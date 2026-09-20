@@ -589,3 +589,29 @@ with the readout behind a flag that defaults to off, so it can be reverted.
 
 **Why.** E4 runs offline on nine public games, a development proxy. Hidden-game performance
 is unknown, and only a real submission shows it. Passing E4 makes E5 eligible, not automatic.
+
+### 12.2 Amendment, 2026-09-20 (later): Q9 decided
+
+The operator answered question 9: the choice of primary Jev engine "depends on the speed,
+accuracy, and efficiency of the two", and the goal is the best ARC-AGI-3 challenge score. The
+Q9 row above said "Deferred". This supersedes it with the rule below.
+
+**Reading of the goal.** The project already records that the challenge metric rewards action
+efficiency and squares it, so a slow or wasteful solver scores low. So the engines are judged
+by ARC outcomes, not by decision quality alone:
+
+- **Accuracy** counts only as it moves ARC outcomes: budgeted solve rate, total `levels_gained`, and actions between level advances (section 6, metrics 1 and 2). Decision accuracy, ECE and Brier are diagnostics. They never override an ARC outcome.
+- **Speed and token cost** count in two ways. First, as feasibility limits: a run that misses the time or token caps loses levels. Second, as a possible source of score: budget freed by a cheaper engine may fund more search inside the same caps. That second claim is a hypothesis and must be tested before it is used.
+
+**Rule for choosing the primary engine** (applies once SemIf and the runtime NanoJev-style head
+have each passed on their own):
+
+1. Compare them only in paired runs on the section 6 units (all 25 public games, three seeds each), under one frozen `(A, T, W)` tuple, with no per-game adapter, source, banked trajectory or hand verifier.
+2. If one engine has a positive game-clustered bootstrap interval for the paired difference in budgeted solve rate or `levels_gained`, it is primary.
+3. If both intervals include zero, prefer the engine that uses less of the token and wall-clock budget at equal progress. Confirm that the saved budget improves the score before relying on it (experiment E12).
+4. An engine is excluded if it worsens any level count against the baseline, does not fit `W` and `T`, carries fitted state across games at scoring time, or has a weights license that blocks shipping.
+5. Use both only if the combined arm beats the best single arm with a positive interval. Otherwise use one.
+6. The outer loop reports the numbers. The operator confirms the pick before it becomes the default for E11. No scored-path change is involved (E5 rules in 12.1 still apply).
+
+**Note on rosters.** E4's nine-game roster (question 6) is for the first adapter-free A/B
+tests. The head-to-head above uses the full section 6 units.
