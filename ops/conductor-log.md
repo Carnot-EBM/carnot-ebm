@@ -18267,3 +18267,4 @@ code |
 | 2026-09-20 04:26 UTC | Conductor re-exec: fresh committed source | OK | d0833c91b3f7 -> 1b84546670a6; argv preserved |
 | 2026-09-20 09:34 UTC | Measure compact Qwen claim extraction after the re | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 104 passed, 1 warning in 12.49s |
 | 2026-09-20 09:59 UTC | Audit raw extraction outcomes including a failed d | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 109 passed, 1 warning in 8.14s |
+| 2026-09-20 10:18 UTC | Interpret adapter-withheld ARC supervisor outcomes | OK | 96 passed, 1 warning in 9.89s |
