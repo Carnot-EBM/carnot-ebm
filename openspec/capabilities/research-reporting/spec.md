@@ -75603,3 +75603,95 @@ row consistency read the candidate
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7448 and SCENARIO-REPORT-7448-* | Implemented: typed capture callback boundary and host-only owned-process lifecycle qualification with real short-lived children and the shipped lease protocol. | Verified by spec-linked focused tests and affected shared-module tests; the entrypoint enforces 100 percent changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, and strict row consistency before publication. |
+
+## V653 independent decision audit — 2026-09-20
+
+**Status:** Specified. This host aggregation audits static energy calibration
+decisions and delayed continuous learning independently. It performs no model
+inference, training, production promotion, or external publication.
+
+### REQ-REPORT-7455: Audit source conditioning and continuous learning independently
+
+Exp7455 SHALL locate Exp7453 and Exp7454 through their declared V653 roadmap
+paths or structured pre-gate results. It SHALL authenticate each file hash,
+experiment identity, milestone, terminal class, and adversarial flag before
+dependent work. An absent or pre-gated producer SHALL create a branch-local
+`blocked_*` disposition with the exact path, field, expected value, and observed
+value. It SHALL not suppress an available peer branch or make completed audit
+work partial.
+
+The static audit SHALL recompute group splits, label isolation, each probability
+metric, paired confidence interval, and primary gates from raw rows when available.
+It SHALL verify that all human annotations and detector metadata were evaluator-only,
+representation dimensions/pooling are real, projections fit no test data, and
+FaithBench is reported as a selected challenge population.
+
+The online audit SHALL read hash-bound event rows without importing a producer
+update function as the independent oracle. It SHALL recompute all delivered losses,
+fixed-share updates, normalizers, and next weights from initial numeric state
+and saved prediction-time expert probabilities within declared numerical tolerances.
+It SHALL verify prediction-before-reveal ordering and no-feedback immutability.
+
+Exp7455 SHALL evaluate planted mutations: mutating a prediction-time probability,
+shuffling event order, dropping a feedback event, leaking a test label into features,
+duplicating a source group, and replacing a vector with length-only data. Each
+planted corruption SHALL be rejected by its named claim.
+
+The artifact SHALL expose separate `static_audit` and `online_audit` results,
+`branch_rows`, `mutation_rows`, `independent_update_replay`, and `continuation_rows`.
+A failed benefit gate with valid evidence SHALL remain `null`; missing external
+input SHALL remain `blocked`; defective current evidence SHALL be `disqualified`.
+Unchanged mixture mechanisms on repeated valid nulls SHALL be marked retired in
+`continuation_rows` and `mixture_construction_retired`. The whole audit SHALL be
+terminal after all available branches run, and `promotion_score` SHALL remain zero.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. The terminal record SHALL contain the required identity,
+clock, phase, prerequisite, source-hash, row, budget, gate, validation, mutation,
+claim, principle, and checksum fields. The affected plan SHALL use the Exp7358
+command plan and Exp7303 runner. Focused tests, 100 percent changed-module
+coverage, scoped Ruff and mypy, exact-test specification coverage, the declared
+entrypoint, cold replay, independent reduction, adversarial verification, and
+strict row consistency SHALL pass before atomic publication. No numbered
+end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7455-INDEPENDENT: One branch cannot hide its peer
+
+**Given** any mix of complete, invalid, or pre-gated static and online inputs
+**When** Exp7455 authenticates and audits the branches
+**Then** each available branch runs and retains its own disposition
+**And** an upstream pre-gate block does not prevent auditing the available peer branch.
+
+#### SCENARIO-REPORT-7455-ONLINE-REPLAY: Delayed updates reconstruct from saved expert predictions
+
+**Given** immutable prediction, feedback, and checkpoint event rows from Exp7454
+**When** the independent scalar reducer replays each revealed-label update
+**Then** all delivered losses, normalizers, and fixed-share log weights match within declared numerical tolerance
+**And** no-feedback arm state remains immutable.
+
+#### SCENARIO-REPORT-7455-MUTATIONS: Evidence corruption fails closed
+
+**Given** private event and prediction copies with planted corruptions
+**When** probability, order, feedback count, label leakage, group uniqueness, or vector representations are mutated
+**Then** each planted mutation is rejected by its corresponding claim check.
+
+#### SCENARIO-REPORT-7455-RETIREMENT: Repeated valid nulls mark mixture retirement
+
+**Given** repeated complete null verdicts with no online benefit in Exp7440 and Exp7454
+**When** continuation rows and terminal dispositions are evaluated
+**Then** the unchanged mixture construction is marked retired with its explicit reason.
+
+#### SCENARIO-REPORT-7455-ARTIFACT: Exact readers control atomic publication
+
+**Given** authenticated source bytes and independently reduced raw rows
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** source, row, branch, mutation, gate, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7455)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7455 and SCENARIO-REPORT-7455-* | Implemented: independent V653 static and online decision audit with a thin entrypoint | Verification in progress: spec-linked focused tests and 100 percent changed-module coverage pass; the entrypoint enforces scoped checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage before publication |
+
