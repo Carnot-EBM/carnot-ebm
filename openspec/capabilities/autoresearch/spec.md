@@ -1416,6 +1416,105 @@ receipts,
 fail
 **and** the terminal JSON publishes only after every required reader passes.
 
+### REQ-AUTO-7439: Measure tuned certified decisions on the preserved corpus
+
+Exp7439 SHALL authenticate the exact Exp7436 selection-protocol artifact and
+sealed protocol before dependent work. It SHALL require
+`selection_protocol_ready_score=1`, an allowed null or positive verdict, and
+`flagged_adversarial=false`. Missing, changed, or ineligible evidence SHALL
+produce a terminal `blocked_*` artifact with an exact gate summary.
+
+The experiment SHALL use only the six shipped predictor features. Predictor
+inputs SHALL exclude labels, annotation spans, model identity, and group IDs.
+It SHALL fit Gibbs 6-4-1, sparse spline 49, and raw L2 logistic heads on fit
+groups with seeds 65201 through 65205. Dense spline and no-training prevalence
+SHALL remain diagnostics and SHALL not add certification observations. Each
+deployed head SHALL average seed probabilities before scalar calibration.
+Scalar calibration and selection of one accept/reject pair SHALL use the two
+separate group halves sealed by Exp7436.
+
+Certification labels SHALL be read only after all policies are frozen. The
+nine registered checks SHALL use exact one-sided bounds with delta 0.05/9:
+accept harm at most 0.05, reject harm at most 0.10, and non-escalation coverage
+at least 0.25 for each deployed head. A disabled action SHALL report null risk,
+not applicable, and zero alpha spent. Every applicable action check and the
+coverage check SHALL pass together. A failed certificate SHALL disable the
+whole policy without threshold reselection.
+
+Final-test labels SHALL be read once after certification. The result SHALL
+report Brier score, log loss, accept and reject harm with denominators,
+coverage, and registered utility. Undefined action risks SHALL remain null.
+The old fixed-threshold protocol SHALL use the same head predictions and source
+groups as the tuned policy. Ten thousand paired source-group bootstrap draws
+SHALL give simultaneous intervals for tuned spline coverage minus its old
+policy and tuned spline coverage minus tuned raw logistic coverage.
+
+`decision_value_score=1` SHALL require a valid spline certificate, certificate
+coverage lower bound at least 0.25, both paired coverage lower bounds above
+zero, utility no worse than either control, and Brier and log-loss
+non-inferiority within 0.001. A policy-only coverage gain without a gain over
+tuned logistic SHALL be a limited policy-wrapper finding with null energy
+advantage. Gibbs results SHALL remain visible for every terminal outcome.
+`decision_capture_complete_score=1` SHALL allow complete valid nulls.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. It SHALL keep head fitting, scalar calibration, and
+policy fitting times separate in `small_ebm_training`. The artifact SHALL set
+`deployment_certificate_valid=false`,
+`certificate_scope=exploratory_reused_corpus`, and `promotion_score=0` because
+historical label exposure prevents a fresh deployment guarantee.
+
+The terminal result SHALL bind probability-row shards, fitted checkpoints,
+source bytes, the validation manifest, and its checksum. It SHALL run the
+frozen affected-file checks, declared entrypoint, cold replay, independent raw
+reduction, adversarial verification, and strict row consistency before atomic
+publication. These entrypoint checks form the capability E2E. No numbered E2E
+scenario applies because shared training, sampling, bindings, and ARC code do
+not change.
+
+#### SCENARIO-AUTO-7439-01: Predictor projection excludes forbidden fields
+
+**Given** preserved predictor and evaluator views,
+**when** compact heads receive a training or scoring matrix,
+**then** only the six shipped numeric features enter the matrix
+**and** labels, spans, model identity, and group identity remain excluded.
+
+#### SCENARIO-AUTO-7439-02: Frozen roles control calibration and certification
+
+**Given** the exact Exp7436 role seal,
+**when** probabilities are calibrated, tuned, and certified,
+**then** seed probabilities average before calibration
+**and** certification labels cannot alter the frozen threshold pair.
+
+#### SCENARIO-AUTO-7439-03: Empty actions and failed certificates stay honest
+
+**Given** a disabled or empty action and a frozen typed policy,
+**when** exact risk and coverage checks run,
+**then** undefined risks remain null and disabled checks spend no alpha
+**and** any failed conjunction disables the whole policy without reselection.
+
+#### SCENARIO-AUTO-7439-04: Policy coverage differs from calibration quality
+
+**Given** final-test probability rows for tuned and old policies,
+**when** metrics and paired group intervals are reduced,
+**then** coverage contrasts use actions while Brier and log loss use probabilities
+**and** controls do not contribute rows to certification counts.
+
+#### SCENARIO-AUTO-7439-05: Benefit requires every registered gate
+
+**Given** a complete valid measurement,
+**when** decision value is reduced,
+**then** one failed certificate, coverage, contrast, utility, or score gate keeps
+`decision_value_score=0` while `decision_capture_complete_score` can remain one.
+
+#### SCENARIO-AUTO-7439-06: Reused labels cannot authorize deployment
+
+**Given** nominally valid bounds on the historically exposed corpus,
+**when** the artifact is classified and replayed,
+**then** deployment certification and promotion remain false
+**and** fresh-process readers reproduce the same measurements from bound rows.
+
 ### REQ-AUTO-7427: Measure randomized delayed-feedback source adaptation
 
 Exp7427 SHALL authenticate the exact Exp7426 static-decision artifact before
