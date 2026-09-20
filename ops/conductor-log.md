@@ -18278,3 +18278,4 @@ code |
 | 2026-09-20 14:54 UTC | Seal source-pair features and an external human ch | OK | 92 passed, 1 warning in 9.60s |
 | 2026-09-20 15:15 UTC | Preserve prediction-time expert losses under delay | OK | 167 passed, 1 warning in 37.06s |
 | 2026-09-20 15:17 UTC | Conductor re-exec: fresh committed source | OK | 1b84546670a6 -> dc13505e64cf; argv preserved |
+| 2026-09-20 15:45 UTC | Measure compact Qwen extraction through the repair | OK | 96 passed, 1 warning in 8.94s |
