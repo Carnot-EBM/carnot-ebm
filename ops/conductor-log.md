@@ -18257,3 +18257,4 @@ code |
 | 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 0: OPEN 1 days: REAL_B |
 | 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_match_declared_substrate age-week 0: OPEN 1 days: SILENT |
 | 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_field_name age-week 0: OPEN 1 days: SILENT_NON_FIR |
+| 2026-09-20 00:32 UTC | Prototype compact claim spans and seal the extract | OK | 109 passed, 1 warning in 7.60s |
