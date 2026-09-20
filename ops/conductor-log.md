@@ -18289,3 +18289,4 @@ code |
 | 2026-09-20 18:38 UTC | Measure live supervisor exposure beyond its stagna | OK | 91 passed, 1 warning in 14.52s |
 | 2026-09-20 19:01 UTC | Test append-only learning state with unchanged ack | OK | 98 passed, 1 warning in 12.38s |
 | 2026-09-20 19:21 UTC | Preserve board graduation and check GateMate chang | OK | 89 passed, 1 warning in 8.06s |
+| 2026-09-20 19:40 UTC | Reconcile fourteen dispositions and retire unchang | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 108 passed, 1 warning in 13.00s |
