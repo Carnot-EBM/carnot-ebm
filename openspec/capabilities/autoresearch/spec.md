@@ -1285,6 +1285,137 @@ protocol, input bytes, detailed row shards, checkpoints, and validation scope.
 **then** changed probabilities, metrics, hashes, counters, or gates fail
 **and** terminal JSON publishes atomically only after all required readers pass.
 
+### REQ-AUTO-7436: Select and certify typed actions with isolated roles
+
+Exp7436 SHALL authenticate the exact Exp7423 corpus, Exp7426 static-decision
+artifact, and Exp7428 decision audit before dependent work. It SHALL preserve
+each producer's original adversarial flag and byte identity. Missing or changed
+external evidence SHALL produce `blocked_*` with an exact gate summary. The run
+SHALL not invent an unavailable branch.
+
+The protocol SHALL use only fit, probability-calibration, and
+policy-calibration rows. It SHALL not read final-test or prospective-stream
+labels, quantiles, or metrics for method design. It SHALL hash original role
+membership and source-group identities. Prior exposure of the reused RAGTruth
+evaluation corpus SHALL remain disclosed.
+
+The three deployed heads SHALL be Gibbs 6-4-1, sparse spline 49, and raw L2
+logistic from the Exp7426 full-source checkpoints. Each head SHALL average the
+same five fixed training seeds before scalar calibration or policy fitting.
+Dense spline logistic SHALL remain an equivalence control and SHALL not become
+a fourth deployed policy.
+
+Source groups in probability calibration SHALL split deterministically into
+disjoint calibration and tuning halves without labels. Each half SHALL use one
+label-blind representative per source group. Scalar calibration SHALL use only
+the calibration half. Policy tuning SHALL use only the tuning half. Candidate
+thresholds SHALL use tuning-score deciles plus an explicit no-action sentinel
+for each action. Exactly one accept/reject pair SHALL be selected per deployed
+head by utility, then a fixed deterministic tie rule. Utility SHALL be +1 for a
+correct action, -20 for a harmful accept, -10 for a harmful reject, and 0 for
+escalation.
+
+Policy calibration SHALL remain certification-only. Familywise delta 0.05
+SHALL divide equally across nine planned checks: accept-harm upper bound,
+reject-harm upper bound, and non-escalation coverage lower bound for each of
+three policies. Exact one-sided Clopper-Pearson bounds SHALL be used. Accept
+risk SHALL be at most 0.05. Reject risk SHALL be at most 0.10. Certified
+coverage SHALL be at least 0.25. An action disabled during tuning SHALL have an
+undefined risk and a not-applicable check; its alpha remains unspent. Every
+enabled action check and the coverage check SHALL pass together. Otherwise the
+whole policy SHALL become all-escalate without threshold reselection.
+
+Every arm and action SHALL report score quantiles, selected source-group count,
+harmful count, exact upper bound, and a diagnosis that distinguishes empty
+selection, non-empty insufficient support, and excessive observed risk. The
+zero-error support requirement SHALL equal
+`ceil(log(delta / 9) / log(1 - risk_budget))`. Empty selection SHALL not be
+attributed to multiplicity. Coverage SHALL use an exact lower bound.
+
+Before the measured trial, the experiment SHALL seal
+`results/raw/experiment_7436_v652_selection_protocol/protocol.json`. The seal
+SHALL include role disjointness, group sampling assumptions, seeds, candidate
+rules, thresholds, utility, familywise allocation, and 10,000 source-group
+bootstrap draws. The joint-certificate paper motivates role separation only;
+the artifact SHALL not claim it improves the binary exact bounds. Mutation
+checks SHALL cover duplicated groups, tune/certification overlap, empty
+selection, and hidden labels.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Numeric fitting receipts SHALL remain separate under
+`small_ebm_training`. Archived or scripted model events SHALL remain typed,
+hash-bound sidecars.
+
+The artifact SHALL set `deployment_certificate_valid=false` and
+`certificate_scope=exploratory_reused_corpus`. A nominal feasibility pass MAY
+justify a separately sealed future corpus. It SHALL not authorize rollout or
+describe any tested policy as safe for new users. `promotion_score` SHALL remain
+zero. `selection_protocol_ready_score=1` SHALL require sealed roles,
+finite-sample checks, label-isolation controls, and all required validation. It
+SHALL remain independent of whether any policy is nominally feasible.
+
+The workflow SHALL freeze an Exp7358 affected-file manifest. It SHALL use the
+Exp7303 runner with private temporary parents. It SHALL run worktree imports,
+affected tests without coverage, separate 100-percent changed-module coverage,
+scoped Ruff, changed-module mypy, exact-test spec coverage, the declared
+entrypoint, fresh-process replay, independent reduction, adversarial
+verification, and strict row consistency. These entrypoint checks form the
+capability E2E. No numbered E2E scenario applies because shared training,
+sampling, bindings, and ARC code do not change.
+
+The terminal artifact SHALL include all ordinary experiment fields plus
+`selection_protocol_ready_score`, `selection_diagnosis_rows`,
+`protocol_manifest`, `evaluation_reuse_disclosure`,
+`deployment_certificate_valid`, and `certificate_scope`. Detailed policy rows
+MAY use hash-bound shards. The checksum SHALL bind code, protocol, input bytes,
+row shards, and the exact validation scope.
+
+#### SCENARIO-AUTO-7436-01: Role separation rejects leakage
+
+**Given** source groups assigned to fit, scalar calibration, policy tuning, and
+certification,
+**when** membership is validated,
+**then** duplicate groups or tuning/certification overlap fail closed
+**and** predictor-side hidden labels are rejected before scoring.
+
+#### SCENARIO-AUTO-7436-02: Seed averaging precedes policy fitting
+
+**Given** five frozen seed states for each deployed head,
+**when** calibration and tuning scores are computed,
+**then** the five probabilities average before scalar calibration
+**and** dense spline matches sparse spline only as an equivalence control.
+
+#### SCENARIO-AUTO-7436-03: Tuning selects exactly one fixed policy
+
+**Given** label-blind representatives and tuning-score deciles,
+**when** candidate pairs are evaluated,
+**then** one pair per head wins by the frozen asymmetric utility and tie rule
+**and** no-action sentinels can disable either action without inventing risk.
+
+#### SCENARIO-AUTO-7436-04: Certification diagnoses support honestly
+
+**Given** one frozen policy and certification-only source groups,
+**when** its exact risk and coverage checks run,
+**then** empty, insufficient-support, and excessive-risk outcomes stay distinct
+**and** a failed conjunction converts the whole policy to all-escalate.
+
+#### SCENARIO-AUTO-7436-05: Reused evidence cannot become deployment proof
+
+**Given** nominal exact bounds on the previously exposed RAGTruth corpus,
+**when** the terminal result is classified,
+**then** deployment certification remains false with exploratory reused scope
+**and** readiness can pass without promotion or a new-user safety claim.
+
+#### SCENARIO-AUTO-7436-06: Cold readers bind the sealed protocol
+
+**Given** the terminal candidate, protocol seal, detailed rows, and validation
+receipts,
+**when** fresh processes independently replay and reduce the evidence,
+**then** changed roles, thresholds, counts, bounds, hashes, gates, or checksum
+fail
+**and** the terminal JSON publishes only after every required reader passes.
+
 ### REQ-AUTO-7427: Measure randomized delayed-feedback source adaptation
 
 Exp7427 SHALL authenticate the exact Exp7426 static-decision artifact before
