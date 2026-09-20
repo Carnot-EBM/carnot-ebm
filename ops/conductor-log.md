@@ -18298,3 +18298,5 @@ code |
 | 2026-09-20 22:05 UTC | Measure E6 decision cost from existing adapter-wit | OK | 94 passed, 1 warning in 7.49s |
 | 2026-09-20 22:07 UTC | Capture raw Qwen source-support options with order | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7462-option-protocol.option_protocol_ready_score (actual=0 == expected=1) |
 | 2026-09-20 22:09 UTC | Train source-support energy decisions against matc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7465-source-option-capture, exp7465-source-option-capture, exp7465-source-option-capture) |
+| 2026-09-20 23:54 UTC | Repair factual canary composition and measure comp | FAIL | Post-tests failed: 1 failed, 163 passed, 1 warning in 45.08s |
+| 2026-09-20 23:56 UTC | Repair factual canary composition and measure comp | OK | Deliverable already exists in repo |
