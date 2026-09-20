@@ -13,6 +13,122 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V653 ARC supervisor exposure comparison — 2026-09-20
+
+**Status:** Specified. This work measures exposure to the shipped supervisor
+threshold. It does not change the threshold, arm table, model budget, or live
+policy defaults.
+
+### REQ-ARC-WMTE-7457: Measure paired live supervisor exposure at the shipped threshold
+
+Experiment 7457 SHALL authenticate the exact Experiment 7448 terminal artifact.
+It SHALL require `capture_lifecycle_ready_score == 1`, a verdict class in
+`[null, positive]`, and `flagged_adversarial == false` before dependent work.
+An absent or unchanged failed external prerequisite SHALL produce a terminal
+`blocked_*` artifact with the exact failed path, field, expected value, and
+observed value. It SHALL not fabricate model work.
+
+The experiment SHALL freeze `bp35` and `cn04`, two seeds, and two conditions:
+the shipped shadow supervisor and the opt-in applied supervisor. It SHALL
+interleave paired conditions. The fixed panel SHALL contain eight episodes.
+Each episode SHALL stop at 180 scored actions or 240 seconds. The aggregate
+live phase, including model load and cleanup, SHALL stop at 2400 seconds. A
+started episode that reaches a limit SHALL be recorded as censored and SHALL
+not be rerun. An unstarted episode SHALL remain explicit.
+
+The live child SHALL use the actual scored `E3AgentPolicy` through the shipped
+agent factory and public game environment. Per-game adapters, stored engines,
+banked solutions, saved routes, hidden game source, and offline ground-truth
+search SHALL remain unavailable. The generator SHALL be
+`unsloth/Qwen3.8-27B-GGUF`, resolved by the current-model cache contract and
+served by one owned native CUDA lease. Each episode SHALL use the shipped
+request and inference-boundary ledgers, no more than two generation requests,
+and no more than 256 new tokens per request. A load attempt with no generation
+SHALL be `model_load_no_generation`. No model attempt SHALL be
+`blocked_no_run`.
+
+Before live work, the experiment SHALL drive a threshold-boundary case and an
+arm-consumption case through actual `E3AgentPolicy` supervisor hooks. These
+rows SHALL be labeled synthetic and excluded from all live outcome metrics.
+The threshold SHALL stay at 120. The four-arm order SHALL equal the shipped
+`ARM_ORDER`; the disabled fourth arm SHALL remain disabled. No new arm MAY be
+proposed unless every existing enabled arm fired in one level stretch and a
+later recorded stagnation window shows that enabled set exhausted.
+
+Every live action row SHALL record an episode identifier, scored action index,
+monotonic timestamp, observed level, plateau counter, threshold eligibility,
+proposed redirect, whether that redirect applied, callback outcome, and later
+progress. Each episode SHALL report action count, threshold reached, each arm
+fired and applied, peak and terminal level, banked progress, actions after each
+redirect, generation calls, and elapsed cost. A zero-firing or right-censored
+episode SHALL remain exposure-limited evidence, not an intervention null. The
+row SHALL state its exact remaining actions to the next 120-action window.
+
+The solve registry SHALL be read only to confirm that `bp35` and `cn04` are
+already solved public development games. Both games SHALL receive zero new
+level credit. A reached level MAY use
+`solve_provenance=live_agent_self_discovery` only after the agent reproduces
+its own action trace. The experiment SHALL not read game source, use a
+ground-truth search, change the registry, or grant new solve credit.
+
+The terminal artifact SHALL use run date `20260920`, milestone `2026.09.653`,
+`inference_substrate_class=model_bounded_generation` when a generation is
+attempted, and `execution_venue=host`. It SHALL record balanced invocation
+counts, phase spans, immutable input hashes, all eight dispositions, paired
+per-game results, and exact validation receipts. `promotion_score` and
+`arm_value_score` SHALL remain zero. `arc_exposure_complete_score` MAY equal
+one only when all eight planned dispositions exist, scripted rows remain
+separate, live rows are independently reducible, and every required validation
+reader passes. No automatic arm promotion follows from this pilot.
+
+The affected manifest SHALL use the Experiment 7358 command plan and
+Experiment 7303 scope runner for worktree imports, focused pytest, separate
+100 percent changed-module coverage, scoped Ruff, changed-module mypy, and
+exact-test spec coverage. It SHALL also run E2E-009, E2E-010, their private
+real-environment smoke, the declared entrypoint cold replay, independent cold
+reduction, the unchanged adversarial verifier, and strict row-consistency lint
+before atomic publication.
+
+#### SCENARIO-ARC-WMTE-7457-THRESHOLD
+
+- GIVEN the real policy hook has observed 119 stagnant actions
+- WHEN one more stagnant action is observed
+- THEN the first eligible shipped arm is proposed at action 120
+- AND shadow mode records but does not apply it while applied mode consumes it.
+
+#### SCENARIO-ARC-WMTE-7457-SCHEDULE
+
+- GIVEN two frozen games, two seeds, and shadow and applied conditions
+- WHEN the schedule is sealed
+- THEN it contains eight interleaved paired episodes with 180-action and
+  240-second ceilings
+- AND every missing, failed, censored, or completed disposition remains explicit.
+
+#### SCENARIO-ARC-WMTE-7457-EXPOSURE
+
+- GIVEN an episode ends before its next stagnation window
+- WHEN live rows are reduced
+- THEN it records the exact remaining exposure gap
+- AND it is not classified as evidence that an eligible arm had no effect.
+
+#### SCENARIO-ARC-WMTE-7457-ARM-EXHAUSTION
+
+- GIVEN the shipped enabled arms have not all fired on one level stretch
+- WHEN a later stagnation window is inspected
+- THEN no new arm is proposed
+- AND the shipped threshold and arm order remain unchanged.
+
+#### SCENARIO-ARC-WMTE-7457-TERMINAL
+
+- GIVEN eight episode dispositions, separate synthetic qualification rows,
+  exact invocation accounting, and all required readers
+- WHEN a fresh process independently reduces the candidate
+- THEN the terminal artifact is complete without promotion or new solve credit
+- AND any scientific null is limited to completed applied-versus-shadow evidence.
+
+Implementation status: specified 2026-09-20. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V652 ARC supervisor evidence reduction — 2026-09-20
 
 **Status:** Specified. This work interprets two archived adapter-withheld live
