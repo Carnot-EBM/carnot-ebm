@@ -6871,3 +6871,10 @@ The critical path for milestone .250:
 - theme: randomized-feedback learning and adapter-withheld callback reachability set the pace while execution telemetry remained task-agnostic
 - key result: honest operational negative — the critical path is ranked, but no data available this milestone explains its internal cost, proves compute-window accelerator efficiency, or demonstrates an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.652
+
+- exp_range: no data available this milestone
+- theme: delayed-weighting and contract work led an all-compute milestone with incomplete execution attribution
+- key result: honest operational negative — the duration leaders are known, but the supplied evidence does not explain their cost, establish task-window GPU efficiency, or show an eligible DualGPURunner miss
+- acceptance: no data available this milestone

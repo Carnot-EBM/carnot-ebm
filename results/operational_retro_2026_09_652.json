@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.652",
+  "generated_at": "2026-09-20T11:13:16Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 9.0,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 13,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure continuous expert weighting on delayed source-support outcomes",
+      "duration_minutes": 2.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind the thirteen-task contract and ingest methods against V651 evidence",
+      "duration_minutes": 1.7,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure compact Qwen claim extraction after the representation repair",
+      "duration_minutes": 1.39,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prevent historical rejection streaks from locking future research rounds",
+      "duration_minutes": 1.31,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently audit policy risk and delayed learning without benefit gates",
+      "duration_minutes": 0.45,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments, all compute-bound, in 9.0 minutes. Continuous expert weighting and contract/method ingestion were the listed duration leaders, but the supplied data does not identify their costly phases.",
+  "bottlenecks_identified": [
+    "Continuous expert weighting and contract/method ingestion were the longest listed compute-bound tasks, but the bounded timing record does not identify the phase that caused either duration.",
+    "Task-aligned accelerator telemetry is absent, so the end-state GPU snapshot cannot establish utilization during individual compute windows.",
+    "No model-count or runner-selection record is available, so eligibility for DualGPURunner and actual runner engagement cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Record monotonic phase timestamps and wait states for every experiment instead of relying only on disk modification times.",
+    "Join GPU utilization samples to the active experiment, process, and model throughout each compute window.",
+    "Record model count and runner choice at launch, then route only confirmed parallel multi-model tasks through DualGPURunner.",
+    "Add an active-window alert for sustained zero accelerator utilization on tasks declared compute-bound."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add per-phase monotonic timing and wait-state receipts to the experiment harness.",
+    "Capture task-scoped GPU utilization with process and model ownership.",
+    "Persist model count and runner selection, with conditional DualGPURunner dispatch for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The supplied evidence supports duration ranking but not causal attribution. A point-in-time GPU report cannot establish compute-window efficiency, and no parallel-model record supports a DualGPURunner failure claim."
+}
