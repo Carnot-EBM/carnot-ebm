@@ -18274,3 +18274,4 @@ code |
 | 2026-09-20 12:24 UTC | Milestone 2026.09.653 activated | OK | 14 tasks queued |
 | 2026-09-20 12:44 UTC | Bind fourteen tasks and ingest source-conditioning | FAIL | Codex CLI error: Stalled after 600s silence. Last output: assert first == s |
 | 2026-09-20 13:10 UTC | Bind fourteen tasks and ingest source-conditioning | OK | 95 passed, 1 warning in 35.91s |
+| 2026-09-20 14:29 UTC | Repair extraction callback failure and owned-proce | OK | 164 passed, 1 warning in 37.74s |
