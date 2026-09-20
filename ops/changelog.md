@@ -20213,3 +20213,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-20: Added the REQ-AUTO-028 JevBench option-logit evaluator, CPU-only tests, and a source-audited research note. The dry path uses a non-live stub and writes nothing without `--output`.
 - 2026-09-20: Added a SemIf option-readout experiment plan for EBM calibration and the ARC live agent; no implementation or scored-path change.
 - 2026-09-20: Extended the SemIf ARC plan with Needle 3/Jev roles, adapter-free metrics, E6-E12 pairing experiments, and license and scored-path blockers; planning only.
+- 2026-09-20: Bind fourteen tasks and ingest native decision methods (⚠️ Research Finding) — honest_verdict=complete_null_v654_contract_methods_ingested; results/experiment_7461_v654_contract_methods.json
