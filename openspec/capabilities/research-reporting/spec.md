@@ -75695,3 +75695,102 @@ end-to-end scenario applies.
 |---|---|---|
 | REQ-REPORT-7455 and SCENARIO-REPORT-7455-* | Implemented: independent V653 static and online decision audit with a thin entrypoint | Verification in progress: spec-linked focused tests and 100 percent changed-module coverage pass; the entrypoint enforces scoped checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage before publication |
 
+## V653 compact extraction audit — 2026-09-20
+
+**Status:** Specified. This host aggregation audits the exact Exp7451 capture
+bytes and runtime history. It performs no current model inference, training,
+production promotion, or external publication.
+
+### REQ-REPORT-7456: Audit every compact extraction disposition without a producer value gate
+
+Exp7456 SHALL locate the exact Exp7451 deliverable or its conductor pre-gate
+record. It SHALL authenticate the artifact bytes, experiment identity,
+milestone, original verdict class, and original adversarial flag before it reads
+aggregate scores. Missing current inference SHALL create a specific blocked
+branch. Historical replies SHALL never become current model work.
+
+The audit SHALL independently parse every attempted raw reply. It SHALL verify
+request, response, and reply hashes. It SHALL reconstruct each literal span and
+reject malformed JSON, repaired truncation, deleted modifiers, off-by-one
+offsets, nonliteral source claims, and duplicate ambiguous claims. It SHALL
+retain failures, cancellations, censored calls, and unstarted calls as separate
+dispositions.
+
+The audit SHALL account for all eight development calls and all 96 evaluation
+calls. It SHALL recompute paired completion and token effects only from complete
+evaluation pairs. An unopened evaluation panel SHALL have zero observed pairs
+and unknown effects. It SHALL not convert unstarted cells into measured zeros.
+
+Correct-empty replies on the three frozen nonfactual introductions SHALL remain
+valid transport outputs. They SHALL receive no factual recall credit and SHALL
+not create semantic ground truth. Real response paragraphs SHALL retain limited
+mechanical coverage authority. Only the twelve frozen constructed qualifier
+pairs SHALL supply semantic retention labels. Constructed success SHALL not
+support synthetic-to-natural extrapolation.
+
+Exp7456 SHALL replay invocation balance and cleanup from the producer's actual
+current event ledger, PID and start-tick identity, lease identity, and release
+events. The artifact SHALL report audit completion separately from the audited
+scientific disposition. A producer null or disqualification SHALL remain
+unchanged and SHALL not become readiness or benefit.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Historical live and scripted events SHALL remain typed,
+hash-bound sidecars. No numeric model training occurs. `promotion_score` SHALL
+remain zero.
+
+The terminal artifact SHALL contain the required identity, clock, phase,
+precondition, source-hash, row, budget, gate, validation, coverage, runtime,
+principle, and checksum fields. `extraction_audit_complete_score` SHALL equal
+one only when all available current raw evidence is independently reduced or an
+unavailable branch receives an explicit disposition.
+
+The affected plan SHALL reuse the Exp7358 command plan and Exp7303 runner. It
+SHALL run worktree imports, focused pytest without coverage, separate 100
+percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test specification coverage. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. Independent
+reduction, `scripts/adversarial_verify.py`, and strict verdict-row consistency
+SHALL pass before atomic publication. No numbered end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7456-RAW: Raw replies reproduce without producer summaries
+
+**Given** authenticated Exp7451 development and evaluation rows
+**When** every attempted reply is parsed and every planned cell is counted
+**Then** literal substrings, completion counts, token counts, and dispositions reproduce
+**And** failures and unstarted cells remain visible without measured-zero coercion.
+
+#### SCENARIO-REPORT-7456-SEMANTICS: Semantic authority remains bounded
+
+**Given** three nonfactual introductions, real paragraphs, and frozen qualifier pairs
+**When** empty and nonempty claims are audited
+**Then** correct-empty transport receives no factual recall credit
+**And** only constructed labels score retention without natural-text extrapolation.
+
+#### SCENARIO-REPORT-7456-RUNTIME: Cleanup and invocation balance replay from identity events
+
+**Given** the producer event ledger, PID start ticks, lease, and cleanup receipt
+**When** the runtime audit replays loads, generations, and terminal release
+**Then** attempted and terminal counts balance with no in-flight work
+**And** cleanup is accepted only for matching owned process and lease identities.
+
+#### SCENARIO-REPORT-7456-MUTATIONS: Extraction corruptions fail closed
+
+**Given** a valid private producer fixture
+**When** a modifier, offset, JSON suffix, source substring, event terminal, or lease identity changes
+**Then** each corruption creates its named audit error
+**And** no producer event becomes a current audit invocation.
+
+#### SCENARIO-REPORT-7456-ARTIFACT: Exact readers control atomic publication
+
+**Given** authenticated sources, independently reduced rows, and a frozen manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** source, row, coverage, runtime, gate, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7456)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7456 and SCENARIO-REPORT-7456-* | Implemented: independent V653 compact extraction and runtime audit with a thin entrypoint. | The entrypoint requires spec-linked tests, 100 percent changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, and strict row consistency before publication. |
