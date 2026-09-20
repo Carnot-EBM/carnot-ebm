@@ -45762,3 +45762,79 @@ authors' own. None was reproduced by us except the readout health check below.
 Our run: `docs/research-notes/jevbench-semif-decision-readout-2026-09-20.md`. Plan and gated
 ladder: `docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`. Follow-up work is
 queued in `ops/known-issues.md` (E0 and E6). Not evidence for any Carnot claim.
+
+## 2026-09-20 — V654 planning source review
+
+Recorded before drafting the V654 task contract. This review checked the eight
+research topics and all six secondary channels. Rechecked sources are marked;
+paper and vendor results do not establish a Carnot result.
+
+### Selected findings
+
+| Primary source | Finding | Bounded experiment implication |
+|---|---|---|
+| [SemIf source](https://github.com/TheoLeeCJ/SemIf/tree/ca3ba65f142967030ecb453346e94d6f476a69df), September 2026 code review | `direct.py` checks exact single-token answer slots, including their boundary after the prompt, and reads final-position logits without decoding. `shared.py` branches a common prefix with explicit positions and masks. The repository LICENSE was readable and is MIT. | Use the existing local Qwen readout as an input to a calibrated energy selector. Test token boundaries, option permutations, missing option logits and cache contamination. Porting this idea to GGUF is not reproducing the author's transformers runtime. |
+| [Catastrophic Forgetting in KANs, 2511.12828](https://arxiv.org/abs/2511.12828), November 2025, AAAI 2026 record | The authors connect forgetting to activation-support overlap and find that spline locality does not prevent forgetting in high-dimensional domains. | Test a small residual energy learner on low-dimensional decision features. Measure untouched-support drift, replay loss and delayed feedback against frozen and linear controls. Do not assume KAN implies retention. |
+| [Online Learning with LLM Experts from Limited Feedback, 2609.05820](https://arxiv.org/abs/2609.05820), September 5, 2026 | Studies feedback-budgeted routing, with separate full-information and bandit settings. | Keep audit propensity, label availability and prediction time explicit in a budgeted online test. Carnot's residual learner is not this paper's routing algorithm and inherits no regret bound. |
+| [RECAP, 2606.06698](https://arxiv.org/abs/2606.06698), June 2026 | Evaluates continual prompt adaptation with constraint-level regression and an adapt-before-test protocol. | Report retained-domain regressions as well as new-domain gains. Use the evaluation distinction; do not add prompt optimization or mutate the mandated generator. |
+| [On-chip spline learning, 2602.02056v4](https://arxiv.org/abs/2602.02056v4), June 19, 2026 revision, rechecked | Describes sparse fixed-point online updates on FPGA. | Keep the small learner's active-basis updates measurable, but account for prefill, verification, feedback and durable state in the service denominator. No FPGA speed claim follows from a CPU kernel. |
+| [The Semantic Illusion, 2512.15068v2](https://arxiv.org/abs/2512.15068v2), December 2025, rechecked | Reports that embedding discrimination and useful selective decisions can diverge on real hallucinations. | Use natural human source-support labels and report coverage with error, rather than promoting AUROC alone. Treat this preprint's quantitative claims as author results. |
+
+The earlier local JevBench health check is useful prerequisite evidence, but its
+artifact contains aggregate metrics rather than a reusable per-question logit
+ledger. A new source-support capture must save every raw option vector. The
+existing note's 72% versus 21% reversal result applies to `open-alternative-jev`,
+not SemIf; the source-audited JevBench note records this correction. Do not carry
+the conflicting attribution in the broader integration plan into a new claim.
+
+### Required topic sweep and deferred ideas
+
+- **EBM verification and reasoning:** reopened [EBT, 2507.02092](https://arxiv.org/abs/2507.02092)
+  and [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4).
+  A categorical negative-log-probability energy is a useful interface, not an
+  independent correctness oracle. Keep the retired external-text reranker closed.
+- **Neural constraint satisfaction:** rechecked [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461).
+  Linear-feasibility results do not solve source extraction. Defer a solver port.
+- **Ising in ML:** rechecked [Thermodynamic learning, 2609.04732](https://arxiv.org/abs/2609.04732).
+  Physical learning is relevant to the long-term substrate; no accessible local
+  device or present selector benefit was established by this review.
+- **Hallucinations:** selected source-support decisions and the real-versus-synthetic
+  caution above. A model's confidence is a feature, not an evaluator label.
+- **KAN and continual learning:** selected support-overlap diagnostics and sparse
+  residual updates. This changes the update mechanism and inputs from V653's
+  retired fixed-share four-expert construction.
+- **Energy-guided and constrained generation:** rechecked [CRANE, 2502.09061](https://arxiv.org/abs/2502.09061)
+  and [Energy-Guided Decoding for Object Hallucination, 2507.07731](https://arxiv.org/abs/2507.07731).
+  The second is a vision-language method. Neither warrants a new text decoding
+  sweep. The measured extraction canary needs factual content before more decoding.
+- **Hardware sampling:** rechecked [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985).
+  Transfer and host coordination remain part of any hardware comparison.
+
+### Secondary-source receipts
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and verifier work. EBT's indexed
+  ICLR 2026 PDF was readable through search; direct EBT forum and VFScale PDF
+  opens returned browser challenges. The [official ICLR VFScale record](https://proceedings.iclr.cc/paper_files/paper/2026/hash/6188c02ccc16a7587716de2efd754033-Abstract-Conference.html)
+  was available. No inaccessible review or decision is inferred.
+- **Semantic Scholar:** queried citations for both requested seed papers through
+  its Graph API. EBT returned HTTP 429; ARM–EBM returned HTTP 200 with eight
+  entries and no next page. Followed [Constitutional On-Policy Safe Distillation,
+  2606.03089](https://arxiv.org/abs/2606.03089) to arXiv. Generator distillation
+  stays outside this small-selector milestone. No complete EBT citation walk is claimed.
+- **Hugging Face Papers:** opened [the limited-feedback paper page](https://huggingface.co/papers/2609.05820)
+  and used its arXiv source for method claims. Verification work was also included
+  in the discovery sweep. Generated summaries are not experimental evidence.
+- **GitHub trending:** opened [weekly Python](https://github.com/trending/python?since=weekly)
+  and [monthly Rust](https://github.com/trending/rust?since=monthly).
+  No new EBM, constraint or KAN dependency was selected from these lists. SemIf
+  came from the operator's existing lead, not a verified trending placement.
+- **Extropic:** opened [writing](https://extropic.ai/writing) and [Z1T](https://extropic.ai/writing/z1t),
+  dated September 4, 2026. Z1T describes sparse probabilistic/digital co-design;
+  its energy and latency estimates use FPGA coprocessors. The page is vendor
+  evidence, not owned TSU access or a Carnot benchmark.
+- **Logical Intelligence:** reopened [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  Its language/constraint split remains architectural context. This pass did not
+  establish a new reproducible local checkpoint or training recipe.
+
+No model inference, hardware probe, download of weights, vendor contact,
+purchase or publication occurred in this planning review.

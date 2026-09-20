@@ -174,3 +174,6 @@ of truth, not this line.)
 | 2026-09-19 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_field_name | SILENT_NON_FIRING | OPEN | |
 | 2026-09-20 | qa_layer_authenticity_audit | adversarial_verify.py::_classify_current_task_inference_claim | SILENT_NON_FIRING | OPEN | |
 | 2026-09-20 | qa_layer_authenticity_audit | adversarial_verify.py::_strip_verdict_terminal_prefix | SILENT_NON_FIRING | OPEN | |
+| 2026-09-20 | qa_layer_authenticity_audit | adversarial_verify.py::check_substrate_declaration_shape | SILENT_NON_FIRING | OPEN | |
+| 2026-09-20 | qa_layer_authenticity_audit | adversarial_verify.py::check_execution_venue | REAL_BUG | OPEN | |
+| 2026-09-20 | qa_layer_authenticity_audit | adversarial_verify.py::check_methodology_present | REAL_BUG | OPEN | |

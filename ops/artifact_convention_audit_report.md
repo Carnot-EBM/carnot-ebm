@@ -9,26 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| AGGREGATE_ONLY | 2 |
+| CHECKABLE | 4 |
+| UNKNOWN | 4 |
 
-## experiment_7439_v652_certified_decisions.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The run completed validly but showed no registered decision benefit, despite aggregate noninferiority to controls.
-
-## WHAT IS MISSING
-The actual per-unit `"rows"` or `"probability_row_shards"` containing each source group’s arm, seed, condition, prediction, label, coverage, utility, Brier score, and log loss are missing; only aggregate `"independent_reduction.metrics"`, `"paired_coverage_intervals"`, and certificate counts are present.
-
-## THE CHECK A READER CANNOT DO
-Were the reported arm comparisons and zero coverage deltas consistent across the 450 paired source groups, or caused by degenerate controls or a small number of influential units?
-
-## experiment_7440_v652_mixture_learning.json
+## experiment_7453_energy_calibration.json
 
 **CHECKABLE**
 
@@ -36,7 +20,7 @@ Were the reported arm comparisons and zero coverage deltas consistent across the
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment completed but found insufficient online benefit because multiple scientific-benefit, safety, coverage, and negative-control gates failed.
+The experiment was blocked before running by a conductor pre-gate check because upstream dependency `exp7452-source-embeddings` reported `embedding_capture_ready_score` = 0 instead of the expected 1.
 
 ## WHAT IS MISSING
 nothing
@@ -44,7 +28,19 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7441_v652_decision_audit.json
+## experiment_7454_v653_continuous_learning.json
+
+**UNKNOWN**
+
+jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
+
+## experiment_7455_v653_decision_audit.json
+
+**UNKNOWN**
+
+jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
+
+## experiment_7456_v653_extraction_audit.json
 
 **CHECKABLE**
 
@@ -52,7 +48,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The online-learning branch is disqualified because prediction-time expert evidence is missing and weight-update replay is incomplete, while the static evidence supports only a null, non-deployment conclusion.
+The artifact claims an honest null disposition (`honest_verdict`: "complete_null_span_capture_development_gate_closed") with zero span value score, failing the evaluation benefit gate because no evaluation effect was established.
 
 ## WHAT IS MISSING
 nothing
@@ -60,7 +56,19 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7442_v652_span_capture.json
+## experiment_7457_v653_arc_exposure.json
+
+**UNKNOWN**
+
+jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
+
+## experiment_7458_v653_durable_updates.json
+
+**UNKNOWN**
+
+jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
+
+## experiment_7459_v653_board_continuity.json
 
 **CHECKABLE**
 
@@ -68,7 +76,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The span-capture experiment was blocked with a null result because runtime validation failed and the development gate did not open.
+The artifact reports an honest null audit finding that GateMate remains blocked by an unchanged physical prerequisite while KV260 and PolarFire retain historical continuity with no new hardware value.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +84,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7443_v652_span_audit.json
+## experiment_7460_v653_capstone.json
 
 **CHECKABLE**
 
@@ -84,55 +92,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The audit completed with a null, development-only verdict because producer runtime integrity failed and no sealed evaluation was attempted.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7444_v652_arc_supervisor_evidence.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The two archived episodes produced no supervisor firings, so they provide no arm-effect evidence and justify no policy change.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7445_v652_hardware_envelope.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The hardware envelope is a null result: the measured 0.37696 persistence fraction limits idealized acceleration to 2.65×, so the 100× condition fails and requires persistence-orchestration redesign.
-
-## WHAT IS MISSING
-Per-block timing rows for the 30 paired blocks underlying each comparative service condition and per-unit measurements underlying `"observed_unaccelerated_fraction"`; only `"whole_service_time_ratio"`, confidence intervals, `"paired_blocks": 30`, and aggregate Amdahl values are present. The GateMate blocker is adequately diagnosed in `"gate_check_summary"`.
-
-## THE CHECK A READER CANNOT DO
-Were the null service comparisons and 0.37696 persistence fraction broad across the paired measurements, or driven by a few outlier or degenerate blocks?
-
-## experiment_7446_v652_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capstone completed all 13 task dispositions but disqualified the required V652 science because three upstream scientific-validity checks observed `"valid": false`.
+no claim
 
 ## WHAT IS MISSING
 nothing
