@@ -477,7 +477,23 @@ def reconcile_terminal_events(
     persisted native response makes the generation terminal.
     """
 
-    reconciled = [deepcopy(dict(row)) for row in events]
+    copied = [deepcopy(dict(row)) for row in events]
+    attempt_times = {
+        row.get("call_id"): int(row.get("monotonic_ns", 0) or 0)
+        for row in copied
+        if row.get("operation") == "generation" and row.get("state") == "attempted"
+    }
+    # A recovery process can run after a host reboot. Its monotonic clock then
+    # starts below the persisted attempt time. Keep that bad derived shard as
+    # raw evidence, but replace it in the reduced ledger with a valid ordering.
+    reconciled = [
+        row
+        for row in copied
+        if not (
+            row.get("reconciliation_basis") == "persisted_terminal_raw_response"
+            and int(row.get("monotonic_ns", 0) or 0) <= attempt_times.get(row.get("call_id"), -1)
+        )
+    ]
     attempted = [
         row
         for row in reconciled
@@ -493,6 +509,10 @@ def reconcile_terminal_events(
         for row in terminal_rows
         if row.get("terminal_state") in {"response", "request_error", "cancelled"}
     ]
+    next_monotonic_ns = max(
+        monotonic_ns,
+        max((int(row.get("monotonic_ns", 0) or 0) for row in reconciled), default=0) + 1,
+    )
     for index, attempt in enumerate(attempted):
         if attempt.get("call_id") in terminal_ids or index >= len(available):
             continue
@@ -506,7 +526,7 @@ def reconcile_terminal_events(
                 },
                 "operation": "generation",
                 "state": state,
-                "monotonic_ns": monotonic_ns + index,
+                "monotonic_ns": next_monotonic_ns + index,
                 "reconciled_from_call_id": source.get("call_id"),
                 "reconciliation_basis": "persisted_terminal_raw_response",
             }
@@ -1272,7 +1292,17 @@ def validate_artifact(
             errors.append("raw_capture_manifest_mismatch")
     receipts = value.get("validation_receipts") or []
     receipt_errors = required_receipt_errors(receipts) if require_terminal else []
-    errors.extend(receipt_errors)
+    receipt_failure_is_terminal = (
+        value.get("verdict_class") == "disqualified"
+        and value.get("span_capture_complete_score") == 0
+    )
+    errors.extend(
+        error
+        for error in receipt_errors
+        if not (
+            error.startswith("required_validation_receipt_failed:") and receipt_failure_is_terminal
+        )
+    )
     runner = value.get("runner_receipt") or {}
     terminal_dispositions = len(rows) == EVALUATION_CALLS and all(
         isinstance(row, Mapping) and row.get("disposition") != "unstarted" for row in rows
@@ -1962,15 +1992,19 @@ def _recover_owned_capture(
         "current_run_id": events[0].get("run_id") if events else None,
         "current_owner_pid": events[0].get("owner_pid") if events else None,
         "event_shards": [_byte_receipt(path, raw_root, "events") for path in event_paths],
-        "response_shards": [
-            _byte_receipt(path, raw_root, "responses") for path in response_paths
-        ],
+        "response_shards": [_byte_receipt(path, raw_root, "responses") for path in response_paths],
         "evaluation_shards": evaluation_shards,
+        "recovery_timing": {
+            "started_at_utc": datetime.fromtimestamp(
+                min(path.stat().st_mtime for path in event_paths), UTC
+            )
+            .isoformat()
+            .replace("+00:00", "Z"),
+            "basis": "earliest_persisted_invocation_event_mtime",
+        },
         "runtime_identity": {
             **identity,
-            "server_build": dict(native_row.get("raw_response") or {}).get(
-                "system_fingerprint"
-            ),
+            "server_build": dict(native_row.get("raw_response") or {}).get("system_fingerprint"),
         },
         "gpu_receipts": {
             "provenance": {
@@ -2453,6 +2487,9 @@ def _owned_run_start(runner: Mapping[str, Any]) -> tuple[float, str]:
         raise ValueError("recovery_boot_time_missing")
     boot_utc = int(boot_line.split()[1])
     monotonic_start = ticks / ticks_per_second
+    uptime_s = float(Path("/proc/uptime").read_text().split()[0])
+    if monotonic_start > uptime_s:
+        raise ValueError("recovery_owner_boot_mismatch")
     wall_start = datetime.fromtimestamp(boot_utc + monotonic_start, UTC)
     return monotonic_start, wall_start.isoformat().replace("+00:00", "Z")
 
@@ -2474,7 +2511,6 @@ def _recover_and_publish(
         root, context, raw_dir / "owned_runtime"
     )
     checks.extend(recovery_checks)
-    original_started, started_at = _owned_run_start(runner)
     events = list(capture.get("current_invocation_events") or [])
     load_ticks = [
         int(row.get("monotonic_ns", 0) or 0)
@@ -2488,7 +2524,33 @@ def _recover_and_publish(
         if load_ticks
         else response_latency
     )
-    model_start_s = min(load_ticks) / 1_000_000_000 - original_started if load_ticks else 0.0
+    try:
+        original_started, started_at = _owned_run_start(runner)
+    except ValueError as exc:
+        original_started = recovery_started - model_duration
+        started_at = str(dict(capture.get("recovery_timing") or {}).get("started_at_utc"))
+        checks.append(
+            _gate(
+                "recovery_monotonic_continuity",
+                "evidence",
+                "==",
+                True,
+                False,
+                False,
+                "A reboot breaks monotonic continuity, so active phase durations replace wall time.",
+                upstream="owned_runtime",
+                path="/proc/uptime",
+                field=str(exc),
+            )
+        )
+        monotonic_continuity = False
+    else:
+        monotonic_continuity = True
+    model_start_s = (
+        min(load_ticks) / 1_000_000_000 - original_started
+        if load_ticks and monotonic_continuity
+        else 0.0
+    )
     model_end_s = model_start_s + model_duration
     spans: list[JsonDict] = [
         {
@@ -2497,9 +2559,9 @@ def _recover_and_publish(
             "end_s": round(model_end_s, 6),
             "duration_s": round(model_duration, 6),
             "completed_units": 1,
-            "checkpoint": (
-                raw_dir / "owned_runtime/native/call_00.json"
-            ).relative_to(root).as_posix(),
+            "checkpoint": (raw_dir / "owned_runtime/native/call_00.json")
+            .relative_to(root)
+            .as_posix(),
             "checkpoint_at_utc": datetime.fromtimestamp(
                 int(dict(development_rows[0].get("raw_response") or {}).get("created", 0) or 0),
                 UTC,

@@ -246,6 +246,32 @@ def test_fixture_artifact_replays_and_mutations_fail_closed() -> None:
     )
 
 
+def test_failed_required_receipt_is_a_valid_disqualified_terminal() -> None:
+    """SCENARIO-VERIFY-7442-TERMINAL keeps verifier failure without invalidating evidence."""
+
+    artifact = capture.build_fixture_artifact()
+    adversarial = next(
+        row for row in artifact["validation_receipts"] if row["name"] == "adversarial_verify"
+    )
+    adversarial.update({"passed": False, "exit_code": 1})
+    terminal_gate = next(
+        row for row in artifact["acceptance_gate_results"] if row["check"] == "terminal_validation"
+    )
+    terminal_gate.update({"observed": False, "passed": False})
+    artifact.update(
+        {
+            "status": "complete_required_validation_failed",
+            "honest_verdict": "complete_disqualified_span_capture_required_check_failed",
+            "verdict_class": "disqualified",
+            "flagged_adversarial": True,
+            "span_capture_complete_score": 0,
+            "gate_check_summary": capture._gate_summary(artifact["acceptance_gate_results"]),
+        }
+    )
+    artifact["reproducibility_checksum"] = capture.artifact_checksum(artifact)
+    assert capture.validate_artifact(artifact, require_terminal=True) == []
+
+
 def test_blocked_artifact_has_exact_gate_summary_and_zero_model_work() -> None:
     """SCENARIO-VERIFY-7442-PRECONDITIONS emits a specific external block."""
 
@@ -614,7 +640,128 @@ def test_terminal_raw_response_reconciles_one_unfinished_generation() -> None:
     )
     assert reconciled[-1]["state"] == "completed"
     assert reconciled[-1]["reconciled_from_call_id"] == "development-00-span"
-    assert capture.canary.reduce_current_events(reconciled, run_id="run", owner_pid=12)[
-        "invocation_counts"
-    ]["generation_calls_completed"] == 1
+    assert (
+        capture.canary.reduce_current_events(reconciled, run_id="run", owner_pid=12)[
+            "invocation_counts"
+        ]["generation_calls_completed"]
+        == 1
+    )
     assert capture.reconcile_terminal_events(reconciled, [], monotonic_ns=5) == reconciled
+
+
+def test_terminal_reconciliation_replaces_a_cross_boot_timestamp() -> None:
+    """SCENARIO-VERIFY-7442-RAW keeps recovered terminal events after their attempt."""
+
+    events = [
+        {
+            "scope": "current",
+            "transport": "owned_runtime",
+            "run_id": "run",
+            "owner_pid": 12,
+            "call_id": "generation-0",
+            "operation": "generation",
+            "state": "attempted",
+            "monotonic_ns": 100,
+        },
+        {
+            "scope": "current",
+            "transport": "owned_runtime",
+            "run_id": "run",
+            "owner_pid": 12,
+            "call_id": "generation-0",
+            "operation": "generation",
+            "state": "completed",
+            "monotonic_ns": 5,
+            "reconciliation_basis": "persisted_terminal_raw_response",
+        },
+    ]
+    reconciled = capture.reconcile_terminal_events(
+        events,
+        [{"terminal_state": "response", "call_id": "development-00-span"}],
+        monotonic_ns=6,
+    )
+    terminal = [row for row in reconciled if row["state"] == "completed"]
+    assert len(terminal) == 1
+    assert terminal[0]["monotonic_ns"] > 100
+    assert (
+        capture.canary.reduce_current_events(reconciled, run_id="run", owner_pid=12)[
+            "invocation_counts"
+        ]["generation_calls_completed"]
+        == 1
+    )
+
+
+def test_recovery_helpers_bind_bytes_model_and_current_boot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-VERIFY-7442-TERMINAL rejects stale boot identity but keeps exact bytes."""
+
+    evidence = tmp_path / "evidence.json"
+    evidence.write_text('{"value": 1}\n')
+    receipt = capture._byte_receipt(evidence, tmp_path, "fixture")
+    assert receipt == {
+        "path": "evidence.json",
+        "sha256": capture.sha256_file(evidence),
+        "bytes": evidence.stat().st_size,
+        "phase": "fixture",
+    }
+
+    lease = tmp_path / "lease.journal.json"
+    lease.write_text(json.dumps({"lease_id": "lease-test", "released": True}))
+    monkeypatch.setattr(capture.Path, "glob", lambda _self, _pattern: iter([lease]))
+    assert capture._find_owned_lease_journal("lease-test") == (
+        lease,
+        {"lease_id": "lease-test", "released": True},
+    )
+    assert capture._find_owned_lease_journal("other") == (None, {})
+
+    historical = tmp_path / "results/experiment_7429_v651_anchored_capture.json"
+    historical.parent.mkdir()
+    model_hash = "sha256:" + "1" * 64
+    historical.write_text(
+        json.dumps(
+            {
+                "model_specs": [
+                    {
+                        "sha256": model_hash,
+                        "model_block_count": 65,
+                        "revision": "old",
+                    }
+                ]
+            }
+        )
+    )
+    spec = capture._recovery_model_spec(
+        tmp_path,
+        {
+            "model_sha256": model_hash,
+            "model_path": "/external/model.gguf",
+            "model_revision": "revision",
+            "model_bytes": 17,
+        },
+    )
+    assert spec["hf_id"] == capture.MODEL_ID
+    assert spec["sha256"] == model_hash
+    assert spec["decoding"]["max_new_tokens"] == 256
+
+    current_ticks = int(Path("/proc/self/stat").read_text().split()[21])
+    monotonic_start, started_at = capture._owned_run_start(
+        {"parent_identity": {"start_time_ticks": current_ticks}}
+    )
+    assert monotonic_start > 0
+    assert started_at.endswith("Z")
+    with pytest.raises(ValueError, match="recovery_owner_boot_mismatch"):
+        capture._owned_run_start({"parent_identity": {"start_time_ticks": current_ticks + 10**12}})
+    with pytest.raises(ValueError, match="recovery_owner_start_ticks_missing"):
+        capture._owned_run_start({})
+
+    original_read_text = capture.Path.read_text
+
+    def read_without_boot_time(path: Path, *args: object, **kwargs: object) -> str:
+        if path == Path("/proc/stat"):
+            return "cpu 1\n"
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(capture.Path, "read_text", read_without_boot_time)
+    with pytest.raises(ValueError, match="recovery_boot_time_missing"):
+        capture._owned_run_start({"parent_identity": {"start_time_ticks": 1}})
