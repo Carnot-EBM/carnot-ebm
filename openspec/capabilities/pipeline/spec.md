@@ -4861,6 +4861,39 @@ documented procedure, which is what the incident followed.
 
 **Spec traces:** REQ-INFRA-6977
 
+### REQ-INFRA-7087: A Checkpoint MUST NOT Stage A File Over The Size Cap
+
+**Statement:** Every checkpoint staging path MUST NOT commit a file whose on-disk size exceeds
+`OVERSIZED_FILE_THRESHOLD_BYTES` (90MB), regardless of path. When such a file is staged by
+`git add -A`, it MUST be unstaged before the commit, and the exclusion MUST be logged as
+`BLOCKED_OVERSIZED_FILE` naming the path and size. A check that cannot run (git failure, an
+unreadable size) MUST leave the file staged rather than block the checkpoint commit itself.
+
+**Rationale:** ops/known-issues.md 2026-09-18 records a 17GB cached GGUF model-weight blob
+committed four separate times under a moving per-experiment-ID
+`results/raw/experiment_NNNN/task_owned_model_cache/` path, plus ~9GB and ~30 further oversized
+files, none of which a static `.gitignore` pattern list could anticipate in advance — the same
+"pattern list narrower than its concept" bug class this project has hit twice before at smaller
+scale. GitHub rejected the push once the pack exceeded its aggregate and per-file caps, and the
+only recovery was a full `git filter-repo --strip-blobs-bigger-than 90M` history rewrite. That
+rewrite fixed the past; it did nothing to stop a future oversized file from entering history the
+same way. This requirement is the size-based backstop the incident's own writeup queued: it
+catches a file by SIZE, not by path, so a moving or newly-named large-file shape cannot slip
+through the way a path-based `.gitignore` rule already has, twice.
+
+**Fail direction.** Fails OPEN on an unexpected error (git unavailable, an unreadable stat):
+the file stays staged and the checkpoint proceeds, because a broken gate must not block the
+research loop's ability to commit at all — the same reasoning `REQ-INFRA-6977` applies to an
+unreadable mutation-proof lock. There is no fail-CLOSED case here (unlike 6977's empty-checkpoint
+rule): removing an oversized file always leaves other work to commit, since a checkpoint that
+stages nothing but an oversized file is not the scenario this incident describes.
+
+**Tests:** `tests/python/test_conductor_oversized_file_gate.py` (the pure rule
+`oversized_staged_files`, plus call-site tests against `_unstage_oversized_files` and
+`_stage_all_except_claimed`).
+
+**Spec traces:** REQ-INFRA-7087
+
 ### REQ-PIPELINE-6703: Cold Audit Rows Own The Readiness Gate
 
 Exp6703 SHALL reduce `planning_fixture_audit_passed` only from raw coverage,

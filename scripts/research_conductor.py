@@ -516,6 +516,68 @@ def checkpoint_after_mutation_freeze(committable: list[str]) -> list[str]:
     return kept
 
 
+#: 2026-09-18 GitHub pack-size incident (ops/known-issues.md) -- 39 blobs over 90MB, dominated
+#: by a 17GB GGUF cache committed under a moving per-experiment-ID path a static .gitignore
+#: rule cannot list in advance. This is the size-based backstop that catches ANY future oversized
+#: file regardless of path, so the fix does not depend on someone remembering to widen a pattern
+#: list again. 90MB matches the threshold `git filter-repo --strip-blobs-bigger-than 90M` used
+#: for that incident's history rewrite.
+OVERSIZED_FILE_THRESHOLD_BYTES = 90 * 1024 * 1024
+
+
+def oversized_staged_files(
+    staged: list[str], sizes: dict[str, int], threshold_bytes: int
+) -> list[str]:
+    """The subset of `staged` whose on-disk size exceeds `threshold_bytes`.
+
+    Pure so it is testable without a git fixture, following the precedent set by
+    `mutation_frozen` / `claimed_by_other_sessions`. `sizes` maps path to byte size; a path with
+    no entry (e.g. a staged deletion has nothing left to stat) is never oversized.
+    """
+    return [p for p in staged if sizes.get(p, 0) > threshold_bytes]
+
+
+def _unstage_oversized_files(threshold_bytes: int = OVERSIZED_FILE_THRESHOLD_BYTES) -> None:
+    """Refuse to commit any staged file over `threshold_bytes` regardless of path.
+
+    Runs immediately after `git add -A` and BEFORE the scope narrowing, same placement reason as
+    `_unstage_mutation_proof_target`: the scope-narrowing return-early path must not skip this.
+
+    FAIL-OPEN, deliberately and for the same reason as the rest of this staging pipeline: any
+    error here leaves the file staged rather than blocking the checkpoint commit. A missed
+    oversized file is the SAME failure this project already lived through (the 2026-09-18
+    incident); refusing to commit ANYTHING because this check itself broke would be worse.
+    """
+    try:
+        rc, staged_out, _ = run_cmd(["git", "diff", "--cached", "--name-only"])
+        if rc != 0:
+            return
+        staged = [line.strip() for line in staged_out.splitlines() if line.strip()]
+        if not staged:
+            return
+        sizes: dict[str, int] = {}
+        for path in staged:
+            try:
+                sizes[path] = (PROJECT_ROOT / path).stat().st_size
+            except OSError:
+                continue  # staged deletion, or a path that no longer exists on disk
+        oversized = oversized_staged_files(staged, sizes, threshold_bytes)
+        if not oversized:
+            return
+        run_cmd(["git", "restore", "--staged", "--", *oversized])
+        for path in oversized:
+            logger.warning(
+                "BLOCKED_OVERSIZED_FILE: %s is %d bytes (over the %d-byte cap) and was NOT "
+                "staged. Model weights / caches do not belong in git -- see ops/known-issues.md "
+                "2026-09-18. Add it to .gitignore or move it outside the repo.",
+                path,
+                sizes.get(path, 0),
+                threshold_bytes,
+            )
+    except Exception as exc:  # noqa: BLE001 - fail-open per docstring
+        logger.debug("oversized-file gate skipped: %s", exc)
+
+
 def _unstage_mutation_proof_target() -> None:
     """REQ-INFRA-6977: drop a file under an open mutation proof from the index.
 
@@ -570,6 +632,7 @@ def _stage_all_except_claimed() -> None:
     """
     _restore_dropped_determinations()
     run_cmd(["git", "add", "-A"])
+    _unstage_oversized_files()
     _unstage_mutation_proof_target()
     try:
         import json as _json
