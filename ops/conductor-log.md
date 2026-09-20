@@ -18295,3 +18295,4 @@ code |
 | 2026-09-20 20:55 UTC | Bind fourteen tasks and ingest native decision met | OK | 93 passed, 1 warning in 36.69s |
 | 2026-09-20 21:19 UTC | Prototype typed option energies and seal disjoint  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 89 passed, 1 warning in 7.55s |
 | 2026-09-20 21:43 UTC | Measure E0 runtime option-logprob parity and pin s | OK | 94 passed, 1 warning in 7.22s |
+| 2026-09-20 22:05 UTC | Measure E6 decision cost from existing adapter-wit | OK | 94 passed, 1 warning in 7.49s |
