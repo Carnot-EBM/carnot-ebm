@@ -6081,3 +6081,93 @@ and honestly classifies exp3521/.325, exp3544/.326, exp3612/.332 as the sibling
 verdict-assertion poison sub-class (zero `results/*.json` references) covered by
 the pre-existing consecutive-fail auto-quarantine guard, rather than falsely
 claiming a 4/4 narrow-signature match.
+
+### REQ-AUTO-7440: Prospective Mixture Learning With A Frozen Reference
+
+The experiment SHALL replay all authenticated source-group representatives from
+the sealed `prospective_stream`. It SHALL use the label-blind hash order and the
+domain-blocked shift order. Each order SHALL run with feedback delays zero and
+eight. All arms in a cell SHALL share one uniform reveal schedule that selects
+eight of each complete block of 32 and `floor(n/4)` from the final block. Every
+revealed row SHALL have a positive known propensity.
+
+Before a label arrives, the experiment SHALL persist each arm's probability,
+shadow typed action, prediction-time state hash, and mixture weights. After the
+label arrives, it SHALL update mixture weights from the stored prediction-time
+losses. It SHALL then update each adaptive expert exactly once. A restart or
+freeze SHALL NOT replay a committed update. The experiment SHALL retain request
+order, reveal probability, arrival order, parent/event/child state hashes,
+losses, update costs, feedback rows, weight trajectories, and checkpoint
+lineage in hash-bound row shards.
+
+The registered arms SHALL be a learned four-expert mixture, equal fixed weights
+over the same adaptive experts, a frozen spline, an adaptive spline, and a
+no-feedback frozen-prior mixture. Two fixed shuffled-label permutations SHALL
+act as negative controls. All arms SHALL start from the authenticated Exp7439
+fit checkpoints and use the Exp7438 mixture protocol. Typed action thresholds
+SHALL remain fixed from Exp7439. Adaptive actions SHALL be shadow-only and SHALL
+NOT inherit a static safety certificate or production permission.
+
+The experiment SHALL report full-stream Brier and log loss, revealed-only and
+inverse-probability-weighted estimates, domain-change harm, and read, predict,
+persist, and update latency. It SHALL use 10,000 moving-block bootstrap draws at
+block lengths 32 and 64. The four order-delay cells and three primary
+comparisons SHALL form one prespecified family. Seed-level deltas SHALL be
+averaged within source group before resampling because five fit seeds do not
+create five independent corpora.
+
+`online_value_score` SHALL be one only if the learned mixture has an upper
+simultaneous log-loss delta below zero against the frozen spline, adaptive
+spline, and equal-weight adaptive mixture in every cell. It SHALL also require
+Brier non-inferiority within 0.001, no higher defined empirical harmful-action
+rate, no coverage loss, no label-cost increase, no-feedback equality, and both
+shuffled-label controls. A valid run with insufficient benefit SHALL be
+`complete_null`, not disqualified. `online_capture_complete_score` SHALL be one
+after valid terminal capture. `promotion_score` SHALL always be zero.
+
+#### SCENARIO-AUTO-7440-01: Feedback Is Causal And Exactly Once
+
+**Given** a prediction with delayed revealed feedback
+**When** the replay commits the feedback
+**Then** all arm probabilities and actions predate the reveal
+**And** the weight update uses stored prediction-time losses
+**And** each adaptive expert has one parent/event/child lineage edge
+**And** a duplicate or restarted commit cannot apply the update twice.
+
+#### SCENARIO-AUTO-7440-02: Uniform Budget Preserves Positive Propensity
+
+**Given** a stream whose length is not a multiple of 32
+**When** the uniform reveal schedule is sealed
+**Then** each full block reveals exactly eight rows
+**And** the final block reveals `floor(n/4)` rows
+**And** every row has the block's positive selection propensity
+**And** all arms and both delays use the same selected identities per order.
+
+#### SCENARIO-AUTO-7440-03: Registered Evidence Uses One Corpus Unit
+
+**Given** five fitted checkpoint seeds for each registered cell
+**When** moving-block intervals are computed at lengths 32 and 64
+**Then** seed deltas are first averaged within source group
+**And** the bootstrap resamples ordered source groups rather than treating seed
+rows as independent observations
+**And** all 12 registered cell-comparison contrasts share one simultaneous
+family correction.
+
+#### SCENARIO-AUTO-7440-04: Adaptive Decisions Stay Shadow Only
+
+**Given** fixed Exp7439 typed action thresholds and changing online probabilities
+**When** the experiment reports actions and empirical risks
+**Then** it marks every action as shadow-only
+**And** it reports all-escalate deployment coverage as zero
+**And** it reports selected risk as null when no shadow action is selected
+**And** it never reports `certified_safe=true`.
+
+#### SCENARIO-AUTO-7440-05: Terminal Value Is Conjunctive
+
+**Given** complete valid replay rows and independently recomputed metrics
+**When** one registered benefit or control gate fails
+**Then** `online_capture_complete_score` is one
+**And** `online_value_score` is zero
+**And** the verdict is `complete_null` unless a validity defect disqualifies it.
+
+Spec: REQ-AUTO-7440, SCENARIO-AUTO-7440-01, SCENARIO-AUTO-7440-02, SCENARIO-AUTO-7440-03, SCENARIO-AUTO-7440-04, SCENARIO-AUTO-7440-05
