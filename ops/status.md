@@ -1,6 +1,21 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-17
+**Last Updated:** 2026-09-20
+
+## 2026-09-20 — Exp7451 closed-gate reporting repaired
+
+Exp7451 now publishes no constructed qualifier delta when development does not
+open evaluation. This removes the false measured zero that correctly triggered
+the adversarial verifier while retaining all eight development dispositions
+and 96 explicit unstarted evaluation rows. The refreshed raw-evidence replay
+made no new model calls and has all 12 receipts passing, completion readiness
+1, value 0, no adversarial flag, and an honest closed-gate null verdict. The
+complete affected set passes 52/52 with 215/215 changed-module statements
+covered; Ruff, format, mypy, scoped spec coverage, cold replay, independent
+reduction, adversarial verification, and strict row consistency pass. No
+numbered E2E in `ops/e2e-test-plan.md` applies to this experiment-only repair.
+No test was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified.
 
 ## 2026-09-17 — Exp7360 scoped-plan regression repaired
 

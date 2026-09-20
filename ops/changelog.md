@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-09-20 — Exp7451 closed-gate receipt repair (REQ-VERIFY-7451)
+
+- Added the missing constructed-delta reporting boundary and integrated it
+  into measured artifacts and independent validation.
+- Closed development gates now retain `constructed_qualifier_delta=null`, so
+  an unexecuted synthetic control cannot look like a perfect measured zero.
+- Replayed the persisted raw capture without new model calls. All 12 affected
+  and terminal receipts now pass; the artifact is an honest null with
+  completion readiness 1 and value 0.
+- Verified 52/52 affected tests, 215/215 changed-module statements, Ruff,
+  formatting, mypy, scoped spec coverage, cold replay, independent reduction,
+  adversarial verification, and strict row consistency. No test was skipped,
+  weakened, deleted, or reverted, and the conductor was not modified.
+
 ## 2026-09-17 — Exp7360 scoped command-plan repair (REQ-CL-7360)
 
 - Kept the explicit affected test selector on the changed-module coverage

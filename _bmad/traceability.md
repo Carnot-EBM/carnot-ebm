@@ -1,6 +1,18 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-17
+**Last Updated:** 2026-09-20
+
+**Operational Note:** 2026-09-20 REQ-VERIFY-7451 maps the V653 repaired
+claim-span capture contract in
+`python/carnot/experiment_7451_v653_span_capture.py` to
+`tests/python/test_experiment_7451_v653_span_capture.py`. A closed development
+gate now leaves `constructed_qualifier_delta` null instead of exposing the
+unexecuted synthetic control's zero as a measured result. The 52-test affected
+set passes, all 215 changed-module statements are covered, and all 12 affected
+and terminal receipts pass. Raw-evidence replay required no new model calls and
+publishes an honest null with completion readiness one. No test was skipped,
+weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
+modified.
 
 **Operational Note:** 2026-09-17 REQ-CL-7360 maps the V646 learning-safety
 fixture in `python/carnot/experiment_7360_v646_learning_fixture.py` to

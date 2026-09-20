@@ -8618,3 +8618,120 @@ changes.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7442 and SCENARIO-VERIFY-7442-* | Planned in `python/carnot/experiment_7442_v652_span_capture.py` with a thin executable wrapper. | Planned in spec-linked focused tests, affected shared-module tests, 100-percent changed-module coverage, scoped static checks, live entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
+## V653 paired claim-span capture after lifecycle repair — 2026-09-20
+
+**Status:** Implemented. This phase repeats the sealed scientific comparison only
+after Exp7448 qualifies the measured callback and owned-process lifecycle fix.
+
+### REQ-VERIFY-7451: Repaired Span Capture SHALL Preserve The Sealed Comparison
+
+Exp7451 SHALL authenticate the exact Exp7437 protocol and Exp7448 lifecycle
+artifact before model work. Exp7448 SHALL have
+`capture_lifecycle_ready_score=1`, an eligible `null` or `positive` verdict,
+and `flagged_adversarial=false`. Missing, changed, excluded, or ineligible
+inputs SHALL produce a terminal `blocked_*` result. The block SHALL name the
+exact upstream path, check, field, expected value, and observed value. It SHALL
+perform no current model load or generation.
+
+The live path SHALL reuse the Exp7442 sealed protocol engine after the Exp7448
+repair. It SHALL use `unsloth/Qwen3.8-27B-GGUF`, the cached Q4_K_M file,
+embedded tokenizer and chat template, and one task-owned native CUDA server.
+It SHALL keep the four development paragraphs, 48 paired evaluation units,
+two frozen arms, 256-token ceiling, zero retries, 45-second call ceiling, and
+1500-second aggregate generation budget. It SHALL make at most 104 generation
+calls. It SHALL not select new text, change grammar, substitute a model, or
+update generator weights after outputs are visible.
+
+Each development reply SHALL have one explicit disposition. The reducer SHALL
+distinguish usable nonempty factual extraction, correct-empty transport,
+malformed output, truncated output, missing output, and transport failure. An
+empty claim list can be correct for a paragraph with no factual proposition,
+but it SHALL not count toward the nonempty extraction gate. Evaluation SHALL
+open only when each arm has at least three usable nonempty outputs. A clean
+closed development gate SHALL retain all eight development dispositions and
+mark all 96 evaluation calls unstarted.
+
+The producer SHALL persist each raw request, raw response, reply, native
+timing, finish reason, and runtime identity before parsing. It SHALL retain the
+model file hash and revision, native runner hash, actual CUDA layer count,
+server PID and start tick, GPU UUID, lease identity, and cleanup receipt.
+Invocation events SHALL balance attempted, completed, failed, cancelled, and
+in-flight work. The producer SHALL release its owned server and lease in a
+`finally` path. It SHALL not reuse or signal an unrelated server.
+
+If evaluation opens, both frozen arms SHALL run in paired order. The reducer
+SHALL measure completion, literal-span validity, whole-proposition coverage,
+modifier preservation, token cost, and latency separately. Real paragraphs
+SHALL retain unknown semantic truth. Only the constructed qualifier pairs have
+exact synthetic authority. Synthetic success SHALL set
+`verifier_is_oracle=true` and SHALL not establish natural-language truth.
+`constructed_qualifier_delta` SHALL remain null unless the development gate
+opens evaluation; an unexecuted evaluation SHALL NOT publish the constructed
+control's zero delta as if it were a measured model result.
+
+`span_capture_complete_score` SHALL equal one only when every planned unit has
+an authenticated terminal or explicit unstarted disposition and runtime
+integrity is clean. `span_value_score` SHALL retain the original paired benefit
+gates. A valid null can have completion readiness one. Required validation
+failure SHALL disqualify the result. `promotion_score` SHALL remain zero.
+
+The producer SHALL freeze an affected-file manifest and use the Exp7358 plan
+through the Exp7303 streaming runner. It SHALL run exact affected tests, a
+separate 100-percent changed-module coverage check, scoped Ruff, changed-module
+mypy, and exact-test spec coverage. The declared entrypoint, fresh-process
+cold replay, independent reduction, `scripts/adversarial_verify.py`, and strict
+verdict-row consistency SHALL pass before atomic publication. No numbered E2E
+applies because this experiment changes no shared training, sampling, binding,
+Rust, or ARC production path.
+
+#### SCENARIO-VERIFY-7451-PRECONDITIONS: Lifecycle Readiness Gates Model Work
+
+**Given** the exact Exp7437 protocol and Exp7448 lifecycle artifact
+**When** Exp7451 authenticates prerequisites before model load
+**Then** lifecycle readiness is one, the verdict is eligible, and the adversarial flag is false
+**And** any failed operand yields an exact blocked gate with zero current invocations.
+
+**Spec traces:** REQ-VERIFY-7451
+
+#### SCENARIO-VERIFY-7451-DEVELOPMENT: Correct Empty Is Not Extraction Coverage
+
+**Given** eight development replies from the four frozen paragraphs and two arms
+**When** the repaired callback reducer classifies each terminal reply
+**Then** correct-empty transport remains separate from usable nonempty extraction
+**And** only three usable nonempty outputs per arm can open evaluation.
+
+**Spec traces:** REQ-VERIFY-7451
+
+#### SCENARIO-VERIFY-7451-RAW: Raw Evidence Precedes Parsing
+
+**Given** one current scheduled call and one owned native server
+**When** the call returns, truncates, fails, or is cancelled
+**Then** transport bytes, timing, finish reason, and runtime identity are durable before parsing
+**And** the terminal row and invocation ledger reconcile without a retry.
+
+**Spec traces:** REQ-VERIFY-7451
+
+#### SCENARIO-VERIFY-7451-REDUCTION: Paired Metrics Keep Narrow Authority
+
+**Given** 48 paired units or 96 explicit unstarted dispositions
+**When** the independent reducer recomputes the frozen endpoints
+**Then** completion, literal validity, proposition coverage, modifiers, and cost remain separate
+**And** constructed authority does not become a factuality claim for real paragraphs.
+
+**Spec traces:** REQ-VERIFY-7451
+
+#### SCENARIO-VERIFY-7451-TERMINAL: Completion And Value Stay Separate
+
+**Given** authenticated raw rows, balanced invocation events, and required receipts
+**When** terminal classification runs
+**Then** a clean null can set capture completion to one while value remains zero
+**And** a runtime or validation defect disqualifies the result before atomic publication.
+
+**Spec traces:** REQ-VERIFY-7451
+
+## Implementation Status (REQ-VERIFY-7451)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7451 and SCENARIO-VERIFY-7451-* | Implemented in a focused V653 contract module and thin entrypoint that reuse the repaired Exp7442 capture engine. | Verified by spec-linked focused tests, affected shared-module tests, 100-percent changed-module coverage, scoped static checks, live entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
