@@ -1,0 +1,122 @@
+{
+  "experiment": 7453,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-20",
+  "started_at": "2026-09-20T16:17:21.331016+00:00",
+  "finished_at": "2026-09-20T16:17:21.331016+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Train typed energy decisions on source-conditioned features",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7452-source-embeddings",
+  "failed_field": "embedding_capture_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7452_v653_source_embeddings.json",
+  "failed_evidence_sha256": "sha256:d924d4acc05553e8f5f026ec18f9ec9fed5a282cc7f007b8ed39dc29ed5937cf",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7452-source-embeddings",
+    "failed_field": "embedding_capture_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7452_v653_source_embeddings.json",
+    "failed_evidence_sha256": "sha256:d924d4acc05553e8f5f026ec18f9ec9fed5a282cc7f007b8ed39dc29ed5937cf"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 6 gate(s) failed; first failure: exp7452-source-embeddings.embedding_capture_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7449-source-protocol",
+      "artifact_field": "source_protocol_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 1,
+      "actual_type": "int",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7449_v653_source_protocol.json",
+      "artifact_sha256": "sha256:52b9c17f6b5f9d2f3069d70fd46da1ef90ec074c6455b397e3d11cc05f7d9f78"
+    },
+    {
+      "upstream": "exp7449-source-protocol",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "null",
+        "positive"
+      ],
+      "expected_type": "list",
+      "actual": "null",
+      "actual_type": "str",
+      "passed": true,
+      "reason": "actual='null' in expected=['null', 'positive']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7449_v653_source_protocol.json",
+      "artifact_sha256": "sha256:52b9c17f6b5f9d2f3069d70fd46da1ef90ec074c6455b397e3d11cc05f7d9f78"
+    },
+    {
+      "upstream": "exp7449-source-protocol",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7449_v653_source_protocol.json",
+      "artifact_sha256": "sha256:52b9c17f6b5f9d2f3069d70fd46da1ef90ec074c6455b397e3d11cc05f7d9f78"
+    },
+    {
+      "upstream": "exp7452-source-embeddings",
+      "artifact_field": "embedding_capture_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7452_v653_source_embeddings.json",
+      "artifact_sha256": "sha256:d924d4acc05553e8f5f026ec18f9ec9fed5a282cc7f007b8ed39dc29ed5937cf"
+    },
+    {
+      "upstream": "exp7452-source-embeddings",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "null",
+        "positive"
+      ],
+      "expected_type": "list",
+      "actual": "null",
+      "actual_type": "str",
+      "passed": true,
+      "reason": "actual='null' in expected=['null', 'positive']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7452_v653_source_embeddings.json",
+      "artifact_sha256": "sha256:d924d4acc05553e8f5f026ec18f9ec9fed5a282cc7f007b8ed39dc29ed5937cf"
+    },
+    {
+      "upstream": "exp7452-source-embeddings",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7452_v653_source_embeddings.json",
+      "artifact_sha256": "sha256:d924d4acc05553e8f5f026ec18f9ec9fed5a282cc7f007b8ed39dc29ed5937cf"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
