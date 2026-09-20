@@ -74981,3 +74981,105 @@ before atomic publication. No numbered end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7434 and SCENARIO-REPORT-7434-* | Implemented: V652 advisory contract and method reducer with thin entrypoint | Verified by spec-linked focused tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V652 independent decision audit — 2026-09-20
+
+**Status:** Specified. This host aggregation audits static policy evidence and
+delayed online evidence independently. It performs no model inference, training,
+production promotion, or external publication.
+
+### REQ-REPORT-7441: Audit complete nulls and unavailable decision branches independently
+
+Exp7441 SHALL locate Exp7436, Exp7438, Exp7439, and Exp7440 only through their
+declared V652 roadmap paths. It SHALL authenticate each file hash, experiment
+identity, milestone, terminal class, and adversarial flag before dependent work.
+An unavailable producer SHALL create a branch-local `blocked_*` result with the
+exact path, field, expected value, and observed value. It SHALL not suppress an
+available peer branch or make completed audit work partial.
+
+The static audit SHALL read hash-bound probability rows without importing a
+producer verdict reducer. It SHALL verify one representative per source group,
+role separation, fixed alpha allocation of `0.05/9`, selected-group counts,
+undefined empty-action risk, exact one-sided risk and coverage bounds, Brier,
+log loss, utility, and paired source-group intervals. It SHALL compare tuned and
+old policies on identical head probabilities. Final-test labels or metrics SHALL
+not select or change a threshold.
+
+The online audit SHALL read hash-bound event rows without importing a producer
+verdict reducer. It SHALL verify prediction-before-feedback order, uniform reveal
+propensities, unique commits, revocation handling, lineage, and stored expert
+predictions or losses sufficient to rebuild every weight update. It SHALL
+recompute proper scores and moving-block intervals from prediction rows. Private
+mutations SHALL reject role leakage, wrong group units, false zero risk, future
+labels, duplicate events, revoked labels, and missing expert predictions.
+
+The audit SHALL verify no-feedback equality, both shuffled-label controls,
+all-escalate deployment, shadow-only adaptive actions, and the absence of an
+inherited calibration or no-share regret theorem. It SHALL describe
+`-log(q/(1-q))` as a logistic re-expression of the probability mixture. It SHALL
+not claim a new energy advantage.
+
+The artifact SHALL expose separate `static_audit` and `online_audit` results.
+A valid complete null SHALL remain `null`. Missing external science SHALL remain
+`blocked`. An authenticated evidence defect SHALL be `disqualified`. The whole
+audit SHALL be terminal after all available branches run, and `promotion_score`
+SHALL remain zero.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. The terminal record SHALL contain the required identity,
+clock, phase, prerequisite, source-hash, row, budget, gate, validation, mutation,
+claim, principle, and checksum fields. The affected plan SHALL use the Exp7358
+command plan and Exp7303 runner. Focused tests, 100 percent changed-module
+coverage, scoped Ruff and mypy, exact-test specification coverage, the declared
+entrypoint, cold replay, independent reduction, adversarial verification, and
+strict row consistency SHALL pass before atomic publication. No numbered
+end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7441-INDEPENDENT: One branch cannot hide its peer
+
+**Given** any mix of complete, invalid, or unavailable static and online inputs
+**When** Exp7441 authenticates and audits the branches
+**Then** each available branch runs and retains its own disposition
+**And** the completed audit never reports retryable partial work for upstream state.
+
+#### SCENARIO-REPORT-7441-STATIC: Raw probabilities reproduce policy evidence
+
+**Given** frozen policies and hash-bound certification and final-test rows
+**When** the auditor recomputes counts, exact bounds, scores, utility, and intervals
+**Then** empty selections retain null risk and source groups remain the unit
+**And** tuned and old policies use identical probabilities per head and group.
+
+#### SCENARIO-REPORT-7441-ONLINE: Delayed updates require complete causal evidence
+
+**Given** prediction, feedback, weight, lineage, and revocation rows
+**When** the auditor replays each revealed-label update
+**Then** every update uses stored prediction-time expert evidence exactly once
+**And** missing expert evidence or causal drift disqualifies the online branch.
+
+#### SCENARIO-REPORT-7441-MUTATIONS: Planted evidence defects fail closed
+
+**Given** private copies with one defect at a time
+**When** role, group, risk, time, identity, revocation, or expert fields change
+**Then** each planted defect is rejected by its named check
+**And** no rejected mutation changes the immutable producer artifacts.
+
+#### SCENARIO-REPORT-7441-CLAIMS: Null and representation limits remain explicit
+
+**Given** complete static and online scientific results
+**When** controls fail or benefit intervals cross zero
+**Then** valid insufficient benefit remains null
+**And** adaptive shadow actions and logistic energy re-expression imply no promotion.
+
+#### SCENARIO-REPORT-7441-ARTIFACT: Exact readers control atomic publication
+
+**Given** authenticated source bytes and independently reduced raw rows
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** source, row, branch, mutation, claim, gate, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7441)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7441 and SCENARIO-REPORT-7441-* | Implemented: independent V652 static and online reducer with a thin entrypoint | Verification in progress: spec-linked focused tests and 100 percent changed-module coverage pass; the entrypoint enforces scoped checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage before publication |

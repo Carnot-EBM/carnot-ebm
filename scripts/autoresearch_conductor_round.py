@@ -660,6 +660,11 @@ def call_fable(prompt: str, timeout: int) -> tuple[bool, str]:
     --dangerously-skip-permissions, so unlike call_codex there is no repo
     tool access to restrict in the first place). `claude --help` documents
     'fable' as a first-class --model alias directly.
+
+    DORMANT since 2026-09-20 (Claude quota-conserve operator directive) --
+    `generate_hypotheses_with_fallback` no longer calls this function. Kept,
+    not deleted, so re-enabling is a one-line revert if the quota constraint
+    is lifted later. See that function's own docstring for the full context.
     """
     try:
         proc = subprocess.run(
@@ -707,22 +712,27 @@ def generate_hypotheses_with_fallback(
     fallback_log: list[int],
     fable_timeout: int = DEFAULT_FABLE_TIMEOUT_S,
 ) -> list[tuple[str, str]]:
-    """codex first; if it returns nothing, ask Fable 5.1 the same question
-    before giving up on this iteration. Also the fix for the OTHER half of
-    the 2026-09-12 known-issues finding: run_loop_with_generator stops the
-    WHOLE round on one empty generator call, so a transient codex failure
-    used to end a 5-iteration round at iteration 0 with no second attempt at
-    all -- this gives every iteration a real second attempt before it can
-    do that. `fallback_log` records which iterations needed the fallback,
-    for the receipt (the other known-issues gap: no diagnostic was kept for
-    why a round produced zero hypotheses). `fable_timeout` is deliberately
-    separate from `timeout` (codex's budget) -- see DEFAULT_FABLE_TIMEOUT_S.
+    """codex only (2026-09-20 operator directive, quota-conserve: Claude usage
+    across all automated workers must drop while Claude quota is constrained).
+    This used to fall back to Fable 5.1 (`claude --model fable`) when codex
+    returned nothing -- see the retained, now-dormant `call_fable`/
+    `fable_generate_hypotheses` below. That fallback is DISABLED here, not
+    deleted: gemini-cli was checked as the natural non-Claude replacement and
+    is currently unusable for a different, unrelated reason (`gemini --model
+    gemini-3.1-pro-preview --yolo -p ...` fails immediately with
+    `IneligibleTierError: This client is no longer supported for Gemini Code
+    Assist for individuals` -- an external Google account-tier change, not
+    something a retry or a code fix here can work around). So the honest
+    choice today is codex-only, accepting that a codex failure now ends this
+    iteration with zero hypotheses instead of getting a second opinion.
+    `fallback_log` stays as a parameter (empty forever under this directive)
+    rather than being torn out, so `generator_label_for_entry` and every
+    caller need no signature change -- and so re-enabling Fable later, if the
+    operator lifts the quota constraint, is the one-line revert of this
+    function body, not a rebuild. See ops/known-issues.md 2026-09-20 for the
+    directive and the gemini-cli finding.
     """
-    hyps = codex_generate_hypotheses(model, timeout, baselines, recent_failures, iteration)
-    if hyps:
-        return hyps
-    fallback_log.append(iteration)
-    return fable_generate_hypotheses(fable_timeout, baselines, recent_failures, iteration)
+    return codex_generate_hypotheses(model, timeout, baselines, recent_failures, iteration)
 
 
 _ENTRY_ID_ITERATION = re.compile(r"-(\d+)$")

@@ -465,36 +465,45 @@ class TestGenerateHypothesesWithFallback:
         assert fable_calls == []
         assert log == []
 
-    def test_codex_empty_falls_back_to_fable_and_records_the_iteration(self) -> None:
-        """The exact scenario the operator asked for: codex returns nothing,
-        Fable gets a real attempt at the same question before the round
-        gives up on this iteration."""
+    def test_codex_empty_never_falls_back_to_fable(self) -> None:
+        """2026-09-20 operator directive (Claude quota-conserve): the Fable
+        fallback is disabled. codex returning nothing now ends the iteration
+        with zero hypotheses -- fable_generate_hypotheses must never be
+        called, and fallback_log must never be populated. This replaces the
+        prior test of the opposite behavior (codex empty -> real Fable
+        attempt), which was correct for its era and is not correct now."""
         from carnot.autoresearch.baselines import BaselineRecord
 
+        fable_calls = []
         with (
             patch.object(acr, "codex_generate_hypotheses", return_value=[]),
-            patch.object(acr, "fable_generate_hypotheses", return_value=[("fable-found", "code")]),
+            patch.object(
+                acr,
+                "fable_generate_hypotheses",
+                side_effect=lambda *a, **kw: fable_calls.append(1) or [("fable-found", "code")],
+            ),
         ):
             log: list[int] = []
             hyps = acr.generate_hypotheses_with_fallback(
                 "gpt-6-astra", 60, BaselineRecord(), [], 3, log
             )
-        assert hyps == [("fable-found", "code")]
-        assert log == [3]
+        assert hyps == []
+        assert fable_calls == []
+        assert log == []
 
     def test_both_generators_empty_returns_empty(self) -> None:
+        """Renamed in spirit only (2026-09-20): "both" no longer means codex
+        AND fable both ran -- fable never runs -- it means codex empty is
+        the terminal outcome, same as before Fable existed at all."""
         from carnot.autoresearch.baselines import BaselineRecord
 
-        with (
-            patch.object(acr, "codex_generate_hypotheses", return_value=[]),
-            patch.object(acr, "fable_generate_hypotheses", return_value=[]),
-        ):
+        with patch.object(acr, "codex_generate_hypotheses", return_value=[]):
             log: list[int] = []
             hyps = acr.generate_hypotheses_with_fallback(
                 "gpt-6-astra", 60, BaselineRecord(), [], 0, log
             )
         assert hyps == []
-        assert log == [0]  # the attempt is still recorded even though it also failed
+        assert log == []
 
 
 class TestGeneratorLabelForEntry:
@@ -824,16 +833,22 @@ class TestRunRound:
         assert "via Fable 5.1 fallback" in msg
         assert "via codex exec" not in msg
 
-    def test_both_generators_failing_leaves_reasons_in_the_receipt(self, tmp_path: Path) -> None:
-        """REQ-AUTO-022 / SCENARIO-AUTO-022-A. Real call_codex/call_fable
-        (only subprocess.run is faked), so recent_failures is populated the
-        same way a genuine timeout or non-zero exit would populate it."""
+    def test_codex_failing_leaves_the_reason_in_the_receipt_and_never_calls_claude(
+        self, tmp_path: Path
+    ) -> None:
+        """REQ-AUTO-022 / SCENARIO-AUTO-022-A, updated 2026-09-20 (Claude
+        quota-conserve operator directive: Fable fallback disabled). Real
+        call_codex (only subprocess.run is faked), so recent_failures is
+        populated the same way a genuine codex failure would populate it.
+        Renamed from the prior "both_generators_failing" test -- there is
+        only one generator now. Asserts the `claude` binary is never
+        invoked at all, not just that its failure text is absent."""
         _init_repo(tmp_path)
 
         def fake_run(argv, **kwargs):
             if argv[0] == "codex":
                 return subprocess.CompletedProcess(argv, 1, stdout="", stderr="some stderr")
-            return subprocess.CompletedProcess(argv, 1, stdout="", stderr="some other stderr")
+            raise AssertionError(f"unexpected subprocess call, claude must never run: {argv}")
 
         with (
             patch.object(acr, "codex_available", return_value=True),
@@ -850,7 +865,7 @@ class TestRunRound:
         receipt = (tmp_path / "receipt.md").read_text()
         assert "## Generator failure reasons" in receipt
         assert "codex_call_failed: codex exit 1: some stderr" in receipt
-        assert "fable_call_failed: claude exit 1: some other stderr" in receipt
+        assert "fable_call_failed" not in receipt
 
     def test_a_clean_round_omits_the_failure_reasons_section(self, tmp_path: Path) -> None:
         """REQ-AUTO-022 / SCENARIO-AUTO-022-B."""
