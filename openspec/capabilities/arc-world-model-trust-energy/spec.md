@@ -129,6 +129,99 @@ before atomic publication.
 Implementation status: specified 2026-09-20. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7464: Profile typed-decision cost from existing ARC traces
+
+Experiment 7464 SHALL use run date `20260920`, milestone `2026.09.654`, and
+existing adapter-withheld artifacts only. It SHALL make no model call and no
+environment call. It SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Numeric
+head fitting SHALL be absent and recorded separately as
+`small_ebm_training.performed=false`.
+
+The experiment SHALL authenticate the clean Experiment 7457 result and its
+episode, action, request, response, runtime-event, and invocation ledgers. It
+SHALL preserve their exact byte hashes and original flags. It SHALL classify
+Experiment 7234 as flagged and exclude it from quantitative claims. It MAY use
+Experiment 5972 only as an older-model schema control. It SHALL read Experiment
+7463 only after that artifact exists, and SHALL preserve its blocked scored
+runtime and failed local-parity fields without treating its model work as
+current work.
+
+The reducer SHALL emit one row for every Experiment 7457 episode and each
+registered seam: candidate-action selection, hypothesis accept/reject/escalate,
+supervisor-arm selection, induction timing, and downstream generation. Each row
+SHALL state invocation status, elapsed time, input and output tokens, CPU and
+GPU work, candidate-option availability, progress, disposition, and censoring.
+An unknown duration SHALL be `null`, not zero. Nested request and timing spans
+SHALL be unioned before subtraction so attributed time never exceeds episode
+time. Current Qwen3.8 evidence SHALL remain separate from older-model history.
+
+The reducer SHALL report the measured trace-time attribution fraction. It SHALL
+compute replaceable-share bounds by assigning all unclassified residual time to
+nonreplaceable work for the lower bound and to replaceable decision work for the
+upper bound. Downstream generation SHALL not become direct decision cost. The
+perfect-removal ceiling `1 / (1 - f)` SHALL appear only for finite bounds.
+Intervals SHALL resample games as clusters with a frozen seed. The two-game
+result SHALL be labeled sample-limited and SHALL not claim broad transfer.
+Readout overhead SHALL use only measured compatible Experiment 7463 work. An
+incompatible ARC prompt or option workload SHALL keep the projected episode
+overhead null.
+
+The artifact SHALL include a seam-observation specification for Experiment
+7471. It SHALL name every missing start, end, candidate ID, candidate set,
+token, CPU, GPU, and progress-link event needed for complete attribution. It
+SHALL give `go`, `stop`, or `insufficient_evidence` dispositions for E7 through
+E12. No rung SHALL be queued unless both E0 and E6 have reported. A blocked E0
+or an E6 coverage miss SHALL remain visible in each dependent disposition.
+
+The terminal artifact SHALL preserve raw per-unit reductions, a separately
+recomputed independent reduction, the exact affected-file validation manifest,
+current validation receipts, a declared-entrypoint replay, adversarial
+verification, and strict verdict-row consistency results. It SHALL publish
+atomically only after required checks pass. `decision_profile_complete_score`
+SHALL be one only when all supplied traces and every missing field have a
+disposition. This score does not make the cost attribution gate pass.
+
+### SCENARIO-ARC-WMTE-7464-SOURCE-CLASSIFICATION
+
+- **GIVEN** clean current-Qwen3.8 traces, a flagged current-model dry run, and an older-model history
+- **WHEN** Experiment 7464 authenticates its inputs
+- **THEN** only the clean compatible traces enter the quantitative profile
+- **AND** excluded and historical sources retain their original flags, model classes, and byte hashes.
+
+### SCENARIO-ARC-WMTE-7464-SEAM-ACCOUNTING
+
+- **GIVEN** episode time, request spans, action rows, and supervisor receipts
+- **WHEN** the reducer partitions one episode
+- **THEN** overlapping measured spans are counted once and the residual is explicit
+- **AND** every unknown seam duration remains null while known zero model-token use remains zero.
+
+### SCENARIO-ARC-WMTE-7464-BOUNDS
+
+- **GIVEN** incomplete direct timing for replaceable seams
+- **WHEN** lower and upper replaceable shares are computed
+- **THEN** the lower bound assigns residual time to nonreplaceable work and the upper bound assigns it to replaceable work
+- **AND** two game clusters yield a sample-limited interval, not a transfer claim.
+
+### SCENARIO-ARC-WMTE-7464-OBSERVATION-SPEC
+
+- **GIVEN** missing candidate sets and stage timestamps in the historical traces
+- **WHEN** the terminal profile is built
+- **THEN** the Experiment 7471 specification names each missing event and stable candidate identifier
+- **AND** E7 through E12 remain stopped or insufficient until their E0 and E6 gates pass.
+
+### SCENARIO-ARC-WMTE-7464-TERMINAL
+
+- **GIVEN** the frozen affected manifest and measured candidate
+- **WHEN** the entrypoint runs scoped checks and terminal readers
+- **THEN** a fresh process reproduces the reduction and all required checks pass once
+- **AND** the terminal JSON is atomic, schema-complete, and makes no current model or environment claim.
+
+Implementation status: implemented 2026-09-20. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V652 ARC supervisor evidence reduction — 2026-09-20
 
 **Status:** Specified. This work interprets two archived adapter-withheld live
