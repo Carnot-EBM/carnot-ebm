@@ -81,9 +81,7 @@ def test_scenario_auto_7454_01_predictions_precede_outcomes(tmp_path: Path) -> N
     assert not ({"label", "loss", "brier", "feedback_label"} & set(first))
     assert exp.prediction_event_hash(first) == first["event_hash"]
     assert outcomes[0]["ledger_sequence"] > max(
-        row["ledger_sequence"]
-        for row in predictions
-        if row["group_id"] == outcomes[0]["group_id"]
+        row["ledger_sequence"] for row in predictions if row["group_id"] == outcomes[0]["group_id"]
     )
     assert set(outcomes[0]["prediction_event_hashes"].values()) <= {
         row["event_hash"] for row in predictions
@@ -115,9 +113,7 @@ def test_scenario_auto_7454_02_saved_losses_replay_without_producer_math(
             initial_state=exp.initial_audit_state(changed["arm"]),
             prediction_by_hash={
                 row["event_hash"]: row
-                for row in exp.load_event_shards(
-                    tmp_path, evidence["prediction_event_shards"]
-                )
+                for row in exp.load_event_shards(tmp_path, evidence["prediction_event_shards"])
             },
         )
 
@@ -160,9 +156,7 @@ def test_scenario_auto_7454_04_later_query_causality_and_checkpoints(
     assert reduced["checkpoint_lineage_valid"] is True
     checkpoints = exp.load_event_shards(tmp_path, evidence["checkpoint_event_shards"])
     learned_positions = [
-        row["completed_groups"]
-        for row in checkpoints
-        if row["arm"] == exp.LEARNED_MIXTURE
+        row["completed_groups"] for row in checkpoints if row["arm"] == exp.LEARNED_MIXTURE
     ]
     assert learned_positions == [32, 64, 70]
     assert all(exp.checkpoint_event_hash(row) == row["event_hash"] for row in checkpoints)
@@ -290,11 +284,315 @@ def test_req_auto_7454_blocked_result_and_cli_modes_are_strict(
     candidate = tmp_path / "candidate.json"
     candidate.write_text("{}", encoding="utf-8")
     monkeypatch.setattr(exp, "validate_artifact", lambda value, root: [])
-    assert exp.main(["--date", exp.RUN_DATE, "--root", str(tmp_path), "--cold-replay", str(candidate)]) == 0
+    assert (
+        exp.main(["--date", exp.RUN_DATE, "--root", str(tmp_path), "--cold-replay", str(candidate)])
+        == 0
+    )
     monkeypatch.setattr(exp, "independent_reduce", lambda value, root: {"capture": 1})
-    assert exp.main(["--date", exp.RUN_DATE, "--root", str(tmp_path), "--independent-reduce", str(candidate)]) == 0
+    assert (
+        exp.main(
+            [
+                "--date",
+                exp.RUN_DATE,
+                "--root",
+                str(tmp_path),
+                "--independent-reduce",
+                str(candidate),
+            ]
+        )
+        == 0
+    )
     monkeypatch.setattr(exp, "run_experiment", lambda root, run_date, output_path: {"ok": True})
     assert exp.main(["--date", exp.RUN_DATE, "--root", str(tmp_path)]) == 0
     with pytest.raises(SystemExit, match="--date"):
         exp.main(["--date", "wrong"])
     assert "capture" in capsys.readouterr().out
+
+
+def test_req_auto_7454_load_object_invalid_or_missing(tmp_path: Path) -> None:
+    """REQ-AUTO-7454 covers resilient object loading on malformed or absent files."""
+    missing = tmp_path / "missing.json"
+    assert exp._load_object(missing) == {}
+    bad = tmp_path / "bad.json"
+    bad.write_text("{broken", encoding="utf-8")
+    assert exp._load_object(bad) == {}
+    non_dict = tmp_path / "list.json"
+    non_dict.write_text("[1, 2]", encoding="utf-8")
+    assert exp._load_object(non_dict) == {}
+
+
+def test_req_auto_7454_validate_prediction_event_and_arm_guards() -> None:
+    """REQ-AUTO-7454 guards against labeled prediction events, corrupted expert keys, and unknown arms."""
+    base_event: dict[str, Any] = {
+        "event_id": "p1",
+        "ledger_sequence": 1,
+        "group_id": "g1",
+        "arm": exp.LEARNED_MIXTURE,
+        "input_hash": "inhash",
+        "expert_probabilities": {name: 0.25 for name in exp.EXPERT_NAMES},
+        "mixture_weights": {name: 0.25 for name in exp.EXPERT_NAMES},
+        "mixture_probability": 0.25,
+        "mixture_decision": 0,
+        "threshold": 0.5,
+        "source_checkpoint_hashes": {name: "h" for name in exp.EXPERT_NAMES},
+        "certified_safe": False,
+        "domain_changed": False,
+        "durable_acknowledged": True,
+        "predict_duration_ns": 1,
+        "hash_duration_ns": 1,
+    }
+    base_event["event_hash"] = exp.prediction_event_hash(base_event)
+
+    # Label present
+    labeled = dict(base_event, label=1)
+    with pytest.raises(ValueError, match="prediction_event_contains_label"):
+        exp.validate_prediction_event(labeled)
+
+    # Missing expert probability
+    missing_prob = dict(base_event, expert_probabilities={"sparse_spline_49": 0.5})
+    with pytest.raises(ValueError, match="prediction_experts_invalid"):
+        exp.validate_prediction_event(missing_prob)
+
+    # Missing mixture weight
+    missing_wt = dict(base_event, mixture_weights={"sparse_spline_49": 0.5})
+    with pytest.raises(ValueError, match="prediction_weights_invalid"):
+        exp.validate_prediction_event(missing_wt)
+
+    # Weights don't sum to 1
+    bad_sum = dict(base_event, mixture_weights={name: 0.1 for name in exp.EXPERT_NAMES})
+    with pytest.raises(ValueError, match="prediction_weights_invalid"):
+        exp.validate_prediction_event(bad_sum)
+
+    # Unknown arm in initial_audit_state
+    with pytest.raises(ValueError, match="unknown_arm"):
+        exp.initial_audit_state("nonexistent_arm")
+
+    # Unknown arm in _arm_update_parameters
+    with pytest.raises(ValueError, match="arm_does_not_accept_feedback"):
+        exp._arm_update_parameters("nonexistent_arm")
+
+
+def test_req_auto_7454_shard_and_checkpoint_fallbacks(tmp_path: Path) -> None:
+    """REQ-AUTO-7454 handles corrupted shard JSON, invalid rows, and checkpoint hash fallbacks."""
+    bad_shard = tmp_path / "corrupt.jsonl"
+    bad_shard.write_text("not json\n", encoding="utf-8")
+    manifest = [
+        {
+            "path": "corrupt.jsonl",
+            "sha256": exp.sha256_file(bad_shard),
+            "rows": 1,
+            "size_bytes": bad_shard.stat().st_size,
+        }
+    ]
+    with pytest.raises(ValueError, match="event_shard_invalid"):
+        exp.load_event_shards(tmp_path, manifest)
+
+    bad_rows = tmp_path / "bad_rows.jsonl"
+    bad_rows.write_text("123\n", encoding="utf-8")
+    manifest2 = [
+        {
+            "path": "bad_rows.jsonl",
+            "sha256": exp.sha256_file(bad_rows),
+            "rows": 1,
+            "size_bytes": bad_rows.stat().st_size,
+        }
+    ]
+    with pytest.raises(ValueError, match="event_shard_invalid"):
+        exp.load_event_shards(tmp_path, manifest2)
+
+    # Checkpoint hashes fallback when source_checkpoints is empty
+    state_no_ckpts = {
+        "source_checkpoints": [],
+        "spline_checkpoint": {"weights": [1, 2]},
+        "gibbs_checkpoint": {"weights": [3, 4]},
+    }
+    ck_hashes = exp._checkpoint_hashes(state_no_ckpts)
+    assert set(ck_hashes.keys()) == set(exp.EXPERT_NAMES)
+
+
+def test_req_auto_7454_feedback_replay_validation_errors(tmp_path: Path) -> None:
+    """REQ-AUTO-7454 checks feedback event hash, prediction linkage, and state hash lineage."""
+    evidence = _fixture(tmp_path, groups=10)
+    predictions = exp.load_event_shards(tmp_path, evidence["prediction_event_shards"])
+    feedback = exp.load_event_shards(tmp_path, evidence["feedback_event_shards"])
+    prediction_by_hash = {row["event_hash"]: row for row in predictions}
+    initial_st = exp.initial_audit_state(exp.LEARNED_MIXTURE)
+
+    # Feedback event hash mismatch
+    bad_fb = deepcopy(feedback[0])
+    bad_fb["event_hash"] = "wrong_hash"
+    with pytest.raises(ValueError, match="feedback_event_hash_mismatch"):
+        exp.replay_feedback_rows(
+            [bad_fb], initial_state=initial_st, prediction_by_hash=prediction_by_hash
+        )
+
+    # Missing prediction for feedback
+    bad_pred_ref = deepcopy(feedback[0])
+    bad_pred_ref["prediction_event_hash"] = "unknown_pred"
+    bad_pred_ref["event_hash"] = exp.feedback_event_hash(bad_pred_ref)
+    with pytest.raises(ValueError, match="missing_prediction_for_feedback"):
+        exp.replay_feedback_rows(
+            [bad_pred_ref], initial_state=initial_st, prediction_by_hash=prediction_by_hash
+        )
+
+    # Parent state hash mismatch
+    bad_parent = deepcopy(feedback[0])
+    bad_parent["parent_state_hash"] = "wrong_parent"
+    bad_parent["event_hash"] = exp.feedback_event_hash(bad_parent)
+    with pytest.raises(ValueError, match="parent_state_hash_mismatch"):
+        exp.replay_feedback_rows(
+            [bad_parent], initial_state=initial_st, prediction_by_hash=prediction_by_hash
+        )
+
+    # Child state hash mismatch
+    bad_child = deepcopy(feedback[0])
+    bad_child["child_state_hash"] = "wrong_child"
+    bad_child["event_hash"] = exp.feedback_event_hash(bad_child)
+    with pytest.raises(ValueError, match="child_state_hash_mismatch"):
+        exp.replay_feedback_rows(
+            [bad_child], initial_state=initial_st, prediction_by_hash=prediction_by_hash
+        )
+
+
+def test_req_auto_7454_reduce_evidence_lineage_and_empty_feedback(tmp_path: Path) -> None:
+    """REQ-AUTO-7454 rejects invalid checkpoint lineage and handles empty feedback."""
+    evidence = _fixture(tmp_path, groups=10)
+    checkpoints = exp.load_event_shards(tmp_path, evidence["checkpoint_event_shards"])
+
+    # Tamper with checkpoint previous_checkpoint_hash
+    bad_ckpts = deepcopy(checkpoints)
+    bad_ckpts[1]["previous_checkpoint_hash"] = "tampered"
+    bad_ckpts[1]["event_hash"] = exp.checkpoint_event_hash(bad_ckpts[1])
+    bad_shard = tmp_path / "bad_ckpt.jsonl"
+    bad_shard.write_text("\n".join(json.dumps(row) for row in bad_ckpts) + "\n", encoding="utf-8")
+    tampered_evidence = deepcopy(evidence)
+    tampered_evidence["checkpoint_event_shards"] = [
+        {
+            "path": bad_shard.name,
+            "sha256": exp.sha256_file(bad_shard),
+            "rows": len(bad_ckpts),
+            "size_bytes": bad_shard.stat().st_size,
+        }
+    ]
+    reduced = exp.independent_reduce_evidence(tampered_evidence, root=tmp_path, bootstrap_draws=10)
+    assert reduced["checkpoint_lineage_valid"] is False
+
+    # Tamper with checkpoint event hash directly
+    bad_ckpts2 = deepcopy(checkpoints)
+    bad_ckpts2[0]["event_hash"] = "wrong_hash"
+    bad_shard2 = tmp_path / "bad_ckpt2.jsonl"
+    bad_shard2.write_text("\n".join(json.dumps(row) for row in bad_ckpts2) + "\n", encoding="utf-8")
+    tampered_evidence2 = deepcopy(evidence)
+    tampered_evidence2["checkpoint_event_shards"] = [
+        {
+            "path": bad_shard2.name,
+            "sha256": exp.sha256_file(bad_shard2),
+            "rows": len(bad_ckpts2),
+            "size_bytes": bad_shard2.stat().st_size,
+        }
+    ]
+    reduced2 = exp.independent_reduce_evidence(
+        tampered_evidence2, root=tmp_path, bootstrap_draws=10
+    )
+    assert reduced2["checkpoint_lineage_valid"] is False
+
+    # Empty feedback shards
+    empty_fb_evidence = deepcopy(evidence)
+    empty_fb_shard = tmp_path / "empty_fb.jsonl"
+    empty_fb_shard.write_text("", encoding="utf-8")
+    empty_fb_evidence["feedback_event_shards"] = [
+        {
+            "path": empty_fb_shard.name,
+            "sha256": exp.sha256_file(empty_fb_shard),
+            "rows": 0,
+            "size_bytes": 0,
+        }
+    ]
+    reduced_empty = exp.independent_reduce_evidence(
+        empty_fb_evidence, root=tmp_path, bootstrap_draws=10
+    )
+    assert reduced_empty["feedback_handling_controls"]["duplicate_feedback_rejected"] is True
+
+
+def test_req_auto_7454_summarize_reduction_without_failed_precondition() -> None:
+    """REQ-AUTO-7454 summarizes reduction gates when no upstream precondition failed."""
+    gates = [
+        {"check": "gate_valid", "category": "validity", "passed": False},
+        {"check": "gate_benefit", "category": "benefit", "passed": False},
+        {"check": "gate_ok", "category": "completion", "passed": True},
+    ]
+    summary = exp._gate_summary(gates, failed_precondition=None)
+    assert summary["required_checks_passed"] is False
+    assert "gate_valid" in summary["failed_required_checks"]
+    assert "gate_benefit" in summary["benefit_failures"]
+
+
+def test_req_auto_7454_validate_artifact_declarations_and_mismatches(tmp_path: Path) -> None:
+    """REQ-AUTO-7454 cold validator rejects altered substrates, venues, non-zero promotion, and shard mismatches."""
+    artifact = exp.build_fixture_artifact(tmp_path)
+
+    # Missing field
+    stripped = deepcopy(artifact)
+    del stripped["status"]
+    errs = exp.validate_artifact(stripped, root=tmp_path)
+    assert "missing_field:status" in errs
+
+    # Field violations
+    mutations: list[tuple[str, Any, str]] = [
+        ("continuous_self_learning_task", False, "continuous_self_learning_task_invalid"),
+        ("MODEL_SPECS", ["gpt-4"], "MODEL_SPECS_not_empty"),
+        ("model_invoked", True, "model_invoked_not_false"),
+        ("inference_substrate_class", "cpu", "inference_substrate_class_invalid"),
+        ("execution_venue", "cluster", "execution_venue_invalid"),
+        ("promotion_score", 1, "promotion_score_not_zero"),
+        ("flagged_adversarial", True, "flagged_adversarial_not_false"),
+    ]
+    for key, val, expected_err in mutations:
+        bad = deepcopy(artifact)
+        bad[key] = val
+        assert expected_err in exp.validate_artifact(bad, root=tmp_path)
+
+    # Shard sha256 mismatch (shard exists on disk but sha256 declared does not match)
+    bad_shard_artifact = deepcopy(artifact)
+    shard_info = bad_shard_artifact["prediction_event_shards"][0]
+    shard_file = tmp_path / shard_info["path"]
+    shard_file.write_text("corrupted content", encoding="utf-8")
+    assert any(
+        "shard_sha256_mismatch:" in e
+        for e in exp.validate_artifact(bad_shard_artifact, root=tmp_path)
+    )
+
+
+def test_req_auto_7454_independent_reduce_entrypoint(tmp_path: Path) -> None:
+    """REQ-AUTO-7454 entrypoint executes full independent reduction."""
+    artifact = exp.build_fixture_artifact(tmp_path)
+    reduced = exp.independent_reduce(artifact, root=tmp_path)
+    assert reduced["causal_capture_valid"] is True
+
+
+def test_req_auto_7454_main_exit_codes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """REQ-AUTO-7454 main maps validation failure, null verdict, and non-null verdict to correct exit codes."""
+    candidate = tmp_path / "candidate.json"
+    candidate.write_text("{}", encoding="utf-8")
+
+    # cold-replay failure
+    monkeypatch.setattr(exp, "validate_artifact", lambda value, root: ["some_error"])
+    ret = exp.main(
+        ["--date", exp.RUN_DATE, "--root", str(tmp_path), "--cold-replay", str(candidate)]
+    )
+    assert ret == 1
+    assert "cold_replay_failed" in capsys.readouterr().out
+
+    # run_experiment returning verdict_class == 'null'
+    monkeypatch.setattr(
+        exp, "run_experiment", lambda root, run_date, output_path: {"verdict_class": "null"}
+    )
+    assert exp.main(["--date", exp.RUN_DATE, "--root", str(tmp_path)]) == 0
+
+    # run_experiment returning verdict_class == 'other'
+    monkeypatch.setattr(
+        exp, "run_experiment", lambda root, run_date, output_path: {"verdict_class": "unrecognized"}
+    )
+    assert exp.main(["--date", exp.RUN_DATE, "--root", str(tmp_path)]) == 1
