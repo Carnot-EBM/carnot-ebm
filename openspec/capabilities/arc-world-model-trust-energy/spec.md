@@ -33899,3 +33899,77 @@ episodes do not establish a treatment effect or hidden leaderboard performance.
 - **THEN** `arc_sentinel_capture_complete_score` is one
 - **AND** `live_efficacy_score`, `promotion_score`, and solve credit remain zero
 - **AND** the run is described as a public adapter-withheld development proxy
+
+## REQ-ARC-WMTE-7463: Measure SEMIF option-logit parity without changing the scored path
+
+Experiment 7463 SHALL use run date `20260920`, milestone `2026.09.654`, and
+`unsloth/Qwen3.8-27B-GGUF` Q4_K_M. It SHALL authenticate the staged scored-kernel
+manifest, exact mounted vLLM wheel bytes and metadata, cached GGUF, embedded
+tokenizer, CUDA device, one owned lease, and the qualified runtime-ownership and
+capture-lifecycle receipts before dependent work. An ordinary host wheel or a
+newer upstream API SHALL not stand in for the mounted scored wheel.
+
+The experiment SHALL run eight two-option known-answer controls in both label
+orders through native llama.cpp. Native readiness requires 8/8 correct,
+nonuniform distributions, identical recorded input IDs for each comparison,
+raw option logits, actual CUDA-offload evidence, the runner hash, and continuous
+lease identity. It SHALL then freeze 64 disjoint two-option development prompts
+with balanced correct labels. It SHALL compare native llama.cpp and one owned
+local server with the same GGUF bytes, quantization, tokenizer, prompt tokens,
+and reset state. A server request MAY emit at most one token only when its HTTP
+API needs generation to return first-token log-probabilities. No token-logit
+bias may alter the distribution. A missing option SHALL be unavailable, not
+assigned zero probability.
+
+The exact scored vLLM branch SHALL use the same 64 prompts only when its mounted
+wheel bytes and compatible owned hardware are present. Otherwise, it SHALL end
+as blocked and name the absent artifact or device plus the exact proposed
+request-field change. Different weights or quantization SHALL be reported as
+cross-configuration agreement and SHALL not set scored-runtime parity to one.
+Live work SHALL stop by 900 seconds and 160 one-token server requests.
+
+The reducer SHALL compute argmax agreement, a 95 percent lower confidence bound,
+and median total-variation distance from raw pairs. The exploratory local and
+scored bounds are lower agreement at least 0.95 and median total variation at
+most 0.05. These bounds authorize no deployment. `native_readout_ready_score`,
+`local_runtime_parity_score`, and `scored_runtime_parity_score` SHALL be bare
+zero-or-one fields derived from current evidence only.
+
+The terminal artifact SHALL preserve all raw pairs, blocked and unstarted rows,
+invocation counts, requested and observed offload, runtime manifests, source
+hashes, field principles, scoped validation receipts, a fresh-process replay,
+independent reduction, adversarial verification, and strict verdict-row
+consistency results. It SHALL publish atomically only after required checks.
+It SHALL not change the scored wrapper, submit a job, start E7 through E12,
+download a model, change production defaults, or claim ARC benefit.
+
+### SCENARIO-ARC-WMTE-7463-NATIVE-CONTROLS
+
+- **GIVEN** the cached current GGUF, embedded tokenizer, idle owned CUDA device, and lease
+- **WHEN** native llama.cpp scores four known answers in both label orders
+- **THEN** all eight argmax decisions are correct and every distribution is nonuniform
+- **AND** the artifact retains input IDs, option token IDs, raw logits, offload evidence, runner hash, and lease identity.
+
+### SCENARIO-ARC-WMTE-7463-LOCAL-PARITY
+
+- **GIVEN** 64 frozen disjoint prompts with balanced correct labels
+- **WHEN** native llama.cpp and the owned local server score identical prompt tokens with reset state
+- **THEN** both declared option logits are present or the row is unavailable
+- **AND** local parity is one only when every row is complete, the lower agreement bound is at least 0.95, and median total variation is at most 0.05.
+
+### SCENARIO-ARC-WMTE-7463-SCORED-RUNTIME-BLOCK
+
+- **GIVEN** the staged kernel manifest names a vLLM-wheel dataset but exact mounted wheel bytes are absent
+- **WHEN** the scored-runtime subcheck authenticates its inputs
+- **THEN** it records the exact missing path or artifact and proposed request fields without running that branch
+- **AND** `scored_runtime_parity_score` stays zero even if a different local wheel exists.
+
+### SCENARIO-ARC-WMTE-7463-TERMINAL
+
+- **GIVEN** measured raw rows and the frozen affected-file manifest
+- **WHEN** the entrypoint runs scoped checks and terminal readers
+- **THEN** independent reduction reproduces every score and terminal disposition
+- **AND** failed required validation disqualifies the artifact while an unavailable exact scored runtime remains an honest blocked finding.
+
+Implementation status: specified 2026-09-20. The conductor owns later status,
+changelog, and traceability reconciliation.
