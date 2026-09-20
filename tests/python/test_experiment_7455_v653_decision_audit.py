@@ -1,11 +1,7 @@
 """Tests for REQ-REPORT-7455 and SCENARIO-REPORT-7455-*.
 
-Spec: REQ-REPORT-7455: Audit source conditioning and continuous learning independently
-Spec: SCENARIO-REPORT-7455-INDEPENDENT: One branch cannot hide its peer
-Spec: SCENARIO-REPORT-7455-ONLINE-REPLAY: Delayed updates reconstruct from saved expert predictions
-Spec: SCENARIO-REPORT-7455-MUTATIONS: Evidence corruption fails closed
-Spec: SCENARIO-REPORT-7455-RETIREMENT: Repeated valid nulls mark mixture retirement
-Spec: SCENARIO-REPORT-7455-ARTIFACT: Exact readers control atomic publication
+The small fixtures expose each numeric operand. The real-evidence test then
+applies the same reducer to the hash-bound Exp7454 event shards.
 """
 
 from __future__ import annotations
@@ -14,512 +10,659 @@ from copy import deepcopy
 import json
 import math
 from pathlib import Path
-from typing import Any
 
 import pytest
 
 from carnot import experiment_7455_v653_decision_audit as audit
 
 
-def _make_prediction_event(
-    group_id: str,
-    *,
-    arm: str = "learned_mixture",
-    order: str = "hash_order",
-    delay: int = 0,
-    seed: int = 65201,
-    seq: int = 0,
-    probs: dict[str, float] | None = None,
-    weights: dict[str, float] | None = None,
-) -> dict[str, Any]:
-    """Build a deterministic prediction event fixture."""
-    expert_probs = probs or {
-        "adaptive_gibbs": 0.2,
-        "adaptive_spline": 0.3,
-        "frozen_gibbs": 0.2,
-        "frozen_spline": 0.3,
-    }
-    mix_weights = weights or {
-        "adaptive_gibbs": 0.25,
-        "adaptive_spline": 0.25,
-        "frozen_gibbs": 0.25,
-        "frozen_spline": 0.25,
-    }
-    row: dict[str, Any] = {
-        "schema": "carnot.exp7454.prediction_event.v1",
+def _online_fixture() -> tuple[list[dict], list[dict], list[dict], list[dict]]:
+    state = audit.initial_state("learned_mixture")
+    prediction = {
+        "schema": audit.PREDICTION_SCHEMA,
         "row_type": "prediction_event",
-        "group_id": group_id,
-        "arm": arm,
-        "ordering": order,
-        "delay": delay,
-        "seed": seed,
-        "ledger_sequence": seq,
-        "request_order": seq,
-        "expert_probabilities": deepcopy(expert_probs),
-        "mixture_weights": deepcopy(mix_weights),
-        "mixture_probability": math.fsum(
-            expert_probs[k] * mix_weights[k] for k in audit.EXPERT_NAMES
-        ),
-        "proposed_action": "escalate",
-        "deployed_action": "escalate",
-        "shadow_only": True,
-        "certified_safe": False,
+        "arm": "learned_mixture",
+        "ordering": "hash_order",
+        "delay": 8,
+        "seed": 65201,
+        "group_id": "g1",
+        "prediction_index": 0,
+        "request_order": 0,
+        "ledger_sequence": 0,
+        "expert_probabilities": {
+            "adaptive_gibbs": 0.7,
+            "adaptive_spline": 0.8,
+            "frozen_gibbs": 0.6,
+            "frozen_spline": 0.9,
+        },
+        "mixture_weights": {name: 0.25 for name in audit.EXPERT_NAMES},
+        "mixture_probability": 0.75,
+        "pre_feedback_state_hash": state["state_hash"],
+        "durable_acknowledged": True,
         "revealed": True,
-        "pre_feedback_state_hash": f"sha256:pre_state_{seq}",
+        "shadow_only": True,
     }
-    row["event_hash"] = audit.canonical_hash({k: v for k, v in row.items() if k != "event_hash"})
-    return row
-
-
-def _make_feedback_event(
-    pred: dict[str, Any],
-    *,
-    true_label: int = 1,
-    seq: int = 1,
-    old_log_weights: dict[str, float] | None = None,
-) -> dict[str, Any]:
-    """Build a deterministic feedback event fixture corresponding to pred."""
-    probs = pred["expert_probabilities"]
-    old_lw = old_log_weights or {name: math.log(0.25) for name in audit.EXPERT_NAMES}
-    update = audit.independent_scalar_update(old_lw, probs, true_label, eta=1.0, fixed_share=0.01)
-    row: dict[str, Any] = {
-        "schema": "carnot.exp7454.feedback_event.v1",
+    prediction["event_hash"] = audit.event_hash(prediction)
+    numeric = audit.scalar_fixed_share_update(
+        state["log_weights"],
+        prediction["expert_probabilities"],
+        1,
+        eta=1.0,
+        fixed_share=0.01,
+    )
+    next_state = audit.advance_state(state, prediction, 1)
+    feedback = {
+        "schema": audit.FEEDBACK_SCHEMA,
         "row_type": "feedback_event",
-        "group_id": pred["group_id"],
-        "arm": pred["arm"],
-        "ordering": pred["ordering"],
-        "delay": pred["delay"],
-        "seed": pred["seed"],
-        "ledger_sequence": seq,
-        "request_order": pred["request_order"],
-        "reveal_order": pred["request_order"] + pred["delay"],
-        "prediction_index": pred["request_order"],
-        "prediction_event_hash": pred["event_hash"],
-        "true_label": true_label,
-        "feedback_label": true_label,
-        "revoked": False,
-        "probability_source": "immutable_prediction_event",
-        "per_expert_loss": update["losses"],
-        "old_log_weights": old_lw,
-        "new_log_weights": update["new_log_weights"],
-        "normalizer": {
-            "maximum": update["maximum"],
-            "sum_exp": update["sum_exp"],
-        },
+        "arm": "learned_mixture",
+        "ordering": "hash_order",
+        "delay": 8,
+        "seed": 65201,
+        "group_id": "g1",
+        "prediction_index": 0,
+        "request_order": 0,
+        "reveal_order": 8,
+        "ledger_sequence": 2,
+        "prediction_event_hash": prediction["event_hash"],
+        "feedback_label": 1,
+        "true_label": 1,
+        "per_expert_loss": numeric["losses"],
+        "old_log_weights": state["log_weights"],
         "numeric_update": {
-            "penalized_log_weights": update["penalized_log_weights"],
-            "posterior_before_share": update["posterior_before_share"],
+            "penalized_log_weights": numeric["penalized_log_weights"],
+            "posterior_before_share": numeric["posterior_before_share"],
         },
-        "parent_state_hash": f"sha256:pre_state_{pred['request_order']}",
-        "child_state_hash": f"sha256:post_state_{seq}",
+        "normalizer": {
+            "maximum": numeric["maximum"],
+            "sum_exp": numeric["sum_exp"],
+        },
+        "new_log_weights": next_state["log_weights"],
+        "parent_state_hash": state["state_hash"],
+        "child_state_hash": next_state["state_hash"],
+        "feedback_count_before": 0,
+        "feedback_count_after": 1,
+        "probability_source": "immutable_prediction_event",
         "update_applied": True,
+        "revoked": False,
     }
-    row["event_hash"] = audit.canonical_hash({k: v for k, v in row.items() if k != "event_hash"})
-    return row
-
-
-def test_bernoulli_log_loss_and_validation() -> None:
-    """Spec: REQ-REPORT-7455: Loss computation and domain bounds."""
-    loss_0 = audit.bernoulli_log_loss(0, 0.1)
-    assert math.isclose(loss_0, -math.log(0.9), abs_tol=1e-7)
-    loss_1 = audit.bernoulli_log_loss(1, 0.8)
-    assert math.isclose(loss_1, -math.log(0.8), abs_tol=1e-7)
-
-    with pytest.raises(ValueError, match="binary label"):
-        audit.bernoulli_log_loss(2, 0.5)
-    with pytest.raises(ValueError, match="binary label"):
-        audit.bernoulli_log_loss(True, 0.5)  # type: ignore
-    with pytest.raises(ValueError, match="finite probability"):
-        audit.bernoulli_log_loss(1, -0.1)
-    with pytest.raises(ValueError, match="finite probability"):
-        audit.bernoulli_log_loss(1, 1.5)
-
-
-def test_independent_scalar_update_fixed_share() -> None:
-    """Spec: SCENARIO-REPORT-7455-ONLINE-REPLAY: Recompute fixed-share update."""
-    old_log_weights = {name: math.log(0.25) for name in audit.EXPERT_NAMES}
-    probs = {
-        "adaptive_gibbs": 0.2,
-        "adaptive_spline": 0.8,
-        "frozen_gibbs": 0.2,
-        "frozen_spline": 0.8,
+    feedback["event_hash"] = audit.event_hash(feedback)
+    outcome = {
+        "schema": audit.OUTCOME_SCHEMA,
+        "row_type": "outcome_event",
+        "group_id": "g1",
+        "ordering": "hash_order",
+        "delay": 8,
+        "seed": 65201,
+        "request_order": 0,
+        "ledger_sequence": 1,
+        "true_label": 1,
+        "revealed": True,
+        "prediction_event_hashes": {"learned_mixture": prediction["event_hash"]},
     }
-    update = audit.independent_scalar_update(
-        old_log_weights, probs, label=1, eta=1.0, fixed_share=0.01
+    outcome["event_hash"] = audit.event_hash(outcome)
+    checkpoint = {
+        "schema": audit.CHECKPOINT_SCHEMA,
+        "row_type": "checkpoint_event",
+        "arm": "learned_mixture",
+        "ordering": "hash_order",
+        "delay": 8,
+        "seed": 65201,
+        "completed_groups": 1,
+        "ledger_sequence": 3,
+        "state_hash": next_state["state_hash"],
+        "log_weights": next_state["log_weights"],
+        "feedback_count": 1,
+        "previous_checkpoint_hash": None,
+    }
+    checkpoint["event_hash"] = audit.event_hash(checkpoint)
+    return [prediction], [outcome], [feedback], [checkpoint]
+
+
+def test_scalar_reducer_recomputes_losses_normalizer_and_weights() -> None:
+    """SCENARIO-REPORT-7455-ONLINE-REPLAY uses saved prediction probabilities."""
+
+    probabilities = dict(zip(audit.EXPERT_NAMES, (0.7, 0.8, 0.6, 0.9), strict=True))
+    old = {name: math.log(0.25) for name in audit.EXPERT_NAMES}
+    reduced = audit.scalar_fixed_share_update(old, probabilities, 1, eta=1.0, fixed_share=0.01)
+    assert reduced["losses"]["frozen_spline"] == pytest.approx(-math.log(0.9))
+    assert math.fsum(math.exp(value) for value in reduced["new_log_weights"].values()) == (
+        pytest.approx(1.0)
     )
-    # Check that update contains all expected keys
-    assert "losses" in update
-    assert "penalized_log_weights" in update
-    assert "maximum" in update
-    assert "sum_exp" in update
-    assert "posterior_before_share" in update
-    assert "new_log_weights" in update
+    assert reduced["sum_exp"] > 0.0
+    with pytest.raises(ValueError, match="binary_label_invalid"):
+        audit.scalar_fixed_share_update(old, probabilities, 2, eta=1.0, fixed_share=0.01)
+    with pytest.raises(ValueError, match="expert_vector_invalid"):
+        audit.scalar_fixed_share_update(old, {}, 1, eta=1.0, fixed_share=0.01)
 
-    # The probabilities under label=1 gave lower loss to spline (0.8) than gibbs (0.2).
-    # So spline's new log weight should be greater than gibbs's new log weight.
+
+def test_online_replay_checks_causality_hashes_and_no_feedback() -> None:
+    """SCENARIO-REPORT-7455-ONLINE-REPLAY reconstructs causal state transitions."""
+
+    predictions, outcomes, feedback, checkpoints = _online_fixture()
+    result = audit.reduce_online_rows(predictions, outcomes, feedback, checkpoints)
+    assert result["errors"] == []
+    assert result["independent_update_replay"]["updates_replayed"] == 1
+    assert result["independent_update_replay"]["max_expert_loss_error"] < 1e-12
+    assert result["independent_update_replay"]["max_numeric_error"] < 1e-12
+    assert result["prediction_before_reveal"] is True
+
+    no_feedback_state = audit.initial_state("no_feedback_frozen_prior_mixture")
+    no_feedback = deepcopy(predictions[0])
+    no_feedback.update(
+        {
+            "arm": "no_feedback_frozen_prior_mixture",
+            "pre_feedback_state_hash": no_feedback_state["state_hash"],
+        }
+    )
+    no_feedback["event_hash"] = audit.event_hash(no_feedback)
+    result = audit.reduce_online_rows([*predictions, no_feedback], outcomes, feedback, checkpoints)
+    assert result["no_feedback_state_unchanged"] is True
+
+
+def test_registered_mutations_each_break_the_named_claim() -> None:
+    """SCENARIO-REPORT-7455-MUTATIONS rejects all six required corruptions."""
+
+    rows = audit.run_mutation_controls()
+    assert {row["mutation"] for row in rows} == set(audit.REQUIRED_MUTATIONS)
+    assert all(row["passed"] is True for row in rows)
+    assert all(row["rejected_claims"] for row in rows)
+
+    predictions, outcomes, feedback, checkpoints = _online_fixture()
+    changed = deepcopy(predictions)
+    changed[0]["expert_probabilities"]["adaptive_gibbs"] = 0.1
     assert (
-        update["new_log_weights"]["adaptive_spline"] > update["new_log_weights"]["adaptive_gibbs"]
+        "prediction_event_hash_mismatch"
+        in audit.reduce_online_rows(changed, outcomes, feedback, checkpoints)["errors"]
     )
 
-    # Weights in exp space must sum to 1.0
-    new_weights = [math.exp(update["new_log_weights"][name]) for name in audit.EXPERT_NAMES]
-    assert math.isclose(sum(new_weights), 1.0, abs_tol=1e-9)
+
+def test_branch_local_absence_does_not_hide_available_peer(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7455-INDEPENDENT keeps a missing static branch local."""
+
+    (tmp_path / "results").mkdir()
+    (tmp_path / "research-roadmap.yaml").write_text(
+        """milestone: 2026.09.653
+tasks:
+- id: exp7453-energy-calibration
+  deliverable: results/static.json
+- id: exp7454-continuous-learning
+  deliverable: results/online.json
+""",
+        encoding="utf-8",
+    )
+    (tmp_path / "results/online.json").write_text(
+        json.dumps(
+            {
+                "experiment_id": "exp7454-v653-continuous-learning",
+                "milestone": audit.MILESTONE,
+                "verdict_class": "null",
+                "flagged_adversarial": False,
+                "online_capture_complete_score": 1,
+                "honest_verdict": "complete_null_insufficient_online_benefit",
+            }
+        ),
+        encoding="utf-8",
+    )
+    checks, hashes, producers = audit.collect_preconditions(tmp_path)
+    assert producers["static"] == {}
+    assert producers["online"]["verdict_class"] == "null"
+    assert "results/online.json" in hashes
+    static = audit.blocked_branch("static", [row for row in checks if row["branch"] == "static"])
+    assert static["verdict_class"] == "blocked"
+    assert static["gate_check_summary"]["blocked_observed"] is False
+    assert static["gate_check_summary"]["blocked_path"] == "results/static.json"
 
 
-def test_initial_audit_state() -> None:
-    """Spec: SCENARIO-REPORT-7455-ONLINE-REPLAY: Initial state construction."""
-    state_mix = audit.initial_audit_state("learned_mixture")
-    assert state_mix["arm"] == "learned_mixture"
-    assert state_mix["feedback_count"] == 0
-    for name in audit.EXPERT_NAMES:
-        assert math.isclose(state_mix["log_weights"][name], math.log(0.25), abs_tol=1e-9)
+def test_classification_and_retirement_separate_validity_from_value() -> None:
+    """SCENARIO-REPORT-7455-RETIREMENT keeps a valid null and retires repetition."""
 
-    state_fs = audit.initial_audit_state("frozen_spline")
-    assert state_fs["log_weights"]["frozen_spline"] == 0.0  # log(1.0)
-    assert state_fs["log_weights"]["adaptive_gibbs"] == -math.inf
-
-
-def test_replay_event_stream_matches_exact_updates() -> None:
-    """Spec: SCENARIO-REPORT-7455-ONLINE-REPLAY: Replay stream matches exactly."""
-    pred = _make_prediction_event("group-0", seq=0)
-    fb = _make_feedback_event(pred, true_label=1, seq=1)
-
-    result = audit.replay_event_stream([pred], [fb])
-    assert result["updates_replayed"] == 1
-    assert result["all_updates_matched"] is True
-    assert result["max_loss_gap"] < 1e-9
-    assert result["max_weight_gap"] < 1e-9
-    assert result["no_feedback_immutable"] is True
-
-
-def test_scenario_independent_peer_not_hidden() -> None:
-    """Spec: SCENARIO-REPORT-7455-INDEPENDENT: One branch cannot hide its peer."""
-    # Build a simulated pre-gated static slot and valid online slot
-    static_slot = {
-        "task_id": "exp7453-energy-calibration",
-        "declared_path": "results/experiment_7453_v653_energy_calibration.json",
-        "source_path": "results/experiment_7453_energy_calibration.json",
-        "source_kind": "structured_pre_gate",
-        "authenticated": True,
-        "available": False,
-        "valid": True,
-        "verdict_class": "blocked",
-        "honest_verdict": "blocked_gate_check_failed",
-        "flagged_adversarial": False,
-        "gate_check_summary": {
-            "blocked_upstream": "exp7452-source-embeddings",
-            "blocked_path": "results/experiment_7452_v653_source_embeddings.json",
-            "blocked_check": "exp7452-source-embeddings.embedding_capture_ready_score",
-            "blocked_field": "embedding_capture_ready_score",
-            "blocked_expected": 1,
-            "blocked_observed": 0,
-        },
-    }
-    online_slot = {
-        "task_id": "exp7454-continuous-learning",
-        "declared_path": "results/experiment_7454_v653_continuous_learning.json",
-        "source_path": "results/experiment_7454_v653_continuous_learning.json",
-        "source_kind": "completed_artifact",
-        "authenticated": True,
+    static = {"branch": "static", "verdict_class": "blocked", "valid": False}
+    online = {
+        "branch": "online",
         "available": True,
-        "valid": True,
         "verdict_class": "null",
+        "valid": True,
+        "complete": True,
+        "value": False,
         "honest_verdict": "complete_null_insufficient_online_benefit",
-        "flagged_adversarial": False,
-        "gate_check_summary": {
-            "required_checks_passed": True,
-        },
     }
-    checks = [
-        {"check": "static:pre_gate", "passed": True, "branch": "static"},
-        {"check": "online:completed", "passed": True, "branch": "online"},
-    ]
-    static_audit = audit.audit_static_branch(Path("."), static_slot, checks)
-    online_audit = audit.audit_online_branch(Path("."), online_slot, checks, skip_rows=True)
-
-    assert static_audit["available"] is False
-    assert static_audit["verdict_class"] == "blocked"
-    assert online_audit["available"] is True
-    assert online_audit["verdict_class"] == "null"
-
-    terminal = audit.classify_terminal([static_audit, online_audit], validation_passed=True)
-    assert terminal["verdict_class"] == "blocked"
-    assert "blocked_static_upstream_science" in terminal["honest_verdict"]
-
-
-def test_scenario_mutations_rejected() -> None:
-    """Spec: SCENARIO-REPORT-7455-MUTATIONS: Evidence corruption fails closed."""
-    pred = _make_prediction_event("group-0", seq=0)
-    fb = _make_feedback_event(pred, true_label=1, seq=1)
-
-    # 1. Mutate prediction probability
-    bad_pred = deepcopy(pred)
-    bad_pred["expert_probabilities"]["adaptive_gibbs"] = 0.99
-    errors1 = audit.online_integrity_errors([bad_pred], [fb])
-    assert "prediction_probability_mutation" in errors1 or "event_hash_mismatch" in errors1
-
-    # 2. Shuffle event order: feedback before prediction
-    errors2 = audit.online_integrity_errors([pred], [fb], event_order_override=[fb, pred])
-    assert "causal_order_violation" in errors2
-
-    # 3. Drop feedback event
-    fb2 = _make_feedback_event(pred, true_label=1, seq=2)
-    fb2["parent_state_hash"] = fb["child_state_hash"]
-    fb2["event_hash"] = audit.canonical_hash({k: v for k, v in fb2.items() if k != "event_hash"})
-    errors3 = audit.online_integrity_errors([pred], [fb2])  # dropped fb
-    assert "state_chain_break" in errors3 or "missing_feedback_parent" in errors3
-
-    # 4. Leak test label into features
-    bad_pred_label = deepcopy(pred)
-    bad_pred_label["label"] = 1
-    errors4 = audit.online_integrity_errors([bad_pred_label], [fb])
-    assert "label_isolation_leak" in errors4
-
-    # 5. Duplicate source group
-    pred_dup = _make_prediction_event("group-0", seq=2)
-    errors5 = audit.online_integrity_errors([pred, pred_dup], [fb])
-    assert "duplicate_source_group" in errors5
-
-    # 6. Replace vector with length-only
-    bad_pred_vec = deepcopy(pred)
-    bad_pred_vec["expert_probabilities"] = 4  # length scalar instead of vector mapping
-    errors6 = audit.online_integrity_errors([bad_pred_vec], [fb])
-    assert "representation_vector_invalid" in errors6
-
-    # Test run_mutation_controls produces expected mutation rows
-    mutation_rows = audit.run_mutation_controls([pred], [fb])
-    assert len(mutation_rows) >= 6
-    assert all(r["passed"] is True for r in mutation_rows)
-    assert all(r["observed"] == "rejected" for r in mutation_rows)
-
-
-def test_scenario_retirement_on_repeated_nulls() -> None:
-    """Spec: SCENARIO-REPORT-7455-RETIREMENT: Repeated valid nulls mark mixture retirement."""
-    continuation = audit.continuation_rows(
+    classified = audit.classify_terminal([static, online], validation_passed=True)
+    assert classified["verdict_class"] == "blocked"
+    assert classified["decision_audit_complete_score"] == 1
+    continuations = audit.continuation_rows(
         static_verdict="blocked",
-        online_verdict="null",
+        online_verdict=online["honest_verdict"],
         online_retired=True,
     )
-    assert len(continuation) == 2
-    online_row = next(r for r in continuation if r["branch"] == "online")
-    assert online_row["status"] == "retired"
-    assert "repeated valid null" in online_row["reason"]
-    assert online_row["capstone_action"] == "retire_mechanism"
+    online_continuation = next(row for row in continuations if row["branch"] == "online")
+    assert online_continuation["status"] == "retired"
+    assert "repeated valid null" in online_continuation["reason"]
 
-
-def test_scenario_artifact_cold_replay_and_validation() -> None:
-    """Spec: SCENARIO-REPORT-7455-ARTIFACT: Exact readers control atomic publication."""
-    artifact = audit.build_artifact_for_test()
-    errors = audit.validate_artifact(artifact, verify_source_bytes=False)
-    assert errors == []
-
-    # Check top-level required fields
-    for field in audit.REQUIRED_FIELDS:
-        assert field in artifact, f"Missing required field: {field}"
-
-    # Check principles match top-level fields
-    for field in audit.REQUIRED_FIELDS:
-        assert field in artifact["field_principles"], f"Missing field principle: {field}"
-
-    # Corrupt checksum
-    corrupted = deepcopy(artifact)
-    corrupted["reproducibility_checksum"] = "bad_checksum"
-    errs = audit.validate_artifact(corrupted, verify_source_bytes=False)
-    assert "reproducibility_checksum_mismatch" in errs
-
-
-def test_evidence_slot_loading_and_branch_audits(tmp_path: Path) -> None:
-    """Spec: SCENARIO-REPORT-7455-INDEPENDENT: Evidence slot loading and branch audits."""
-    root = audit.REPO_ROOT
-    static_slot = audit.load_evidence_slot(
-        root,
-        "exp7453-energy-calibration",
-        Path("results/experiment_7453_v653_energy_calibration.json"),
-        fallback_path=Path("results/experiment_7453_energy_calibration.json"),
+    defective = {**online, "valid": False, "verdict_class": "disqualified"}
+    assert (
+        audit.classify_terminal([static, defective], validation_passed=True)["verdict_class"]
+        == "disqualified"
     )
-    assert static_slot["authenticated"] is True
-    assert static_slot["available"] is False
-    assert static_slot["source_kind"] == "structured_pre_gate"
+    assert audit.classify_terminal([online], validation_passed=False)["verdict_class"] == (
+        "disqualified"
+    )
 
-    online_slot = audit.load_evidence_slot(
-        root,
+
+def test_fixture_artifact_and_fresh_process_modes(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """SCENARIO-REPORT-7455-ARTIFACT binds terminal reductions and checksum."""
+
+    artifact = audit.build_artifact_for_test()
+    assert audit.validate_artifact(artifact, verify_source_bytes=False) == []
+    path = tmp_path / "candidate.json"
+    path.write_text(json.dumps(artifact), encoding="utf-8")
+    assert audit.cold_replay(path, verify_source_bytes=False) == []
+    assert audit.main(["--cold-replay", str(path), "--skip-source-bytes"]) == 0
+    assert json.loads(capsys.readouterr().out)["errors"] == []
+    assert audit.main(["--independent-reduce", str(path), "--skip-source-bytes"]) == 0
+    assert json.loads(capsys.readouterr().out)["errors"] == []
+
+    changed = deepcopy(artifact)
+    changed["promotion_score"] = 1
+    changed["reproducibility_checksum"] = audit.reproducibility_checksum(changed)
+    assert "promotion_score_invalid" in audit.validate_artifact(changed, verify_source_bytes=False)
+    changed = deepcopy(artifact)
+    changed["branch_rows"][0]["original_flagged_adversarial"] = True
+    changed["reproducibility_checksum"] = audit.reproducibility_checksum(changed)
+    assert "branch_rows_mismatch" in audit.validate_artifact(changed, verify_source_bytes=False)
+    with pytest.raises(SystemExit, match="--date is required"):
+        audit.main([])
+
+
+def test_validation_plan_is_exact_and_private(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7455-ARTIFACT freezes the Exp7358 affected command plan."""
+
+    private = tmp_path / "private"
+    private.mkdir()
+    commands = audit.build_validation_commands(audit.REPO_ROOT, private)
+    assert [command.name for command in commands] == list(audit.AFFECTED_CHECK_NAMES)
+    focused = next(command for command in commands if command.name == "focused_pytest")
+    assert "-n" in focused.argv and "0" in focused.argv
+    assert "--no-cov" in focused.argv
+    assert any(arg.startswith("--basetemp=") for arg in focused.argv)
+    assert "tests/python" not in focused.argv
+
+
+@pytest.mark.memory_watchdog_skip
+def test_actual_exp7454_rows_replay_while_exp7453_remains_blocked() -> None:
+    """REQ-REPORT-7455 audits both real branches even when one producer is absent."""
+
+    checks, hashes, producers, static, online = audit.audit_sources(audit.REPO_ROOT)
+    assert (
+        hashes["results/experiment_7454_v653_continuous_learning.json"]["original_verdict_class"]
+        == "null"
+    )
+    assert producers["static"]["schema"] == "blocked_gate_check_v1"
+    assert static["verdict_class"] == "blocked"
+    assert online["valid"] is True
+    assert online["verdict_class"] == "null"
+    assert online["prediction_row_count"] == 5271
+    assert online["feedback_row_count"] == 940
+    assert online["independent_update_replay"]["updates_replayed"] == 940
+    assert online["independent_update_replay"]["max_numeric_error"] < 1e-12
+    assert any(row["branch"] == "static" and not row["passed"] for row in checks)
+
+
+def test_event_validators_and_scalar_boundaries() -> None:
+    """SCENARIO-REPORT-7455-MUTATIONS rejects malformed numeric operands."""
+
+    predictions, _outcomes, feedback, _checkpoints = _online_fixture()
+    prediction = predictions[0]
+    row = deepcopy(prediction)
+    row["label"] = 1
+    with pytest.raises(ValueError, match="contains_label"):
+        audit.validate_prediction_event(row)
+    row = deepcopy(prediction)
+    row["expert_probabilities"] = {}
+    with pytest.raises(ValueError, match="experts_invalid"):
+        audit.validate_prediction_event(row)
+    row = deepcopy(prediction)
+    row["mixture_weights"] = "bad"
+    with pytest.raises(ValueError, match="weights_invalid"):
+        audit.validate_prediction_event(row)
+    row = deepcopy(prediction)
+    row["mixture_weights"]["adaptive_gibbs"] = 0.9
+    with pytest.raises(ValueError, match="weights_invalid"):
+        audit.validate_prediction_event(row)
+
+    fb = deepcopy(feedback[0])
+    fb["true_label"] = 2
+    with pytest.raises(ValueError, match="true_label_invalid"):
+        audit.validate_feedback_event(fb)
+    fb = deepcopy(feedback[0])
+    fb["prediction_event_hash"] = ""
+    with pytest.raises(ValueError, match="missing_prediction_hash"):
+        audit.validate_feedback_event(fb)
+    fb = deepcopy(feedback[0])
+    fb["event_hash"] = "sha256:wrong"
+    with pytest.raises(ValueError, match="hash_mismatch"):
+        audit.validate_feedback_event(fb)
+
+    old = {name: math.log(0.25) for name in audit.EXPERT_NAMES}
+    probabilities = {name: 0.5 for name in audit.EXPERT_NAMES}
+    with pytest.raises(ValueError, match="update_parameter_invalid"):
+        audit.scalar_fixed_share_update(old, probabilities, 1, eta=-1.0, fixed_share=0.0)
+    with pytest.raises(ValueError, match="binary label"):
+        audit.bernoulli_log_loss(True, 0.5)  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="finite probability"):
+        audit.bernoulli_log_loss(1, math.inf)
+    with pytest.raises(ValueError, match="arm_does_not_accept_feedback"):
+        audit.advance_state(audit.initial_state("unknown"), prediction, 1)
+
+
+def test_online_reducer_defensive_corruptions() -> None:
+    """SCENARIO-REPORT-7455-MUTATIONS names every raw-event corruption."""
+
+    predictions, outcomes, feedback, checkpoints = _online_fixture()
+    all_errors: set[str] = set()
+
+    duplicate_predictions = [*predictions, deepcopy(predictions[0])]
+    all_errors.update(
+        audit.reduce_online_rows(
+            duplicate_predictions, outcomes, feedback, checkpoints, bootstrap_draws=4
+        )["errors"]
+    )
+
+    bad_outcomes = [deepcopy(outcomes[0]) for _ in range(4)]
+    bad_outcomes[0]["schema"] = "wrong"
+    bad_outcomes[0]["prediction_event_hashes"] = {"learned_mixture": "sha256:missing"}
+    bad_outcomes[1]["true_label"] = 2
+    all_errors.update(
+        audit.reduce_online_rows(
+            predictions, bad_outcomes, feedback, checkpoints, bootstrap_draws=4
+        )["errors"]
+    )
+
+    bad_feedback = [deepcopy(feedback[0])]
+    bad_feedback[0].update(
+        {
+            "ledger_sequence": 0,
+            "probability_source": "future_label",
+            "revoked": True,
+            "parent_state_hash": "sha256:wrong",
+            "feedback_count_before": 9,
+            "feedback_count_after": 9,
+            "child_state_hash": "sha256:wrong",
+        }
+    )
+    bad_feedback[0]["per_expert_loss"]["adaptive_gibbs"] += 1.0
+    bad_feedback[0]["normalizer"]["maximum"] = None
+    bad_feedback[0]["event_hash"] = audit.event_hash(bad_feedback[0])
+    all_errors.update(
+        audit.reduce_online_rows(
+            predictions, outcomes, bad_feedback, checkpoints, bootstrap_draws=4
+        )["errors"]
+    )
+
+    missing_prediction = [deepcopy(feedback[0])]
+    missing_prediction[0]["prediction_event_hash"] = "sha256:missing"
+    missing_prediction[0]["event_hash"] = audit.event_hash(missing_prediction[0])
+    all_errors.update(
+        audit.reduce_online_rows(
+            predictions, outcomes, missing_prediction, checkpoints, bootstrap_draws=4
+        )["errors"]
+    )
+
+    invalid_label = [deepcopy(feedback[0])]
+    invalid_label[0]["feedback_label"] = 2
+    invalid_label[0]["event_hash"] = audit.event_hash(invalid_label[0])
+    all_errors.update(
+        audit.reduce_online_rows(
+            predictions, outcomes, invalid_label, checkpoints, bootstrap_draws=4
+        )["errors"]
+    )
+
+    duplicate_feedback = [deepcopy(feedback[0]), deepcopy(feedback[0])]
+    all_errors.update(
+        audit.reduce_online_rows(
+            predictions, outcomes, duplicate_feedback, checkpoints, bootstrap_draws=4
+        )["errors"]
+    )
+
+    bad_checkpoint = [deepcopy(checkpoints[0])]
+    bad_checkpoint[0]["previous_checkpoint_hash"] = "sha256:wrong"
+    bad_checkpoint[0]["state_hash"] = "sha256:wrong"
+    all_errors.update(
+        audit.reduce_online_rows(
+            predictions, outcomes, feedback, bad_checkpoint, bootstrap_draws=4
+        )["errors"]
+    )
+
+    no_feedback = deepcopy(predictions[0])
+    no_feedback.update(
+        {
+            "arm": "no_feedback_frozen_prior_mixture",
+            "group_id": "g2",
+            "pre_feedback_state_hash": "sha256:wrong",
+        }
+    )
+    no_feedback["event_hash"] = audit.event_hash(no_feedback)
+    all_errors.update(
+        audit.reduce_online_rows(
+            [*predictions, no_feedback], outcomes, feedback, checkpoints, bootstrap_draws=4
+        )["errors"]
+    )
+
+    expected = {
+        "duplicate_source_group",
+        "outcome_event_hash_mismatch",
+        "outcome_label_invalid",
+        "duplicate_outcome_group",
+        "outcome_prediction_reference_missing",
+        "prediction_not_before_reveal",
+        "feedback_probability_source_invalid",
+        "feedback_admission_invalid",
+        "parent_state_hash_mismatch",
+        "feedback_count_before_mismatch",
+        "feedback_count_after_mismatch",
+        "expert_loss_mismatch",
+        "numeric_update_mismatch",
+        "child_state_hash_mismatch",
+        "feedback_prediction_missing",
+        "feedback_label_invalid",
+        "duplicate_feedback_event",
+        "feedback_event_order_invalid",
+        "checkpoint_event_hash_mismatch",
+        "checkpoint_lineage_invalid",
+        "checkpoint_state_mismatch",
+        "no_feedback_state_mutated",
+        "prediction_outcome_missing",
+    }
+    assert expected <= all_errors
+
+
+def test_evidence_boundaries_and_reader_failures(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """SCENARIO-REPORT-7455-ARTIFACT fails closed on unreadable evidence."""
+
+    missing = audit.load_evidence_slot(tmp_path, "missing", Path("results/missing.json"))
+    assert missing["authenticated"] is False
+    missing_fallback = audit.load_evidence_slot(
+        tmp_path,
+        "missing",
+        Path("results/missing.json"),
+        fallback_path=Path("results/also-missing.json"),
+    )
+    assert missing_fallback["source_kind"] == "missing"
+    assert audit._roadmap_deliverables(tmp_path / "missing.yaml") == {}
+    malformed = tmp_path / "malformed.yaml"
+    malformed.write_text("tasks: [", encoding="utf-8")
+    assert audit._roadmap_deliverables(malformed) == {}
+
+    shard = tmp_path / "rows.jsonl"
+    shard.write_text('{"x": 1}\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="shard_hash_mismatch"):
+        audit._load_manifest_rows(
+            tmp_path, [{"path": "rows.jsonl", "sha256": "sha256:wrong", "rows": 1}]
+        )
+    with pytest.raises(ValueError, match="shard_row_count_mismatch"):
+        audit._load_manifest_rows(
+            tmp_path,
+            [{"path": "rows.jsonl", "sha256": audit.sha256_file(shard), "rows": 2}],
+        )
+
+    blocked = audit.audit_online_branch(tmp_path, missing, [])
+    assert blocked["verdict_class"] == "blocked"
+    static_available = {**missing, "available": True, "valid": True, "verdict_class": "null"}
+    assert audit.audit_static_branch(tmp_path, static_available, [])["available"] is True
+
+    artifact = audit.build_artifact_for_test()
+    path = tmp_path / "fixture.json"
+    path.write_text(json.dumps(artifact), encoding="utf-8")
+    assert audit.independent_replay(path, root=audit.REPO_ROOT)
+    assert audit.cold_replay(tmp_path / "absent.json") == ["candidate_artifact_unreadable"]
+    assert audit.main(["--independent-reduce", str(path)]) == 1
+    assert json.loads(capsys.readouterr().out)["errors"]
+
+
+def test_artifact_defensive_fields_and_runtime_plans(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7455-ARTIFACT validates each terminal control field."""
+
+    base = audit.build_artifact_for_test()
+    mutations = (
+        ("schema", "wrong", "artifact_identity_invalid"),
+        ("milestone", "wrong", "artifact_schedule_invalid"),
+        ("MODEL_SPECS", ["model"], "current_model_declaration_invalid"),
+        ("invocation_counts", {}, "current_invocation_counts_invalid"),
+        ("inference_substrate_class", "gpu", "inference_substrate_class_invalid"),
+        ("execution_venue", "remote", "execution_venue_invalid"),
+        ("decision_audit_complete_score", 2, "decision_audit_complete_score_invalid"),
+        ("mutation_rows", [], "mutation_controls_invalid"),
+    )
+    for field, changed_value, expected in mutations:
+        changed = deepcopy(base)
+        changed[field] = changed_value
+        assert expected in audit.validate_artifact(changed, verify_source_bytes=False)
+
+    missing_field = deepcopy(base)
+    del missing_field["rows"]
+    assert "required_field_missing:rows" in audit.validate_artifact(
+        missing_field, verify_source_bytes=False
+    )
+    bad_source = deepcopy(base)
+    bad_source["source_artifact_hashes"] = {"bad": "not-a-mapping"}
+    assert "source_reference_invalid:bad" in audit.validate_artifact(
+        bad_source, verify_source_bytes=True
+    )
+    bad_source["source_artifact_hashes"] = {
+        "missing": {"path": "missing", "sha256": "sha256:missing"}
+    }
+    assert "source_hash_mismatch:missing" in audit.validate_artifact(
+        bad_source, root=tmp_path, verify_source_bytes=True
+    )
+
+    assert len(audit._terminal_commands(tmp_path / "candidate.json")) == 4
+    span = audit._span("fixture", 1.0, 0.0, 2)
+    assert span["completed_units"] == 2
+    audit._progress(0.0, "fixture", "event", units=1)
+    assert (
+        audit.classify_terminal(
+            [
+                {"branch": "static", "available": True, "valid": True, "value": True},
+                {"branch": "online", "available": True, "valid": True, "value": False},
+            ],
+            validation_passed=True,
+        )["verdict_class"]
+        == "positive"
+    )
+    assert (
+        audit.classify_terminal(
+            [
+                {"branch": "static", "available": True, "valid": True, "value": False},
+                {"branch": "online", "available": True, "valid": True, "value": False},
+            ],
+            validation_passed=True,
+        )["verdict_class"]
+        == "null"
+    )
+
+    with pytest.raises(SystemExit, match="--date must be"):
+        audit.run_experiment(audit.REPO_ROOT, "wrong")
+
+
+def test_remaining_reader_boundaries(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """SCENARIO-REPORT-7455-ARTIFACT covers remaining fail-closed readers."""
+
+    predictions, outcomes, feedback, checkpoints = _online_fixture()
+    assert math.isinf(audit._max_gap({}, {}))
+    bad_hash = [deepcopy(feedback[0])]
+    bad_hash[0]["event_hash"] = "sha256:wrong"
+    assert (
+        "feedback_event_hash_mismatch"
+        in audit.reduce_online_rows(
+            predictions, outcomes, bad_hash, checkpoints, bootstrap_draws=4
+        )["errors"]
+    )
+    assert (
+        audit.online_integrity_errors(
+            predictions, feedback, event_order_override=[predictions[0], feedback[0]]
+        )
+        == []
+    )
+    assert len(audit.run_mutation_controls(predictions, [feedback[0], feedback[0]])) == 6
+
+    nonlist = tmp_path / "nonlist.yaml"
+    nonlist.write_text("tasks: mapping\n", encoding="utf-8")
+    assert audit._roadmap_deliverables(nonlist) == {}
+    assert audit._load_jsonl_rows(tmp_path / "absent.jsonl") == []
+
+    slot = audit.load_evidence_slot(
+        audit.REPO_ROOT,
         "exp7454-continuous-learning",
         Path("results/experiment_7454_v653_continuous_learning.json"),
-        fallback_path=Path("results/experiment_7454_continuous_learning.json"),
     )
-    assert online_slot["authenticated"] is True
-    assert online_slot["available"] is True
-    assert online_slot["source_kind"] == "completed_artifact"
-
-    # Missing file
-    missing_slot = audit.load_evidence_slot(root, "exp-none", Path("results/nonexistent_123.json"))
-    assert missing_slot["authenticated"] is False
-    assert missing_slot["available"] is False
-
-    missing_fallback = audit.load_evidence_slot(
-        root,
-        "exp-none",
-        Path("results/nonexistent_123.json"),
-        fallback_path=Path("results/nonexistent_456.json"),
-    )
-    assert missing_fallback["authenticated"] is False
-
-    # Audit branches with real repository data
-    checks: list[dict[str, Any]] = []
-    static_audit = audit.audit_static_branch(root, static_slot, checks)
-    assert static_audit["verdict_class"] == "blocked"
-
-    online_audit = audit.audit_online_branch(root, online_slot, checks)
-    assert online_audit["verdict_class"] == "null"
-    assert online_audit["raw_row_count"] > 0
-
-    # Test audit_online_branch when unavailable
-    unavail_slot = deepcopy(online_slot)
-    unavail_slot["available"] = False
-    unavail_audit = audit.audit_online_branch(root, unavail_slot, checks)
-    assert unavail_audit["verdict_class"] == "blocked"
-
-
-def test_validate_events_error_paths() -> None:
-    """Spec: SCENARIO-REPORT-7455-MUTATIONS: Validation errors on corrupted events."""
-    pred = _make_prediction_event("g1")
-    fb = _make_feedback_event(pred)
-
-    # Missing expert in prediction
-    bad_pred1 = deepcopy(pred)
-    del bad_pred1["expert_probabilities"]["adaptive_gibbs"]
-    with pytest.raises(ValueError, match="prediction_experts_invalid"):
-        audit.validate_prediction_event(bad_pred1)
-
-    # Weights don't sum to 1
-    bad_pred2 = deepcopy(pred)
-    bad_pred2["mixture_weights"]["adaptive_gibbs"] = 0.9
-    with pytest.raises(ValueError, match="prediction_weights_invalid"):
-        audit.validate_prediction_event(bad_pred2)
-
-    # Invalid weights mapping
-    bad_pred3 = deepcopy(pred)
-    bad_pred3["mixture_weights"] = "bad"
-    with pytest.raises(ValueError, match="prediction_weights_invalid"):
-        audit.validate_prediction_event(bad_pred3)
-
-    # Hash mismatch in prediction
-    bad_pred4 = deepcopy(pred)
-    bad_pred4["event_hash"] = "sha256:wrong_hash"
-    with pytest.raises(ValueError, match="prediction_event_hash_mismatch"):
-        audit.validate_prediction_event(bad_pred4)
-
-    # Feedback invalid true_label
-    bad_fb1 = deepcopy(fb)
-    bad_fb1["true_label"] = 2
-    with pytest.raises(ValueError, match="feedback_event_true_label_invalid"):
-        audit.validate_feedback_event(bad_fb1)
-
-    # Feedback missing prediction hash
-    bad_fb2 = deepcopy(fb)
-    bad_fb2["prediction_event_hash"] = ""
-    with pytest.raises(ValueError, match="feedback_missing_prediction_hash"):
-        audit.validate_feedback_event(bad_fb2)
-
-    # Feedback hash mismatch
-    bad_fb3 = deepcopy(fb)
-    bad_fb3["event_hash"] = "sha256:wrong_fb_hash"
-    with pytest.raises(ValueError, match="feedback_event_hash_mismatch"):
-        audit.validate_feedback_event(bad_fb3)
-
-
-def test_validate_artifact_disqualification_and_errors() -> None:
-    """Spec: SCENARIO-REPORT-7455-ARTIFACT: Strict artifact validation error paths."""
-    base = audit.build_artifact_for_test()
-
-    for field in ("schema", "experiment_id", "milestone", "run_date"):
-        bad = deepcopy(base)
-        bad[field] = "wrong"
-        assert len(audit.validate_artifact(bad, verify_source_bytes=False)) > 0
-
-    bad_model = deepcopy(base)
-    bad_model["MODEL_SPECS"] = ["some_model"]
-    assert "current_model_declaration_invalid" in audit.validate_artifact(
-        bad_model, verify_source_bytes=False
+    skipped = audit.audit_online_branch(audit.REPO_ROOT, slot, [], skip_rows=True)
+    assert skipped["valid"] is True
+    broken = deepcopy(slot)
+    broken["payload"]["prediction_event_shards"][0]["sha256"] = "sha256:wrong"
+    assert audit.audit_online_branch(audit.REPO_ROOT, broken, [])["verdict_class"] == (
+        "disqualified"
     )
 
-    bad_counts = deepcopy(base)
-    bad_counts["invocation_counts"]["model_loads_attempted"] = 1
-    assert "current_invocation_counts_invalid" in audit.validate_artifact(
-        bad_counts, verify_source_bytes=False
+    missing_root = tmp_path / "missing-root"
+    missing_root.mkdir()
+    _checks, _hashes, _producers, static, online = audit.audit_sources(missing_root)
+    assert static["verdict_class"] == online["verdict_class"] == "blocked"
+
+    malformed_source_root = tmp_path / "malformed-source-root"
+    (malformed_source_root / "results").mkdir(parents=True)
+    (malformed_source_root / "research-roadmap.yaml").write_text(
+        """milestone: 2026.09.653
+tasks:
+- id: exp7454-continuous-learning
+  deliverable: results/online.json
+""",
+        encoding="utf-8",
     )
-
-    bad_sub = deepcopy(base)
-    bad_sub["inference_substrate_class"] = "cuda"
-    assert "inference_substrate_class_invalid" in audit.validate_artifact(
-        bad_sub, verify_source_bytes=False
+    (malformed_source_root / "results/online.json").write_text(
+        json.dumps(
+            {
+                "experiment_id": "exp7454-v653-continuous-learning",
+                "milestone": audit.MILESTONE,
+                "verdict_class": "null",
+                "flagged_adversarial": False,
+                "source_artifact_hashes": {"malformed": "not-a-mapping"},
+            }
+        ),
+        encoding="utf-8",
     )
-
-    bad_venue = deepcopy(base)
-    bad_venue["execution_venue"] = "remote"
-    assert "execution_venue_invalid" in audit.validate_artifact(
-        bad_venue, verify_source_bytes=False
+    malformed_checks, _malformed_hashes, _malformed_loaded = audit.collect_preconditions(
+        malformed_source_root
     )
+    assert any(row["check"] == "online:artifact_exists" for row in malformed_checks)
 
-    bad_promo = deepcopy(base)
-    bad_promo["promotion_score"] = 1
-    assert "promotion_score_invalid" in audit.validate_artifact(
-        bad_promo, verify_source_bytes=False
-    )
+    nonfixture = audit.build_artifact_for_test()
+    nonfixture["fixture_artifact"] = False
+    nonfixture["reproducibility_checksum"] = audit.reproducibility_checksum(nonfixture)
+    assert audit.validate_artifact(nonfixture, verify_source_bytes=False) == []
 
-    bad_score = deepcopy(base)
-    bad_score["decision_audit_complete_score"] = 0
-    assert "decision_audit_complete_score_invalid" in audit.validate_artifact(
-        bad_score, verify_source_bytes=False
-    )
-
-    bad_mutations = deepcopy(base)
-    bad_mutations["mutation_rows"] = []
-    assert "mutation_controls_invalid" in audit.validate_artifact(
-        bad_mutations, verify_source_bytes=False
-    )
-
-    bad_branch = deepcopy(base)
-    bad_branch["online_audit"]["valid"] = False
-    assert "terminal_classification_mismatch" in audit.validate_artifact(
-        bad_branch, verify_source_bytes=False
-    )
-
-
-def test_cold_and_independent_replay(tmp_path: Path) -> None:
-    """Spec: SCENARIO-REPORT-7455-ARTIFACT: Cold and independent replay interfaces."""
-    artifact = audit.build_artifact_for_test()
-    art_path = tmp_path / "candidate.json"
-    art_path.write_text(json.dumps(artifact), encoding="utf-8")
-
-    errs = audit.cold_replay(art_path, verify_source_bytes=False)
-    assert errs == []
-
-    errs_ind = audit.independent_replay(art_path)
-    assert errs_ind == []
-
-    bad_file = tmp_path / "nonexistent.json"
-    assert audit.cold_replay(bad_file) == ["candidate_artifact_unreadable"]
-
-
-def test_cli_main_and_validation_commands(tmp_path: Path) -> None:
-    """Spec: SCENARIO-REPORT-7455-ARTIFACT: Command line interface and validation plan."""
-    artifact = audit.build_artifact_for_test()
-    art_path = tmp_path / "candidate.json"
-    art_path.write_text(json.dumps(artifact), encoding="utf-8")
-
-    # Test build_validation_commands
-    cmds = audit.build_validation_commands(audit.REPO_ROOT, tmp_path)
-    assert len(cmds) > 0
-
-    # Test main --cold-replay
-    ret_cold = audit.main(["--cold-replay", str(art_path), "--skip-source-bytes"])
-    assert ret_cold == 0
-
-    # Test main --independent-reduce
-    ret_ind = audit.main(["--independent-reduce", str(art_path), "--skip-source-bytes"])
-    assert ret_ind == 0
-
-    # Test main missing --date
-    with pytest.raises(SystemExit):
-        audit.main([])
+    monkeypatch.setattr(audit, "validate_command_plan", lambda *_args: ["forced"])
+    with pytest.raises(ValueError, match="validation_plan_invalid"):
+        audit.build_validation_commands(audit.REPO_ROOT, tmp_path)
