@@ -20206,3 +20206,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-20: Independently audit source conditioning and continuous learning (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7455_v653_decision_audit.json
 - 2026-09-20: Audit compact extraction coverage and every failed call (⚠️ Research Finding) — honest_verdict=complete_null_extraction_audit_preserved_development_gate_closed; results/experiment_7456_v653_extraction_audit.json
 - 2026-09-20: Measure live supervisor exposure beyond its stagnation threshold (⚠️ Research Finding) — honest_verdict=complete_null_bounded_exposure_no_arm_promotion; results/experiment_7457_v653_arc_exposure.json
+- 2026-09-20: Test append-only learning state with unchanged acknowledgement semantics (⚠️ Research Finding) — honest_verdict=complete_null_durable_delta_speed_gate_not_met; results/experiment_7458_v653_durable_updates.json
