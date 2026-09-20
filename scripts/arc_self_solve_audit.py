@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -121,9 +122,17 @@ def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tupl
             check=False,
             cwd=PROJECT_ROOT,
         )
-        return (proc.returncode == 0, proc.stdout if proc.returncode == 0 else proc.stderr[:300])
+        ok = proc.returncode == 0
+        output = proc.stdout if ok else proc.stderr[:300]
     except Exception as exc:
-        return False, str(exc)
+        ok, output = False, str(exc)
+    if ok:
+        return True, output
+    return call_codex(
+        prompt,
+        body,
+        model=os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-5.6-sol"),
+    )
 
 
 def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, str]:

@@ -51,6 +51,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -172,9 +173,17 @@ def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
                 timeout=420,
                 check=False,
             )
-            return (r.returncode == 0, r.stdout or r.stderr)
+            ok, output = r.returncode == 0, r.stdout or r.stderr
         except Exception as exc:  # noqa: BLE001
-            return False, repr(exc)[:200]
+            ok, output = False, repr(exc)[:200]
+        if ok:
+            return True, output
+        return _call(
+            "codex",
+            os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-5.6-sol"),
+            prompt,
+            body,
+        )
     cmds = {
         "codex": ["codex", "exec", "--model", model, "-"],
         "claude": ["claude", "-p", "--model", model],

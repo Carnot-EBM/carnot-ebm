@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import os
 import re
 import shutil
 import subprocess
@@ -178,11 +179,16 @@ def call_agy(prompt: str, model: str = "gemini-3.1-pro-high") -> tuple[bool, str
             check=False,
             cwd=PROJECT_ROOT,
         )
-        if proc.returncode != 0:
-            return False, f"agy exit {proc.returncode}: {proc.stderr[:200]}"
-        return True, proc.stdout
+        ok = proc.returncode == 0
+        output = proc.stdout if ok else f"agy exit {proc.returncode}: {proc.stderr[:200]}"
     except Exception as exc:
-        return False, str(exc)
+        ok, output = False, str(exc)
+    if ok:
+        return True, output
+    return call_codex(
+        prompt,
+        model=os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-5.6-sol"),
+    )
 
 
 def call_claude(prompt: str, model: str = "claude-opus-4-8") -> tuple[bool, str]:

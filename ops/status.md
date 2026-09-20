@@ -16698,3 +16698,11 @@ focused tests passed; spec-reference coverage passed. The next step is normal
 conductor activation of the staged plan. No V648 experiment, GPU run or
 physical-board action was executed during planning. The original V647 design
 is archived as `research-roadmap-v647-preserved-20260918.md`.
+
+## 2026-09-20 — Environment-gated agy routing
+
+REQ-INFRA-7088 adds agy as a conductor backend for non-planning tasks.
+`AGY_FORCE_EXPERIMENTS=1` selects it for eligible experiments. Failed calls
+retry once with Codex unless a non-empty deliverable exists. Planning stays on
+its existing route. The new route remains inactive until the operator sets its
+environment variables.

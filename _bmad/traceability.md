@@ -2936,3 +2936,11 @@ research-references.md under the dated V648 review. Planning checks passed:
 independent fourteen-row comparison, eight contract mutations, 123 actual
 conductor gate-reader cases, schema/prior-failure/gate audits, and 62 existing
 roadmap-consumer tests with their spec references.
+
+## 2026-09-20 — REQ-INFRA-7088 agy routing
+
+REQ-INFRA-7088 and its two scenarios map to `scripts/research_conductor.py`,
+the six milestone-close audit scripts, and
+`tests/python/test_conductor_agy_routing.py`. Agy requires a zero exit and a
+final `SUCCESS` result event. One failed agy call retries with Codex. Planning
+is unchanged, and the route stays inactive without operator environment flags.

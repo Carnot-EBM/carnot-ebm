@@ -4894,6 +4894,35 @@ stages nothing but an oversized file is not the scenario this incident describes
 
 **Spec traces:** REQ-INFRA-7087
 
+### REQ-INFRA-7088: Selected Non-Planning Agent Calls MUST Route Through Agy
+
+**Statement:** The conductor MUST accept `agy` as an agent type. An agy call MUST use a
+Gemini model, stream JSON progress, pass its prompt as the final argument, and tell the agent
+to use absolute paths below `PROJECT_ROOT`. The call succeeds only when the process exits zero
+and its final result event has status `SUCCESS`. A failed agy call MUST retry once with Codex,
+unless the first call already wrote a non-empty deliverable. Planning routes MUST remain
+unchanged. This behavior MUST remain disabled until the operator selects it with environment
+variables.
+
+### SCENARIO-INFRA-7088-AGY-ROUTING: The Operator Routes An Experiment Through Agy
+
+**Given** the operator enables `AGY_FORCE_EXPERIMENTS=1`
+**When** a research task selects Claude, Codex, or Gemini without a verified-agent exemption
+**Then** the conductor coerces the task and its model to agy, while planning remains unchanged
+
+### SCENARIO-INFRA-7088-CODEX-FAILOVER: Agy Does Not Return A Successful Result
+
+**Given** an agy call exits non-zero, reports a non-success status, or has no final result event
+**When** the call did not create a non-empty deliverable
+**Then** the conductor retries the same task once with the configured Codex fallback model and
+never retries it with Claude
+
+**Implementation:** `scripts/research_conductor.py` and the six milestone-close audit scripts.
+
+**Tests:** `tests/python/test_conductor_agy_routing.py`.
+
+**Spec traces:** REQ-INFRA-7088
+
 ### REQ-PIPELINE-6703: Cold Audit Rows Own The Readiness Gate
 
 Exp6703 SHALL reduce `planning_fixture_audit_passed` only from raw coverage,

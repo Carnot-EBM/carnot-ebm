@@ -8,7 +8,7 @@ Tasks are loaded from YAML files:
 Milestones use CalVer (YYYY.MM.seq) to show chronology.
 See openspec/change-proposals/ for roadmap design docs.
 
-Uses the configured agent CLI (`claude`, `gemini`, `opencode`, or `codex`)
+Uses the configured agent CLI (`claude`, `gemini`, `opencode`, `codex`, or `agy`)
 to actually implement research improvements, not just run benchmarks.
 Each iteration: identify a gap → ask the agent to fix it → verify tests
 pass → commit → push.
@@ -51,16 +51,19 @@ logging.basicConfig(
 logger = logging.getLogger("conductor")
 
 PROJECT_ROOT = Path(__file__).parent.parent
+AGY_BIN = (
+    os.environ.get("AGY_BIN") or shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
+)
 
-# Per-agent-type lookup tables. Module-level constants for the four supported
-# CLI backends; per-task agent_type override (added 2026-04-29) reads from
-# these instead of the process-startup AGENT_TYPE constant. See
-# openspec/change-proposals/multi-agent-routing.md.
+# Per-agent-type lookup tables. A per-task agent_type override (added
+# 2026-04-29) reads from these instead of the process-startup AGENT_TYPE.
+# See openspec/change-proposals/multi-agent-routing.md.
 AGENT_BIN_BY_TYPE = {
     "claude": os.environ.get("CLAUDE_BIN", "claude"),
     "gemini": os.environ.get("GEMINI_BIN", "gemini"),
     "opencode": os.environ.get("OPENCODE_BIN", "opencode"),
     "codex": os.environ.get("CODEX_BIN", "codex"),
+    "agy": AGY_BIN,
 }
 DEFAULT_MODEL_BY_TYPE = {
     # 2026-06-20 operator directive: the claude -p bridge uses Opus 4.8 (the ultracode
@@ -78,9 +81,10 @@ DEFAULT_MODEL_BY_TYPE = {
     # audit already ran gpt-5.6-sol via their own AGENT_MODEL_* env vars; only
     # the experiment tier was left behind, so a milestone mixed both models.
     "codex": "gpt-5.6-sol",
+    "agy": "gemini-3.8-flash-high",
 }
 
-# Flexible agent configuration: AGENT_TYPE can be 'claude', 'gemini', 'opencode', or 'codex'
+# AGENT_TYPE accepts every backend in AGENT_BIN_BY_TYPE.
 RAW_AGENT_TYPE = os.environ.get("AGENT_TYPE", "claude").lower()
 if RAW_AGENT_TYPE in AGENT_BIN_BY_TYPE:
     AGENT_TYPE = RAW_AGENT_TYPE
@@ -168,6 +172,7 @@ AGENT_DISPLAY_BY_TYPE = {
     "gemini": "Gemini CLI",
     "opencode": "OpenCode CLI",
     "codex": "Codex CLI",
+    "agy": "Agy CLI",
 }
 AGENT_DISPLAY = AGENT_DISPLAY_BY_TYPE[AGENT_TYPE]
 AGENT_SIGNATURE_BY_TYPE = {
@@ -175,6 +180,7 @@ AGENT_SIGNATURE_BY_TYPE = {
     "gemini": "\n\nCo-Authored-By: Gemini CLI <noreply@google.com>",
     "opencode": "\n\nCo-Authored-By: OpenCode CLI <noreply@opencode.ai>",
     "codex": "\n\nCo-Authored-By: Codex CLI <noreply@openai.com>",
+    "agy": "\n\nCo-Authored-By: Agy CLI <noreply@google.com>",
 }
 AGENT_SIGNATURE = AGENT_SIGNATURE_BY_TYPE[AGENT_TYPE]
 
@@ -328,6 +334,7 @@ _MODEL_FAMILY_HINTS: dict[str, tuple[str, ...]] = {
     "codex": ("gpt-", "o1", "o3", "o4"),
     "claude": ("claude", "opus", "sonnet", "haiku"),
     "gemini": ("gemini",),
+    "agy": ("gemini",),
 }
 
 
@@ -383,6 +390,36 @@ def coerced_model(
     if task_model and not _model_belongs_to(task_model, coerced_agent):
         return agent_default_model
     return task_model
+
+
+def _agent_default_model(task_agent_type: str | None) -> str | None:
+    """The model a coerced task should get from its agent's own default.
+
+    Behaves as before (the AGENT_MODEL env value) for every agent, so an operator's
+    AGENT_MODEL override keeps working. The one exception is a task coerced to agy
+    while the process agent is another type: AGENT_MODEL then names the wrong vendor.
+    """
+    if task_agent_type == "agy" and AGENT_TYPE != "agy":
+        return DEFAULT_MODEL_BY_TYPE["agy"]
+    return os.environ.get("AGENT_MODEL")
+
+
+def _coerce_agy_experiment_agent(task: dict, task_agent_type: str | None) -> str | None:
+    """Apply the operator-only agy experiment route from REQ-INFRA-7088."""
+    if os.environ.get("AGY_FORCE_EXPERIMENTS") != "1":
+        return task_agent_type
+    if task_agent_type == "claude" and task.get("requires_claude_verified"):
+        return task_agent_type
+    if task_agent_type == "codex" and task.get("requires_codex_verified"):
+        return task_agent_type
+    if task_agent_type not in {"claude", "codex", "gemini"}:
+        return task_agent_type
+    logger.warning(
+        "AGY_FORCE_EXPERIMENTS=1: coercing task %r agent_type %s → agy",
+        task.get("id", "?"),
+        task_agent_type,
+    )
+    return "agy"
 
 
 def claimed_by_other_sessions(
@@ -716,7 +753,7 @@ def _build_agent_command(
 ) -> tuple[list[str], str | None, str]:
     """Build the command, optional stdin payload, and log message.
 
-    agent_type_override: per-task agent backend (claude/codex/gemini/opencode).
+    agent_type_override: per-task agent backend (claude/codex/gemini/opencode/agy).
     Falls through to module-level AGENT_TYPE when None. See multi-agent-routing
     proposal: openspec/change-proposals/multi-agent-routing.md.
     """
@@ -782,6 +819,35 @@ def _build_agent_command(
                 DEFAULT_MODEL_BY_TYPE["claude"],
             )
             model = DEFAULT_MODEL_BY_TYPE["claude"]
+    elif effective_agent_type == "agy" and not model.startswith("gemini-"):
+        logger.warning(
+            "Cross-vendor model override ignored: agent_type=agy got model=%s; "
+            "snapping to default %s",
+            model,
+            DEFAULT_MODEL_BY_TYPE["agy"],
+        )
+        model = DEFAULT_MODEL_BY_TYPE["agy"]
+
+    if effective_agent_type == "agy":
+        agy_prompt = (
+            f"PROJECT_ROOT is {PROJECT_ROOT.resolve()}. Use absolute paths under it for every "
+            "file tool call. Never write into any scratch or brain directory.\n\n"
+            f"{prompt}"
+        )
+        return (
+            [
+                bin_path,
+                "--model",
+                model,
+                "--dangerously-skip-permissions",
+                "--output-format",
+                "stream-json",
+                "--print",
+                agy_prompt,
+            ],
+            None,
+            f"Calling {display} (model: {model})...",
+        )
 
     if effective_agent_type == "gemini":
         return (
@@ -885,6 +951,20 @@ def _build_agent_command(
         prompt,
         f"Calling {display} ({max_turns} max turns, model: {model}, effort: max)...",
     )
+
+
+def _parse_agy_result_event(output: str) -> dict[str, object] | None:
+    """Return the last well-formed agy result event from a JSON-lines stream."""
+    last_result = None
+    for line in output.splitlines():
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, dict) or event.get("event") != "result":
+            continue
+        last_result = event if isinstance(event.get("result"), dict) else None
+    return last_result
 
 
 def _meaningful_error_tail(full_output: str, prompt: str, n: int = 500) -> str:
@@ -1010,7 +1090,7 @@ def _prompt_loads_live_model(prompt: str) -> bool:
     return any(m in p for m in _LIVE_MODEL_PROMPT_MARKERS)
 
 
-def run_agent(
+def _run_agent_once(
     prompt: str,
     max_turns: int = 20,
     timeout: int = 600,
@@ -1018,7 +1098,7 @@ def run_agent(
     deliverable_path: str | None = None,
     agent_type_override: str | None = None,
 ) -> tuple[bool, str]:
-    """Run the configured agent with a research prompt.
+    """Run the configured agent once with a research prompt.
 
     Streams output live to the terminal.
     Args:
@@ -1035,10 +1115,17 @@ def run_agent(
             subagent alive running extra tests until the 60-min wall-clock
             cap fires.  See observations around Exp 447/448 on 2026-04-18.
         agent_type_override: per-task agent backend (claude/codex/gemini/
-            opencode). Falls through to module-level AGENT_TYPE when None.
+            opencode/agy). Falls through to module-level AGENT_TYPE when None.
             Multi-agent routing per
             openspec/change-proposals/multi-agent-routing.md.
     """
+    effective_agent_type = agent_type_override or AGENT_TYPE
+
+    def _failure(message: str) -> tuple[bool, str]:
+        if effective_agent_type == "agy" and not message.startswith("Agy CLI error:"):
+            message = f"Agy CLI error: {message}"
+        return False, message
+
     cmd, stdin_text, msg = _build_agent_command(
         prompt, max_turns, model_override, agent_type_override
     )
@@ -1223,9 +1310,9 @@ def run_agent(
                     proc.wait(timeout=10)
                     full_output = "".join(output_lines)
                     _persist_output_tail(full_output, "stall", deliverable_path)
-                    return (
-                        False,
-                        f"Stalled after {int(elapsed_silence)}s silence. Last output: {full_output[-300:]}",
+                    return _failure(
+                        f"Stalled after {int(elapsed_silence)}s silence. "
+                        f"Last output: {full_output[-300:]}"
                     )
 
             # Deliverable-watch: if the experiment has produced its expected
@@ -1531,7 +1618,7 @@ def run_agent(
                     return rescued
                 full_output = "".join(output_lines)
                 _persist_output_tail(full_output, "hard-cap", deliverable_path)
-                return False, (
+                return _failure(
                     f"Hard wall-clock cap after {int(elapsed_total)}s. "
                     f"Last output: {_meaningful_error_tail(full_output, prompt, 300)}"
                 )
@@ -1553,7 +1640,7 @@ def run_agent(
                     return rescued
                 full_output = "".join(output_lines)
                 _persist_output_tail(full_output, "wall-clock-idle", deliverable_path)
-                return False, (
+                return _failure(
                     f"Wall-clock+idle timeout after {int(elapsed_total)}s "
                     f"({int(elapsed_silence)}s silence). "
                     f"Last output: {_meaningful_error_tail(full_output, prompt, 300)}"
@@ -1570,7 +1657,16 @@ def run_agent(
 
         if proc.returncode != 0:
             logger.error("%s failed (exit %d)", AGENT_DISPLAY, proc.returncode)
-            return False, _meaningful_error_tail(full_output, prompt, 500)
+            return _failure(_meaningful_error_tail(full_output, prompt, 500))
+
+        if effective_agent_type == "agy":
+            result_event = _parse_agy_result_event(full_output)
+            if result_event is None:
+                return _failure("no final result event")
+            result = result_event["result"]
+            status = result.get("status") if isinstance(result, dict) else None
+            if status != "SUCCESS":
+                return _failure(f"final result status was {status!r}")
 
         logger.info("%s completed (exit 0)", AGENT_DISPLAY)
         return True, full_output[-2000:]
@@ -1584,10 +1680,58 @@ def run_agent(
         except (ProcessLookupError, PermissionError, OSError):
             proc.kill()
         logger.error("%s timed out after %ds", AGENT_DISPLAY, timeout)
-        return False, "Timed out"
+        return _failure("Timed out")
     except Exception as e:
         logger.error("%s error: %s", AGENT_DISPLAY, e)
-        return False, str(e)
+        return _failure(str(e))
+
+
+def run_agent(
+    prompt: str,
+    max_turns: int = 20,
+    timeout: int = 600,
+    model_override: str | None = None,
+    deliverable_path: str | None = None,
+    agent_type_override: str | None = None,
+) -> tuple[bool, str]:
+    """Run one agent call and retry a failed agy call once with Codex."""
+    # _run_agent_once retains `if timeout` when it computes WALL_CLOCK_TIMEOUT.
+    result = _run_agent_once(
+        prompt,
+        max_turns=max_turns,
+        timeout=timeout,
+        model_override=model_override,
+        deliverable_path=deliverable_path,
+        agent_type_override=agent_type_override,
+    )
+    effective_agent_type = agent_type_override or AGENT_TYPE
+    if effective_agent_type != "agy" or result[0]:
+        return result
+    if not result[1].startswith("Agy CLI error:"):
+        result = False, f"Agy CLI error: {result[1]}"
+
+    if deliverable_path:
+        deliverable = PROJECT_ROOT / deliverable_path
+        try:
+            if deliverable.is_file() and deliverable.stat().st_size > 0:
+                return result
+        except OSError:
+            pass
+
+    fallback_model = os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-5.6-sol")
+    logger.warning(
+        "%s Retrying once with Codex model %s.",
+        result[1],
+        fallback_model,
+    )
+    return _run_agent_once(
+        prompt,
+        max_turns=max_turns,
+        timeout=timeout,
+        model_override=fallback_model,
+        deliverable_path=deliverable_path,
+        agent_type_override="codex",
+    )
 
 
 def preflight_gpu_reap() -> dict:
@@ -7367,6 +7511,7 @@ def research_step(
             task.get("id", "?"),
         )
         task_agent_type = "gemini"
+    task_agent_type = _coerce_agy_experiment_agent(task, task_agent_type)
     # Per-experiment max_turns hint via YAML "max_turns:" field. Default 50
     # mirrors the historical hard-coded value; simple experiments (CPU-only
     # retros, doc passes, configuration changes) can opt into a smaller budget
@@ -7388,7 +7533,10 @@ def research_step(
         # `gemini-3.1-pro-preview` and died on "Model metadata not found" -- 15 times across 5
         # dates. See `coerced_model`.
         model_override=coerced_model(
-            _planned_agent_type, task_agent_type, task_model, os.environ.get("AGENT_MODEL")
+            _planned_agent_type,
+            task_agent_type,
+            task_model,
+            _agent_default_model(task_agent_type),
         ),
         deliverable_path=task.get("deliverable"),
         agent_type_override=task_agent_type,
