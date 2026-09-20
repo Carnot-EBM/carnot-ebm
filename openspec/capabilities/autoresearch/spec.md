@@ -6210,3 +6210,111 @@ family correction.
 **And** the verdict is `complete_null` unless a validity defect disqualifies it.
 
 Spec: REQ-AUTO-7440, SCENARIO-AUTO-7440-01, SCENARIO-AUTO-7440-02, SCENARIO-AUTO-7440-03, SCENARIO-AUTO-7440-04, SCENARIO-AUTO-7440-05
+
+### REQ-AUTO-7449: Seal source-conditioned inputs and an external human challenge
+
+Exp7449 SHALL seal a model-independent protocol for later source-conditioned
+representation work. It SHALL make no current LLM call and SHALL declare
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current invocation counts,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Numeric
+selector fitting is deferred and SHALL be reported separately as
+`small_ebm_training` by its future producer. Historical model-shaped evidence
+SHALL remain typed and hash-bound rather than becoming current inference.
+
+The RAGTruth panel SHALL group rows by normalized complete source hash before
+selection and keep every sibling response in one group. Label-blind hash order
+SHALL select one response per group and at most 180 original-train groups for
+training, 60 other original-train groups for calibration and tuning, and 60
+original-test groups for internal testing. A shortage SHALL not be cross-filled
+from another official role. Selection SHALL occur before evaluator labels are
+read and the realized count SHALL be recorded before later fitting.
+
+FaithBench SHALL be pinned to revision
+`cf89797d82812c23b5d5e5c121f1d9b8983bbbce`. Only the bounded public release
+license, README, schema, official aggregation script, and release batch files
+SHALL enter an external cache. The protocol SHALL record immutable URLs, byte
+hashes, sizes, CC BY-NC-SA 4.0 attribution, the release schema, and the official
+worst-case binary label policy. It SHALL preserve ambiguous annotation labels
+in the evaluator view while excluding annotator notes, detector scores, and
+summarizer identity from predictor features. FaithBench SHALL remain an
+external, disagreement-selected challenge of at most 100 normalized-source
+groups and SHALL not estimate deployment prevalence.
+
+The predictor view SHALL contain only stable identity and role fields, complete
+source and response text, and the six existing source features. Human labels
+and annotation details SHALL remain in a separately hash-bound evaluator view.
+The protocol SHALL deduplicate the external challenge against authenticated
+local V649 through V652 source corpora and disclose residual public-data
+contamination uncertainty. Permuting evaluator labels SHALL leave group
+eligibility, response selection, prompt bytes, and feature bytes unchanged.
+
+Two representation views SHALL be frozen: complete RESPONSE alone and complete
+SOURCE followed by RESPONSE. Neither view may contain a label or request a
+yes/no answer. The GGUF tokenizer SHALL later enforce a 2,048-token complete-
+input ceiling; evidence SHALL never be truncated to make a row eligible. This
+model-independent protocol MAY be ready before exact tokenizer eligibility is
+known, but it SHALL retain one unstarted eligibility row per group and view.
+
+The future comparison SHALL freeze final-layer last-token pooling, a seeded
+32-dimensional random projection, five fit seeds, matched-capacity Gibbs and
+logistic heads, a prevalence control, and the old lexical-feature arm.
+Source conditioning SHALL have response-only and source-shuffled matched
+controls. Primary external Brier and log-loss contrasts SHALL use 10,000
+source-group bootstrap draws and Holm correction. Risk and coverage intervals
+SHALL remain descriptive. Confirmatory minima SHALL be 150 training, 40
+calibration, 40 internal-test, and 60 external groups; a shortfall blocks only
+confirmatory value, not an honest coverage report.
+
+`source_protocol_ready_score=1` SHALL require frozen group roles, the feature
+allowlist, authenticated release hashes and attribution, all controls, evaluator
+isolation, and passing required validation. It SHALL not require token counts or
+claim predictive benefit. `promotion_score` SHALL remain zero. The terminal
+artifact SHALL publish atomically only after affected checks, fresh-process
+cold replay, independent raw reduction, adversarial verification, and strict
+row consistency pass. These readers form the capability end-to-end check; no
+numbered end-to-end scenario applies because shared training, sampling,
+bindings, and ARC code do not change.
+
+#### SCENARIO-AUTO-7449-01: Official roles and shortages stay fixed
+
+**Given** duplicate sources, sibling responses, and original train/test roles
+**When** the label-blind group selector seals the RAGTruth panel
+**Then** normalized duplicate sources and siblings cannot cross roles
+**And** each role stops at its own cap without cross-filling a shortage.
+
+#### SCENARIO-AUTO-7449-02: External annotations stay evaluator-only
+
+**Given** pinned FaithBench rows with detector metadata, notes, and disagreeing labels
+**When** predictor and evaluator views are projected
+**Then** predictor bytes contain only source, response, existing features, identity, and role
+**And** ambiguity remains in evaluator bytes without notes, scores, or summarizer identity.
+
+#### SCENARIO-AUTO-7449-03: Label permutation cannot alter model inputs
+
+**Given** one sealed predictor panel and its separate evaluator labels
+**When** evaluator labels are permuted across the same row identities
+**Then** prompt bytes, feature bytes, group eligibility, and selected response identities match
+**And** no label-derived replacement can enter either representation view.
+
+#### SCENARIO-AUTO-7449-04: Complete evidence controls token eligibility
+
+**Given** RESPONSE and SOURCE-followed-by-RESPONSE representation bytes
+**When** the later GGUF tokenizer applies the 2,048-token ceiling
+**Then** over-limit rows are excluded without truncating evidence
+**And** protocol readiness can precede exact token counts while eligibility stays unstarted.
+
+#### SCENARIO-AUTO-7449-05: Source value has matched controls
+
+**Given** a fixed final-layer pooling surface and 32-dimensional projection
+**When** the future selector comparison is executed
+**Then** five-seed Gibbs is compared with matched logistic, prevalence, lexical, response-only, and source-shuffled arms
+**And** primary external proper-score contrasts use grouped resampling and Holm correction.
+
+#### SCENARIO-AUTO-7449-06: Challenge coverage is not a safety certificate
+
+**Given** complete external FaithBench coverage selected for detector disagreement
+**When** protocol readiness and future value are interpreted
+**Then** readiness claims only a reproducible isolated protocol
+**And** risk, coverage, and shortfall results cannot authorize deployment prevalence or promotion.
+
+Spec: REQ-AUTO-7449, SCENARIO-AUTO-7449-01, SCENARIO-AUTO-7449-02, SCENARIO-AUTO-7449-03, SCENARIO-AUTO-7449-04, SCENARIO-AUTO-7449-05, SCENARIO-AUTO-7449-06
