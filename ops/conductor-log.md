@@ -18263,3 +18263,5 @@ code |
 | 2026-09-20 02:30 UTC | Measure continuous expert weighting on delayed sou | OK | 94 passed, 1 warning in 14.96s |
 | 2026-09-20 03:53 UTC | Independently audit policy risk and delayed learni | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: f-8") + rep |
 | 2026-09-20 04:05 UTC | Independently audit policy risk and delayed learni | OK | cache hit: 158 passed, 1 warning in 39.55s |
+| 2026-09-20 04:24 UTC | Measure compact Qwen claim extraction after the re | FAIL | Codex CLI error: Stalled after 600s silence. Last output: dict_class"] == "nu |
+| 2026-09-20 04:26 UTC | Conductor re-exec: fresh committed source | OK | d0833c91b3f7 -> 1b84546670a6; argv preserved |

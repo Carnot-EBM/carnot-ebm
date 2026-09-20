@@ -8489,3 +8489,132 @@ training, sampling, binding, serialization, Rust, or ARC production behavior.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7437 and SCENARIO-VERIFY-7437-* | Implemented in a focused reusable module and thin entrypoint. The module reuses only shipped provenance and scoped-validation helpers. | Verified by 28 spec-linked tests, 100-percent changed-module coverage, scoped static checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
+## V652 paired claim-span capture — 2026-09-20
+
+**Status:** Specified. This phase evaluates the sealed Exp7437 representation once under one fixed live-model budget.
+
+### REQ-VERIFY-7442: Paired Span Capture SHALL Compare Both Frozen Arms Under One Budget
+
+Exp7442 SHALL authenticate the exact Exp7437 artifact and its hash-bound panel,
+schedule, evaluator, and protocol manifest before model work. The Exp7437
+`span_protocol_ready_score` SHALL equal one. Its verdict class SHALL be
+`positive`, `circular_positive`, or `null`, and its adversarial flag SHALL be
+false. Missing, changed, excluded, or ineligible external prerequisites SHALL
+produce a `blocked_*` artifact with an exact gate summary and zero current
+model invocations.
+
+The live path SHALL use `unsloth/Qwen3.8-27B-GGUF`, its cached Q4_K_M file,
+embedded tokenizer and chat template, and the native llama.cpp CUDA runner on
+one task-owned RTX 3090. It SHALL require `CARNOT_FORCE_LIVE=1`, wait at most
+120 seconds for capacity, acquire one real lease, and release only its owned
+server and lease. Current load and request events SHALL retain the owned PID,
+process start tick, server build, model hash, actual device, and offloaded layer
+count. CPU fallback, model substitution, copied weights, serving-default
+changes, and signals to another owner are forbidden.
+
+The producer SHALL run the four sealed development paragraphs through both
+frozen arms for eight calls total. Every call SHALL use 256 output tokens,
+temperature zero, one generation, no grammar, no retry, and the same model
+server. At least three of four calls in each arm SHALL return complete,
+nonempty, parse-valid, exactly reconstructable output before evaluation opens.
+Truncated and malformed replies SHALL be measured failures. If either canary
+arm fails, all eight development rows SHALL remain evidence and every one of
+the 96 evaluation calls SHALL be explicit and unstarted. The result SHALL be a
+complete null rather than an external block.
+
+If the canary opens, the producer SHALL run all 48 sealed evaluation units in
+both arms. The panel SHALL therefore contain 96 evaluation calls and at most
+104 current generation calls including development. Both arms SHALL use the
+same paragraph bytes, fixed 256-token output budget, 45-second per-call
+ceiling, 1500-second aggregate live budget, and Exp7437 counterbalanced arm
+order. Each raw request and response SHALL be persisted and hashed before
+parsing. No prompt, budget, grammar, case, arm order, or parser SHALL be tuned
+after outcomes are observed.
+
+The reducer SHALL retain every development and evaluation disposition. It
+SHALL measure completion, nonempty valid output, literal reconstruction,
+whole-proposition coverage, qualifier retention, prompt tokens, output tokens,
+and latency. Real RAGTruth paragraphs SHALL use mechanically auditable
+retention and omission diagnostics only. Their source-support labels SHALL not
+be treated as extraction-fidelity truth. The twelve constructed qualifier
+pairs SHALL remain the only exact semantic authority, and all other semantic
+claims SHALL remain unknown.
+
+The paired completion advantage SHALL be computed as compact span-arm success
+minus verbatim-arm success across the 48 paired evaluation units. A frozen
+paired bootstrap with a declared seed SHALL report a 95-percent interval.
+`span_value_score` SHALL equal one only when the interval excludes zero in the
+positive direction, constructed-pair qualifier retention does not decrease,
+and compact-arm paired output-token cost is lower. This score is
+representation evidence only. It SHALL not claim entailment, factual
+correctness, or verified reasoning.
+
+`span_capture_complete_score` SHALL equal one only when all 96 evaluation
+calls have valid terminal dispositions, raw hashes and current provenance
+reconcile, CUDA offload is authenticated, affected validation passes, and all
+terminal readers pass. A fully accounted low-quality panel remains a complete
+null. A required receipt or validation defect SHALL disqualify the artifact.
+Promotion SHALL remain zero.
+
+The producer SHALL freeze the Exp7358 affected-file manifest and execute it
+through the Exp7303 streaming runner. It SHALL use exact affected tests,
+`-n 0`, `-o addopts=`, `--no-cov`, a private existing base-temp parent, a
+separate command-local 100-percent changed-module coverage run, scoped Ruff,
+changed-module mypy, and exact-test spec coverage. It SHALL run the declared
+entrypoint, fresh-process cold replay, independent raw-row reduction,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency before
+atomic terminal publication. No numbered E2E applies because no shared
+training, sampling, binding, serialization, Rust, or ARC production path
+changes.
+
+#### SCENARIO-VERIFY-7442-PRECONDITIONS: Protocol Readiness Gates Model Work
+
+**Given** the exact Exp7437 artifact and its bound sidecars
+**When** Exp7442 authenticates prerequisites before loading the model
+**Then** readiness equals one, the verdict class is eligible, and the original adversarial flag is false
+**And** any absent or changed prerequisite produces an exact blocked gate with zero current invocations.
+
+**Spec traces:** REQ-VERIFY-7442
+
+#### SCENARIO-VERIFY-7442-DEVELOPMENT: Both Arms Share One Fixed Canary Budget
+
+**Given** four sealed development paragraphs and the two frozen prompt arms
+**When** eight calls run on one owned server with a 256-token budget
+**Then** each arm needs at least three complete nonempty exact-reconstructable outputs
+**And** a closed canary retains all eight rows while all 96 evaluation calls stay explicitly unstarted.
+
+**Spec traces:** REQ-VERIFY-7442
+
+#### SCENARIO-VERIFY-7442-RAW: Capture Persists Transport Evidence Before Parsing
+
+**Given** one scheduled evaluation call in either arm
+**When** the native runner returns, fails, truncates, or reaches the live deadline
+**Then** the exact request and response bytes receive content hashes before parser interpretation
+**And** the row keeps its terminal disposition, token cost, latency, runtime identity, and parse outcome without retry.
+
+**Spec traces:** REQ-VERIFY-7442
+
+#### SCENARIO-VERIFY-7442-REDUCTION: Representation Value Stays Paired And Narrow
+
+**Given** 48 paired evaluation units and twelve constructed qualifier pairs
+**When** the independent reducer recomputes completion, retention, reconstruction, and cost
+**Then** real-paragraph semantic truth stays unknown and constructed checks stay separate
+**And** value requires a positive paired completion interval, no constructed qualifier loss, and lower compact-arm output-token cost.
+
+**Spec traces:** REQ-VERIFY-7442
+
+#### SCENARIO-VERIFY-7442-TERMINAL: Completion Requires Every Disposition And Receipt
+
+**Given** a completed canary or evaluation attempt with current owned provenance
+**When** affected checks and exact terminal readers finish
+**Then** all counters, raw manifests, runtime identity, and receipts independently reconcile
+**And** only a valid 96-disposition panel can set completion to one while validation defects disqualify.
+
+**Spec traces:** REQ-VERIFY-7442
+
+## Implementation Status (REQ-VERIFY-7442)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7442 and SCENARIO-VERIFY-7442-* | Planned in `python/carnot/experiment_7442_v652_span_capture.py` with a thin executable wrapper. | Planned in spec-linked focused tests, affected shared-module tests, 100-percent changed-module coverage, scoped static checks, live entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
