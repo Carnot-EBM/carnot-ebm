@@ -9889,6 +9889,67 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-09-20: CLAUDE QUOTA-CONSERVE DIRECTIVE — AUTORESEARCH FABLE FALLBACK DISABLED, GEMINI CLI CONFIRMED EXTERNALLY BROKEN
+
+**What happened.** The operator directed a reduction in Claude usage across every
+automated worker while Claude quota is constrained, and asked that codex and
+gemini-cli take that load where possible. A live routing check
+(`/proc/<pid>/environ` on the running conductor process) confirmed experiments,
+planner, retro, and audit are ALL already routed to codex
+(`AGENT_TYPE=codex`, `AGENT_TYPE_PLANNER=codex`, `AGENT_TYPE_RETRO=codex`,
+`AGENT_TYPE_AUDIT=codex`), so the only live Claude touchpoint left in the
+autonomous loop was `call_fable()` in `scripts/autoresearch_conductor_round.py`
+— a `claude --model fable` fallback that `generate_hypotheses_with_fallback`
+calls whenever codex returns no hypotheses for a round.
+
+**gemini-cli was checked as the natural non-Claude replacement and found
+externally broken.** A direct smoke test, `gemini --model gemini-3.1-pro-preview
+--yolo -p "..."` run from the project root, fails immediately with:
+
+```
+IneligibleTierError: This client is no longer supported for Gemini Code Assist
+for individuals. To continue using Gemini, please migrate to the Antigravity
+suite of products: https://antigravity.google
+```
+
+This is a Google account-tier deprecation on the external service, not a
+misconfiguration on this host — no retry, reconfiguration, or code change here
+fixes it. (Confirmed by first ruling out a false lead: an earlier attempt from
+`/tmp` failed with "not a trusted directory" instead, which would have been the
+wrong root cause to report.)
+
+**The fix.** `generate_hypotheses_with_fallback` now calls ONLY
+`codex_generate_hypotheses`. The Fable fallback (`call_fable` /
+`fable_generate_hypotheses`) is left in the file, marked DORMANT in its
+docstring, rather than deleted — re-enabling it later, if the operator lifts
+the quota constraint or gemini-cli becomes usable again, is a one-line revert
+of the fallback function's body. `fallback_log` stays as a parameter (always
+empty under this directive) so no caller signature changes.
+
+**Accepted tradeoff, stated plainly.** With no fallback, a codex failure on a
+round now ends that iteration with zero hypotheses instead of getting a second
+opinion from another model. `codex_generate_hypotheses` already logs
+`codex_call_failed` into `recent_failures` on its own, so the diagnostic trail
+for a failed round is unchanged.
+
+**Not done.** gemini-cli's account-tier migration is an operator-side decision
+(the Antigravity migration path above) outside this session's scope — recorded
+here so a future session does not re-diagnose the same error from scratch.
+
+**Verification.** `tests/python/test_autoresearch_conductor_round.py` updated
+(3 tests rewritten to assert codex-only behavior; renamed
+`test_codex_empty_never_falls_back_to_fable` and
+`test_codex_failing_leaves_the_reason_in_the_receipt_and_never_calls_claude`).
+Full file: 65 passed. `ruff check` / `ruff format --check`: clean on both
+changed files. `mypy` on `scripts/autoresearch_conductor_round.py`: clean (1
+source file, no issues).
+
+**Cross-references:** `scripts/autoresearch_conductor_round.py:
+generate_hypotheses_with_fallback` (the fix) · `call_fable` docstring (marks
+the dormant path) · CLAUDE.md "Codex-Default for Experiments v2" (the
+standing routing default this directive extends to the last Claude
+touchpoint).
+
 ### NEW 2026-09-19: AUTORESEARCH CIRCUIT BREAKER SELF-LOCKS ON A CUMULATIVE, NEVER-RESET COUNTER — HAPPENED TWICE IN ONE DAY
 
 **What happened.** `AutoresearchConfig.max_consecutive_failures=10` counts the
