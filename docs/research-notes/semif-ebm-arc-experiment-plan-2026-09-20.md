@@ -545,3 +545,24 @@ Decentralization implications: all proposed components are local and must run wi
 7. If E4 passes, the operator must decide whether and when to perform E5. This plan does not submit.
 8. Should E9 use a generic frozen Qwen3-0.6B backbone with a fresh runtime head, or may it use the published NanoJev backbone after its training corpus and license are audited? The fresh-head arm is the cleaner generalization test.
 9. If both SemIf and the runtime NanoJev-style head pass separately, which one should E11 treat as the primary Jev engine? The plan defaults to the lower-cost arm at equal progress.
+
+
+## 12. Operator decisions, 2026-09-20
+
+The operator answered the questions in section 11 with "follow your recommendations". The
+outer loop's recommendations are recorded here as decisions.
+
+| # | Decision |
+|---|---|
+| 1 | No single cost matrix is set yet. Escalation cost is derived from measured token and time costs once E6 has them (its first run was a sample-limited null). Until then every accept, reject, escalate policy is reported over a grid of cost ratios and compared by AUROC, ECE and Brier, not by one assumed cost. |
+| 2 | A readout stays a soft feature. It has no authority to control candidate-action or supervisor-arm choices, and it never overrides `WorldModelVerifier`. Revisit only after the relevant gates pass. |
+| 3 | The top-15-plus-delegate-to-incumbent action representation is accepted. |
+| 4 | Granted: a private, non-scored Kaggle probe of the exact vLLM wheel on a Blackwell run (E0). It must not touch the scored kernel. It does not authorize any scored-path change. |
+| 5 | The E0 parity bounds stay (95% lower-bound argmax agreement, median total variation at most 0.05). Do not loosen them to pass. The first E0 run found identical-runtime pairs already missing the bounds, so read those rows first. |
+| 6 | The frozen roster is in `semif-e4-frozen-game-roster-2026-09-20.md`. It is nine games chosen by a fixed hash rule, three per action-interface stratum. |
+| 7 | Deferred. It depends on E4, which has not run. Submission stays operator-only. |
+| 8 | E9 uses the generic frozen Qwen3-0.6B backbone with a fresh runtime head. The published NanoJev backbone stays out until its training corpus and license are audited. |
+| 9 | Deferred. It depends on both engines passing separately. |
+
+Also approved the same day: shadow telemetry on the live agent (off by default, no behavior
+change), which supplies the missing option sets and per-decision timing for E2 and E6.
