@@ -1575,6 +1575,131 @@ rows, checkpoints, and validation scope.
 **then** changed schedules, probabilities, arrivals, hashes, metrics, gates, or receipts fail
 **and** terminal JSON publishes atomically only after all required readers pass.
 
+### REQ-AUTO-7438: Prototype a causal four-expert probability mixture
+
+Exp7438 SHALL implement four named experts: frozen spline, adaptive spline,
+frozen Gibbs, and adaptive Gibbs. It SHALL call the shipped spline and Gibbs
+numeric APIs. It SHALL not load a language model or change generator, ARC, or
+production defaults. The four weights SHALL start uniformly. Each expert
+probability and the mixture probability SHALL be clipped to
+`[1e-6, 1-1e-6]`. The reported energy SHALL be the probability re-expression
+`-log(q/(1-q))`, where `q` is the weighted probability sum. It SHALL not be
+described as a new generative EBM.
+
+After one label becomes visible, the controller SHALL use only the four expert
+probabilities stored with that request. It SHALL apply Bernoulli log loss with
+`eta=1`, normalize the log weights stably, and then apply a uniform fixed share
+of `0.01`. Only the adaptive spline and adaptive Gibbs experts SHALL receive a
+numeric coefficient update. The frozen experts SHALL remain available without
+state changes. An unrevealed label, a hindsight prediction, or a future
+checkpoint SHALL not enter either update.
+
+The prototype SHALL cover feedback delays zero and eight. Event IDs SHALL
+commit at most once. Pending feedback storage SHALL have a fixed capacity and
+report its measured peak bytes. A late duplicate SHALL not change weights or
+expert state. A restart SHALL preserve predictions, weights, pending feedback,
+and numeric expert state. Revocation SHALL restore the last safe checkpoint and
+replay later active events. Original prediction hashes SHALL not change.
+Checkpoint publication SHALL be atomic, and an interrupted replacement SHALL
+leave the prior checkpoint readable.
+
+Analytic controls SHALL cover no-feedback equality to the frozen prior
+mixture, constant experts, one persistently harmful expert, a regime change,
+extreme finite probabilities, restart, revocation, duplicate feedback, and an
+interrupted write. A full-information, no-share fixture SHALL verify the exact
+log-loss mixture identity. The delayed fixed-share prototype SHALL claim no
+inherited no-share regret, calibration, IID, conformal, or delayed-feedback
+guarantee.
+
+The frozen protocol SHALL be written to
+`results/raw/experiment_7438_v652_mixture_prototype/protocol.json`. It SHALL
+require probability and energy parity within `1e-10`, zero future-label reads,
+zero duplicate commits, and exact restart equality. The terminal artifact
+SHALL keep per-event prediction, reveal, update, revocation, and restart rows.
+It SHALL report actual serialized bytes and update work. Synthetic success
+SHALL use `verdict_class=circular_positive` and SHALL set
+`verifier_is_oracle=true`. `mixture_prototype_ready_score=1` SHALL certify only
+implementation readiness. `promotion_score` SHALL remain zero.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Compact
+numeric updates SHALL appear only in `small_ebm_training`. Archived and
+scripted model events SHALL remain typed, hash-bound sidecars.
+
+The workflow SHALL freeze an Exp7358 affected-file manifest. It SHALL use the
+Exp7303 runner with a private existing base-temp parent and command-local
+coverage data. It SHALL run worktree imports, affected tests, 100-percent
+changed-module coverage, scoped Ruff, changed-module mypy, exact-test spec
+coverage, the declared entrypoint, fresh-process replay, independent
+reduction, adversarial verification, and strict row consistency. The declared
+entrypoint and fresh-process replay form the capability E2E. No numbered E2E
+scenario applies because shared training, sampling, serialization, PyO3, and
+ARC behavior do not change.
+
+The terminal artifact SHALL contain the ordinary required experiment fields.
+It SHALL also contain `mixture_prototype_ready_score`, `mixture_definition`,
+`learning_control_rows`, `hardware_path`, `small_ebm_training`, and the frozen
+validation manifest. The checksum SHALL bind code, protocol, input bytes, raw
+control rows, and exact validation scope.
+
+#### SCENARIO-AUTO-7438-01: A prediction is a four-way probability mixture
+
+**Given** equal initial weights and paired frozen and adaptive numeric states,
+**when** one request is predicted before feedback,
+**then** its probability equals the frozen prior mixture within `1e-10`
+**and** its energy is the finite log-odds re-expression of that probability.
+
+#### SCENARIO-AUTO-7438-02: Revealed loss updates the stored prediction once
+
+**Given** one durable request and its four stored expert probabilities,
+**when** its label reaches the declared availability index,
+**then** the stable eta-one fixed-share update uses those stored probabilities
+**and** only the two adaptive numeric experts change state.
+
+#### SCENARIO-AUTO-7438-03: Delayed feedback stays causal and bounded
+
+**Given** delays zero and eight with a fixed pending capacity,
+**when** requests, releases, and updates replay,
+**then** every prediction precedes its label and no future label is read
+**and** actual pending bytes and peak update work remain in the evidence.
+
+#### SCENARIO-AUTO-7438-04: Duplicate, restart, and interruption controls fail closed
+
+**Given** committed and pending events plus one readable checkpoint,
+**when** late feedback repeats, the process restarts, or replacement stops early,
+**then** duplicate commits remain zero and restarted state is equal
+**and** the interrupted write leaves the prior checkpoint readable.
+
+#### SCENARIO-AUTO-7438-05: Revocation replays from safe state
+
+**Given** an active committed label and later committed labels,
+**when** the earlier label is revoked,
+**then** the controller restores the last safe checkpoint and replays later events
+**and** every original prediction hash remains unchanged.
+
+#### SCENARIO-AUTO-7438-06: Analytic expert controls expose adaptation behavior
+
+**Given** constant, harmful-expert, regime-change, and extreme fixtures,
+**when** the probability reducer applies the frozen rule,
+**then** constant predictions stay constant and harmful weight decreases
+**and** fixed share permits recovery after the registered regime change.
+
+#### SCENARIO-AUTO-7438-07: No-share log-loss identity is exact
+
+**Given** a full-information analytic probability table and uniform prior,
+**when** the reducer uses eta one with zero share,
+**then** cumulative mixture loss equals the negative log marginal likelihood
+within `1e-10`
+**and** this identity is not transferred to the delayed fixed-share deployment.
+
+#### SCENARIO-AUTO-7438-08: Cold readers bind readiness evidence
+
+**Given** the protocol, raw control rows, current-work receipt, and exact checks,
+**when** fresh processes replay and independently reduce the candidate,
+**then** drift in identity, chronology, hashes, counters, parity, or gates fails
+**and** terminal JSON publishes atomically only after every required check passes.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the

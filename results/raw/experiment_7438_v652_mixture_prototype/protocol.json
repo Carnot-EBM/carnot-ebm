@@ -1,0 +1,48 @@
+{
+  "adaptive_experts": [
+    "adaptive_spline",
+    "adaptive_gibbs"
+  ],
+  "delays": [
+    0,
+    8
+  ],
+  "energy": "-log(q/(1-q)) where q=sum_k(w_k*p_k)",
+  "energy_scope": "probability_reexpression_not_generative_ebm",
+  "eta": 1.0,
+  "experiment_id": "exp7438-mixture-prototype",
+  "experts": [
+    "frozen_spline",
+    "adaptive_spline",
+    "frozen_gibbs",
+    "adaptive_gibbs"
+  ],
+  "fixed_share": 0.01,
+  "guarantees_not_inherited": [
+    "no_share_regret",
+    "calibration",
+    "iid",
+    "conformal",
+    "delayed_feedback_theorem"
+  ],
+  "initial_weights": [
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "loss": "bernoulli_log_loss",
+  "manifest_hash": "sha256:ac93b307c74ab870cc51a730bb7eaea45b31b92162cec122a4cf65431270abac",
+  "max_pending_events": 16,
+  "parity_tolerance": 1e-10,
+  "probability_clip": [
+    1e-06,
+    0.999999
+  ],
+  "random_seed": 65201,
+  "required_duplicate_commits": 0,
+  "required_future_label_reads": 0,
+  "required_restart_equality": true,
+  "safe_checkpoint_interval": 2,
+  "schema": "carnot.exp7438.four_expert_protocol.v1"
+}
