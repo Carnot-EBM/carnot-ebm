@@ -74982,6 +74982,102 @@ before atomic publication. No numbered end-to-end scenario applies.
 |---|---|---|
 | REQ-REPORT-7434 and SCENARIO-REPORT-7434-* | Implemented: V652 advisory contract and method reducer with thin entrypoint | Verified by spec-linked focused tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage |
 
+## V652 span extraction audit — 2026-09-20
+
+**Status:** Specified. This host aggregation audits available capture bytes. It
+performs no model inference, training, production promotion, or publication.
+
+### REQ-REPORT-7443: Audit available span capture evidence without a whole-panel gate
+
+Exp7443 SHALL authenticate the roadmap declarations and terminal artifacts for
+Exp7437 and Exp7442. It SHALL preserve each original verdict class and
+adversarial flag. Missing or pre-gated Exp7442 evidence SHALL produce a
+`blocked_*` verdict with its exact path, check, field, expected value, and
+observed value. Available development evidence SHALL still receive a complete
+audit when the evaluation panel did not run.
+
+The reducer SHALL read hash-bound raw sidecars without importing an Exp7442
+parser or verdict reducer. It SHALL decode JSON independently. It SHALL
+reconstruct half-open Unicode spans and classify complete, truncated,
+malformed, empty, failed, cancelled, and unstarted outputs. It SHALL compare
+request token ceilings with server receipts. Current audit invocation counts
+SHALL remain zero. Producer model declarations and archived events SHALL not
+become current calls.
+
+The audit SHALL preserve source text and selected propositions for available
+real paragraphs. It SHALL keep their semantic quality unknown. Constructed
+pairs SHALL receive exact checks for negation, time, units, comparisons, and
+conditions. RAGTruth response labels SHALL not certify extracted claims. The
+artifact SHALL separate literal reconstruction, constructed exact checks, and
+unresolved real semantics.
+
+Evaluation estimates SHALL use the exact 48 paired units and keep real and
+constructed cohorts separate. Intervals SHALL cluster the two members of each
+constructed pair. If evaluation did not run, evaluation coverage SHALL equal
+zero and treatment effects SHALL be unknown. Development calls SHALL not
+supply an evaluation effect.
+
+Private controls SHALL mutate spans, offsets, finish reasons, canary-open
+state, per-arm counts, and current versus historical event tags. Every
+corruption SHALL fail. The continuation decision SHALL name the observed
+cause. An unchanged representation SHALL retire only when its registered null
+repeats.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM
+invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. `promotion_score` SHALL remain zero.
+`extraction_audit_complete_score` SHALL equal one only when every available raw
+outcome passes independent checks. It SHALL not measure extraction benefit.
+
+The affected manifest SHALL use the Exp7358 plan and Exp7303 runner. It SHALL
+run worktree imports, focused pytest without coverage, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test specification coverage. The declared entrypoint and fresh-process
+cold replay are the capability end-to-end checks. Independent reduction,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency SHALL pass
+before atomic publication. No numbered end-to-end check applies.
+
+#### SCENARIO-REPORT-7443-RAW: Available sidecars reproduce independently
+
+**Given** authenticated Exp7442 raw requests, responses, rows, and event tags
+**When** Exp7443 decodes each available outcome without producer reducers
+**Then** hashes, dispositions, spans, finish reasons, and token counts reproduce
+**And** unstarted outputs stay distinct from observed zero-valued metrics.
+
+#### SCENARIO-REPORT-7443-SEMANTICS: Semantic authority remains bounded
+
+**Given** constructed qualifier pairs and unchanged real response paragraphs
+**When** selected propositions are audited
+**Then** exact qualifier checks apply only to constructed evidence
+**And** real-paragraph semantic quality remains unknown and inspectable.
+
+#### SCENARIO-REPORT-7443-PAIRS: Evaluation absence cannot create an effect
+
+**Given** an unopened or incomplete 48-unit paired evaluation panel
+**When** completion and token-cost intervals are reduced
+**Then** evaluation coverage reports the observed fraction
+**And** no development call supplies a treatment-effect estimate.
+
+#### SCENARIO-REPORT-7443-MUTATIONS: Every registered corruption fails
+
+**Given** a valid private audit fixture
+**When** spans, offsets, finish reasons, canary state, arm counts, or event scope changes
+**Then** each targeted mutation creates a named validation error
+**And** no historical event becomes a current audit invocation.
+
+#### SCENARIO-REPORT-7443-ARTIFACT: Scoped readers control atomic publication
+
+**Given** exact source bytes, raw reductions, controls, and a frozen manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, source, row, gate, score, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7443)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7443 and SCENARIO-REPORT-7443-* | Implemented in a focused host reducer and thin entrypoint. | Verified by spec-linked tests, 100 percent changed-module coverage, scoped static checks, real-sidecar replay, and registered corruption controls. Terminal entrypoint checks are recorded in the result artifact. |
+
 ## V652 independent decision audit — 2026-09-20
 
 **Status:** Specified. This host aggregation audits static policy evidence and
