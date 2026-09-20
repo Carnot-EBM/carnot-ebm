@@ -6014,3 +6014,11 @@ mapped to the V652 roster. Exact access receipts and limits are in
 `docs/research-notes/v652-method-ingestion.md`. External claims are not Carnot
 measurements. Generator training, unchanged proof-memory trials, and generic
 Ising sweeps remain deferred.
+
+<!-- EXP7447-V653-METHOD-INGESTION -->
+## 2026-09-20 Exp7447 — V653 methods — INGESTED
+
+Hidden-representation probing, cross-block conditioning, delayed expert losses,
+compact output semantics, and on-chip locality were mapped to the V653 roster.
+FaithBench remains an external challenge corpus. Exact access outcomes and
+evidence limits are in `docs/research-notes/v653-method-ingestion.md`.

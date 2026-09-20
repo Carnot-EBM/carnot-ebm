@@ -111,9 +111,7 @@ def test_active_v653_authorities_match_all_fourteen_rows() -> None:
     assert comparison["passed"] is True
     assert comparison["markdown_milestone"] == audit.MILESTONE
     assert comparison["yaml_milestone"] == audit.MILESTONE
-    assert [row["unit_id"] for row in comparison["contract_rows"]] == list(
-        audit.EXPECTED_TASK_IDS
-    )
+    assert [row["unit_id"] for row in comparison["contract_rows"]] == list(audit.EXPECTED_TASK_IDS)
     assert len(comparison["contract_rows"]) == 14
     assert all(row["passed"] for row in comparison["contract_rows"])
 
@@ -125,17 +123,13 @@ def test_roadmap_resolution_prefers_only_a_matching_next_authority(tmp_path: Pat
     active = {"milestone": audit.MILESTONE, "tasks": []}
     stale = {"milestone": "2026.09.652", "tasks": []}
     (tmp_path / "research-roadmap.yaml").write_text(yaml.safe_dump(active), encoding="utf-8")
-    (tmp_path / "research-roadmap-next.yaml").write_text(
-        yaml.safe_dump(stale), encoding="utf-8"
-    )
+    (tmp_path / "research-roadmap-next.yaml").write_text(yaml.safe_dump(stale), encoding="utf-8")
     path, value, candidates = audit.resolve_v653_roadmap(tmp_path)
     assert path == tmp_path / "research-roadmap.yaml"
     assert value == active
     assert candidates[0]["matches_milestone"] is False
 
-    (tmp_path / "research-roadmap-next.yaml").write_text(
-        yaml.safe_dump(active), encoding="utf-8"
-    )
+    (tmp_path / "research-roadmap-next.yaml").write_text(yaml.safe_dump(active), encoding="utf-8")
     path, _value, _candidates = audit.resolve_v653_roadmap(tmp_path)
     assert path == tmp_path / "research-roadmap-next.yaml"
 
@@ -233,9 +227,7 @@ def test_six_sources_map_to_v653_methods_and_faithbench_challenge() -> None:
     sources = _source_rows()
     assert len(sources) == 6
     assert {row["review_status"] for row in sources} == {"new_finding", "rechecked"}
-    assert next(row for row in sources if row["source_id"] == "crane")["access_state"] == (
-        "failed"
-    )
+    assert next(row for row in sources if row["source_id"] == "crane")["access_state"] == ("failed")
     methods = audit.method_rows(sources)
     assert [row["method"] for row in methods] == [
         "hidden_representation_probing",
