@@ -6421,3 +6421,108 @@ mutation control passes
 **And** the terminal class is `circular_positive` with promotion disabled.
 
 Spec: REQ-AUTO-7450, SCENARIO-AUTO-7450-01, SCENARIO-AUTO-7450-02, SCENARIO-AUTO-7450-03, SCENARIO-AUTO-7450-04, SCENARIO-AUTO-7450-05, SCENARIO-AUTO-7450-06
+
+### REQ-AUTO-7454: Replay continuous mixture learning with complete causal evidence
+
+Exp7454 SHALL repeat the unchanged Exp7440 scientific comparison only after the
+Exp7450 ledger reports `prediction_ledger_ready_score=1`, a verdict class in
+`null`, `positive`, or `circular_positive`, and `flagged_adversarial=false`.
+It SHALL authenticate the ten selected Exp7439 spline and Gibbs checkpoints and
+the Exp7438 protocol bytes. It SHALL use the same 753 source groups, five fit
+seeds, two label-blind orders, delays zero and eight, seven arms, randomized
+one-quarter reveal schedule, action thresholds, and success bars. The result
+SHALL identify this evidence as a replay of the old corpus and protocol. It
+SHALL NOT describe the result as fresh deployment evidence.
+
+Before the evaluator label is read, each arm SHALL durably persist a
+content-hashed prediction event. The event SHALL include all four named expert
+probabilities, its mixture weights, mixture probability, shadow action,
+propensity, checkpoint hashes, and pre-feedback numeric state. Prediction bytes
+SHALL contain no label or label-derived value. A later outcome event SHALL bind
+the label to those prediction hashes. Each delivered-feedback event SHALL bind
+its prediction hash, four losses recomputed from the saved probabilities, old
+and new numeric state, normalization operands, update receipt, and lineage.
+Duplicate feedback SHALL fail closed. Revoked feedback SHALL replay from the
+initial state without the revoked event. The no-feedback arm SHALL emit no
+update and SHALL keep its initial state.
+
+All prespecified cells SHALL run the learned mixture, equal-weight mixture,
+frozen spline, adaptive spline, no-feedback mixture, and two fixed shuffled-label
+controls. Numeric checkpoints SHALL occur after each 32 source groups and at the
+final group. A cold reader SHALL rehash all shards, reconstruct every mixture
+weight transition without producer update code, verify checkpoint lineage, and
+show that delivered feedback changes at least one later prediction state.
+Segmented restart replay SHALL produce the same final state as uninterrupted
+replay.
+
+The experiment SHALL recompute full-stream and revealed proper scores,
+inverse-propensity estimates, harmful-action rates, coverage, label cost, and
+domain-change harm. It SHALL compare the learned arm with every registered
+comparator. It SHALL use the unchanged moving-block lengths 32 and 64, 10,000
+draws, and one simultaneous 12-contrast family after averaging fit seeds within
+each source group. The unchanged no-harm, benefit, no-feedback, and shuffled-label
+control bars SHALL decide `online_value_score`. A complete valid repeated null
+SHALL retire this unchanged mixture construction. It SHALL not rename the null.
+
+The artifact SHALL expose read, predict, durable persist, reveal, and update
+timings. It SHALL also expose checkpoint hashing cost, CPU work counts, and
+persisted bytes. The 100x hardware goal SHALL remain an engineering target.
+The task SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM
+calls, `inference_substrate_class=no_model_load`, `execution_venue=host`,
+`continuous_self_learning_task=true`, and `no_model_weight_mutation=true`.
+Historical model events SHALL remain typed, hash-bound inputs. Prior numeric
+head fitting SHALL remain a separate `small_ebm_training` receipt.
+
+`online_capture_complete_score=1` SHALL require complete cells, exact cold
+replay, later-query causality, restart equality, checkpoint coverage, and all
+required validation. `online_value_score` SHALL use only the unchanged Exp7440
+bars. `promotion_score` SHALL remain zero. The terminal artifact SHALL publish
+atomically only after scoped affected checks, declared-entrypoint cold replay,
+independent raw reduction, adversarial verification, and strict row consistency
+pass. These readers form the capability end-to-end check. No numbered end-to-end
+scenario applies because shared training, sampling, bindings, and ARC code do
+not change.
+
+#### SCENARIO-AUTO-7454-01: Prediction evidence is label-free and durable
+
+**Given** one source group in a registered replay cell
+**When** all seven arms predict
+**Then** each prediction commits four probabilities, weights, state, and propensity before label access
+**And** a later outcome references the immutable prediction hashes.
+
+#### SCENARIO-AUTO-7454-02: Stored losses replay every mixture update
+
+**Given** delivered feedback for a persisted mixture prediction
+**When** an independent reader applies the frozen scalar update
+**Then** all four stored losses and normalization operands match
+**And** the parent, event, and child state hashes form one exactly-once edge.
+
+#### SCENARIO-AUTO-7454-03: Feedback controls preserve causal state
+
+**Given** duplicate, revoked, delayed, no-feedback, and segmented-restart cases
+**When** the ledger replays from its initial numeric manifest
+**Then** duplicate feedback is rejected and revoked feedback is excluded
+**And** no-feedback stays fixed and segmented restart equals uninterrupted replay.
+
+#### SCENARIO-AUTO-7454-04: Later predictions depend on earlier feedback
+
+**Given** a revealed update followed by another query in the same cell
+**When** the later prediction is reduced
+**Then** its pre-feedback state descends from the earlier update child
+**And** the matching no-feedback state remains unchanged.
+
+#### SCENARIO-AUTO-7454-05: Scientific reduction keeps the registered family
+
+**Given** all 753 groups in every order, delay, seed, and arm
+**When** the independent reducer computes value
+**Then** it averages fit seeds within source group and uses 10,000 moving-block draws at 32 and 64
+**And** benefit, no-harm, cost, no-feedback, and shuffled-label gates remain conjunctive.
+
+#### SCENARIO-AUTO-7454-06: A valid repeated null retires the construction
+
+**Given** complete replay and passing mechanical and validation gates
+**When** any registered benefit gate fails
+**Then** capture is complete, value is zero, and the verdict is `complete_null`
+**And** the artifact records retirement of the unchanged mixture construction without promotion.
+
+Spec: REQ-AUTO-7454, SCENARIO-AUTO-7454-01, SCENARIO-AUTO-7454-02, SCENARIO-AUTO-7454-03, SCENARIO-AUTO-7454-04, SCENARIO-AUTO-7454-05, SCENARIO-AUTO-7454-06
