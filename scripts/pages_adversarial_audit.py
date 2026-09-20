@@ -34,12 +34,18 @@ from __future__ import annotations
 import argparse
 import datetime
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 INDEX_HTML = PROJECT_ROOT / "docs" / "index.html"
+
+#: agy (Google Antigravity CLI) is a fresh user-local install at ~/.local/bin, not on the
+#: conductor systemd service's PATH (verified 2026-09-20; codex/claude resolve via /usr/bin's
+#: own system-wide copies). See verifier_authenticity_audit.py's AGY_BIN for the full note.
+AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
 REPORT_PATH = PROJECT_ROOT / "ops" / "docs_audit_report.md"
 
 # The adversarial prompt. Designed to be hostile and stranger-focused.
@@ -140,14 +146,10 @@ Discipline". Your output is advisory.
 
 
 def call_gemini(prompt: str, model: str = "gemini-3.1-pro-preview") -> tuple[bool, str]:
-    """Invoke gemini-cli with the audit prompt. Returns (ok, output)."""
+    """BROKEN since 2026-09-20: gemini-cli fails every call with `IneligibleTierError`, a Google
+    account-tier deprecation on gemini-cli itself. Kept, not deleted; see `call_agy` below."""
     try:
-        full = (
-            f"{prompt}\n\n"
-            f"---\n"
-            f"docs/index.html CONTENT:\n\n"
-            f"{INDEX_HTML.read_text()}\n"
-        )
+        full = f"{prompt}\n\n---\ndocs/index.html CONTENT:\n\n{INDEX_HTML.read_text()}\n"
         proc = subprocess.run(
             ["gemini", "--model", model, "--yolo", "-p", full],
             capture_output=True,
@@ -163,15 +165,30 @@ def call_gemini(prompt: str, model: str = "gemini-3.1-pro-preview") -> tuple[boo
         return False, str(exc)
 
 
+def call_agy(prompt: str, model: str = "gemini-3.1-pro-high") -> tuple[bool, str]:
+    """Google Antigravity CLI (agy) -- replaces gemini-cli (broken since 2026-09-20, see
+    `call_gemini`). `--print` is agy's non-interactive flag; no `--yolo` equivalent is needed."""
+    try:
+        full = f"{prompt}\n\n---\ndocs/index.html CONTENT:\n\n{INDEX_HTML.read_text()}\n"
+        proc = subprocess.run(
+            [AGY_BIN, "--model", model, "--print", full],
+            capture_output=True,
+            text=True,
+            timeout=600,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        if proc.returncode != 0:
+            return False, f"agy exit {proc.returncode}: {proc.stderr[:200]}"
+        return True, proc.stdout
+    except Exception as exc:
+        return False, str(exc)
+
+
 def call_claude(prompt: str, model: str = "claude-opus-4-8") -> tuple[bool, str]:
     """Invoke claude CLI with the audit prompt (Opus 4.8 + max effort per 2026-06-08 directive)."""
     try:
-        full = (
-            f"{prompt}\n\n"
-            f"---\n"
-            f"docs/index.html CONTENT:\n\n"
-            f"{INDEX_HTML.read_text()}\n"
-        )
+        full = f"{prompt}\n\n---\ndocs/index.html CONTENT:\n\n{INDEX_HTML.read_text()}\n"
         proc = subprocess.run(
             ["claude", "--model", model, "--effort", "max", "--print", full],
             capture_output=True,
@@ -191,15 +208,21 @@ def call_codex(prompt: str, model: str = "gpt-5.5") -> tuple[bool, str]:
     """Codex (gpt-5.5) hostile-stranger reviewer — quota-conserve path (mirrors the conductor's
     codex exec pattern; prompt on stdin via `-`). Added 2026-06-30 for the Claude-quota window."""
     try:
-        full = (
-            f"{prompt}\n\n"
-            f"---\n"
-            f"docs/index.html CONTENT:\n\n"
-            f"{INDEX_HTML.read_text()}\n"
-        )
+        full = f"{prompt}\n\n---\ndocs/index.html CONTENT:\n\n{INDEX_HTML.read_text()}\n"
         proc = subprocess.run(
-            ["codex", "exec", "--dangerously-bypass-approvals-and-sandbox", "--color", "never",
-             "--model", model, "--cd", str(PROJECT_ROOT), "--ephemeral", "-"],
+            [
+                "codex",
+                "exec",
+                "--dangerously-bypass-approvals-and-sandbox",
+                "--color",
+                "never",
+                "--model",
+                model,
+                "--cd",
+                str(PROJECT_ROOT),
+                "--ephemeral",
+                "-",
+            ],
             input=full,
             capture_output=True,
             text=True,
@@ -230,9 +253,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        default="claude",  # 2026-06-10 operator directive: gemini is NEVER the default (global-stall incident); claude=Opus is the audit agent per the 2026-06-08 directive. codex added 2026-06-30 for the Claude-quota-conserve window.
-        choices=["gemini", "claude", "codex"],
-        help="Which CLI backend to use (default: claude=Opus; codex for the quota-conserve window)",
+        default="claude",  # 2026-06-10 operator directive: gemini-cli is NEVER the default (global-stall incident; also broken since 2026-09-20, IneligibleTierError); claude=Opus is the audit agent per the 2026-06-08 directive. codex added 2026-06-30, agy added 2026-09-20 for the Claude-quota-conserve window.
+        choices=["gemini", "claude", "codex", "agy"],
+        help="Which CLI backend to use (default: claude=Opus; codex/agy for the quota-conserve window)",
     )
     parser.add_argument(
         "--model-name",
@@ -245,7 +268,10 @@ def main() -> int:
         print(f"docs/index.html not found at {INDEX_HTML}")
         return 1
 
-    if args.model == "gemini":
+    if args.model == "agy":
+        model_name = args.model_name or "gemini-3.1-pro-high"
+        ok, output = call_agy(ADVERSARIAL_PROMPT, model=model_name)
+    elif args.model == "gemini":
         model_name = args.model_name or "gemini-3.1-pro-preview"
         ok, output = call_gemini(ADVERSARIAL_PROMPT, model=model_name)
     elif args.model == "codex":

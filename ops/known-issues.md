@@ -9936,6 +9936,53 @@ for a failed round is unchanged.
 (the Antigravity migration path above) outside this session's scope — recorded
 here so a future session does not re-diagnose the same error from scratch.
 
+**FOLLOW-UP, same day: the operator took the Antigravity migration path.** The
+operator installed and logged into the Google Antigravity CLI (`agy`) and
+directed replacing gemini-cli with it wherever gemini-cli was used. `agy`
+exposes real Gemini models (`gemini-3.1-pro-high`, `gemini-3.6/3.7/3.8-flash-*`)
+plus Claude and GPT-OSS models, confirmed working via a direct smoke test
+(`agy --model gemini-3.1-pro-high --print "..."`).
+
+Live gemini-cli usage was already fully retired from the autonomous conductor
+loop before this incident (Codex-Default-v2, `GEMINI_FORCE_EXPERIMENTS=0`) —
+the remaining `["gemini", ...]` call sites were six standalone milestone-close
+audit scripts (`verifier_authenticity_audit.py`, `pages_adversarial_audit.py`,
+`qa_layer_authenticity_audit.py`, `arc_self_solve_audit.py`,
+`artifact_convention_audit.py`, `experiment_claim_audit.py`), each already
+routed to codex in the live path via `AGENT_TYPE_AUDIT`/`AGENT_MODEL_AUDIT` —
+so gemini-cli was already dormant there too, just still selectable and broken.
+Added `call_agy` (or an `agy` branch in the shared `_call` dispatcher) to all
+six, alongside the existing dormant `call_gemini`, matching the Fable pattern:
+kept, not deleted, docstring marked BROKEN with the date and error.
+
+**Real bug caught before it shipped: `agy` is not on the conductor's PATH.**
+The live conductor systemd process's actual PATH (read from `/proc/<pid>/environ`,
+not `systemctl show`, which does not reflect it) is
+`.venv/bin:/usr/local/bin:/usr/bin`. `codex` and `claude` resolve because
+`/usr/bin` carries its own system-wide copies; `agy` is a brand-new user-local
+install at `~/.local/bin/agy` only. A bare `["agy", ...]` argv would have
+worked in every interactive smoke test and then failed with `FileNotFoundError`
+the first time the live conductor actually tried to call it — the exact kind
+of gap this project's own "exercised by use, not unit tests" convention for
+these thin CLI wrappers cannot catch without deliberately testing under the
+SAME restricted PATH the service uses. Fixed by resolving
+`AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")`
+once per file and using that constant in the subprocess argv, re-verified with
+`env -i PATH=.venv/bin:/usr/local/bin:/usr/bin` reproducing the exact live PATH.
+
+**agy does not read a prompt from stdin.** Unlike codex/gemini's `-`-as-stdin-
+marker convention, `agy --model X --print` with no argument prints usage and
+exits — confirmed by a direct smoke test. The two `_call`-dict-shaped audits
+(`artifact_convention_audit.py`, `experiment_claim_audit.py`) special-case
+`agy` to pass the full prompt text as a literal argv element instead of piping
+it via `input=`.
+
+**Not done (still open).** `--model-name` defaults to `"gpt-5.5"` in the two
+`_call`-dict-shaped scripts; a manual `--agent-type agy` invocation with no
+explicit `--model-name` will pass that codex-shaped default to `agy`, which
+does not recognize it. Needs `--model-name gemini-3.1-pro-high` (or similar)
+explicitly until/unless that default is reconsidered.
+
 **Verification.** `tests/python/test_autoresearch_conductor_round.py` updated
 (3 tests rewritten to assert codex-only behavior; renamed
 `test_codex_empty_never_falls_back_to_fable` and
@@ -9996,7 +10043,15 @@ invocation, and still stop ten fresh rejections in one invocation. A determinist
 compact Gibbs-head proposal also crossed the real conductor sandbox and fresh-
 process recompute path without a synthesis LLM or a scientific acceptance.
 
-### NEW 2026-09-18: GITHUB PACK-SIZE INCIDENT — HISTORY REWRITTEN, CONDUCTOR-SIDE SIZE GATE STILL NEEDED
+### RESOLVED 2026-09-20 (was: NEW 2026-09-18): GITHUB PACK-SIZE INCIDENT — HISTORY REWRITTEN, CONDUCTOR-SIDE SIZE GATE SHIPPED
+
+**RESOLVED 2026-09-20.** The conductor-side hard size gate this entry queued as "the real
+remaining gap" shipped in commit `882ab8d59f` (REQ-INFRA-7087,
+`openspec/capabilities/pipeline/spec.md`): `_unstage_oversized_files` in
+`scripts/research_conductor.py` refuses to STAGE any file over 90MB regardless of path, at
+every conductor checkpoint, logging `BLOCKED_OVERSIZED_FILE`. Tested in
+`tests/python/test_conductor_oversized_file_gate.py`. The incident record below is unchanged
+per never-prune; only the header status and this note are new.
 
 **What happened.** GitHub push had been silently failing since 2026-08-30 (19 days,
 82 logged conductor timeout attempts) — first misread as a plain timeout, then as a

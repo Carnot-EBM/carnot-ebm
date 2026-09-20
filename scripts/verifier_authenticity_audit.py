@@ -43,12 +43,21 @@ from __future__ import annotations
 import argparse
 import datetime
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 VERIFY_DIR = PROJECT_ROOT / "python" / "carnot" / "verify"
+
+#: agy (Google Antigravity CLI) is a fresh user-local install at ~/.local/bin, which is NOT on
+#: the conductor systemd service's PATH (verified 2026-09-20 via /proc/<pid>/environ: only
+#: .venv/bin, /usr/local/bin, /usr/bin -- codex/claude resolve there because /usr/bin has its
+#: own system-wide copies; agy does not). A bare "agy" in subprocess argv would silently fail
+#: with FileNotFoundError from the live conductor. shutil.which still wins if a future install
+#: (or a PATH change) puts agy somewhere standard.
+AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
 REPORT_PATH = PROJECT_ROOT / "ops" / "verifier_authenticity_audit_report.md"
 
 # Per-verifier audit prompt. Strong "hostile reviewer" frame so the
@@ -135,6 +144,9 @@ Be hostile. If you find no problems, say AUTHENTIC and move on.
 
 
 def call_gemini(prompt: str, body: str, model: str = "gemini-3.1-pro-preview") -> tuple[bool, str]:
+    """BROKEN since 2026-09-20: gemini-cli fails every call with `IneligibleTierError`, a Google
+    account-tier deprecation on gemini-cli itself. Kept, not deleted; see `call_agy` below, which
+    replaces it via the Google Antigravity CLI (a separate, working product on real Gemini models)."""
     try:
         full = f"{prompt}\n\n---\nVERIFIER SOURCE:\n\n{body}"
         proc = subprocess.run(
@@ -147,6 +159,28 @@ def call_gemini(prompt: str, body: str, model: str = "gemini-3.1-pro-preview") -
         )
         if proc.returncode != 0:
             return False, f"gemini exit {proc.returncode}: {proc.stderr[:200]}"
+        return True, proc.stdout
+    except Exception as exc:
+        return False, str(exc)
+
+
+def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tuple[bool, str]:
+    """Google Antigravity CLI (agy) hostile reviewer -- replaces gemini-cli (broken since
+    2026-09-20, see `call_gemini`). Same shape as the other callers; agy's non-interactive flag
+    is `--print`, and no `--yolo` equivalent is needed for a text-in/text-out prompt with no
+    tool calls."""
+    try:
+        full = f"{prompt}\n\n---\nVERIFIER SOURCE:\n\n{body}"
+        proc = subprocess.run(
+            [AGY_BIN, "--model", model, "--print", full],
+            capture_output=True,
+            text=True,
+            timeout=300,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        if proc.returncode != 0:
+            return False, f"agy exit {proc.returncode}: {proc.stderr[:200]}"
         return True, proc.stdout
     except Exception as exc:
         return False, str(exc)
@@ -176,8 +210,19 @@ def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, st
     try:
         full = f"{prompt}\n\n---\nVERIFIER SOURCE:\n\n{body}"
         proc = subprocess.run(
-            ["codex", "exec", "--dangerously-bypass-approvals-and-sandbox", "--color", "never",
-             "--model", model, "--cd", str(PROJECT_ROOT), "--ephemeral", "-"],
+            [
+                "codex",
+                "exec",
+                "--dangerously-bypass-approvals-and-sandbox",
+                "--color",
+                "never",
+                "--model",
+                model,
+                "--cd",
+                str(PROJECT_ROOT),
+                "--ephemeral",
+                "-",
+            ],
             input=full,
             capture_output=True,
             text=True,
@@ -251,8 +296,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        default="claude",  # 2026-06-10 operator directive: gemini is NEVER the default (global-stall incident); claude=Opus is the audit agent per the 2026-06-08 directive. codex added 2026-06-30 for the Claude-quota-conserve window.
-        choices=["gemini", "claude", "codex"],
+        default="claude",  # 2026-06-10 operator directive: gemini-cli is NEVER the default (global-stall incident; also broken since 2026-09-20, IneligibleTierError); claude=Opus is the audit agent per the 2026-06-08 directive. codex added 2026-06-30, agy added 2026-09-20 for the Claude-quota-conserve window.
+        choices=["gemini", "claude", "codex", "agy"],
     )
     parser.add_argument("--model-name", default=None)
     parser.add_argument(
@@ -290,9 +335,15 @@ def main() -> int:
     ]
 
     flagged_verdicts = {"DISHONEST_NAMING", "ADVERSARIAL_GAMING", "OUTRIGHT_FAKE"}
-    counts = {"AUTHENTIC": 0, "HONEST_HEURISTIC": 0, "DISHONEST_NAMING": 0,
-              "ADVERSARIAL_GAMING": 0, "CANNOT_DETERMINE": 0, "UNKNOWN": 0,
-              "OUTRIGHT_FAKE": 0}
+    counts = {
+        "AUTHENTIC": 0,
+        "HONEST_HEURISTIC": 0,
+        "DISHONEST_NAMING": 0,
+        "ADVERSARIAL_GAMING": 0,
+        "CANNOT_DETERMINE": 0,
+        "UNKNOWN": 0,
+        "OUTRIGHT_FAKE": 0,
+    }
     flagged_files = []
     # (file, original_verdict, missing_evidence[]) for flags voided by the integrity guard
     integrity_voids: list[tuple[str, str, list[str]]] = []
@@ -307,7 +358,13 @@ def main() -> int:
             counts["AUTHENTIC"] += 1
             continue
         print(f"[{i}/{len(files)}] {rel}", file=sys.stderr)
-        if args.model == "gemini":
+        if args.model == "agy":
+            ok, report = call_agy(
+                PER_VERIFIER_PROMPT,
+                body,
+                model=args.model_name or "gemini-3.1-pro-high",
+            )
+        elif args.model == "gemini":
             ok, report = call_gemini(
                 PER_VERIFIER_PROMPT,
                 body,
@@ -347,10 +404,14 @@ def main() -> int:
                     "hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier "
                     "false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed "
                     "from the action list; DO NOT retire on this basis. Absent evidence: "
-                    + "; ".join(f"`{m}`" for m in missing[:6]) + "\n"
+                    + "; ".join(f"`{m}`" for m in missing[:6])
+                    + "\n"
                 )
-                print(f"    [integrity-guard] VOIDED {rel}: {verdict} cited "
-                      f"{len(missing)} absent evidence string(s)", file=sys.stderr)
+                print(
+                    f"    [integrity-guard] VOIDED {rel}: {verdict} cited "
+                    f"{len(missing)} absent evidence string(s)",
+                    file=sys.stderr,
+                )
                 verdict = "CANNOT_DETERMINE"
         counts[verdict] = counts.get(verdict, 0) + 1
         if verdict in flagged_verdicts:
@@ -378,11 +439,15 @@ def main() -> int:
             summary.append(f"- `{path}` — **{verdict}**")
     if integrity_voids:
         summary.append("")
-        summary.append("### AUDIT-INTEGRITY GUARD — flags voided (auditor hallucinated its evidence)")
-        summary.append("These verdicts were FLAGGED by the LLM reviewer but cited concrete "
-                       "code/path strings that do NOT exist in the source. Auto-downgraded to "
-                       "`CANNOT_DETERMINE`; **do NOT act on them.** They indicate the audit RUN "
-                       "was partly unreliable, not that the verifier is fake.")
+        summary.append(
+            "### AUDIT-INTEGRITY GUARD — flags voided (auditor hallucinated its evidence)"
+        )
+        summary.append(
+            "These verdicts were FLAGGED by the LLM reviewer but cited concrete "
+            "code/path strings that do NOT exist in the source. Auto-downgraded to "
+            "`CANNOT_DETERMINE`; **do NOT act on them.** They indicate the audit RUN "
+            "was partly unreliable, not that the verifier is fake."
+        )
         for path, verdict, missing in integrity_voids:
             ev = "; ".join(f"`{m}`" for m in missing) if missing else "(none captured)"
             summary.append(f"- `{path}` — was **{verdict}**; absent evidence: {ev}")

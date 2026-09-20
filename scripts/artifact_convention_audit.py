@@ -57,12 +57,18 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 REPORT = REPO / "ops" / "artifact_convention_audit_report.md"
+
+#: agy (Google Antigravity CLI) is a fresh user-local install at ~/.local/bin, not on the
+#: conductor systemd service's PATH (verified 2026-09-20; codex/claude resolve via /usr/bin's
+#: own system-wide copies). See scripts/verifier_authenticity_audit.py's AGY_BIN for the note.
+AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
 
 VERDICTS = ("CHECKABLE", "AGGREGATE_ONLY", "BLOCKED_WITHOUT_DIAGNOSTIC", "CANNOT_DETERMINE")
 
@@ -112,7 +118,26 @@ show what you looked at. If nothing is missing, write "nothing">
 
 
 def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
-    """Invoke the configured reviewer CLI. Mirrors the sibling audits' shape."""
+    """Invoke the configured reviewer CLI. Mirrors the sibling audits' shape.
+
+    `gemini` is BROKEN since 2026-09-20 (`IneligibleTierError`, a Google account-tier
+    deprecation on gemini-cli itself). `agy` (Google Antigravity CLI) replaces it, but takes
+    the full text as a literal argument rather than reading stdin -- confirmed 2026-09-20:
+    `agy --model X --print` with no argument prints usage instead of waiting on stdin.
+    """
+    full = f"{prompt}\n\n---ARTIFACT---\n{body}"
+    if agent == "agy":
+        try:
+            r = subprocess.run(
+                [AGY_BIN, "--model", model, "--print", full],
+                capture_output=True,
+                text=True,
+                timeout=300,
+                check=False,
+            )
+            return (r.returncode == 0, r.stdout or r.stderr)
+        except Exception as exc:  # noqa: BLE001
+            return False, repr(exc)[:200]
     cmds = {
         "codex": ["codex", "exec", "--model", model, "-"],
         "claude": ["claude", "-p", "--model", model],
@@ -124,7 +149,7 @@ def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
     try:
         r = subprocess.run(
             cmd,
-            input=f"{prompt}\n\n---ARTIFACT---\n{body}",
+            input=full,
             capture_output=True,
             text=True,
             timeout=300,

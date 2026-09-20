@@ -126,6 +126,7 @@ import datetime
 import hashlib
 import json
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -134,6 +135,11 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPORT_PATH = PROJECT_ROOT / "ops" / "qa_layer_authenticity_audit_report.md"
+
+#: agy (Google Antigravity CLI) is a fresh user-local install at ~/.local/bin, not on the
+#: conductor systemd service's PATH (verified 2026-09-20; codex/claude resolve via /usr/bin's
+#: own system-wide copies). See verifier_authenticity_audit.py's AGY_BIN for the full note.
+AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
 PRECOMMIT_CONFIG = PROJECT_ROOT / ".pre-commit-config.yaml"
 
 # Whole-file targets: small enough to audit in one shot.
@@ -892,6 +898,8 @@ def extract_risky_functions(path: Path) -> list[Chunk]:
 
 
 def call_gemini(prompt: str, body: str, model: str = "gemini-3.1-pro-preview") -> tuple[bool, str]:
+    """BROKEN since 2026-09-20: gemini-cli fails every call with `IneligibleTierError`, a Google
+    account-tier deprecation on gemini-cli itself. Kept, not deleted; see `call_agy` below."""
     try:
         full = f"{prompt}\n\n---\nCODE:\n\n{body}"
         proc = subprocess.run(
@@ -904,6 +912,26 @@ def call_gemini(prompt: str, body: str, model: str = "gemini-3.1-pro-preview") -
         )
         if proc.returncode != 0:
             return False, f"gemini exit {proc.returncode}: {proc.stderr[:200]}"
+        return True, proc.stdout
+    except Exception as exc:
+        return False, str(exc)
+
+
+def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tuple[bool, str]:
+    """Google Antigravity CLI (agy) -- replaces gemini-cli (broken since 2026-09-20, see
+    `call_gemini`). `--print` is agy's non-interactive flag; no `--yolo` equivalent is needed."""
+    try:
+        full = f"{prompt}\n\n---\nCODE:\n\n{body}"
+        proc = subprocess.run(
+            [AGY_BIN, "--model", model, "--print", full],
+            capture_output=True,
+            text=True,
+            timeout=300,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        if proc.returncode != 0:
+            return False, f"agy exit {proc.returncode}: {proc.stderr[:200]}"
         return True, proc.stdout
     except Exception as exc:
         return False, str(exc)
@@ -960,6 +988,8 @@ def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, st
 
 
 def call_model(model_kind: str, model_name: str | None, prompt: str, body: str) -> tuple[bool, str]:
+    if model_kind == "agy":
+        return call_agy(prompt, body, model=model_name or "gemini-3.1-pro-high")
     if model_kind == "gemini":
         return call_gemini(prompt, body, model=model_name or "gemini-3.1-pro-preview")
     if model_kind == "codex":
@@ -1386,9 +1416,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        default="claude",  # matches verifier_authenticity_audit.py's default; gemini is never
-        # the default per the 2026-06-10 global-stall directive.
-        choices=["gemini", "claude", "codex"],
+        default="claude",  # matches verifier_authenticity_audit.py's default; gemini-cli is never
+        # the default per the 2026-06-10 global-stall directive (also broken since 2026-09-20).
+        choices=["gemini", "claude", "codex", "agy"],
     )
     parser.add_argument("--model-name", default=None)
     parser.add_argument(

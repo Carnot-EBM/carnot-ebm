@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import shutil
 import subprocess
 import sys
 import time
@@ -39,6 +40,11 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REPORT_PATH = PROJECT_ROOT / "ops" / "arc_self_solve_audit_report.md"
+
+#: agy (Google Antigravity CLI) is a fresh user-local install at ~/.local/bin, not on the
+#: conductor systemd service's PATH (verified 2026-09-20; codex/claude resolve via /usr/bin's
+#: own system-wide copies). See verifier_authenticity_audit.py's AGY_BIN for the full note.
+AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
 LIVE_ENTRYPOINTS = ("scripts/arc_loop_solve.py", "python/carnot/agentic/arc_competition_agent.py")
 
 OUTER_LOOP_INPUT_FLAGS = (
@@ -87,9 +93,28 @@ def call_claude(prompt: str, body: str, model: str = "claude-opus-4-8") -> tuple
 
 
 def call_gemini(prompt: str, body: str, model: str = "gemini-3.1-pro-preview") -> tuple[bool, str]:
+    """BROKEN since 2026-09-20: gemini-cli fails every call with `IneligibleTierError`, a Google
+    account-tier deprecation on gemini-cli itself. Kept, not deleted; see `call_agy` below."""
     try:
         proc = subprocess.run(
             ["gemini", "--model", model, "--yolo", "-p", f"{prompt}\n\n---\n{body}"],
+            capture_output=True,
+            text=True,
+            timeout=600,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        return (proc.returncode == 0, proc.stdout if proc.returncode == 0 else proc.stderr[:300])
+    except Exception as exc:
+        return False, str(exc)
+
+
+def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tuple[bool, str]:
+    """Google Antigravity CLI (agy) -- replaces gemini-cli (broken since 2026-09-20, see
+    `call_gemini`). `--print` is agy's non-interactive flag; no `--yolo` equivalent is needed."""
+    try:
+        proc = subprocess.run(
+            [AGY_BIN, "--model", model, "--print", f"{prompt}\n\n---\n{body}"],
             capture_output=True,
             text=True,
             timeout=600,
@@ -106,8 +131,19 @@ def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, st
     pattern; prompt on stdin via `-`). Added 2026-06-30 for the Claude-quota-conserve window."""
     try:
         proc = subprocess.run(
-            ["codex", "exec", "--dangerously-bypass-approvals-and-sandbox", "--color", "never",
-             "--model", model, "--cd", str(PROJECT_ROOT), "--ephemeral", "-"],
+            [
+                "codex",
+                "exec",
+                "--dangerously-bypass-approvals-and-sandbox",
+                "--color",
+                "never",
+                "--model",
+                model,
+                "--cd",
+                str(PROJECT_ROOT),
+                "--ephemeral",
+                "-",
+            ],
             input=f"{prompt}\n\n---\n{body}",
             capture_output=True,
             text=True,
@@ -178,7 +214,9 @@ def _recent_solve_artifacts(since_days: int) -> list[dict]:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--model", choices=("claude", "gemini", "codex", "none"), default="claude")
+    ap.add_argument(
+        "--model", choices=("claude", "gemini", "codex", "agy", "none"), default="claude"
+    )
     ap.add_argument("--model-name", default=None)
     ap.add_argument("--since-days", type=int, default=7)
     args = ap.parse_args()
@@ -234,7 +272,12 @@ def main() -> int:
     ]
 
     if args.model != "none":
-        caller = {"claude": call_claude, "gemini": call_gemini, "codex": call_codex}[args.model]
+        caller = {
+            "claude": call_claude,
+            "gemini": call_gemini,
+            "codex": call_codex,
+            "agy": call_agy,
+        }[args.model]
         kwargs = {"model": args.model_name} if args.model_name else {}
         ok, resp = caller(HOSTILE_PROMPT, body, **kwargs)
         out += [
