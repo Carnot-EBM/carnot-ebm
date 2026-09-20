@@ -566,3 +566,26 @@ outer loop's recommendations are recorded here as decisions.
 
 Also approved the same day: shadow telemetry on the live agent (off by default, no behavior
 change), which supplies the missing option sets and per-decision timing for E2 and E6.
+
+### 12.1 Amendment, 2026-09-20 (later): Q7 decided
+
+The operator accepted the outer loop's rule for question 7. The row for Q7 in the table above
+said "Deferred". It is now decided as follows. This supersedes that row.
+
+**E5 (any change that puts the readout on the scored path) is allowed only when all of these hold:**
+
+1. E4 clears its own gate as written in this plan, with the effect measured by actions-to-progress, not an accuracy proxy.
+2. The scored vLLM wheel supports option log-probs and a parity result exists on the Blackwell class. If the wheel lacks the fields, E5 waits for a rebuilt wheel. It is not worked around.
+3. A non-scored Blackwell save-run shows the readout's added prefill and output cost fits inside the 2,400 s per-call and 41,400 s swarm limits at concurrency 8.
+4. The full-kernel local dry run, using the existing local submission gate, shows no regression against the current baseline kernel.
+5. The operator signs off explicitly for each submission. The outer loop never submits.
+
+**Timing.** No date is set. If E4 passes within about two weeks of the working November
+deadline, E5 needs a larger effect, and the readout ships default-off unless the effect is
+decisive.
+
+**Shipping.** E5 ships as a separate new kernel version through the normal daily-prep flow,
+with the readout behind a flag that defaults to off, so it can be reverted.
+
+**Why.** E4 runs offline on nine public games, a development proxy. Hidden-game performance
+is unknown, and only a real submission shows it. Passing E4 makes E5 eligible, not automatic.
