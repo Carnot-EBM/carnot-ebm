@@ -587,7 +587,31 @@ def codex_available() -> bool:
     return shutil.which(CODEX_BIN) is not None
 
 
-def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
+def _codex_invocation_bin(*, pin_configured: bool) -> str:
+    """Choose a stable argv name without losing the service's binary pin.
+
+    Interactive shells commonly resolve bare ``codex`` to the exact binary
+    named by ``CODEX_BIN``. Keep the canonical command shape in that case.
+    The unattended generator pins the configured spelling because its service
+    PATH may resolve bare ``codex`` to an older installation.
+    """
+
+    if pin_configured:
+        return CODEX_BIN
+    bare = shutil.which("codex")
+    configured = shutil.which(CODEX_BIN)
+    if bare and configured and Path(bare).resolve() == Path(configured).resolve():
+        return "codex"
+    return CODEX_BIN
+
+
+def call_codex(
+    prompt: str,
+    model: str,
+    timeout: int,
+    *,
+    pin_configured: bool = False,
+) -> tuple[bool, str]:
     """One codex exec call. Mirrors pages_adversarial_audit.py:call_codex and
     scripts/research_conductor.py's own `_build_agent_command` codex branch --
     same flags, same stdin-piped-prompt shape, same '-' terminator.
@@ -605,7 +629,7 @@ def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
         with tempfile.TemporaryDirectory(prefix="autoresearch-codex-") as scratch_dir:
             proc = subprocess.run(
                 [
-                    CODEX_BIN,
+                    _codex_invocation_bin(pin_configured=pin_configured),
                     "exec",
                     "--dangerously-bypass-approvals-and-sandbox",
                     "--color",
@@ -662,7 +686,7 @@ def codex_generate_hypotheses(
     self-reported final_energy) and only ours is actually verified downstream
     by _energy_verification_patch."""
     prompt = _hypothesis_prompt(baselines, recent_failures, iteration)
-    ok, output = call_codex(prompt, model, timeout)
+    ok, output = call_codex(prompt, model, timeout, pin_configured=True)
     if not ok:
         recent_failures.append({"description": "codex_call_failed", "reason": output})
         return []

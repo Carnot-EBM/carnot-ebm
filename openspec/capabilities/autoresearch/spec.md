@@ -6022,6 +6022,13 @@ binary with `shutil.which` and fall back to `~/.local/bin/agy`, because the
 conductor service PATH does not include `~/.local/bin`. The round SHALL be
 blocked only when neither agy nor codex is available.
 
+The unattended codex fallback SHALL execute the binary named by `CODEX_BIN`
+so the conductor service cannot accidentally select an older binary from its
+restricted PATH. A direct adapter call MAY retain the canonical bare `codex`
+argv when `codex` and `CODEX_BIN` resolve to the same executable; otherwise it
+SHALL use `CODEX_BIN`. This equivalence normalization SHALL not weaken the
+unattended round's explicit configured-binary selection.
+
 The round SHALL record each iteration where agy returned nothing and codex ran in
 the receipt under `fallback_iterations`. The commit message of a hypothesis that
 codex produced after that failover SHALL say so. When both generators return

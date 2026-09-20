@@ -2,6 +2,16 @@
 
 **Last Updated:** 2026-09-20
 
+**Operational Note:** 2026-09-20 REQ-AUTO-027 now distinguishes canonical
+direct `codex exec` argv from the unattended round's configured executable.
+`scripts/autoresearch_conductor_round.py` keeps bare `codex` only when it and
+`CODEX_BIN` resolve to the same executable, while the production fallback pins
+`CODEX_BIN` so the conductor service cannot select its older PATH binary. The
+exact smart subset passes 164 tests with one existing warning; all changed
+executable lines are covered, and focused Ruff, format, mypy, and spec coverage
+checks pass. No test was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified.
+
 **Operational Note:** 2026-09-20 REQ-VERIFY-7451 maps the V653 repaired
 claim-span capture contract in
 `python/carnot/experiment_7451_v653_span_capture.py` to

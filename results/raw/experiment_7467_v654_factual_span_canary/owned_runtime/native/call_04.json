@@ -1,0 +1,231 @@
+{
+  "annotation_scope": "unchanged_response_source_support_only",
+  "arm": "span",
+  "arm_order": 0,
+  "attempted": true,
+  "call_id": "development-02-span",
+  "call_index": 4,
+  "canary_kind": "factual",
+  "capture_phase": "development",
+  "case_index": 2,
+  "censored": false,
+  "claim_spans": [],
+  "claims": [],
+  "clipped": false,
+  "complete_response_coverage_eligible": true,
+  "completed_valid_output": false,
+  "completion_tokens": 29,
+  "condition": "annotated_factual_canary",
+  "correct_empty_control": false,
+  "correct_empty_counts_as_factual_success": false,
+  "covered_nonspace_fraction": 0.0,
+  "development_disposition": "malformed",
+  "development_usable": false,
+  "disposition": "malformed",
+  "error": null,
+  "factual_recall_success": false,
+  "finish_reason": "stop",
+  "generation_count": 1,
+  "grammar_mask": false,
+  "group_id": "15594",
+  "human_annotation_status": "no_unsupported_span_annotated",
+  "human_annotations": [],
+  "latency_s": 0.9791629929968622,
+  "literal_span_reconstruction": false,
+  "max_new_tokens": 256,
+  "missing_modifiers": [],
+  "nonempty_output": true,
+  "output_tokens": 29,
+  "pair_id": "development-02",
+  "paragraph": "Iran is set to lift its ban on women attending sports events.",
+  "paragraph_sha256": "sha256:43f95bf29561d3983164ab97ddff02f65d100feb043e2c84ce31f912098f173b",
+  "parse_errors": [
+    "span_bounds"
+  ],
+  "parse_status": "invalid",
+  "parse_valid": false,
+  "parser_retry_count": 0,
+  "persisted_before_parse": true,
+  "prompt": "Extract whole factual propositions from RESPONSE. Include every explicit modifier inside each selected proposition. Do not create triples, implied arguments, or new facts. Return one JSON object and no markdown. Use {\"claims\":[]} when there are no factual propositions.\nRESPONSE:\nIran is set to lift its ban on women attending sports events.\nSchema: {\"claims\":[[start,end]]}. Offsets are zero-based half-open Unicode character offsets into RESPONSE.",
+  "prompt_sha256": "sha256:b9fb2a580e6beecfdc69974209a780837687471dc6e07d4cf5f28fa65dfd096a",
+  "prompt_tokens": 102,
+  "qualifier_retention": null,
+  "raw_reply": "{\n  \"claims\": [\n    [\n      0,\n      63\n    ]\n  ]\n}",
+  "raw_reply_sha256": "sha256:41ed54933caffd22aaca052dc1b567afade182484f09e9f96f82fa2336a81d16",
+  "raw_request": {
+    "cache_prompt": false,
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "Extract whole factual propositions from RESPONSE. Include every explicit modifier inside each selected proposition. Do not create triples, implied arguments, or new facts. Return one JSON object and no markdown. Use {\"claims\":[]} when there are no factual propositions.\nRESPONSE:\nIran is set to lift its ban on women attending sports events.\nSchema: {\"claims\":[[start,end]]}. Offsets are zero-based half-open Unicode character offsets into RESPONSE.",
+        "role": "user"
+      }
+    ],
+    "seed": 6537451,
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "raw_request_sha256": "sha256:aea5cc4cf8b8bc0c339026b58cc30e797f99941cc6e7e76cd38f43fe2e33cd30",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"claims\": [\n    [\n      0,\n      63\n    ]\n  ]\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789946627,
+    "id": "chatcmpl-5Qb2mNA7wtMQnJVCJN5NLh983a6ffNjk",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 686.345,
+      "predicted_n": 29,
+      "predicted_per_second": 42.252802890674516,
+      "predicted_per_token_ms": 23.66706896551724,
+      "prompt_ms": 190.3,
+      "prompt_n": 102,
+      "prompt_per_second": 535.995796111403,
+      "prompt_per_token_ms": 1.865686274509804
+    },
+    "usage": {
+      "completion_tokens": 29,
+      "prompt_tokens": 102,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 131
+    }
+  },
+  "raw_response_sha256": "sha256:5441c0a1e8b1c481a0066d97f4908ef478cfd9f0e1f502c94bbc907bfff08580",
+  "repair_attempted": false,
+  "request_id": "development-02-span",
+  "response_id": "12",
+  "retry_count": 0,
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "42587",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:3d28472f3e318908654374bf606ccfde0be80056788c134a90669d89b6243463",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:2a3b6f8e45be76fe89ee8d80ce0b2b21dbc0179fcbb8bea5cd6d0f974df192e4",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 604348,
+      "start_time_ticks": 5059969
+    },
+    "pid": 604418,
+    "ppid": 604348,
+    "process_group_id": 604418,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789946622,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 604418,
+    "start_time_ticks": 5060151,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "seed": 6537451,
+  "semantic_truth": "not_assigned",
+  "syntax_valid": true,
+  "temperature": 0.0,
+  "terminal_state": "response",
+  "unit_id": "factual-02",
+  "whole_proposition_coverage": false
+}

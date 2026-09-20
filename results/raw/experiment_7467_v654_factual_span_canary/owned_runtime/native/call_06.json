@@ -1,0 +1,231 @@
+{
+  "annotation_scope": "unchanged_response_source_support_only",
+  "arm": "verbatim",
+  "arm_order": 0,
+  "attempted": true,
+  "call_id": "development-03-verbatim",
+  "call_index": 6,
+  "canary_kind": "factual",
+  "capture_phase": "development",
+  "case_index": 3,
+  "censored": false,
+  "claim_spans": [],
+  "claims": [],
+  "clipped": false,
+  "complete_response_coverage_eligible": true,
+  "completed_valid_output": false,
+  "completion_tokens": 96,
+  "condition": "annotated_factual_canary",
+  "correct_empty_control": false,
+  "correct_empty_counts_as_factual_success": false,
+  "covered_nonspace_fraction": 0.0,
+  "development_disposition": "malformed",
+  "development_usable": false,
+  "disposition": "malformed",
+  "error": null,
+  "factual_recall_success": false,
+  "finish_reason": "stop",
+  "generation_count": 1,
+  "grammar_mask": false,
+  "group_id": "15595",
+  "human_annotation_status": "no_unsupported_span_annotated",
+  "human_annotations": [],
+  "latency_s": 2.6231716409965884,
+  "literal_span_reconstruction": false,
+  "max_new_tokens": 256,
+  "missing_modifiers": [],
+  "nonempty_output": true,
+  "output_tokens": 96,
+  "pair_id": "development-03",
+  "paragraph": "Survival stories at sea are not just for Hollywood, they happen in real life too, and they are usually incredible tales of human endurance, ingenuity, resourcefulness, and often, luck.",
+  "paragraph_sha256": "sha256:c62a833bed10968751bf735e25d231898ad4516ec0504c305ad77938def8b762",
+  "parse_errors": [
+    "claim_not_found"
+  ],
+  "parse_status": "invalid",
+  "parse_valid": false,
+  "parser_retry_count": 0,
+  "persisted_before_parse": true,
+  "prompt": "Extract whole factual propositions from RESPONSE. Include every explicit modifier inside each selected proposition. Do not create triples, implied arguments, or new facts. Return one JSON object and no markdown. Use {\"claims\":[]} when there are no factual propositions.\nRESPONSE:\nSurvival stories at sea are not just for Hollywood, they happen in real life too, and they are usually incredible tales of human endurance, ingenuity, resourcefulness, and often, luck.\n{\"claims\":[\"exact RESPONSE substring\"]}. Copy each claim exactly once.",
+  "prompt_sha256": "sha256:32a7bb740777ab4ba02990e44324c5142a265274ab33ba3cabbb1174ad85132b",
+  "prompt_tokens": 119,
+  "qualifier_retention": null,
+  "raw_reply": "{\n\"claims\": [\n\"Survival stories at sea are not just for Hollywood\",\n\"Survival stories at sea happen in real life too\",\n\"Survival stories at sea are usually incredible tales of human endurance\",\n\"Survival stories at sea are usually incredible tales of ingenuity\",\n\"Survival stories at sea are usually incredible tales of resourcefulness\",\n\"Survival stories at sea are usually incredible tales of luck\"\n]\n}",
+  "raw_reply_sha256": "sha256:003251e46155ac65ac5dd1534ea7811e9864c3a7f52d2b25c39c2e170e5e4ddf",
+  "raw_request": {
+    "cache_prompt": false,
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "Extract whole factual propositions from RESPONSE. Include every explicit modifier inside each selected proposition. Do not create triples, implied arguments, or new facts. Return one JSON object and no markdown. Use {\"claims\":[]} when there are no factual propositions.\nRESPONSE:\nSurvival stories at sea are not just for Hollywood, they happen in real life too, and they are usually incredible tales of human endurance, ingenuity, resourcefulness, and often, luck.\n{\"claims\":[\"exact RESPONSE substring\"]}. Copy each claim exactly once.",
+        "role": "user"
+      }
+    ],
+    "seed": 6537451,
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "raw_request_sha256": "sha256:48a6964dc784fa84815006f11a1df28dde6a33e29c58c75ee161a6186834604a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"claims\": [\n\"Survival stories at sea are not just for Hollywood\",\n\"Survival stories at sea happen in real life too\",\n\"Survival stories at sea are usually incredible tales of human endurance\",\n\"Survival stories at sea are usually incredible tales of ingenuity\",\n\"Survival stories at sea are usually incredible tales of resourcefulness\",\n\"Survival stories at sea are usually incredible tales of luck\"\n]\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789946631,
+    "id": "chatcmpl-LwyrC11G9M3gJXMHTUZ18jRmikpxDfvX",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2320.323,
+      "predicted_n": 96,
+      "predicted_per_second": 41.373550147975095,
+      "predicted_per_token_ms": 24.170031249999997,
+      "prompt_ms": 200.648,
+      "prompt_n": 119,
+      "prompt_per_second": 593.0784259000837,
+      "prompt_per_token_ms": 1.6861176470588235
+    },
+    "usage": {
+      "completion_tokens": 96,
+      "prompt_tokens": 119,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 215
+    }
+  },
+  "raw_response_sha256": "sha256:8b4286628352f1fab7d3d3bb2084461ac224235be4243df45a6b622332f6c3b9",
+  "repair_attempted": false,
+  "request_id": "development-03-verbatim",
+  "response_id": "18",
+  "retry_count": 0,
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "42587",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:3d28472f3e318908654374bf606ccfde0be80056788c134a90669d89b6243463",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:2a3b6f8e45be76fe89ee8d80ce0b2b21dbc0179fcbb8bea5cd6d0f974df192e4",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 604348,
+      "start_time_ticks": 5059969
+    },
+    "pid": 604418,
+    "ppid": 604348,
+    "process_group_id": 604418,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789946622,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 604418,
+    "start_time_ticks": 5060151,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "seed": 6537451,
+  "semantic_truth": "not_assigned",
+  "syntax_valid": true,
+  "temperature": 0.0,
+  "terminal_state": "response",
+  "unit_id": "factual-03",
+  "whole_proposition_coverage": false
+}

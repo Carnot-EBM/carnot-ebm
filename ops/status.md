@@ -2,6 +2,18 @@
 
 **Last Updated:** 2026-09-20
 
+## 2026-09-20 — Autoresearch Codex binary selection repaired
+
+REQ-AUTO-027 now preserves both required behaviors: direct adapter calls use
+the canonical bare `codex` argv when it resolves to the same executable as
+`CODEX_BIN`, and the unattended fallback pins `CODEX_BIN` so the conductor's
+restricted PATH cannot select its older installation. The exact failing smart
+subset is green at 164/164 with one existing warning; all changed executable
+lines ran under scoped coverage. Ruff check/format, mypy, focused spec coverage,
+and diff checks pass. No numbered E2E in `ops/e2e-test-plan.md` applies to this
+subprocess-selection repair. No test was skipped, weakened, deleted, or
+reverted, and `scripts/research_conductor.py` was not modified.
+
 ## 2026-09-20 — Exp7451 closed-gate reporting repaired
 
 Exp7451 now publishes no constructed qualifier delta when development does not

@@ -8735,3 +8735,114 @@ Rust, or ARC production path.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7451 and SCENARIO-VERIFY-7451-* | Implemented in a focused V653 contract module and thin entrypoint that reuse the repaired Exp7442 capture engine. | Verified by spec-linked focused tests, affected shared-module tests, 100-percent changed-module coverage, scoped static checks, live entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
+## V654 factual claim-span development canary — 2026-09-20
+
+**Status:** Implemented. This phase changes the diagnosed development corpus from
+Exp7451. It does not change the extraction gate, decoding budget, or sealed
+evaluation roster.
+
+### REQ-VERIFY-7467: Factual Canary SHALL Qualify The Frozen Span Comparison
+
+Exp7467 SHALL authenticate the exact Exp7451 null result, the Exp7456 audit,
+the Exp7437 sealed evaluation roster, and the human-annotated RAGTruth bytes
+before model work. It SHALL preserve the original verdict classes and
+adversarial flags. Missing, changed, excluded, or ineligible inputs SHALL
+produce a terminal `blocked_*` result with no current model work.
+
+The producer SHALL freeze six development paragraphs before inference. Four
+paragraphs SHALL be separate, self-contained factual sentences selected by a
+deterministic rule from human-annotated rows with no unsupported span label.
+Two paragraphs SHALL be fixed nonfactual greeting or instruction controls.
+The selection record SHALL include the rules, source identifiers, annotations,
+exact text, and text hashes. All six paragraphs SHALL be disjoint from the
+original 96-call evaluation roster. Model output SHALL not affect selection.
+
+Both span-offset and verbatim arms SHALL process every development paragraph.
+The live path SHALL use the cached `unsloth/Qwen3.8-27B-GGUF` Q4_K_M file,
+embedded tokenizer and chat template, one owned CUDA lease, a 256-token
+ceiling, zero retries, and no grammar sweep. Requested offload and observed
+offload SHALL remain separate. The run SHALL make at most 108 generation calls
+and SHALL use at most 1500 seconds for model work.
+
+The factual gate SHALL require at least three usable outputs among the four
+factual paragraphs in each arm. It SHALL also require correct empty output for
+both nonfactual controls in each arm. A correct empty factual reply SHALL remain
+a factual failure. A nonempty nonfactual reply SHALL remain a control failure.
+If either requirement fails, evaluation SHALL stay closed and all 96 original
+evaluation calls SHALL have explicit unstarted dispositions. A repeated factual
+canary failure SHALL retire this extraction construction until a diagnosed
+cause changes.
+
+If development passes, the producer SHALL run the original sealed 96-call
+evaluation roster without changing its text, order, arms, seeds, or prompts.
+It SHALL persist every raw request and reply before parsing. It SHALL retain
+token counts, callback errors, invocation events, owned cleanup events, and
+content-addressed reply shards. Failed and correct-empty replies SHALL remain
+available to Exp7470.
+
+The reducer SHALL report paired completed-extraction rate, output-token cost,
+literal reconstruction, and explicit qualifier retention. The result SHALL
+keep constructed exact qualifier cases separate from human natural-language
+annotations. `span_value_score=1` SHALL require a completion-rate CI95 lower
+bound above zero, no increase in qualifier loss, and an output-token paired
+CI95 upper bound below zero. Syntactic overlap SHALL not establish factual
+truth or complete semantic coverage.
+
+`span_capture_complete_score` SHALL equal one when all planned calls have
+terminal or explicit unstarted dispositions and all required validation passes.
+A valid failed benefit gate SHALL be `null`. A required validation failure
+SHALL be `disqualified`. The producer SHALL use scoped Exp7358 and Exp7303
+validation, a live entrypoint E2E, cold replay, independent reduction,
+adversarial verification, strict row consistency, and atomic publication.
+
+#### SCENARIO-VERIFY-7467-SELECTION: Human Annotations Freeze Factual Inputs
+
+**Given** the exact annotated corpus and old evaluation roster
+**When** the development selector applies its frozen rule before inference
+**Then** it returns four exact factual sentences and two exact nonfactual controls
+**And** no selected identifier, group, or text hash occurs in the evaluation roster.
+
+**Spec traces:** REQ-VERIFY-7467
+
+#### SCENARIO-VERIFY-7467-GATE: Factual And Empty-Control Denominators Stay Separate
+
+**Given** twelve development replies across the two arms
+**When** the factual development gate reduces them
+**Then** each arm needs three of four usable factual replies and two of two correct empty controls
+**And** a correct empty factual reply receives no factual success credit.
+
+**Spec traces:** REQ-VERIFY-7467
+
+#### SCENARIO-VERIFY-7467-ROSTER: A Closed Gate Preserves All Evaluation Dispositions
+
+**Given** a completed development panel that fails either gate component
+**When** capture terminates
+**Then** no evaluation generation starts and all 96 sealed calls remain explicit unstarted rows
+**And** failed and empty raw replies remain hash-bound for Exp7470.
+
+**Spec traces:** REQ-VERIFY-7467
+
+#### SCENARIO-VERIFY-7467-VALUE: Paired Benefit Requires Both Confidence Bounds
+
+**Given** a completed 48-pair evaluation with separate qualifier authorities
+**When** independent reduction computes the registered gates
+**Then** completion CI95 lower must exceed zero and token-cost CI95 upper must be below zero
+**And** qualifier loss cannot increase before `span_value_score` becomes one.
+
+**Spec traces:** REQ-VERIFY-7467
+
+#### SCENARIO-VERIFY-7467-TERMINAL: Completion Does Not Hide A Null
+
+**Given** complete dispositions, owned cleanup, and required validation receipts
+**When** terminal classification runs
+**Then** completion can equal one while a failed scientific gate remains null
+**And** any required validation failure disqualifies the artifact before publication.
+
+**Spec traces:** REQ-VERIFY-7467
+
+## Implementation Status (REQ-VERIFY-7467)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7467 and SCENARIO-VERIFY-7467-* | Implemented in a focused V654 contract module and thin entrypoint that reuse the qualified span engine and owned-process lifecycle. | Verified by nine spec-linked focused tests, 100-percent changed-module coverage, scoped validation, live entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
