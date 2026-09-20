@@ -1,0 +1,174 @@
+{
+  "attempted": true,
+  "call_id": "development-00-span",
+  "completion_tokens": 6,
+  "error": null,
+  "finish_reason": "stop",
+  "latency_s": 0.6580640678294003,
+  "prompt_tokens": 106,
+  "raw_reply": "{\"claims\": []}",
+  "raw_request": {
+    "cache_prompt": false,
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "Extract whole factual propositions from RESPONSE. Include every explicit modifier inside each selected proposition. Do not create triples, implied arguments, or new facts. Return one JSON object and no markdown. Use {\"claims\":[]} when there are no factual propositions.\nRESPONSE:\nSure! Here's my attempt to briefly answer the question based on the provided passages:\nSchema: {\"claims\":[[start,end]]}. Offsets are zero-based half-open Unicode character offsets into RESPONSE.",
+        "role": "user"
+      }
+    ],
+    "seed": 6527442,
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"claims\": []}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789882488,
+    "id": "chatcmpl-0o29UYKJEcfUGMFO9947T4LSVnTR20ta",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 150.272,
+      "predicted_n": 6,
+      "predicted_per_second": 39.927597955706986,
+      "predicted_per_token_ms": 25.045333333333332,
+      "prompt_ms": 481.126,
+      "prompt_n": 106,
+      "prompt_per_second": 220.31650752609508,
+      "prompt_per_token_ms": 4.538924528301886
+    },
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 106,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 112
+    }
+  },
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "60101",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:95c3a4485c962cb4e6dac8283937ffd5074267a307ef2c11f4f7d59dbe5d422c",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 0,
+    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "lease_id": "lease:c0ff82493316eaae5a5200d226a72987366223a38acee9a7aaab7acbd280e243",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 251437,
+      "start_time_ticks": 217413132
+    },
+    "pid": 251508,
+    "ppid": 251437,
+    "process_group_id": 251508,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789882487,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 251508,
+    "start_time_ticks": 217413323,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "terminal_state": "response"
+}
