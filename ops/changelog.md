@@ -20201,3 +20201,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-20: Measure compact Qwen extraction through the repaired lifecycle (⚠️ Research Finding) — honest_verdict=complete_null_span_capture_development_gate_closed; results/experiment_7451_v653_span_capture.json
 - 2026-09-20: Capture authenticated source-conditioned Qwen representations (⚠️ Research Finding) — honest_verdict=complete_null_blocked_embedding_surface_unavailable; results/experiment_7452_v653_source_embeddings.json
 - 2026-09-20: Added environment-gated agy routing for non-planning conductor tasks, with one Codex failover and matching audit fallbacks (REQ-INFRA-7088).
+- 2026-09-20: Measure delayed continuous learning with fully replayable expert events (⚠️ Research Finding) — honest_verdict=complete_null_insufficient_online_benefit; results/experiment_7454_v653_continuous_learning.json
