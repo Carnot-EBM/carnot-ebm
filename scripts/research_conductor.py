@@ -831,7 +831,9 @@ def _build_agent_command(
     if effective_agent_type == "agy":
         agy_prompt = (
             f"PROJECT_ROOT is {PROJECT_ROOT.resolve()}. Use absolute paths under it for every "
-            "file tool call. Never write into any scratch or brain directory.\n\n"
+            "file tool call. Never write into any scratch or brain directory. Run every command in "
+            "the foreground and wait for it. Do not end your turn while a command or test is "
+            "still running, and do not stop before the deliverable file exists.\n\n"
             f"{prompt}"
         )
         return (
@@ -1686,6 +1688,14 @@ def _run_agent_once(
         return _failure(str(e))
 
 
+def _deliverable_present(deliverable_path: str) -> bool:
+    try:
+        deliverable = PROJECT_ROOT / deliverable_path
+        return deliverable.is_file() and deliverable.stat().st_size > 0
+    except OSError:
+        return False
+
+
 def run_agent(
     prompt: str,
     max_turns: int = 20,
@@ -1705,18 +1715,23 @@ def run_agent(
         agent_type_override=agent_type_override,
     )
     effective_agent_type = agent_type_override or AGENT_TYPE
-    if effective_agent_type != "agy" or result[0]:
+    if effective_agent_type != "agy":
         return result
-    if not result[1].startswith("Agy CLI error:"):
+    if result[0]:
+        if not deliverable_path or _deliverable_present(deliverable_path):
+            return result
+        # Seen 2026-09-20: agy exited 0 with status SUCCESS after saying it was "waiting"
+        # on a background test, having written nothing. Treat that as a failure.
+        result = (
+            False,
+            "Agy CLI error: exit 0 but the deliverable was not written "
+            "(agy can end its turn while a command is still running)",
+        )
+    elif not result[1].startswith("Agy CLI error:"):
         result = False, f"Agy CLI error: {result[1]}"
 
-    if deliverable_path:
-        deliverable = PROJECT_ROOT / deliverable_path
-        try:
-            if deliverable.is_file() and deliverable.stat().st_size > 0:
-                return result
-        except OSError:
-            pass
+    if deliverable_path and _deliverable_present(deliverable_path):
+        return result
 
     fallback_model = os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-5.6-sol")
     logger.warning(

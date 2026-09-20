@@ -251,3 +251,42 @@ def test_pages_audit_retries_failed_agy_with_codex(monkeypatch: pytest.MonkeyPat
 
     assert result == (True, "codex ok")
     codex.assert_called_once_with("prompt", model="gpt-pages-test")
+
+
+def test_agy_success_without_the_deliverable_falls_back_to_codex(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Seen 2026-09-20: agy ended its turn (exit 0, SUCCESS) while "waiting" on a test."""
+    missing = tmp_path / "never_written.json"
+    run_once = Mock(side_effect=[(True, "agy said it was waiting"), (True, "codex wrote it")])
+    monkeypatch.setattr(research_conductor, "_run_agent_once", run_once)
+
+    result = research_conductor.run_agent(
+        "prompt", deliverable_path=str(missing), agent_type_override="agy"
+    )
+
+    assert result == (True, "codex wrote it")
+    assert run_once.call_count == 2
+    assert run_once.call_args_list[1].kwargs["agent_type_override"] == "codex"
+
+
+def test_agy_success_with_the_deliverable_present_is_kept(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    deliverable = tmp_path / "result.json"
+    deliverable.write_text("{}")
+    run_once = Mock(return_value=(True, "agy ok"))
+    monkeypatch.setattr(research_conductor, "_run_agent_once", run_once)
+
+    result = research_conductor.run_agent(
+        "prompt", deliverable_path=str(deliverable), agent_type_override="agy"
+    )
+
+    assert result == (True, "agy ok")
+    assert run_once.call_count == 1
+
+
+def test_agy_prompt_prefix_forbids_ending_the_turn_early() -> None:
+    cmd, _, _ = research_conductor._build_agent_command("do the task", 5, agent_type_override="agy")
+    assert "foreground" in cmd[-1]
+    assert "do not stop before the deliverable file exists" in cmd[-1]
