@@ -13,6 +13,103 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V652 ARC supervisor evidence reduction — 2026-09-20
+
+**Status:** Specified. This work interprets two archived adapter-withheld live
+episodes. It does not run a game, invoke a model, or change the live policy.
+
+### REQ-ARC-WMTE-7444: Reduce supervisor exposure without inventing an arm effect
+
+Experiment 7444 SHALL authenticate the exact Experiment 7431 terminal artifact,
+its two episode rows, and the available trajectory-supervisor evidence for
+`bp35` and `cn04`. It SHALL preserve the producer's original status, verdict
+class, adversarial flag, adapter and saved-solution flags, action counts,
+request receipts, supervisor mode, enabled arms, firings, consumed redirects,
+level observations, and banked progress. Historical model and callback records
+SHALL remain in immutable typed sidecars. They SHALL not enter current-work
+model counters.
+
+The experiment SHALL use a private supervisor ledger. For each episode it
+SHALL reduce attempted callbacks, received completions, tool feedback,
+shadow or active mode, enabled arms, firings, consumed redirects, transient
+level changes, and banked progress from existing timestamped receipts only.
+A transient level increase followed by a return SHALL remain distinct from
+banked progress. An arm that did not fire SHALL have `effect_evidence=none`;
+it SHALL not be classified as a measured failed intervention.
+
+The reducer SHALL compare recorded actions with the shipped firing threshold.
+When no complete trajectory-supervisor window receipt exists, window contents
+and arm eligibility SHALL remain `unknown`. A run shorter than the threshold
+MAY establish that the threshold was not reached, but SHALL not synthesize a
+window row. The reducer SHALL preserve a disabled fourth arm and SHALL require
+all four curated arms to have actually fired, followed by an exhausted
+stagnation window, before it can justify proposing a new arm.
+
+Zero firings SHALL produce no recommendation to promote or retire an arm.
+Selection SHALL remain within the four curated AVO arms. The result SHALL name
+the exact future evidence prerequisite: a live adapter-withheld comparison in
+which the relevant curated arm is enabled, reaches its shipped threshold,
+actually fires, and records a later outcome. The experiment SHALL not lower a
+threshold, raise a generation budget, enable an arm, change arm order, or
+change any production default.
+
+Before reduction, the experiment SHALL precheck the solve registry and confirm
+that both public targets are already solved. It SHALL not construct a game
+adapter, read hidden game code, replay a known solve, or run an offline
+ground-truth search. Archived attempts MAY use
+`solve_provenance=live_agent_self_discovery` only to describe their origin.
+Current `solve_credit` and `new_level_credit` SHALL remain zero.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. It SHALL publish two per-game artifacts and one
+terminal aggregate artifact atomically. The affected manifest SHALL use the
+Experiment 7358 command plan and Experiment 7303 runner for worktree imports,
+focused pytest, separate 100 percent changed-module coverage, scoped Ruff,
+changed-module mypy, and exact-test spec coverage. The entrypoint, fresh-process
+cold replay, independent reduction, unchanged adversarial verifier, and strict
+row-consistency reader SHALL pass before publication. No numbered end-to-end
+test applies because this experiment changes reporting only.
+
+#### SCENARIO-ARC-WMTE-7444-ZERO-FIRINGS
+
+- GIVEN a complete archived episode below the shipped firing threshold with no redirect
+- WHEN the private ledger reduces its supervisor evidence
+- THEN firings and consumed redirects are zero and arm-effect evidence is `none`
+- AND no arm is promoted, retired, or described as a measured failure.
+
+#### SCENARIO-ARC-WMTE-7444-TRANSIENT-PROGRESS
+
+- GIVEN timestamped observations whose levels change from zero to one and back to zero
+- WHEN the episode ends with zero banked progress
+- THEN the transient increase is counted separately from banked progress
+- AND neither supervisor help nor solve credit is inferred from the transient event.
+
+#### SCENARIO-ARC-WMTE-7444-DISABLED-ARM
+
+- GIVEN the three default arms are enabled and `tool_loop_reinduction` is disabled
+- WHEN stagnation continues without the fourth arm firing
+- THEN the curated table is not classified as all-arms exhausted
+- AND the next prerequisite names enablement and an observed firing, not a new arm.
+
+#### SCENARIO-ARC-WMTE-7444-ALL-ARMS-EXHAUSTED
+
+- GIVEN all four curated arms actually fired on one level stretch
+- AND a later recorded window has every curated arm in `arms_used`
+- WHEN stagnation continued in that window
+- THEN and only then the reducer marks new-arm evidence as present
+- AND it still records no automatic policy or arm-table change.
+
+#### SCENARIO-ARC-WMTE-7444-TERMINAL
+
+- GIVEN both source rows, sidecars, registry checks, scoped validation, and terminal readers
+- WHEN an independent fresh process recomputes the candidate
+- THEN the terminal verdict is a complete null with no supervisor policy recommendation
+- AND promotion, solve, and new-level credit remain zero.
+
+Implementation status: specified 2026-09-20. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V651 ARC receipt evidence boundary — 2026-09-19
 
 **Status:** Specified. This work repairs the producer boundary that caused the

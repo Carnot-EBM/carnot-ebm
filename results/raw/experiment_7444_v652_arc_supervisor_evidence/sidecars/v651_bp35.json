@@ -1,0 +1,828 @@
+{
+  "payload": {
+    "episode_receipt": {
+      "action_limit": 64,
+      "actions": 62,
+      "adapter_disabled": true,
+      "banked_solution_disabled": true,
+      "disposition": "complete",
+      "elapsed_s": 182.32682809280232,
+      "episode_id": "bp35:seed-7431651",
+      "episode_limit_s": 240.0,
+      "error": null,
+      "execution_order": 0,
+      "first_action": {
+        "action": "ACTION6",
+        "action_index": 1,
+        "data": {
+          "x": 45,
+          "y": 15
+        },
+        "elapsed_s": 0.3554142597131431
+      },
+      "first_action_latency_s": 0.3554142597131431,
+      "first_observation": {
+        "elapsed_s": 0.35823316499590874,
+        "frame_sha256": "sha256:83e53b244e6650531deca2d0a6dd75762cc52ee3ca1bb2a09094183bb4fab50c",
+        "level": 0
+      },
+      "game": "bp35",
+      "hand_model_disabled": true,
+      "hand_solver_disabled": true,
+      "hidden_game_source_disabled": true,
+      "induction_attempt_count": 1,
+      "level_progress": 0,
+      "lookup_solver_disabled": true,
+      "max_level": 0,
+      "max_new_tokens_per_call": 256,
+      "offline_ground_truth_bfs_disabled": true,
+      "policy_entry": {
+        "adapter_disabled": true,
+        "choose_action_path": true,
+        "denied_paths": [
+          "per_game_adapter",
+          "banked_solution",
+          "hand_model",
+          "hand_solver",
+          "saved_engine",
+          "lookup_solver",
+          "replay_route",
+          "hidden_game_source",
+          "offline_ground_truth_bfs"
+        ],
+        "factory": "make_carnot_agent",
+        "is_done_path": true,
+        "policy_class": "E3AgentPolicy"
+      },
+      "request_budget_receipt": {
+        "accounting_valid": true,
+        "attempted": 2,
+        "callback_rows": [
+          {
+            "branch": "generation",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 15.113310402724892,
+            "episode_id": "bp35:seed-7431651",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "request-3a822ffdfa3640b3a436fa019ae73b54",
+            "reservation_index": 0,
+            "reserved_monotonic": 2137345.124467023,
+            "terminal_monotonic": 2137360.237777426
+          },
+          {
+            "branch": "generation",
+            "cancel_reason": null,
+            "disposition": "completed",
+            "elapsed_s": 7.489773389883339,
+            "episode_id": "bp35:seed-7431651",
+            "error": null,
+            "recovered_after_restart": false,
+            "request_id": "request-bf5d33e049c549599babedef9c42b4d5",
+            "reservation_index": 1,
+            "reserved_monotonic": 2137398.981054819,
+            "terminal_monotonic": 2137406.470828209
+          }
+        ],
+        "cancel_reason": "episode_terminal",
+        "cancelled": 0,
+        "closed": true,
+        "completed": 2,
+        "deadline_exceeded": false,
+        "deadline_violations": 0,
+        "elapsed_s": 183.08203927380964,
+        "episode_id": "bp35:seed-7431651",
+        "failed": 0,
+        "in_flight": 0,
+        "late_completions_discarded": 0,
+        "late_write_violations": 0,
+        "limit": 2,
+        "remaining": 0,
+        "replayed_completed_refusals": 0,
+        "schema": "carnot.arc_episode_request_budget.v1"
+      },
+      "request_limit": 2,
+      "saved_engine_disabled": true,
+      "seed": 7431651,
+      "sentinel": true,
+      "server_request_rows": [
+        {
+          "call_index": 0,
+          "elapsed_s": 15.110675102099776,
+          "episode_id": "bp35:seed-7431651",
+          "event": "server_response",
+          "request_dispatched": true,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/00_request.json",
+          "request_sha256": "sha256:3f3754efc0fc01754b2de46dece50cba6840b31ffb9863f9690fb0fd11a74b4f",
+          "request_started_monotonic": 2137345.126321657,
+          "requested_max_tokens": 256,
+          "response_observed": true,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/00_response.json",
+          "response_sha256": "sha256:bfb1f26c4643cbd8861a2d6539200e9cb723d91d7d89b284137a625c3442f3f1",
+          "url": "http://127.0.0.1:32921/v1/chat/completions"
+        },
+        {
+          "call_index": 1,
+          "elapsed_s": 7.486106863245368,
+          "episode_id": "bp35:seed-7431651",
+          "event": "server_response",
+          "request_dispatched": true,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/01_request.json",
+          "request_sha256": "sha256:7bb4ca8cdca183c1e1b3e132d06bebfbb886ab3320750793219a5d07a2df554c",
+          "request_started_monotonic": 2137398.982953896,
+          "requested_max_tokens": 256,
+          "response_observed": true,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/01_response.json",
+          "response_sha256": "sha256:d7c860b6736c5bba699d666c94ce10de03cda0c52cbed2578f030b637160c3f9",
+          "url": "http://127.0.0.1:32921/v1/chat/completions"
+        }
+      ],
+      "solve_credit": 0,
+      "start_level": 0,
+      "supervisor": {
+        "arms_enabled": [
+          "drop_goal_bias",
+          "allow_reinduction",
+          "force_exploration_diversity"
+        ],
+        "consumed": 0,
+        "fired": 0,
+        "mode": "shadow"
+      },
+      "tool_feedback_consumed": 0,
+      "withheld_inputs": [
+        "per_game_adapter",
+        "banked_solution",
+        "hand_model",
+        "hand_solver",
+        "saved_engine",
+        "lookup_solver",
+        "replay_route",
+        "hidden_game_source",
+        "offline_ground_truth_bfs"
+      ]
+    },
+    "schema": "carnot.exp7444.archived_episode.v1",
+    "scope": "historical_model_receipts",
+    "source": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7431_v651_arc_live_sentinel.json",
+      "sha256": "sha256:0389f7373376cb50a458f6e91ec1f1590ac536e6e3451543564fa68f3ce68642"
+    },
+    "timestamped_observations": [
+      {
+        "adapter_disabled": true,
+        "choose_action_path": true,
+        "denied_paths": [
+          "per_game_adapter",
+          "banked_solution",
+          "hand_model",
+          "hand_solver",
+          "saved_engine",
+          "lookup_solver",
+          "replay_route",
+          "hidden_game_source",
+          "offline_ground_truth_bfs"
+        ],
+        "episode_id": "bp35:seed-7431651",
+        "event": "policy_entry",
+        "factory": "make_carnot_agent",
+        "is_done_path": true,
+        "policy_class": "E3AgentPolicy"
+      },
+      {
+        "action": "RESET",
+        "action_index": 0,
+        "elapsed_s": 0.2952435836195946,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 1,
+        "data": {
+          "x": 45,
+          "y": 15
+        },
+        "elapsed_s": 0.3554142597131431,
+        "episode_id": "bp35:seed-7431651",
+        "event": "first_action"
+      },
+      {
+        "elapsed_s": 0.35823316499590874,
+        "episode_id": "bp35:seed-7431651",
+        "event": "first_observation",
+        "frame_sha256": "sha256:83e53b244e6650531deca2d0a6dd75762cc52ee3ca1bb2a09094183bb4fab50c",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 1,
+        "elapsed_s": 0.35870796674862504,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 2,
+        "elapsed_s": 0.38626718474552035,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 3,
+        "elapsed_s": 0.41481287591159344,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 4,
+        "elapsed_s": 0.47821595473214984,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 5,
+        "elapsed_s": 0.5324567016214132,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 6,
+        "elapsed_s": 0.5911534586921334,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 7,
+        "elapsed_s": 0.6119452146813273,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 8,
+        "elapsed_s": 0.6141774579882622,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 9,
+        "elapsed_s": 0.8641479499638081,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 10,
+        "elapsed_s": 0.917676739860326,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 11,
+        "elapsed_s": 0.9542375667952001,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 12,
+        "elapsed_s": 0.9568229438737035,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 13,
+        "elapsed_s": 0.9582878747023642,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 14,
+        "elapsed_s": 0.9597541699185967,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 15,
+        "elapsed_s": 0.9957354278303683,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 16,
+        "elapsed_s": 0.9985500047914684,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 17,
+        "elapsed_s": 1.040988421998918,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 18,
+        "elapsed_s": 1.0663197948597372,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 19,
+        "elapsed_s": 1.1228851187042892,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 20,
+        "elapsed_s": 1.127068817615509,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 21,
+        "elapsed_s": 1.1632975707761943,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 22,
+        "elapsed_s": 1.1667576506733894,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 23,
+        "elapsed_s": 1.1876634606160223,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 24,
+        "elapsed_s": 1.2171920877881348,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 25,
+        "elapsed_s": 1.2402132116258144,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "episode_id": "bp35:seed-7431651",
+        "event": "permit_acquired",
+        "monotonic": 2137345.124467023,
+        "request_id": "request-3a822ffdfa3640b3a436fa019ae73b54",
+        "reservation_index": 0
+      },
+      {
+        "call_index": 0,
+        "episode_id": "bp35:seed-7431651",
+        "event": "server_request",
+        "request_dispatched": true,
+        "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/00_request.json",
+        "request_sha256": "sha256:3f3754efc0fc01754b2de46dece50cba6840b31ffb9863f9690fb0fd11a74b4f",
+        "request_started_monotonic": 2137345.126321657,
+        "requested_max_tokens": 256,
+        "url": "http://127.0.0.1:32921/v1/chat/completions"
+      },
+      {
+        "call_index": 0,
+        "elapsed_s": 15.110675102099776,
+        "episode_id": "bp35:seed-7431651",
+        "event": "server_response",
+        "request_dispatched": true,
+        "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/00_request.json",
+        "request_sha256": "sha256:3f3754efc0fc01754b2de46dece50cba6840b31ffb9863f9690fb0fd11a74b4f",
+        "request_started_monotonic": 2137345.126321657,
+        "requested_max_tokens": 256,
+        "response_observed": true,
+        "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/00_response.json",
+        "response_sha256": "sha256:bfb1f26c4643cbd8861a2d6539200e9cb723d91d7d89b284137a625c3442f3f1",
+        "url": "http://127.0.0.1:32921/v1/chat/completions"
+      },
+      {
+        "disposition": "completed",
+        "episode_id": "bp35:seed-7431651",
+        "event": "permit_terminal",
+        "monotonic": 2137360.237782495,
+        "request_id": "request-3a822ffdfa3640b3a436fa019ae73b54"
+      },
+      {
+        "episode_id": "bp35:seed-7431651",
+        "event": "permit_acquired",
+        "monotonic": 2137398.981054819,
+        "request_id": "request-bf5d33e049c549599babedef9c42b4d5",
+        "reservation_index": 1
+      },
+      {
+        "call_index": 1,
+        "episode_id": "bp35:seed-7431651",
+        "event": "server_request",
+        "request_dispatched": true,
+        "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/01_request.json",
+        "request_sha256": "sha256:7bb4ca8cdca183c1e1b3e132d06bebfbb886ab3320750793219a5d07a2df554c",
+        "request_started_monotonic": 2137398.982953896,
+        "requested_max_tokens": 256,
+        "url": "http://127.0.0.1:32921/v1/chat/completions"
+      },
+      {
+        "call_index": 1,
+        "elapsed_s": 7.486106863245368,
+        "episode_id": "bp35:seed-7431651",
+        "event": "server_response",
+        "request_dispatched": true,
+        "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/01_request.json",
+        "request_sha256": "sha256:7bb4ca8cdca183c1e1b3e132d06bebfbb886ab3320750793219a5d07a2df554c",
+        "request_started_monotonic": 2137398.982953896,
+        "requested_max_tokens": 256,
+        "response_observed": true,
+        "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7431_v651_arc_live_sentinel/bp35__seed-7431651/requests/01_response.json",
+        "response_sha256": "sha256:d7c860b6736c5bba699d666c94ce10de03cda0c52cbed2578f030b637160c3f9",
+        "url": "http://127.0.0.1:32921/v1/chat/completions"
+      },
+      {
+        "disposition": "completed",
+        "episode_id": "bp35:seed-7431651",
+        "event": "permit_terminal",
+        "monotonic": 2137406.470835592,
+        "request_id": "request-bf5d33e049c549599babedef9c42b4d5"
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 26,
+        "elapsed_s": 181.48791013471782,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 27,
+        "elapsed_s": 181.4921611198224,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 28,
+        "elapsed_s": 181.51219027396291,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 29,
+        "elapsed_s": 181.51506576500833,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 30,
+        "elapsed_s": 181.51675048982725,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 31,
+        "elapsed_s": 181.5979751558043,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 32,
+        "elapsed_s": 181.6002369238995,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 33,
+        "elapsed_s": 181.60165594983846,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 34,
+        "elapsed_s": 181.60328335687518,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "RESET",
+        "action_index": 35,
+        "elapsed_s": 181.70415561879054,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 36,
+        "elapsed_s": 181.70608129678294,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 37,
+        "elapsed_s": 181.77776383794844,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 38,
+        "elapsed_s": 181.7794818249531,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 39,
+        "elapsed_s": 181.85394547088072,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 40,
+        "elapsed_s": 181.85636065760627,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 41,
+        "elapsed_s": 181.93851651297882,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 42,
+        "elapsed_s": 181.96098978677765,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 43,
+        "elapsed_s": 181.96287952689454,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 44,
+        "elapsed_s": 181.98658362356946,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 45,
+        "elapsed_s": 181.99057131400332,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 46,
+        "elapsed_s": 182.00458760280162,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 47,
+        "elapsed_s": 182.00648123957217,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 48,
+        "elapsed_s": 182.04300161171705,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 49,
+        "elapsed_s": 182.10113894892856,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 50,
+        "elapsed_s": 182.16121913585812,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 51,
+        "elapsed_s": 182.18012504000217,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 52,
+        "elapsed_s": 182.18242996977642,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 53,
+        "elapsed_s": 182.18410854274407,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION3",
+        "action_index": 54,
+        "elapsed_s": 182.21689024101943,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 55,
+        "elapsed_s": 182.24041782598943,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 56,
+        "elapsed_s": 182.26944364001974,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 57,
+        "elapsed_s": 182.27282839780673,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 58,
+        "elapsed_s": 182.2746132495813,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 59,
+        "elapsed_s": 182.27731961384416,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 60,
+        "elapsed_s": 182.2881384869106,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION7",
+        "action_index": 61,
+        "elapsed_s": 182.29029646981508,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION4",
+        "action_index": 62,
+        "elapsed_s": 182.29188847076148,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "action": "ACTION6",
+        "action_index": 63,
+        "elapsed_s": 182.32549740280956,
+        "episode_id": "bp35:seed-7431651",
+        "event": "action_observation",
+        "level": 0
+      },
+      {
+        "actions": 62,
+        "disposition": "complete",
+        "elapsed_s": 182.32682809280232,
+        "episode_id": "bp35:seed-7431651",
+        "event": "episode_terminal"
+      }
+    ],
+    "trajectory_supervisor_receipt": {
+      "arms_enabled": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity"
+      ],
+      "consumed": 0,
+      "efficacy_inference": false,
+      "episode_id": "bp35:seed-7431651",
+      "fired": 0,
+      "mode": "shadow"
+    },
+    "trajectory_window_receipt": null,
+    "trajectory_window_receipt_status": "unknown_not_preserved_by_v651_terminal_row"
+  },
+  "schema": "carnot.current_work_receipt.sidecar.v1",
+  "scope": "historical_model_receipts"
+}

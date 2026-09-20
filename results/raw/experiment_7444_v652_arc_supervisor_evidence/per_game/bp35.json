@@ -1,0 +1,94 @@
+{
+  "experiment_id": "exp7444-v652-arc-supervisor-evidence",
+  "row": {
+    "actions": 62,
+    "adapter_disabled": true,
+    "all_arms_exhausted_windows": 0,
+    "all_curated_arms_fired": false,
+    "arm_effect_evidence": "none_no_firing",
+    "arm_rows": [
+      {
+        "arm": "drop_goal_bias",
+        "consumed": 0,
+        "effect_evidence": "none",
+        "enabled": true,
+        "fired": 0
+      },
+      {
+        "arm": "allow_reinduction",
+        "consumed": 0,
+        "effect_evidence": "none",
+        "enabled": true,
+        "fired": 0
+      },
+      {
+        "arm": "force_exploration_diversity",
+        "consumed": 0,
+        "effect_evidence": "none",
+        "enabled": true,
+        "fired": 0
+      },
+      {
+        "arm": "tool_loop_reinduction",
+        "consumed": 0,
+        "effect_evidence": "none",
+        "enabled": false,
+        "fired": 0
+      }
+    ],
+    "automatic_policy_change": false,
+    "banked_progress": 0,
+    "banked_solution_disabled": true,
+    "callbacks_attempted": 2,
+    "callbacks_cancelled": 0,
+    "callbacks_failed": 0,
+    "callbacks_in_flight": 0,
+    "completions_received": 2,
+    "condition": "archived_shadow_supervisor",
+    "consumed_redirects": 0,
+    "disabled_arms": [
+      "tool_loop_reinduction"
+    ],
+    "disposition": "complete",
+    "eligible_stagnation_windows": null,
+    "enabled_arms": [
+      "drop_goal_bias",
+      "allow_reinduction",
+      "force_exploration_diversity"
+    ],
+    "firing_threshold_reached": false,
+    "game": "bp35",
+    "level_decrease_events": 0,
+    "level_increase_events": 0,
+    "measured_failed_intervention": false,
+    "new_arm_evidence": false,
+    "new_level_credit": 0,
+    "next_live_prerequisite": {
+      "for_arm_effect": "Run an adapter-withheld live comparison at the shipped 120-action stagnation threshold; record one curated-arm firing, whether it was applied, and the later transient and banked outcome.",
+      "for_new_arm": "Enable every curated arm through an explicit experiment opt-in, observe all four arms fire on one level stretch, then record a later exhausted stagnation window.",
+      "generation_budget_change_required": false,
+      "live_policy_changed_by_this_task": false,
+      "requires_arm_enablement": [
+        "tool_loop_reinduction"
+      ],
+      "threshold_actions": 120
+    },
+    "peak_level": 0,
+    "saved_engine_disabled": true,
+    "seed": 7431651,
+    "shipped_firing_threshold": 120,
+    "solve_credit": 0,
+    "source_group": "v651_live_scored_policy_adapter_withheld",
+    "supervisor_firings": 0,
+    "supervisor_helped_banked_progress": false,
+    "supervisor_mode": "shadow",
+    "terminal_observed_level": 0,
+    "tool_feedback_consumed": 0,
+    "transient_level_progress": 0,
+    "unit_id": "bp35:seed-7431651",
+    "verdict_class": "null",
+    "window_evidence_status": "unknown_missing_timestamped_window_receipt"
+  },
+  "schema": "carnot.exp7444.per_game.v1",
+  "source_artifact": "results/experiment_7431_v651_arc_live_sentinel.json"
+}
