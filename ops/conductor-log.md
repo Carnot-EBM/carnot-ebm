@@ -18260,3 +18260,4 @@ code |
 | 2026-09-20 00:32 UTC | Prototype compact claim spans and seal the extract | OK | 109 passed, 1 warning in 7.60s |
 | 2026-09-20 00:54 UTC | Prototype delayed expert weighting over frozen and | OK | 94 passed, 1 warning in 9.60s |
 | 2026-09-20 01:53 UTC | Train calibrated energy policies and measure indep | OK | 94 passed, 1 warning in 7.65s |
+| 2026-09-20 02:30 UTC | Measure continuous expert weighting on delayed sou | OK | 94 passed, 1 warning in 14.96s |
