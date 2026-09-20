@@ -45628,3 +45628,44 @@ observation supports another unchanged architecture or threshold sweep.
 
 No hardware purchase, vendor contact, model download, or external publication
 is part of this planning pass.
+
+## Outer-loop note - 2026-09-20 (test-model-thing, inspiration only)
+
+**Source:** [jrz97619761/test-model-thing](https://github.com/jrz97619761/test-model-thing)
+(MIT, created 2026-08-12, about 40 KB, 209 stars). A 4.5M-parameter byte-level
+model in MLX by a solo developer. Read through the GitHub API. Nothing was run.
+The README screenshots were not viewed.
+
+**What the code does (outer-loop reading, untested):**
+
+- Each layer state is `decay * state + embedding(byte)`. It is a learned-decay
+  running average of byte embeddings. The recurrence has no nonlinearity.
+  Layer states depend only on the embedded byte stream, not on other layers.
+- That structure makes exact per-step online gradients cheap. The
+  `embedtrace` and `decaytrace` arrays are real-time recurrent learning traces.
+  The update looks exact, with no truncation.
+- Losses: JEPA-style latent MSE, a variance hinge against collapse, byte
+  cross-entropy, and a learned stop head.
+- Weights and recurrent memory persist across chats. `--frozen` disables
+  learning.
+- The README credits "recurrent trace units". The outer loop believes this
+  traces to Elelimy et al., NeurIPS 2024, on RTRL with trace units. That is
+  from memory and is not verified against the paper.
+
+**Carnot hooks:**
+
+- Cheap online adaptation: choose the recurrence so exact online gradients cost
+  little. A possible pattern for test-time learning. Direct ARC relevance is low,
+  because the ARC deliverable is the runtime discovery process, not weights.
+- Local-first fit: it runs on a laptop, which matches the decentralization
+  rules.
+- A cheap latent-prediction testbed for the Phase 3 direction. It is
+  autoregressive, not energy-based.
+
+**Not evidence.** The headline is a CoLA screenshot compared with GPT-1's 45.4.
+The comparison is unlike-for-unlike. The repo uses a linear probe on a frozen
+final state and a self-made split of the training file. GPT-1's figure is
+end-to-end fine-tuning. There is no seed, no held-out size, and no artifact.
+It would fail the adversarial artifact rules, so cite it as inspiration only.
+The two scripts make no network, exec, or subprocess calls. The README also
+mentions unofficial PyTorch ports. Those were not reviewed.
