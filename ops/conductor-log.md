@@ -18293,3 +18293,4 @@ code |
 | 2026-09-20 20:29 UTC | Plan milestone 2026.09.654 | OK | 14 tasks proposed |
 | 2026-09-20 20:32 UTC | Milestone 2026.09.654 activated | OK | 14 tasks queued |
 | 2026-09-20 20:55 UTC | Bind fourteen tasks and ingest native decision met | OK | 93 passed, 1 warning in 36.69s |
+| 2026-09-20 21:19 UTC | Prototype typed option energies and seal disjoint  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 89 passed, 1 warning in 7.55s |
