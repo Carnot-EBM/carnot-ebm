@@ -45669,3 +45669,83 @@ end-to-end fine-tuning. There is no seed, no held-out size, and no artifact.
 It would fail the adversarial artifact rules, so cite it as inspiration only.
 The two scripts make no network, exec, or subprocess calls. The README also
 mentions unofficial PyTorch ports. Those were not reviewed.
+
+## 2026-09-20 — V653 planning source review
+
+Recorded before writing the V653 experiment contract. The completed V652
+artifacts, rather than conductor OK labels, guide selection. Rechecked work is
+identified below. External results do not establish a Carnot result.
+
+### Selected methods and evidence limits
+
+| Primary source | Finding and bounded use |
+|---|---|
+| [Quantized hidden-state probes, 2606.02628](https://arxiv.org/abs/2606.02628), May 30, 2026 | Reports useful linear probes at intermediate layers in three smaller NF4 models. Test source-conditioned representations with the mandated GGUF and a matched linear control. An exposed final embedding is not a mid-layer replication. Authenticate the available layer and pooling before fitting. |
+| [Cross-block conditioning, 2609.14934v2](https://arxiv.org/abs/2609.14934v2), September 16, 2026 | Separates representation from conditioning effects in a Boltzmann data-fusion model. Adopt an answer-only versus source-plus-answer ablation. This is a diagnostic design, not a claim that its data-fusion result transfers to text. |
+| [FaithBench, NAACL 2025](https://aclanthology.org/2025.naacl-short.38/) and [author release](https://github.com/vectara/FaithBench) | Provides expert-annotated source/summary pairs selected for detector disagreement. Use as an external challenge set after fitting on separate RAGTruth groups. Its sampling does not estimate deployment prevalence or permit population safety claims. The preprint first appeared in 2024; the selected publication/release is 2025. |
+| [Adaptive Bayesian Online Learning via Expert Aggregation, 2607.20239](https://arxiv.org/html/2607.20239v1), July 22, 2026, rechecked | Sequential predictive losses determine expert weighting. Preserve each expert's prediction made before feedback, then independently recompute delayed losses and updates. This directly addresses V652's missing expert predictions. Carnot's delayed fixed-share adaptation inherits no theorem without a separate derivation. |
+| [CRANE, 2502.09061](https://arxiv.org/abs/2502.09061), February 2025, rechecked | Syntax constraints and reasoning quality have different effects. Keep complete JSON, literal span recovery and semantic coverage separate. Repair the measured parser/lifecycle defect before new compact-span capture. |
+| [On-chip spline learning, 2602.02056](https://arxiv.org/abs/2602.02056), February 2026, rechecked | Sparse fixed-point updates have a hardware path. Test a durable event-journal design separately from arithmetic: preserve acknowledged updates across crashes and measure total service cost. This is systems work motivated by the local bottleneck, not a reproduction of FPGA speed. |
+
+FaithBench's GitHub API returned HTTP 200 at revision
+`cf89797d82812c23b5d5e5c121f1d9b8983bbbce`. The release includes source text,
+summary text, annotations, and metadata with detector predictions. The last two
+must stay outside predictor features. Read the pinned license and aggregation
+script before use, retain attribution, and cache data outside git. Annotation
+disagreement remains uncertainty; it is not exact constraint truth.
+
+### Required topic sweep
+
+- **EBM verification/reasoning:** reopened [EBT](https://arxiv.org/abs/2507.02092)
+  and [ARM–EBM](https://arxiv.org/abs/2512.15605), whose current record is v4,
+  May 25, 2026. Their formulations do not certify semantic extraction.
+  [Distributional EBMs](https://arxiv.org/abs/2605.18871) remains background;
+  Carnot's retired external-text reranker family stays closed.
+- **Neural constraint satisfaction:** opened [T-SKM-Net](https://arxiv.org/abs/2512.10461),
+  December 2025, and rechecked [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047).
+  Neither linear feasibility nor solver effort establishes language correctness.
+- **Ising ML:** rechecked [Thermodynamic learning](https://arxiv.org/abs/2609.04732)
+  and [parallel inertia dynamics](https://arxiv.org/abs/2604.17109).
+  Optimization success and a faithful Boltzmann distribution remain distinct.
+- **Hallucinations:** selected the hidden-state diagnostic and FaithBench.
+  Also checked [AuthenHallu](https://arxiv.org/abs/2510.10539) and
+  [ARS](https://arxiv.org/abs/2601.17467). Defer open-world dialogue labels
+  and latent interventions until source-conditioned inputs are authenticated.
+- **KANs:** rechecked on-chip locality above. Do not repeat the unchanged
+  fixed-point sweep that failed the whole-service speed gate.
+- **Energy-guided/constrained generation:** checked CRANE and
+  [energy-guided object decoding](https://arxiv.org/abs/2507.07731).
+  The latter is a VLM method; it supplies no direct text-GGUF intervention.
+- **Hardware sampling:** rechecked [FPGA/ASIC decomposition](https://arxiv.org/abs/2602.15985).
+  Host coordination and data movement belong in the measured denominator.
+- **Continual learning:** expert aggregation motivates prediction-time records;
+  causal delayed feedback and crash-safe state are separately testable obligations.
+
+### Secondary-source access receipts
+
+- **OpenReview:** searched 2025–2026 EBM submissions. Indexed EBT PDFs were
+  readable. [VFScale](https://openreview.net/pdf?id=8ta0xgtsJK) describes
+  energy/quality alignment and hybrid search; its forum returned a browser
+  challenge. This pass does not claim a full review of inaccessible submissions.
+- **Semantic Scholar:** direct Graph API citation requests for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=20)
+  returned HTTP 200. EBT returned 20 entries with a next-page pointer;
+  ARM–EBM returned eight with none. This is a partial citation walk.
+  Cross-block conditioning was followed to its primary arXiv record.
+- **Hugging Face Papers:** opened [AuthenHallu](https://huggingface.co/papers/2510.10539)
+  and followed the primary paper. A separate discovery-page open failed;
+  no claim rests on its generated summary.
+- **GitHub trending:** opened [weekly Python](https://github.com/trending/python?since=weekly).
+  No relevant dependency was selected from the returned list. FaithBench was
+  author-linked and is not described as trending.
+- **Extropic:** reopened [writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). The index exposed navigation; Z1T
+  describes probabilistic/digital co-design. Vendor evidence grants neither
+  local access nor measured Carnot acceleration.
+- **Logical Intelligence:** reopened [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  Its public description separates language interaction and constraint
+  enforcement. No reproducible checkpoint or new local integration was established.
+
+No model inference, hardware probe, purchase, vendor contact or publication
+was performed during this source review.

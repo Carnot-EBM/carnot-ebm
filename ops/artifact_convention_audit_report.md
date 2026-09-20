@@ -9,26 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| AGGREGATE_ONLY | 4 |
+| CHECKABLE | 6 |
+| AGGREGATE_ONLY | 2 |
 
-## experiment_7426_v651_static_decisions.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The decision-value gate failed solely because certified coverage was 0.0 rather than at least 0.25, while the comparative Brier-improvement and non-worse-log-loss checks passed.
-
-## WHAT IS MISSING
-Per-unit metric rows keyed by `arm`, `seed`, and `condition`, containing at least Brier score, log loss, and coverage; `"detailed_rows_present"` and `"detail_row_directory"` assert those rows exist elsewhere, but the artifact itself provides only pooled/domain aggregates and checkpoint metadata.
-
-## THE CHECK A READER CANNOT DO
-Did every seed and condition show Brier improvement over the controls, or was the reported `"simultaneous_brier_improvement": true` driven by a small number of unusually favorable units?
-
-## experiment_7427_v651_randomized_feedback.json
+## experiment_7439_v652_certified_decisions.json
 
 **AGGREGATE_ONLY**
 
@@ -36,15 +20,15 @@ Did every seed and condition show Brier improvement over the controls, or was th
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The experiment completed validly but found no registered online value because the scientific-benefit gate failed.
+The run completed validly but showed no registered decision benefit, despite aggregate noninferiority to controls.
 
 ## WHAT IS MISSING
-Per-unit arm/control metric rows and paired Brier-delta/interval rows are missing; `"condition_reports"` contains only condition-level aggregates, while `"feedback_event_rows"` and `"checkpoint_lineage"` provide only shard manifests, row counts, and hashes—not row contents.
+The actual per-unit `"rows"` or `"probability_row_shards"` containing each source group’s arm, seed, condition, prediction, label, coverage, utility, Brier score, and log loss are missing; only aggregate `"independent_reduction.metrics"`, `"paired_coverage_intervals"`, and certificate counts are present.
 
 ## THE CHECK A READER CANNOT DO
-Did `"upper_brier_deltas_below_zero": false` reflect broadly non-improving results across units, or a small number of outliers or degenerate control units?
+Were the reported arm comparisons and zero coverage deltas consistent across the 450 paired source groups, or caused by degenerate controls or a small number of influential units?
 
-## experiment_7428_v651_decision_audit.json
+## experiment_7440_v652_mixture_learning.json
 
 **CHECKABLE**
 
@@ -52,7 +36,7 @@ Did `"upper_brier_deltas_below_zero": false` reflect broadly non-improving resul
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-All listed acceptance gates passed, including branch validity, required validation, attack rejection, and disabled promotion.
+The experiment completed but found insufficient online benefit because multiple scientific-benefit, safety, coverage, and negative-control gates failed.
 
 ## WHAT IS MISSING
 nothing
@@ -60,7 +44,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7429_v651_anchored_capture.json
+## experiment_7441_v652_decision_audit.json
 
 **CHECKABLE**
 
@@ -68,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The capture was gated because it produced 0 of 3 required usable development outputs, had an extraction-value score of 0 instead of 1, and failed terminal-reader validation.
+The online-learning branch is disqualified because prediction-time expert evidence is missing and weight-update replay is incomplete, while the static evidence supports only a null, non-deployment conclusion.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7430_extraction_audit.json
+## experiment_7442_v652_span_capture.json
 
 **CHECKABLE**
 
@@ -84,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because all three upstream gates failed, beginning with `extraction_capture_complete_score` being 0 instead of the required 1.
+The span-capture experiment was blocked with a null result because runtime validation failed and the development gate did not open.
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7431_v651_arc_live_sentinel.json
+## experiment_7443_v652_span_audit.json
 
 **CHECKABLE**
 
@@ -100,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The live ARC sentinel reached the model and completed both scheduled units, while making no comparative efficacy claim.
+The audit completed with a null, development-only verdict because producer runtime integrity failed and no sealed evaluation was attempted.
 
 ## WHAT IS MISSING
 nothing
@@ -108,7 +92,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7432_v651_update_placement.json
+## experiment_7444_v652_arc_supervisor_evidence.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The two archived episodes produced no supervisor firings, so they provide no arm-effect evidence and justify no policy change.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7445_v652_hardware_envelope.json
 
 **AGGREGATE_ONLY**
 
@@ -116,26 +116,26 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The sparse fixed-point update showed no registered complete-service speed benefit because the `paired_whole_service_speed` gate failed at every reported batch size.
+The hardware envelope is a null result: the measured 0.37696 persistence fraction limits idealized acceleration to 2.65×, so the 100× condition fails and requires persistence-orchestration redesign.
 
 ## WHAT IS MISSING
-Per-unit paired timing rows underlying `timing_summary.ci95_upper`; `gate_check_summary` identifies the failed check and observed values, and `rows` provides event-level quality data, but no `timing_rows` are present.
+Per-block timing rows for the 30 paired blocks underlying each comparative service condition and per-unit measurements underlying `"observed_unaccelerated_fraction"`; only `"whole_service_time_ratio"`, confidence intervals, `"paired_blocks": 30`, and aggregate Amdahl values are present. The GateMate blocker is adequately diagnosed in `"gate_check_summary"`.
 
 ## THE CHECK A READER CANNOT DO
-Were the unfavorable timing results broad across paired repetitions, or driven by a few outliers or degenerate control measurements?
+Were the null service comparisons and 0.37696 persistence fraction broad across the paired measurements, or driven by a few outlier or degenerate blocks?
 
-## experiment_7433_v651_capstone.json
+## experiment_7446_v652_capstone.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims the capstone is complete but disqualified, while reporting comparative speed-gate and benefit verdicts across experimental arms.
+The capstone completed all 13 task dispositions but disqualified the required V652 science because three upstream scientific-validity checks observed `"valid": false`.
 
 ## WHAT IS MISSING
-Per-paired-block metric rows underlying `"complete_service_costs"`—specifically each block’s arm and baseline whole-service timings or ratio—are missing; only `"whole_service_time_ratio"`, `"ci95_lower"`, `"ci95_upper"`, `"paired_blocks": 30`, and `"speed_gate_passed"` are present. `"raw_rows_available": true` and external `"observed_path"` references do not include those rows in this artifact.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Were the reported speed-gate failures consistent across the 30 paired blocks, or driven by one or a few extreme blocks?
+none
