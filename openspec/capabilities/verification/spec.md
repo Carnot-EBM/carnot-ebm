@@ -43409,3 +43409,117 @@ row consistency SHALL pass before atomic publication.
 **When** scoped checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
 **Then** their exact argument vectors, exits, durations, and log hashes remain in the artifact
 **And** only the cold-valid terminal JSON is published at the declared result path.
+
+### REQ-VERIFY-7462: V654 Option Protocol SHALL Seal Raw Logits And Source-Support Roles
+
+Exp7462 SHALL define a reusable two-option energy readout before any model
+capture or empirical fit. The stable option IDs SHALL be `supported` and
+`contains_unsupported`. Each displayed label SHALL round-trip as exactly one
+token. Tokenizing the complete prompt plus a label SHALL equal the prompt token
+sequence followed by that label token. The readout SHALL use prompt position
+`len(prompt_tokens) - 1`, retain the selected raw logits before softmax, and
+reject missing labels, duplicate label tokens, nonfinite logits, uniform
+scripted surfaces, unused-buffer reads, and option-ID mapping changes.
+
+Every source group SHALL use its complete supplied response as one support
+unit. The target SHALL distinguish a fully supported response from a response
+that contains any human-annotated unsupported content. It SHALL not claim
+complete extraction of individual claims. Uncertain or contested annotations
+SHALL be defined before fitting and retained as separate evaluator rows.
+
+The protocol SHALL preserve the authenticated Exp7449 training, calibration,
+internal-test, and external groups. Their role caps SHALL remain 180, 60, 60,
+and 100. It SHALL add at most 160 disjoint RAGTruth groups for ordered online
+evaluation. Selection SHALL use stable identity hashes without outcomes. Every
+group SHALL retain a source hash, group hash, role, pinned release identity,
+license, source text, response text, and annotation provenance. Predictor rows
+SHALL exclude labels, annotations, notes, detector outputs, and response-model
+identity. No source hash or group hash may occur in two roles.
+
+The prompt contract SHALL include the complete source and response. A later
+embedded tokenizer SHALL enforce a 2,048-token limit without truncation.
+Overlength groups SHALL remain explicit exclusions and SHALL not be replaced
+after scoring. Every group SHALL have original and reversed option orders.
+The primary readout SHALL average both distributions after remapping them to
+stable option IDs. Both forwards SHALL be charged by the later capture task.
+
+The protocol SHALL reserve 40 calibration groups for response-only and
+shuffled-source controls. It SHALL freeze fit seeds 65401 through 65405,
+10,000 group-bootstrap draws, familywise alpha 0.05, and paired multiclass
+Brier as the primary outcome. Secondary outcomes SHALL be log loss, ECE,
+coverage, false acceptance, and service time. Exploratory decision costs SHALL
+be false accept 10, false reject 1, and escalation 0.2. Sensitivity analyses
+SHALL use false-accept costs 5 and 20. Thresholds SHALL fit on calibration only.
+These costs SHALL remain research settings, not deployment policy.
+
+Minimum usable group counts SHALL be 150 training, 40 calibration, 40 internal,
+120 online, and 60 external. A shortfall SHALL block confirmatory benefit and
+SHALL not permit role mixing. This task SHALL write only a protocol and scripted
+interface controls. It SHALL not fit a selector or make a scientific efficacy
+claim.
+
+The terminal artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current model calls,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`.
+Scripted logits SHALL be hash-bound protocol evidence, not current inference.
+Numeric fitting SHALL have a separate zero-work `small_ebm_training` receipt.
+The artifact SHALL include every task-required provenance, timing, cohort,
+comparison, raw-row, validation, gate, verdict, and field-principle field.
+
+Exp7462 SHALL use the Exp7303 scoped validation runner with one explicit test
+file, one changed module, and one thin entrypoint. It SHALL not add a
+repository-wide Python suite to the affected manifest. Any separately requested
+broad-suite observation SHALL remain unrelated repository health. It SHALL require 100 percent
+changed-module coverage, scoped Ruff and mypy, exact-test spec coverage, a
+fresh-process entrypoint replay, independent raw reduction, adversarial
+verification, and strict verdict-row consistency before atomic publication.
+Pure protocol work has no numbered runtime E2E.
+
+#### SCENARIO-VERIFY-7462-LOGITS: Raw Readout Rejects Known Mutations
+
+**Given** scripted prompt rows with a larger unused score buffer
+**When** the option interface reads logits and validates both option orders
+**Then** it uses the last evaluated prompt position and stores finite raw logits
+**And** unused-buffer, uniform, missing-label, duplicate-token, nonfinite, and option-swap mutations fail closed.
+
+#### SCENARIO-VERIFY-7462-COHORT: Roles Stay Disjoint And Outcome Blind
+
+**Given** the authenticated Exp7449 panel and pinned RAGTruth release
+**When** V654 preserves old roles and selects the next online groups by stable hash
+**Then** no source or group hash occurs in two roles and the total is at most 560
+**And** labels, notes, detector outputs, and response-model identity never enter predictor features.
+
+#### SCENARIO-VERIFY-7462-SUPPORT: Full Responses Define The Unit
+
+**Given** a human-annotated source and supplied response
+**When** the protocol builds its target and annotation disposition
+**Then** one row means fully supported or contains any unsupported content
+**And** uncertain or contested evidence stays separate without a complete-claim-extraction claim.
+
+#### SCENARIO-VERIFY-7462-PLAN: Controls And Decision Costs Are Frozen
+
+**Given** sealed training, calibration, internal, online, and external roles
+**When** a later task fits and evaluates the option-energy selector
+**Then** it uses five fixed seeds, 10,000 group draws, alpha 0.05, and paired Brier
+**And** it fits thresholds only on calibration under costs 10/1/0.2 with false-accept sensitivities 5 and 20.
+
+#### SCENARIO-VERIFY-7462-MINIMA: Shortfall Cannot Mix Roles
+
+**Given** one role falls below its fixed usable-group minimum
+**When** the protocol reduces confirmatory eligibility
+**Then** confirmatory benefit is false and the exact role shortfall remains visible
+**And** surplus groups from another role cannot replace the missing groups.
+
+#### SCENARIO-VERIFY-7462-NO-MODEL: Scripted Logits Are Not Inference
+
+**Given** the interface controls use fixed numeric score buffers
+**When** the artifact records current work
+**Then** all model invocation counters remain zero and both model-spec fields are empty
+**And** the numeric-training receipt records zero fits and no scientific efficacy claim.
+
+#### SCENARIO-VERIFY-7462-E2E: One Command Publishes A Cold-Valid Protocol
+
+**Given** sealed raw rows and one frozen affected-file manifest
+**When** the declared unbuffered entrypoint runs
+**Then** scoped checks, cold replay, raw reduction, adversarial verification, and strict row lint inspect the candidate
+**And** only the validated terminal artifact is published atomically.
