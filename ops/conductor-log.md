@@ -18296,3 +18296,5 @@ code |
 | 2026-09-20 21:19 UTC | Prototype typed option energies and seal disjoint  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 89 passed, 1 warning in 7.55s |
 | 2026-09-20 21:43 UTC | Measure E0 runtime option-logprob parity and pin s | OK | 94 passed, 1 warning in 7.22s |
 | 2026-09-20 22:05 UTC | Measure E6 decision cost from existing adapter-wit | OK | 94 passed, 1 warning in 7.49s |
+| 2026-09-20 22:07 UTC | Capture raw Qwen source-support options with order | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7462-option-protocol.option_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-20 22:09 UTC | Train source-support energy decisions against matc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7465-source-option-capture, exp7465-source-option-capture, exp7465-source-option-capture) |
