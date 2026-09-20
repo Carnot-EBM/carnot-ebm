@@ -216,6 +216,13 @@ DEFAULT_CODEX_TIMEOUT_S = 300
 # there is room.
 DEFAULT_FABLE_TIMEOUT_S = 600
 
+# REQ-AUTO-027: agy (Google Antigravity CLI) is the codex fallback since 2026-09-20.
+# agy is a user-local install (~/.local/bin), not on the conductor service's PATH, so a
+# bare "agy" would fail from the live process. shutil.which still wins if that changes.
+DEFAULT_AGY_MODEL = os.environ.get("CARNOT_AUTORESEARCH_AGY_MODEL", "gemini-3.1-pro-high")
+DEFAULT_AGY_TIMEOUT_S = 600
+AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
+
 # REQ-AUTO-021: unlike hypothesis_generator.DEFAULT_SYSTEM_PROMPT (which asks
 # for a self-reported final_energy -- the exact self-report gap adversarial
 # review 2026-09-12 finding 1 exploited), this prompt asks for a final_state
@@ -613,11 +620,11 @@ def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
             # lines) is itself close to 200 chars, so every failure reason this
             # project has ever logged was just that banner -- the real error text,
             # which always comes AFTER the banner, was silently truncated away.
-            # Every "codex_call_failed" reason recorded before this fix told nobody
-            # what actually went wrong. 4000 chars comfortably clears the banner and
-            # still bounds the receipt.
+            # CORRECTION (2026-09-20): keeping the first 4000 chars was still wrong.
+            # codex also echoes the whole prompt right after the banner, so the head
+            # is banner plus prompt and the real error sits at the END. Keep the tail.
             detail = proc.stderr.strip() or proc.stdout.strip()
-            return False, f"codex exit {proc.returncode}: {detail[:4000]}"
+            return False, f"codex exit {proc.returncode}: {detail[-4000:]}"
         return True, proc.stdout
     except (subprocess.TimeoutExpired, OSError) as exc:
         return False, str(exc)
@@ -652,6 +659,46 @@ def codex_generate_hypotheses(
     return _extract_hypotheses(output)
 
 
+def call_agy(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
+    """One agy --print call (REQ-AUTO-027). The prompt goes in as a literal argument:
+    `agy --print` with no argument prints usage and does not read stdin. It runs in a
+    fresh empty scratch directory, like call_codex, and gets no permission-bypass flag,
+    so it cannot act on the repository."""
+    try:
+        with tempfile.TemporaryDirectory(prefix="autoresearch-agy-") as scratch_dir:
+            proc = subprocess.run(
+                [AGY_BIN, "--model", model, "--print", prompt],
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=False,
+                cwd=scratch_dir,
+            )
+        if proc.returncode != 0:
+            detail = proc.stderr.strip() or proc.stdout.strip()
+            return False, f"agy exit {proc.returncode}: {detail[-4000:]}"
+        return True, proc.stdout
+    except (subprocess.TimeoutExpired, OSError) as exc:
+        return False, str(exc)
+
+
+def agy_generate_hypotheses(
+    model: str,
+    timeout: int,
+    baselines: BaselineRecord,
+    recent_failures: list[dict[str, Any]],
+    iteration: int,
+) -> list[tuple[str, str]]:
+    """Same question and same parsing as codex_generate_hypotheses, different model.
+    Called only when codex returned nothing first."""
+    prompt = _hypothesis_prompt(baselines, recent_failures, iteration)
+    ok, output = call_agy(prompt, model, timeout)
+    if not ok:
+        recent_failures.append({"description": "agy_call_failed", "reason": output})
+        return []
+    return _extract_hypotheses(output)
+
+
 def call_fable(prompt: str, timeout: int) -> tuple[bool, str]:
     """Second-opinion generator (2026-09-12 operator directive: "If the codex
     run returns zero hypothesis, I want to follow up with a Fable 5.1 run to
@@ -681,7 +728,7 @@ def call_fable(prompt: str, timeout: int) -> tuple[bool, str]:
             # exhaust it today; the sibling function silently losing its real
             # error text is exactly the failure this correction exists to prevent.
             detail = proc.stderr.strip() or proc.stdout.strip()
-            return False, f"claude exit {proc.returncode}: {detail[:4000]}"
+            return False, f"claude exit {proc.returncode}: {detail[-4000:]}"
         return True, proc.stdout
     except (subprocess.TimeoutExpired, OSError) as exc:
         return False, str(exc)
@@ -710,41 +757,39 @@ def generate_hypotheses_with_fallback(
     recent_failures: list[dict[str, Any]],
     iteration: int,
     fallback_log: list[int],
-    fable_timeout: int = DEFAULT_FABLE_TIMEOUT_S,
+    fallback_timeout: int = DEFAULT_AGY_TIMEOUT_S,
+    agy_model: str = DEFAULT_AGY_MODEL,
 ) -> list[tuple[str, str]]:
-    """codex only (2026-09-20 operator directive, quota-conserve: Claude usage
-    across all automated workers must drop while Claude quota is constrained).
-    This used to fall back to Fable 5.1 (`claude --model fable`) when codex
-    returned nothing -- see the retained, now-dormant `call_fable`/
-    `fable_generate_hypotheses` below. That fallback is DISABLED here, not
-    deleted: gemini-cli was checked as the natural non-Claude replacement and
-    is currently unusable for a different, unrelated reason (`gemini --model
-    gemini-3.1-pro-preview --yolo -p ...` fails immediately with
-    `IneligibleTierError: This client is no longer supported for Gemini Code
-    Assist for individuals` -- an external Google account-tier change, not
-    something a retry or a code fix here can work around). So the honest
-    choice today is codex-only, accepting that a codex failure now ends this
-    iteration with zero hypotheses instead of getting a second opinion.
-    `fallback_log` stays as a parameter (empty forever under this directive)
-    rather than being torn out, so `generator_label_for_entry` and every
-    caller need no signature change -- and so re-enabling Fable later, if the
-    operator lifts the quota constraint, is the one-line revert of this
-    function body, not a rebuild. See ops/known-issues.md 2026-09-20 for the
-    directive and the gemini-cli finding.
+    """codex first, then agy when codex returns nothing (REQ-AUTO-027).
+
+    The 2026-09-20 Claude quota-conserve directive removed the Fable 5.1 fallback
+    (`call_fable` and `fable_generate_hypotheses` stay in this file, dormant, not
+    deleted). With no fallback, one codex failure ended a whole iteration with zero
+    hypotheses. agy (Google Antigravity CLI, Gemini models) now fills that slot.
+    It uses no Claude quota.
+
+    `fallback_log` records which iterations needed the fallback, so the receipt and
+    the commit message can name the real generator. See ops/known-issues.md 2026-09-20.
     """
-    return codex_generate_hypotheses(model, timeout, baselines, recent_failures, iteration)
+    hyps = codex_generate_hypotheses(model, timeout, baselines, recent_failures, iteration)
+    if hyps:
+        return hyps
+    fallback_log.append(iteration)
+    return agy_generate_hypotheses(
+        agy_model, fallback_timeout, baselines, recent_failures, iteration
+    )
 
 
 _ENTRY_ID_ITERATION = re.compile(r"-(\d+)$")
 
 
-def generator_label_for_entry(entry_id: str, fable_fallback_iterations: Sequence[int]) -> str:
+def generator_label_for_entry(entry_id: str, fallback_iterations: Sequence[int]) -> str:
     """REQ-AUTO-024: which generator actually produced this entry.
 
     orchestrator.py's `run_loop_with_generator` names each entry
     ``llm-<timestamp>-<iteration:03d>`` (see its own exp_id line) -- the
     trailing iteration number is the only place that survives to tell
-    codex and Fable apart after the fact, since `ExperimentEntry` itself
+    codex and the fallback apart after the fact, since `ExperimentEntry` itself
     (a shared, REQ-AUTO-008 dataclass) carries no generator-provenance
     field, and this script does not own that dataclass. Falls back to
     "codex exec" (the historical, still-correct-in-the-common-case
@@ -752,8 +797,8 @@ def generator_label_for_entry(entry_id: str, fable_fallback_iterations: Sequence
     than raising on an unexpected format.
     """
     match = _ENTRY_ID_ITERATION.search(entry_id)
-    if match and int(match.group(1)) in fable_fallback_iterations:
-        return "Fable 5.1 fallback (codex returned nothing this iteration)"
+    if match and int(match.group(1)) in fallback_iterations:
+        return "agy fallback (codex returned nothing this iteration)"
     return "codex exec"
 
 
@@ -791,7 +836,7 @@ def commit_accepted_hypothesis(
 
     `generator_label` (REQ-AUTO-024) names which generator actually
     produced this hypothesis in the commit message -- callers should pass
-    `generator_label_for_entry(entry.id, fable_fallback_iterations)`, not
+    `generator_label_for_entry(entry.id, fallback_iterations)`, not
     rely on the default. The default of "codex exec" exists only so the
     many tests exercising commit mechanics (not attribution) don't need a
     value they don't care about.
@@ -862,7 +907,8 @@ def run_round(
     model: str,
     max_iterations: int,
     codex_timeout: int = DEFAULT_CODEX_TIMEOUT_S,
-    fable_timeout: int = DEFAULT_FABLE_TIMEOUT_S,
+    fallback_timeout: int = DEFAULT_AGY_TIMEOUT_S,
+    agy_model: str = DEFAULT_AGY_MODEL,
     project_root: Path = PROJECT_ROOT,
     baseline_cache: Path | None = None,
     log_cache: Path | None = None,
@@ -897,7 +943,7 @@ def run_round(
     breaker_historical_tail = experiment_log.consecutive_failures()
     energy_before = {name: metrics.final_energy for name, metrics in baselines.benchmarks.items()}
 
-    fable_fallback_iterations: list[int] = []
+    fallback_iterations: list[int] = []
     # REQ-AUTO-022: orchestrator.py owns one `recent_failures` list for the
     # whole loop (cleared only on an accepted hypothesis) and hands it to
     # `generator` by reference every iteration -- capturing that same
@@ -918,8 +964,9 @@ def run_round(
             cur_baselines,
             recent_failures,
             iteration,
-            fable_fallback_iterations,
-            fable_timeout,
+            fallback_iterations,
+            fallback_timeout,
+            agy_model,
         )
 
     config = AutoresearchConfig(
@@ -927,9 +974,9 @@ def run_round(
         max_consecutive_failures=10,
         # REQ-AUTO-023: 3, not the orchestrator default's own 3 by
         # coincidence -- explicit here because this generator is expensive
-        # (a codex subprocess up to codex_timeout, then Fable up to
-        # fable_timeout on top). Worst case 3 * (codex_timeout +
-        # fable_timeout) must stay under the conductor's own outer timeout
+        # (a codex subprocess up to codex_timeout, then agy up to
+        # fallback_timeout on top). Worst case 3 * (codex_timeout +
+        # fallback_timeout) must stay under the conductor's own outer timeout
         # for this script (see research_conductor.py:_run_autoresearch_round,
         # bumped to 3600s alongside this for exactly that reason).
         max_consecutive_empty_generations=3,
@@ -984,7 +1031,7 @@ def run_round(
                 energy_before.get(bench_name),
                 after_energy,
                 project_root=project_root,
-                generator_label=generator_label_for_entry(entry.id, fable_fallback_iterations),
+                generator_label=generator_label_for_entry(entry.id, fallback_iterations),
             )
             if sha:
                 energy_before[bench_name] = after_energy
@@ -1005,17 +1052,17 @@ def run_round(
         f"- breaker_invocation_local_tail_at_end: "
         f"{experiment_log.consecutive_failures_since(before_count)}",
         f"- generator_exhausted: {result.generator_exhausted}",
-        f"- fable_fallback_iterations: {fable_fallback_iterations or 'none'}",
+        f"- fallback_iterations: {fallback_iterations or 'none'}",
         "",
     ]
     if result.generator_exhausted:
-        # REQ-AUTO-023: this now means codex+Fable BOTH failed
+        # REQ-AUTO-023: this now means codex+agy BOTH failed
         # max_consecutive_empty_generations times in a row, not just once --
         # see the '## Generator failure reasons' section below for why each
         # attempt failed.
         report_lines.append(
-            f"codex and Fable 5.1 both produced nothing across "
-            f"{len(fable_fallback_iterations)} attempt(s) this round -- giving up."
+            f"codex and agy both produced nothing across "
+            f"{len(fallback_iterations)} attempt(s) this round -- giving up."
         )
     if captured_failures:
         # REQ-AUTO-022: the diagnostic the 2026-09-12 known-issues entry
@@ -1028,7 +1075,10 @@ def run_round(
         report_lines.append("## Generator failure reasons")
         for fail in captured_failures:
             desc = fail.get("description", "unknown")
-            reason = str(fail.get("reason", ""))[:300]
+            # Keep the TAIL: codex echoes its banner and the whole prompt first, so the
+            # real error is last (2026-09-20 correction, see call_codex).
+            raw = str(fail.get("reason", ""))
+            reason = raw if len(raw) <= 600 else "..." + raw[-600:]
             report_lines.append(f"- {desc}: {reason}")
     if committed:
         report_lines.append("## Committed lineage")
@@ -1050,13 +1100,15 @@ def main() -> int:
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--max-iterations", type=int, default=5)
     parser.add_argument("--codex-timeout", type=int, default=DEFAULT_CODEX_TIMEOUT_S)
-    parser.add_argument("--fable-timeout", type=int, default=DEFAULT_FABLE_TIMEOUT_S)
+    parser.add_argument("--fallback-timeout", type=int, default=DEFAULT_AGY_TIMEOUT_S)
+    parser.add_argument("--agy-model", default=DEFAULT_AGY_MODEL)
     args = parser.parse_args()
     return run_round(
         model=args.model,
         max_iterations=args.max_iterations,
         codex_timeout=args.codex_timeout,
-        fable_timeout=args.fable_timeout,
+        fallback_timeout=args.fallback_timeout,
+        agy_model=args.agy_model,
     )
 
 

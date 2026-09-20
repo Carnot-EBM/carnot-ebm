@@ -3,13 +3,15 @@ between the already-built autoresearch pipeline (python/carnot/autoresearch/)
 and the unattended conductor loop.
 
 Spec refs: REQ-AUTO-019 (unattended conductor integration),
-REQ-AUTO-020 (git-committed lineage per accepted hypothesis).
+REQ-AUTO-020 (git-committed lineage per accepted hypothesis),
+REQ-AUTO-027 (agy fallback when codex returns nothing).
 """
 
 from __future__ import annotations
 
 import subprocess
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -108,7 +110,7 @@ class TestCommitAcceptedHypothesis:
             0.05,
             -6.0,
             project_root=tmp_path,
-            generator_label="Fable 5.1 fallback (codex returned nothing this iteration)",
+            generator_label="agy fallback (codex returned nothing this iteration)",
         )
 
         assert sha is not None
@@ -119,7 +121,7 @@ class TestCommitAcceptedHypothesis:
             text=True,
             check=True,
         ).stdout
-        assert "via Fable 5.1 fallback" in msg
+        assert "via agy fallback" in msg
         assert "via codex exec" not in msg
 
     def test_commit_message_carries_the_score(self, tmp_path: Path) -> None:
@@ -444,13 +446,97 @@ class TestCallFable:
         assert "REAL ERROR TAIL" in out
 
 
-class TestGenerateHypothesesWithFallback:
-    def test_codex_success_never_calls_fable(self) -> None:
+class TestCallAgy:
+    """REQ-AUTO-027: agy is the codex fallback since 2026-09-20."""
+
+    def test_argv_uses_agy_print_with_a_literal_prompt_in_a_scratch_dir(self) -> None:
+        captured: dict[str, Any] = {}
+
+        def fake_run(argv, **kwargs):  # noqa: ANN001, ANN202
+            captured["argv"] = argv
+            captured["cwd"] = kwargs.get("cwd")
+            return subprocess.CompletedProcess(argv, 0, stdout="OUT", stderr="")
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_agy("the prompt", "gemini-3.1-pro-high", 60)
+        assert ok is True and out == "OUT"
+        argv = captured["argv"]
+        assert argv[0] == acr.AGY_BIN
+        assert argv[argv.index("--model") + 1] == "gemini-3.1-pro-high"
+        assert argv[-2:] == ["--print", "the prompt"]
+        assert "--dangerously-skip-permissions" not in argv
+        assert Path(captured["cwd"]).resolve() != acr.PROJECT_ROOT.resolve()
+
+    def test_failure_keeps_the_error_tail(self) -> None:
+        def fake_run(argv, **kwargs):  # noqa: ANN001, ANN202
+            return subprocess.CompletedProcess(
+                argv, 1, stdout="", stderr="X" * 6000 + "REAL ERROR TAIL"
+            )
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_agy("p", "m", 60)
+        assert ok is False
+        assert out.startswith("agy exit 1:")
+        assert "REAL ERROR TAIL" in out
+
+    def test_timeout_and_missing_binary_return_false(self) -> None:
+        with patch.object(
+            acr.subprocess, "run", side_effect=subprocess.TimeoutExpired(cmd="agy", timeout=1)
+        ):
+            assert acr.call_agy("p", "m", 1)[0] is False
+        with patch.object(acr.subprocess, "run", side_effect=FileNotFoundError("agy")):
+            assert acr.call_agy("p", "m", 1)[0] is False
+
+    def test_a_failed_call_is_recorded_as_agy_call_failed(self) -> None:
         from carnot.autoresearch.baselines import BaselineRecord
 
-        fable_calls = []
+        failures: list[dict[str, Any]] = []
+        with patch.object(acr, "call_agy", return_value=(False, "agy exit 1: boom")):
+            hyps = acr.agy_generate_hypotheses("m", 60, BaselineRecord(), failures, 0)
+        assert hyps == []
+        assert failures[0]["description"] == "agy_call_failed"
+        assert "boom" in failures[0]["reason"]
+
+
+class TestGenerateHypothesesWithFallback:
+    def test_codex_success_never_calls_agy_or_fable(self) -> None:
+        from carnot.autoresearch.baselines import BaselineRecord
+
+        fallback_calls: list[str] = []
         with (
             patch.object(acr, "codex_generate_hypotheses", return_value=[("d", "code")]),
+            patch.object(
+                acr,
+                "agy_generate_hypotheses",
+                side_effect=lambda *a, **kw: fallback_calls.append("agy") or [],
+            ),
+            patch.object(
+                acr,
+                "fable_generate_hypotheses",
+                side_effect=lambda *a, **kw: fallback_calls.append("fable") or [],
+            ),
+        ):
+            log: list[int] = []
+            hyps = acr.generate_hypotheses_with_fallback(
+                "gpt-6-astra", 60, BaselineRecord(), [], 0, log
+            )
+        assert hyps == [("d", "code")]
+        assert fallback_calls == []
+        assert log == []
+
+    def test_codex_empty_falls_back_to_agy_and_records_the_iteration(self) -> None:
+        from carnot.autoresearch.baselines import BaselineRecord
+
+        agy_calls: list[tuple[Any, ...]] = []
+        fable_calls: list[int] = []
+
+        def fake_agy(model, timeout, baselines, failures, iteration):  # noqa: ANN001, ANN202
+            agy_calls.append((model, timeout, iteration))
+            return [("agy-found", "code")]
+
+        with (
+            patch.object(acr, "codex_generate_hypotheses", return_value=[]),
+            patch.object(acr, "agy_generate_hypotheses", side_effect=fake_agy),
             patch.object(
                 acr,
                 "fable_generate_hypotheses",
@@ -459,64 +545,39 @@ class TestGenerateHypothesesWithFallback:
         ):
             log: list[int] = []
             hyps = acr.generate_hypotheses_with_fallback(
-                "gpt-6-astra", 60, BaselineRecord(), [], 0, log
+                "gpt-6-astra", 60, BaselineRecord(), [], 3, log, 77, "gemini-x"
             )
-        assert hyps == [("d", "code")]
+        assert hyps == [("agy-found", "code")]
+        assert agy_calls == [("gemini-x", 77, 3)]
+        assert log == [3]
         assert fable_calls == []
-        assert log == []
 
-    def test_codex_empty_never_falls_back_to_fable(self) -> None:
-        """2026-09-20 operator directive (Claude quota-conserve): the Fable
-        fallback is disabled. codex returning nothing now ends the iteration
-        with zero hypotheses -- fable_generate_hypotheses must never be
-        called, and fallback_log must never be populated. This replaces the
-        prior test of the opposite behavior (codex empty -> real Fable
-        attempt), which was correct for its era and is not correct now."""
+    def test_both_generators_empty_returns_empty_and_still_records(self) -> None:
         from carnot.autoresearch.baselines import BaselineRecord
 
-        fable_calls = []
         with (
             patch.object(acr, "codex_generate_hypotheses", return_value=[]),
-            patch.object(
-                acr,
-                "fable_generate_hypotheses",
-                side_effect=lambda *a, **kw: fable_calls.append(1) or [("fable-found", "code")],
-            ),
+            patch.object(acr, "agy_generate_hypotheses", return_value=[]),
         ):
             log: list[int] = []
             hyps = acr.generate_hypotheses_with_fallback(
-                "gpt-6-astra", 60, BaselineRecord(), [], 3, log
-            )
-        assert hyps == []
-        assert fable_calls == []
-        assert log == []
-
-    def test_both_generators_empty_returns_empty(self) -> None:
-        """Renamed in spirit only (2026-09-20): "both" no longer means codex
-        AND fable both ran -- fable never runs -- it means codex empty is
-        the terminal outcome, same as before Fable existed at all."""
-        from carnot.autoresearch.baselines import BaselineRecord
-
-        with patch.object(acr, "codex_generate_hypotheses", return_value=[]):
-            log: list[int] = []
-            hyps = acr.generate_hypotheses_with_fallback(
                 "gpt-6-astra", 60, BaselineRecord(), [], 0, log
             )
         assert hyps == []
-        assert log == []
+        assert log == [0]
 
 
 class TestGeneratorLabelForEntry:
     """REQ-AUTO-024: the commit-message attribution bug -- round 1's real
     production commits all said "via codex exec" even though
-    fable_fallback_iterations showed codex failed every single iteration."""
+    fallback_iterations showed codex failed every single iteration."""
 
     def test_iteration_not_in_fallback_list_is_codex(self) -> None:
         assert acr.generator_label_for_entry("llm-20260913-082215-000", [1, 2]) == "codex exec"
 
-    def test_iteration_in_fallback_list_is_fable(self) -> None:
+    def test_iteration_in_fallback_list_is_agy(self) -> None:
         label = acr.generator_label_for_entry("llm-20260913-082215-002", [0, 2, 4])
-        assert "Fable" in label
+        assert "agy" in label
 
     def test_unparseable_id_defaults_to_codex_not_a_crash(self) -> None:
         assert acr.generator_label_for_entry("not-the-expected-shape", [0]) == "codex exec"
@@ -760,7 +821,8 @@ class TestRunRound:
             _failures,
             iteration,
             _fallback_log=None,
-            _fable_timeout=None,
+            _fallback_timeout=None,
+            _agy_model=None,
         ):
             return [
                 (
@@ -787,11 +849,9 @@ class TestRunRound:
         assert log.count("\n") == 1  # only the seed commit -- the fabricated claim never landed
         assert not (tmp_path / "ops" / "autoresearch_discoveries").exists()
 
-    def test_fable_produced_hypothesis_is_attributed_to_fable_end_to_end(
-        self, tmp_path: Path
-    ) -> None:
+    def test_agy_produced_hypothesis_is_attributed_to_agy_end_to_end(self, tmp_path: Path) -> None:
         """REQ-AUTO-024, full pipeline. Round 1's real production commits all
-        said "via codex exec" although fable_fallback_iterations showed codex
+        said "via codex exec" although fallback_iterations showed codex
         failed every iteration -- this reproduces the exact wiring
         (run_round -> generator closure -> commit_accepted_hypothesis) that
         must attribute correctly."""
@@ -805,12 +865,11 @@ class TestRunRound:
             _failures,
             iteration,
             fallback_log,
-            _fable_timeout,
+            _fallback_timeout,
+            _agy_model,
         ):
-            fallback_log.append(iteration)  # simulate: codex failed, Fable won
-            return [
-                ("fable win", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")
-            ]
+            fallback_log.append(iteration)  # simulate: codex failed, agy won
+            return [("agy win", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")]
 
         with (
             patch.object(acr, "codex_available", return_value=True),
@@ -830,25 +889,29 @@ class TestRunRound:
             text=True,
             check=True,
         ).stdout
-        assert "via Fable 5.1 fallback" in msg
+        assert "via agy fallback" in msg
         assert "via codex exec" not in msg
 
-    def test_codex_failing_leaves_the_reason_in_the_receipt_and_never_calls_claude(
+    def test_codex_and_agy_failing_leave_both_reasons_and_never_call_claude(
         self, tmp_path: Path
     ) -> None:
-        """REQ-AUTO-022 / SCENARIO-AUTO-022-A, updated 2026-09-20 (Claude
-        quota-conserve operator directive: Fable fallback disabled). Real
-        call_codex (only subprocess.run is faked), so recent_failures is
-        populated the same way a genuine codex failure would populate it.
-        Renamed from the prior "both_generators_failing" test -- there is
-        only one generator now. Asserts the `claude` binary is never
-        invoked at all, not just that its failure text is absent."""
+        """REQ-AUTO-022 / REQ-AUTO-027. Real call_codex and call_agy (only
+        subprocess.run is faked), so recent_failures is populated the way genuine
+        failures populate it. The `claude` binary must never run. The error is
+        buried after a long banner-plus-prompt echo, so the receipt must show the
+        TAIL of each failure, not the head."""
         _init_repo(tmp_path)
+        seen: list[str] = []
 
         def fake_run(argv, **kwargs):
+            seen.append(str(argv[0]))
             if argv[0] == "codex":
-                return subprocess.CompletedProcess(argv, 1, stdout="", stderr="some stderr")
-            raise AssertionError(f"unexpected subprocess call, claude must never run: {argv}")
+                return subprocess.CompletedProcess(
+                    argv, 1, stdout="", stderr="B" * 5000 + "CODEX_TAIL_MARKER"
+                )
+            if argv[0] == acr.AGY_BIN:
+                return subprocess.CompletedProcess(argv, 1, stdout="", stderr="AGY_TAIL_MARKER")
+            raise AssertionError(f"unexpected subprocess call: {argv}")
 
         with (
             patch.object(acr, "codex_available", return_value=True),
@@ -856,16 +919,22 @@ class TestRunRound:
         ):
             rc = acr.run_round(
                 model="gpt-6-astra",
-                max_iterations=1,
+                max_iterations=5,
                 project_root=tmp_path,
                 receipt_path=tmp_path / "receipt.md",
             )
 
         assert rc == 0
+        assert "claude" not in seen
+        assert acr.AGY_BIN in seen
         receipt = (tmp_path / "receipt.md").read_text()
         assert "## Generator failure reasons" in receipt
-        assert "codex_call_failed: codex exit 1: some stderr" in receipt
+        assert "codex_call_failed: ...BBB" in receipt
+        assert "CODEX_TAIL_MARKER" in receipt
+        assert "agy_call_failed: agy exit 1: AGY_TAIL_MARKER" in receipt
         assert "fable_call_failed" not in receipt
+        assert "fallback_iterations: [0, 1, 2]" in receipt
+        assert "codex and agy both produced nothing across 3 attempt(s)" in receipt
 
     def test_a_clean_round_omits_the_failure_reasons_section(self, tmp_path: Path) -> None:
         """REQ-AUTO-022 / SCENARIO-AUTO-022-B."""
@@ -878,7 +947,8 @@ class TestRunRound:
             _failures,
             iteration,
             _fallback_log=None,
-            _fable_timeout=None,
+            _fallback_timeout=None,
+            _agy_model=None,
         ):
             return [
                 ("clean win", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")
@@ -921,7 +991,8 @@ class TestRunRound:
             _failures,
             iteration,
             _fallback_log=None,
-            _fable_timeout=None,
+            _fallback_timeout=None,
+            _agy_model=None,
         ):
             if iteration == 0:
                 # double_well_energy([1.0, 1.0]) == 0.0, beats baseline 0.05
@@ -960,7 +1031,8 @@ class TestRunRound:
             _failures,
             iteration,
             _fallback_log=None,
-            _fable_timeout=None,
+            _fallback_timeout=None,
+            _agy_model=None,
         ):
             return []  # no hypotheses -> loop stops immediately, nothing accepted
 
@@ -1005,7 +1077,8 @@ class TestRunRound:
             _failures,
             iteration,
             _fallback_log=None,
-            _fable_timeout=None,
+            _fallback_timeout=None,
+            _agy_model=None,
         ):
             if iteration == 0:
                 return [("no-op", "def run(d): return {}")]
@@ -1047,7 +1120,8 @@ class TestRunRound:
             _failures,
             iteration,
             _fallback_log=None,
-            _fable_timeout=None,
+            _fallback_timeout=None,
+            _agy_model=None,
         ):
             if iteration == 0:
                 # double_well_energy([1.1, 1.0]) == 0.04410000000000008, beats baseline 0.05

@@ -6005,6 +6005,45 @@ invocation-local circuit breaker.
 **Then** the second invocation can still propose and evaluate
 **And** every rejection from both invocations remains recorded.
 
+### REQ-AUTO-027: Use agy as the fallback when codex returns no hypotheses
+
+The bounded conductor round SHALL try the agy CLI (Google Antigravity, Gemini
+models) for an iteration when codex returned no hypotheses for that iteration.
+It SHALL NOT call the Fable 5.1 (`claude`) generator. The Fable functions MAY stay
+in the file as dormant code.
+
+The agy call SHALL pass the prompt as a literal `--print` argument, because
+`agy --print` does not read stdin. It SHALL run in a fresh empty scratch
+directory and SHALL NOT use a permission-bypass flag. It SHALL resolve the
+binary with `shutil.which` and fall back to `~/.local/bin/agy`, because the
+conductor service PATH does not include `~/.local/bin`.
+
+The round SHALL record each iteration that needed the fallback in the receipt
+under `fallback_iterations`. The commit message of a hypothesis that agy
+produced SHALL name agy, not codex. When both generators return nothing for
+enough consecutive iterations, the receipt SHALL say that codex and agy both
+produced nothing.
+
+The receipt SHALL show the TAIL of each generator failure text, not the head.
+codex prints a banner and then echoes the whole prompt before its real error,
+so the head holds no diagnosis.
+
+#### SCENARIO-AUTO-027-A: codex empty, agy supplies the hypothesis
+
+**Given** codex returns no hypotheses for an iteration
+**When** the round runs that iteration
+**Then** agy is called once with the same prompt
+**And** the iteration is recorded in `fallback_iterations`
+**And** Fable is never called.
+
+#### SCENARIO-AUTO-027-B: both fail, the real error stays visible
+
+**Given** codex and agy both exit non-zero with long stderr ending in a real error
+**When** the round ends with the generator exhausted
+**Then** the receipt lists `codex_call_failed` and `agy_call_failed` with the
+error tails visible
+**And** no `claude` process ran.
+
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
 The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).
 If AR+SC32 > 0.75, it must ABORT as ceiling-polluted. If AR_greedy ~ 0.20 and AR_SC32 < 0.50 and oracle materially > AR+SC32, it must set headroom_confirmed = true and CONFIRM.

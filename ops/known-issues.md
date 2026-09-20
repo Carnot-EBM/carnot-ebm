@@ -9983,6 +9983,22 @@ explicit `--model-name` will pass that codex-shaped default to `agy`, which
 does not recognize it. Needs `--model-name gemini-3.1-pro-high` (or similar)
 explicitly until/unless that default is reconsidered.
 
+**FOLLOW-UP, 2026-09-20 (later, operator: "make agy the fallback"): agy now fills the
+fallback slot.** The first round after the conductor restart produced zero iterations:
+codex exited 1 on the real autoresearch prompt, and with no fallback the round stopped
+(a trivial codex prompt to the same model worked, so the failure is prompt-specific).
+`generate_hypotheses_with_fallback` now tries codex, then agy
+(`gemini-3.1-pro-high` by default, env `CARNOT_AUTORESEARCH_AGY_MODEL`). Fable stays
+dormant. REQ-AUTO-027. The receipt key is now `fallback_iterations` (was
+`fable_fallback_iterations`).
+
+**A second real bug found while doing it: the codex error was never visible.** The
+2026-09-17 fix kept the first 4000 chars of codex stderr, but codex prints its banner
+and then echoes the whole prompt, so the head is banner plus prompt and the real error
+is at the end. The receipt then cut that to 300 chars. Every `codex_call_failed` reason
+recorded so far therefore hid the diagnosis. Both cuts now keep the TAIL. The real codex
+failure cause on the long prompt is still unknown until the next failing round shows it.
+
 **Verification.** `tests/python/test_autoresearch_conductor_round.py` updated
 (3 tests rewritten to assert codex-only behavior; renamed
 `test_codex_empty_never_falls_back_to_fable` and
