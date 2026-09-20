@@ -75289,3 +75289,113 @@ SHALL pass before atomic publication. No numbered end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7445 and SCENARIO-REPORT-7445-* | Implemented: V652 host hardware-envelope reducer, read-only board audit, and thin entrypoint | Verified by spec-linked focused tests and 100 percent changed-module coverage; the entrypoint enforces scoped checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage before publication |
+
+## V652 thirteen-disposition capstone — 2026-09-20
+
+**Status:** Specified. This host aggregation closes the milestone without new
+model inference, training, hardware work, production changes, or publication.
+
+### REQ-REPORT-7446: Close every V652 branch without converting completion into benefit
+
+Exp7446 SHALL parse the exact V652 Markdown contract and active YAML through
+independent reads. It SHALL require thirteen ordered tasks from Exp7434 through
+Exp7446. Every structured gate SHALL name an earlier task in this roadmap and a
+field declared verbatim in that producer's REQUIRED ARTIFACT FIELDS section.
+The Exp7434 contract audit remains advisory; its completion cannot create
+scientific benefit or suppress an independent branch.
+
+The capstone SHALL authenticate every predecessor's exact artifact bytes,
+numeric experiment identity, milestone, terminal status, original verdict
+class, adversarial flag, raw-row manifest, and validation receipts. It SHALL
+verify hash-bound row shards when a producer declares them. A missing declared
+artifact SHALL retain that path. An exact structured pre-gate record may supply
+the terminal blocked disposition, but missing evidence SHALL never be invented.
+
+The reducer SHALL emit exactly thirteen ordered dispositions. The current
+capstone disposition SHALL come from current checks, not a self-read. Valid
+nulls count as completed science and never as benefit. A missing scientific
+input remains blocked. An authenticated validity defect, disqualified source,
+failed required validation receipt, or adversarial flag disqualifies that
+branch. Upstream absence SHALL not make the capstone partial.
+
+The claim matrix SHALL keep contract accounting, runtime recovery, static
+decisions, online learning, extraction, ARC, and hardware separate. It SHALL
+cross-check sampled decision and extraction metrics against the Exp7441 and
+Exp7443 independent auditors. A capture-complete null remains gate-eligible.
+A score-one source is ineligible when its verdict is disqualified or its
+adversarial flag is true.
+
+Each mechanism SHALL receive a continue, retire, or defer decision. Continue
+requires a measured changed cause or exact new prerequisite. Permanent
+retirement requires an exact repeated verdict and a matching
+`retire_if_same_verdict=true` declaration. The artifact SHALL preserve complete
+prior-failure entries and SHALL not rehabilitate flagged science.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Archived model calls and small energy-head training
+SHALL remain typed, hash-bound historical sidecars. `promotion_score` SHALL be
+zero. `capstone_complete_score` SHALL equal one only when all thirteen
+dispositions are authenticated and every current capstone validation passes;
+upstream efficacy is not part of that completion score.
+
+The capstone SHALL execute the unchanged publication G1-G4 evaluator and keep
+its FoVer headline scope. It SHALL list every unresolved science obligation and
+the current task's prohibition on editing `scripts/research_conductor.py`. It
+SHALL not activate a roadmap, change production defaults, update generator
+weights, contact others, publish, or push.
+
+The affected manifest SHALL use the Exp7358 command plan and Exp7303 runner.
+Focused tests, 100 percent changed-module coverage, scoped Ruff and mypy,
+exact-test specification coverage, the declared entrypoint, fresh-process cold
+replay, independent reduction, `scripts/adversarial_verify.py`, and strict
+verdict-row consistency SHALL pass before atomic publication. No numbered
+end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7446-CONTRACT: Exact authorities and producer fields agree
+
+**Given** the V652 Markdown table and active roadmap YAML
+**When** Exp7446 parses both authorities and audits every structured gate
+**Then** thirteen exact rows agree on identity, title, phase, path, substrate, and gates
+**And** every gate field is declared by an earlier producer in this roadmap.
+
+#### SCENARIO-REPORT-7446-EVIDENCE: Terminal evidence retains original authority
+
+**Given** any mix of terminal artifacts, exact pre-gate records, and absent paths
+**When** predecessor evidence is authenticated in conductor order
+**Then** row manifests, validation receipts, verdicts, and flags retain their source values
+**And** the current capstone receives a current-work disposition instead of a self-read.
+
+#### SCENARIO-REPORT-7446-BRANCHES: Null, blocked, and disqualified remain distinct
+
+**Given** completed null science, absent external inputs, and current validity defects
+**When** the seven mechanism claims are reduced independently
+**Then** null creates no benefit, absence remains blocked, and defects remain disqualified
+**And** no upstream state creates retryable partial capstone work.
+
+#### SCENARIO-REPORT-7446-GATES: Completion scores cannot override validity
+
+**Given** a capture-complete null and score-one invalid controls
+**When** the structured gate audit applies class and flag admissibility
+**Then** the valid null remains eligible
+**And** a disqualified or flagged source remains ineligible despite its score.
+
+#### SCENARIO-REPORT-7446-DECISIONS: Repetition alone cannot authorize another attempt
+
+**Given** declared prior failures and current branch verdicts
+**When** continuation and retirement rows are reduced
+**Then** every continuation names measured changed evidence or an exact prerequisite
+**And** retirement occurs only for the same exact verdict under its declared rule.
+
+#### SCENARIO-REPORT-7446-ARTIFACT: Current validation controls terminal publication
+
+**Given** authenticated inputs, independent reductions, and a frozen affected manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** source, disposition, claim, gate, decision, score, principle, or checksum drift fails
+**And** only the validated thirteen-disposition terminal JSON publishes atomically.
+
+## Implementation Status (REQ-REPORT-7446)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7446 and SCENARIO-REPORT-7446-* | Implemented: V652 thirteen-disposition host reducer with a thin entrypoint. | Verified by spec-linked focused tests and 100 percent changed-module coverage. The entrypoint enforces scoped static checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage before publication. |

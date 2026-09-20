@@ -1,0 +1,2195 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "completion",
+      "check": "thirteen_task_dispositions",
+      "expected": 13,
+      "observed": 13,
+      "operator": "==",
+      "passed": true,
+      "principle": "Every promised task receives one terminal disposition."
+    },
+    {
+      "category": "current_validity",
+      "check": "contract_authorities_agree",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "The current capstone independently binds the exact contract."
+    },
+    {
+      "category": "evidence_validity",
+      "check": "predecessor_evidence_authenticated",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Exact artifacts, rows, flags, and validation receipts remain bound."
+    },
+    {
+      "category": "evidence_validity",
+      "check": "structured_gates_authenticated",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "A scalar score cannot override class or adversarial admissibility."
+    },
+    {
+      "category": "evidence_validity",
+      "check": "independent_auditor_cross_checks",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Both independent auditors retain their measured defects."
+    },
+    {
+      "category": "required_validation",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Only the frozen affected command plan controls current code validity."
+    },
+    {
+      "category": "required_validation",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "principle": "Cold replay and unchanged strict readers control final publication."
+    },
+    {
+      "category": "promotion",
+      "check": "promotion_zero",
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true,
+      "principle": "A host aggregation cannot publish or change production state."
+    }
+  ],
+  "auditor_cross_checks": [
+    {
+      "auditor": "exp7441-decision-audit",
+      "auditor_complete": true,
+      "auditor_raw_row_count": 5016,
+      "auditor_valid": true,
+      "branch": "static_decision",
+      "errors": [],
+      "passed": true,
+      "producer": "exp7439-certified-decisions",
+      "producer_completion_score": 1,
+      "producer_verdict_class": "null"
+    },
+    {
+      "auditor": "exp7441-decision-audit",
+      "auditor_complete": true,
+      "auditor_prediction_row_count": 105420,
+      "auditor_raw_row_count": 158060,
+      "auditor_valid": false,
+      "branch": "online_learning",
+      "errors": [
+        "missing_expert_predictions",
+        "weight_update_replay_incomplete"
+      ],
+      "passed": true,
+      "producer": "exp7440-mixture-learning",
+      "producer_completion_score": 1,
+      "producer_verdict_class": "null"
+    },
+    {
+      "audited_outcome_count": 104,
+      "auditor": "exp7443-span-audit",
+      "branch": "extraction",
+      "errors": [],
+      "evaluation_coverage": 0.0,
+      "maximum_generation_calls": 104,
+      "passed": true,
+      "producer": "exp7442-span-capture",
+      "producer_flagged_adversarial": true,
+      "producer_verdict_class": "disqualified"
+    }
+  ],
+  "capability_e2e": {
+    "declared_entrypoint": "scripts/experiments/experiment_7446_v652_capstone.py",
+    "fresh_process_cold_replay": "declared_entrypoint_cold_replay",
+    "numbered_e2e_applicable": []
+  },
+  "capstone_complete_score": 1,
+  "claim_matrix": {
+    "arc": {
+      "authority": "archived adapter-withheld supervisor outcomes",
+      "authority_task": "exp7444-arc-supervisor-evidence",
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "disposition": "null",
+      "limitations": [
+        "zero supervisor firings supply no arm-effect evidence"
+      ],
+      "producer_flagged_adversarial": false,
+      "producer_verdict_class": "null",
+      "scientific_progress_claimed": false,
+      "valid": true
+    },
+    "contract": {
+      "authority": "independent Markdown and YAML comparison",
+      "authority_task": "exp7434-contract-methods",
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "disposition": "null",
+      "limitations": [
+        "advisory accounting cannot create scientific progress"
+      ],
+      "producer_flagged_adversarial": false,
+      "producer_verdict_class": "null",
+      "scientific_progress_claimed": false,
+      "valid": true
+    },
+    "extraction": {
+      "authority": "owned Qwen call and Exp7443 independent raw audit",
+      "authority_task": "exp7442-span-capture",
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "disposition": "disqualified",
+      "evaluation_coverage": 0.0,
+      "limitations": [
+        "producer runtime identity failed; evaluation coverage is zero"
+      ],
+      "producer_completion_score": null,
+      "producer_flagged_adversarial": true,
+      "producer_verdict_class": "disqualified",
+      "scientific_progress_claimed": false,
+      "valid": false
+    },
+    "hardware": {
+      "authority": "host service bounds and read-only board evidence",
+      "authority_task": "exp7445-hardware-envelope",
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "disposition": "null",
+      "hardware_ready_score": 0,
+      "limitations": [
+        "no new device workload; persistence fraction limits acceleration"
+      ],
+      "producer_flagged_adversarial": false,
+      "producer_verdict_class": "null",
+      "scientific_progress_claimed": false,
+      "valid": true
+    },
+    "online_learning": {
+      "auditor_valid": false,
+      "authority": "Exp7440 event rows and Exp7441 independent online audit",
+      "authority_task": "exp7440-mixture-learning",
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "disposition": "disqualified",
+      "limitations": [
+        "auditor found missing expert predictions for update replay"
+      ],
+      "producer_flagged_adversarial": false,
+      "producer_verdict_class": "null",
+      "scientific_progress_claimed": false,
+      "valid": true
+    },
+    "runtime_recovery": {
+      "authority": "private persisted-log and sandbox recovery controls",
+      "authority_task": "exp7435-round-breaker",
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "disposition": "null",
+      "limitations": [
+        "execution recovery is not scientific acceptance"
+      ],
+      "producer_flagged_adversarial": false,
+      "producer_verdict_class": "null",
+      "scientific_progress_claimed": false,
+      "valid": true
+    },
+    "static_decision": {
+      "auditor_valid": true,
+      "authority": "Exp7439 rows and Exp7441 independent static audit",
+      "authority_task": "exp7439-certified-decisions",
+      "available": true,
+      "benefit_score": 0,
+      "completion_score": 1,
+      "disposition": "null",
+      "limitations": [
+        "reused corpus is exploratory; no deployment certificate"
+      ],
+      "producer_flagged_adversarial": false,
+      "producer_verdict_class": "null",
+      "scientific_progress_claimed": false,
+      "valid": true
+    }
+  },
+  "cold_start_duration_s": 2.119698690000405,
+  "completed_at_utc": "2026-09-20T11:02:41.304974+00:00",
+  "continuation_rows": [
+    {
+      "changed_cause_or_prerequisite": "new authority drift or a changed roadmap contract",
+      "current_disposition": "null",
+      "decision": "defer",
+      "mechanism": "contract"
+    },
+    {
+      "changed_cause_or_prerequisite": "a measured recurrence of invocation-local lockout",
+      "current_disposition": "null",
+      "decision": "defer",
+      "mechanism": "runtime_recovery"
+    },
+    {
+      "changed_cause_or_prerequisite": "a fresh independent corpus with usable score support",
+      "current_disposition": "null",
+      "decision": "defer",
+      "mechanism": "static_decision"
+    },
+    {
+      "changed_cause_or_prerequisite": "record complete prediction-time expert prediction losses before each update",
+      "current_disposition": "disqualified",
+      "decision": "continue",
+      "mechanism": "online_learning"
+    },
+    {
+      "changed_cause_or_prerequisite": "repair owned-process identity and lease continuity before changed capture",
+      "current_disposition": "disqualified",
+      "decision": "continue",
+      "mechanism": "extraction"
+    },
+    {
+      "changed_cause_or_prerequisite": "measured supervisor exposure or a changed trigger condition",
+      "current_disposition": "null",
+      "decision": "defer",
+      "mechanism": "arc"
+    },
+    {
+      "changed_cause_or_prerequisite": "changed persistence/orchestration design or dated GateMate physical state",
+      "current_disposition": "null",
+      "decision": "defer",
+      "mechanism": "hardware"
+    }
+  ],
+  "duration_s": 24.507783519999975,
+  "ended_monotonic_ns": 24507783519,
+  "execution_venue": "host",
+  "experiment_id": "exp7446-capstone",
+  "external_contact_performed": false,
+  "field_principles": {
+    "MODEL_SPECS": "List every current LLM; remain empty because no LLM runs here.",
+    "acceptance_gate_results": "Separate completion, validity, benefit, and promotion.",
+    "auditor_cross_checks": "Plain terminal evidence for auditor_cross_checks.",
+    "capability_e2e": "Plain terminal evidence for capability_e2e.",
+    "capstone_complete_score": "One requires thirteen authenticated dispositions and current validation.",
+    "claim_matrix": "Separate measured effects, readiness, circular fixtures, and unavailable evidence.",
+    "cold_start_duration_s": "Plain terminal evidence for cold_start_duration_s.",
+    "completed_at_utc": "Plain terminal evidence for completed_at_utc.",
+    "continuation_rows": "Every next attempt requires a measured changed cause.",
+    "duration_s": "Measure current work and separate validation from model time.",
+    "ended_monotonic_ns": "Plain terminal evidence for ended_monotonic_ns.",
+    "execution_venue": "Use host and keep hardware identity in details.",
+    "experiment_id": "Plain terminal evidence for experiment_id.",
+    "external_contact_performed": "Plain terminal evidence for external_contact_performed.",
+    "flagged_adversarial": "Preserve critical upstream findings without rehabilitation.",
+    "gate_check_summary": "Name exact failed upstream fields without hiding later failures.",
+    "generator_weights_changed": "Plain terminal evidence for generator_weights_changed.",
+    "historical_evidence_sidecars": "Plain terminal evidence for historical_evidence_sidecars.",
+    "honest_verdict": "Use complete findings; upstream absence never creates partial work.",
+    "inference_substrate": "Describe current host aggregation without inheriting old compute.",
+    "inference_substrate_class": "Declare aggregation so the matching duration rule applies.",
+    "inference_substrate_details": "Plain terminal evidence for inference_substrate_details.",
+    "invocation_counts": "Reconcile every current load and generation outcome at zero.",
+    "milestone": "Plain terminal evidence for milestone.",
+    "model_duration_s": "Plain terminal evidence for model_duration_s.",
+    "model_invoked": "Distinguish current attempted model use from historical evidence.",
+    "phase": "Plain terminal evidence for phase.",
+    "phase_spans": "Bind phase timing, progress boundaries, and checkpoints.",
+    "preconditions_checked": "Name each real path and observed prerequisite before reduction.",
+    "production_defaults_changed": "Plain terminal evidence for production_defaults_changed.",
+    "promotion_score": "Always zero; no rollout, publication, or generator update is authorized.",
+    "publication_gates": "Preserve unchanged G1-G4 and their FoVer headline scope.",
+    "publication_performed": "Plain terminal evidence for publication_performed.",
+    "push_performed": "Plain terminal evidence for push_performed.",
+    "random_seed": "Remain null because this reducer does no fitting or resampling.",
+    "repository_health": "Plain terminal evidence for repository_health.",
+    "reproducibility_checksum": "Bind protocol, sources, rows, gates, and decisions.",
+    "retirement_rows": "Retire only exact repeated verdicts under declared rules.",
+    "roadmap_activated": "Plain terminal evidence for roadmap_activated.",
+    "rows": "Keep one ordered disposition for every promised task.",
+    "run_date": "Use 20260920 and retain real UTC and monotonic boundaries.",
+    "sample_size_budget": "Account for all thirteen task disposition units.",
+    "schema": "Use a versioned plain top-level identity and terminal status.",
+    "source_artifact_hashes": "Preserve exact source bytes, classes, and flags.",
+    "started_at_utc": "Plain terminal evidence for started_at_utc.",
+    "started_monotonic_ns": "Plain terminal evidence for started_monotonic_ns.",
+    "status": "Plain terminal evidence for status.",
+    "structured_gate_audit": "Plain terminal evidence for structured_gate_audit.",
+    "task_dispositions": "One ordered row per task prevents silent contract shortening.",
+    "unresolved_obligations": "Keep missing science and forbidden conductor work explicit.",
+    "validation_duration_s": "Plain terminal evidence for validation_duration_s.",
+    "validation_receipts": "Record exact scoped commands, exits, timings, and log hashes.",
+    "verdict_class": "Keep null, blocked, disqualified, and partial meanings distinct.",
+    "verifier_is_oracle": "Remain false because no deployed verifier scores this aggregation."
+  },
+  "flagged_adversarial": true,
+  "gate_check_summary": {
+    "failure_count": 3,
+    "failures": [
+      {
+        "category": "scientific_validity",
+        "check": "scientific_validity",
+        "expected": true,
+        "field": "valid",
+        "observed": false,
+        "operator": "==",
+        "path": "results/experiment_7441_v652_decision_audit.json",
+        "upstream": "exp7441-decision-audit"
+      },
+      {
+        "category": "scientific_validity",
+        "check": "scientific_validity",
+        "expected": true,
+        "field": "valid",
+        "observed": false,
+        "operator": "==",
+        "path": "results/experiment_7442_v652_span_capture.json",
+        "upstream": "exp7442-span-capture"
+      },
+      {
+        "category": "scientific_validity",
+        "check": "scientific_validity",
+        "expected": true,
+        "field": "valid",
+        "observed": false,
+        "operator": "==",
+        "path": "results/experiment_7443_v652_span_audit.json",
+        "upstream": "exp7443-span-audit"
+      }
+    ],
+    "first_failure": {
+      "category": "scientific_validity",
+      "check": "scientific_validity",
+      "expected": true,
+      "field": "valid",
+      "observed": false,
+      "operator": "==",
+      "path": "results/experiment_7441_v652_decision_audit.json",
+      "upstream": "exp7441-decision-audit"
+    },
+    "passed": false
+  },
+  "generator_weights_changed": false,
+  "historical_evidence_sidecars": [
+    {
+      "counts_as_current_invocation": false,
+      "kind": "historical_small_ebm_training",
+      "path": "results/experiment_7435_v652_round_breaker.json",
+      "sha256": "sha256:e8db0919021e1f1c2ace5883703af2d4a1d320bedc3242dca86a46371c25ee35",
+      "task_id": "exp7435-round-breaker"
+    },
+    {
+      "counts_as_current_invocation": false,
+      "kind": "historical_small_ebm_training",
+      "path": "results/experiment_7436_v652_selection_protocol.json",
+      "sha256": "sha256:e125cf8a0bd6ab3805bf3cc5656f6aadc0d1dfb99fe6c42967db746119148f79",
+      "task_id": "exp7436-selection-protocol"
+    },
+    {
+      "counts_as_current_invocation": false,
+      "kind": "historical_small_ebm_training",
+      "path": "results/experiment_7438_v652_mixture_prototype.json",
+      "sha256": "sha256:bd670d6ce25e178d0bc856ba0dbc93ce7e4573d0ea0d427ed51b26d679c3ec61",
+      "task_id": "exp7438-mixture-prototype"
+    },
+    {
+      "counts_as_current_invocation": false,
+      "kind": "historical_small_ebm_training",
+      "path": "results/experiment_7439_v652_certified_decisions.json",
+      "sha256": "sha256:bc9c8c7754e36efceb13726dab89f63578c54cc2c850a348340a9daf0296f6b6",
+      "task_id": "exp7439-certified-decisions"
+    },
+    {
+      "counts_as_current_invocation": false,
+      "kind": "historical_model_invocation",
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "sha256": "sha256:866b22cfb9b9853e10ca700016c076d5974a115aa2ad33533b0194f6e7692fbf",
+      "task_id": "exp7442-span-capture"
+    }
+  ],
+  "honest_verdict": "complete_disqualified_required_v652_science_with_thirteen_dispositions",
+  "inference_substrate": "aggregation_from_authenticated_v652_artifacts",
+  "inference_substrate_class": "aggregation",
+  "inference_substrate_details": {
+    "current_compute": "host JSON and YAML reduction",
+    "current_cuda_operations": 0,
+    "current_external_device_operations": 0,
+    "current_llm_operations": 0,
+    "historical_compute_inherited": false
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.652",
+  "model_duration_s": 0.0,
+  "model_invoked": false,
+  "phase": 4,
+  "phase_spans": [
+    {
+      "checkpoint": "twelve_sources_authenticated",
+      "duration_s": 0.20639321399994515,
+      "ended_elapsed_s": 0.20654035000006843,
+      "heartbeat_count": 0,
+      "phase": "preconditions",
+      "started_elapsed_s": 0.00014713600012328243
+    },
+    {
+      "checkpoint": "affected_plan_frozen",
+      "duration_s": 0.0006260840000322787,
+      "ended_elapsed_s": 0.20718688299984933,
+      "heartbeat_count": 0,
+      "phase": "plan",
+      "started_elapsed_s": 0.20656079899981705
+    },
+    {
+      "checkpoint": "no_current_model_load",
+      "duration_s": 2.6249999791616574e-06,
+      "ended_elapsed_s": 0.2071964509996178,
+      "heartbeat_count": 0,
+      "phase": "load",
+      "started_elapsed_s": 0.20719382599963865
+    },
+    {
+      "checkpoint": "no_current_generation",
+      "duration_s": 1.7929996829479933e-06,
+      "ended_elapsed_s": 0.20720022799923754,
+      "heartbeat_count": 0,
+      "phase": "generate",
+      "started_elapsed_s": 0.2071984349995546
+    },
+    {
+      "checkpoint": "affected_checks_complete",
+      "duration_s": 22.168492087999766,
+      "ended_elapsed_s": 22.375694139999723,
+      "heartbeat_count": 0,
+      "phase": "validate",
+      "started_elapsed_s": 0.2072020519999569
+    },
+    {
+      "checkpoint": "seven_claims_reduced",
+      "duration_s": 5.5300006351899356e-06,
+      "ended_elapsed_s": 22.37572215199998,
+      "heartbeat_count": 0,
+      "phase": "reduce",
+      "started_elapsed_s": 22.375716621999345
+    },
+    {
+      "checkpoint": "cold_readers_complete",
+      "duration_s": 2.1218797319997975,
+      "ended_elapsed_s": 24.507761467999444,
+      "heartbeat_count": 0,
+      "phase": "terminal_validation",
+      "started_elapsed_s": 22.385881735999646
+    },
+    {
+      "checkpoint": "terminal_artifact_ready",
+      "duration_s": 4.648999492928851e-06,
+      "ended_elapsed_s": 24.507779672999277,
+      "heartbeat_count": 0,
+      "phase": "write",
+      "started_elapsed_s": 24.507775023999784
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "AGENTS.md",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "CLAUDE.md",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "CODEX.md",
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "research-program.md",
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/experiment_7433_v651_capstone.py",
+      "upstream": "python/carnot/experiment_7433_v651_capstone.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "scripts/publication_gate.py",
+      "upstream": "scripts/publication_gate.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "scripts/conductor_gates.py",
+      "upstream": "scripts/conductor_gates.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "ops/north-star.md",
+      "upstream": "ops/north-star.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "ops/verifier_gaps.md",
+      "upstream": "ops/verifier_gaps.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "research-complete.yaml",
+      "upstream": "research-complete.yaml"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "ops/conductor-log.md",
+      "upstream": "ops/conductor-log.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source_exists",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "artifact_field": "comparison_passed",
+      "check": "contract_authority_equivalence",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md + research-roadmap.yaml",
+      "upstream": "v652-contract-authorities"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7434_v652_contract_methods.json",
+      "upstream": "exp7434-contract-methods"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7435_v652_round_breaker.json",
+      "upstream": "exp7435-round-breaker"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7436_v652_selection_protocol.json",
+      "upstream": "exp7436-selection-protocol"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7437_v652_span_protocol.json",
+      "upstream": "exp7437-span-protocol"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7438_v652_mixture_prototype.json",
+      "upstream": "exp7438-mixture-prototype"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7439_v652_certified_decisions.json",
+      "upstream": "exp7439-certified-decisions"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7440_v652_mixture_learning.json",
+      "upstream": "exp7440-mixture-learning"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7441_v652_decision_audit.json",
+      "upstream": "exp7441-decision-audit"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "upstream": "exp7442-span-capture"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7443_v652_span_audit.json",
+      "upstream": "exp7443-span-audit"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7444_v652_arc_supervisor_evidence.json",
+      "upstream": "exp7444-arc-supervisor-evidence"
+    },
+    {
+      "artifact_field": "identity+rows+verdict+flag+validation",
+      "check": "predecessor_authentication",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7445_v652_hardware_envelope.json",
+      "upstream": "exp7445-hardware-envelope"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "publication_gates": {
+    "certifies_v652": false,
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "headline_scope": "FoVer dual-condition AUROC",
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "publication_performed": false,
+  "push_performed": false,
+  "random_seed": null,
+  "repository_health": {
+    "historical_failures": [],
+    "status": "outside_current_affected_validity"
+  },
+  "reproducibility_checksum": "sha256:e4ac9f59250a7893de4da6e04653fc7e8604da9e9dcff11265c67cdaca5188a4",
+  "retirement_rows": [
+    {
+      "addressed_by": "Rewrite the design for V652 before activation and compare both fresh authorities with milestone-parameterized parsing.",
+      "current_verdict": "complete_null_exact_contract_methods_ingested",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_disqualified_stale_markdown_contract_with_method_ingestion",
+      "prior_experiment_id": "exp7421-contract-ingestion",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7434-contract-methods"
+    },
+    {
+      "addressed_by": "Diagnose selection support and replace fixed extreme thresholds with tune-once, certify-on-disjoint-data policies; preserve risk and coverage targets.",
+      "current_verdict": "complete_null_selection_protocol_no_nominally_feasible_policy",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_null_static_source_support_no_registered_decision_benefit",
+      "prior_experiment_id": "exp7426-static-decisions",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7436-selection-protocol"
+    },
+    {
+      "addressed_by": "Replace verbose repeated-text triples with whole-proposition spans and qualify the exact missing terminal receipt before live work.",
+      "current_verdict": "complete_null_span_protocol_ready_no_model_evaluation",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_disqualified_internal_artifact_validation_failed",
+      "prior_experiment_id": "exp7429-anchored-capture",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7437-span-protocol"
+    },
+    {
+      "addressed_by": "Add loss-based competition with frozen experts instead of forcing all predictions through the same adaptive spline; test delayed commits and shift harm.",
+      "current_verdict": "complete_circular_positive_mixture_implementation_ready",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_null_no_registered_online_value",
+      "prior_experiment_id": "exp7427-randomized-feedback",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7438-mixture-prototype"
+    },
+    {
+      "addressed_by": "Fit thresholds on a distinct tuning role and certify only three frozen policies; preserve the 5 percent/10 percent risk and 25 percent coverage bars.",
+      "current_verdict": "complete_null_no_registered_decision_benefit",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_null_static_source_support_no_registered_decision_benefit",
+      "prior_experiment_id": "exp7426-static-decisions",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7439-certified-decisions"
+    },
+    {
+      "addressed_by": "Test fixed-share competition with frozen experts and an equal-weight same-expert control under randomized feedback, instead of another unchanged SGD pass.",
+      "current_verdict": "complete_null_insufficient_online_benefit",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_null_no_registered_online_value",
+      "prior_experiment_id": "exp7427-randomized-feedback",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7440-mixture-learning"
+    },
+    {
+      "addressed_by": "Audit the new same-roadmap producers branch by branch, including nulls and missing-input diagnostics; no rerun of the absent V649 producers.",
+      "current_verdict": "complete_disqualified_invalid_branch_evidence",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "blocked_missing_unchanged_online_producer_inputs",
+      "prior_experiment_id": "exp7401-online-audit",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7441-decision-audit"
+    },
+    {
+      "addressed_by": "Use the new whole-proposition span protocol, a symmetric fixed budget and a prequalified terminal receipt set; preserve the prior raw truncations.",
+      "current_verdict": "complete_disqualified_span_capture_producer_runtime_error",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_disqualified_internal_artifact_validation_failed",
+      "prior_experiment_id": "exp7429-anchored-capture",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7442-span-capture"
+    },
+    {
+      "addressed_by": "Remove the whole-task capture gate and audit any new raw canary evidence; missing producers remain terminal blocked rather than repeatedly retried.",
+      "current_verdict": "complete_null_development_only_producer_runtime_failure",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp7430-extraction-audit",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7443-span-audit"
+    },
+    {
+      "addressed_by": "Use the newly authenticated Exp7431 adapter-withheld receipts and interpret zero firings without requiring a promotion.",
+      "current_verdict": "complete_null_no_supervisor_firings_no_arm_effect_evidence",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "blocked: missing outcome-bearing live trajectory-supervisor receipts",
+      "prior_experiment_id": "exp6524-arc-supervisor-redirect-generalization",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7444-arc-supervisor-evidence"
+    },
+    {
+      "addressed_by": "Reduce existing current-path episode evidence on CPU; this task needs no GPU, new accrual or resource reservation.",
+      "current_verdict": "complete_null_no_supervisor_firings_no_arm_effect_evidence",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute",
+      "prior_experiment_id": "exp6776-arc-shadow-supervisor-accrual",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7444-arc-supervisor-evidence"
+    },
+    {
+      "addressed_by": "Separate no exposure from failed treatment in the new two-episode evidence; no banked-progress or arm-effect claim is required.",
+      "current_verdict": "complete_null_no_supervisor_firings_no_arm_effect_evidence",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_insufficient_banked_progress_evidence",
+      "prior_experiment_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7444-arc-supervisor-evidence"
+    },
+    {
+      "addressed_by": "Reduce the newly measured V651 persistence fraction and optional new mixture costs. Preserve the unchanged GateMate block per board without repeating physical work or blocking the host audit.",
+      "current_verdict": "complete_null_hardware_envelope_requires_persistence_orchestration_redesign",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three board dispositions are complete and unavailable placement inputs create no speed claim",
+      "prior_experiment_id": "exp7379-hardware-envelope",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7445-hardware-envelope"
+    },
+    {
+      "addressed_by": "Use the rewritten exact V652 authorities and independent branch dispositions; a missing producer is terminal blocked, never a retryable capstone partial.",
+      "current_verdict": "complete_disqualified_required_v652_science_with_thirteen_dispositions",
+      "decision": "continue",
+      "permanent_retirement": false,
+      "previous_verdict": "complete_disqualified_required_v651_science_with_thirteen_dispositions",
+      "prior_experiment_id": "exp7433-capstone",
+      "retire_if_same_verdict": true,
+      "same_exact_verdict": false,
+      "task_id": "exp7446-capstone"
+    }
+  ],
+  "roadmap_activated": false,
+  "rows": [
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7434_v652_contract_methods.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_exact_contract_methods_ingested",
+      "observed_path": "results/experiment_7434_v652_contract_methods.json",
+      "order": 1,
+      "raw_row_count": 73,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7434-contract-methods",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7435_v652_round_breaker.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_breaker_recovery_verified",
+      "observed_path": "results/experiment_7435_v652_round_breaker.json",
+      "order": 2,
+      "raw_row_count": 7,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7435-round-breaker",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7436_v652_selection_protocol.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_selection_protocol_no_nominally_feasible_policy",
+      "observed_path": "results/experiment_7436_v652_selection_protocol.json",
+      "order": 3,
+      "raw_row_count": 3,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7436-selection-protocol",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7437_v652_span_protocol.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_span_protocol_ready_no_model_evaluation",
+      "observed_path": "results/experiment_7437_v652_span_protocol.json",
+      "order": 4,
+      "raw_row_count": 48,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7437-span-protocol",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7438_v652_mixture_prototype.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_circular_positive_mixture_implementation_ready",
+      "observed_path": "results/experiment_7438_v652_mixture_prototype.json",
+      "order": 5,
+      "raw_row_count": 10,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7438-mixture-prototype",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "circular_positive"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7439_v652_certified_decisions.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_no_registered_decision_benefit",
+      "observed_path": "results/experiment_7439_v652_certified_decisions.json",
+      "order": 6,
+      "raw_row_count": 21,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7439-certified-decisions",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7440_v652_mixture_learning.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_insufficient_online_benefit",
+      "observed_path": "results/experiment_7440_v652_mixture_learning.json",
+      "order": 7,
+      "raw_row_count": 140,
+      "raw_rows_available": true,
+      "raw_shard_count": 17,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7440-mixture-learning",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7441_v652_decision_audit.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_invalid_branch_evidence",
+      "observed_path": "results/experiment_7441_v652_decision_audit.json",
+      "order": 8,
+      "raw_row_count": 161,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7441-decision-audit",
+      "valid": false,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "disqualified"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7442_v652_span_capture.json",
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_span_capture_producer_runtime_error",
+      "observed_path": "results/experiment_7442_v652_span_capture.json",
+      "order": 9,
+      "raw_row_count": 96,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7442-span-capture",
+      "valid": false,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "disqualified"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7443_v652_span_audit.json",
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_null_development_only_producer_runtime_failure",
+      "observed_path": "results/experiment_7443_v652_span_audit.json",
+      "order": 10,
+      "raw_row_count": 104,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7443-span-audit",
+      "valid": false,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7444_v652_arc_supervisor_evidence.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_no_supervisor_firings_no_arm_effect_evidence",
+      "observed_path": "results/experiment_7444_v652_arc_supervisor_evidence.json",
+      "order": 11,
+      "raw_row_count": 2,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7444-arc-supervisor-evidence",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7445_v652_hardware_envelope.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_hardware_envelope_requires_persistence_orchestration_redesign",
+      "observed_path": "results/experiment_7445_v652_hardware_envelope.json",
+      "order": 12,
+      "raw_row_count": 19,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7445-hardware-envelope",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7446_v652_capstone.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_required_v652_science_with_thirteen_dispositions",
+      "observed_path": "results/experiment_7446_v652_capstone.json",
+      "order": 13,
+      "raw_row_count": 13,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "current_work",
+      "task_id": "exp7446-capstone",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "disqualified"
+    }
+  ],
+  "run_date": "20260920",
+  "sample_size_budget": {
+    "attempted": 13,
+    "censored": 0,
+    "completed": 13,
+    "failed": 0,
+    "independent_units": 13,
+    "planned": 13,
+    "stopping_rule": "one terminal disposition for every ordered V652 task",
+    "unstarted": 0
+  },
+  "schema": "carnot.exp7446.v652.capstone.v1",
+  "source_artifact_hashes": {
+    "contract-comparison": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md + research-roadmap.yaml",
+      "sha256": "sha256:d0a0e22e85230e89cfdbc1d8501f3d21b9d7c75c572067392ea399ef0f931c61",
+      "source_kind": "canonical_reduction"
+    },
+    "current-module": {
+      "path": "python/carnot/experiment_7446_v652_capstone.py",
+      "sha256": "sha256:8bc1340f49a9119aa63192ae3447101722f6185b99f94b76d447a8c0bd1329b5"
+    },
+    "current-test": {
+      "path": "tests/python/test_experiment_7446_v652_capstone.py",
+      "sha256": "sha256:7f696cbf33328ad158e693ab7dd7dc23aa7b68f881effe100ea906949ecb7fa4"
+    },
+    "current-wrapper": {
+      "path": "scripts/experiments/experiment_7446_v652_capstone.py",
+      "sha256": "sha256:ed24a9f382882715c83e69623d8cfc18f9a231a50ddb89bd4b0f98209f984bae"
+    },
+    "exp7434-contract-methods": {
+      "declared_path": "results/experiment_7434_v652_contract_methods.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_exact_contract_methods_ingested",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7434_v652_contract_methods.json",
+      "raw_rows_sha256": "sha256:783f2e69c9e416d98e1eed74463ba516998d55230def91b856a528dc9f3f0823",
+      "sha256": "sha256:1ac15524774936e829de7ad5e9eb8098a1e62d9aad1090697685b56ad60b3817",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:aca09023bf445dd4be510f0abaded00982968bcb252f53f8d9ad91f4824ac6bc"
+    },
+    "exp7435-round-breaker": {
+      "declared_path": "results/experiment_7435_v652_round_breaker.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_breaker_recovery_verified",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7435_v652_round_breaker.json",
+      "raw_rows_sha256": "sha256:d20592ee16ba1d6da4f072bfc9a649f7dd7e798266bd26c7103c7a06f96e4d8a",
+      "sha256": "sha256:e8db0919021e1f1c2ace5883703af2d4a1d320bedc3242dca86a46371c25ee35",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:1b3b7275f40d6f6c0153e1532180881b969e8bd2ba3ee8b48bfd136ce569bea8"
+    },
+    "exp7436-selection-protocol": {
+      "declared_path": "results/experiment_7436_v652_selection_protocol.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_selection_protocol_no_nominally_feasible_policy",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7436_v652_selection_protocol.json",
+      "raw_rows_sha256": "sha256:7ce8bf3d6a98f5c4b6989d15960861dd64dc2f4ca8e27845236e5466b9e88369",
+      "sha256": "sha256:e125cf8a0bd6ab3805bf3cc5656f6aadc0d1dfb99fe6c42967db746119148f79",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:24ba2535f3a69efd7cc98468a036e26552b8a1b8b2487014d4f17ea611b661bd"
+    },
+    "exp7437-span-protocol": {
+      "declared_path": "results/experiment_7437_v652_span_protocol.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_span_protocol_ready_no_model_evaluation",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7437_v652_span_protocol.json",
+      "raw_rows_sha256": "sha256:1978b4cd3d3cd287ac362e75891043684970cf6592b4ac53c3138547b436b53b",
+      "sha256": "sha256:7130813047bef0bfc977e5d7231db79abf3f5e8a408dd510551ca3e65f40ae1d",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:93a57f09eb8b4f8991c4bdbe10eaa287c077238c8ed36155217fc34dcd242c70"
+    },
+    "exp7438-mixture-prototype": {
+      "declared_path": "results/experiment_7438_v652_mixture_prototype.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_circular_positive_mixture_implementation_ready",
+      "original_verdict_class": "circular_positive",
+      "path": "results/experiment_7438_v652_mixture_prototype.json",
+      "raw_rows_sha256": "sha256:642cf83f96269a900e6d8da135358f149f68258578322a3b3c590339bd3959ae",
+      "sha256": "sha256:bd670d6ce25e178d0bc856ba0dbc93ce7e4573d0ea0d427ed51b26d679c3ec61",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:f4e4795fdc5711e3f9b4e5c869d0598e72eb44e7c57daaccd4093ef2174726db"
+    },
+    "exp7439-certified-decisions": {
+      "declared_path": "results/experiment_7439_v652_certified_decisions.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_no_registered_decision_benefit",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7439_v652_certified_decisions.json",
+      "raw_rows_sha256": "sha256:fb9611c8a43b8ac1d1bd3984bf46a0f94f1d055bd6e1f84b632d28bf80aeafd3",
+      "sha256": "sha256:bc9c8c7754e36efceb13726dab89f63578c54cc2c850a348340a9daf0296f6b6",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:6cad7308d898b5df9a64251ab395a72de433d51b081d62928ed13de2cf8a954e"
+    },
+    "exp7440-mixture-learning": {
+      "declared_path": "results/experiment_7440_v652_mixture_learning.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_insufficient_online_benefit",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7440_v652_mixture_learning.json",
+      "raw_rows_sha256": "sha256:8de52f6d74e495977c0a9dc2ce88a38dcbabf8d1c9c7893164f904137018eba4",
+      "sha256": "sha256:1c57c990b4ae890693ced35f1db0de4d5ce77f932a941e8b104d7b5e5ae630eb",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:70b8dc2e24f7dfcd8e2edfc1208e6b05b682109596c9ab748046a0551ff6ed71"
+    },
+    "exp7441-decision-audit": {
+      "declared_path": "results/experiment_7441_v652_decision_audit.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_disqualified_invalid_branch_evidence",
+      "original_verdict_class": "disqualified",
+      "path": "results/experiment_7441_v652_decision_audit.json",
+      "raw_rows_sha256": "sha256:3d6f8a92afc0c7917e54e6bed977261cbccf1270a86d9c9ac7d5a015e4d1252f",
+      "sha256": "sha256:cd53dcec7cd6194bb7db538e89380b9e90ccf59fbe6516bb3a63ea0c96dc46f7",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:7b15da358d0f552ef624e8b47930c2ba377432b012bb7e641a14eefb5add6995"
+    },
+    "exp7442-span-capture": {
+      "declared_path": "results/experiment_7442_v652_span_capture.json",
+      "original_flagged_adversarial": true,
+      "original_honest_verdict": "complete_disqualified_span_capture_producer_runtime_error",
+      "original_verdict_class": "disqualified",
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "raw_rows_sha256": "sha256:db6b12e10ffb64ca33f5d46d058140826f45efd9aab76402fcd709a96eb16490",
+      "sha256": "sha256:866b22cfb9b9853e10ca700016c076d5974a115aa2ad33533b0194f6e7692fbf",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:ccd0e727865a0653e4940e3c3175f029c83fb75aef9410060bbf32f4101908bf"
+    },
+    "exp7443-span-audit": {
+      "declared_path": "results/experiment_7443_v652_span_audit.json",
+      "original_flagged_adversarial": true,
+      "original_honest_verdict": "complete_null_development_only_producer_runtime_failure",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7443_v652_span_audit.json",
+      "raw_rows_sha256": "sha256:ce2c7ce57767c476398a3935b818b3a645a16f8192de224f95a9087586463744",
+      "sha256": "sha256:6d6dc2a63688d8e5560612b3c24cf5b75dc914f4a8307bab018028f21bd1cc28",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:28d89252a7d1c2717d027475d3b1b6c31652232acb1af4ee1c8c58b83fae4e81"
+    },
+    "exp7444-arc-supervisor-evidence": {
+      "declared_path": "results/experiment_7444_v652_arc_supervisor_evidence.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_no_supervisor_firings_no_arm_effect_evidence",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7444_v652_arc_supervisor_evidence.json",
+      "raw_rows_sha256": "sha256:2523195ec0e437718b9600dd038a857fdb751767316cc4b72f39350833d96758",
+      "sha256": "sha256:54492f426607268a6e0c3c2523a40a5c195458c90517eef3740b6f99abc125d5",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:cf81964de93a3a01ac6c0a83f03c098c0ab652f4255c0d38827d4c15f9ee0129"
+    },
+    "exp7445-hardware-envelope": {
+      "declared_path": "results/experiment_7445_v652_hardware_envelope.json",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_hardware_envelope_requires_persistence_orchestration_redesign",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7445_v652_hardware_envelope.json",
+      "raw_rows_sha256": "sha256:745bfe28a4921c9377c9702f4b33aa496bccd2828a5480dc9dcf0de47ba1c02c",
+      "sha256": "sha256:bbf535fc1df3fb9b579abb0d2ecc6b5bd67c525f9abef1aea2cb92de9cdcf328",
+      "source_kind": "terminal_artifact",
+      "validation_receipts_sha256": "sha256:27efb66da69ad64369e17cd92df233a6b238e9080f9074fc58b869027fb96d1d"
+    },
+    "markdown-contract": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:dbe05ae5bdc5cdf7643968bbbfc43604b0db24cca9f20a3ac729ae141f385d4a"
+    },
+    "publication-gate": {
+      "path": "scripts/publication_gate.py",
+      "sha256": "sha256:e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4"
+    },
+    "research-reporting-spec": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:31e4f08cb121d7ec39839b88fdf730003fe94edf5454552f9a8efed624d83a77"
+    },
+    "research-roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:87efb6790df9db3c527bfdd3833aad65c776a1da817aa4fe06f0f6ef8f5cc5d4"
+    }
+  },
+  "started_at_utc": "2026-09-20T11:02:16.797194+00:00",
+  "started_monotonic_ns": 0,
+  "status": "complete_disqualified_required_v652_science_with_thirteen_dispositions",
+  "structured_gate_audit": [
+    {
+      "artifact_field": "selection_protocol_ready_score",
+      "consumer": "exp7439-certified-decisions",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7436-selection-protocol"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "consumer": "exp7439-certified-decisions",
+      "expected": [
+        "null",
+        "positive"
+      ],
+      "observed": "null",
+      "operator": "in",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7436-selection-protocol"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "consumer": "exp7439-certified-decisions",
+      "expected": false,
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7436-selection-protocol"
+    },
+    {
+      "artifact_field": "mixture_prototype_ready_score",
+      "consumer": "exp7440-mixture-learning",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7438-mixture-prototype"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "consumer": "exp7440-mixture-learning",
+      "expected": [
+        "circular_positive",
+        "null",
+        "positive"
+      ],
+      "observed": "circular_positive",
+      "operator": "in",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7438-mixture-prototype"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "consumer": "exp7440-mixture-learning",
+      "expected": false,
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7438-mixture-prototype"
+    },
+    {
+      "artifact_field": "decision_capture_complete_score",
+      "consumer": "exp7440-mixture-learning",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7439-certified-decisions"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "consumer": "exp7440-mixture-learning",
+      "expected": [
+        "null",
+        "positive"
+      ],
+      "observed": "null",
+      "operator": "in",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7439-certified-decisions"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "consumer": "exp7440-mixture-learning",
+      "expected": false,
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7439-certified-decisions"
+    },
+    {
+      "artifact_field": "span_protocol_ready_score",
+      "consumer": "exp7442-span-capture",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7437-span-protocol"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "consumer": "exp7442-span-capture",
+      "expected": [
+        "null",
+        "positive",
+        "circular_positive"
+      ],
+      "observed": "null",
+      "operator": "in",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7437-span-protocol"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "consumer": "exp7442-span-capture",
+      "expected": false,
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "producer_field_declared": true,
+      "producer_in_roadmap": true,
+      "producer_precedes_consumer": true,
+      "scalar_passed": true,
+      "source_admissible": true,
+      "upstream": "exp7437-span-protocol"
+    }
+  ],
+  "task_dispositions": [
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7434_v652_contract_methods.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_exact_contract_methods_ingested",
+      "observed_path": "results/experiment_7434_v652_contract_methods.json",
+      "order": 1,
+      "raw_row_count": 73,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7434-contract-methods",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7435_v652_round_breaker.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_breaker_recovery_verified",
+      "observed_path": "results/experiment_7435_v652_round_breaker.json",
+      "order": 2,
+      "raw_row_count": 7,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7435-round-breaker",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7436_v652_selection_protocol.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_selection_protocol_no_nominally_feasible_policy",
+      "observed_path": "results/experiment_7436_v652_selection_protocol.json",
+      "order": 3,
+      "raw_row_count": 3,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7436-selection-protocol",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7437_v652_span_protocol.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_span_protocol_ready_no_model_evaluation",
+      "observed_path": "results/experiment_7437_v652_span_protocol.json",
+      "order": 4,
+      "raw_row_count": 48,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7437-span-protocol",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7438_v652_mixture_prototype.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_circular_positive_mixture_implementation_ready",
+      "observed_path": "results/experiment_7438_v652_mixture_prototype.json",
+      "order": 5,
+      "raw_row_count": 10,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7438-mixture-prototype",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "circular_positive"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7439_v652_certified_decisions.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_no_registered_decision_benefit",
+      "observed_path": "results/experiment_7439_v652_certified_decisions.json",
+      "order": 6,
+      "raw_row_count": 21,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7439-certified-decisions",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7440_v652_mixture_learning.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_insufficient_online_benefit",
+      "observed_path": "results/experiment_7440_v652_mixture_learning.json",
+      "order": 7,
+      "raw_row_count": 140,
+      "raw_rows_available": true,
+      "raw_shard_count": 17,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7440-mixture-learning",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7441_v652_decision_audit.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_invalid_branch_evidence",
+      "observed_path": "results/experiment_7441_v652_decision_audit.json",
+      "order": 8,
+      "raw_row_count": 161,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7441-decision-audit",
+      "valid": false,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "disqualified"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7442_v652_span_capture.json",
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_span_capture_producer_runtime_error",
+      "observed_path": "results/experiment_7442_v652_span_capture.json",
+      "order": 9,
+      "raw_row_count": 96,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7442-span-capture",
+      "valid": false,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "disqualified"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7443_v652_span_audit.json",
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_null_development_only_producer_runtime_failure",
+      "observed_path": "results/experiment_7443_v652_span_audit.json",
+      "order": 10,
+      "raw_row_count": 104,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7443-span-audit",
+      "valid": false,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7444_v652_arc_supervisor_evidence.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_no_supervisor_firings_no_arm_effect_evidence",
+      "observed_path": "results/experiment_7444_v652_arc_supervisor_evidence.json",
+      "order": 11,
+      "raw_row_count": 2,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7444-arc-supervisor-evidence",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7445_v652_hardware_envelope.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_hardware_envelope_requires_persistence_orchestration_redesign",
+      "observed_path": "results/experiment_7445_v652_hardware_envelope.json",
+      "order": 12,
+      "raw_row_count": 19,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "terminal_artifact",
+      "task_id": "exp7445-hardware-envelope",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "null"
+    },
+    {
+      "authenticated": true,
+      "available": true,
+      "declared_path": "results/experiment_7446_v652_capstone.json",
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_required_v652_science_with_thirteen_dispositions",
+      "observed_path": "results/experiment_7446_v652_capstone.json",
+      "order": 13,
+      "raw_row_count": 13,
+      "raw_rows_available": true,
+      "raw_shard_count": 0,
+      "source_kind": "current_work",
+      "task_id": "exp7446-capstone",
+      "valid": true,
+      "validation_receipts_authenticated": true,
+      "verdict_class": "disqualified"
+    }
+  ],
+  "unresolved_obligations": [
+    {
+      "obligation_id": "static_decision_benefit",
+      "required_change": "fresh independent labels and usable selected-action support",
+      "state": "open"
+    },
+    {
+      "obligation_id": "online_causal_evidence",
+      "required_change": "complete stored expert predictions and replayable weight updates",
+      "state": "open"
+    },
+    {
+      "obligation_id": "live_extraction_evaluation",
+      "producer_flagged_adversarial": true,
+      "required_change": "valid runtime ownership followed by sealed evaluation capture",
+      "state": "open"
+    },
+    {
+      "obligation_id": "arc_supervisor_effect",
+      "required_change": "measured exposure and outcome-bearing supervisor firings",
+      "state": "open"
+    },
+    {
+      "obligation_id": "hardware_service_value",
+      "required_change": "persistence redesign plus complete device service measurements",
+      "state": "open"
+    },
+    {
+      "current_task_action": "none",
+      "obligation_id": "conductor_size_gate",
+      "prohibited_path": "scripts/research_conductor.py",
+      "repository_record": "ops/known-issues.md marks the conductor size gate resolved on 2026-09-20",
+      "required_change": "none in this task; repository notes an earlier shipped size gate",
+      "state": "current_task_forbidden"
+    }
+  ],
+  "validation_duration_s": 24.283957312001803,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7446_v652_capstone",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7446_v652_capstone"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5268231560003187,
+      "ended_at_utc": "2026-09-20T11:02:17.531605+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:98a2d557b51c2c01de63ec9ee8624173e40573833c3b61a0d5f95e8fe2a4bb07",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7446_v652_capstone\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7446_v652_capstone.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7446_v652_capstone": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7446_v652_capstone.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-20T11:02:17.004406+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7446-hs7wr8v1/basetemp/focused tests/python/test_experiment_7446_v652_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7446-hs7wr8v1/basetemp/focused",
+        "tests/python/test_experiment_7446_v652_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 7.960843528000623,
+      "ended_at_utc": "2026-09-20T11:02:25.492880+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:eb85d17bc690d551da298b783b7881e87fb08fe5cc4ce9b7d9ab4ede3c55791b",
+      "name": "focused_pytest",
+      "output_tail": "................                                                         [100%]\n16 passed in 6.13s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-20T11:02:17.531639+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7446-hs7wr8v1/coverage/.coverage '--include=*/experiment_7446_v652_capstone.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7446-hs7wr8v1/basetemp/coverage tests/python/test_experiment_7446_v652_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7446-hs7wr8v1/coverage/.coverage",
+        "--include=*/experiment_7446_v652_capstone.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7446-hs7wr8v1/basetemp/coverage",
+        "tests/python/test_experiment_7446_v652_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 13.418826722000631,
+      "ended_at_utc": "2026-09-20T11:02:38.912141+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:22c3479de59acff3064606657bd6915e111b324f11fd6619adb31e1514de9b9b",
+      "name": "changed_module_coverage",
+      "output_tail": "................                                                         [100%]\n16 passed in 10.56s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-20T11:02:25.492940+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7446_v652_capstone.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7446_v652_capstone.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7446-hs7wr8v1/coverage/.coverage"
+      },
+      "duration_s": 0.10064537299967924,
+      "ended_at_utc": "2026-09-20T11:02:39.013661+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:257003fb65426227a524f2da2514b85f89289d76093b0b1baaf980b790e7be22",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                             Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------\npython/carnot/experiment_7446_v652_capstone.py     486      0   100%\n------------------------------------------------------------------------------\nTOTAL                                              486      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-20T11:02:38.912172+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7446_v652_capstone.py scripts/experiments/experiment_7446_v652_capstone.py tests/python/test_experiment_7446_v652_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7446_v652_capstone.py",
+        "scripts/experiments/experiment_7446_v652_capstone.py",
+        "tests/python/test_experiment_7446_v652_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.012653862999286503,
+      "ended_at_utc": "2026-09-20T11:02:39.026774+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-20T11:02:39.013723+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7446_v652_capstone.py scripts/experiments/experiment_7446_v652_capstone.py tests/python/test_experiment_7446_v652_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7446_v652_capstone.py",
+        "scripts/experiments/experiment_7446_v652_capstone.py",
+        "tests/python/test_experiment_7446_v652_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011521399000230303,
+      "ended_at_utc": "2026-09-20T11:02:39.038781+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-20T11:02:39.026817+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7446_v652_capstone.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7446_v652_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.10115757499988831,
+      "ended_at_utc": "2026-09-20T11:02:39.140293+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-20T11:02:39.038826+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7446_v652_capstone.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7446_v652_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.0317870060007408,
+      "ended_at_utc": "2026-09-20T11:02:39.172611+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-20T11:02:39.140321+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7446_v652_capstone.py --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7446_v652_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7446_v652_capstone.py",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7446_v652_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.719938130000628,
+      "ended_at_utc": "2026-09-20T11:02:39.903541+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:b505af2e9c90c8f98807f55650608347e18d05e2fba9d0fefe168e7dde95e930",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "[exp7446] phase=startup event=flushed\n{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_capability_e2e",
+      "started_at_utc": "2026-09-20T11:02:39.183126+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7446_v652_capstone.py --independent-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7446_v652_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7446_v652_capstone.py",
+        "--independent-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7446_v652_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.7368840300005104,
+      "ended_at_utc": "2026-09-20T11:02:40.640841+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/terminal/01_independent_cold_reducer/00_independent_cold_reducer.log",
+      "log_sha256": "sha256:b505af2e9c90c8f98807f55650608347e18d05e2fba9d0fefe168e7dde95e930",
+      "name": "independent_cold_reducer",
+      "output_tail": "[exp7446] phase=startup event=flushed\n{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_raw_reduction",
+      "started_at_utc": "2026-09-20T11:02:39.903593+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7446_v652_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7446_v652_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.561316679999436,
+      "ended_at_utc": "2026-09-20T11:02:41.202433+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_safety",
+      "started_at_utc": "2026-09-20T11:02:40.640879+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7446_v652_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7446_v652_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02574089100016863,
+      "ended_at_utc": "2026-09-20T11:02:41.228576+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_row_consistency",
+      "started_at_utc": "2026-09-20T11:02:41.202463+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/publication_gate.py --json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/publication_gate.py",
+        "--json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.07581895899966185,
+      "ended_at_utc": "2026-09-20T11:02:41.304913+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7446_v652_capstone/validation/terminal/04_publication_gate_json/00_publication_gate_json.log",
+      "log_sha256": "sha256:e1b5f037271823dc0bcb132094749a1a0ce08f27d22c7f17573e052379a2a725",
+      "name": "publication_gate_json",
+      "output_tail": "{\n  \"paper_ready\": true,\n  \"gates\": {\n    \"G1\": {\n      \"pass\": true,\n      \"detail\": \"FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    },\n    \"G2\": {\n      \"pass\": true,\n      \"detail\": \"reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \\u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125\"\n    },\n    \"G3\": {\n      \"pass\": true,\n      \"detail\": \"no retracted phrasings asserted as live claims\",\n      \"hits\": []\n    },\n    \"G4\": {\n      \"pass\": true,\n      \"detail\": \"experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    }\n  },\n  \"unmet_gates\": [],\n  \"note\": \"Stable 4-condition gate (ops/north-star.md \\u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.\"\n}\n",
+      "passed": true,
+      "required": true,
+      "scope": "unchanged_publication_g1_g4",
+      "started_at_utc": "2026-09-20T11:02:41.228616+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}
