@@ -6022,3 +6022,12 @@ Hidden-representation probing, cross-block conditioning, delayed expert losses,
 compact output semantics, and on-chip locality were mapped to the V653 roster.
 FaithBench remains an external challenge corpus. Exact access outcomes and
 evidence limits are in `docs/research-notes/v653-method-ingestion.md`.
+
+<!-- EXP7461-V654-METHOD-INGESTION -->
+## 2026-09-20 Exp7461 — V654 methods — INGESTED
+
+Native option readout, KAN support overlap, feedback budgets, RECAP retention,
+on-chip locality, and ARM–EBM categorical energy were mapped to V654 controls.
+The JevBench 72-to-21 reversal is attributed to open-alternative-jev, not SemIf.
+Exact revisions and claim limits are in
+`docs/research-notes/v654-method-ingestion.md`.

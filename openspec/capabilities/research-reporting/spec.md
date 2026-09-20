@@ -75505,6 +75505,113 @@ SHALL pass before atomic publication. No numbered end-to-end scenario applies.
 |---|---|---|
 | REQ-REPORT-7447 and SCENARIO-REPORT-7447-* | Planned: V653 advisory contract and method reducer with a thin entrypoint. | Pending spec-linked focused tests, changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, and strict row consistency. |
 
+## V654 contract and native-decision method audit — 2026-09-20
+
+**Status:** Specified. This advisory host aggregation performs no current model
+inference, numeric training, roadmap activation, promotion, or external
+publication. It does not gate the independent V654 science tasks.
+
+### REQ-REPORT-7461: Bind the exact V654 contract and preserve V653 dispositions
+
+Exp7461 SHALL resolve the structured roadmap by milestone. It SHALL prefer
+`research-roadmap-next.yaml` when that file declares V654. It SHALL use
+`research-roadmap.yaml` only when that active file declares V654. It SHALL
+compare the selected YAML with the complete V654 Markdown task table. Both
+authorities SHALL contain exactly fourteen ordered tasks from Exp7461 through
+Exp7474. The audit SHALL compare each ID, title, phase, deliverable, substrate
+class, and complete structured gate. Private mutations SHALL independently
+reject count, ID, order, path, field, and milestone drift in each authority.
+
+The audit SHALL authenticate every V653 disposition from exact producer bytes
+or the exact conductor pre-gate bytes. It SHALL retain the original verdict,
+class, adversarial flag, and source kind. It SHALL record the archive lag from
+the current completed ledger and the actual Exp7453 pre-gate path. It SHALL
+retain Exp7455's failed 711-statement coverage report and methodology warning.
+Conductor `OK` SHALL not turn a measured null into positive evidence.
+
+The method audit SHALL ingest at most six primary sources selected by the dated
+V654 review: native SemIf readout, KAN support overlap, limited-feedback
+budgets, RECAP, on-chip locality, and ARM–EBM. Each method row SHALL record a
+source revision, usable mechanism, task mapping, and claim boundary. The
+JevBench 72-to-21 reversal SHALL be attributed to `open-alternative-jev`, not
+SemIf. External claims SHALL not become Carnot measurements.
+
+The audit SHALL run the shipped roadmap schema, gate, exclusion, ARC-floor,
+and overdue-priority checks without changing their semantics. It SHALL map the
+dated E0 and E6 priorities to Exp7463 and Exp7464. The unresolved conductor
+artifact-size obligation SHALL remain visible as work outside the authorized
+scope. The audit SHALL not activate a roadmap or modify
+`scripts/research_conductor.py`.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, balanced zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Archived
+model-shaped events SHALL remain hash-bound historical sidecars. Numeric head
+fitting SHALL have a separate `small_ebm_training` receipt and SHALL be absent
+from this run. `contract_ready_score` SHALL be a bare zero or one. One requires
+exact authority agreement, all twelve mutation rejections, authentic V653
+evidence, and all current required checks. The score is not a scientific gain.
+
+The terminal artifact SHALL contain versioned identity, actual UTC and
+monotonic boundaries, clock identity, phase spans, exact preconditions, device
+identity, source hashes, per-unit rows, sample accounting, categorized gates,
+exact failure summaries, validation receipts, field principles, method rows,
+unresolved obligations, and a reproducibility checksum. A failed required
+validation SHALL be disqualified. A valid failed benefit gate SHALL remain
+null. `partial` SHALL apply only to unfinished owned retryable work.
+
+The affected plan SHALL reuse the Exp7358 command-plan helper and Exp7303
+streaming runner. It SHALL use a private existing pytest basetemp parent,
+command-local coverage data, focused pytest without coverage, separate 100
+percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test specification coverage. The declared entrypoint and a
+fresh-process cold replay SHALL be the capability end-to-end checks. Independent
+reduction, `scripts/adversarial_verify.py`, and strict verdict-row consistency
+SHALL pass before atomic publication. No numbered runtime end-to-end scenario
+applies.
+
+#### SCENARIO-REPORT-7461-CONTRACT: Each V654 authority fails closed
+
+**Given** one complete V654 Markdown table and one milestone-selected YAML roadmap
+**When** count, ID, order, path, field, or milestone changes in either authority
+**Then** the changed authority is rejected while the unchanged authority remains readable
+**And** all thirteen later branches remain independent of this advisory audit.
+
+#### SCENARIO-REPORT-7461-EVIDENCE: V653 terminal causes remain authentic
+
+**Given** the V653 capstone, producer artifacts, and Exp7453 conductor pre-gate bytes
+**When** Exp7461 authenticates all fourteen dispositions
+**Then** nulls, blocks, disqualification, flags, archive lag, and actual paths remain distinct
+**And** Exp7455 coverage and methodology failures remain visible in their original receipts.
+
+#### SCENARIO-REPORT-7461-METHODS: Six sources map to bounded V654 controls
+
+**Given** the dated V654 review and no more than six selected primary sources
+**When** method rows map each source to a usable mechanism and exact claim boundary
+**Then** revisions, task hooks, access outcomes, and deferrals remain auditable
+**And** the 72-to-21 reversal belongs to `open-alternative-jev`, not SemIf.
+
+#### SCENARIO-REPORT-7461-AUDITS: Existing repository guards retain their meaning
+
+**Given** the selected V654 authority and the shipped repository audit scripts
+**When** schema, gate, exclusion, ARC-floor, and overdue checks run
+**Then** each exact command result and log hash is retained without semantic changes
+**And** E0 maps to Exp7463, E6 maps to Exp7464, and conductor-size work stays unresolved.
+
+#### SCENARIO-REPORT-7461-ARTIFACT: Scoped readers control atomic publication
+
+**Given** authenticated sources, independently reducible rows, and a frozen affected manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, authority, evidence, method, gate, score, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared result path.
+
+## Implementation Status (REQ-REPORT-7461)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7461 and SCENARIO-REPORT-7461-* | Planned: V654 advisory contract and native-decision method reducer with a thin entrypoint. | Pending spec-linked focused tests, 100 percent changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, and strict row consistency. |
+
 ## V653 capture lifecycle qualification — 2026-09-20
 
 **Status:** Specified. This host-only qualification repairs and exercises the
