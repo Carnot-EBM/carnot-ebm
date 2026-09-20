@@ -1,0 +1,1723 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "typed_callback_compatibility",
+      "expected": 1,
+      "field": "lifecycle_rows.passed",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7448_v653_capture_lifecycle.json",
+      "principle": "Every independently named lifecycle mutation must pass before readiness.",
+      "upstream": "exp7448-v653-capture-lifecycle"
+    },
+    {
+      "category": "safety",
+      "check": "owned_failure_path_cleanup",
+      "expected": 4,
+      "field": "lifecycle_rows.passed",
+      "observed": 4,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7448_v653_capture_lifecycle.json",
+      "principle": "Every independently named lifecycle mutation must pass before readiness.",
+      "upstream": "exp7448-v653-capture-lifecycle"
+    },
+    {
+      "category": "safety",
+      "check": "durable_recovery_authentication",
+      "expected": 6,
+      "field": "lifecycle_rows.passed",
+      "observed": 6,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7448_v653_capture_lifecycle.json",
+      "principle": "Every independently named lifecycle mutation must pass before readiness.",
+      "upstream": "exp7448-v653-capture-lifecycle"
+    },
+    {
+      "category": "completion",
+      "check": "fresh_process_restart_conservation",
+      "expected": 1,
+      "field": "lifecycle_rows.passed",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7448_v653_capture_lifecycle.json",
+      "principle": "Every independently named lifecycle mutation must pass before readiness.",
+      "upstream": "exp7448-v653-capture-lifecycle"
+    },
+    {
+      "category": "validity",
+      "check": "required_validation",
+      "expected": [],
+      "field": "validation_receipts",
+      "observed": [],
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7448_v653_capture_lifecycle.json",
+      "principle": "Every frozen affected and terminal reader must exit successfully.",
+      "upstream": "exp7448-v653-capture-lifecycle"
+    }
+  ],
+  "capability_e2e": {
+    "declared_entrypoint": "scripts/experiments/experiment_7448_v653_capture_lifecycle.py",
+    "fresh_process_cold_replay": "pending",
+    "numbered_e2e": "not_applicable_isolated_reporting_study"
+  },
+  "capture_lifecycle_ready_score": 1,
+  "completed_at_utc": "2026-09-20T14:26:20.964473Z",
+  "computation_duration_s": 0.0,
+  "current_invocation_events": [],
+  "current_owner_pid": 253675,
+  "current_run_id": "exp7448-v653-capture-lifecycle:253675:18297084026479",
+  "duration_s": 3.205225894,
+  "ended_monotonic_ns": 18300289252373,
+  "event_count": 0,
+  "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "execution_venue": "host",
+  "experiment_id": "exp7448-v653-capture-lifecycle",
+  "field_principles": {
+    "MODEL_SPECS": "Use an empty list because this qualification performs no current LLM task.",
+    "acceptance_gate_results": "Name each validity gate with its operator and exact operands.",
+    "capture_lifecycle_ready_score": "One requires callback compatibility and every owned failure-path check.",
+    "computation_duration_s": "Use zero because this audit performs no numeric fit or inference computation.",
+    "duration_s": "Measure real callback and owned-process lifecycle work without padding.",
+    "execution_venue": "Use host while retaining historical device facts only in typed sidecars.",
+    "field_principles": "Explain field intent separately while gate values stay bare scalars.",
+    "flagged_adversarial": "Preserve critical findings because flagged evidence cannot supply readiness.",
+    "gate_check_summary": "Expose the first exact failed upstream field while retaining all gates.",
+    "historical_failure_hashes": "Preserve the original parse exception and quarantined source identity.",
+    "honest_verdict": "Use complete_null for qualified infrastructure without claiming extraction benefit.",
+    "inference_substrate": "Describe fake transport and real owned host processes without importing historical CUDA.",
+    "inference_substrate_class": "Declare no_model_load because no current model is loaded or called.",
+    "invocation_counts": "Balance attempted, completed, failed, cancelled, and in-flight current calls.",
+    "lifecycle_rows": "Keep one row for every exception, cancellation, ownership mutation, and restart case.",
+    "model_invoked": "Keep attempted current work separate from archived model-shaped events.",
+    "phase_spans": "Bind progress, checkpoints, completed units, boot identity, and monotonic segments.",
+    "preconditions_checked": "Name actual paths, resources, identities, and historical flags before dependent work.",
+    "promotion_score": "Remain zero because this work authorizes no rollout, weight change, or publication.",
+    "random_seed": "Explain that deterministic lifecycle mutations use no random sampling.",
+    "reproducibility_checksum": "Bind code, protocol, historical bytes, lifecycle rows, and validation scope.",
+    "rows": "Retain every callback, failure, ownership mutation, and restart disposition.",
+    "run_date": "Use 20260920 with actual UTC and monotonic boundaries plus boot and segment identity.",
+    "sample_size_budget": "Separate planned, attempted, completed, failed, censored, and unstarted cases.",
+    "schema": "Use a versioned top-level schema and exact experiment identity, milestone, and terminal status.",
+    "source_artifact_hashes": "Preserve exact upstream bytes, original classes, and flags without rehabilitation.",
+    "validation_receipts": "Record exact scoped commands, environments, exits, durations, and log hashes.",
+    "verdict_class": "Use only positive, circular_positive, null, blocked, disqualified, or partial.",
+    "verifier_is_oracle": "False because this infrastructure audit does not score semantic truth."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": true,
+    "check": "all_required_checks",
+    "expected": true,
+    "failed_checks": [],
+    "failed_count": 0,
+    "field": "gate_check_summary",
+    "observed": true,
+    "op": "==",
+    "passed": true,
+    "path": "results/experiment_7448_v653_capture_lifecycle.json",
+    "upstream": "exp7448-v653-capture-lifecycle"
+  },
+  "historical_failure_hashes": {
+    "experiment_artifact_path": "results/experiment_7442_v652_span_capture.json",
+    "experiment_artifact_sha256": "sha256:866b22cfb9b9853e10ca700016c076d5974a115aa2ad33533b0194f6e7692fbf",
+    "flagged_adversarial": true,
+    "honest_verdict": "complete_disqualified_span_capture_producer_runtime_error",
+    "producer_runtime_error": "KeyError:'parse_status'",
+    "quarantined_from_current_science": true,
+    "raw_response_path": "results/raw/experiment_7442_v652_span_capture/owned_runtime/native/call_00.json",
+    "raw_response_sha256": "sha256:1ab26b39ccdce5b0aea0565e4958840893ffde525b89b6b9c6d4d69f0c518b8b",
+    "verdict_class": "disqualified"
+  },
+  "honest_verdict": "complete_null_capture_lifecycle_qualified",
+  "inference_substrate": "host_fake_transport_owned_process_lifecycle_audit",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+    "fake_transport": true,
+    "historical_cuda_is_current": false,
+    "model_device": null,
+    "real_short_lived_children": true
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "lifecycle_rows": [
+    {
+      "callback_disposition": "correct_empty",
+      "case": "callback_shape",
+      "censored": false,
+      "condition": "historical_empty_claims_response",
+      "development_usable": false,
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "legacy_error": "KeyError:'parse_status'",
+      "parse_status": "valid",
+      "passed": true,
+      "raw_reply_sha256": "sha256:5112b15a6e608a1bab1c1f8b0c853d4eab491946d495c7514e5683af08d92951",
+      "raw_request_sha256": "sha256:83c60e3d5d6ad295032ffa2a09cb952b965627d850dcc39136cf29eb6589b578",
+      "raw_response_sha256": "sha256:9a123da3899545b17f19cba9e0cf34cda068664a8b571dde31395cdb735efcfe",
+      "semantic_success": false,
+      "terminal_state": "normalized"
+    },
+    {
+      "callback_disposition": "correct_empty",
+      "case": "callback_exception",
+      "censored": false,
+      "child_reaped": true,
+      "cleanup_entered": true,
+      "condition": "callback_exception",
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 18297268049419,
+            "segment": "owned_server_lifetime",
+            "start_ns": 18297225533292
+          },
+          {
+            "end_ns": 18297266865114,
+            "segment": "callback",
+            "start_ns": 18297225533292
+          }
+        ],
+        "lease_id": "lease:1aaa3518344660e9b2b6426c5f29abc42c132c851d715bd00b5e4b16b57efe73",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253727,
+        "server_pid_start_ticks": 1829709,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/private/lifecycle/callback_exception/lease/device-ddbf8a616ea468f06e7e62f65fb1a18d2fd36511aa570f9d20134e92411dbc0f.journal.json",
+      "lease_released": true,
+      "owned_signals": [
+        {
+          "owned": true,
+          "pid": 253727,
+          "signal": "SIGTERM"
+        }
+      ],
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "terminal_state": "callback_exception"
+    },
+    {
+      "callback_disposition": "correct_empty",
+      "case": "development_gate_closure",
+      "censored": false,
+      "child_reaped": true,
+      "cleanup_entered": true,
+      "condition": "development_gate_closure",
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 18297836962992,
+            "segment": "owned_server_lifetime",
+            "start_ns": 18297828575951
+          },
+          {
+            "end_ns": 18297833776197,
+            "segment": "callback",
+            "start_ns": 18297828575951
+          }
+        ],
+        "lease_id": "lease:3896150e8dd5be0fa3373ffaee989cf9b9d8d37ea2199b5cc4082ebfe46f0ee8",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253728,
+        "server_pid_start_ticks": 1829762,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/private/lifecycle/development_gate_closure/lease/device-562baaf163728b2f574f109157c811d5609a913e732144dfa3eec2282dfd8bc3.journal.json",
+      "lease_released": true,
+      "owned_signals": [
+        {
+          "owned": true,
+          "pid": 253728,
+          "signal": "SIGTERM"
+        }
+      ],
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "terminal_state": "development_gate_closed"
+    },
+    {
+      "callback_disposition": "timeout",
+      "case": "timeout",
+      "censored": false,
+      "child_reaped": true,
+      "cleanup_entered": true,
+      "condition": "timeout",
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 18298238875233,
+            "segment": "owned_server_lifetime",
+            "start_ns": 18298233210244
+          },
+          {
+            "end_ns": 18298237754679,
+            "segment": "callback",
+            "start_ns": 18298233210244
+          }
+        ],
+        "lease_id": "lease:a87138039aeb493bd0e5ac97be56e0d51287f283b099dd5b9aa00086e44840c6",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253729,
+        "server_pid_start_ticks": 1829823,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/private/lifecycle/timeout/lease/device-48e7649365d40f1d876f67671ae59ba2aba6916707fd1f88dc21d0835bb1ac5f.journal.json",
+      "lease_released": true,
+      "owned_signals": [
+        {
+          "owned": true,
+          "pid": 253729,
+          "signal": "SIGTERM"
+        }
+      ],
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "terminal_state": "timeout"
+    },
+    {
+      "callback_disposition": "partial_response",
+      "case": "partial_response",
+      "censored": false,
+      "child_reaped": true,
+      "cleanup_entered": true,
+      "condition": "partial_response",
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 18298840076935,
+            "segment": "owned_server_lifetime",
+            "start_ns": 18298834262925
+          },
+          {
+            "end_ns": 18298838895145,
+            "segment": "callback",
+            "start_ns": 18298834262925
+          }
+        ],
+        "lease_id": "lease:006c9dee1691136f5c6a3c35ebd44c996ccb5d4de886b82f327e42753d9467ae",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253730,
+        "server_pid_start_ticks": 1829863,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/private/lifecycle/partial_response/lease/device-539506312a4f4962d9355bc5cf82b50e151f3aaf93e9dfe45f3563d7a08d0fd0.journal.json",
+      "lease_released": true,
+      "owned_signals": [
+        {
+          "owned": true,
+          "pid": 253730,
+          "signal": "SIGTERM"
+        }
+      ],
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "terminal_state": "partial_response"
+    },
+    {
+      "case": "matching_owner_evidence",
+      "censored": false,
+      "condition": "matching_owner_evidence",
+      "disposition": "complete",
+      "expected_reason": "durable_identity_match",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "durable_identity_match",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "authenticated"
+    },
+    {
+      "case": "missing_owner_identity",
+      "censored": false,
+      "condition": "missing_owner_identity",
+      "disposition": "complete",
+      "expected_reason": "missing_owner_identity",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "missing_owner_identity",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "case": "owner_pid_reuse",
+      "censored": false,
+      "condition": "owner_pid_reuse",
+      "disposition": "complete",
+      "expected_reason": "owner_pid_reused",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829658,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "owner_pid_reused",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "case": "server_pid_reuse",
+      "censored": false,
+      "condition": "server_pid_reuse",
+      "disposition": "complete",
+      "expected_reason": "server_pid_reused",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829658,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "server_pid_reused",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "case": "changed_boot_identity",
+      "censored": false,
+      "condition": "changed_boot_identity",
+      "disposition": "complete",
+      "expected_reason": "boot_identity_changed",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "changed-boot-identity",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "boot_identity_changed",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "case": "foreign_live_owner",
+      "censored": false,
+      "condition": "foreign_live_owner",
+      "disposition": "complete",
+      "expected_reason": "foreign_live_owner",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:foreign-live-owner",
+        "owner_pid": 253731,
+        "owner_pid_start_ticks": 1829923,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "foreign_live_owner",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "acknowledgement_persisted": true,
+      "case": "interruption_restart",
+      "censored": false,
+      "child_identities": [
+        {
+          "pid": 253732,
+          "pid_start_ticks": 1829923,
+          "stage": "persist"
+        },
+        {
+          "pid": 253756,
+          "pid_start_ticks": 1829979,
+          "stage": "resume"
+        }
+      ],
+      "condition": "fresh_process_raw_first_restart",
+      "current_work_receipt": {
+        "MODEL_SPECS": [],
+        "current_invocation_events": [],
+        "current_owner_pid": 253675,
+        "current_run_id": "exp7448-v653-capture-lifecycle:restart:253675",
+        "duration_s": 1.05197724,
+        "ended_monotonic_ns": 18300289014907,
+        "event_count": 0,
+        "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "execution_venue": "host",
+        "inference_substrate": "host_fake_transport_owned_process_lifecycle_audit",
+        "inference_substrate_class": "no_model_load",
+        "inference_substrate_details": {
+          "fake_transport": true,
+          "fresh_processes": 2
+        },
+        "invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_cancelled": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_cancelled": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0
+        },
+        "model_invoked": false,
+        "phase_spans": [],
+        "receipt_sidecars": [],
+        "small_ebm_training": {
+          "performed": false
+        },
+        "started_monotonic_ns": 18299237037667,
+        "status": "terminal_complete"
+      },
+      "disposition": "complete",
+      "duplicate_completed_requests": 0,
+      "first_exit_code": 75,
+      "foreign_signal_count": 0,
+      "lost_acknowledgements": 0,
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "request_attempts": 1,
+      "resume_exit_code": 0,
+      "signals_sent": [],
+      "subprocess_output": {
+        "persist": [
+          "{\"stage\": \"persist\", \"raw_persisted\": true}\n"
+        ],
+        "resume": [
+          "{\"stage\": \"resume\", \"acknowledged\": true}\n"
+        ]
+      },
+      "terminal_state": "restart_complete"
+    }
+  ],
+  "milestone": "2026.09.653",
+  "model_duration_s": 0.0,
+  "model_invoked": false,
+  "phase": 1,
+  "phase_spans": [
+    {
+      "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+      "checkpoint": "inputs_authenticated",
+      "checkpoint_at_utc": "2026-09-20T14:25:08.583252Z",
+      "clock_segment": {
+        "end_ns": 18297091389126,
+        "start_ns": 18297084044182
+      },
+      "completed_units": 24,
+      "duration_s": 0.007344944,
+      "end_s": 0.007362647,
+      "phase": "preconditions",
+      "start_s": 1.7703e-05
+    },
+    {
+      "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+      "checkpoint": "mutations_complete",
+      "checkpoint_at_utc": "2026-09-20T14:25:11.781019Z",
+      "clock_segment": {
+        "end_ns": 18300289153527,
+        "start_ns": 18297091442987
+      },
+      "completed_units": 12,
+      "duration_s": 3.19771054,
+      "end_s": 3.205127048,
+      "phase": "lifecycle_mutations",
+      "start_s": 0.007416508
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "category": "precondition",
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "research-program.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7442_v652_span_capture.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7442_v652_span_capture.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "python/carnot/experiment_7442_v652_span_capture.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7209_v635_span_canary.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7209_v635_span_canary.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "python/carnot/experiment_7209_v635_span_canary.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7422_v651_runtime_ownership.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7422_v651_runtime_ownership.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "python/carnot/experiment_7422_v651_runtime_ownership.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/gpu_lease_phase_journal.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/gpu_lease_phase_journal.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "python/carnot/gpu_lease_phase_journal.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7442_v652_span_capture.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "results/experiment_7442_v652_span_capture.json"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:results/raw/experiment_7442_v652_span_capture/owned_runtime/native/call_00.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7442_v652_span_capture/owned_runtime/native/call_00.json",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "results/raw/experiment_7442_v652_span_capture/owned_runtime/native/call_00.json"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7448_v653_capture_lifecycle.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7448_v653_capture_lifecycle.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "python/carnot/experiment_7448_v653_capture_lifecycle.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiments/experiment_7448_v653_capture_lifecycle.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7448_v653_capture_lifecycle.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "scripts/experiments/experiment_7448_v653_capture_lifecycle.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+      "principle": "Each declared input must exist before its dependent audit branch runs.",
+      "upstream": "tests/python/test_experiment_7448_v653_capture_lifecycle.py"
+    },
+    {
+      "category": "precondition",
+      "check": "historical_producer_runtime_error",
+      "expected": "KeyError:'parse_status'",
+      "field": "producer_runtime_error",
+      "observed": "KeyError:'parse_status'",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "principle": "The repair must preserve the original failure instead of rehabilitating it.",
+      "upstream": "results/experiment_7442_v652_span_capture.json"
+    },
+    {
+      "category": "precondition",
+      "check": "historical_honest_verdict",
+      "expected": "complete_disqualified_span_capture_producer_runtime_error",
+      "field": "honest_verdict",
+      "observed": "complete_disqualified_span_capture_producer_runtime_error",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "principle": "The repair must preserve the original failure instead of rehabilitating it.",
+      "upstream": "results/experiment_7442_v652_span_capture.json"
+    },
+    {
+      "category": "precondition",
+      "check": "historical_verdict_class",
+      "expected": "disqualified",
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "principle": "The repair must preserve the original failure instead of rehabilitating it.",
+      "upstream": "results/experiment_7442_v652_span_capture.json"
+    },
+    {
+      "category": "precondition",
+      "check": "historical_flagged_adversarial",
+      "expected": true,
+      "field": "flagged_adversarial",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "principle": "The repair must preserve the original failure instead of rehabilitating it.",
+      "upstream": "results/experiment_7442_v652_span_capture.json"
+    }
+  ],
+  "promotion_score": 0,
+  "random_seed": {
+    "fit": null,
+    "projection": null,
+    "reason": "deterministic lifecycle mutations use no randomness",
+    "resampling": null,
+    "stream": null
+  },
+  "receipt_sidecars": [
+    {
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "scope": "historical_model_receipts",
+      "sha256": "sha256:866b22cfb9b9853e10ca700016c076d5974a115aa2ad33533b0194f6e7692fbf"
+    },
+    {
+      "path": "results/raw/experiment_7442_v652_span_capture/owned_runtime/native/call_00.json",
+      "scope": "historical_model_receipts",
+      "sha256": "sha256:1ab26b39ccdce5b0aea0565e4958840893ffde525b89b6b9c6d4d69f0c518b8b"
+    }
+  ],
+  "reproducibility_checksum": "sha256:8245ae4be679cbcc95c27a6b8769ef096c1cb15985eab5bf90fd7626fa64b43b",
+  "rows": [
+    {
+      "callback_disposition": "correct_empty",
+      "case": "callback_shape",
+      "censored": false,
+      "condition": "historical_empty_claims_response",
+      "development_usable": false,
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "legacy_error": "KeyError:'parse_status'",
+      "parse_status": "valid",
+      "passed": true,
+      "raw_reply_sha256": "sha256:5112b15a6e608a1bab1c1f8b0c853d4eab491946d495c7514e5683af08d92951",
+      "raw_request_sha256": "sha256:83c60e3d5d6ad295032ffa2a09cb952b965627d850dcc39136cf29eb6589b578",
+      "raw_response_sha256": "sha256:9a123da3899545b17f19cba9e0cf34cda068664a8b571dde31395cdb735efcfe",
+      "semantic_success": false,
+      "terminal_state": "normalized"
+    },
+    {
+      "callback_disposition": "correct_empty",
+      "case": "callback_exception",
+      "censored": false,
+      "child_reaped": true,
+      "cleanup_entered": true,
+      "condition": "callback_exception",
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 18297268049419,
+            "segment": "owned_server_lifetime",
+            "start_ns": 18297225533292
+          },
+          {
+            "end_ns": 18297266865114,
+            "segment": "callback",
+            "start_ns": 18297225533292
+          }
+        ],
+        "lease_id": "lease:1aaa3518344660e9b2b6426c5f29abc42c132c851d715bd00b5e4b16b57efe73",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253727,
+        "server_pid_start_ticks": 1829709,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/private/lifecycle/callback_exception/lease/device-ddbf8a616ea468f06e7e62f65fb1a18d2fd36511aa570f9d20134e92411dbc0f.journal.json",
+      "lease_released": true,
+      "owned_signals": [
+        {
+          "owned": true,
+          "pid": 253727,
+          "signal": "SIGTERM"
+        }
+      ],
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "terminal_state": "callback_exception"
+    },
+    {
+      "callback_disposition": "correct_empty",
+      "case": "development_gate_closure",
+      "censored": false,
+      "child_reaped": true,
+      "cleanup_entered": true,
+      "condition": "development_gate_closure",
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 18297836962992,
+            "segment": "owned_server_lifetime",
+            "start_ns": 18297828575951
+          },
+          {
+            "end_ns": 18297833776197,
+            "segment": "callback",
+            "start_ns": 18297828575951
+          }
+        ],
+        "lease_id": "lease:3896150e8dd5be0fa3373ffaee989cf9b9d8d37ea2199b5cc4082ebfe46f0ee8",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253728,
+        "server_pid_start_ticks": 1829762,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/private/lifecycle/development_gate_closure/lease/device-562baaf163728b2f574f109157c811d5609a913e732144dfa3eec2282dfd8bc3.journal.json",
+      "lease_released": true,
+      "owned_signals": [
+        {
+          "owned": true,
+          "pid": 253728,
+          "signal": "SIGTERM"
+        }
+      ],
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "terminal_state": "development_gate_closed"
+    },
+    {
+      "callback_disposition": "timeout",
+      "case": "timeout",
+      "censored": false,
+      "child_reaped": true,
+      "cleanup_entered": true,
+      "condition": "timeout",
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 18298238875233,
+            "segment": "owned_server_lifetime",
+            "start_ns": 18298233210244
+          },
+          {
+            "end_ns": 18298237754679,
+            "segment": "callback",
+            "start_ns": 18298233210244
+          }
+        ],
+        "lease_id": "lease:a87138039aeb493bd0e5ac97be56e0d51287f283b099dd5b9aa00086e44840c6",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253729,
+        "server_pid_start_ticks": 1829823,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/private/lifecycle/timeout/lease/device-48e7649365d40f1d876f67671ae59ba2aba6916707fd1f88dc21d0835bb1ac5f.journal.json",
+      "lease_released": true,
+      "owned_signals": [
+        {
+          "owned": true,
+          "pid": 253729,
+          "signal": "SIGTERM"
+        }
+      ],
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "terminal_state": "timeout"
+    },
+    {
+      "callback_disposition": "partial_response",
+      "case": "partial_response",
+      "censored": false,
+      "child_reaped": true,
+      "cleanup_entered": true,
+      "condition": "partial_response",
+      "disposition": "complete",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 18298840076935,
+            "segment": "owned_server_lifetime",
+            "start_ns": 18298834262925
+          },
+          {
+            "end_ns": 18298838895145,
+            "segment": "callback",
+            "start_ns": 18298834262925
+          }
+        ],
+        "lease_id": "lease:006c9dee1691136f5c6a3c35ebd44c996ccb5d4de886b82f327e42753d9467ae",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253730,
+        "server_pid_start_ticks": 1829863,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/private/lifecycle/partial_response/lease/device-539506312a4f4962d9355bc5cf82b50e151f3aaf93e9dfe45f3563d7a08d0fd0.journal.json",
+      "lease_released": true,
+      "owned_signals": [
+        {
+          "owned": true,
+          "pid": 253730,
+          "signal": "SIGTERM"
+        }
+      ],
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "terminal_state": "partial_response"
+    },
+    {
+      "case": "matching_owner_evidence",
+      "censored": false,
+      "condition": "matching_owner_evidence",
+      "disposition": "complete",
+      "expected_reason": "durable_identity_match",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "durable_identity_match",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "authenticated"
+    },
+    {
+      "case": "missing_owner_identity",
+      "censored": false,
+      "condition": "missing_owner_identity",
+      "disposition": "complete",
+      "expected_reason": "missing_owner_identity",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "missing_owner_identity",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "case": "owner_pid_reuse",
+      "censored": false,
+      "condition": "owner_pid_reuse",
+      "disposition": "complete",
+      "expected_reason": "owner_pid_reused",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829658,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "owner_pid_reused",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "case": "server_pid_reuse",
+      "censored": false,
+      "condition": "server_pid_reuse",
+      "disposition": "complete",
+      "expected_reason": "server_pid_reused",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829658,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "server_pid_reused",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "case": "changed_boot_identity",
+      "censored": false,
+      "condition": "changed_boot_identity",
+      "disposition": "complete",
+      "expected_reason": "boot_identity_changed",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "changed-boot-identity",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:matching-private-evidence",
+        "owner_pid": 253675,
+        "owner_pid_start_ticks": 1829657,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "boot_identity_changed",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "case": "foreign_live_owner",
+      "censored": false,
+      "condition": "foreign_live_owner",
+      "disposition": "complete",
+      "expected_reason": "foreign_live_owner",
+      "foreign_signal_count": 0,
+      "identity_binding": {
+        "boot_id": "d8ba1f5c-9fbd-4d64-826f-c59d21c4f77f",
+        "clock_segments": [
+          {
+            "end_ns": 2,
+            "segment": "fixture",
+            "start_ns": 1
+          }
+        ],
+        "lease_id": "lease:foreign-live-owner",
+        "owner_pid": 253731,
+        "owner_pid_start_ticks": 1829923,
+        "server_pid": 253675,
+        "server_pid_start_ticks": 1829657,
+        "task_id": "experiment_7448_v653_capture_lifecycle"
+      },
+      "observed_reason": "foreign_live_owner",
+      "passed": true,
+      "signals_sent": [],
+      "terminal_state": "rejected"
+    },
+    {
+      "acknowledgement_persisted": true,
+      "case": "interruption_restart",
+      "censored": false,
+      "child_identities": [
+        {
+          "pid": 253732,
+          "pid_start_ticks": 1829923,
+          "stage": "persist"
+        },
+        {
+          "pid": 253756,
+          "pid_start_ticks": 1829979,
+          "stage": "resume"
+        }
+      ],
+      "condition": "fresh_process_raw_first_restart",
+      "current_work_receipt": {
+        "MODEL_SPECS": [],
+        "current_invocation_events": [],
+        "current_owner_pid": 253675,
+        "current_run_id": "exp7448-v653-capture-lifecycle:restart:253675",
+        "duration_s": 1.05197724,
+        "ended_monotonic_ns": 18300289014907,
+        "event_count": 0,
+        "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "execution_venue": "host",
+        "inference_substrate": "host_fake_transport_owned_process_lifecycle_audit",
+        "inference_substrate_class": "no_model_load",
+        "inference_substrate_details": {
+          "fake_transport": true,
+          "fresh_processes": 2
+        },
+        "invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_cancelled": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_cancelled": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0
+        },
+        "model_invoked": false,
+        "phase_spans": [],
+        "receipt_sidecars": [],
+        "small_ebm_training": {
+          "performed": false
+        },
+        "started_monotonic_ns": 18299237037667,
+        "status": "terminal_complete"
+      },
+      "disposition": "complete",
+      "duplicate_completed_requests": 0,
+      "first_exit_code": 75,
+      "foreign_signal_count": 0,
+      "lost_acknowledgements": 0,
+      "passed": true,
+      "raw_persisted_before_callback": true,
+      "request_attempts": 1,
+      "resume_exit_code": 0,
+      "signals_sent": [],
+      "subprocess_output": {
+        "persist": [
+          "{\"stage\": \"persist\", \"raw_persisted\": true}\n"
+        ],
+        "resume": [
+          "{\"stage\": \"resume\", \"acknowledged\": true}\n"
+        ]
+      },
+      "terminal_state": "restart_complete"
+    }
+  ],
+  "run_date": "20260920",
+  "sample_size_budget": {
+    "attempted": 12,
+    "censored": 0,
+    "completed": 12,
+    "failed": 0,
+    "independent_units": 12,
+    "planned": 12,
+    "stop_rule": "Run each frozen lifecycle mutation once; do not retry a failed case.",
+    "unstarted": 0
+  },
+  "schema": "carnot.exp7448.v653.capture_lifecycle.v1",
+  "small_ebm_training": {
+    "performed": false,
+    "reason": "lifecycle_audit_only"
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "path": "CLAUDE.md",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b"
+    },
+    "CODEX.md": {
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:4e970060d64c231512057e37f2c4e4a18d5221a23e08ba9c186404d134ac5e4d"
+    },
+    "ops/e2e-test-plan.md": {
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e"
+    },
+    "python/carnot/experiment_7209_v635_span_canary.py": {
+      "path": "python/carnot/experiment_7209_v635_span_canary.py",
+      "sha256": "sha256:cb6524e856570f048af9f116ea73f6715d60e9bd62d46a088340a463169f4f6e"
+    },
+    "python/carnot/experiment_7358_v646_validation_contract.py": {
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    "python/carnot/experiment_7422_v651_runtime_ownership.py": {
+      "path": "python/carnot/experiment_7422_v651_runtime_ownership.py",
+      "sha256": "sha256:b756120dbdb9fa99084de76e632d110d4e8b445b7c04890a1a047325bef97ef2"
+    },
+    "python/carnot/experiment_7442_v652_span_capture.py": {
+      "path": "python/carnot/experiment_7442_v652_span_capture.py",
+      "sha256": "sha256:c0f43dbe780ff4281aa9d477ae6377b8d31fc88ba53531651070d068fee130fc"
+    },
+    "python/carnot/experiment_7448_v653_capture_lifecycle.py": {
+      "path": "python/carnot/experiment_7448_v653_capture_lifecycle.py",
+      "sha256": "sha256:02cd9c7370574423e46ef980d51685ab2932b17c96bdb8d68d870b6a85fbd7e4"
+    },
+    "python/carnot/gpu_lease_phase_journal.py": {
+      "path": "python/carnot/gpu_lease_phase_journal.py",
+      "sha256": "sha256:4308c325d2489c64503b9cbdbddc03ef3f02f422f746b77bf1a1ced461fbfa08"
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    "research-program.md": {
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "results/experiment_7442_v652_span_capture.json": {
+      "path": "results/experiment_7442_v652_span_capture.json",
+      "sha256": "sha256:866b22cfb9b9853e10ca700016c076d5974a115aa2ad33533b0194f6e7692fbf"
+    },
+    "results/raw/experiment_7442_v652_span_capture/owned_runtime/native/call_00.json": {
+      "path": "results/raw/experiment_7442_v652_span_capture/owned_runtime/native/call_00.json",
+      "sha256": "sha256:1ab26b39ccdce5b0aea0565e4958840893ffde525b89b6b9c6d4d69f0c518b8b"
+    },
+    "scripts/experiment_template.py": {
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    "scripts/experiments/experiment_7448_v653_capture_lifecycle.py": {
+      "path": "scripts/experiments/experiment_7448_v653_capture_lifecycle.py",
+      "sha256": "sha256:d15344a5c5778a9b25c0d310ec6e67e7068a255bb02e448dee2ab9d9a62e24ce"
+    },
+    "tests/python/test_experiment_7448_v653_capture_lifecycle.py": {
+      "path": "tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+      "sha256": "sha256:a3a556d86d7cb4773c16cc7568232968fb5e379d66c77b3d05a365c00cd53003"
+    }
+  },
+  "started_at_utc": "2026-09-20T14:25:08.575889Z",
+  "started_monotonic_ns": 18297084026479,
+  "status": "complete_null",
+  "validation_duration_s": 69.17415443899517,
+  "validation_manifest": {
+    "affected_checks": [
+      "worktree_imports",
+      "focused_pytest",
+      "changed_module_coverage",
+      "changed_module_coverage_report",
+      "ruff_check",
+      "ruff_format",
+      "changed_module_mypy",
+      "scoped_spec_coverage"
+    ],
+    "changed_modules": [
+      "python/carnot/experiment_7448_v653_capture_lifecycle.py"
+    ],
+    "static_paths": [
+      "scripts/experiments/experiment_7448_v653_capture_lifecycle.py"
+    ],
+    "terminal_checks": [
+      "declared_entrypoint_cold_replay",
+      "independent_cold_reducer",
+      "adversarial_verify",
+      "verdict_row_consistency_strict"
+    ],
+    "test_paths": [
+      "tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+      "tests/python/test_experiment_7442_v652_span_capture.py",
+      "tests/python/test_gpu_lease_phase_journal.py"
+    ]
+  },
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7448_v653_capture_lifecycle",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7448_v653_capture_lifecycle"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.44022105600015493,
+      "ended_at_utc": "2026-09-20T14:25:12.226083+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7448_v653_capture_lifecycle/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:5e69e7ab067a5a6a178b8265a2a83f49a71a2af0308f9eb043edf6d1e34a6a9f",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7448_v653_capture_lifecycle\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7448_v653_capture_lifecycle.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7448_v653_capture_lifecycle": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7448_v653_capture_lifecycle.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-20T14:25:11.785614+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/validation_private/basetemp/focused tests/python/test_experiment_7448_v653_capture_lifecycle.py tests/python/test_experiment_7442_v652_span_capture.py tests/python/test_gpu_lease_phase_journal.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/validation_private/basetemp/focused",
+        "tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+        "tests/python/test_experiment_7442_v652_span_capture.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 30.33792214099958,
+      "ended_at_utc": "2026-09-20T14:25:42.564325+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7448_v653_capture_lifecycle/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:c7791f39e25667062aeff1232ff58ded4ee1ec5140d06d2fb6b6aedb50ac4928",
+      "name": "focused_pytest",
+      "output_tail": ".............................................                            [100%]\n45 passed in 28.48s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-20T14:25:12.226120+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/validation_private/coverage/.coverage '--include=*/experiment_7448_v653_capture_lifecycle.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/validation_private/basetemp/coverage tests/python/test_experiment_7448_v653_capture_lifecycle.py tests/python/test_experiment_7442_v652_span_capture.py tests/python/test_gpu_lease_phase_journal.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/validation_private/coverage/.coverage",
+        "--include=*/experiment_7448_v653_capture_lifecycle.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/validation_private/basetemp/coverage",
+        "tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+        "tests/python/test_experiment_7442_v652_span_capture.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 38.035651946000144,
+      "ended_at_utc": "2026-09-20T14:26:20.600318+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7448_v653_capture_lifecycle/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:b7bb98f819a8d8309798963fc66bd00175c1d0858ffaaf97dd52de9f5add04e8",
+      "name": "changed_module_coverage",
+      "output_tail": ".............................................                            [100%]\n45 passed in 35.07s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-20T14:25:42.564362+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7448_v653_capture_lifecycle.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7448_v653_capture_lifecycle.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7448_v653_capture_lifecycle/validation_private/coverage/.coverage"
+      },
+      "duration_s": 0.10540876099912566,
+      "ended_at_utc": "2026-09-20T14:26:20.706240+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7448_v653_capture_lifecycle/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:1bc9f9da15d0dad37e241b74936f073cd15d2de495b02230df6777506bdfb375",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                      Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------\npython/carnot/experiment_7448_v653_capture_lifecycle.py     476      0   100%\n---------------------------------------------------------------------------------------\nTOTAL                                                       476      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-20T14:26:20.600355+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7448_v653_capture_lifecycle.py scripts/experiments/experiment_7448_v653_capture_lifecycle.py tests/python/test_experiment_7448_v653_capture_lifecycle.py tests/python/test_experiment_7442_v652_span_capture.py tests/python/test_gpu_lease_phase_journal.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7448_v653_capture_lifecycle.py",
+        "scripts/experiments/experiment_7448_v653_capture_lifecycle.py",
+        "tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+        "tests/python/test_experiment_7442_v652_span_capture.py",
+        "tests/python/test_gpu_lease_phase_journal.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01569648900112952,
+      "ended_at_utc": "2026-09-20T14:26:20.722398+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7448_v653_capture_lifecycle/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-20T14:26:20.706289+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7448_v653_capture_lifecycle.py scripts/experiments/experiment_7448_v653_capture_lifecycle.py tests/python/test_experiment_7448_v653_capture_lifecycle.py tests/python/test_experiment_7442_v652_span_capture.py tests/python/test_gpu_lease_phase_journal.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7448_v653_capture_lifecycle.py",
+        "scripts/experiments/experiment_7448_v653_capture_lifecycle.py",
+        "tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+        "tests/python/test_experiment_7442_v652_span_capture.py",
+        "tests/python/test_gpu_lease_phase_journal.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01635498500036192,
+      "ended_at_utc": "2026-09-20T14:26:20.739172+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7448_v653_capture_lifecycle/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "name": "ruff_format",
+      "output_tail": "5 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-20T14:26:20.722442+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7448_v653_capture_lifecycle.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7448_v653_capture_lifecycle.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.19655208099720767,
+      "ended_at_utc": "2026-09-20T14:26:20.936336+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7448_v653_capture_lifecycle/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-20T14:26:20.739217+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7448_v653_capture_lifecycle.py tests/python/test_experiment_7442_v652_span_capture.py tests/python/test_gpu_lease_phase_journal.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7448_v653_capture_lifecycle.py",
+        "tests/python/test_experiment_7442_v652_span_capture.py",
+        "tests/python/test_gpu_lease_phase_journal.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.026346979997470044,
+      "ended_at_utc": "2026-09-20T14:26:20.963123+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7448_v653_capture_lifecycle/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-20T14:26:20.936384+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

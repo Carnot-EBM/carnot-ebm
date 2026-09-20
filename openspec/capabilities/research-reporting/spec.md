@@ -75504,3 +75504,102 @@ SHALL pass before atomic publication. No numbered end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7447 and SCENARIO-REPORT-7447-* | Planned: V653 advisory contract and method reducer with a thin entrypoint. | Pending spec-linked focused tests, changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, and strict row consistency. |
+
+## V653 capture lifecycle qualification — 2026-09-20
+
+**Status:** Specified. This host-only qualification repairs and exercises the
+measured Exp7442 software failure before another model trial. It performs no
+current model load, generation, training, promotion, or publication.
+
+### REQ-REPORT-7448: Normalize callback rows and prove owned cleanup across every exit
+
+Exp7448 SHALL reproduce the exact Exp7442 callback mismatch from its immutable
+raw response. One typed boundary SHALL add the generic `parse_status` and
+`parse_errors` fields consumed by the shipped native loop while preserving the
+raw request, response, and reply byte identities. A syntactically valid empty
+claims list SHALL remain a correct-empty transport disposition, not semantic
+extraction success and not a usable development output.
+
+The lifecycle harness SHALL bind task ID, lease ID, owner PID and start ticks,
+server PID and start ticks, Linux boot identity, and every monotonic clock
+segment before invoking any callback. Callback exceptions, development-gate
+closure, request timeout, and partial response SHALL all pass through one
+`finally` cleanup boundary covering parsing and evidence persistence. The
+qualification SHALL use fake transport and real short-lived child processes;
+it SHALL not load a model or signal an unrelated process.
+
+Recovery SHALL authenticate a prior owner only from durable evidence matching
+the task, lease, owner PID/start ticks, server PID/start ticks, boot identity,
+and ordered monotonic segments. Missing owner identity, PID reuse, changed boot
+identity, and a foreign live owner SHALL fail closed. An artifact filename or
+process number alone SHALL never establish ownership.
+
+A private fresh-process interruption/restart SHALL traverse the actual Exp7442
+producer callback. The raw response SHALL be durable before parsing, the
+completed request SHALL not be issued twice, its acknowledgement SHALL remain
+durable, current invocation counts SHALL remain zero for this host audit, and
+terminal current-work receipts SHALL record zero foreign signals. Historical
+Exp7442 bytes and its disqualified, adversarial disposition SHALL remain
+unchanged in hash-bound typed sidecars.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, balanced
+zero invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. `promotion_score` SHALL remain zero.
+`capture_lifecycle_ready_score` SHALL equal one only when the callback boundary,
+all failure-path cleanup cases, all ownership mutations, and restart replay
+pass. The scientific verdict SHALL remain a completed null because this task
+qualifies infrastructure rather than extraction benefit.
+
+The terminal artifact SHALL contain versioned identity, actual UTC and
+monotonic timing, phase spans, preconditions, exact source hashes, lifecycle
+rows, sample budget, categorized gates, exact failure summary, validation
+receipts, field principles, historical failure hashes, and a reproducibility
+checksum. The affected manifest SHALL use the Exp7358 command plan and Exp7303
+runner for worktree imports, focused pytest, separate 100 percent changed-module
+coverage, scoped Ruff check and format, changed-module mypy, and exact-test spec
+coverage. The declared entrypoint, a fresh-process cold replay, independent
+reduction, adversarial verification, and strict verdict-row consistency SHALL
+pass before atomic publication. No numbered end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7448-CALLBACK: The persisted empty reply crosses one typed boundary
+
+**Given** the exact Exp7442 raw request, response, and `{"claims": []}` reply
+**When** the actual producer callback builds a native-loop row
+**Then** `parse_status` and `parse_errors` are present without changing raw hashes
+**And** correct-empty remains unusable for the development extraction gate.
+
+#### SCENARIO-REPORT-7448-CLEANUP: Every callback exit releases only owned resources
+
+**Given** real short-lived child processes and fake transport
+**When** callback exception, gate closure, timeout, or partial response occurs
+**Then** parsing and evidence-writing exceptions still traverse `finally` cleanup
+**And** the owned child and shipped lease release with zero foreign signals.
+
+#### SCENARIO-REPORT-7448-OWNERSHIP: Durable identity mutations fail closed
+
+**Given** task, lease, owner, server, boot, and clock-segment evidence
+**When** owner identity is absent, PID start ticks change, boot identity changes,
+or a foreign recorded owner remains live
+**Then** recovery rejects the evidence without signaling any process
+**And** an unchanged durable identity is the only recovery-eligible case.
+
+#### SCENARIO-REPORT-7448-RESTART: Raw-first restart conserves one completed request
+
+**Given** a fresh producer process interrupted after raw persistence
+**When** a second fresh process resumes through the actual producer callback
+**Then** the raw row is acknowledged without a duplicate request or lost terminal event
+**And** terminal current-work receipts record zero model calls and foreign signals.
+
+#### SCENARIO-REPORT-7448-ARTIFACT: Independent readers control readiness publication
+
+**Given** all lifecycle rows, ownership mutations, and scoped command receipts
+**When** cold replay, independent reduction, adversarial verification, and strict
+row consistency read the candidate
+**Then** identity, raw hash, lifecycle, gate, score, principle, or checksum drift fails
+**And** only a validated terminal JSON may publish atomically.
+
+## Implementation Status (REQ-REPORT-7448)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7448 and SCENARIO-REPORT-7448-* | Implemented: typed capture callback boundary and host-only owned-process lifecycle qualification with real short-lived children and the shipped lease protocol. | Verified by spec-linked focused tests and affected shared-module tests; the entrypoint enforces 100 percent changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, and strict row consistency before publication. |
