@@ -216,10 +216,12 @@ DEFAULT_CODEX_TIMEOUT_S = 300
 # there is room.
 DEFAULT_FABLE_TIMEOUT_S = 600
 
-# REQ-AUTO-027: agy (Google Antigravity CLI) is the codex fallback since 2026-09-20.
+# REQ-AUTO-027: agy (Google Antigravity CLI) is the PRIMARY generator since 2026-09-20 (operator:
+# "start with agy with gemini-3.8-flash and fail over to codex using gpt-6-astra"). "gemini-3.8-flash"
+# names three levels in `agy models`; -high is the level agy itself picks when no model is given.
 # agy is a user-local install (~/.local/bin), not on the conductor service's PATH, so a
 # bare "agy" would fail from the live process. shutil.which still wins if that changes.
-DEFAULT_AGY_MODEL = os.environ.get("CARNOT_AUTORESEARCH_AGY_MODEL", "gemini-3.1-pro-high")
+DEFAULT_AGY_MODEL = os.environ.get("CARNOT_AUTORESEARCH_AGY_MODEL", "gemini-3.8-flash-high")
 DEFAULT_AGY_TIMEOUT_S = 600
 AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
 
@@ -572,6 +574,10 @@ def load_experiment_log(log_cache: Path) -> ExperimentLog:
         return ExperimentLog()
 
 
+def agy_available() -> bool:
+    return Path(AGY_BIN).exists()
+
+
 def codex_available() -> bool:
     """Precondition check (Pre-Launch Preconditions Discipline pattern)."""
     return shutil.which("codex") is not None
@@ -751,32 +757,32 @@ def fable_generate_hypotheses(
 
 
 def generate_hypotheses_with_fallback(
-    model: str,
-    timeout: int,
+    agy_model: str,
+    agy_timeout: int,
     baselines: BaselineRecord,
     recent_failures: list[dict[str, Any]],
     iteration: int,
     fallback_log: list[int],
-    fallback_timeout: int = DEFAULT_AGY_TIMEOUT_S,
-    agy_model: str = DEFAULT_AGY_MODEL,
+    codex_model: str,
+    codex_timeout: int,
 ) -> list[tuple[str, str]]:
-    """codex first, then agy when codex returns nothing (REQ-AUTO-027).
+    """agy first, then codex when agy returns nothing (REQ-AUTO-027).
 
-    The 2026-09-20 Claude quota-conserve directive removed the Fable 5.1 fallback
-    (`call_fable` and `fable_generate_hypotheses` stay in this file, dormant, not
-    deleted). With no fallback, one codex failure ended a whole iteration with zero
-    hypotheses. agy (Google Antigravity CLI, Gemini models) now fills that slot.
-    It uses no Claude quota.
+    Operator directive 2026-09-20: autoresearch starts with agy (Gemini Flash) and
+    fails over to codex (gpt-6-astra). The Fable 5.1 fallback stays removed for the
+    Claude quota window; `call_fable` and `fable_generate_hypotheses` stay in this file,
+    dormant, not deleted.
 
-    `fallback_log` records which iterations needed the fallback, so the receipt and
-    the commit message can name the real generator. See ops/known-issues.md 2026-09-20.
+    `fallback_log` records the iterations where agy returned nothing and codex ran, so
+    the receipt and the commit message can name the real generator.
+    See ops/known-issues.md 2026-09-20.
     """
-    hyps = codex_generate_hypotheses(model, timeout, baselines, recent_failures, iteration)
+    hyps = agy_generate_hypotheses(agy_model, agy_timeout, baselines, recent_failures, iteration)
     if hyps:
         return hyps
     fallback_log.append(iteration)
-    return agy_generate_hypotheses(
-        agy_model, fallback_timeout, baselines, recent_failures, iteration
+    return codex_generate_hypotheses(
+        codex_model, codex_timeout, baselines, recent_failures, iteration
     )
 
 
@@ -792,14 +798,13 @@ def generator_label_for_entry(entry_id: str, fallback_iterations: Sequence[int])
     codex and the fallback apart after the fact, since `ExperimentEntry` itself
     (a shared, REQ-AUTO-008 dataclass) carries no generator-provenance
     field, and this script does not own that dataclass. Falls back to
-    "codex exec" (the historical, still-correct-in-the-common-case
-    hardcoded text) if the id does not match the expected shape, rather
+    "agy" (the primary generator) if the id does not match the expected shape, rather
     than raising on an unexpected format.
     """
     match = _ENTRY_ID_ITERATION.search(entry_id)
     if match and int(match.group(1)) in fallback_iterations:
-        return "agy fallback (codex returned nothing this iteration)"
-    return "codex exec"
+        return "codex exec fallback (agy returned nothing this iteration)"
+    return "agy"
 
 
 def _git(project_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -907,7 +912,7 @@ def run_round(
     model: str,
     max_iterations: int,
     codex_timeout: int = DEFAULT_CODEX_TIMEOUT_S,
-    fallback_timeout: int = DEFAULT_AGY_TIMEOUT_S,
+    agy_timeout: int = DEFAULT_AGY_TIMEOUT_S,
     agy_model: str = DEFAULT_AGY_MODEL,
     project_root: Path = PROJECT_ROOT,
     baseline_cache: Path | None = None,
@@ -930,8 +935,8 @@ def run_round(
         "",
     ]
 
-    if not codex_available():
-        report_lines.append("BLOCKED: `codex` CLI not found on PATH. No round run.")
+    if not codex_available() and not agy_available():
+        report_lines.append("BLOCKED: neither `agy` nor `codex` CLI found. No round run.")
         receipt_path.write_text("\n".join(report_lines) + "\n")
         print("blocked_codex_unavailable")
         return 0
@@ -959,14 +964,14 @@ def run_round(
         nonlocal captured_failures
         captured_failures = recent_failures
         return generate_hypotheses_with_fallback(
-            model,
-            codex_timeout,
+            agy_model,
+            agy_timeout,
             cur_baselines,
             recent_failures,
             iteration,
             fallback_iterations,
-            fallback_timeout,
-            agy_model,
+            model,
+            codex_timeout,
         )
 
     config = AutoresearchConfig(
@@ -974,9 +979,9 @@ def run_round(
         max_consecutive_failures=10,
         # REQ-AUTO-023: 3, not the orchestrator default's own 3 by
         # coincidence -- explicit here because this generator is expensive
-        # (a codex subprocess up to codex_timeout, then agy up to
-        # fallback_timeout on top). Worst case 3 * (codex_timeout +
-        # fallback_timeout) must stay under the conductor's own outer timeout
+        # (an agy subprocess up to agy_timeout, then codex up to
+        # codex_timeout on top). Worst case 3 * (agy_timeout +
+        # codex_timeout) must stay under the conductor's own outer timeout
         # for this script (see research_conductor.py:_run_autoresearch_round,
         # bumped to 3600s alongside this for exactly that reason).
         max_consecutive_empty_generations=3,
@@ -1056,12 +1061,12 @@ def run_round(
         "",
     ]
     if result.generator_exhausted:
-        # REQ-AUTO-023: this now means codex+agy BOTH failed
+        # REQ-AUTO-023: this now means agy+codex BOTH failed
         # max_consecutive_empty_generations times in a row, not just once --
         # see the '## Generator failure reasons' section below for why each
         # attempt failed.
         report_lines.append(
-            f"codex and agy both produced nothing across "
+            f"agy and codex both produced nothing across "
             f"{len(fallback_iterations)} attempt(s) this round -- giving up."
         )
     if captured_failures:
@@ -1100,14 +1105,14 @@ def main() -> int:
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--max-iterations", type=int, default=5)
     parser.add_argument("--codex-timeout", type=int, default=DEFAULT_CODEX_TIMEOUT_S)
-    parser.add_argument("--fallback-timeout", type=int, default=DEFAULT_AGY_TIMEOUT_S)
+    parser.add_argument("--agy-timeout", type=int, default=DEFAULT_AGY_TIMEOUT_S)
     parser.add_argument("--agy-model", default=DEFAULT_AGY_MODEL)
     args = parser.parse_args()
     return run_round(
         model=args.model,
         max_iterations=args.max_iterations,
         codex_timeout=args.codex_timeout,
-        fallback_timeout=args.fallback_timeout,
+        agy_timeout=args.agy_timeout,
         agy_model=args.agy_model,
     )
 

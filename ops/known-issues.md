@@ -9987,10 +9987,13 @@ explicitly until/unless that default is reconsidered.
 fallback slot.** The first round after the conductor restart produced zero iterations:
 codex exited 1 on the real autoresearch prompt, and with no fallback the round stopped
 (a trivial codex prompt to the same model worked, so the failure is prompt-specific).
-`generate_hypotheses_with_fallback` now tries codex, then agy
-(`gemini-3.1-pro-high` by default, env `CARNOT_AUTORESEARCH_AGY_MODEL`). Fable stays
-dormant. REQ-AUTO-027. The receipt key is now `fallback_iterations` (was
-`fable_fallback_iterations`).
+`generate_hypotheses_with_fallback` first tried codex, then agy. **Same day, operator
+reordered it: "start with agy with gemini-3.8-flash and fail over to codex using
+gpt-6-astra".** It now tries agy (`gemini-3.8-flash-high`, env
+`CARNOT_AUTORESEARCH_AGY_MODEL`), then codex (`gpt-6-astra`). "gemini-3.8-flash" names
+three levels in `agy models`; -high is the level agy picks with no model given, so I
+used it. Fable stays dormant. REQ-AUTO-027. The receipt key is now `fallback_iterations`
+(was `fable_fallback_iterations`), and lists iterations where agy failed and codex ran.
 
 **A second real bug found while doing it: the codex error was never visible.** The
 2026-09-17 fix kept the first 4000 chars of codex stderr, but codex prints its banner

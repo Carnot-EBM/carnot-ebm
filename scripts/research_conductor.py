@@ -6307,9 +6307,9 @@ def _run_autoresearch_round(dry_run: bool) -> None:
             ],
             receipt=PROJECT_ROOT / "ops" / "autoresearch_conductor_report.md",
             # REQ-AUTO-023: the round can now retry up to
-            # max_consecutive_empty_generations=3 times when both codex and
-            # its Fable fallback return nothing, each retry costing up to
-            # codex_timeout(300) + fable_timeout(600) = 900s worst case
+            # max_consecutive_empty_generations=3 times when both agy and
+            # its codex fallback return nothing, each retry costing up to
+            # agy_timeout(600) + codex_timeout(300) = 900s worst case
             # (2700s total). 1800s used to be enough only because a single
             # empty generator call ended the round immediately; bumped to
             # 3600s so the new retry budget is never cut short by this

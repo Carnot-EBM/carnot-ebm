@@ -6005,42 +6005,45 @@ invocation-local circuit breaker.
 **Then** the second invocation can still propose and evaluate
 **And** every rejection from both invocations remains recorded.
 
-### REQ-AUTO-027: Use agy as the fallback when codex returns no hypotheses
+### REQ-AUTO-027: Start with agy and fail over to codex
 
 The bounded conductor round SHALL try the agy CLI (Google Antigravity, Gemini
-models) for an iteration when codex returned no hypotheses for that iteration.
-It SHALL NOT call the Fable 5.1 (`claude`) generator. The Fable functions MAY stay
-in the file as dormant code.
+Flash models) first for every iteration. It SHALL call codex only when agy
+returned no hypotheses for that iteration. It SHALL NOT call the Fable 5.1
+(`claude`) generator. The Fable functions MAY stay in the file as dormant code.
+The default agy model SHALL be a Gemini 3.8 Flash level. The codex fallback model
+SHALL stay the round's `--model` value (default `gpt-6-astra`).
 
 The agy call SHALL pass the prompt as a literal `--print` argument, because
 `agy --print` does not read stdin. It SHALL run in a fresh empty scratch
 directory and SHALL NOT use a permission-bypass flag. It SHALL resolve the
 binary with `shutil.which` and fall back to `~/.local/bin/agy`, because the
-conductor service PATH does not include `~/.local/bin`.
+conductor service PATH does not include `~/.local/bin`. The round SHALL be
+blocked only when neither agy nor codex is available.
 
-The round SHALL record each iteration that needed the fallback in the receipt
-under `fallback_iterations`. The commit message of a hypothesis that agy
-produced SHALL name agy, not codex. When both generators return nothing for
-enough consecutive iterations, the receipt SHALL say that codex and agy both
-produced nothing.
+The round SHALL record each iteration where agy returned nothing and codex ran in
+the receipt under `fallback_iterations`. The commit message of a hypothesis that
+codex produced after that failover SHALL say so. When both generators return
+nothing for enough consecutive iterations, the receipt SHALL say that agy and
+codex both produced nothing.
 
 The receipt SHALL show the TAIL of each generator failure text, not the head.
 codex prints a banner and then echoes the whole prompt before its real error,
 so the head holds no diagnosis.
 
-#### SCENARIO-AUTO-027-A: codex empty, agy supplies the hypothesis
+#### SCENARIO-AUTO-027-A: agy empty, codex supplies the hypothesis
 
-**Given** codex returns no hypotheses for an iteration
+**Given** agy returns no hypotheses for an iteration
 **When** the round runs that iteration
-**Then** agy is called once with the same prompt
+**Then** codex is called once with the same prompt
 **And** the iteration is recorded in `fallback_iterations`
 **And** Fable is never called.
 
 #### SCENARIO-AUTO-027-B: both fail, the real error stays visible
 
-**Given** codex and agy both exit non-zero with long stderr ending in a real error
+**Given** agy and codex both exit non-zero with long stderr ending in a real error
 **When** the round ends with the generator exhausted
-**Then** the receipt lists `codex_call_failed` and `agy_call_failed` with the
+**Then** the receipt lists `agy_call_failed` and `codex_call_failed` with the
 error tails visible
 **And** no `claude` process ran.
 
@@ -6318,3 +6321,103 @@ bindings, and ARC code do not change.
 **And** risk, coverage, and shortfall results cannot authorize deployment prevalence or promotion.
 
 Spec: REQ-AUTO-7449, SCENARIO-AUTO-7449-01, SCENARIO-AUTO-7449-02, SCENARIO-AUTO-7449-03, SCENARIO-AUTO-7449-04, SCENARIO-AUTO-7449-05, SCENARIO-AUTO-7449-06
+
+### REQ-AUTO-7450: Seal A Replayable Prediction-Time Mixture Ledger
+
+Exp7450 SHALL establish the causal record that Exp7440 omitted. Before a label
+is available, a prediction event SHALL persist its event and source-group
+identities, request order, feedback delay, fit seed, four named expert
+probabilities, mixture weights, mixture probability, one hash for each expert
+checkpoint, label propensity, and pre-feedback numeric state hash. The event
+SHALL contain no label or label-derived value. Its content hash SHALL cover all
+prediction-time fields. A feedback event SHALL reference that exact prediction
+event hash.
+
+Each feedback event SHALL record reveal order, label origin, the revealed binary
+label, four losses computed from the saved expert probabilities, old and new log
+weights, the unshared numeric update, stable normalizer, fixed-share update,
+and parent and child state hashes. The ledger SHALL include an initial numeric
+state manifest with the expert order, update rate, fixed-share rate, initial log
+weights, checkpoint byte hashes, and initial state hash. A cold reader SHALL
+replay the complete trajectory without importing the producer's update logic.
+
+The cold reader SHALL reject a changed saved expert prediction, a missing or
+changed checkpoint, label access before the registered reveal order, duplicate
+feedback, reordered feedback, and a state/hash mismatch. Recovery from a crash
+after a persisted prediction SHALL produce the same final state as an
+uninterrupted replay. The registered no-feedback arm SHALL emit predictions but
+SHALL keep its initial numeric state unchanged.
+
+The analytic fixture SHALL compare the recorded update with a separately coded
+scalar calculation. Exact success on this synthetic oracle SHALL be classified
+`circular_positive`, with `verifier_is_oracle=true`. It establishes ledger
+mechanics only, not online scientific value.
+
+The collector protocol SHALL freeze Exp7440's two orders, delays zero and eight,
+five fit seeds, seven arms, one-quarter reveal schedule, block sizes 32 and 64,
+10,000 bootstrap draws, three primary comparisons, labels, and success bars.
+This prototype SHALL not execute the full scientific stream. It SHALL qualify
+read, predict, persist, reveal, and update as the five service-time stages for a
+later cost study.
+
+The task SHALL make no current LLM call and SHALL declare `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`.
+Historical model-shaped evidence SHALL remain typed and hash-bound. Small
+numeric-head fitting is historical `small_ebm_training`, not current inference.
+
+`prediction_ledger_ready_score=1` SHALL require independent cold replay and all
+causal mutation checks. `promotion_score` SHALL remain zero. The terminal JSON
+SHALL publish atomically only after affected validation, fresh-process replay,
+independent raw reduction, adversarial verification, and strict row consistency
+pass. These readers form the capability end-to-end check. No numbered end-to-end
+scenario applies because shared training, sampling, bindings, and ARC code do
+not change.
+
+#### SCENARIO-AUTO-7450-01: Prediction Bytes Precede Labels
+
+**Given** a four-expert prediction whose feedback has a registered delay
+**When** the collector persists the prediction event
+**Then** all probabilities, weights, checkpoint hashes, and the pre-feedback
+state hash are content-bound before reveal
+**And** no label or label-derived loss is present in the prediction event.
+
+#### SCENARIO-AUTO-7450-02: Feedback Replays Stored Expert Losses
+
+**Given** one persisted prediction and a later revealed binary label
+**When** feedback updates the learned mixture
+**Then** each loss is computed from the saved expert probability
+**And** old log weights, numeric update, normalizer, fixed-share result, and
+state hashes permit an independent scalar replay.
+
+#### SCENARIO-AUTO-7450-03: Causal Mutations Fail Closed
+
+**Given** an otherwise valid prediction and feedback ledger
+**When** an expert probability changes, a checkpoint disappears, feedback is
+early or duplicated, or two feedback events are reordered
+**Then** the cold reader rejects the ledger with a specific integrity error.
+
+#### SCENARIO-AUTO-7450-04: Crash Recovery Is Exact
+
+**Given** a prediction persisted before its label is revealed
+**When** the collector restarts from the initial manifest and durable events
+**Then** later feedback produces the same final state hash as uninterrupted
+execution
+**And** the prediction event hash remains unchanged.
+
+#### SCENARIO-AUTO-7450-05: No Feedback Means No State Change
+
+**Given** the registered no-feedback frozen-prior arm
+**When** it emits predictions without feedback events
+**Then** its final state hash equals its initial state hash exactly.
+
+#### SCENARIO-AUTO-7450-06: Readiness Is Mechanical And Circular
+
+**Given** the analytic fixture, frozen Exp7440 protocol, five service stages,
+and passing terminal readers
+**When** an independent reducer evaluates readiness
+**Then** `prediction_ledger_ready_score` is one only if every replay and
+mutation control passes
+**And** the terminal class is `circular_positive` with promotion disabled.
+
+Spec: REQ-AUTO-7450, SCENARIO-AUTO-7450-01, SCENARIO-AUTO-7450-02, SCENARIO-AUTO-7450-03, SCENARIO-AUTO-7450-04, SCENARIO-AUTO-7450-05, SCENARIO-AUTO-7450-06

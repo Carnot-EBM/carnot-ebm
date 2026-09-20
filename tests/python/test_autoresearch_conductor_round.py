@@ -4,7 +4,7 @@ and the unattended conductor loop.
 
 Spec refs: REQ-AUTO-019 (unattended conductor integration),
 REQ-AUTO-020 (git-committed lineage per accepted hypothesis),
-REQ-AUTO-027 (agy fallback when codex returns nothing).
+REQ-AUTO-027 (agy primary generator, codex fallback).
 """
 
 from __future__ import annotations
@@ -110,7 +110,7 @@ class TestCommitAcceptedHypothesis:
             0.05,
             -6.0,
             project_root=tmp_path,
-            generator_label="agy fallback (codex returned nothing this iteration)",
+            generator_label="codex exec fallback (agy returned nothing this iteration)",
         )
 
         assert sha is not None
@@ -121,8 +121,8 @@ class TestCommitAcceptedHypothesis:
             text=True,
             check=True,
         ).stdout
-        assert "via agy fallback" in msg
-        assert "via codex exec" not in msg
+        assert "via codex exec fallback" in msg
+        assert "via agy" not in msg
 
     def test_commit_message_carries_the_score(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
@@ -499,44 +499,46 @@ class TestCallAgy:
 
 
 class TestGenerateHypothesesWithFallback:
-    def test_codex_success_never_calls_agy_or_fable(self) -> None:
+    """REQ-AUTO-027: agy is primary, codex is the fallback."""
+
+    def test_agy_success_never_calls_codex_or_fable(self) -> None:
         from carnot.autoresearch.baselines import BaselineRecord
 
-        fallback_calls: list[str] = []
+        other_calls: list[str] = []
         with (
-            patch.object(acr, "codex_generate_hypotheses", return_value=[("d", "code")]),
+            patch.object(acr, "agy_generate_hypotheses", return_value=[("d", "code")]),
             patch.object(
                 acr,
-                "agy_generate_hypotheses",
-                side_effect=lambda *a, **kw: fallback_calls.append("agy") or [],
+                "codex_generate_hypotheses",
+                side_effect=lambda *a, **kw: other_calls.append("codex") or [],
             ),
             patch.object(
                 acr,
                 "fable_generate_hypotheses",
-                side_effect=lambda *a, **kw: fallback_calls.append("fable") or [],
+                side_effect=lambda *a, **kw: other_calls.append("fable") or [],
             ),
         ):
             log: list[int] = []
             hyps = acr.generate_hypotheses_with_fallback(
-                "gpt-6-astra", 60, BaselineRecord(), [], 0, log
+                "gemini-x", 60, BaselineRecord(), [], 0, log, "gpt-6-astra", 30
             )
         assert hyps == [("d", "code")]
-        assert fallback_calls == []
+        assert other_calls == []
         assert log == []
 
-    def test_codex_empty_falls_back_to_agy_and_records_the_iteration(self) -> None:
+    def test_agy_empty_falls_back_to_codex_and_records_the_iteration(self) -> None:
         from carnot.autoresearch.baselines import BaselineRecord
 
-        agy_calls: list[tuple[Any, ...]] = []
+        codex_calls: list[tuple[Any, ...]] = []
         fable_calls: list[int] = []
 
-        def fake_agy(model, timeout, baselines, failures, iteration):  # noqa: ANN001, ANN202
-            agy_calls.append((model, timeout, iteration))
-            return [("agy-found", "code")]
+        def fake_codex(model, timeout, baselines, failures, iteration):  # noqa: ANN001, ANN202
+            codex_calls.append((model, timeout, iteration))
+            return [("codex-found", "code")]
 
         with (
-            patch.object(acr, "codex_generate_hypotheses", return_value=[]),
-            patch.object(acr, "agy_generate_hypotheses", side_effect=fake_agy),
+            patch.object(acr, "agy_generate_hypotheses", return_value=[]),
+            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_codex),
             patch.object(
                 acr,
                 "fable_generate_hypotheses",
@@ -545,10 +547,10 @@ class TestGenerateHypothesesWithFallback:
         ):
             log: list[int] = []
             hyps = acr.generate_hypotheses_with_fallback(
-                "gpt-6-astra", 60, BaselineRecord(), [], 3, log, 77, "gemini-x"
+                "gemini-x", 60, BaselineRecord(), [], 3, log, "gpt-6-astra", 77
             )
-        assert hyps == [("agy-found", "code")]
-        assert agy_calls == [("gemini-x", 77, 3)]
+        assert hyps == [("codex-found", "code")]
+        assert codex_calls == [("gpt-6-astra", 77, 3)]
         assert log == [3]
         assert fable_calls == []
 
@@ -556,15 +558,18 @@ class TestGenerateHypothesesWithFallback:
         from carnot.autoresearch.baselines import BaselineRecord
 
         with (
-            patch.object(acr, "codex_generate_hypotheses", return_value=[]),
             patch.object(acr, "agy_generate_hypotheses", return_value=[]),
+            patch.object(acr, "codex_generate_hypotheses", return_value=[]),
         ):
             log: list[int] = []
             hyps = acr.generate_hypotheses_with_fallback(
-                "gpt-6-astra", 60, BaselineRecord(), [], 0, log
+                "gemini-x", 60, BaselineRecord(), [], 0, log, "gpt-6-astra", 30
             )
         assert hyps == []
         assert log == [0]
+
+    def test_the_default_primary_model_is_gemini_3_8_flash(self) -> None:
+        assert acr.DEFAULT_AGY_MODEL.startswith("gemini-3.8-flash")
 
 
 class TestGeneratorLabelForEntry:
@@ -572,15 +577,15 @@ class TestGeneratorLabelForEntry:
     production commits all said "via codex exec" even though
     fallback_iterations showed codex failed every single iteration."""
 
-    def test_iteration_not_in_fallback_list_is_codex(self) -> None:
-        assert acr.generator_label_for_entry("llm-20260913-082215-000", [1, 2]) == "codex exec"
+    def test_iteration_not_in_fallback_list_is_agy(self) -> None:
+        assert acr.generator_label_for_entry("llm-20260913-082215-000", [1, 2]) == "agy"
 
-    def test_iteration_in_fallback_list_is_agy(self) -> None:
+    def test_iteration_in_fallback_list_is_codex(self) -> None:
         label = acr.generator_label_for_entry("llm-20260913-082215-002", [0, 2, 4])
-        assert "agy" in label
+        assert "codex" in label
 
-    def test_unparseable_id_defaults_to_codex_not_a_crash(self) -> None:
-        assert acr.generator_label_for_entry("not-the-expected-shape", [0]) == "codex exec"
+    def test_unparseable_id_defaults_to_agy_not_a_crash(self) -> None:
+        assert acr.generator_label_for_entry("not-the-expected-shape", [0]) == "agy"
 
 
 class TestRecomputeMetrics:
@@ -849,9 +854,11 @@ class TestRunRound:
         assert log.count("\n") == 1  # only the seed commit -- the fabricated claim never landed
         assert not (tmp_path / "ops" / "autoresearch_discoveries").exists()
 
-    def test_agy_produced_hypothesis_is_attributed_to_agy_end_to_end(self, tmp_path: Path) -> None:
+    def test_codex_fallback_hypothesis_is_attributed_to_codex_end_to_end(
+        self, tmp_path: Path
+    ) -> None:
         """REQ-AUTO-024, full pipeline. Round 1's real production commits all
-        said "via codex exec" although fallback_iterations showed codex
+        said "via codex exec" although fallback_iterations showed the primary
         failed every iteration -- this reproduces the exact wiring
         (run_round -> generator closure -> commit_accepted_hypothesis) that
         must attribute correctly."""
@@ -868,8 +875,10 @@ class TestRunRound:
             _fallback_timeout,
             _agy_model,
         ):
-            fallback_log.append(iteration)  # simulate: codex failed, agy won
-            return [("agy win", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")]
+            fallback_log.append(iteration)  # simulate: agy failed, codex won
+            return [
+                ("codex win", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")
+            ]
 
         with (
             patch.object(acr, "codex_available", return_value=True),
@@ -889,16 +898,16 @@ class TestRunRound:
             text=True,
             check=True,
         ).stdout
-        assert "via agy fallback" in msg
-        assert "via codex exec" not in msg
+        assert "via codex exec fallback" in msg
+        assert "via agy" not in msg
 
-    def test_codex_and_agy_failing_leave_both_reasons_and_never_call_claude(
+    def test_agy_and_codex_failing_leave_both_reasons_and_never_call_claude(
         self, tmp_path: Path
     ) -> None:
-        """REQ-AUTO-022 / REQ-AUTO-027. Real call_codex and call_agy (only
+        """REQ-AUTO-022 / REQ-AUTO-027. Real call_agy and call_codex (only
         subprocess.run is faked), so recent_failures is populated the way genuine
-        failures populate it. The `claude` binary must never run. The error is
-        buried after a long banner-plus-prompt echo, so the receipt must show the
+        failures populate it. The `claude` binary must never run. codex buries its
+        error after a long banner-plus-prompt echo, so the receipt must show the
         TAIL of each failure, not the head."""
         _init_repo(tmp_path)
         seen: list[str] = []
@@ -926,15 +935,15 @@ class TestRunRound:
 
         assert rc == 0
         assert "claude" not in seen
-        assert acr.AGY_BIN in seen
+        assert seen[:2] == [acr.AGY_BIN, "codex"]  # agy is tried first, codex second
         receipt = (tmp_path / "receipt.md").read_text()
         assert "## Generator failure reasons" in receipt
+        assert "agy_call_failed: agy exit 1: AGY_TAIL_MARKER" in receipt
         assert "codex_call_failed: ...BBB" in receipt
         assert "CODEX_TAIL_MARKER" in receipt
-        assert "agy_call_failed: agy exit 1: AGY_TAIL_MARKER" in receipt
         assert "fable_call_failed" not in receipt
         assert "fallback_iterations: [0, 1, 2]" in receipt
-        assert "codex and agy both produced nothing across 3 attempt(s)" in receipt
+        assert "agy and codex both produced nothing across 3 attempt(s)" in receipt
 
     def test_a_clean_round_omits_the_failure_reasons_section(self, tmp_path: Path) -> None:
         """REQ-AUTO-022 / SCENARIO-AUTO-022-B."""
@@ -968,8 +977,11 @@ class TestRunRound:
         receipt = (tmp_path / "receipt.md").read_text()
         assert "## Generator failure reasons" not in receipt
 
-    def test_codex_unavailable_is_non_fatal(self, tmp_path: Path) -> None:
-        with patch.object(acr, "codex_available", return_value=False):
+    def test_both_clis_unavailable_is_non_fatal(self, tmp_path: Path) -> None:
+        with (
+            patch.object(acr, "codex_available", return_value=False),
+            patch.object(acr, "agy_available", return_value=False),
+        ):
             rc = acr.run_round(
                 model="gpt-6-astra",
                 max_iterations=5,
@@ -979,6 +991,23 @@ class TestRunRound:
         assert rc == 0
         receipt = (tmp_path / "receipt.md").read_text()
         assert "BLOCKED" in receipt
+        assert "neither `agy` nor `codex`" in receipt
+
+    def test_one_cli_missing_does_not_block_the_round(self, tmp_path: Path) -> None:
+        """REQ-AUTO-027: agy missing must not block a round codex can still run."""
+        with (
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr, "agy_available", return_value=False),
+            patch.object(acr, "generate_hypotheses_with_fallback", return_value=[]),
+        ):
+            rc = acr.run_round(
+                model="gpt-6-astra",
+                max_iterations=1,
+                project_root=tmp_path,
+                receipt_path=tmp_path / "receipt.md",
+            )
+        assert rc == 0
+        assert "BLOCKED" not in (tmp_path / "receipt.md").read_text()
 
     def test_bounded_run_commits_only_accepted_winners(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
