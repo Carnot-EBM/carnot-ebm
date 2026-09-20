@@ -75179,3 +75179,113 @@ end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7441 and SCENARIO-REPORT-7441-* | Implemented: independent V652 static and online reducer with a thin entrypoint | Verification in progress: spec-linked focused tests and 100 percent changed-module coverage pass; the entrypoint enforces scoped checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage before publication |
+
+## V652 hardware placement envelope — 2026-09-20
+
+**Status:** Specified. This host aggregation audits archived timing and board
+evidence. It performs no model inference, training, hardware command, purchase,
+production promotion, or publication.
+
+### REQ-REPORT-7445: Bound hardware placement by complete-service evidence
+
+Exp7445 SHALL authenticate the terminal Exp7432 update-placement artifact and
+the terminal Exp7440 mixture-learning artifact by exact bytes, experiment
+identity, milestone, terminal class, and adversarial flag. It SHALL follow each
+selected timing or board receipt through its recorded hash. Missing, malformed,
+or unauthenticated prerequisites SHALL produce a branch-local `blocked_*`
+disposition whose gate summary names the upstream, path, check, field, expected
+value, and observed value. Independent available branches SHALL still run.
+
+The reducer SHALL independently compute the Amdahl ceiling `1/f` from Exp7432's
+recorded unaccelerated persistence fraction `0.37696053267914603`. It SHALL
+state that a 100x complete-service target requires `f < 0.01` in the idealized
+infinite-acceleration limit. These values are bounds, not new speed
+measurements. The complete-service timing rows from Exp7432 SHALL remain the
+V651 envelope; unchanged sparse and int16 benchmarks SHALL not be rerun.
+
+Exp7440 may replace the coarse envelope only when it contains valid complete
+rows for mixture prediction, numeric update, feedback, hash/checkpoint, and
+durable persistence. Aggregate or incomplete durations SHALL preserve their
+original meaning, retain the V651 envelope, and name the unavailable stages.
+The audit SHALL record the cost of four expert predictions and weight
+normalization explicitly, without fabricating an isolated benchmark.
+
+The learning-hardware route SHALL bound numeric expert state and log-weight
+updates for future GPU/NPU or FPGA placement while keeping orchestration,
+feedback, acknowledgements, checkpoint/hash work, and durable state on the CPU.
+It SHALL quantify the measured residual persistence bottleneck. Any 100x route
+requires a changed persistence/orchestration design with equivalent
+acknowledgement and crash semantics; durability cannot be exchanged for a
+claimed speedup.
+
+The artifact SHALL emit separate KV260, GateMate, and PolarFire rows. KV260
+shall retain its graduated FPGA disposition and SSH-only access mechanism.
+PolarFire shall retain graduated CPU dispatch separately from unmeasured FPGA
+sampling. GateMate shall receive only a read-only changed-state audit and shall
+remain blocked unless a dated operator cable, port, power, board, or DirtyJTAG
+change after Exp6559 is authenticated. No detect, flash, SSH, purchase, or
+other physical command is permitted.
+
+Extropic Z1T/TSU, photonic, D-Wave, NPU, and larger FPGA options SHALL remain
+external future work. Each row SHALL name the exact access or measured
+bottleneck that would justify it. `hardware_ready_score`,
+`hardware_value_score`, and `promotion_score` SHALL remain zero because this
+audit executes no device workload and external evidence is not a Carnot
+hardware measurement.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM
+invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Historical model-shaped and small-EBM events SHALL stay
+in typed hash-bound sidecars. The terminal record SHALL contain the required
+plain identity, clocks, phase spans, preconditions, source hashes, rows, sample
+budget, categorized gates, exact failure summary, validation receipts, field
+principles, board rows, Amdahl rows, hardware route, and checksum.
+
+The affected manifest SHALL use the Exp7358 command plan and Exp7303 runner. It
+SHALL run worktree imports, focused pytest without coverage, separate 100
+percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test specification coverage. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. Independent
+reduction, `scripts/adversarial_verify.py`, and strict verdict-row consistency
+SHALL pass before atomic publication. No numbered end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7445-AMDahl: The residual fraction limits total service speed
+
+**Given** the authenticated Exp7432 persistence fraction
+**When** the auditor recomputes the idealized infinite-acceleration limit
+**Then** the ceiling equals `1 / 0.37696053267914603`
+**And** the 100x condition is recorded as strictly `f < 0.01`, not as a measurement.
+
+#### SCENARIO-REPORT-7445-STAGES: Incomplete stage evidence cannot become a decomposition
+
+**Given** Exp7440 aggregate durations without every required complete-service stage
+**When** the hardware envelope is reduced
+**Then** the V651 complete-service timing rows remain authoritative
+**And** missing hash/checkpoint and separately normalized expert costs remain unavailable.
+
+#### SCENARIO-REPORT-7445-BOARDS: Three board dispositions remain independent
+
+**Given** graduated KV260 and PolarFire history plus GateMate's changed-state gate
+**When** the audit reads repository evidence without touching a device
+**Then** KV260 retains SSH-only access and PolarFire retains CPU-dispatch graduation
+**And** GateMate remains blocked absent a dated qualifying change after Exp6559.
+
+#### SCENARIO-REPORT-7445-FUTURE: External options require measured prerequisites
+
+**Given** Z1T/TSU, photonic, D-Wave, NPU, and larger-FPGA proposals
+**When** the audit maps each option to a future route
+**Then** every option names exact access or a measured bottleneck that would justify it
+**And** no external paper, host bound, or archived board state creates hardware value.
+
+#### SCENARIO-REPORT-7445-ARTIFACT: Exact readers control atomic publication
+
+**Given** authenticated sources, raw reductions, a read-only board audit, and a frozen manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** source, row, bound, board, gate, score, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7445)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7445 and SCENARIO-REPORT-7445-* | Implemented: V652 host hardware-envelope reducer, read-only board audit, and thin entrypoint | Verified by spec-linked focused tests and 100 percent changed-module coverage; the entrypoint enforces scoped checks, cold replay, independent reduction, adversarial verification, strict row consistency, and exact-test spec coverage before publication |
