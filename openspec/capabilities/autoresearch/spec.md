@@ -4036,6 +4036,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-023 | N/A | Implemented (`python/carnot/autoresearch/orchestrator.py`, `scripts/autoresearch_conductor_round.py`) | 6 Python (`test_autoresearch_generator.py`, `test_autoresearch_skills_loop.py`) |
 | REQ-AUTO-024 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 5 Python (shared conductor-round test file) |
 | REQ-AUTO-025 | N/A | Implemented, hardened same-day per 2026-09-16 adversarial review (`python/carnot/autoresearch/verifier_auroc_benchmark.py`, `scripts/autoresearch_conductor_round.py`, `scripts/_autoresearch_energy_recompute_worker.py`) | 31 Python (`test_autoresearch_verifier_auroc_benchmark.py`) + 13 shared conductor-round test file + 1 shared toy-benchmarks test file |
+| REQ-AUTO-028 | N/A | Implemented (`scripts/jevbench_readout_eval.py`) | 11 Python (`test_jevbench_readout_eval.py`) |
 | REQ-AUTO-018 | N/A | Implemented (`python/carnot/autoresearch/calibrated_decision_benchmark.py`, `scripts/autoresearch_conductor_round.py`, `scripts/_autoresearch_energy_recompute_worker.py`) | 31 Python (`test_calibrated_decision_benchmark.py`) + shared conductor-round test file |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
@@ -6046,6 +6047,32 @@ so the head holds no diagnosis.
 **Then** the receipt lists `agy_call_failed` and `codex_call_failed` with the
 error tails visible
 **And** no `claude` process ran.
+
+### REQ-AUTO-028: Evaluate one-pass option-logit decision readout
+
+The evaluation script SHALL score declared option probabilities with one model
+forward pass per option order. It SHALL report top-label ECE and total-variation
+fidelity with 95% bootstrap intervals. It SHALL also report Brier score,
+accuracy, and the JevBench-style calibration score. The script SHALL fit
+temperature scaling out of fold, so no row calibrates itself. It SHALL run an
+option-order probe and map reversed-order probabilities back to each option ID.
+The script SHALL never write a result without an explicit output path.
+
+#### SCENARIO-AUTO-028-A: Public tasks receive calibrated decision metrics
+
+**Given** valid public tasks and an option scorer
+**When** the evaluation runs in original and reversed option order
+**Then** each score call uses one forward pass
+**And** the report contains raw and out-of-fold calibrated metrics
+**And** ECE and total-variation fidelity include 95% bootstrap intervals
+**And** the report contains both order accuracies and the mean probability shift.
+
+#### SCENARIO-AUTO-028-B: An omitted output path causes no write
+
+**Given** a dry run with no `--output` argument
+**When** the evaluation completes
+**Then** it reports stub inference as non-live
+**And** it creates no result file.
 
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
 The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).

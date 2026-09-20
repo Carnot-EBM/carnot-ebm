@@ -2944,3 +2944,11 @@ the six milestone-close audit scripts, and
 `tests/python/test_conductor_agy_routing.py`. Agy requires a zero exit and a
 final `SUCCESS` result event. One failed agy call retries with Codex. Planning
 is unchanged, and the route stays inactive without operator environment flags.
+
+## 2026-09-20 — REQ-AUTO-028 JevBench option readout
+
+REQ-AUTO-028 and its two scenarios map to
+`scripts/jevbench_readout_eval.py` and
+`tests/python/test_jevbench_readout_eval.py`. The evaluator uses one option-logit
+forward pass per order. It reports out-of-fold calibration and the option-order
+probe. It writes no artifact unless the caller supplies `--output`.

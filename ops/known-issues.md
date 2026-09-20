@@ -9889,6 +9889,59 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-09-20: SEMIF OPTION-READOUT FOLLOW-UP E0 -- CAN THE SCORED PATH RETURN OPTION LOGPROBS, AND DO TWO RUNTIMES AGREE
+
+**Context.** An outer-loop review of Benchmark Heaven's JevBench and the open SemIf
+reproduction found a possible fit with the calibrated-decision floor and the ARC live agent.
+The full plan is `docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`. The E1
+health check already ran on our local Qwen3.8-27B
+(`docs/research-notes/jevbench-semif-decision-readout-2026-09-20.md`, artifact
+`results/jevbench_readout_eval_2026_09_20.json`): 86.1% accuracy on the 231 public tasks,
+73.9% on the hard tier, and option-order sensitivity on hard items. That is text decisions,
+not ARC. Transfer to ARC is an untested hypothesis.
+
+**Blocker found by the plan.** The scored vLLM wrapper neither requests nor keeps option
+log-probabilities, and the attached vLLM wheel version and supported request fields are not
+pinned. Every later experiment depends on this.
+
+**The task to queue (plan section 8, rung E0).**
+1. Pin the attached vLLM wheel version and list the request fields it supports for log-probs.
+2. Score the same prompts on the local llama.cpp path and on a vLLM path, and compare the
+   option distributions. The plan proposes these parity bounds, awaiting operator approval:
+   95% lower-bound argmax agreement and median total variation at most 0.05.
+3. If the scored path cannot return option log-probs, name the exact flag or code change
+   that would fix it. Do not change the scored path here. Submission is operator-only.
+
+**Falsifiable gate.** Parity bounds met, or a named blocker with the needed change.
+`retire_if_same_verdict: true`.
+
+deliverable: "results/experiment_<next>_semif_e0_logprob_parity.json"
+
+### NEW 2026-09-20: SEMIF FOLLOW-UP E6 -- WHAT SHARE OF THE ARC LIVE LOOP IS DECISION POINTS
+
+**Why this comes first.** Any speedup from a typed-decision engine is bounded by the share of
+time and tokens the live loop spends at decision points. The plan's rough estimate of a 49%
+replaceable share would cap the gain near 1.96x even at zero overhead. That estimate is
+unverified. "Greatly accelerate the solve rate" is an untested hope, and the public set is
+already 183 of 183 as a dev proxy, so the measurable targets are adapter-free performance
+and cost per level.
+
+**The task to queue (plan section 7, E6).** Profile the current live loop from existing run
+artifacts: time and tokens at each decision seam named in the plan (candidate-action
+selection, induced-hypothesis accept, reject or escalate, supervisor arm selection, and the
+induction timing gate). Report the real replaceable share with intervals, and state which
+seams lack the candidate-option data needed to rebuild calibration sets. Use the metrics the
+plan sets: adapter-free or leave-one-game-out runs and actions-to-progress. It reads
+existing artifacts and needs no new game runs.
+
+**Falsifiable gate.** The measured share, its interval, and a go or stop call for the gated
+ladder E7-E12 (Needle 3 as a confidence gate, SemIf selector, runtime-fit NanoJev-style head,
+and the pairing designs). Those are not queued until E0 and E6 report.
+This is a candidate for the reserved ARC slot (Generalization-Testing Floor); the planner
+decides. `retire_if_same_verdict: true`.
+
+deliverable: "results/experiment_<next>_semif_e6_decision_cost_profile.json"
+
 ### NEW 2026-09-20: CLAUDE QUOTA-CONSERVE DIRECTIVE — AUTORESEARCH FABLE FALLBACK DISABLED, GEMINI CLI CONFIRMED EXTERNALLY BROKEN
 
 **What happened.** The operator directed a reduction in Claude usage across every

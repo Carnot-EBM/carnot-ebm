@@ -45749,3 +45749,16 @@ disagreement remains uncertainty; it is not exact constraint truth.
 
 No model inference, hardware probe, purchase, vendor contact or publication
 was performed during this source review.
+
+## Outer-loop note - 2026-09-20 (JevBench, SemIf, Needle 3, NanoJev; inspiration only)
+
+Benchmark Heaven's JevBench v1.2 ranks "Jev-class" typed-decision systems. The closed Jev
+is #1 (75.4). SemIf (github.com/TheoLeeCJ/SemIf, MIT, independent of TypeSafe) is #2 (74.7)
+and the top open system. It reads option probabilities from one forward pass of a small
+model, with no generation. Needle 3 (cactus-compute/needle, Apache-2.0 repo) is a tiny
+grammar-constrained tool-call model with a confidence head. NanoJev (TianyuCodings/NanoJev,
+MIT) is a 0.6B decision model trained on game data. All benchmark and repo claims are the
+authors' own. None was reproduced by us except the readout health check below.
+Our run: `docs/research-notes/jevbench-semif-decision-readout-2026-09-20.md`. Plan and gated
+ladder: `docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`. Follow-up work is
+queued in `ops/known-issues.md` (E0 and E6). Not evidence for any Carnot claim.

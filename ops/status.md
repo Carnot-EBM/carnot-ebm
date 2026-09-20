@@ -16706,3 +16706,15 @@ REQ-INFRA-7088 adds agy as a conductor backend for non-planning tasks.
 retry once with Codex unless a non-empty deliverable exists. Planning stays on
 its existing route. The new route remains inactive until the operator sets its
 environment variables.
+
+## 2026-09-20 outer-loop handoff: typed-decision (SemIf/JevBench) follow-up
+
+- **Done:** JevBench public-task readout check on local Qwen3.8-27B (86.1% overall, 73.9%
+  hard); plan for EBM integration and the ARC live agent (E0-E12); positive-control and
+  degeneracy guards added after a wrong-logits-row bug voided the first run.
+- **Queued in the planner loop:** E0 (logprob access and parity on the scored path) and E6
+  (decision-point cost profile), both in `ops/known-issues.md`.
+- **Gated, not queued:** E7-E12 (Needle 3 gate, SemIf selector, NanoJev-style head, pairings).
+- **Open operator questions:** plan section 11 (readout authority, parity bounds, public
+  game roster, permission to probe the vLLM wheel on a Blackwell run).
+- **Not verified:** SemIf, Needle 3 and NanoJev claims; weights licenses; ARC transfer.
