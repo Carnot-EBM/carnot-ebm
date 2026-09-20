@@ -10055,6 +10055,22 @@ is at the end. The receipt then cut that to 300 chars. Every `codex_call_failed`
 recorded so far therefore hid the diagnosis. Both cuts now keep the TAIL. The real codex
 failure cause on the long prompt is still unknown until the next failing round shows it.
 
+**RESOLVED same day: the real causes of the empty autoresearch rounds (visible once the
+error tail was fixed).** The first live round with agy first (20:31Z) again produced nothing.
+Two separate defects, both found from the receipt:
+1. **codex:** the round script called a bare `codex`. The conductor service PATH holds the
+   OLDER `/usr/bin/codex` (0.149.1); the conductor's `CODEX_BIN` env names the newer one
+   (0.153.4). `gpt-6-astra` returned HTTP 400 "requires a newer version of Codex" on every
+   call. This is why codex_call_failed rounds recurred for days. Fixed: the script now uses
+   `CODEX_BIN`.
+2. **agy:** `gemini-3.8-flash-high` tried to run a shell command, headless mode auto-denied
+   it, and agy exited 0 with an empty response and status SUCCESS. Nothing was recorded as a
+   failure. Fixed: empty agy output is now a failure with the stderr reason, the autoresearch
+   prompt says "text only, no tools", and the six audit scripts count empty agy output as a
+   failure and fail over to codex. With the text-only line, flash-high returned a parseable
+   hypothesis on 2 of 2 live tries (about 90 s each). `gemini-3.1-pro-high` also works
+   (63 s).
+
 **Verification.** `tests/python/test_autoresearch_conductor_round.py` updated
 (3 tests rewritten to assert codex-only behavior; renamed
 `test_codex_empty_never_falls_back_to_fable` and

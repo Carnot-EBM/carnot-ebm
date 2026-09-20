@@ -914,7 +914,7 @@ class TestRunRound:
 
         def fake_run(argv, **kwargs):
             seen.append(str(argv[0]))
-            if argv[0] == "codex":
+            if argv[0] == acr.CODEX_BIN:
                 return subprocess.CompletedProcess(
                     argv, 1, stdout="", stderr="B" * 5000 + "CODEX_TAIL_MARKER"
                 )
@@ -935,7 +935,7 @@ class TestRunRound:
 
         assert rc == 0
         assert "claude" not in seen
-        assert seen[:2] == [acr.AGY_BIN, "codex"]  # agy is tried first, codex second
+        assert seen[:2] == [acr.AGY_BIN, acr.CODEX_BIN]  # agy is tried first, codex second
         receipt = (tmp_path / "receipt.md").read_text()
         assert "## Generator failure reasons" in receipt
         assert "agy_call_failed: agy exit 1: AGY_TAIL_MARKER" in receipt
@@ -1279,3 +1279,43 @@ class TestSeedBaselines:
         loaded = acr.load_baselines(cache)
 
         assert loaded.benchmarks["verifier_auroc"].final_energy == 0.1234
+
+
+class TestAgyEmptyOutputAndCodexBin:
+    """REQ-AUTO-027. agy exited 0 with no output when it tried a denied tool; codex needs its own binary."""
+
+    def test_empty_agy_output_is_a_failure_with_a_reason(self) -> None:
+        def fake_run(argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 0, stdout="  \n", stderr="tool auto-denied")
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_agy("p", "m", 30)
+        assert ok is False
+        assert "tool auto-denied" in out
+
+    def test_agy_prompt_says_no_tools(self) -> None:
+        from carnot.autoresearch.baselines import BaselineRecord
+
+        seen: list[str] = []
+
+        def fake_call(prompt, model, timeout):  # noqa: ANN001, ANN202
+            seen.append(prompt)
+            return False, "x"
+
+        with patch.object(acr, "call_agy", side_effect=fake_call):
+            acr.agy_generate_hypotheses("m", 30, BaselineRecord(), [], 0)
+        assert "You have no tools" in seen[0]
+
+    def test_call_codex_uses_the_configured_binary(self) -> None:
+        captured: dict[str, Any] = {}
+
+        def fake_run(argv, **kwargs):
+            captured["argv0"] = argv[0]
+            return subprocess.CompletedProcess(argv, 0, stdout="out", stderr="")
+
+        with (
+            patch.object(acr, "CODEX_BIN", "/opt/newer/codex"),
+            patch.object(acr.subprocess, "run", side_effect=fake_run),
+        ):
+            acr.call_codex("p", "gpt-6-astra", 30)
+        assert captured["argv0"] == "/opt/newer/codex"

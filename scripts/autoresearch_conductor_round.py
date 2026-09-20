@@ -224,6 +224,10 @@ DEFAULT_FABLE_TIMEOUT_S = 600
 DEFAULT_AGY_MODEL = os.environ.get("CARNOT_AUTORESEARCH_AGY_MODEL", "gemini-3.8-flash-high")
 DEFAULT_AGY_TIMEOUT_S = 600
 AGY_BIN = shutil.which("agy") or str(Path.home() / ".local" / "bin" / "agy")
+# The conductor service PATH holds an OLDER /usr/bin/codex. Its CODEX_BIN env names the newer
+# one. A bare "codex" here made every gpt-6-astra call fail with HTTP 400 "requires a newer
+# version of Codex" (found 2026-09-20 once the error tail became visible).
+CODEX_BIN = os.environ.get("CODEX_BIN") or "codex"
 
 # REQ-AUTO-021: unlike hypothesis_generator.DEFAULT_SYSTEM_PROMPT (which asks
 # for a self-reported final_energy -- the exact self-report gap adversarial
@@ -580,7 +584,7 @@ def agy_available() -> bool:
 
 def codex_available() -> bool:
     """Precondition check (Pre-Launch Preconditions Discipline pattern)."""
-    return shutil.which("codex") is not None
+    return shutil.which(CODEX_BIN) is not None
 
 
 def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
@@ -601,7 +605,7 @@ def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
         with tempfile.TemporaryDirectory(prefix="autoresearch-codex-") as scratch_dir:
             proc = subprocess.run(
                 [
-                    "codex",
+                    CODEX_BIN,
                     "exec",
                     "--dangerously-bypass-approvals-and-sandbox",
                     "--color",
@@ -680,8 +684,10 @@ def call_agy(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
                 check=False,
                 cwd=scratch_dir,
             )
-        if proc.returncode != 0:
-            detail = proc.stderr.strip() or proc.stdout.strip()
+        if proc.returncode != 0 or not proc.stdout.strip():
+            # agy can exit 0 with NO output when it tries a tool that headless mode denies
+            # (seen 2026-09-20 with gemini-3.8-flash-high). Empty output is a failure.
+            detail = proc.stderr.strip() or proc.stdout.strip() or "no output"
             return False, f"agy exit {proc.returncode}: {detail[-4000:]}"
         return True, proc.stdout
     except (subprocess.TimeoutExpired, OSError) as exc:
@@ -697,7 +703,11 @@ def agy_generate_hypotheses(
 ) -> list[tuple[str, str]]:
     """Same question and same parsing as codex_generate_hypotheses, different model.
     Called only when codex returned nothing first."""
-    prompt = _hypothesis_prompt(baselines, recent_failures, iteration)
+    prompt = (
+        _hypothesis_prompt(baselines, recent_failures, iteration)
+        + "\n\nAnswer with text only. You have no tools and cannot run commands, "
+        "so do not try to run or test the code."
+    )
     ok, output = call_agy(prompt, model, timeout)
     if not ok:
         recent_failures.append({"description": "agy_call_failed", "reason": output})

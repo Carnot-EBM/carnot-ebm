@@ -931,7 +931,7 @@ def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tupl
             check=False,
             cwd=PROJECT_ROOT,
         )
-        ok = proc.returncode == 0
+        ok = proc.returncode == 0 and bool(proc.stdout.strip())
         output = proc.stdout if ok else f"agy exit {proc.returncode}: {proc.stderr[:200]}"
     except Exception as exc:
         ok, output = False, str(exc)

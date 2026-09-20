@@ -173,7 +173,7 @@ def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
                 timeout=420,
                 check=False,
             )
-            ok, output = r.returncode == 0, r.stdout or r.stderr
+            ok, output = r.returncode == 0 and bool(r.stdout.strip()), r.stdout or r.stderr
         except Exception as exc:  # noqa: BLE001
             ok, output = False, repr(exc)[:200]
         if ok:
