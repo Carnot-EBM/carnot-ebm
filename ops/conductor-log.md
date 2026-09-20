@@ -18282,3 +18282,4 @@ code |
 | 2026-09-20 16:15 UTC | Capture authenticated source-conditioned Qwen repr | OK | 92 passed, 1 warning in 7.42s |
 | 2026-09-20 16:17 UTC | Train typed energy decisions on source-conditioned | GATE_BLOCK | gate-unsat(final): 1 of 6 gate(s) failed; first failure: exp7452-source-embeddings.embedding_capture_ready_score (actual=0 == expected=1) |
 | 2026-09-20 16:31 UTC | Measure delayed continuous learning with fully rep | SKIP | Pre-tests failing, self-heal failed: failed = { |
+| 2026-09-20 16:46 UTC | Measure delayed continuous learning with fully rep | OK | 99 passed, 1 warning in 8.10s |
