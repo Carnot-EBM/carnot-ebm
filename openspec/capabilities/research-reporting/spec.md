@@ -75794,3 +75794,97 @@ SHALL pass before atomic publication. No numbered end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7456 and SCENARIO-REPORT-7456-* | Implemented: independent V653 compact extraction and runtime audit with a thin entrypoint. | The entrypoint requires spec-linked tests, 100 percent changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, and strict row consistency before publication. |
+
+## V653 fourteen-disposition capstone — 2026-09-20
+
+**Status:** Specified. This host aggregation closes every V653 task slot. It
+does not invoke a model, train an energy head, change defaults, or publish.
+
+### REQ-REPORT-7460: Reconcile fourteen independent dispositions and retire only measured scopes
+
+Exp7460 SHALL compare the V653 Markdown contract with the active V653 YAML.
+It SHALL require exactly fourteen ordered tasks from Exp7447 through Exp7460.
+The capstone SHALL have a current-work disposition. It SHALL not read its own
+final artifact as an upstream prerequisite.
+
+The reducer SHALL authenticate each preceding deliverable or its exact
+conductor pre-gate record. It SHALL preserve original verdict classes,
+adversarial flags, nulls, blocks, censoring, and validation failures. An absent
+external branch SHALL receive a terminal blocked disposition. Other available
+branches SHALL still finish. `partial` SHALL describe only unfinished owned
+retryable work.
+
+The reducer SHALL independently recompute bounded branch metrics from raw rows
+or independent audit rows. It SHALL keep static representation value, delayed
+learning causality, extraction completion, ARC exposure, durable-update speed,
+and board state separate. A valid null can support an audit. A flagged or
+disqualified producer cannot supply scientific readiness.
+
+Each declared `prior_failures` rule SHALL be applied to the observed verdict.
+The unchanged four-expert mixture construction SHALL also retire when Exp7454
+and Exp7455 independently establish the same valid null mechanism. Cosmetic
+verdict text differences SHALL not prevent this retirement. Environmental
+blocks and unrelated future mechanisms SHALL not retire permanently.
+
+The artifact SHALL contain exactly fourteen ordered `task_dispositions`, a
+claim matrix, concrete continuation conditions, retirement rows, unresolved
+obligations, and unchanged G1–G4 publication-gate meanings. Contract completion,
+scientific readiness, benefit, and publication scope SHALL stay separate.
+`promotion_score` SHALL remain zero. `capstone_complete_score` SHALL equal one
+only after all fourteen dispositions and current validation work are complete.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, balanced
+zero invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Historical model events SHALL remain typed hash-bound
+sidecars. The artifact SHALL include every field required by the V653 task
+contract with plain scalar gate values and a reproducibility checksum.
+
+The affected plan SHALL reuse the Exp7358 command plan and Exp7303 runner. It
+SHALL run worktree imports, focused pytest without coverage, separate 100
+percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test specification coverage. The declared entrypoint and a
+fresh-process cold replay are the capability end-to-end checks. Independent
+reduction, adversarial verification, strict verdict-row consistency, and the
+unchanged publication gate SHALL pass before atomic publication. No numbered
+end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7460-CONTRACT: Both V653 authorities fail closed
+
+**Given** the current V653 Markdown table and active V653 YAML
+**When** count, ID, order, title, phase, path, substrate, gate, or milestone differs
+**Then** the contract comparison fails without using a prior contract artifact
+**And** the current capstone remains a current-work row, not a self-read.
+
+#### SCENARIO-REPORT-7460-BRANCHES: Every predecessor gets one authentic disposition
+
+**Given** complete producers, valid nulls, disqualified audits, and a pre-gate block
+**When** the capstone authenticates and independently reduces all thirteen inputs
+**Then** every original class and flag remains visible in its ordered row
+**And** one unavailable branch does not prevent another branch from completing.
+
+#### SCENARIO-REPORT-7460-RETIREMENT: Repeated mixture nulls retire only the unchanged mechanism
+
+**Given** Exp7454's valid mixture null and Exp7455's independent null conclusion
+**When** exact prior-failure and semantic mixture retirement rules run
+**Then** the unchanged four-expert construction retires despite cosmetic verdict text
+**And** environmental blocks and future mechanisms remain eligible after a changed cause.
+
+#### SCENARIO-REPORT-7460-CLAIMS: Completion cannot promote scientific value
+
+**Given** fourteen accounted dispositions and one disqualified scientific audit
+**When** completion, readiness, benefit, and publication claims are reduced
+**Then** capstone completion can equal one while scientific readiness stays false
+**And** the existing FoVer G1–G4 gate cannot promote a V653 mechanism.
+
+#### SCENARIO-REPORT-7460-ARTIFACT: Exact readers control atomic publication
+
+**Given** authenticated sources, raw reductions, and a frozen affected manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** source, row, gate, decision, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7460)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7460 and SCENARIO-REPORT-7460-* | Implemented: V653 fourteen-disposition capstone with a thin entrypoint and independent branch reductions. | The entrypoint requires spec-linked tests, 100 percent changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, strict row consistency, and unchanged publication gates before atomic publication. |
