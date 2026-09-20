@@ -43304,3 +43304,108 @@ raw reduction, adversarial verification, and strict row-consistency checks.
 **When** the declared unbuffered entrypoint runs
 **Then** scoped checks, cold raw replay, adversarial verification, and strict row lint pass
 **And** only the terminal validated JSON is published at the declared path.
+
+### REQ-VERIFY-7452: Source Embeddings SHALL Capture One Authenticated Final-Layer Surface
+
+Exp7452 SHALL authenticate the current Exp7448 capture lifecycle and Exp7449
+source protocol before model work. Each readiness score SHALL equal one. Each
+upstream verdict class SHALL be `null` or `positive`, and each adversarial flag
+SHALL be false. A missing or unchanged invalid prerequisite SHALL produce a
+terminal blocked artifact with the exact path, field, expected value, and
+observed value. Independent checks SHALL continue on available inputs.
+
+The live path SHALL resolve only `unsloth/Qwen3.8-27B-GGUF` through
+`cached_current_model()`. It SHALL use the embedded GGUF tokenizer and the
+installed native llama.cpp API with per-token pooling. It SHALL take the last
+token vector from the final model layer. It SHALL not generate text, read
+logits as hidden states, download another model, sweep layers, or substitute a
+smoke model. An unavailable per-token embedding surface SHALL report
+`blocked_embedding_surface_unavailable` after a truthful load attempt.
+
+Four label-free development inputs SHALL establish vector dimension, finite
+values, last-token pooling, and deterministic replay. Token eligibility SHALL
+be fixed in sealed hash order before evaluator labels are read. Complete
+inputs above 2,048 embedded-token IDs SHALL be excluded without truncation.
+Each eligible source group SHALL produce RESPONSE and SOURCE-then-RESPONSE
+vectors. The run SHALL attempt no more than 800 evaluation forwards plus eight
+development or repeat forwards. It SHALL stop after 1,800 seconds of forward
+work. One call SHALL have a 30-second ceiling.
+
+Raw numerical vectors and a fixed 32-dimensional signed projection SHALL be
+stored in hash-bound shards of at most sixteen source groups. Checkpoints SHALL
+bind the exact model, runner, tokenizer, offload, lease, protocol bytes,
+projection seed, and sealed group identities. Resume SHALL accept only this
+exact identity. Failed, censored, excluded, and unstarted cells SHALL remain in
+the row ledger. No difficult group SHALL be replaced.
+
+All joins SHALL use source hash, group ID, row key, and response ID. They SHALL
+not use array position or model family. Every completed row SHALL retain its
+vector hash, norm, dimension, token count, projection, and shard identity. An
+independent reducer SHALL reload a deterministic subset. It SHALL reject a
+permuted identity join and a fabricated vector dimension. The artifact SHALL
+state that final-layer evidence does not replicate a cited mid-layer NF4 study.
+
+`embedding_capture_ready_score` SHALL equal one only when every eligible group
+is complete, authenticated, and meets the Exp7449 role minima. A resource block
+or clean null SHALL still report eligibility and coverage diagnostics. This
+task SHALL not train a selector or inspect held-out labels. Promotion SHALL
+remain zero.
+
+The terminal artifact SHALL declare
+`inference_substrate_class=model_load_no_generation`,
+`execution_venue=host`, balanced load and forward counters, and zero generation
+attempts. It SHALL use a two-second load-only classification floor without
+sleeping. It SHALL include all task-required fields, measured phase timing,
+exact source hashes, raw rows, feature shards, and validation receipts. Affected
+pytest, changed-module coverage, Ruff, mypy, exact-test spec coverage, cold
+artifact replay, independent reduction, adversarial verification, and strict
+row consistency SHALL pass before atomic publication.
+
+#### SCENARIO-VERIFY-7452-01: Prerequisites Fail Closed Before Model Work
+
+**Given** an upstream readiness, verdict, flag, path, or byte identity is invalid
+**When** Exp7452 authenticates its dependencies
+**Then** it records the exact failed comparison and attempts no model load
+**And** available independent prerequisite checks remain visible.
+
+#### SCENARIO-VERIFY-7452-02: Native Per-Token Output Defines The Surface
+
+**Given** the mandated cached GGUF and installed llama.cpp runtime
+**When** four label-free development inputs replay through pooling type `NONE`
+**Then** final-token vectors have one finite stable dimension and exact replay hashes
+**And** no generation call, logits proxy, model substitution, or layer sweep occurs.
+
+#### SCENARIO-VERIFY-7452-03: Eligibility Precedes Labels
+
+**Given** the sealed Exp7449 predictor rows in hash order
+**When** the embedded tokenizer applies the 2,048-token ceiling
+**Then** both representation views receive an exact token count before labels are read
+**And** over-limit views remain excluded without truncation or replacement.
+
+#### SCENARIO-VERIFY-7452-04: Rows And Shards Preserve Identity
+
+**Given** completed, failed, censored, excluded, and unstarted cells
+**When** groups are checkpointed in durable shards of at most sixteen groups
+**Then** joins use source hash, group ID, row key, and response ID
+**And** each completed vector and projection can be reloaded without a model call.
+
+#### SCENARIO-VERIFY-7452-05: Identity And Dimension Controls Fail Closed
+
+**Given** authentic raw rows and feature shards
+**When** an independent reader permutes one response identity or fabricates one dimension
+**Then** both altered copies are rejected by named controls
+**And** the authentic subset reconstructs vector hashes, norms, dimensions, and projections.
+
+#### SCENARIO-VERIFY-7452-06: Coverage Controls Readiness
+
+**Given** the realized Exp7449 role minima and a bounded forward schedule
+**When** any eligible paired cell is absent, failed, censored, or unstarted
+**Then** embedding capture readiness is zero with complete coverage diagnostics
+**And** only a complete authenticated eligible panel can set readiness to one.
+
+#### SCENARIO-VERIFY-7452-07: Terminal Readers Publish One Atomic Result
+
+**Given** one measured candidate and its immutable shards
+**When** scoped checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
+**Then** their exact argument vectors, exits, durations, and log hashes remain in the artifact
+**And** only the cold-valid terminal JSON is published at the declared result path.
