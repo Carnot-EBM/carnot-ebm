@@ -1836,3 +1836,146 @@ and Kona `no_authenticated_local_execution_surface`, no speedup/energy/
 production-readiness claim, and an `honest_verdict` beginning with `complete:`.
 
 **Implementation status:** Planned (Exp 5794)
+
+---
+
+### REQ-HW-7459
+
+**Title:** Exp7459 board continuity MUST preserve graduated claim scopes and require changed GateMate physical evidence
+
+**Description:**
+Experiment 7459 SHALL produce
+`results/experiment_7459_v653_board_continuity.json` for run date 20260920
+and milestone 2026.09.653. The experiment SHALL run as host aggregation with
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM calls, and no board
+operation. It SHALL authenticate the latest board disposition and the exact
+historical graduation transcript before it reduces any board claim.
+
+The artifact SHALL contain one independent row for KV260, PolarFire, and
+GateMate. Each row SHALL record source path, byte hash, evidence date, terminal
+criterion, and exact claim scope. KV260 SHALL retain SSH-only future access and
+only its historical FPGA-fabric claim. PolarFire SHALL retain historical
+hash-matched CPU dispatch and SHALL state that FPGA sampling remains
+unmeasured. GateMate SHALL not inherit a claim from either graduated board.
+
+The experiment SHALL reuse the approved local receipt parser to check for a
+dated operator-authored GateMate cable, port, power, board, or DirtyJTAG change
+after Exp6559. If no accepted receipt exists, the GateMate row SHALL use
+`blocked_unchanged_physical_prerequisite`. If an accepted receipt exists, the
+row SHALL bind its date, path, hash, and changed fields. It SHALL describe one
+bounded future bring-up plan. The current task MUST still issue zero detect,
+flash, SSH, USB, purchase, installation, synthesis, or board commands.
+
+Exp7459 MAY consume the same-milestone Exp7458 durable-update artifact when it
+exists and authenticates cleanly. It SHALL keep the host durability measurement
+separate from board timing and vendor reports. It SHALL name the measured
+residual bottleneck and the additional local evidence needed to justify an NPU,
+a larger FPGA, or an authenticated Extropic run. A web page SHALL not establish
+device access. Missing Exp7458 evidence SHALL not block the independent board
+audit.
+
+Required artifact fields:
+
+- `schema`
+- `run_date`
+- `preconditions_checked`
+- `MODEL_SPECS`
+- `model_invoked`
+- `invocation_counts`
+- `inference_substrate`
+- `inference_substrate_class`
+- `execution_venue`
+- `duration_s`
+- `phase_spans`
+- `random_seed`
+- `reproducibility_checksum`
+- `source_artifact_hashes`
+- `rows`
+- `sample_size_budget`
+- `acceptance_gate_results`
+- `gate_check_summary`
+- `verifier_is_oracle`
+- `honest_verdict`
+- `verdict_class`
+- `flagged_adversarial`
+- `validation_receipts`
+- `field_principles`
+- `promotion_score`
+- `board_rows`
+- `hardware_ready_score`
+- `hardware_value_score`
+- `changed_state_evidence`
+- `hardware_wishlist_disposition`
+
+Required field principles:
+
+- `board_rows`: principle "Three separately authenticated dispositions prevent reachability from becoming a performance claim."
+- `hardware_ready_score`: principle "Always zero because no new device workload is executed."
+- `hardware_value_score`: principle "Always zero because vendor evidence and host software timing are not board evidence."
+- `changed_state_evidence`: principle "A dated operator change is required before a future GateMate retry."
+- `hardware_wishlist_disposition`: principle "Use measured host residuals only to state future evidence needs, not current device value."
+
+**Acceptance criteria:**
+- The declared entrypoint writes
+  `results/experiment_7459_v653_board_continuity.json` atomically only after
+  affected validation, cold replay, independent reduction, and both strict
+  terminal readers pass.
+- The artifact contains exactly three board rows and retains source byte hashes,
+  dates, terminal criteria, and exact claim scopes.
+- KV260 future access is `ssh_only`. PolarFire CPU dispatch does not imply FPGA
+  sampling. GateMate absence remains
+  `blocked_unchanged_physical_prerequisite` with an exact gate summary.
+- `hardware_ready_score`, `hardware_value_score`, and `promotion_score` are
+  zero. Hardware operations and current LLM invocation counts are zero.
+- The affected manifest names only the new module, its thin entrypoint, the new
+  tests, and the affected shared-module tests. It contains no full-suite target.
+- A fresh process validates the candidate. Independent reduction reproduces
+  the three dispositions and zero scores from raw rows.
+
+**Implementation status:** Implemented (Exp 7459)
+
+---
+
+### SCENARIO-HW-7459-UNCHANGED
+
+**Scenario:** Exp7459 completes documentation while GateMate stays blocked on unchanged physical state.
+
+**Given:** The latest authenticated board state preserves KV260 FPGA-fabric
+graduation and PolarFire CPU-dispatch graduation, and the approved receipt
+parser finds no operator-authored material GateMate change after Exp6559,
+**When:** Exp7459 reduces the three board rows,
+**Then:** KV260 and PolarFire retain their narrow historical scopes, GateMate
+uses `blocked_unchanged_physical_prerequisite`, all current hardware operations
+remain empty, and the artifact completes with all hardware scores equal to zero.
+
+**Implementation status:** Implemented (Exp 7459)
+
+---
+
+### SCENARIO-HW-7459-CHANGED
+
+**Scenario:** Exp7459 records changed GateMate evidence without using the board.
+
+**Given:** The approved parser finds one valid dated operator-authored GateMate
+cable, port, power, board, or DirtyJTAG change after Exp6559,
+**When:** Exp7459 builds the GateMate disposition,
+**Then:** it binds the selected receipt path, hash, date, and changed fields,
+states one bounded future bring-up plan, and issues no detect, flash, SSH, USB,
+purchase, installation, synthesis, or board command in the current task.
+
+**Implementation status:** Implemented (Exp 7459)
+
+---
+
+### SCENARIO-HW-7459-DURABILITY
+
+**Scenario:** Exp7459 links host durability to future hardware evidence without making a board value claim.
+
+**Given:** Exp7458 is present and its original identity, verdict, validation,
+and residual host fraction authenticate,
+**When:** Exp7459 evaluates NPU, larger-FPGA, and Extropic wishlist routes,
+**Then:** it records the measured host residual and exact additional evidence
+for each route, keeps vendor reports separate from local timing, infers no
+access from a web page, and leaves `hardware_value_score=0`.
+
+**Implementation status:** Implemented (Exp 7459)
