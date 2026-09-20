@@ -6878,3 +6878,10 @@ The critical path for milestone .250:
 - theme: delayed-weighting and contract work led an all-compute milestone with incomplete execution attribution
 - key result: honest operational negative — the duration leaders are known, but the supplied evidence does not explain their cost, establish task-window GPU efficiency, or show an eligible DualGPURunner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.653
+
+- exp_range: no data available this milestone
+- theme: live supervisor exposure dominated execution time during an all-compute window lacking phase-level instrumentation
+- key result: honest operational negative — supervisor exposure consumed 27.04 of 34.5 total minutes, but available data cannot attribute intra-task duration, prove active-window GPU efficiency, or confirm an eligible multi-model runner miss
+- acceptance: no data available this milestone

@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.653",
+  "generated_at": "2026-09-20T19:46:39Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 34.5,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 13,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure live supervisor exposure beyond its stagnation threshold",
+      "duration_minutes": 27.04,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and ingest source-conditioning methods",
+      "duration_minutes": 2.16,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently audit source conditioning and continuous learning",
+      "duration_minutes": 1.62,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure compact Qwen extraction through the repaired lifecycle",
+      "duration_minutes": 1.24,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture authenticated source-conditioned Qwen representations",
+      "duration_minutes": 0.57,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments, all compute-bound, in 34.5 minutes. 'Measure live supervisor exposure beyond its stagnation threshold' dominated wall time at 27.04 minutes, followed by 'Bind fourteen tasks and ingest source-conditioning methods' at 2.16 minutes. The milestone record does not contain phase-level duration logs to explain these runtimes.",
+  "bottlenecks_identified": [
+    "'Measure live supervisor exposure beyond its stagnation threshold' consumed 27.04 of 34.5 minutes, but the record lacks internal phase metrics to isolate the specific delay.",
+    "The remaining 12 compute-bound tasks finished in under 7.5 minutes combined, led by contract/method ingestion (2.16 minutes) and auditing (1.62 minutes), with no telemetry to distinguish internal phases.",
+    "Accelerator telemetry is restricted to a post-run snapshot rather than continuous samples across task windows, so active GPU efficiency cannot be established.",
+    "Launch metadata does not record concurrent model counts or engine choice, leaving DualGPURunner eligibility and dispatch unverified."
+  ],
+  "improvements_suggested": [
+    "Instrument per-phase monotonic timers and wait-state logging within long-running supervisor and evaluation harnesses.",
+    "Record continuous, task-aligned accelerator telemetry (utilization percentage, allocated VRAM) over each experiment window.",
+    "Log concurrent model counts and runner selection at task initialization, ensuring DualGPURunner is engaged only when two or more models run concurrently.",
+    "Add an early stagnation cutoff to stop live supervisor exposure runs once predictive signals plateau."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument per-phase monotonic execution timers and wait-state telemetry in the supervisor exposure harness.",
+    "Capture task-synchronized GPU utilization and memory metrics during experiment execution windows.",
+    "Record model count and runner dispatch at launch, enabling DualGPURunner strictly for verified parallel multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone timing record isolates 'Measure live supervisor exposure beyond its stagnation threshold' (27.04 minutes) as the dominant critical path, but lack of phase telemetry prevents causal diagnostics. A static post-run GPU snapshot cannot evaluate active-window efficiency, and without parallel-model tracking, no DualGPURunner omission can be confirmed."
+}
