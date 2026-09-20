@@ -18174,3 +18174,121 @@ terminal publication. No numbered E2E test applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7418 and SCENARIO-CL-7418-* | Implemented: focused revision-memory module, thin entrypoint, frozen schedule, revision-aware proof retention, and terminal artifact producer. | Verified by 31 spec-linked tests, 100 percent changed-module coverage, the eight scoped affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test specification coverage. |
+
+## REQ-CL-7458: Durable Delta Journal And Compact Snapshot Prototype
+
+Carnot SHALL compare two host-only durability protocols with one fixed four-
+expert numeric state and one fixed event sequence. The prototype arm SHALL
+append one checksum-linked delta record for each update. It SHALL call `fsync`
+once on the journal before it acknowledges that update. It SHALL write a
+compact, checksum-bound snapshot every 64 updates. It MAY compact only through
+an atomic replacement that leaves either the old valid journal or the new valid
+journal after interruption. The control arm SHALL write the equivalent complete
+state to a temporary file, synchronize that file, atomically replace the state,
+and synchronize the containing directory. Production storage defaults SHALL not
+change.
+
+The update API SHALL return success only after the complete update is durable.
+Restart SHALL apply each acknowledged event exactly once. It SHALL reject or
+truncate a torn unacknowledged tail and retain evidence of that action. A
+duplicate event SHALL not change state. A disk-full failure SHALL not
+acknowledge the event or change the recovered state. Both stores SHALL preserve
+exact numeric state and prediction parity.
+
+The fault matrix SHALL terminate an owned child before append, after a partial
+append, after journal synchronization, during snapshot, and during compaction.
+Each fault row SHALL name the expected acknowledged prefix, the recovered
+prefix, any uncertain durable event, the tail action, and exact parity. The
+experiment SHALL use private isolated stores and SHALL cancel only its owned
+processes.
+
+After one warm-up block per arm, the experiment SHALL run 30 paired blocks of
+128 updates on the local filesystem. Block order SHALL alternate. Each block
+SHALL record every update latency and all durable service work. The rows SHALL
+include service wall time, durable bytes, write amplification, hash time,
+`fsync` time, p50, p95, failures, and censoring. The benchmark SHALL stop at 900
+seconds and retain explicit censored and unstarted blocks.
+
+The software value gate SHALL require exact crash parity, zero acknowledged
+loss, and a paired 95 percent upper confidence bound below `0.90` for the
+delta-journal to whole-state total service-time ratio. A valid run that misses
+the speed gate SHALL use `verdict_class=null`. The experiment SHALL derive an
+Amdahl bound from the measured residual host fraction. A 100x route requires
+an unaccelerated fraction at most `0.01`; an unmet bound SHALL remain explicit.
+
+Compact fixed-point numeric state MAY map to an FPGA or GPU. The durable
+journal, acknowledgement, crash recovery, and orchestration SHALL remain
+CPU/storage work in this prototype. The artifact SHALL not claim FPGA, TSU,
+GPU, board, or production performance. `promotion_score` SHALL remain zero.
+
+The artifact SHALL use milestone `2026.09.653`, phase 4, and run date
+`20260920`. It SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM counts, `inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`.
+Historical model-shaped evidence SHALL remain in typed hash-bound sidecars.
+Small numeric-head fitting SHALL remain separate as `small_ebm_training`.
+
+The affected command list SHALL come from Exp7358 and run through Exp7303. It
+SHALL contain worktree imports, focused serial pytest with cleared addopts and
+no coverage, separate 100 percent changed-module coverage, scoped Ruff check
+and format, changed-module mypy, and exact-test specification coverage. It
+SHALL use a command-local `COVERAGE_FILE`, an existing private base-temp parent,
+and no full-suite validation receipt. The declared entrypoint and fresh-process
+cold replay SHALL be the capability E2E. Independent reduction, adversarial
+verification, and strict row consistency SHALL inspect the exact candidate
+before one atomic terminal publication. No numbered E2E check applies.
+
+### SCENARIO-CL-7458-ACK: Acknowledgement Follows Durable Completion
+
+- GIVEN one valid next event and either isolated store
+- WHEN the update call returns success
+- THEN the complete update already survives a fresh-process restart
+- AND the recovered state and prediction equal the serial reference exactly.
+
+### SCENARIO-CL-7458-FAULTS: Owned Child Termination Preserves The Prefix
+
+- GIVEN each registered crash point and its known acknowledged prefix
+- WHEN an owned child terminates at that point and a new process opens the store
+- THEN every acknowledged event appears exactly once
+- AND a torn tail is rejected or truncated with retained evidence.
+
+### SCENARIO-CL-7458-DISK-DUPLICATE: Failed And Repeated Events Do Not Mutate State
+
+- GIVEN a full private store or an event whose sequence is already durable
+- WHEN the writer attempts the update
+- THEN disk-full returns no acknowledgement and duplicate delivery applies no delta
+- AND restart preserves the exact prior or once-applied state.
+
+### SCENARIO-CL-7458-BENCHMARK: Paired Blocks Measure Complete Durable Service
+
+- GIVEN one warm-up per arm and 30 alternating-order paired blocks
+- WHEN both stores process the same 128-event sequence
+- THEN every update latency, byte count, hash cost, synchronization cost, p50, p95, and total wall time is retained
+- AND a 900-second stop retains censored and unstarted units instead of changing the denominator.
+
+### SCENARIO-CL-7458-GATES: Durability And Value Stay Separate
+
+- GIVEN complete fault, parity, timing, and validation evidence
+- WHEN the paired confidence interval is reduced
+- THEN completion can equal one when the speed upper bound is not below `0.90`
+- AND value equals one only when crash parity, acknowledged preservation, and the registered speed gate all pass.
+
+### SCENARIO-CL-7458-HARDWARE: Host Residual Limits Prospective Acceleration
+
+- GIVEN the measured numeric and host persistence costs
+- WHEN the Amdahl limit is derived
+- THEN a 100x route requires at most one percent unaccelerated work
+- AND prospective FPGA or GPU numeric placement does not become a hardware performance claim.
+
+### SCENARIO-CL-7458-ARTIFACT: Fresh Readers Control Terminal Publication
+
+- GIVEN raw fault rows, paired timing rows, source hashes, and scoped receipts
+- WHEN fresh-process replay and unchanged strict readers inspect the candidate
+- THEN changed evidence, scores, hashes, gates, or validation scope fails closed
+- AND only a valid terminal artifact is published atomically.
+
+## Implementation Status (REQ-CL-7458)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7458 and SCENARIO-CL-7458-* | Planned: reusable durable stores and experiment logic in `python/carnot/experiment_7458_v653_durable_updates.py` with a thin executable entrypoint. | Planned: `tests/python/test_experiment_7458_v653_durable_updates.py`, affected shared-module tests, 100 percent changed-module coverage, scoped validation, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
