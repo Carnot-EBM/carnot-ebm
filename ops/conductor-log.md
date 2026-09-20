@@ -18241,3 +18241,19 @@ code |
 | 2026-09-19 23:25 UTC | Bind the thirteen-task contract and ingest methods | OK | 93 passed, 1 warning in 35.67s |
 | 2026-09-19 23:44 UTC | Prevent historical rejection streaks from locking  | OK | 116 passed, 1 warning in 8.04s |
 | 2026-09-20 00:10 UTC | Diagnose empty decision sets and seal an independe | OK | 102 passed, 1 warning in 9.83s |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | exclusion_manifest_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on exclus |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_timestamp_field age-week 3: OPEN 21 days: SILENT_NON_ |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_online_training_evidence age-week 2: OPEN 1 |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_online_arm_metric_items age-week 2: OPEN 14 days: SILENT |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_byte_identical_online_arm_reason age-week 2: OPEN 14 day |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_probe_exercise_evidence age-week 2: OPEN 14 |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_but_unrun_probe_reasons age-week 2: OPEN 14 day |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nondegenerate_lever_evidence age-week 2: OPEN 14 day |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_execution_venue age-week 1: OPEN 7 days: SILENT_NON |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_artifact_run_date age-week 1: OPEN 7 days: SILENT_NON_FI |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_class age-week 1: OPEN 7 days: SILENT_NON |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7267_v639_recognition_prototype.json age-week 1: OPEN 7 days: CLAIM_O |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7403_v649_synthetic_memory.json age-week 0: OPEN 1 days: CLAIM_OVERST |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 0: OPEN 1 days: REAL_B |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_match_declared_substrate age-week 0: OPEN 1 days: SILENT |
+| 2026-09-20 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_field_name age-week 0: OPEN 1 days: SILENT_NON_FIR |

@@ -8366,3 +8366,126 @@ changes no ARC, training, sampling, serialization, PyO3, or Rust behavior.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7429 and SCENARIO-VERIFY-7429-* | Planned in a focused reusable module and thin entrypoint that reuse the Exp7416 protocol and shipped native runtime. | Planned in spec-linked focused tests, changed-module coverage, scoped checks, live entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
+## V652 lossless claim-span protocol — 2026-09-20
+
+**Status:** Implemented. This phase changes the extraction representation and repairs the producer validation order. It loads no model.
+
+### REQ-VERIFY-7437: Claim Spans SHALL Preserve Literal Propositions And Terminal Evidence
+
+Exp7437 SHALL independently reduce the four archived Exp7429 development
+replies. It SHALL retain each native finish reason, actual 64-token ceiling,
+embedded GGUF tokenizer identity, and JSON parse result. Archived requests and
+responses SHALL remain in a typed hash-bound sidecar. They SHALL not count as
+current model work. The reduction SHALL keep output truncation separate from
+the missing `adversarial_verify` receipt.
+
+The protocol SHALL define two extraction arms over the same immutable response
+paragraph. The compact arm SHALL return `{"claims":[[start,end]]}` with
+zero-based, half-open Unicode character offsets. The verbatim arm SHALL return
+`{"claims":["text"]}`. Each item SHALL identify a whole factual proposition
+with its explicit modifiers. Neither arm SHALL create triples, implied
+arguments, or facts that are absent from the response.
+
+The deterministic parser SHALL reconstruct compact claims as exact response
+substrings. It SHALL reject invalid bounds, Boolean offsets, duplicate-text
+ambiguity in the verbatim arm, extra schema fields, partial JSON objects, and
+missing modifiers. It SHALL accept `{"claims":[]}` as an explicit empty
+result. It SHALL not repair malformed output or retry parsing. A paragraph
+SHALL contain at most 512 Unicode characters. Any clipped paragraph SHALL be
+marked and excluded from complete-response coverage claims.
+
+The producer SHALL seal four development paragraphs and 24 evaluation
+paragraphs from distinct RAGTruth source groups. Selection SHALL use only
+source, response, split, and stable identity fields before evaluator data is
+joined. It SHALL not read annotations, model identity, quality, or expected
+outcomes during selection. The producer SHALL keep source context and response
+bytes immutable. Prompts SHALL contain no evaluator annotation. IDs, byte
+hashes, selection rules, prompt templates, and arm order SHALL be sealed before
+evaluation.
+
+The future evaluation schedule SHALL contain 48 units: 24 paragraphs by two
+arms. Both arms SHALL use the same paragraph, a 256-token ceiling, temperature
+zero, and one generation per unit. The protocol SHALL add no grammar mask,
+parser retry, or repair call. Twelve constructed qualifier pairs SHALL test
+exact qualifier preservation separately from RAGTruth diagnostics. Human
+source-support annotations SHALL score only the unchanged RAGTruth response.
+They SHALL not certify the semantic quality of a new extraction.
+
+Frozen endpoints SHALL include completed valid output, whole-proposition
+coverage, qualifier retention, literal span reconstruction, prompt tokens,
+output tokens, and latency. Unstarted calls SHALL remain in `rows` and in each
+denominator. A claim-span interface SHALL be described only as an extraction
+precursor. It SHALL not be described as an entailment verifier.
+
+This experiment SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. Scripted parser controls SHALL remain in a typed
+hash-bound sidecar. `promotion_score` SHALL remain zero.
+
+The producer SHALL freeze the affected-file manifest before checks. It SHALL
+reuse the Exp7358 command plan through the Exp7303 streaming runner. It SHALL
+run exact affected tests, 100-percent changed-module coverage with a private
+command-local coverage file, scoped Ruff, changed-module mypy, and exact-test
+spec coverage. The producer SHALL validate the exact terminal receipt names
+before runtime. It SHALL prove that a private receipt set without
+`adversarial_verify` fails, then prove that the complete set passes.
+
+The declared entrypoint, fresh-process cold replay, independent reduction,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency SHALL pass
+before atomic publication. `span_protocol_ready_score` SHALL equal one only
+when parser controls, provenance, the sealed panel, affected validation, and
+all terminal receipts pass. A required validation defect SHALL disqualify the
+artifact. No numbered E2E applies because this protocol changes no shared
+training, sampling, binding, serialization, Rust, or ARC production behavior.
+
+#### SCENARIO-VERIFY-7437-ARCHIVE: Truncation And Missing Receipt Stay Separate
+
+**Given** the four immutable Exp7429 development responses and terminal receipts
+**When** Exp7437 independently reduces their raw request and response bytes
+**Then** all four rows report the native `length` finish and 64-token ceiling
+**And** the missing passing `adversarial_verify` receipt remains a separate producer defect.
+
+**Spec traces:** REQ-VERIFY-7437
+
+#### SCENARIO-VERIFY-7437-PARSER: Literal Offsets Fail Closed
+
+**Given** valid, empty, Unicode, duplicate, malformed, and partial claim outputs
+**When** the deterministic parser reads either frozen arm
+**Then** every accepted claim reconstructs one exact paragraph substring
+**And** ambiguity, bad bounds, missing modifiers, and partial JSON remain explicit failures without repair.
+
+**Spec traces:** REQ-VERIFY-7437
+
+#### SCENARIO-VERIFY-7437-PANEL: Label-Blind Groups Share One Input
+
+**Given** authenticated RAGTruth source and response bytes
+**When** the sealed selector chooses development and evaluation paragraphs
+**Then** the evaluation panel contains 24 distinct source groups and 48 paired units
+**And** both arms receive identical paragraph bytes without evaluator annotations.
+
+**Spec traces:** REQ-VERIFY-7437
+
+#### SCENARIO-VERIFY-7437-SCOPE: Extraction Does Not Become Entailment
+
+**Given** RAGTruth source-support annotations and twelve constructed qualifier pairs
+**When** protocol endpoints are frozen
+**Then** corpus diagnostics score only the unchanged response
+**And** constructed exact checks remain separate from extraction quality and entailment claims.
+
+**Spec traces:** REQ-VERIFY-7437
+
+#### SCENARIO-VERIFY-7437-TERMINAL: Complete Receipts Control Readiness
+
+**Given** a private candidate without an `adversarial_verify` receipt
+**When** terminal receipt validation runs before publication
+**Then** the incomplete set fails and the exact complete set passes
+**And** readiness becomes one only after fresh replay, independent reduction, both strict readers, and atomic publication controls pass.
+
+**Spec traces:** REQ-VERIFY-7437
+
+## Implementation Status (REQ-VERIFY-7437)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7437 and SCENARIO-VERIFY-7437-* | Implemented in a focused reusable module and thin entrypoint. The module reuses only shipped provenance and scoped-validation helpers. | Verified by 28 spec-linked tests, 100-percent changed-module coverage, scoped static checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
