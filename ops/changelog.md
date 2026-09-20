@@ -20215,3 +20215,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-20: Extended the SemIf ARC plan with Needle 3/Jev roles, adapter-free metrics, E6-E12 pairing experiments, and license and scored-path blockers; planning only.
 - 2026-09-20: Bind fourteen tasks and ingest native decision methods (⚠️ Research Finding) — honest_verdict=complete_null_v654_contract_methods_ingested; results/experiment_7461_v654_contract_methods.json
 - 2026-09-20: Prototype typed option energies and seal disjoint source cohorts (⚠️ Research Finding) — honest_verdict=complete_disqualified_option_protocol_validation; results/experiment_7462_v654_option_protocol.json
+- 2026-09-20: Measure E0 runtime option-logprob parity and pin scored support (⚠️ Blocked) — honest_verdict=complete_scored_runtime_unavailable_local_parity_null; results/experiment_7463_v654_semif_e0_logprob_parity.json
