@@ -20225,3 +20225,9 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-20: [outer-loop] Recorded the operator preference to favor the easier-to-train Jev engine as a PROPOSED amendment (SemIf plan section 12.3), with a leave-one-game-out gate because it conflicts with the ARC framing rule and Q8. Pending operator confirmation. Docs only.
 - 2026-09-21: Prototype local residual energy updates with retention controls (⚠️ Research Finding) — honest_verdict=complete_circular_positive_analytic_residual_learner_ready; results/experiment_7468_v654_residual_learner.json
 - 2026-09-21: Independently audit typed decisions, residual learning, and extraction (⚠️ Research Finding) — honest_verdict=complete_null_independent_audit_two_missing_branches_extraction_null; results/experiment_7470_v654_independent_audit.json
+
+## 2026-09-20/21 — ARC decision shadow telemetry and vLLM logprob probe (outer loop)
+
+- Instruction: "Go ahead and shadow telemetry on the live agent" and the vLLM wheel probe permission.
+- Added REQ-ARC-WMTE-7465: default-off JSONL decision telemetry on the live ARC policy (commit 8d7ca7bab6). Parity of actions, provenance, call order and random state is tested.
+- Added REQ-INFRA-7089: private vLLM logprob probe kernel (commit 5147f85a4f). Version 1 ran on 2x Tesla T4 and failed on the fp8 KV cache flag. Version 2 pushed with an explicit accelerator.
