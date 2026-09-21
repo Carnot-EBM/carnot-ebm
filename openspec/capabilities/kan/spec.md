@@ -3279,3 +3279,98 @@ recomputes readiness, then altered rows, state hashes, invocation declarations,
 source hashes, gates, or scores invalidate the candidate. Readiness can produce
 only `circular_positive` implementation evidence because the verifier uses
 analytic fixtures as its oracle.
+
+## REQ-KAN-7482: Prequential Per-Knot Importance Anchor
+
+The KAN capability MUST add an importance-weighted diagonal anchor to the
+Exp7468 local residual head. The head MUST keep at most 256 spline
+coefficients. It MUST keep the Qwen features and generator weights frozen.
+The anchor loss MUST be
+`lambda * sum_i importance_i * (coefficient_i - reference_i)^2`.
+Its gradient MUST cover the complete coefficient vector, including a
+previously changed coefficient that is inactive for the current example.
+
+The importance estimate MUST be bounded to `[0, 1]`. It MUST use only labels
+that the prediction ledger has already revealed. The reference vector MUST
+come from an explicit consolidation boundary. Each prediction record MUST
+retain its prediction-time feature vector and pre-update probability.
+Duplicate, delayed, reordered, and restarted feedback MUST preserve the
+Exp7468 admission rules and acknowledged state exactly.
+
+The analytic trial MUST compare an unanchored arm, a uniform diagonal anchor,
+an importance-weighted anchor, an excessive-anchor control, and a zero-rate
+control. The main three arms MUST have the same parameter count, replay
+buffer, learning-rate search budget, and update opportunities. Hyperparameter
+candidates MUST be frozen before trial outcomes and selected only with
+training or calibration fixtures. The trial MUST include overlapping and
+disjoint spline support plus deliberately conflicting labels. It MUST report
+active data-gradient work separately from complete anchor work.
+
+The experiment MUST document its departures from KAN-CL
+(arXiv:2605.12306v1): it uses no CNN, no backbone EWC, no gradient mask, and a
+prequential feedback stream. Analytic benefit evidence MAY produce only
+`circular_positive`. `importance_anchor_ready_score` MUST depend only on loss
+and gradient correctness, feedback chronology, complete-vector anchor work,
+and exact restart. It MUST NOT depend on fixture benefit.
+
+The current run MUST declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current LLM calls,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Numeric fitting MUST have a separate `small_ebm_training` receipt. The
+terminal artifact MUST publish only after the frozen affected checks, a fresh
+process cold replay, independent raw-row reduction, adversarial verification,
+and strict verdict-row consistency checks pass.
+
+### SCENARIO-KAN-7482-01: Complete Anchor Gradient Matches Finite Differences
+
+Given a consolidated residual head with a nonzero diagonal importance vector,
+when the anchored Bernoulli loss is differentiated, then its complete analytic
+gradient matches centered finite differences within `1e-8`.
+
+### SCENARIO-KAN-7482-02: Inactive Changed Coefficients Remain Anchored
+
+Given a coefficient that moved after consolidation and is inactive for the
+current example, when another anchored update runs, then that coefficient
+moves toward its reference. The receipt MUST report active data-gradient
+coefficients and all anchored coefficients as separate work counts.
+
+### SCENARIO-KAN-7482-03: Importance Uses Revealed Labels Only
+
+Given sealed predictions with delayed labels, when feedback is early,
+duplicated, or reordered, then the importance estimate does not change. An
+admitted label MAY affect later anchor penalties but MUST NOT affect its own
+pre-update anchor gradient.
+
+### SCENARIO-KAN-7482-04: Anchor Arms Use A Fair Frozen Protocol
+
+Given the frozen analytic protocol, when the five arms run, then the main
+three arms use equal parameter counts, replay rows, learning-rate candidates,
+selected learning rate, and update opportunities. The zero-rate and excessive
+anchor controls differ only in their declared control parameter.
+
+### SCENARIO-KAN-7482-05: Overlap, Disjoint Support, And Excessive Strength
+
+Given deliberately conflicting labels on overlapping and disjoint support,
+when per-seed rows are reduced, then retained-support drift, adaptation loss,
+uniform-anchor behavior, excessive-anchor blocking, and zero-rate immobility
+remain explicit. Any fixture benefit is circular evidence only.
+
+### SCENARIO-KAN-7482-06: Restart Replays Acknowledged State Exactly
+
+Given a checkpoint between delayed events, when a fresh head restores and
+continues the ledger, then its coefficients, bias, importance statistics,
+reference vector, prediction records, feedback acknowledgements, and terminal
+state hash equal uninterrupted replay.
+
+### SCENARIO-KAN-7482-07: Readiness And Benefit Stay Independent
+
+Given valid implementation and lifecycle checks, when fixture benefit fails,
+then `importance_anchor_ready_score` MAY remain one and the honest verdict is
+a complete null. A fixture benefit pass MAY produce only
+`circular_positive` because the verifier is the oracle.
+
+### SCENARIO-KAN-7482-08: Terminal Evidence Fails Closed
+
+Given the raw fixture rows and exact validation receipts, when a fresh process
+changes a row, source hash, invocation declaration, gate, score, or state
+replay result, then validation fails and terminal publication is refused.
