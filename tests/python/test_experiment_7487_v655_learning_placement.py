@@ -72,9 +72,7 @@ def test_fixed_point_replay_gate_precedes_timing(tmp_path: Path) -> None:
     rows = exp.benchmark_size_seed(fixture, tmp_path, updates=12)
     reduction = exp.reduce_numeric_rows(rows, sizes=(32,), seeds=(748702,), updates=12)
     fixed = next(
-        row
-        for row in rows
-        if row["arithmetic"] == exp.FIXED_ARITHMETIC and row["mode"] == "update"
+        row for row in rows if row["arithmetic"] == exp.FIXED_ARITHMETIC and row["mode"] == "update"
     )
     assert fixed["decision_flips"] == 0
     assert fixed["max_probability_error"] <= exp.FIXED_PROBABILITY_ERROR_LIMIT
@@ -86,9 +84,12 @@ def test_fixed_point_replay_gate_precedes_timing(tmp_path: Path) -> None:
         for row in changed
         if row["arithmetic"] == exp.FIXED_ARITHMETIC and row["mode"] == "update"
     )["decision_flips"] = 1
-    assert exp.reduce_numeric_rows(changed, sizes=(32,), seeds=(748702,), updates=12)[
-        "fixed_point_deployable"
-    ] is False
+    assert (
+        exp.reduce_numeric_rows(changed, sizes=(32,), seeds=(748702,), updates=12)[
+            "fixed_point_deployable"
+        ]
+        is False
+    )
 
 
 def test_numeric_reducer_requires_every_size_seed_arm_and_control(tmp_path: Path) -> None:
@@ -100,9 +101,12 @@ def test_numeric_reducer_requires_every_size_seed_arm_and_control(tmp_path: Path
     assert reduction["numeric_complete"] is True
     assert reduction["planned_rows"] == 6
 
-    assert exp.reduce_numeric_rows(rows[:-1], sizes=(32,), seeds=(748700,), updates=3)[
-        "numeric_complete"
-    ] is False
+    assert (
+        exp.reduce_numeric_rows(rows[:-1], sizes=(32,), seeds=(748700,), updates=3)[
+            "numeric_complete"
+        ]
+        is False
+    )
 
 
 def test_service_envelope_refuses_incomplete_denominator() -> None:
@@ -233,3 +237,67 @@ def test_parse_args_supports_terminal_reader_modes() -> None:
     assert args.date == exp.RUN_DATE
     assert args.cold_replay == Path("candidate.json")
     assert args.independent_reduce is None
+
+
+def test_invalid_fixture_and_evidence_shapes_fail_closed(tmp_path: Path) -> None:
+    """REQ-KAN-7487; SCENARIO-KAN-7487-01/02/07."""
+
+    with pytest.raises(ValueError, match="numeric_fixture_shape_invalid"):
+        exp.freeze_numeric_fixture(3, 1, 1)
+    fixture = exp.freeze_numeric_fixture(32, 1, 2)
+    with pytest.raises(ValueError, match="fixture_update_count_mismatch"):
+        exp.benchmark_size_seed(fixture, tmp_path, updates=1)
+    assert 0.0 < exp._sigmoid(-1.0) < 0.5
+    with pytest.raises(ValueError, match="board_rows_missing"):
+        exp.reduce_board_evidence({})
+    with pytest.raises(ValueError, match="board_rows_invalid"):
+        exp.reduce_board_evidence({"board_rows": [{"board": "KV260"}]})
+
+
+def test_terminal_failure_boundaries_are_reduced(tmp_path: Path) -> None:
+    """REQ-KAN-7487; SCENARIO-KAN-7487-08/09."""
+
+    artifact = exp.build_fixture_artifact(tmp_path)
+    invalid = deepcopy(artifact)
+    invalid["schema"] = "wrong"
+    invalid["run_date"] = "20990101"
+    invalid["verifier_is_oracle"] = True
+    invalid["acceptance_gate_results"][0].pop("principle")
+    invalid["field_principles"] = {}
+    errors = exp.validate_artifact(invalid)
+    assert {
+        "identity_mismatch",
+        "run_identity_mismatch",
+        "verifier_oracle_invalid",
+        "gate_principle_missing",
+        "field_principles_missing",
+    }.issubset(errors)
+
+    malformed = deepcopy(artifact)
+    malformed["board_rows"] = None
+    assert "independent_reduction_mismatch" in exp.validate_artifact(malformed)
+
+    blocked = deepcopy(artifact)
+    blocked["service_envelope"]["status"] = "unreconciled"
+    exp._finalize(blocked)
+    assert blocked["verdict_class"] == "blocked"
+
+    disqualified = deepcopy(artifact)
+    disqualified["preconditions_checked"][0]["passed"] = False
+    exp._finalize(disqualified)
+    assert disqualified["verdict_class"] == "disqualified"
+
+
+def test_source_hash_verification_uses_declared_root(tmp_path: Path) -> None:
+    """REQ-KAN-7487; SCENARIO-KAN-7487-09."""
+
+    artifact = exp.build_fixture_artifact(tmp_path)
+    root = tmp_path / "fixture-root"
+    assert exp.validate_artifact(artifact, root=root, verify_sources=True) == []
+    changed = deepcopy(artifact)
+    first = next(iter(changed["source_artifact_hashes"].values()))
+    first["sha256"] = "sha256:" + "0" * 64
+    assert any(
+        error.startswith("source_hash_invalid:")
+        for error in exp.validate_artifact(changed, root=root, verify_sources=True)
+    )

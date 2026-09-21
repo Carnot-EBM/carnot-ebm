@@ -3510,7 +3510,9 @@ fixed-point scale, clipping range, and nearest-even rounding rule MUST freeze
 before outcomes. Each arm MUST report prediction, active data-gradient, complete
 diagonal penalty, importance update, coefficient update, serialization, durable
 write, `fsync`, and recovery costs. Each arm MUST also run an identical durable
-no-update control. Dense anchor work MUST remain separate from active data work.
+no-update control. `numeric_cost_rows` MUST contain one update row and one
+no-update row for every size, seed, and arithmetic arm. Dense anchor work MUST
+remain separate from active data work.
 
 The float64 arm MUST define numeric correctness. Float32 and fixed-point replay
 MUST use the same fixtures and update order. Every arm MUST report maximum
