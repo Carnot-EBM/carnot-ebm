@@ -18370,3 +18370,4 @@ code |
 | 2026-09-21 19:00 UTC | Qualify Brier updates and chronology-preserving fe | FAIL | Codex CLI error: Stalled after 600s silence. Last output: formed) == {} - |
 | 2026-09-21 19:02 UTC | Measure whether correctly paired delayed feedback | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7496-causal-update-fixture, exp7496-causal-update-fixture, exp7496-causal-update-fixture) |
 | 2026-09-21 19:27 UTC | Independently reduce window and causal-learning cl | OK | 89 passed, 1 warning in 7.29s |
+| 2026-09-21 19:51 UTC | Complete withheld-game live ARC panel B with exclu | FAIL | Codex CLI error: Wall-clock+idle timeout after 1302s (600s silence). Last out |

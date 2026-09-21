@@ -475,6 +475,122 @@ atomically only after required checks pass.
 Implementation status: specified 2026-09-21. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7499: Complete the frozen Panel B ARC cost observation
+
+Experiment 7499 SHALL use run date `20260921` and milestone `2026.09.656`.
+It SHALL treat the absent Experiment 7486 producer as external absence. It
+SHALL not convert that absence into a scientific null or reuse a banked solve.
+
+The producer SHALL authenticate Experiment 7478's ready score, verdict class,
+adversarial flag, exact Panel B roster, frozen schedule, observer parity, and
+actual raw timing fields. It SHALL precheck every selected game's registered
+`levels_reproduced` value. Registry data SHALL not enter the policy. A failed
+protocol check SHALL block only this branch before model work.
+
+The frozen panel SHALL contain `tu93`, `g50t`, `tn36`, `vc33`, `re86`, and
+`dc22`. Each game SHALL use seeds `65501`, `65502`, and `65503`. Every episode
+SHALL keep 180 actions, two generation requests, 256 new tokens per request,
+a 240-second episode cap, and the shared 3600-second live cap. Missing,
+censored, failed, and unstarted rows SHALL remain in place. The producer SHALL
+not substitute a game or rerun Panel A.
+
+The live child SHALL reuse the qualified Experiment 7485 driver through an
+explicit panel configuration. It SHALL run `make_carnot_agent` and the actual
+`E3AgentPolicy` action loop. Per-game adapters, stored engines, injected action
+recipes, game-source inspection, cross-game fitted state, outer-loop reverse
+engineering, and exhaustive offline search SHALL remain disabled.
+
+The child SHALL authenticate one cached `unsloth/Qwen3.8-27B-GGUF` file, its
+hash and quantization, the native runtime build, the owned process, the CUDA
+device UUID, and observed layer placement. It SHALL attempt at most one model
+load and 36 bounded generations. Invocation accounting SHALL retain failures,
+cancellations, and in-flight calls. The declared class SHALL be
+`model_bounded_generation` after a generation attempt, with no padded duration.
+
+Every live interval SHALL retain run, process, episode, clock, decision,
+parent, seam, work-class, and disposition identities. The qualified reducer
+SHALL preserve text generation, world-model or verifier work, dispatch, idle,
+unattributed time, and observer overhead. Duplicate and nested intervals SHALL
+not increase a union. Every episode SHALL satisfy
+`0 <= replaceable_lower <= replaceable_upper <= episode duration`.
+
+Every episode SHALL report progress censoring, request use, runtime failures,
+and live trace reproduction. A reproduced level claim SHALL use
+`solve_provenance=live_agent_self_discovery`; registered public levels receive
+zero new credit. The artifact SHALL publish supervisor opportunities, eligible
+arms, selected arms, and abstentions even when all counts are zero. Public-game
+evidence SHALL not become a hidden-game success claim.
+
+The producer SHALL compare Panel A and Panel B code, model, protocol, and native
+build hashes. A mismatch SHALL set comparability false and forbid pooling. It
+SHALL preserve both strata and SHALL not fabricate a homogeneous 36-episode
+sample. `arc_panel_b_complete_score` MAY equal one only when all 18 planned
+units have valid terminal evidence and all required validity checks pass.
+`arc_support_score` SHALL report completed episode and game support separately
+from progress and benefit.
+
+The artifact SHALL include each required field and a one-line field principle.
+Every acceptance gate SHALL name its category, expected value, observed value,
+operator, result, evidence path, and principle. Validity SHALL remain required.
+Readiness SHALL measure only Panel B completion. Benefit SHALL retain support,
+effect, retention, and multiplicity checks without promoting a favorable seed
+or low-support result.
+
+The producer SHALL freeze an affected-file validation manifest before checks.
+It SHALL use the Experiment 7358 and Experiment 7303 scoped helpers for focused
+pytest, separate 100 percent changed-module coverage, scoped Ruff, changed-module
+mypy, and exact-test spec coverage. Because shared ARC policy and telemetry stay
+unchanged, it SHALL reuse E2E-009, E2E-010, E2E-011, and the private ARC smoke.
+It SHALL then run the declared entrypoint replay, independent reduction,
+unchanged adversarial verifier, and strict row-consistency lint against the
+exact candidate. Terminal publication SHALL be atomic and occur only after the
+required readers pass.
+
+### SCENARIO-ARC-WMTE-7499-PRECONDITIONS
+
+- **GIVEN** the Exp7486 producer is absent and the Exp7478 protocol is immutable
+- **WHEN** Panel B preconditions are authenticated
+- **THEN** absence remains external blocked history rather than a null row
+- **AND** only an invalid Panel B protocol check can stop current model work.
+
+### SCENARIO-ARC-WMTE-7499-SCHEDULE
+
+- **GIVEN** the frozen Panel B games and three sealed seeds
+- **WHEN** the live schedule is selected through the shared panel parameter
+- **THEN** it contains exactly 18 game-major and seed-minor rows
+- **AND** no missing, failed, censored, or unstarted row is replaced.
+
+### SCENARIO-ARC-WMTE-7499-INTERVALS
+
+- **GIVEN** nested, duplicate, incomplete, and nonreplaceable live spans
+- **WHEN** one episode is independently reduced
+- **THEN** exclusive unions count each compatible clock tick at most once
+- **AND** every replaceable bound remains inside the measured episode duration.
+
+### SCENARIO-ARC-WMTE-7499-SUPERVISOR
+
+- **GIVEN** an episode with selected, eligible, or abstained supervisor choices
+- **WHEN** its observer events are reduced
+- **THEN** each opportunity exposes the selected arm and eligible arm set
+- **AND** a zero-opportunity episode remains an explicit zero row.
+
+### SCENARIO-ARC-WMTE-7499-COMPARABILITY
+
+- **GIVEN** immutable Panel A evidence and current Panel B identities
+- **WHEN** code, model, protocol, and native build hashes are compared
+- **THEN** pooling is allowed only when every required identity matches
+- **AND** any mismatch preserves version-stratified evidence without rerunning A.
+
+### SCENARIO-ARC-WMTE-7499-TERMINAL
+
+- **GIVEN** 18 dispositions, balanced current calls, raw shards, and scoped checks
+- **WHEN** fresh processes replay reduction and all strict readers
+- **THEN** completeness, support, progress, comparability, and benefit stay separate
+- **AND** the terminal artifact is published atomically only after validity passes.
+
+Implementation status: specified 2026-09-21. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7471: Observe live E3 decision seams without changing decisions
 
 Experiment 7471 SHALL use run date `20260921`, milestone `2026.09.654`, and
