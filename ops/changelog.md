@@ -20248,3 +20248,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-21: Independently reduce source decisions and delayed learning from raw rows (⚠️ Research Finding) — honest_verdict=complete_null_independent_v655_decision_and_learning_audit; results/experiment_7484_v655_decision_audit.json
 - 2026-09-21: Measure exclusive live ARC decision cost on sealed panel A (⚠️ Research Finding) — honest_verdict=complete_null_live_arc_cost_panel_a; results/experiment_7485_v655_arc_cost_panel_a.json
 - 2026-09-21: Measure anchor service costs and preserve board prerequisites (⚠️ Research Finding) — honest_verdict=complete_null_retained_state_placement_measured_service_100x_not_established; results/experiment_7487_v655_learning_placement.json
+- 2026-09-21: Reconcile fourteen outcomes and decide each research branch (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_present_v655_evidence; results/experiment_7488_v655_capstone.json
