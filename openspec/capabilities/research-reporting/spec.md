@@ -75995,3 +75995,121 @@ end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7460 and SCENARIO-REPORT-7460-* | Implemented: V653 fourteen-disposition capstone with a thin entrypoint and independent branch reductions. | The entrypoint requires spec-linked tests, 100 percent changed-module coverage, scoped checks, capability replay, independent reduction, adversarial verification, strict row consistency, and unchanged publication gates before atomic publication. |
+
+## V654 independent typed-decision, residual-learning, and extraction audit — 2026-09-21
+
+**Status:** Specified. This host aggregation audits each available V654 branch.
+It performs no current model inference, numeric fitting, promotion, or external
+publication. A missing branch does not prevent another branch from completing.
+
+### REQ-REPORT-7470: Independently audit each available V654 evidence branch
+
+Exp7470 SHALL locate Exp7466, Exp7469, and Exp7467 by exact experiment identity
+and milestone. It SHALL also search for a differently named conductor pre-gate
+record. A pre-gate record is usable only when its own identity and milestone
+match. Each available artifact, raw shard, and checkpoint SHALL retain its byte
+hash, original verdict class, original adversarial flag, and evidence class.
+Missing evidence SHALL block only its branch. An invalid available artifact
+SHALL disqualify only its branch.
+
+For an available Exp7466 branch, the audit SHALL independently restore option
+order, recompute probabilities from raw logits, score frozen checkpoints without
+fitting, and reduce every group-level Brier and cost contrast. It SHALL verify
+group separation, evaluator-only labels, source-swap controls, all-escalate
+baselines, full-source eligibility, multiplicity correction, and all sample
+denominators. It SHALL not call the producer reducer as its oracle.
+
+For an available Exp7469 branch, the audit SHALL replay each update from
+immutable features and prediction-time probabilities with an independent scalar
+reference. It SHALL reject label-before-prediction order, duplicate feedback,
+stale state, unaudited updates, nonfrozen controls, and seed pooling. Every saved
+state hash and retained-domain prediction SHALL match the independent replay.
+
+For an available Exp7467 branch, the audit SHALL reparse all twelve development
+replies and all 96 evaluation dispositions from authenticated raw bytes. It
+SHALL recompute factual-content counts, completion, literal spans, and qualifier
+losses. It SHALL keep correct-empty transport separate from factual recall.
+Natural annotation uncertainty SHALL remain separate from constructed exact
+qualifier correctness. Unstarted calls SHALL remain unstarted, not measured
+zeros.
+
+Private mutations SHALL change the option mapping, leak a label, remove one
+failure row, move a label before its prediction, change a checkpoint, and
+fabricate an improvement. The independent reader SHALL reject every mutation by
+its named check. Audit completion SHALL not promote any empirical branch.
+Valid benefit failure remains null. Missing evidence remains blocked. Defective
+available evidence is disqualified.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, balanced zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+model events SHALL remain hash-bound sidecars. Numeric head fitting belongs to a
+separate `small_ebm_training` receipt and SHALL be absent from this audit.
+
+The terminal artifact SHALL include versioned identity, measured UTC and
+monotonic boundaries, clock and device identity, phase spans, exact
+preconditions, source hashes, per-unit rows, sample accounting, categorized
+gates, exact failure summaries, validation receipts, branch rows, update replay,
+mutation rows, field principles, and a reproducibility checksum.
+`independent_audit_complete_score` SHALL be a bare zero or one. One requires a
+disposition for every branch and every registered mutation. It does not require
+scientific benefit.
+
+The affected plan SHALL reuse the Exp7358 command-plan helper and Exp7303
+streaming runner. It SHALL use one exact test file, one changed module, one thin
+entrypoint, a private existing pytest base directory, command-local coverage,
+focused pytest without coverage, separate 100 percent changed-module coverage,
+scoped Ruff, changed-module mypy, and exact-test specification coverage. The
+declared entrypoint and a fresh-process cold replay are the capability end-to-end
+checks. Independent reduction, adversarial verification, and strict row
+consistency SHALL pass before atomic publication. No numbered runtime
+end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7470-BRANCHES: Missing evidence blocks only its own branch
+
+**Given** any mix of available producers, exact pre-gate records, and missing inputs
+**When** Exp7470 authenticates all three branches
+**Then** each branch retains its own availability, validity, class, flag, and benefit disposition
+**And** every available peer branch still completes its independent reduction.
+
+#### SCENARIO-REPORT-7470-DECISIONS: Raw logits and checkpoints reproduce decisions
+
+**Given** authenticated decision rows, option orders, and frozen checkpoints
+**When** the independent reducer remaps options and recomputes probabilities and costs
+**Then** every group denominator, source control, and corrected contrast reproduces
+**And** evaluator labels and source identities never enter fitting features.
+
+#### SCENARIO-REPORT-7470-UPDATES: Prediction-time state controls every replayed update
+
+**Given** authenticated immutable features, predictions, feedback, and checkpoints
+**When** the scalar reference replays each delayed residual update
+**Then** every state hash and retention prediction matches the saved state
+**And** causal order, audit selection, frozen controls, and seed boundaries remain intact.
+
+#### SCENARIO-REPORT-7470-EXTRACTION: Every planned extraction call keeps its disposition
+
+**Given** twelve development replies and 96 planned evaluation cells
+**When** the independent parser reads their authenticated raw bytes
+**Then** factual, malformed, correct-empty, failed, censored, and unstarted counts reproduce
+**And** literal checks, natural uncertainty, and constructed qualifier authority remain separate.
+
+#### SCENARIO-REPORT-7470-MUTATIONS: Six corruptions fail closed
+
+**Given** valid private decision, update, checkpoint, and extraction fixtures
+**When** each registered corruption changes one protected claim
+**Then** all six mutations are rejected by distinct named checks
+**And** no mutation result changes an upstream artifact.
+
+#### SCENARIO-REPORT-7470-ARTIFACT: Exact readers control atomic publication
+
+**Given** branch dispositions, independently reduced rows, and a frozen affected manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, source, row, branch, mutation, gate, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared result path.
+
+## Implementation Status (REQ-REPORT-7470)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7470 and SCENARIO-REPORT-7470-* | Implemented: small independent V654 branch reducer with a thin entrypoint. | The entrypoint requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |

@@ -1,0 +1,3964 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "required_sources",
+      "expected": true,
+      "field": "passed",
+      "observed": true,
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "preconditions_checked",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "current_audit_inputs"
+    },
+    {
+      "category": "audit_completion",
+      "check": "branch_dispositions_complete",
+      "expected": 3,
+      "field": "count",
+      "observed": 3,
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "branch_rows",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "exp7470-v654-independent-audit"
+    },
+    {
+      "category": "audit_completion",
+      "check": "mutations_rejected",
+      "expected": 6,
+      "field": "caught",
+      "observed": 6,
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "mutation_rows",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "exp7470-v654-independent-audit"
+    },
+    {
+      "category": "validity",
+      "check": "available_branch_validity",
+      "expected": true,
+      "field": "validity",
+      "observed": true,
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "branch_rows",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "exp7470-v654-independent-audit"
+    },
+    {
+      "category": "benefit",
+      "check": "typed_decision_benefit",
+      "expected": "measured_improvement",
+      "field": "measured_benefit",
+      "observed": "not_evaluated_missing_branch",
+      "op": "==",
+      "operator": "==",
+      "passed": false,
+      "path": "results/experiment_7466_v654_typed_energy_calibration.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "exp7466-v654-typed-energy-calibration"
+    },
+    {
+      "category": "benefit",
+      "check": "residual_learning_benefit",
+      "expected": "measured_improvement",
+      "field": "measured_benefit",
+      "observed": "not_evaluated_missing_branch",
+      "op": "==",
+      "operator": "==",
+      "passed": false,
+      "path": "results/experiment_7469_v654_continuous_residual_learning.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "exp7469-v654-continuous-residual-learning"
+    },
+    {
+      "category": "required_validation",
+      "check": "required_validation",
+      "expected": true,
+      "field": "passed",
+      "observed": true,
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "validation_receipts",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "exp7470-v654-independent-audit"
+    }
+  ],
+  "branch_rows": [
+    {
+      "availability": "missing",
+      "branch": "typed_decision",
+      "gate_check_summary": {
+        "check": "producer_evidence",
+        "expected": "exact_current_or_pre_gate_evidence",
+        "field": "bytes/experiment_id/milestone",
+        "observed": "missing",
+        "passed": false,
+        "path": "results/experiment_7466_v654_typed_energy_calibration.json",
+        "upstream": "exp7466-v654-typed-energy-calibration"
+      },
+      "honest_verdict": "blocked_typed_decision_producer_evidence_missing",
+      "measured_benefit": null,
+      "original_flagged_adversarial": null,
+      "original_verdict_class": null,
+      "producer_path": "results/experiment_7466_v654_typed_energy_calibration.json",
+      "producer_sha256": null,
+      "promotion_score": 0,
+      "validity": "not_auditable",
+      "verdict_class": "blocked"
+    },
+    {
+      "availability": "missing",
+      "branch": "residual_learning",
+      "gate_check_summary": {
+        "check": "producer_evidence",
+        "expected": "exact_current_or_pre_gate_evidence",
+        "field": "bytes/experiment_id/milestone",
+        "observed": "missing",
+        "passed": false,
+        "path": "results/experiment_7469_v654_continuous_residual_learning.json",
+        "upstream": "exp7469-v654-continuous-residual-learning"
+      },
+      "honest_verdict": "blocked_residual_learning_producer_evidence_missing",
+      "measured_benefit": null,
+      "original_flagged_adversarial": null,
+      "original_verdict_class": null,
+      "producer_path": "results/experiment_7469_v654_continuous_residual_learning.json",
+      "producer_sha256": null,
+      "promotion_score": 0,
+      "validity": "not_auditable",
+      "verdict_class": "blocked"
+    },
+    {
+      "audit_errors": [],
+      "audit_summary": {
+        "constructed_exact_pairs": 12,
+        "constructed_qualifier_losses": 0,
+        "correct_empty_controls": 4,
+        "counts": {
+          "attempted": 12,
+          "censored": 0,
+          "completed": 7,
+          "failed": 5,
+          "planned": 108,
+          "unstarted": 96
+        },
+        "factual_content_counts": {
+          "span": 1,
+          "verbatim": 2
+        },
+        "natural_annotation_uncertainty": true
+      },
+      "availability": "available",
+      "branch": "extraction",
+      "gate_check_summary": null,
+      "honest_verdict": "complete_null_extraction_audit_preserved",
+      "measured_benefit": null,
+      "original_flagged_adversarial": false,
+      "original_verdict_class": "null",
+      "producer_path": "results/experiment_7467_v654_factual_span_canary.json",
+      "producer_sha256": "sha256:733d5216c0916cd9e9ea67e6ba907f0fa154070e69c70c9c1293bfad17b7d1e9",
+      "promotion_score": 0,
+      "validity": "valid",
+      "verdict_class": "null"
+    }
+  ],
+  "clock_identity": {
+    "monotonic": "time.monotonic_ns",
+    "utc": "datetime.now(datetime.UTC)"
+  },
+  "completed_at_utc": "2026-09-21T00:41:44.943116+00:00",
+  "computation_duration_s": 17.915835645991507,
+  "current_invocation_events": [],
+  "current_owner_pid": 847454,
+  "current_run_id": "exp7470-host-aggregation",
+  "device_identity": {
+    "cpu": "x86_64",
+    "cuda_used": false,
+    "execution_venue": "host",
+    "hostname": "icbfl1"
+  },
+  "duration_s": 126.701629822,
+  "ended_monotonic_ns": 55293451257820,
+  "event_count": 0,
+  "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "execution_venue": "host",
+  "experiment_id": "exp7470-v654-independent-audit",
+  "external_publication_authorized": false,
+  "extraction_audit": {
+    "constructed_exact_pairs": 12,
+    "constructed_qualifier_losses": 0,
+    "correct_empty_controls": 4,
+    "counts": {
+      "attempted": 12,
+      "censored": 0,
+      "completed": 7,
+      "failed": 5,
+      "planned": 108,
+      "unstarted": 96
+    },
+    "errors": [],
+    "factual_content_counts": {
+      "span": 1,
+      "verbatim": 2
+    },
+    "natural_annotation_uncertainty": true
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Use an empty list because this audit performs no current LLM work.",
+    "acceptance_gate_results": "Keep validity, audit completion, and benefit gates in distinct categories.",
+    "branch_rows": "Keep producer class, original flag, availability, validity, and benefit separate.",
+    "duration_s": "Measure current work and separate computation from validation without padding.",
+    "execution_venue": "Use host and keep historical CUDA identity inside source receipts.",
+    "field_principles": "Explain why each field exists without wrapping its ordinary value.",
+    "flagged_adversarial": "Retain source and current structural flags without clearing them for a gate.",
+    "gate_check_summary": "Name each failed check and its exact upstream field or path.",
+    "honest_verdict": "Complete the audit without turning branch absence or a scientific null into benefit.",
+    "independent_audit_complete_score": "One means every branch and mutation has a disposition, not benefit.",
+    "independent_update_replay": "Use scalar event reduction so aggregate metrics cannot establish causality.",
+    "inference_substrate": "Name aggregation from upstream artifacts for this pure reducer.",
+    "inference_substrate_class": "Use aggregation because no model is loaded or fitted.",
+    "invocation_counts": "Balance every current load and generation count at zero.",
+    "model_invoked": "Keep current attempted calls separate from archived producer calls.",
+    "model_specs": "Repeat the empty model list for lowercase readers.",
+    "mutation_rows": "Show that each registered corruption is caught by the independent reader.",
+    "phase_spans": "Bind progress phases to monotonic times and completed-unit counts.",
+    "preconditions_checked": "Record exact paths, evidence ownership, device identity, and observed prerequisites.",
+    "random_seed": "Freeze audit, ordering, and bootstrap seeds even when a branch is absent.",
+    "reproducibility_checksum": "Bind code, protocol, source bytes, rows, mutations, and validation scope.",
+    "rows": "Keep every available development and evaluation unit, including unstarted calls.",
+    "run_date": "Use 20260921 with measured UTC and monotonic boundaries and a named clock.",
+    "sample_size_budget": "Separate planned, attempted, completed, failed, censored, and unstarted units.",
+    "schema": "Use a versioned schema with exact experiment identity, milestone, and terminal status.",
+    "source_artifact_hashes": "Retain exact upstream bytes, original classes, and original flags.",
+    "validation_receipts": "Capture exact scoped commands, exits, durations, environments, and log hashes.",
+    "verdict_class": "Use a closed terminal class; external absence is never retryable partial work.",
+    "verifier_is_oracle": "False because this audit checks evidence but supplies no natural semantic oracle."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": false,
+    "check": "typed_decision_benefit",
+    "expected": "measured_improvement",
+    "failed_checks": [
+      "typed_decision_benefit",
+      "residual_learning_benefit"
+    ],
+    "failed_count": 2,
+    "field": "measured_benefit",
+    "observed": "not_evaluated_missing_branch",
+    "op": "==",
+    "path": "results/experiment_7466_v654_typed_energy_calibration.json",
+    "upstream": "exp7466-v654-typed-energy-calibration"
+  },
+  "honest_verdict": "complete_null_independent_audit_two_missing_branches_extraction_null",
+  "independent_audit_complete_score": 1,
+  "independent_update_replay": {
+    "availability": "missing",
+    "disposition": "blocked_residual_learning_producer_missing",
+    "errors": [],
+    "retention_predictions_checked": 0,
+    "updates_replayed": 0
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "inference_substrate_details": {
+    "historical_model_events_current": false,
+    "numeric_fitting": false,
+    "operation": "independent_json_and_scalar_reduction"
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.654",
+  "model_duration_s": 0.0,
+  "model_invoked": false,
+  "model_specs": [],
+  "mutation_rows": [
+    {
+      "attempted": true,
+      "caught": true,
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_rejection": "option_mapping_mismatch",
+      "failed": false,
+      "mutation": "option_mapping",
+      "observed_errors": [
+        "option_mapping_mismatch:decision-0",
+        "probability_mismatch:decision-0"
+      ],
+      "unstarted": false
+    },
+    {
+      "attempted": true,
+      "caught": true,
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_rejection": "label_leakage",
+      "failed": false,
+      "mutation": "leaked_labels",
+      "observed_errors": [
+        "label_leakage:decision-0:gold_label"
+      ],
+      "unstarted": false
+    },
+    {
+      "attempted": true,
+      "caught": true,
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_rejection": "planned_extraction_row_count_mismatch",
+      "failed": false,
+      "mutation": "missing_failure_rows",
+      "observed_errors": [
+        "planned_extraction_row_count_mismatch"
+      ],
+      "unstarted": false
+    },
+    {
+      "attempted": true,
+      "caught": true,
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_rejection": "label_before_prediction",
+      "failed": false,
+      "mutation": "delayed_label_timestamp",
+      "observed_errors": [
+        "label_before_prediction:f1"
+      ],
+      "unstarted": false
+    },
+    {
+      "attempted": true,
+      "caught": true,
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_rejection": "checkpoint_hash_mismatch",
+      "failed": false,
+      "mutation": "changed_checkpoint",
+      "observed_errors": [
+        "checkpoint_hash_mismatch",
+        "stale_state:p1",
+        "prediction_probability_mismatch:p1",
+        "stale_state:f1",
+        "state_hash_mismatch:f1"
+      ],
+      "unstarted": false
+    },
+    {
+      "attempted": true,
+      "caught": true,
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_rejection": "fabricated_improvement",
+      "failed": false,
+      "mutation": "fabricated_improvement",
+      "observed_errors": [
+        "fabricated_improvement"
+      ],
+      "unstarted": false
+    }
+  ],
+  "numbered_e2e_applicable": false,
+  "numeric_fitting_duration_s": 0.0,
+  "phase_spans": [
+    {
+      "completed_units": 108,
+      "duration_s": 17.902393447,
+      "end_s": 17.902407073,
+      "phase": "audit",
+      "start_s": 1.3626e-05
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 85.989787344,
+      "end_s": 103.892812637,
+      "phase": "validation",
+      "start_s": 17.903025293
+    },
+    {
+      "completed_units": 4,
+      "duration_s": 22.800727059,
+      "end_s": 126.701607961,
+      "phase": "terminal_validation",
+      "start_s": 103.900880902
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "category": "precondition",
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "research-program.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7455_v653_decision_audit.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7455_v653_decision_audit.py",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "python/carnot/experiment_7455_v653_decision_audit.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7456_v653_extraction_audit.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7456_v653_extraction_audit.py",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "python/carnot/experiment_7456_v653_extraction_audit.py"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7455_v653_decision_audit.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7455_v653_decision_audit.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "results/experiment_7455_v653_decision_audit.json"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7456_v653_extraction_audit.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7456_v653_extraction_audit.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "results/experiment_7456_v653_extraction_audit.json"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "category": "precondition",
+      "check": "source_bytes:research-roadmap.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "category": "precondition",
+      "check": "driving_requirement",
+      "expected": "REQ-REPORT-7470",
+      "field": "REQ-*",
+      "observed": "REQ-REPORT-7470",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "category": "historical_authentication",
+      "check": "historical:experiment_7455_v653_decision_audit:verdict_class",
+      "expected": "disqualified",
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7455_v653_decision_audit.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "experiment_7455_v653_decision_audit"
+    },
+    {
+      "category": "historical_authentication",
+      "check": "historical:experiment_7455_v653_decision_audit:flagged_adversarial",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7455_v653_decision_audit.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "experiment_7455_v653_decision_audit"
+    },
+    {
+      "category": "historical_authentication",
+      "check": "historical:experiment_7455_v653_decision_audit:honest_verdict",
+      "expected": "complete_disqualified_required_validation",
+      "field": "honest_verdict",
+      "observed": "complete_disqualified_required_validation",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7455_v653_decision_audit.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "experiment_7455_v653_decision_audit"
+    },
+    {
+      "category": "historical_authentication",
+      "check": "historical:experiment_7456_v653_extraction_audit:verdict_class",
+      "expected": "null",
+      "field": "verdict_class",
+      "observed": "null",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7456_v653_extraction_audit.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "experiment_7456_v653_extraction_audit"
+    },
+    {
+      "category": "historical_authentication",
+      "check": "historical:experiment_7456_v653_extraction_audit:flagged_adversarial",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7456_v653_extraction_audit.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "experiment_7456_v653_extraction_audit"
+    },
+    {
+      "category": "historical_authentication",
+      "check": "historical:experiment_7456_v653_extraction_audit:honest_verdict",
+      "expected": "complete_null_extraction_audit_preserved_development_gate_closed",
+      "field": "honest_verdict",
+      "observed": "complete_null_extraction_audit_preserved_development_gate_closed",
+      "op": "==",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7456_v653_extraction_audit.json",
+      "principle": "Keep branch validity separate from scientific benefit.",
+      "upstream": "experiment_7456_v653_extraction_audit"
+    }
+  ],
+  "promotion_score": 0,
+  "random_seed": {
+    "audit": 6547470,
+    "bootstrap": 6547472,
+    "ordering": 6547471
+  },
+  "receipt_sidecars": [],
+  "reproducibility_checksum": "sha256:03de4644ffadd00d1468a54571316b4a3200a1d907318dba3c4e1762fb5d579c",
+  "rows": [
+    {
+      "arm": "span",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-00-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "malformed",
+      "factual_content_count": 0,
+      "failed": true,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "factual-00",
+      "unstarted": false
+    },
+    {
+      "arm": "verbatim",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-00-verbatim",
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "usable_nonempty",
+      "factual_content_count": 1,
+      "failed": false,
+      "literal_span_reconstruction": true,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "factual-00",
+      "unstarted": false
+    },
+    {
+      "arm": "verbatim",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-01-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "malformed",
+      "factual_content_count": 0,
+      "failed": true,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "factual-01",
+      "unstarted": false
+    },
+    {
+      "arm": "span",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-01-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "malformed",
+      "factual_content_count": 0,
+      "failed": true,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "factual-01",
+      "unstarted": false
+    },
+    {
+      "arm": "span",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-02-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "malformed",
+      "factual_content_count": 0,
+      "failed": true,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "factual-02",
+      "unstarted": false
+    },
+    {
+      "arm": "verbatim",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-02-verbatim",
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "usable_nonempty",
+      "factual_content_count": 1,
+      "failed": false,
+      "literal_span_reconstruction": true,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "factual-02",
+      "unstarted": false
+    },
+    {
+      "arm": "verbatim",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-03-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "malformed",
+      "factual_content_count": 1,
+      "failed": true,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "factual-03",
+      "unstarted": false
+    },
+    {
+      "arm": "span",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-03-span",
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "usable_nonempty",
+      "factual_content_count": 1,
+      "failed": false,
+      "literal_span_reconstruction": true,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "factual-03",
+      "unstarted": false
+    },
+    {
+      "arm": "span",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-04-span",
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "correct_empty",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "nonfactual-00",
+      "unstarted": false
+    },
+    {
+      "arm": "verbatim",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-04-verbatim",
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "correct_empty",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "nonfactual-00",
+      "unstarted": false
+    },
+    {
+      "arm": "verbatim",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-05-verbatim",
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "correct_empty",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "nonfactual-01",
+      "unstarted": false
+    },
+    {
+      "arm": "span",
+      "attempted": true,
+      "branch": "extraction",
+      "call_id": "development-05-span",
+      "censored": false,
+      "completed": true,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "correct_empty",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "development",
+      "qualifier_loss": null,
+      "unit_id": "nonfactual-01",
+      "unstarted": false
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-00-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-00-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-00-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-00-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-01-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-00-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-01-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-00-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-02-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-01-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-02-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-01-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-03-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-01-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-03-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-01-span",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-04-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-02-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-04-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-02-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-05-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-02-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-05-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-02-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-06-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-03-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-06-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-03-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-07-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-03-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-07-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-03-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-08-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-04-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-08-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-04-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-09-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-04-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-09-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-04-span",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-10-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-05-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-10-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-05-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-11-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-05-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-11-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-05-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-12-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-06-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-12-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-06-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-13-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-06-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-13-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-06-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-14-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-07-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-14-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-07-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-15-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-07-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-15-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-07-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-16-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-08-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-16-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-08-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-17-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-08-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-17-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-08-span",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-18-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-09-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-18-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-09-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-19-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-09-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-19-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-09-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-20-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-10-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-20-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-10-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-21-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-10-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-21-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-10-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-22-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-11-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-22-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-11-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-23-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-11-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-23-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-11-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-24-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-12-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-24-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-12-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-25-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-12-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-25-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-12-span",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-26-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-13-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-26-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-13-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-27-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-13-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-27-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-13-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-28-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-14-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-28-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-14-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-29-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-14-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-29-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-14-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-30-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-15-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-30-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-15-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-31-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-15-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-31-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-15-span",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-32-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-16-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-32-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-16-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-33-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-16-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-33-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-16-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-34-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-17-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-34-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-17-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-35-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-17-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-35-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-17-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-36-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-18-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-36-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-18-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-37-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-18-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-37-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-18-span",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-38-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-19-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-38-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-19-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-39-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-19-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-39-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-19-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-40-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-20-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-40-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-20-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-41-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-20-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-41-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-20-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-42-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-21-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-42-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-21-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-43-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-21-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-43-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-21-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-44-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-22-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-44-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-22-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-45-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-22-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-45-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-22-span",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-46-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-23-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-46-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-23-span",
+      "unstarted": true
+    },
+    {
+      "arm": "verbatim",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-47-verbatim",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-23-verbatim",
+      "unstarted": true
+    },
+    {
+      "arm": "span",
+      "attempted": false,
+      "branch": "extraction",
+      "call_id": "evaluation-47-span",
+      "censored": false,
+      "completed": false,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "unstarted",
+      "factual_content_count": 0,
+      "failed": false,
+      "literal_span_reconstruction": false,
+      "natural_annotation_authority": "uncertain_not_exact",
+      "phase": "evaluation",
+      "qualifier_loss": null,
+      "unit_id": "eval-23-verbatim",
+      "unstarted": true
+    }
+  ],
+  "run_date": "20260921",
+  "sample_size_budget": {
+    "attempted": 12,
+    "censored": 0,
+    "completed": 7,
+    "failed": 5,
+    "planned": 108,
+    "unstarted": 96
+  },
+  "schema": "carnot.exp7470.v654.independent_audit.v1",
+  "small_ebm_training": {
+    "duration_s": 0.0,
+    "performed": false
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "evidence_class": "current_audit_input",
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "evidence_class": "current_audit_input",
+      "path": "CLAUDE.md",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b"
+    },
+    "CODEX.md": {
+      "evidence_class": "current_audit_input",
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "evidence_class": "current_audit_input",
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:19c6c38a42b750d35f4bc50057bbb672486c6be481d4c95c0037bc9d4ef200ba"
+    },
+    "ops/e2e-test-plan.md": {
+      "evidence_class": "current_audit_input",
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "evidence_class": "current_audit_input",
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e"
+    },
+    "python/carnot/experiment_7358_v646_validation_contract.py": {
+      "evidence_class": "current_audit_input",
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    "python/carnot/experiment_7455_v653_decision_audit.py": {
+      "evidence_class": "current_audit_input",
+      "path": "python/carnot/experiment_7455_v653_decision_audit.py",
+      "sha256": "sha256:aa8ca2ba1914b8b83a4dbea055eb0caaed262557162002992238022171f2eb00"
+    },
+    "python/carnot/experiment_7456_v653_extraction_audit.py": {
+      "evidence_class": "current_audit_input",
+      "path": "python/carnot/experiment_7456_v653_extraction_audit.py",
+      "sha256": "sha256:4617b855d344cb77aaea91ed8543e3e79f2d4f9af2070cc2a4879e198f5edc7d"
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "evidence_class": "current_audit_input",
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "evidence_class": "current_audit_input",
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    "research-program.md": {
+      "evidence_class": "current_audit_input",
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "research-roadmap.yaml": {
+      "evidence_class": "current_audit_input",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:7364be22e346909e1f86eed8baf44023e3c269391aca854db4f8efce06e3056a"
+    },
+    "results/experiment_7455_v653_decision_audit.json": {
+      "evidence_class": "current_audit_input",
+      "path": "results/experiment_7455_v653_decision_audit.json",
+      "sha256": "sha256:ccefed11b462b15851f616278e7eb97e9637e92ef069824fdbd6843e4a8c589e"
+    },
+    "results/experiment_7456_v653_extraction_audit.json": {
+      "evidence_class": "current_audit_input",
+      "path": "results/experiment_7456_v653_extraction_audit.json",
+      "sha256": "sha256:03e22487655e4096aadbda495c8e4f34caca57f03f6600ff27438917c9795f06"
+    },
+    "results/experiment_7467_v654_factual_span_canary.json": {
+      "evidence_class": "producer_artifact",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_factual_span_canary_development_gate_closed",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7467_v654_factual_span_canary.json",
+      "sha256": "sha256:733d5216c0916cd9e9ea67e6ba907f0fa154070e69c70c9c1293bfad17b7d1e9"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-019a62a37c0fbc5b25ebe80db476c338a91e8d8cf839c482a308bb7077883382.json": {
+      "call_id": "evaluation-38-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-019a62a37c0fbc5b25ebe80db476c338a91e8d8cf839c482a308bb7077883382.json",
+      "sha256": "sha256:019a62a37c0fbc5b25ebe80db476c338a91e8d8cf839c482a308bb7077883382"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-01ac466024751d8b00a493fba9314bd6f64821ece4c101b5c66fb8cc45f53c85.json": {
+      "call_id": "evaluation-09-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-01ac466024751d8b00a493fba9314bd6f64821ece4c101b5c66fb8cc45f53c85.json",
+      "sha256": "sha256:01ac466024751d8b00a493fba9314bd6f64821ece4c101b5c66fb8cc45f53c85"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-0219cef38c65ad34c23d773cde562000ec3ed644261aad9ea8179d4c4f7bc2a0.json": {
+      "call_id": "evaluation-08-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-0219cef38c65ad34c23d773cde562000ec3ed644261aad9ea8179d4c4f7bc2a0.json",
+      "sha256": "sha256:0219cef38c65ad34c23d773cde562000ec3ed644261aad9ea8179d4c4f7bc2a0"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-05b01006ff0f6d4f949c59d5cbed90f63befe902bb5a176575df810c710a91a2.json": {
+      "call_id": "evaluation-26-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-05b01006ff0f6d4f949c59d5cbed90f63befe902bb5a176575df810c710a91a2.json",
+      "sha256": "sha256:05b01006ff0f6d4f949c59d5cbed90f63befe902bb5a176575df810c710a91a2"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-0692cd5cb4d8c292210018498bf32c36ac9f75cb465cbabc33a4b620a7ce34d5.json": {
+      "call_id": "evaluation-39-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-0692cd5cb4d8c292210018498bf32c36ac9f75cb465cbabc33a4b620a7ce34d5.json",
+      "sha256": "sha256:0692cd5cb4d8c292210018498bf32c36ac9f75cb465cbabc33a4b620a7ce34d5"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-0a2fae49fb0e08db443bc41c14f4e0720f44af94c5734579a0c400f44d2cdeb3.json": {
+      "call_id": "evaluation-43-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-0a2fae49fb0e08db443bc41c14f4e0720f44af94c5734579a0c400f44d2cdeb3.json",
+      "sha256": "sha256:0a2fae49fb0e08db443bc41c14f4e0720f44af94c5734579a0c400f44d2cdeb3"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-0a380b4cc28a4cfdc684876cab9cd6a449b70d032dc0d3c8c4eb9bff8a170fe9.json": {
+      "call_id": "evaluation-32-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-0a380b4cc28a4cfdc684876cab9cd6a449b70d032dc0d3c8c4eb9bff8a170fe9.json",
+      "sha256": "sha256:0a380b4cc28a4cfdc684876cab9cd6a449b70d032dc0d3c8c4eb9bff8a170fe9"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-121f709c8a2f03eb447e24a0cb6b6b415d0659392b595114db04eb5c8889161f.json": {
+      "call_id": "evaluation-13-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-121f709c8a2f03eb447e24a0cb6b6b415d0659392b595114db04eb5c8889161f.json",
+      "sha256": "sha256:121f709c8a2f03eb447e24a0cb6b6b415d0659392b595114db04eb5c8889161f"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-1366c08a18f3cad36d1905b6c42ace9e08ccb2f4f78ca06ce474ba8414ae6df8.json": {
+      "call_id": "evaluation-44-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-1366c08a18f3cad36d1905b6c42ace9e08ccb2f4f78ca06ce474ba8414ae6df8.json",
+      "sha256": "sha256:1366c08a18f3cad36d1905b6c42ace9e08ccb2f4f78ca06ce474ba8414ae6df8"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-15d9949d45633d92b7157b7a0a36b98e95675e960a7cd32480feecd8b1260922.json": {
+      "call_id": "evaluation-36-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-15d9949d45633d92b7157b7a0a36b98e95675e960a7cd32480feecd8b1260922.json",
+      "sha256": "sha256:15d9949d45633d92b7157b7a0a36b98e95675e960a7cd32480feecd8b1260922"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-1b9cd545af5376531efeb0341f8f89cf32e58d62f7be85dab12a53ec29e6aee1.json": {
+      "call_id": "evaluation-38-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-1b9cd545af5376531efeb0341f8f89cf32e58d62f7be85dab12a53ec29e6aee1.json",
+      "sha256": "sha256:1b9cd545af5376531efeb0341f8f89cf32e58d62f7be85dab12a53ec29e6aee1"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-1c6474e917f41d2ba1f64116bb0ad171a80124bdb981f9b2dfff2caa156f39c0.json": {
+      "call_id": "evaluation-18-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-1c6474e917f41d2ba1f64116bb0ad171a80124bdb981f9b2dfff2caa156f39c0.json",
+      "sha256": "sha256:1c6474e917f41d2ba1f64116bb0ad171a80124bdb981f9b2dfff2caa156f39c0"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-20aaf2fc397189c6c5ceccd1b6770aee866fd772bec9edb8e169954b1f1cab2b.json": {
+      "call_id": "evaluation-04-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-20aaf2fc397189c6c5ceccd1b6770aee866fd772bec9edb8e169954b1f1cab2b.json",
+      "sha256": "sha256:20aaf2fc397189c6c5ceccd1b6770aee866fd772bec9edb8e169954b1f1cab2b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-24e7ed39f2fcf353b585ecf33d0573104cbc8f20fd2f288ada010be1dd0e53e8.json": {
+      "call_id": "evaluation-43-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-24e7ed39f2fcf353b585ecf33d0573104cbc8f20fd2f288ada010be1dd0e53e8.json",
+      "sha256": "sha256:24e7ed39f2fcf353b585ecf33d0573104cbc8f20fd2f288ada010be1dd0e53e8"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-2f3fbeef37290c76c85108f920389858fd1c5a8136b0031e29027db6bf353fa2.json": {
+      "call_id": "evaluation-11-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-2f3fbeef37290c76c85108f920389858fd1c5a8136b0031e29027db6bf353fa2.json",
+      "sha256": "sha256:2f3fbeef37290c76c85108f920389858fd1c5a8136b0031e29027db6bf353fa2"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-2f60ead8feae444eaa952224471d3925169da5d708879d70bcd3f1c89e9e4f3b.json": {
+      "call_id": "evaluation-07-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-2f60ead8feae444eaa952224471d3925169da5d708879d70bcd3f1c89e9e4f3b.json",
+      "sha256": "sha256:2f60ead8feae444eaa952224471d3925169da5d708879d70bcd3f1c89e9e4f3b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-300e6b436832ad60bd2c29c5274903c1cd152573e472f4518a10968acf00d1f3.json": {
+      "call_id": "evaluation-20-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-300e6b436832ad60bd2c29c5274903c1cd152573e472f4518a10968acf00d1f3.json",
+      "sha256": "sha256:300e6b436832ad60bd2c29c5274903c1cd152573e472f4518a10968acf00d1f3"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3790cd6d13cf9b7165a8590d229351b414fdbf723e9b98fa5dd6187f67c3c113.json": {
+      "call_id": "evaluation-45-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3790cd6d13cf9b7165a8590d229351b414fdbf723e9b98fa5dd6187f67c3c113.json",
+      "sha256": "sha256:3790cd6d13cf9b7165a8590d229351b414fdbf723e9b98fa5dd6187f67c3c113"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-38a6f5df5ae47427b86b0e57b82ab1e6f8c8673052140746e0d0d6390ee7550b.json": {
+      "call_id": "evaluation-17-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-38a6f5df5ae47427b86b0e57b82ab1e6f8c8673052140746e0d0d6390ee7550b.json",
+      "sha256": "sha256:38a6f5df5ae47427b86b0e57b82ab1e6f8c8673052140746e0d0d6390ee7550b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3998b24be8a494ec197cdbbc145a514882ed3aef41ad0023c584cf324187f5a1.json": {
+      "call_id": "evaluation-31-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3998b24be8a494ec197cdbbc145a514882ed3aef41ad0023c584cf324187f5a1.json",
+      "sha256": "sha256:3998b24be8a494ec197cdbbc145a514882ed3aef41ad0023c584cf324187f5a1"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3a3a0cdad3f7dd792a5fc5e1b2d615c91014521dee27ca46389f12958620a752.json": {
+      "call_id": "evaluation-44-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3a3a0cdad3f7dd792a5fc5e1b2d615c91014521dee27ca46389f12958620a752.json",
+      "sha256": "sha256:3a3a0cdad3f7dd792a5fc5e1b2d615c91014521dee27ca46389f12958620a752"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3a6f298b31a3ff24cb9be000c4519a539e160ee971e232c6898cf164ef9d1cc2.json": {
+      "call_id": "evaluation-03-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3a6f298b31a3ff24cb9be000c4519a539e160ee971e232c6898cf164ef9d1cc2.json",
+      "sha256": "sha256:3a6f298b31a3ff24cb9be000c4519a539e160ee971e232c6898cf164ef9d1cc2"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3c42f625761a1f3a6bde0a0492fac855c3b13912bedce79d18e1a2de3967c69e.json": {
+      "call_id": "evaluation-42-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3c42f625761a1f3a6bde0a0492fac855c3b13912bedce79d18e1a2de3967c69e.json",
+      "sha256": "sha256:3c42f625761a1f3a6bde0a0492fac855c3b13912bedce79d18e1a2de3967c69e"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3e0e6292e94ea471230c7fd21c32255387b8d1dd560407c8929acfb9e86dc007.json": {
+      "call_id": "evaluation-29-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3e0e6292e94ea471230c7fd21c32255387b8d1dd560407c8929acfb9e86dc007.json",
+      "sha256": "sha256:3e0e6292e94ea471230c7fd21c32255387b8d1dd560407c8929acfb9e86dc007"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3ec75c196666144d71538bf3f6f49af1bb90109920a350c4ed8ff97ccda5b3e5.json": {
+      "call_id": "evaluation-22-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-3ec75c196666144d71538bf3f6f49af1bb90109920a350c4ed8ff97ccda5b3e5.json",
+      "sha256": "sha256:3ec75c196666144d71538bf3f6f49af1bb90109920a350c4ed8ff97ccda5b3e5"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-4087cdc87db0b3880769515bfa220faa89bdbb32cf0ffe1d629d3223f09ed06a.json": {
+      "call_id": "evaluation-35-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-4087cdc87db0b3880769515bfa220faa89bdbb32cf0ffe1d629d3223f09ed06a.json",
+      "sha256": "sha256:4087cdc87db0b3880769515bfa220faa89bdbb32cf0ffe1d629d3223f09ed06a"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-47b041f727c19b675b0567090c15f630fdcd9d8ab423a4ecf41160c8f1fa60ab.json": {
+      "call_id": "evaluation-41-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-47b041f727c19b675b0567090c15f630fdcd9d8ab423a4ecf41160c8f1fa60ab.json",
+      "sha256": "sha256:47b041f727c19b675b0567090c15f630fdcd9d8ab423a4ecf41160c8f1fa60ab"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-47b3138ebe6bb152da86b80adb536cc729292d15f2d50b23065bd3b7c4885602.json": {
+      "call_id": "evaluation-06-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-47b3138ebe6bb152da86b80adb536cc729292d15f2d50b23065bd3b7c4885602.json",
+      "sha256": "sha256:47b3138ebe6bb152da86b80adb536cc729292d15f2d50b23065bd3b7c4885602"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-515749658f25ef03befd0a3431b1ddba18a887ca080f70c95e41906fb4ad8ed4.json": {
+      "call_id": "evaluation-30-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-515749658f25ef03befd0a3431b1ddba18a887ca080f70c95e41906fb4ad8ed4.json",
+      "sha256": "sha256:515749658f25ef03befd0a3431b1ddba18a887ca080f70c95e41906fb4ad8ed4"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-554c24693061670510de292e0f9ec9e6f482cbbc29fe13d3ed77cbbe516461a9.json": {
+      "call_id": "evaluation-40-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-554c24693061670510de292e0f9ec9e6f482cbbc29fe13d3ed77cbbe516461a9.json",
+      "sha256": "sha256:554c24693061670510de292e0f9ec9e6f482cbbc29fe13d3ed77cbbe516461a9"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-55dc1118112472a6e449bfa0791933ff5fc870275165fa959a2e641060701d3d.json": {
+      "call_id": "evaluation-04-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-55dc1118112472a6e449bfa0791933ff5fc870275165fa959a2e641060701d3d.json",
+      "sha256": "sha256:55dc1118112472a6e449bfa0791933ff5fc870275165fa959a2e641060701d3d"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-5639aba2bbdda2f1624ae5e6bf2901cf59161ac2a845e7a68809c5bbc80b22f5.json": {
+      "call_id": "evaluation-34-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-5639aba2bbdda2f1624ae5e6bf2901cf59161ac2a845e7a68809c5bbc80b22f5.json",
+      "sha256": "sha256:5639aba2bbdda2f1624ae5e6bf2901cf59161ac2a845e7a68809c5bbc80b22f5"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-5b03b5a00e3650dec258503b563c5f00724c5087fb9739f1c185de5c7df4df3f.json": {
+      "call_id": "evaluation-36-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-5b03b5a00e3650dec258503b563c5f00724c5087fb9739f1c185de5c7df4df3f.json",
+      "sha256": "sha256:5b03b5a00e3650dec258503b563c5f00724c5087fb9739f1c185de5c7df4df3f"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-5b65027c8ca57a220fd2e73f00b9f1a186fd05173b18cbc9777ad08cab5da9aa.json": {
+      "call_id": "evaluation-31-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-5b65027c8ca57a220fd2e73f00b9f1a186fd05173b18cbc9777ad08cab5da9aa.json",
+      "sha256": "sha256:5b65027c8ca57a220fd2e73f00b9f1a186fd05173b18cbc9777ad08cab5da9aa"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-5ffefae34b63fc552b4fc1ae3d4757d3f38decba53dfa221781dcda0b958e6f0.json": {
+      "call_id": "evaluation-40-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-5ffefae34b63fc552b4fc1ae3d4757d3f38decba53dfa221781dcda0b958e6f0.json",
+      "sha256": "sha256:5ffefae34b63fc552b4fc1ae3d4757d3f38decba53dfa221781dcda0b958e6f0"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-653ec2000b9f4bdf820ffb1defbbf782a929f1f22ff32658e6e23607cf2843f8.json": {
+      "call_id": "evaluation-28-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-653ec2000b9f4bdf820ffb1defbbf782a929f1f22ff32658e6e23607cf2843f8.json",
+      "sha256": "sha256:653ec2000b9f4bdf820ffb1defbbf782a929f1f22ff32658e6e23607cf2843f8"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-65e0a4bd45d6b546a466912939c87f2329de466e426443eaf3cbb512872ea663.json": {
+      "call_id": "evaluation-35-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-65e0a4bd45d6b546a466912939c87f2329de466e426443eaf3cbb512872ea663.json",
+      "sha256": "sha256:65e0a4bd45d6b546a466912939c87f2329de466e426443eaf3cbb512872ea663"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-6718427db1ae60a0d60c0410c9cc7d1b8def34dd0ee7f2d02d60fa047f5722ac.json": {
+      "call_id": "evaluation-06-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-6718427db1ae60a0d60c0410c9cc7d1b8def34dd0ee7f2d02d60fa047f5722ac.json",
+      "sha256": "sha256:6718427db1ae60a0d60c0410c9cc7d1b8def34dd0ee7f2d02d60fa047f5722ac"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-69c1868600c09014f141dbe982311d9e6180bbe2d0b2ebbae2db9e4058dd7288.json": {
+      "call_id": "evaluation-24-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-69c1868600c09014f141dbe982311d9e6180bbe2d0b2ebbae2db9e4058dd7288.json",
+      "sha256": "sha256:69c1868600c09014f141dbe982311d9e6180bbe2d0b2ebbae2db9e4058dd7288"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-700ee4c8a1675c3ff87f6e008a1564d4b5d6c033bf98937202c73c66ffeec2aa.json": {
+      "call_id": "evaluation-29-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-700ee4c8a1675c3ff87f6e008a1564d4b5d6c033bf98937202c73c66ffeec2aa.json",
+      "sha256": "sha256:700ee4c8a1675c3ff87f6e008a1564d4b5d6c033bf98937202c73c66ffeec2aa"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-7100a66ee7dd7a436c9c49759ac54e5148eb121184c0c486026b3f0abb5f0a80.json": {
+      "call_id": "evaluation-01-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-7100a66ee7dd7a436c9c49759ac54e5148eb121184c0c486026b3f0abb5f0a80.json",
+      "sha256": "sha256:7100a66ee7dd7a436c9c49759ac54e5148eb121184c0c486026b3f0abb5f0a80"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-76c3f0fc220ce73fb842505aa0e6293ea4228207d3c4fe70253ba29cb419a305.json": {
+      "call_id": "evaluation-41-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-76c3f0fc220ce73fb842505aa0e6293ea4228207d3c4fe70253ba29cb419a305.json",
+      "sha256": "sha256:76c3f0fc220ce73fb842505aa0e6293ea4228207d3c4fe70253ba29cb419a305"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-7d0bc5e454a7c8264bd0b0fbc3dff02e57e8e2a9455bbadd630391798684f692.json": {
+      "call_id": "evaluation-13-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-7d0bc5e454a7c8264bd0b0fbc3dff02e57e8e2a9455bbadd630391798684f692.json",
+      "sha256": "sha256:7d0bc5e454a7c8264bd0b0fbc3dff02e57e8e2a9455bbadd630391798684f692"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-7d9215c7e5b5662eecf6c88448dc19c3bf02e460c3f4fd950c9fe0223846a4a7.json": {
+      "call_id": "evaluation-27-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-7d9215c7e5b5662eecf6c88448dc19c3bf02e460c3f4fd950c9fe0223846a4a7.json",
+      "sha256": "sha256:7d9215c7e5b5662eecf6c88448dc19c3bf02e460c3f4fd950c9fe0223846a4a7"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-8010da6a204df6009bc38af030d0ec5b419f647c340cda565f5b0309e21819e1.json": {
+      "call_id": "evaluation-09-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-8010da6a204df6009bc38af030d0ec5b419f647c340cda565f5b0309e21819e1.json",
+      "sha256": "sha256:8010da6a204df6009bc38af030d0ec5b419f647c340cda565f5b0309e21819e1"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-8038d29ec734784b6230d9312790ba0cdd648cfa40752c6f7d4eea98342a5f42.json": {
+      "call_id": "evaluation-16-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-8038d29ec734784b6230d9312790ba0cdd648cfa40752c6f7d4eea98342a5f42.json",
+      "sha256": "sha256:8038d29ec734784b6230d9312790ba0cdd648cfa40752c6f7d4eea98342a5f42"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-82f2c750d693538431f120b0bab1eb2ca972b99f2a8f92b01c82a0c7abe0df7a.json": {
+      "call_id": "evaluation-20-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-82f2c750d693538431f120b0bab1eb2ca972b99f2a8f92b01c82a0c7abe0df7a.json",
+      "sha256": "sha256:82f2c750d693538431f120b0bab1eb2ca972b99f2a8f92b01c82a0c7abe0df7a"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-8550ac77e6bd21988f66d692952ced8914f9f51a949f3a4c761108df19294445.json": {
+      "call_id": "evaluation-17-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-8550ac77e6bd21988f66d692952ced8914f9f51a949f3a4c761108df19294445.json",
+      "sha256": "sha256:8550ac77e6bd21988f66d692952ced8914f9f51a949f3a4c761108df19294445"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-8a75f3d86239b40b75b9841d62724c49e1d9cdf94f02abfd12b1711a3f0d0ed1.json": {
+      "call_id": "evaluation-00-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-8a75f3d86239b40b75b9841d62724c49e1d9cdf94f02abfd12b1711a3f0d0ed1.json",
+      "sha256": "sha256:8a75f3d86239b40b75b9841d62724c49e1d9cdf94f02abfd12b1711a3f0d0ed1"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-93a53a2b9384606bb75f1a482279c09058c176fc98793511f6e220b2d709be0d.json": {
+      "call_id": "evaluation-37-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-93a53a2b9384606bb75f1a482279c09058c176fc98793511f6e220b2d709be0d.json",
+      "sha256": "sha256:93a53a2b9384606bb75f1a482279c09058c176fc98793511f6e220b2d709be0d"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-9a3ab760ae0e9a8a2112173fef9787a13b5b5d0d744dd53c703290767463709e.json": {
+      "call_id": "evaluation-11-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-9a3ab760ae0e9a8a2112173fef9787a13b5b5d0d744dd53c703290767463709e.json",
+      "sha256": "sha256:9a3ab760ae0e9a8a2112173fef9787a13b5b5d0d744dd53c703290767463709e"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-9cdbae77a9cbd7a13e1697912a97b6f9e8a8ee1953bffad2457da12833cf863b.json": {
+      "call_id": "evaluation-30-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-9cdbae77a9cbd7a13e1697912a97b6f9e8a8ee1953bffad2457da12833cf863b.json",
+      "sha256": "sha256:9cdbae77a9cbd7a13e1697912a97b6f9e8a8ee1953bffad2457da12833cf863b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a0e5eedb6d5b87bb0003400296dde7a6ccc3a1def1fab20e63495881535d4cd3.json": {
+      "call_id": "evaluation-32-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a0e5eedb6d5b87bb0003400296dde7a6ccc3a1def1fab20e63495881535d4cd3.json",
+      "sha256": "sha256:a0e5eedb6d5b87bb0003400296dde7a6ccc3a1def1fab20e63495881535d4cd3"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a3bcf748d3f0c2c2d008082567bd6a8a6dafb8ba569a6bb2a64503d3e626f6e1.json": {
+      "call_id": "evaluation-14-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a3bcf748d3f0c2c2d008082567bd6a8a6dafb8ba569a6bb2a64503d3e626f6e1.json",
+      "sha256": "sha256:a3bcf748d3f0c2c2d008082567bd6a8a6dafb8ba569a6bb2a64503d3e626f6e1"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a3f2197b42fc0f7b6074015edc7481709ec19223f6774113ded7194a8074f2ee.json": {
+      "call_id": "evaluation-45-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a3f2197b42fc0f7b6074015edc7481709ec19223f6774113ded7194a8074f2ee.json",
+      "sha256": "sha256:a3f2197b42fc0f7b6074015edc7481709ec19223f6774113ded7194a8074f2ee"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a41f06dc65047832d96c90a8243f6fe897c07e1aeb26728174f41219b8856156.json": {
+      "call_id": "evaluation-42-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a41f06dc65047832d96c90a8243f6fe897c07e1aeb26728174f41219b8856156.json",
+      "sha256": "sha256:a41f06dc65047832d96c90a8243f6fe897c07e1aeb26728174f41219b8856156"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a53a1f5f09070c8d218fa8c422d2bf4da18b85cd36cf91b910916dc7bd2a4cb2.json": {
+      "call_id": "evaluation-24-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a53a1f5f09070c8d218fa8c422d2bf4da18b85cd36cf91b910916dc7bd2a4cb2.json",
+      "sha256": "sha256:a53a1f5f09070c8d218fa8c422d2bf4da18b85cd36cf91b910916dc7bd2a4cb2"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a80ed11e2c721eb6de331df8efaf08711df21651d7d0943679ac5e852a5a8eee.json": {
+      "call_id": "evaluation-02-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-a80ed11e2c721eb6de331df8efaf08711df21651d7d0943679ac5e852a5a8eee.json",
+      "sha256": "sha256:a80ed11e2c721eb6de331df8efaf08711df21651d7d0943679ac5e852a5a8eee"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ae3831b0b7910289245b62f15dd87a181685e61a125ea6c24d947849ef6fd0ad.json": {
+      "call_id": "evaluation-21-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ae3831b0b7910289245b62f15dd87a181685e61a125ea6c24d947849ef6fd0ad.json",
+      "sha256": "sha256:ae3831b0b7910289245b62f15dd87a181685e61a125ea6c24d947849ef6fd0ad"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b062f98d185a7d5135ddacb5dec5b85523e0979c88579fc138f4ee899eb7cc90.json": {
+      "call_id": "evaluation-15-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b062f98d185a7d5135ddacb5dec5b85523e0979c88579fc138f4ee899eb7cc90.json",
+      "sha256": "sha256:b062f98d185a7d5135ddacb5dec5b85523e0979c88579fc138f4ee899eb7cc90"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b082f19d74441361970cfc1750afe6f527690a9327c31ae5cb01452f9abf0150.json": {
+      "call_id": "evaluation-14-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b082f19d74441361970cfc1750afe6f527690a9327c31ae5cb01452f9abf0150.json",
+      "sha256": "sha256:b082f19d74441361970cfc1750afe6f527690a9327c31ae5cb01452f9abf0150"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b1f337fb37064b6b3d4220852af8d107bc5c74df2ffa869927ddc9047b195c3c.json": {
+      "call_id": "evaluation-01-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b1f337fb37064b6b3d4220852af8d107bc5c74df2ffa869927ddc9047b195c3c.json",
+      "sha256": "sha256:b1f337fb37064b6b3d4220852af8d107bc5c74df2ffa869927ddc9047b195c3c"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b3ba812b86281f634131acc6807ed22aea70ae4e67f49e193624a641309eb6de.json": {
+      "call_id": "evaluation-10-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b3ba812b86281f634131acc6807ed22aea70ae4e67f49e193624a641309eb6de.json",
+      "sha256": "sha256:b3ba812b86281f634131acc6807ed22aea70ae4e67f49e193624a641309eb6de"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b3ff255f5dcdafe5ed0c7aa36db2376b0d32e602ab36d229a84a0a5221c8935c.json": {
+      "call_id": "evaluation-10-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b3ff255f5dcdafe5ed0c7aa36db2376b0d32e602ab36d229a84a0a5221c8935c.json",
+      "sha256": "sha256:b3ff255f5dcdafe5ed0c7aa36db2376b0d32e602ab36d229a84a0a5221c8935c"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b55512b7474c2ee56c4716ea6b140acf596d57bd9dda0937e9cfc55821ebdc1b.json": {
+      "call_id": "evaluation-46-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b55512b7474c2ee56c4716ea6b140acf596d57bd9dda0937e9cfc55821ebdc1b.json",
+      "sha256": "sha256:b55512b7474c2ee56c4716ea6b140acf596d57bd9dda0937e9cfc55821ebdc1b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b68cf9ffd49b1ecb78e43490fe77b74627468b6f98d170bb611cb0d7e0e4e753.json": {
+      "call_id": "evaluation-16-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b68cf9ffd49b1ecb78e43490fe77b74627468b6f98d170bb611cb0d7e0e4e753.json",
+      "sha256": "sha256:b68cf9ffd49b1ecb78e43490fe77b74627468b6f98d170bb611cb0d7e0e4e753"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b6e990a595eadcbd878e049d9f7bbfbc3b8c3f1583bcdf0f96c09a2e205b3e66.json": {
+      "call_id": "evaluation-28-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-b6e990a595eadcbd878e049d9f7bbfbc3b8c3f1583bcdf0f96c09a2e205b3e66.json",
+      "sha256": "sha256:b6e990a595eadcbd878e049d9f7bbfbc3b8c3f1583bcdf0f96c09a2e205b3e66"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ba56a0858a5ab086e52a2effa6c4512185cc53f47df759f23a45a88ac0506d01.json": {
+      "call_id": "evaluation-05-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ba56a0858a5ab086e52a2effa6c4512185cc53f47df759f23a45a88ac0506d01.json",
+      "sha256": "sha256:ba56a0858a5ab086e52a2effa6c4512185cc53f47df759f23a45a88ac0506d01"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-bc38401d66ae1cbf7d3f743a06d067104e28cf28bee34c5e26b3eb86a05404d5.json": {
+      "call_id": "evaluation-12-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-bc38401d66ae1cbf7d3f743a06d067104e28cf28bee34c5e26b3eb86a05404d5.json",
+      "sha256": "sha256:bc38401d66ae1cbf7d3f743a06d067104e28cf28bee34c5e26b3eb86a05404d5"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-bca87636e77c370ee2e5c87a826ef0dff951fb885fbfb4847728951f6a57705a.json": {
+      "call_id": "evaluation-46-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-bca87636e77c370ee2e5c87a826ef0dff951fb885fbfb4847728951f6a57705a.json",
+      "sha256": "sha256:bca87636e77c370ee2e5c87a826ef0dff951fb885fbfb4847728951f6a57705a"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c19630a2fd3db51cf5e06310239a8cac41ea181652940db4c2e39f7542ad367d.json": {
+      "call_id": "evaluation-07-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c19630a2fd3db51cf5e06310239a8cac41ea181652940db4c2e39f7542ad367d.json",
+      "sha256": "sha256:c19630a2fd3db51cf5e06310239a8cac41ea181652940db4c2e39f7542ad367d"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c2465dce6e7e19f582983466d0d824b795a4c9bb3e46257cadfb32e39ac7611a.json": {
+      "call_id": "evaluation-05-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c2465dce6e7e19f582983466d0d824b795a4c9bb3e46257cadfb32e39ac7611a.json",
+      "sha256": "sha256:c2465dce6e7e19f582983466d0d824b795a4c9bb3e46257cadfb32e39ac7611a"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c41e658aef0b87bd5f63e15689d3eac80ecd949290d1c16af88a2ed88d7d5329.json": {
+      "call_id": "evaluation-25-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c41e658aef0b87bd5f63e15689d3eac80ecd949290d1c16af88a2ed88d7d5329.json",
+      "sha256": "sha256:c41e658aef0b87bd5f63e15689d3eac80ecd949290d1c16af88a2ed88d7d5329"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c5a8e65e2e2effc119d4737a5b16457928778187f1e17309d2d88d481701f330.json": {
+      "call_id": "evaluation-03-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c5a8e65e2e2effc119d4737a5b16457928778187f1e17309d2d88d481701f330.json",
+      "sha256": "sha256:c5a8e65e2e2effc119d4737a5b16457928778187f1e17309d2d88d481701f330"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c69c502e4517b36b192c0988948967b39f68fd5f89d3d0ee5a3727e49e537662.json": {
+      "call_id": "evaluation-08-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c69c502e4517b36b192c0988948967b39f68fd5f89d3d0ee5a3727e49e537662.json",
+      "sha256": "sha256:c69c502e4517b36b192c0988948967b39f68fd5f89d3d0ee5a3727e49e537662"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c7d47c5e5eb1fe7554fffdd1711f5412490e7af0c9b2051cac698878f5c07c98.json": {
+      "call_id": "evaluation-33-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c7d47c5e5eb1fe7554fffdd1711f5412490e7af0c9b2051cac698878f5c07c98.json",
+      "sha256": "sha256:c7d47c5e5eb1fe7554fffdd1711f5412490e7af0c9b2051cac698878f5c07c98"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c941455b9f64176ba2ce68f56322b06e6f19b26d51032c1f3690b1174b0d16a4.json": {
+      "call_id": "evaluation-27-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-c941455b9f64176ba2ce68f56322b06e6f19b26d51032c1f3690b1174b0d16a4.json",
+      "sha256": "sha256:c941455b9f64176ba2ce68f56322b06e6f19b26d51032c1f3690b1174b0d16a4"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ca443e842ebad22bfb79601067cc37b5ac143b7ed5605795f58fdcbe6614b3db.json": {
+      "call_id": "evaluation-47-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ca443e842ebad22bfb79601067cc37b5ac143b7ed5605795f58fdcbe6614b3db.json",
+      "sha256": "sha256:ca443e842ebad22bfb79601067cc37b5ac143b7ed5605795f58fdcbe6614b3db"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-d25bde31287d2859f1ecd87612fd75b56a50ae85db86a41b50564bb7b3607b5b.json": {
+      "call_id": "evaluation-02-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-d25bde31287d2859f1ecd87612fd75b56a50ae85db86a41b50564bb7b3607b5b.json",
+      "sha256": "sha256:d25bde31287d2859f1ecd87612fd75b56a50ae85db86a41b50564bb7b3607b5b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-d5c26756db5bd1d32cd8a134dbe3fb7de7b22d9e7abf07098d4e1baa388af14e.json": {
+      "call_id": "evaluation-18-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-d5c26756db5bd1d32cd8a134dbe3fb7de7b22d9e7abf07098d4e1baa388af14e.json",
+      "sha256": "sha256:d5c26756db5bd1d32cd8a134dbe3fb7de7b22d9e7abf07098d4e1baa388af14e"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-d82554c225df2f63304a3e000c948660759898a670cb047397a47adc7b947468.json": {
+      "call_id": "evaluation-19-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-d82554c225df2f63304a3e000c948660759898a670cb047397a47adc7b947468.json",
+      "sha256": "sha256:d82554c225df2f63304a3e000c948660759898a670cb047397a47adc7b947468"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-d92976d2f4d147f24d7eeeccccf9d66cda8aed8cdb199254b4c5b77977bf1e4e.json": {
+      "call_id": "evaluation-19-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-d92976d2f4d147f24d7eeeccccf9d66cda8aed8cdb199254b4c5b77977bf1e4e.json",
+      "sha256": "sha256:d92976d2f4d147f24d7eeeccccf9d66cda8aed8cdb199254b4c5b77977bf1e4e"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-dd50698aa448ec21722a16d94fedd87035aad22513ce620ed4d2be2e5983a8be.json": {
+      "call_id": "evaluation-15-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-dd50698aa448ec21722a16d94fedd87035aad22513ce620ed4d2be2e5983a8be.json",
+      "sha256": "sha256:dd50698aa448ec21722a16d94fedd87035aad22513ce620ed4d2be2e5983a8be"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ddef0bbd991426a988ecaeadd6fec1610e362b6d8de96a4710b08ba80377dc86.json": {
+      "call_id": "evaluation-33-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ddef0bbd991426a988ecaeadd6fec1610e362b6d8de96a4710b08ba80377dc86.json",
+      "sha256": "sha256:ddef0bbd991426a988ecaeadd6fec1610e362b6d8de96a4710b08ba80377dc86"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-e0e5fb6131d298fd3aef851548b36b125e5de8d8086690d2769183f318831a05.json": {
+      "call_id": "evaluation-47-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-e0e5fb6131d298fd3aef851548b36b125e5de8d8086690d2769183f318831a05.json",
+      "sha256": "sha256:e0e5fb6131d298fd3aef851548b36b125e5de8d8086690d2769183f318831a05"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-e13c6eafde8dd093fa1300665014b24f743d03f7a19084be9eeba71a2d1c5221.json": {
+      "call_id": "evaluation-12-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-e13c6eafde8dd093fa1300665014b24f743d03f7a19084be9eeba71a2d1c5221.json",
+      "sha256": "sha256:e13c6eafde8dd093fa1300665014b24f743d03f7a19084be9eeba71a2d1c5221"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-e42db35393ef3f5c4d9fa118b18f9f40c8f04c637679caf9400d7cab9cbb8624.json": {
+      "call_id": "evaluation-37-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-e42db35393ef3f5c4d9fa118b18f9f40c8f04c637679caf9400d7cab9cbb8624.json",
+      "sha256": "sha256:e42db35393ef3f5c4d9fa118b18f9f40c8f04c637679caf9400d7cab9cbb8624"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-e5ae156399e652049c2fab2d4772fcd5dfe0821fe65a15ce100ea6e28c3dcf20.json": {
+      "call_id": "evaluation-22-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-e5ae156399e652049c2fab2d4772fcd5dfe0821fe65a15ce100ea6e28c3dcf20.json",
+      "sha256": "sha256:e5ae156399e652049c2fab2d4772fcd5dfe0821fe65a15ce100ea6e28c3dcf20"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-eadca9010953da372ca5ae86db0cf5457977c552e34184b2f65bac0d7f8cb3fb.json": {
+      "call_id": "evaluation-34-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-eadca9010953da372ca5ae86db0cf5457977c552e34184b2f65bac0d7f8cb3fb.json",
+      "sha256": "sha256:eadca9010953da372ca5ae86db0cf5457977c552e34184b2f65bac0d7f8cb3fb"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-eda211e572736694f24ccbbd1b33f87a432ecc0dd40e2d93aa2c44ae140a9181.json": {
+      "call_id": "evaluation-23-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-eda211e572736694f24ccbbd1b33f87a432ecc0dd40e2d93aa2c44ae140a9181.json",
+      "sha256": "sha256:eda211e572736694f24ccbbd1b33f87a432ecc0dd40e2d93aa2c44ae140a9181"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-f3e46fc001d1749a6642ed0399b0509575d4e5b29bb0eeb481fcbb45d3334bb3.json": {
+      "call_id": "evaluation-00-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-f3e46fc001d1749a6642ed0399b0509575d4e5b29bb0eeb481fcbb45d3334bb3.json",
+      "sha256": "sha256:f3e46fc001d1749a6642ed0399b0509575d4e5b29bb0eeb481fcbb45d3334bb3"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-f52e183b91b5252e559547d361954591534a03eed67b9c262d8d1cbc76e32ce6.json": {
+      "call_id": "evaluation-25-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-f52e183b91b5252e559547d361954591534a03eed67b9c262d8d1cbc76e32ce6.json",
+      "sha256": "sha256:f52e183b91b5252e559547d361954591534a03eed67b9c262d8d1cbc76e32ce6"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-f545bde10b02ecc86c16685c8193258d21139f7b59c2c9de121f19e8e8faeb10.json": {
+      "call_id": "evaluation-39-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-f545bde10b02ecc86c16685c8193258d21139f7b59c2c9de121f19e8e8faeb10.json",
+      "sha256": "sha256:f545bde10b02ecc86c16685c8193258d21139f7b59c2c9de121f19e8e8faeb10"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-f6b711b4992769ffac21200b41506d23bc94674a5da8ff3de38bcb09dfc56521.json": {
+      "call_id": "evaluation-23-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-f6b711b4992769ffac21200b41506d23bc94674a5da8ff3de38bcb09dfc56521.json",
+      "sha256": "sha256:f6b711b4992769ffac21200b41506d23bc94674a5da8ff3de38bcb09dfc56521"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-facfcc8b95494f250935bc4d57d672d9369ce9d97f24c4027b65dc54d571b904.json": {
+      "call_id": "evaluation-26-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-facfcc8b95494f250935bc4d57d672d9369ce9d97f24c4027b65dc54d571b904.json",
+      "sha256": "sha256:facfcc8b95494f250935bc4d57d672d9369ce9d97f24c4027b65dc54d571b904"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ff4ccc0d5d026a10020d5f4f9250a8ac2ec33e0fc55b0dabed7c1bfe7808de53.json": {
+      "call_id": "evaluation-21-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/evaluation/sha256-ff4ccc0d5d026a10020d5f4f9250a8ac2ec33e0fc55b0dabed7c1bfe7808de53.json",
+      "sha256": "sha256:ff4ccc0d5d026a10020d5f4f9250a8ac2ec33e0fc55b0dabed7c1bfe7808de53"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-17e544022b3567565559b7e74ac0f5f0c31d7699b41ef09017aea954c185d40c.json": {
+      "call_id": "development-01-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-17e544022b3567565559b7e74ac0f5f0c31d7699b41ef09017aea954c185d40c.json",
+      "sha256": "sha256:17e544022b3567565559b7e74ac0f5f0c31d7699b41ef09017aea954c185d40c"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-245fc55b04f4d88fce385f6322b3b3b19b99fb7bbc7afe083839aaedb9d88d67.json": {
+      "call_id": "development-04-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-245fc55b04f4d88fce385f6322b3b3b19b99fb7bbc7afe083839aaedb9d88d67.json",
+      "sha256": "sha256:245fc55b04f4d88fce385f6322b3b3b19b99fb7bbc7afe083839aaedb9d88d67"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-2a3957616952fd591e41e5fef1a0f5ccc50b5f35136bd0c4ab952d2ab4efc902.json": {
+      "call_id": "development-04-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-2a3957616952fd591e41e5fef1a0f5ccc50b5f35136bd0c4ab952d2ab4efc902.json",
+      "sha256": "sha256:2a3957616952fd591e41e5fef1a0f5ccc50b5f35136bd0c4ab952d2ab4efc902"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-52f5c8874567543e1ee3743769357c6aecd15dc59681338ac0d365efd643664b.json": {
+      "call_id": "development-05-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-52f5c8874567543e1ee3743769357c6aecd15dc59681338ac0d365efd643664b.json",
+      "sha256": "sha256:52f5c8874567543e1ee3743769357c6aecd15dc59681338ac0d365efd643664b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-5d197c70a278b42f9b130b29721fbae228f34503a3bd5e6ab29b0fb81aad4b1d.json": {
+      "call_id": "development-02-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-5d197c70a278b42f9b130b29721fbae228f34503a3bd5e6ab29b0fb81aad4b1d.json",
+      "sha256": "sha256:5d197c70a278b42f9b130b29721fbae228f34503a3bd5e6ab29b0fb81aad4b1d"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-8f6887d61eee512c45d62a7d65d3ec9668a3e943e56c207ad51b32d2473b193b.json": {
+      "call_id": "development-00-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-8f6887d61eee512c45d62a7d65d3ec9668a3e943e56c207ad51b32d2473b193b.json",
+      "sha256": "sha256:8f6887d61eee512c45d62a7d65d3ec9668a3e943e56c207ad51b32d2473b193b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-936a5f54d345971d9c78a4ceb33b56d34a90f2d4cef9a0bc994b80bc26d2f342.json": {
+      "call_id": "development-02-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-936a5f54d345971d9c78a4ceb33b56d34a90f2d4cef9a0bc994b80bc26d2f342.json",
+      "sha256": "sha256:936a5f54d345971d9c78a4ceb33b56d34a90f2d4cef9a0bc994b80bc26d2f342"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-a635ea53d9db1419dbc42993a64e66b4bbabadb5f6bb6da65175b0070a87b03b.json": {
+      "call_id": "development-00-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-a635ea53d9db1419dbc42993a64e66b4bbabadb5f6bb6da65175b0070a87b03b.json",
+      "sha256": "sha256:a635ea53d9db1419dbc42993a64e66b4bbabadb5f6bb6da65175b0070a87b03b"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-c0e9ddf2259116ef4ae8ee4c18a1316bdda0f5cc38528653b8e3c4df29dcb1f8.json": {
+      "call_id": "development-03-span",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-c0e9ddf2259116ef4ae8ee4c18a1316bdda0f5cc38528653b8e3c4df29dcb1f8.json",
+      "sha256": "sha256:c0e9ddf2259116ef4ae8ee4c18a1316bdda0f5cc38528653b8e3c4df29dcb1f8"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-c1ccafdfd3a5a494b11e6ba334b22d2aee26000e71d318329f6a0f5cc69f6f5c.json": {
+      "call_id": "development-01-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-c1ccafdfd3a5a494b11e6ba334b22d2aee26000e71d318329f6a0f5cc69f6f5c.json",
+      "sha256": "sha256:c1ccafdfd3a5a494b11e6ba334b22d2aee26000e71d318329f6a0f5cc69f6f5c"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-c6cf073cc403835cd57bd68cfc68cb6fce0fc18a7660c111322767bf426054c3.json": {
+      "call_id": "development-03-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-c6cf073cc403835cd57bd68cfc68cb6fce0fc18a7660c111322767bf426054c3.json",
+      "sha256": "sha256:c6cf073cc403835cd57bd68cfc68cb6fce0fc18a7660c111322767bf426054c3"
+    },
+    "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-e231b153d9e7e3ab253ba798203f30e6090280f37057688b66e99f31116dd65d.json": {
+      "call_id": "development-05-verbatim",
+      "evidence_class": "historical_model_sidecar",
+      "path": "results/raw/experiment_7467_v654_factual_span_canary/owned_runtime/responses/sha256-e231b153d9e7e3ab253ba798203f30e6090280f37057688b66e99f31116dd65d.json",
+      "sha256": "sha256:e231b153d9e7e3ab253ba798203f30e6090280f37057688b66e99f31116dd65d"
+    },
+    "scripts/experiment_template.py": {
+      "evidence_class": "current_audit_input",
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    }
+  },
+  "started_at_utc": "2026-09-21T00:39:38.241490+00:00",
+  "started_monotonic_ns": 55166749627998,
+  "status": "complete_independent_audit",
+  "validation_duration_s": 108.7857941760085,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7470_v654_independent_audit",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7470_v654_independent_audit"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.45818777100066654,
+      "ended_at_utc": "2026-09-21T00:39:56.603222+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:8cf825dd50b8fd4e3487b14db6b1da870248ba8c775d819f1dacb948aa2d86ba",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7470_v654_independent_audit\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7470_v654_independent_audit.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7470_v654_independent_audit": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7470_v654_independent_audit.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T00:39:56.144530+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7470-validation-rovoql_z/basetemp/focused tests/python/test_experiment_7470_v654_independent_audit.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7470-validation-rovoql_z/basetemp/focused",
+        "tests/python/test_experiment_7470_v654_independent_audit.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 40.32473667500017,
+      "ended_at_utc": "2026-09-21T00:40:36.928421+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:cb779e6d741a172a2dca0bc9f39b0a2501aaf2a6af907f545c7fb68900cb1079",
+      "name": "focused_pytest",
+      "output_tail": "................                                                         [100%]\n16 passed in 38.40s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-21T00:39:56.603290+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7470-validation-rovoql_z/coverage/.coverage '--include=*/experiment_7470_v654_independent_audit.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7470-validation-rovoql_z/basetemp/coverage tests/python/test_experiment_7470_v654_independent_audit.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7470-validation-rovoql_z/coverage/.coverage",
+        "--include=*/experiment_7470_v654_independent_audit.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7470-validation-rovoql_z/basetemp/coverage",
+        "tests/python/test_experiment_7470_v654_independent_audit.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 44.89268508600071,
+      "ended_at_utc": "2026-09-21T00:41:21.821387+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:9635a76e91ae5d5825d6d7136b93b5140fce1b084d95ceec15dfe69d7d8e6c25",
+      "name": "changed_module_coverage",
+      "output_tail": "................                                                         [100%]\n16 passed in 41.71s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-21T00:40:36.928452+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7470_v654_independent_audit.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7470_v654_independent_audit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7470-validation-rovoql_z/coverage/.coverage"
+      },
+      "duration_s": 0.09819786099978955,
+      "ended_at_utc": "2026-09-21T00:41:21.920014+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:a21093bf297bb31550dc7f2ab2c29e26ccc5f22bcee9ea12a281aa561ebf301d",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                      Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------\npython/carnot/experiment_7470_v654_independent_audit.py     601      0   100%\n---------------------------------------------------------------------------------------\nTOTAL                                                       601      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T00:41:21.821419+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7470_v654_independent_audit.py scripts/experiments/experiment_7470_v654_independent_audit.py tests/python/test_experiment_7470_v654_independent_audit.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7470_v654_independent_audit.py",
+        "scripts/experiments/experiment_7470_v654_independent_audit.py",
+        "tests/python/test_experiment_7470_v654_independent_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011447694996604696,
+      "ended_at_utc": "2026-09-21T00:41:21.931829+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-21T00:41:21.920045+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7470_v654_independent_audit.py scripts/experiments/experiment_7470_v654_independent_audit.py tests/python/test_experiment_7470_v654_independent_audit.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7470_v654_independent_audit.py",
+        "scripts/experiments/experiment_7470_v654_independent_audit.py",
+        "tests/python/test_experiment_7470_v654_independent_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01061941100488184,
+      "ended_at_utc": "2026-09-21T00:41:21.942850+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-21T00:41:21.931881+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7470_v654_independent_audit.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7470_v654_independent_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.172637563002354,
+      "ended_at_utc": "2026-09-21T00:41:22.115786+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T00:41:21.942892+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7470_v654_independent_audit.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7470_v654_independent_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01811817799898563,
+      "ended_at_utc": "2026-09-21T00:41:22.134183+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-21T00:41:22.115816+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7470_v654_independent_audit.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7470_v654_independent_audit/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7470_v654_independent_audit.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7470_v654_independent_audit/measured_terminal_candidate.json"
+      ],
+      "command_category": "capability_e2e",
+      "command_environment": {},
+      "duration_s": 0.4713707720002276,
+      "ended_at_utc": "2026-09-21T00:41:22.614165+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-21T00:41:22.142445+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7470_v654_independent_audit.py --independent-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7470_v654_independent_audit/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7470_v654_independent_audit.py",
+        "--independent-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7470_v654_independent_audit/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 21.557552657002816,
+      "ended_at_utc": "2026-09-21T00:41:44.172064+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/terminal/01_independent_raw_reduction/00_independent_raw_reduction.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-21T00:41:22.614196+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7470_v654_independent_audit/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7470_v654_independent_audit/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.740649947001657,
+      "ended_at_utc": "2026-09-21T00:41:44.913073+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-21T00:41:44.172098+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7470_v654_independent_audit/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7470_v654_independent_audit/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.029590559999633115,
+      "ended_at_utc": "2026-09-21T00:41:44.943060+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7470_v654_independent_audit/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-21T00:41:44.913104+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}
