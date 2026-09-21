@@ -43523,3 +43523,90 @@ Pure protocol work has no numbered runtime E2E.
 **When** the declared unbuffered entrypoint runs
 **Then** scoped checks, cold replay, raw reduction, adversarial verification, and strict row lint inspect the candidate
 **And** only the validated terminal artifact is published atomically.
+
+### REQ-VERIFY-7476: V655 Option Qualification SHALL Revalidate The Sealed V654 Interface
+
+Exp7476 SHALL qualify the existing Exp7462 option interface and its sealed
+cohort without changing the disqualified Exp7462 artifact. It SHALL preserve
+the failed `all_python_tests_required_once` receipt as unrelated repository
+health. That historical receipt SHALL remain failed and visible. It SHALL not
+control current V655 readiness.
+
+The qualification SHALL replay the reusable Exp7462 option controls. It SHALL
+check the exact final evaluated-token position, one-token option labels at the
+prompt boundary, finite raw logits, missing labels, stable-ID remapping after
+order reversal, and rejection of unused-buffer reads. The controls SHALL use
+scripted score buffers only. They SHALL not load or invoke a model.
+
+The qualification SHALL rehash the Exp7462 raw manifest and its predictor,
+evaluator, group, planned-cell, and interface shards. It SHALL preserve 180
+training, 60 calibration, 60 internal-test, 160 online, and 74 external
+FaithBench groups. It SHALL retain 534 groups in total. Source and group roles
+SHALL remain disjoint. Source text, selected response IDs, label provenance,
+licenses, and the 2,048-token no-truncation rule SHALL remain hash-bound.
+Development transport probes SHALL remain outside these roles.
+
+The V655 comparison plan SHALL preserve binary Brier, group-level uncertainty,
+five fitting seeds, calibration-only model choice, untouched external
+assessment, and the V654 decision-cost grid. It SHALL defer overlength and
+unavailable-group counts to capture. A later sample-floor shortfall SHALL block
+confirmatory benefit without invalidating this interface qualification.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current model calls,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Numeric
+fitting SHALL have a separate zero-work `small_ebm_training` receipt. Archived
+or scripted events SHALL remain hash-bound sidecars and SHALL not count as
+current inference.
+
+The affected-file manifest SHALL contain only the Exp7476 test, module, and
+thin entrypoint. Current required checks SHALL be affected pytest, 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+scoped spec coverage, cold replay, independent raw reduction, adversarial
+verification, and strict verdict-row consistency. The broad Python suite SHALL
+not run. Each acceptance gate SHALL include one principle that names the
+failure mode it prevents. Only a complete candidate with all current required
+checks and protocol-validity checks passing may publish
+`option_protocol_ready_score=1`.
+
+#### SCENARIO-VERIFY-7476-HEALTH: Historical Failure Stays Unrelated
+
+**Given** the exact failed Exp7462 broad-suite receipt
+**When** V655 classifies the frozen receipt and a mutation fails one affected check
+**Then** the old receipt remains failed unrelated repository health in both cases
+**And** only the failed current affected check closes V655 readiness.
+
+#### SCENARIO-VERIFY-7476-INTERFACE: The Real Option Boundary Replays
+
+**Given** the reusable V654 option helper and scripted score buffers
+**When** original and reversed option orders replay with known mutations
+**Then** final-position finite raw logits remap by stable option ID
+**And** missing labels, nonfinite values, order swaps, and unused-buffer reads fail closed.
+
+#### SCENARIO-VERIFY-7476-COHORT: The Sealed 534-Group Cohort Is Immutable
+
+**Given** the V654 raw manifest and its five hash-bound shards
+**When** V655 independently reloads predictor, evaluator, group, plan, and interface rows
+**Then** role counts equal 180, 60, 60, 160, and 74 with 534 total
+**And** identities, source text, response IDs, provenance, licenses, and role disjointness remain valid.
+
+#### SCENARIO-VERIFY-7476-PLAN: Statistical Choices Stay Prespecified
+
+**Given** the V654 comparison plan before any capture or fit
+**When** V655 qualifies its metrics, seeds, role boundaries, and cost grid
+**Then** binary Brier, group uncertainty, five seeds, calibration-only selection, and external assessment remain fixed
+**And** no interface result is reported as held-out scientific benefit.
+
+#### SCENARIO-VERIFY-7476-NO-MODEL: Qualification Is Artifact Work
+
+**Given** current scripted controls and frozen upstream bytes
+**When** V655 records its work receipt
+**Then** model loads, forwards, and generations all remain zero
+**And** numeric fitting remains a separate zero-work receipt.
+
+#### SCENARIO-VERIFY-7476-E2E: Scoped Readers Publish One Atomic Qualification
+
+**Given** a frozen affected-file manifest and a measured candidate
+**When** the declared unbuffered entrypoint runs
+**Then** affected checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
+**And** the validated terminal JSON publishes atomically without invoking the broad Python suite.

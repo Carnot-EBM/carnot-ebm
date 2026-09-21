@@ -1,0 +1,1979 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "required_validity",
+      "check": "option_interface_replay",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Wrong token positions or option mappings would make the readout invalid."
+    },
+    {
+      "category": "required_validity",
+      "check": "sealed_cohort_identity",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Changed cohort identities could hide overlap or outcome-driven replacement."
+    },
+    {
+      "category": "required_validity",
+      "check": "statistical_protocol_frozen",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Post-capture metric or cost changes could select a favorable analysis."
+    },
+    {
+      "category": "required_validity",
+      "check": "source_artifact_hashes",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Unbound source bytes could change after the qualification was reported."
+    },
+    {
+      "category": "required_validity",
+      "check": "required_validity",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "A positive scientific metric cannot excuse invalid evidence."
+    },
+    {
+      "category": "readiness",
+      "check": "current_required_checks",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "A failed affected check must close readiness even when old failures are unrelated."
+    },
+    {
+      "category": "readiness",
+      "check": "readiness",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "A valid null must not suppress an independent measurement."
+    },
+    {
+      "category": "scientific_benefit",
+      "check": "scientific_benefit_deferred",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "principle": "A small sample, a favorable seed or an analytic fixture cannot substitute for held-out value."
+    }
+  ],
+  "capability_e2e": {
+    "cold_replay": "fresh_process",
+    "declared_entrypoint": "scripts/experiments/experiment_7476_v655_option_qualification.py",
+    "independent_raw_reduction": "fresh_process",
+    "numbered_runtime_e2e": "not_applicable_pure_reporting_and_protocol_qualification"
+  },
+  "clock_identity": {
+    "monotonic": "time.monotonic_ns",
+    "pid": 1083312,
+    "wall": "datetime.now(datetime.UTC)"
+  },
+  "cohort_manifest": {
+    "control_group_ids": [
+      "group-08a0e23c7eee7e6b1262da55",
+      "group-0b17757f52736a704fe80ca5",
+      "group-19c15a55f20859162193f2d0",
+      "group-20337dbd83d839e2943e01b2",
+      "group-218fc2e6e5e917a5040f19fd",
+      "group-2fcaee78390d52b290c800b0",
+      "group-37a4b8cdacb12e59bdd3346a",
+      "group-3fde2548c57296b99379f6b8",
+      "group-47f1cee0e3edfa710822a651",
+      "group-48daf3a901cf61f0c6e810a4",
+      "group-4c2d61e0d8dd49cc721064ce",
+      "group-591e609f1d5d6de4cf4782d5",
+      "group-592c8697dda4abd47be2cea3",
+      "group-5b280de190059e51dcc5f884",
+      "group-6d929f8ae2d83f347689591b",
+      "group-6fc1ab771a049f4c9c790e66",
+      "group-701b34bea3fd105ff7046c5c",
+      "group-813188f60b81f21cd03666c8",
+      "group-92598c10e46eca89fd22ba81",
+      "group-96fc04f27b29324e3c5eb828",
+      "group-9eb74aebe2d4abc16f7d0aad",
+      "group-a5415b67218ea84d0c9addd9",
+      "group-abd2ff7d4675f4a759e6fbda",
+      "group-aea992455627361a7fa6d86d",
+      "group-b4cc661623646f299e8a1b98",
+      "group-b882e9983a8d609a4d0c2e46",
+      "group-c597920022b6bbd7955d2e9b",
+      "group-c5bf6ad1da309fc4a5c0fed1",
+      "group-cafef620130c6c01e063e43e",
+      "group-ce8b5eea8e35900c23923947",
+      "group-d300a0c6336bc110ce4d8e35",
+      "group-d755a87e7a78127e75817dfd",
+      "group-d9998b51ad164af1c000defc",
+      "group-dd012f04fae803dd38aee7b3",
+      "group-df78cfa935958ad29f3e2c91",
+      "group-e78f49a040ab1b3136bcd04a",
+      "group-ec13eacfb968106e59366828",
+      "group-ee756ea36d519fe8c65da1d1",
+      "group-f388ff53b01f388e78827457",
+      "group-f42b7476f67a11fece667042"
+    ],
+    "counts": {
+      "calibration_tuning": 60,
+      "external": 74,
+      "internal_test": 60,
+      "online": 160,
+      "training": 180
+    },
+    "development_transport_groups": [],
+    "development_transport_groups_disjoint": true,
+    "excluded_online_candidates": [
+      {
+        "group_id": "group-00b2e25851278eaebf5edb5d",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:00b2e25851278eaebf5edb5d2f94d00a4735f150094d0f223fdc7ae4de77671f"
+      },
+      {
+        "group_id": "group-06133dabe23d2b340ed46752",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:06133dabe23d2b340ed4675202289f41e70ce38d138b2adc8b7eb9ed495a9e6f"
+      },
+      {
+        "group_id": "group-09cce14f4a64c9bbeae3cd12",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:8a5890d15dfa6c4e47e1f6a7e0845ae22fc4e4fa820134f867fff4a084080f08"
+      },
+      {
+        "group_id": "group-0f8e8e1fdf889d76e0dfab91",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:0f8e8e1fdf889d76e0dfab9169dfd31cf9c8a6d211aac06a7d154a1536fd0454"
+      },
+      {
+        "group_id": "group-18112728127687727dd3211f",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:18112728127687727dd3211f743dc95298d2d37b76cd7a78f54ed4827de32317"
+      },
+      {
+        "group_id": "group-22ec35d5cb2f8bf739371698",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:22ec35d5cb2f8bf73937169832af07d73d11f695e2e5347f0d7c733be22b1bea"
+      },
+      {
+        "group_id": "group-24661f61e832d4121ca5eb21",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:24661f61e832d4121ca5eb2139cfdd31667b7ae0411ad10b9f314b5307d2a843"
+      },
+      {
+        "group_id": "group-2970b39fb83c6c910f5b0dd7",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:2970b39fb83c6c910f5b0dd7e92d518fada62c59fa1748941402b558305b509f"
+      },
+      {
+        "group_id": "group-2be7a56ee19318a9c188af1a",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:2be7a56ee19318a9c188af1ad1c59358d0f7ddeb9cbdefb416649695ff5341d7"
+      },
+      {
+        "group_id": "group-2d3adf171747dd98a773712b",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:2d3adf171747dd98a773712b7a34331c21a1aa7e0f246f82318023142e93a81a"
+      },
+      {
+        "group_id": "group-34840a46b17c50fb0fe57455",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:34840a46b17c50fb0fe57455b6fdbd8cc2c1b80336cc9d10401ccaa41661beb8"
+      },
+      {
+        "group_id": "group-35815f5f115abf94787d5cce",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:35815f5f115abf94787d5cce2defe067d6d18b18106208449a692fb69de5fb6d"
+      },
+      {
+        "group_id": "group-3582f1d8d84c504c0f779127",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:3582f1d8d84c504c0f779127909a18d3f7c3b7348ae1cc0c01a3d52d1dab2226"
+      },
+      {
+        "group_id": "group-37ecf0e8043829eaae31df94",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:37ecf0e8043829eaae31df94c3ad63b857e9f7cee1ee933256c4a15e1b9b35ef"
+      },
+      {
+        "group_id": "group-429043870bac632a026f005a",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:429043870bac632a026f005a4fe0f60f570b7706fdba11339fd55c121aa70dc4"
+      },
+      {
+        "group_id": "group-475ef5898396ba6d5d958c8b",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:475ef5898396ba6d5d958c8b587fab671b39e0cb150b7f37bc7d4dd9200dacf6"
+      },
+      {
+        "group_id": "group-4a87bca98c02d6c355be2311",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:4a87bca98c02d6c355be23118a2015c05b717cae1063df55e195a7173d2e8ac3"
+      },
+      {
+        "group_id": "group-4e871c0340bb3de7c8f8540a",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:4e871c0340bb3de7c8f8540a8d4f8b444881e862ca249fd50a0450b9cb9a0233"
+      },
+      {
+        "group_id": "group-515e5ef5fee15c194c3236d7",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:515e5ef5fee15c194c3236d77d4368c0c23f8a60a77f0bbdfeefedeee3faad85"
+      },
+      {
+        "group_id": "group-51ef684b24f4e4db45bb89ef",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:51ef684b24f4e4db45bb89ef483d742efb0bdc4ada53474bd7bb5a082ceb1062"
+      },
+      {
+        "group_id": "group-51faf1d0705d4e871be8da0d",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:51faf1d0705d4e871be8da0d67e664ae192f77a5375110f4cd52a8cdc6cee04d"
+      },
+      {
+        "group_id": "group-54042fe3b23416ce0fe96371",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:54042fe3b23416ce0fe96371e89ead7bef5af853a4235bfc6f99a07fa9442a8c"
+      },
+      {
+        "group_id": "group-6192086c7ff75a948d965e4d",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:6192086c7ff75a948d965e4d8e99343b855290ced43cdd344eeb00b7600a64a1"
+      },
+      {
+        "group_id": "group-6481ad30dd54ca23bbe80643",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:6481ad30dd54ca23bbe806436de507255ec825b5b24254725c08572cfaa849df"
+      },
+      {
+        "group_id": "group-64b484416cfb5f1b09aed0d6",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:64b484416cfb5f1b09aed0d6eb9036be5057fd94e049832daae7b03a62502284"
+      },
+      {
+        "group_id": "group-6cf539f6633747b64fbfd433",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:6cf539f6633747b64fbfd433f7a8f792f982a5039de995ab9ef0374b1870741f"
+      },
+      {
+        "group_id": "group-706e9d15de33b8c3b030c08c",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:706e9d15de33b8c3b030c08c6b05adb88667e0ef0ea6605fef7a8c2666d40044"
+      },
+      {
+        "group_id": "group-721fe60fd7c9f839e55cde3f",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:721fe60fd7c9f839e55cde3f4c9b7db7d5efd1757d394d189b2406f5f2ba9448"
+      },
+      {
+        "group_id": "group-747ad5cbdd62c55b3719e564",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:747ad5cbdd62c55b3719e5645a670d4b59ee29a6137cf11583292c462df704fa"
+      },
+      {
+        "group_id": "group-7819313302ff4ecec3b7d7c3",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:7819313302ff4ecec3b7d7c3fc5d3d97f18bad064d4429dd1e20d421d9a1fbe3"
+      },
+      {
+        "group_id": "group-78c3c226f2ed0f22eedfe898",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:78c3c226f2ed0f22eedfe8980b202699a9c54671e27be62897feba35758c75cb"
+      },
+      {
+        "group_id": "group-79b7a66749fd375799dc51ff",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:79b7a66749fd375799dc51ffd61c4878de496d5d493aa745014a3108cfee09fb"
+      },
+      {
+        "group_id": "group-7d8956d7fbfa24c172cc6dfb",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:7d8956d7fbfa24c172cc6dfb0898db7b9c4790905bdd55836c3d62914c5977d8"
+      },
+      {
+        "group_id": "group-854b7981c406e7183f56b97a",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:854b7981c406e7183f56b97abdd9ee23ae74cf27cc0aaec924a0115cb8ad8942"
+      },
+      {
+        "group_id": "group-863eacd8035b6b3940c4c4f9",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:863eacd8035b6b3940c4c4f92134f02d0a869f3c280aab449c6a8fdd0ad42f05"
+      },
+      {
+        "group_id": "group-87647e2ff5011164780b48b3",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:87647e2ff5011164780b48b3359a91830485bc0726ce25db2d47bb68f8d385f3"
+      },
+      {
+        "group_id": "group-8928052017acaffba916567a",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:8928052017acaffba916567a179edde1ed4071a9332d6669566fe4ab340906d8"
+      },
+      {
+        "group_id": "group-92db043e69579465a8a7f28e",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:92db043e69579465a8a7f28eb0463d5a7d17a50e07f3635673511074a22e4bb1"
+      },
+      {
+        "group_id": "group-992b5b7fd558567674ccb4bb",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:992b5b7fd558567674ccb4bbffcdb130c695e1a7f3eda3cb20247701aaab8deb"
+      },
+      {
+        "group_id": "group-9b65f388f2cccce90cea4d34",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:9b65f388f2cccce90cea4d342c0831347a46121eece23da826dee47fcd58cf67"
+      },
+      {
+        "group_id": "group-9ec4750c31fb5fad39fb19c9",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:9ec4750c31fb5fad39fb19c91526855356cebde7490d5fded6192d2aaeea41de"
+      },
+      {
+        "group_id": "group-9f04076ed99454d8dd4162c6",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:9f04076ed99454d8dd4162c6c5683cf5b0e2138594cb1e5531f1d9b78fb26685"
+      },
+      {
+        "group_id": "group-a711a40596fab45a78007fe7",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:a711a40596fab45a78007fe7e15d6d49ceb402a6b65eb1c06625320170279dbd"
+      },
+      {
+        "group_id": "group-b598a81dec82c13533c2bf6c",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:b598a81dec82c13533c2bf6c0e676482d970e052f9131cefc09f7d94650ed432"
+      },
+      {
+        "group_id": "group-b7ddfa4c0fab36ed5aba7281",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:b7ddfa4c0fab36ed5aba7281e8fb997646ce6601f7256fe4cd2b989a2ddb188f"
+      },
+      {
+        "group_id": "group-c5d7c46e3d2f0e8d0810eb48",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:c5d7c46e3d2f0e8d0810eb48ef79744c1908b6dfcc2618ec2397ee19bda5cf94"
+      },
+      {
+        "group_id": "group-c74742c598ea91816415b5ef",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:c74742c598ea91816415b5efb189c4a29eeeddeac5a20afd37f9f56c13663b31"
+      },
+      {
+        "group_id": "group-c771dfdbc3029ebac228c9cd",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:c771dfdbc3029ebac228c9cda9f92a22c132190b35cfc86f42b6caecef645cf5"
+      },
+      {
+        "group_id": "group-d086eb631c92ec0ba450e77a",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:86844ad68e3d06b811d27b65f9d17ebd34a511507da05c0734ace51a9adf12d2"
+      },
+      {
+        "group_id": "group-d36ce79407b66b1aec5981ea",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:d36ce79407b66b1aec5981eadf7f0dc983c8bc00cf3788ff1e578badf9e5d2be"
+      },
+      {
+        "group_id": "group-d38591034dfc25ffc5294da4",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:d38591034dfc25ffc5294da4cb3c4ec5c50622ccae63f52c67768cb2200b6b3e"
+      },
+      {
+        "group_id": "group-d9a6e3de781aef238645bf4f",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:d9a6e3de781aef238645bf4fd82d87245e5e16450e46bc709702b98a8c4e1080"
+      },
+      {
+        "group_id": "group-dd7aaafb73f166889944116f",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:dd7aaafb73f166889944116f48c6c74b6084e024198f84a049b50a98f56ae6d0"
+      },
+      {
+        "group_id": "group-ddb5d8006ce791815ce4ef32",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:ddb5d8006ce791815ce4ef3234e151d212c5ab2a25e5ecec6c6835899f0fed01"
+      },
+      {
+        "group_id": "group-df0b509127613ba7a781bbf6",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:df0b509127613ba7a781bbf6f7c1ae84ce0ae29cfc03cd4c9719e058c0fab8dd"
+      },
+      {
+        "group_id": "group-e6d7bde79d0da52e51cbe5eb",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:e6d7bde79d0da52e51cbe5eb874c5030bb55d92f4a7a53e9230dfa2df8bc3444"
+      },
+      {
+        "group_id": "group-eda62a14276d5340c79edb6e",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:eda62a14276d5340c79edb6ea27e80ecbb191571d356644e64208f029cc63287"
+      },
+      {
+        "group_id": "group-ef79222603c9666a1aca52b2",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:ef79222603c9666a1aca52b2d22b37f635c593e857926380d44101455e9e50ae"
+      },
+      {
+        "group_id": "group-f2c5e80009c25e00f6d5e2d5",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:f2c5e80009c25e00f6d5e2d563d9ee754ef34208ffd4a6f22c5e934613230da9"
+      },
+      {
+        "group_id": "group-febe571541f4be5f2f3ec397",
+        "reason": "excluded_previous_role_source_hash",
+        "source_hash": "sha256:febe571541f4be5f2f3ec397ce835b77051b0ddaaa64cc36ed4407dcd0519a0d"
+      }
+    ],
+    "group_and_source_role_disjoint": true,
+    "label_provenance_hash_bound": true,
+    "licenses": {
+      "faithbench": {
+        "license": "CC BY-NC-SA 4.0",
+        "revision": "cf89797d82812c23b5d5e5c121f1d9b8983bbbce"
+      },
+      "ragtruth": {
+        "license": "MIT",
+        "revision": "c103204b9ce28d6bbad859304bf30de72b8ed8fe"
+      }
+    },
+    "manifest_hash": "sha256:3eeed2ea2cbda0a21e8b4659697a1c5be9999a6d5cc2a2893057b8c7af9aab87",
+    "planned_cells": 1228,
+    "raw_dir": "results/raw/experiment_7462_v654_option_protocol",
+    "schema": "carnot.exp7462.raw_manifest.v1",
+    "selected_response_ids_hash": "sha256:e7a251a6eb577dbfe93e4a555151f62a171004c60394533d66929422760c5539",
+    "selected_response_ids_hash_bound": true,
+    "selection_without_outcomes": true,
+    "shards": [
+      {
+        "kind": "predictor",
+        "path": "cohort_predictors.jsonl",
+        "rows": 534,
+        "sha256": "sha256:f3e5664308215a04d1ee781a2fb20e156d92415ed811be811e5d70c18c0bec38",
+        "size_bytes": 1824489
+      },
+      {
+        "kind": "evaluator",
+        "path": "cohort_evaluators.jsonl",
+        "rows": 534,
+        "sha256": "sha256:1afb8db1fb0e8b1732e3a1afe74df289ff4b0909736c35a6c4f29bfeec1d5898",
+        "size_bytes": 229925
+      },
+      {
+        "kind": "group",
+        "path": "cohort_groups.jsonl",
+        "rows": 534,
+        "sha256": "sha256:c4ad49cf81575b14283cf2551e18e6f466d2a00120fb969ca0b2dfb6e68d0ce0",
+        "size_bytes": 289354
+      },
+      {
+        "kind": "planned_cell",
+        "path": "planned_rows.jsonl",
+        "rows": 1228,
+        "sha256": "sha256:8c291f84b7d5ad50574df61e0558f6a507361dcb3442a611264fb9e7468e5e90",
+        "size_bytes": 787056
+      },
+      {
+        "kind": "interface",
+        "path": "option_readout_contract.json",
+        "rows": 1,
+        "sha256": "sha256:084b9f00c669264055aa1c9a9df4dca7753be67fdc68ab89084ff0ebb1d07e75",
+        "size_bytes": 1842
+      }
+    ],
+    "source_texts_hash_bound": true,
+    "total_groups": 534
+  },
+  "comparison_plan": {
+    "bootstrap": {
+      "draws": 10000,
+      "unit": "source_group"
+    },
+    "calibration_controls": {
+      "arms": [
+        "response_only",
+        "shuffled_source"
+      ],
+      "reserved_groups": 40,
+      "selection": "first stable-hash calibration groups before outcomes"
+    },
+    "complete_claim_extraction_claimed": false,
+    "complete_prompt_token_ceiling": 2048,
+    "decision_costs": {
+      "escalate": 0.2,
+      "false_accept": 10.0,
+      "false_accept_sensitivity": [
+        5.0,
+        20.0
+      ],
+      "false_reject": 1.0,
+      "operator_approved_deployment_policy": false
+    },
+    "familywise_alpha": 0.05,
+    "fit_seeds": [
+      65401,
+      65402,
+      65403,
+      65404,
+      65405
+    ],
+    "forward_charge_per_full_source_group": 2,
+    "minimum_usable_groups": {
+      "calibration_tuning": 40,
+      "external": 60,
+      "internal_test": 40,
+      "online": 120,
+      "training": 150
+    },
+    "multiplicity": "familywise_prespecified",
+    "option_orders": [
+      [
+        "supported",
+        "contains_unsupported"
+      ],
+      [
+        "contains_unsupported",
+        "supported"
+      ]
+    ],
+    "overlength_disposition": "explicit_exclusion_without_replacement_after_scoring",
+    "primary_outcome": "paired_multiclass_brier",
+    "primary_readout": "mean_of_two_distributions_after_stable_id_remap",
+    "role_shortfall_policy": "blocks_confirmatory_benefit_without_role_mixing",
+    "secondary_outcomes": [
+      "log_loss",
+      "ece",
+      "coverage",
+      "false_acceptance",
+      "service_time"
+    ],
+    "stopping_rule": "freeze denominators before capture; do not replace failures or exclusions",
+    "support_unit": "complete_response",
+    "target": "supported_vs_contains_any_human_annotated_unsupported_content",
+    "threshold_fit_role": "calibration_tuning_only",
+    "truncate_to_fit": false
+  },
+  "current_invocation_events": [],
+  "device_identity": {
+    "cpu": "x86_64",
+    "cuda_devices_observed": [],
+    "cuda_used": false,
+    "historical_board_evidence_used": false,
+    "host": "icbfl1",
+    "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44"
+  },
+  "duration_components_s": {
+    "forward_s": 0.0,
+    "generation_s": 0.0,
+    "model_load_s": 0.0,
+    "numeric_fitting_s": 0.0,
+    "qualification_s": 0.11101793700072449,
+    "validation_s": 14.438797277995036
+  },
+  "duration_s": 14.621333465,
+  "ended_at_utc": "2026-09-21T04:33:07.192858+00:00",
+  "ended_monotonic_ns": 69175696986338,
+  "execution_venue": "host",
+  "experiment_id": "exp7476-v655-option-qualification",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "An empty uppercase model list prevents numeric reducer work from posing as a model task.",
+    "acceptance_gate_results": "Typed checks preserve validity, readiness and scientific benefit as separate decisions.",
+    "capability_e2e": "This field preserves one required part of the terminal audit.",
+    "clock_identity": "This field preserves one required part of the terminal audit.",
+    "cohort_manifest": "Source-group role hashes prevent hidden overlap or outcome-driven replacement.",
+    "comparison_plan": "Frozen budgets, controls, metrics and multiplicity prevent analysis after results are known.",
+    "current_invocation_events": "This field preserves one required part of the terminal audit.",
+    "device_identity": "This field preserves one required part of the terminal audit.",
+    "duration_components_s": "This field preserves one required part of the terminal audit.",
+    "duration_s": "Measured duration without padding keeps model, numeric and validation work auditable.",
+    "ended_at_utc": "This field preserves one required part of the terminal audit.",
+    "ended_monotonic_ns": "This field preserves one required part of the terminal audit.",
+    "execution_venue": "The host venue and actual CPU/CUDA identities keep historical board evidence separate.",
+    "experiment_id": "This field preserves one required part of the terminal audit.",
+    "external_publication_authorized": "This field preserves one required part of the terminal audit.",
+    "field_principles": "Field-level reasons make the evidence understandable without hidden context.",
+    "flagged_adversarial": "Real reader flags stay visible and cannot be cleared to open a gate.",
+    "gate_check_summary": "Every blocked verdict names the failed check, upstream, path, expected and observed value.",
+    "historical_inference_sidecars": "This field preserves one required part of the terminal audit.",
+    "honest_verdict": "A complete terminal null reports qualification without claiming held-out benefit.",
+    "independent_reduction": "This field preserves one required part of the terminal audit.",
+    "inference_substrate": "The substrate distinguishes artifact aggregation from native readout, generation and numeric learning.",
+    "inference_substrate_class": "The no-model class prevents short qualification work from claiming model compute.",
+    "invocation_counts": "Balanced load, forward and generation counts expose failed, cancelled or unfinished calls.",
+    "milestone": "This field preserves one required part of the terminal audit.",
+    "model_invoked": "Attempted current model work stays distinct from archived or scripted events.",
+    "model_specs": "The empty lowercase alias prevents schema readers from inventing a current model.",
+    "numbered_e2e_applicable": "This field preserves one required part of the terminal audit.",
+    "option_protocol_ready_score": "A bare 0 or 1 follows current checks and protocol validity, not scientific benefit.",
+    "option_readout_contract": "This field preserves one required part of the terminal audit.",
+    "phase_spans": "Timestamped progress and checkpoints expose silent or unfinished operations.",
+    "preconditions_checked": "Named resources, paths, ownership and observed values prevent dependent work on unauthenticated inputs.",
+    "production_defaults_changed": "This field preserves one required part of the terminal audit.",
+    "promotion_score": "This field preserves one required part of the terminal audit.",
+    "random_seed": "Frozen ordering, fitting, audit and bootstrap seeds prevent favorable reselection.",
+    "repository_health": "The historical broad-suite failure remains failed and separate from current required checks.",
+    "reproducibility_checksum": "One checksum binds code, protocol, roles, model identity, shards and validation scope.",
+    "rows": "Event rows and hash-bound group shards keep independent units, failures and censoring visible.",
+    "run_date": "Use 20260921; measured clocks and process identity prevent a replay from posing as current work.",
+    "sample_size_budget": "Separate planned, attempted, complete, failed, censored, excluded and unstarted counts prevent denominator drift.",
+    "schema": "Versioned schema with exact roadmap experiment_id, milestone and terminal status prevents silent reader drift.",
+    "small_ebm_training": "This field preserves one required part of the terminal audit.",
+    "source_artifact_hashes": "Exact upstream bytes preserve original flags and prevent silent evidence replacement.",
+    "started_at_utc": "This field preserves one required part of the terminal audit.",
+    "started_monotonic_ns": "This field preserves one required part of the terminal audit.",
+    "status": "This field preserves one required part of the terminal audit.",
+    "validation_receipts": "Exact commands, exits and log hashes establish current scope apart from baseline health.",
+    "verdict_class": "A closed class prevents retryable work or external absence from being mislabeled.",
+    "verifier_is_oracle": "False prevents an interface verifier from authorizing a positive scientific claim."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "expected": null,
+    "failed_check": null,
+    "failed_required_checks": [],
+    "field": null,
+    "historical_repository_health_controls_readiness": false,
+    "observed": null,
+    "op": null,
+    "passed": true,
+    "path": null,
+    "upstream": null
+  },
+  "historical_inference_sidecars": [
+    {
+      "counted_as_current_inference": false,
+      "original_flagged_adversarial": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "scope": "archived_disqualified_protocol_and_model_shaped_scripted_events",
+      "sha256": "sha256:66f52a295736f6ae7b91536e92ad48809cc10cb9183ae24ce1f1debb826d426b"
+    }
+  ],
+  "honest_verdict": "complete_null_option_qualification_ready_no_efficacy_measurement",
+  "independent_reduction": {
+    "acceptance_gate_results": [
+      {
+        "category": "required_validity",
+        "check": "option_interface_replay",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "principle": "Wrong token positions or option mappings would make the readout invalid."
+      },
+      {
+        "category": "required_validity",
+        "check": "sealed_cohort_identity",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "principle": "Changed cohort identities could hide overlap or outcome-driven replacement."
+      },
+      {
+        "category": "required_validity",
+        "check": "statistical_protocol_frozen",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "principle": "Post-capture metric or cost changes could select a favorable analysis."
+      },
+      {
+        "category": "required_validity",
+        "check": "source_artifact_hashes",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "principle": "Unbound source bytes could change after the qualification was reported."
+      },
+      {
+        "category": "required_validity",
+        "check": "required_validity",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "principle": "A positive scientific metric cannot excuse invalid evidence."
+      },
+      {
+        "category": "readiness",
+        "check": "current_required_checks",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "principle": "A failed affected check must close readiness even when old failures are unrelated."
+      },
+      {
+        "category": "readiness",
+        "check": "readiness",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "principle": "A valid null must not suppress an independent measurement."
+      },
+      {
+        "category": "scientific_benefit",
+        "check": "scientific_benefit_deferred",
+        "expected": false,
+        "observed": false,
+        "op": "==",
+        "passed": true,
+        "principle": "A small sample, a favorable seed or an analytic fixture cannot substitute for held-out value."
+      }
+    ],
+    "all_cells_unstarted": true,
+    "group_counts": {
+      "calibration_tuning": 60,
+      "external": 74,
+      "internal_test": 60,
+      "online": 160,
+      "training": 180
+    },
+    "honest_verdict": "complete_null_option_qualification_ready_no_efficacy_measurement",
+    "option_protocol_ready_score": 1,
+    "planned_cells": 1228,
+    "promotion_score": 0,
+    "raw_manifest_hash": "sha256:3eeed2ea2cbda0a21e8b4659697a1c5be9999a6d5cc2a2893057b8c7af9aab87",
+    "repository_health_status": "degraded_unrelated_baseline",
+    "required_validation_passed": true,
+    "selected_response_ids_hash": "sha256:e7a251a6eb577dbfe93e4a555151f62a171004c60394533d66929422760c5539",
+    "source_artifact_hashes_passed": true,
+    "status": "complete",
+    "total_groups": 534,
+    "verdict_class": "null"
+  },
+  "inference_substrate": "artifact_aggregation_and_scripted_option_interface_qualification",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_cancelled": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "forward_calls_in_flight": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.655",
+  "model_invoked": false,
+  "model_specs": [],
+  "numbered_e2e_applicable": [],
+  "option_protocol_ready_score": 1,
+  "option_readout_contract": {
+    "averaged_distribution_by_stable_id": {
+      "contains_unsupported": 0.04742587317756679,
+      "supported": 0.9525741268224334
+    },
+    "current_model_forward": false,
+    "display_labels": [
+      " A",
+      " B"
+    ],
+    "last_evaluated_position_rule": "len(prompt_tokens)-1",
+    "mutation_controls": {
+      "duplicate_tokens": true,
+      "missing_label": true,
+      "nonfinite": true,
+      "option_id_swap": true,
+      "uniform_stub": true,
+      "unused_buffer_scores_minus_one": true
+    },
+    "original_order": {
+      "display_labels": [
+        " A",
+        " B"
+      ],
+      "label_to_option_id": {
+        " A": "supported",
+        " B": "contains_unsupported"
+      },
+      "label_token_ids": [
+        11,
+        17
+      ],
+      "last_evaluated_prompt_position": 315,
+      "normalization": "stable_softmax_after_raw_logit_capture",
+      "option_ids_in_prompt": [
+        "supported",
+        "contains_unsupported"
+      ],
+      "probabilities_by_option_id": {
+        "contains_unsupported": 0.04742587317756679,
+        "supported": 0.9525741268224334
+      },
+      "prompt_sha256": "sha256:09c411a920c464b460475339f5cb8a29e1c1f85ab6a3c7f4d7411d04abc495ef",
+      "prompt_token_count": 316,
+      "raw_logits_by_option_id": {
+        "contains_unsupported": 1.0,
+        "supported": 4.0
+      },
+      "score_buffer_rows": 319
+    },
+    "passed": true,
+    "prompt_boundary_checked": true,
+    "raw_logits_saved_before_normalization": true,
+    "reversed_order": {
+      "display_labels": [
+        " A",
+        " B"
+      ],
+      "label_to_option_id": {
+        " A": "contains_unsupported",
+        " B": "supported"
+      },
+      "label_token_ids": [
+        11,
+        17
+      ],
+      "last_evaluated_prompt_position": 315,
+      "normalization": "stable_softmax_after_raw_logit_capture",
+      "option_ids_in_prompt": [
+        "contains_unsupported",
+        "supported"
+      ],
+      "probabilities_by_option_id": {
+        "contains_unsupported": 0.04742587317756679,
+        "supported": 0.9525741268224334
+      },
+      "prompt_sha256": "sha256:32bed4a9ddcd8e0545269c857d0e7e42a8322e0054ec30d653f7dbe58ec9207f",
+      "prompt_token_count": 316,
+      "raw_logits_by_option_id": {
+        "contains_unsupported": 1.0,
+        "supported": 4.0
+      },
+      "score_buffer_rows": 319
+    },
+    "schema": "carnot.exp7462.option_readout_contract.v1",
+    "scripted_logits_only": true,
+    "stable_option_ids": [
+      "supported",
+      "contains_unsupported"
+    ]
+  },
+  "phase_spans": [
+    {
+      "checkpoint": "inputs",
+      "completed_units": 34,
+      "duration_s": 0.01030237998929806,
+      "end_s": 0.010333938989788294,
+      "phase": "preconditions",
+      "start_s": 3.15590004902333e-05
+    },
+    {
+      "checkpoint": "no_model_load",
+      "completed_units": 0,
+      "duration_s": 3.9099541027098894e-07,
+      "end_s": 0.010361280990764499,
+      "phase": "model_load",
+      "start_s": 0.010360889995354228
+    },
+    {
+      "checkpoint": "no_generation",
+      "completed_units": 0,
+      "duration_s": 1.7099955584853888e-07,
+      "end_s": 0.010365688998717815,
+      "phase": "generation",
+      "start_s": 0.010365517999161966
+    },
+    {
+      "checkpoint": "sealed_cohort",
+      "completed_units": 534,
+      "duration_s": 0.11099395199562423,
+      "end_s": 0.12136401899624616,
+      "phase": "qualification",
+      "start_s": 0.01037006700062193
+    },
+    {
+      "checkpoint": "affected_checks",
+      "completed_units": 8,
+      "duration_s": 11.260409358001198,
+      "end_s": 11.382434398998157,
+      "phase": "affected_validation",
+      "start_s": 0.12202504099695943
+    },
+    {
+      "checkpoint": "terminal_readers",
+      "completed_units": 4,
+      "duration_s": 3.1836790399975143,
+      "end_s": 14.621314548989176,
+      "phase": "terminal_validation",
+      "start_s": 11.437635508991661
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7462_v654_option_protocol.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7462_v654_option_protocol.py",
+      "upstream": "python/carnot/experiment_7462_v654_option_protocol.py"
+    },
+    {
+      "check": "source_bytes:tests/python/test_experiment_7462_v654_option_protocol.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7462_v654_option_protocol.py",
+      "upstream": "tests/python/test_experiment_7462_v654_option_protocol.py"
+    },
+    {
+      "check": "source_bytes:results/experiment_7462_v654_option_protocol.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7449_v653_source_protocol.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7449_v653_source_protocol.py",
+      "upstream": "python/carnot/experiment_7449_v653_source_protocol.py"
+    },
+    {
+      "check": "source_bytes:openspec/capabilities/verification/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/verification/spec.md",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "check": "source_bytes:results/raw/experiment_7462_v654_option_protocol/manifest.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7462_v654_option_protocol/manifest.json",
+      "upstream": "results/raw/experiment_7462_v654_option_protocol/manifest.json"
+    },
+    {
+      "check": "source_bytes:results/raw/experiment_7462_v654_option_protocol/cohort_predictors.jsonl",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7462_v654_option_protocol/cohort_predictors.jsonl",
+      "upstream": "results/raw/experiment_7462_v654_option_protocol/cohort_predictors.jsonl"
+    },
+    {
+      "check": "source_bytes:results/raw/experiment_7462_v654_option_protocol/cohort_evaluators.jsonl",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7462_v654_option_protocol/cohort_evaluators.jsonl",
+      "upstream": "results/raw/experiment_7462_v654_option_protocol/cohort_evaluators.jsonl"
+    },
+    {
+      "check": "source_bytes:results/raw/experiment_7462_v654_option_protocol/cohort_groups.jsonl",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7462_v654_option_protocol/cohort_groups.jsonl",
+      "upstream": "results/raw/experiment_7462_v654_option_protocol/cohort_groups.jsonl"
+    },
+    {
+      "check": "source_bytes:results/raw/experiment_7462_v654_option_protocol/planned_rows.jsonl",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7462_v654_option_protocol/planned_rows.jsonl",
+      "upstream": "results/raw/experiment_7462_v654_option_protocol/planned_rows.jsonl"
+    },
+    {
+      "check": "source_bytes:results/raw/experiment_7462_v654_option_protocol/option_readout_contract.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7462_v654_option_protocol/option_readout_contract.json",
+      "upstream": "results/raw/experiment_7462_v654_option_protocol/option_readout_contract.json"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7476_v655_option_qualification.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7476_v655_option_qualification.py",
+      "upstream": "python/carnot/experiment_7476_v655_option_qualification.py"
+    },
+    {
+      "check": "source_bytes:scripts/experiments/experiment_7476_v655_option_qualification.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7476_v655_option_qualification.py",
+      "upstream": "scripts/experiments/experiment_7476_v655_option_qualification.py"
+    },
+    {
+      "check": "source_bytes:tests/python/test_experiment_7476_v655_option_qualification.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7476_v655_option_qualification.py",
+      "upstream": "tests/python/test_experiment_7476_v655_option_qualification.py"
+    },
+    {
+      "check": "driving_requirement",
+      "expected": "REQ-VERIFY-7476",
+      "field": "REQ-*",
+      "observed": "REQ-VERIFY-7476",
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/verification/spec.md",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "check": "v654_schema",
+      "expected": "carnot.exp7462.v654.option_protocol.v1",
+      "field": "schema",
+      "observed": "carnot.exp7462.v654.option_protocol.v1",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "v654_verdict_class",
+      "expected": "disqualified",
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "v654_honest_verdict",
+      "expected": "complete_disqualified_option_protocol_validation",
+      "field": "honest_verdict",
+      "observed": "complete_disqualified_option_protocol_validation",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "v654_flagged_adversarial",
+      "expected": true,
+      "field": "flagged_adversarial",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "v654_option_protocol_ready_score",
+      "expected": 0,
+      "field": "option_protocol_ready_score",
+      "observed": 0,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "historical_full_suite_exit_code",
+      "expected": 2,
+      "field": "validation_receipts.all_python_tests_required_once.exit_code",
+      "observed": 2,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "historical_full_suite_passed",
+      "expected": false,
+      "field": "validation_receipts.all_python_tests_required_once.passed",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "historical_full_suite_log_sha256",
+      "expected": "sha256:46e530d225d2a13970316c369662682c551da67781d2572917a73c3b6420d4da",
+      "field": "validation_receipts.all_python_tests_required_once.log_sha256",
+      "observed": "sha256:46e530d225d2a13970316c369662682c551da67781d2572917a73c3b6420d4da",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "upstream": "results/experiment_7462_v654_option_protocol.json"
+    },
+    {
+      "check": "current_task_not_quarantined",
+      "expected": false,
+      "field": "exp7476-v655-option-qualification",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "random_seed": {
+    "audit_seed": 65409,
+    "bootstrap_seed": 6540010,
+    "deterministic_reducers": "no_rng",
+    "fit_seeds": [
+      65401,
+      65402,
+      65403,
+      65404,
+      65405
+    ],
+    "ordering_seed": 65400
+  },
+  "repository_health": {
+    "controls_option_protocol_readiness": false,
+    "observations": [
+      {
+        "classification": "unrelated_repository_health",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "tests/python",
+          "-q"
+        ],
+        "command_category": "required_validation",
+        "command_environment": {},
+        "duration_s": 239.4824933830023,
+        "ended_at_utc": "2026-09-20T21:16:42.704294+00:00",
+        "exit_code": 2,
+        "interrupted_after_failures": true,
+        "log_path": "results/raw/experiment_7462_v654_option_protocol/validation/all_python_tests/00_all_python_tests_required_once/00_all_python_tests_required_once.log",
+        "log_sha256": "sha256:46e530d225d2a13970316c369662682c551da67781d2572917a73c3b6420d4da",
+        "name": "all_python_tests_required_once",
+        "output_tail": "eyE...\nERROR tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py\nERROR tests/python/test_experiment_5527_sota_hard_soft_panel_v2.py - KeyError...\nERROR tests/python/test_experiment_5525_sota_schema_failure_taxonomy.py - Key...\nERROR tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py\nERROR tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py\nERROR tests/python/test_experiment_5526_sota_structured_repair_loop.py - KeyE...\nERROR tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py\nERROR tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py\nERROR tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py - Key...\nERROR tests/python/test_experiment_5527_sota_hard_soft_panel_v2.py - KeyError...\nERROR tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py\nERROR tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py - Key...\nERROR tests/python/test_experiment_5552_automaton_schema_row_completion_receipt.py\nERROR tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py - Key...\nERROR tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py\nERROR tests/python/test_experiment_5552_automaton_schema_row_completion_receipt.py\nERROR tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py\nERROR tests/python/test_experiment_5552_automaton_schema_row_completion_receipt.py\nERROR tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py - Key...\nERROR tests/python/test_experiment_5552_automaton_schema_row_completion_receipt.py\nERROR tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py\nERROR tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py\nERROR tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py\nERROR tests/python/test_experiment_5786_sota_constraint_stream.py - KeyError:...\nERROR tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py\nERROR tests/python/test_experiment_5786_sota_constraint_stream.py - KeyError:...\nERROR tests/python/test_experiment_5786_sota_constraint_stream.py - KeyError:...\nERROR tests/python/test_experiment_5799_sota_answer_channel_canary.py - KeyEr...\nERROR tests/python/test_experiment_5786_sota_constraint_stream.py - KeyError:...\nERROR tests/python/test_experiment_5799_sota_answer_channel_canary.py - KeyEr...\nERROR tests/python/test_experiment_5799_sota_answer_channel_canary.py - KeyEr...\nERROR tests/python/test_experiment_5799_sota_answer_channel_canary.py - KeyEr...\nERROR tests/python/test_experiment_5811_exp5799_event_provenance_audit.py - K...\nERROR tests/python/test_experiment_5811_exp5799_event_provenance_audit.py - K...\nERROR tests/python/test_experiment_5811_exp5799_event_provenance_audit.py - K...\nERROR tests/python/test_experiment_5811_exp5799_event_provenance_audit.py - K...\nERROR tests/python/test_experiment_5812_split_budget_channel_contract.py - Ke...\nERROR tests/python/test_experiment_5812_split_budget_channel_contract.py - Ke...\nERROR tests/python/test_experiment_5812_split_budget_channel_contract.py - Ke...\nERROR tests/python/test_experiment_5812_split_budget_channel_contract.py - Ke...\nERROR tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py - Index...\nERROR tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py - Index...\nERROR tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py - Index...\nERROR tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py - Index...\nERROR tests/python/test_experiment_7131_v626_model_facing_csl.py - ImportErro...\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/threading.py:359: KeyboardInterrupt\n(to show a full traceback on KeyboardInterrupt use --full-trace)\n= 64 failed, 6695 passed, 6 skipped, 99 warnings, 65 errors in 235.98s (0:03:55) =\n",
+        "passed": false,
+        "required": true,
+        "required_for_exp7476": false,
+        "scope": "required_complete_python_suite_once",
+        "started_at_utc": "2026-09-20T21:12:43.221316+00:00",
+        "timed_out": false
+      }
+    ],
+    "principle": "A historical broad-suite failure remains visible but cannot replace current task-scoped checks.",
+    "status": "degraded_unrelated_baseline"
+  },
+  "reproducibility_checksum": "sha256:d82790b3d9f35bc8c4a4d138f17b9ffa6c6a4a23d82e9618c2e4d624f3186fd7",
+  "rows": [
+    {
+      "censored": false,
+      "disposition": "complete",
+      "failed": false,
+      "role": "training",
+      "shard": "cohort_groups.jsonl",
+      "unit_id": "sealed-role:training",
+      "unit_type": "hash_bound_group_shard_partition",
+      "units": 180
+    },
+    {
+      "censored": false,
+      "disposition": "complete",
+      "failed": false,
+      "role": "calibration_tuning",
+      "shard": "cohort_groups.jsonl",
+      "unit_id": "sealed-role:calibration_tuning",
+      "unit_type": "hash_bound_group_shard_partition",
+      "units": 60
+    },
+    {
+      "censored": false,
+      "disposition": "complete",
+      "failed": false,
+      "role": "internal_test",
+      "shard": "cohort_groups.jsonl",
+      "unit_id": "sealed-role:internal_test",
+      "unit_type": "hash_bound_group_shard_partition",
+      "units": 60
+    },
+    {
+      "censored": false,
+      "disposition": "complete",
+      "failed": false,
+      "role": "online",
+      "shard": "cohort_groups.jsonl",
+      "unit_id": "sealed-role:online",
+      "unit_type": "hash_bound_group_shard_partition",
+      "units": 160
+    },
+    {
+      "censored": false,
+      "disposition": "complete",
+      "failed": false,
+      "role": "external",
+      "shard": "cohort_groups.jsonl",
+      "unit_id": "sealed-role:external",
+      "unit_type": "hash_bound_group_shard_partition",
+      "units": 74
+    },
+    {
+      "censored": false,
+      "current_model_calls": 0,
+      "disposition": "complete",
+      "failed": false,
+      "passed": true,
+      "unit_id": "interface-mutation:uniform_stub",
+      "unit_type": "scripted_interface_control"
+    },
+    {
+      "censored": false,
+      "current_model_calls": 0,
+      "disposition": "complete",
+      "failed": false,
+      "passed": true,
+      "unit_id": "interface-mutation:nonfinite",
+      "unit_type": "scripted_interface_control"
+    },
+    {
+      "censored": false,
+      "current_model_calls": 0,
+      "disposition": "complete",
+      "failed": false,
+      "passed": true,
+      "unit_id": "interface-mutation:missing_label",
+      "unit_type": "scripted_interface_control"
+    },
+    {
+      "censored": false,
+      "current_model_calls": 0,
+      "disposition": "complete",
+      "failed": false,
+      "passed": true,
+      "unit_id": "interface-mutation:duplicate_tokens",
+      "unit_type": "scripted_interface_control"
+    },
+    {
+      "censored": false,
+      "current_model_calls": 0,
+      "disposition": "complete",
+      "failed": false,
+      "passed": true,
+      "unit_id": "interface-mutation:option_id_swap",
+      "unit_type": "scripted_interface_control"
+    },
+    {
+      "censored": false,
+      "current_model_calls": 0,
+      "disposition": "complete",
+      "failed": false,
+      "passed": true,
+      "unit_id": "interface-mutation:unused_buffer_scores_minus_one",
+      "unit_type": "scripted_interface_control"
+    },
+    {
+      "censored": false,
+      "disposition": "complete",
+      "failed": false,
+      "passed": true,
+      "unit_id": "sealed-cohort-reduction",
+      "unit_type": "independent_raw_reduction",
+      "units": 534
+    }
+  ],
+  "run_date": "20260921",
+  "sample_size_budget": {
+    "attempted": 534,
+    "capture_eligibility_status": "deferred_until_tokenizer_and_model_capture",
+    "censored": 0,
+    "complete": 534,
+    "excluded": 0,
+    "failed": 0,
+    "overlength_groups": null,
+    "planned": 534,
+    "planned_capture_cells": 1228,
+    "registered_independent_groups": {
+      "calibration_tuning": 60,
+      "external": 74,
+      "internal_test": 60,
+      "online": 160,
+      "training": 180
+    },
+    "unavailable_groups": null,
+    "unstarted": 0,
+    "unstarted_capture_cells": 1228,
+    "usable_group_counts": null
+  },
+  "schema": "carnot.exp7476.v655.option_qualification.v1",
+  "small_ebm_training": {
+    "attempted": false,
+    "deferred_to": "post_capture_numeric_fit",
+    "duration_s": 0.0,
+    "fit_attempts": 0,
+    "fit_completions": 0,
+    "fit_failures": 0,
+    "receipt_class": "small_ebm_training"
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "CLAUDE.md",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b"
+    },
+    "CODEX.md": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/verification/spec.md": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "openspec/capabilities/verification/spec.md",
+      "sha256": "sha256:c4a59f8f81641ba184464c54f14def0de75e3e8890767d1f8140c1859e490997"
+    },
+    "ops/e2e-test-plan.md": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:35972102ea077beb17323f305a128409f88ac8125a11e8537e402171d0356f73"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fdab7b9ef47aa3f8be8902e30d96cd096f361d1abbe7c6de7624101383bf968e"
+    },
+    "python/carnot/experiment_7358_v646_validation_contract.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    "python/carnot/experiment_7449_v653_source_protocol.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "python/carnot/experiment_7449_v653_source_protocol.py",
+      "sha256": "sha256:38675a7dfb3275e58f1993c75972ca8a33a43a29e4db68ffd3ce3439dde3e3f3"
+    },
+    "python/carnot/experiment_7462_v654_option_protocol.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "python/carnot/experiment_7462_v654_option_protocol.py",
+      "sha256": "sha256:e179094bac1917e19f8498dc53fc4b6444dcd6766847b91762a108082f9f54a3"
+    },
+    "python/carnot/experiment_7476_v655_option_qualification.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "python/carnot/experiment_7476_v655_option_qualification.py",
+      "sha256": "sha256:9c4c1bc57fee4275f2beda11e37ad637dc646c4b44b4063d8a7002828f112f09"
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    "research-program.md": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "results/experiment_7462_v654_option_protocol.json": {
+      "device_id": 64770,
+      "original_flagged_adversarial": true,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "results/experiment_7462_v654_option_protocol.json",
+      "sha256": "sha256:66f52a295736f6ae7b91536e92ad48809cc10cb9183ae24ce1f1debb826d426b"
+    },
+    "results/raw/experiment_7462_v654_option_protocol/cohort_evaluators.jsonl": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "results/raw/experiment_7462_v654_option_protocol/cohort_evaluators.jsonl",
+      "sha256": "sha256:1afb8db1fb0e8b1732e3a1afe74df289ff4b0909736c35a6c4f29bfeec1d5898"
+    },
+    "results/raw/experiment_7462_v654_option_protocol/cohort_groups.jsonl": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "results/raw/experiment_7462_v654_option_protocol/cohort_groups.jsonl",
+      "sha256": "sha256:c4ad49cf81575b14283cf2551e18e6f466d2a00120fb969ca0b2dfb6e68d0ce0"
+    },
+    "results/raw/experiment_7462_v654_option_protocol/cohort_predictors.jsonl": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "results/raw/experiment_7462_v654_option_protocol/cohort_predictors.jsonl",
+      "sha256": "sha256:f3e5664308215a04d1ee781a2fb20e156d92415ed811be811e5d70c18c0bec38"
+    },
+    "results/raw/experiment_7462_v654_option_protocol/manifest.json": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "results/raw/experiment_7462_v654_option_protocol/manifest.json",
+      "sha256": "sha256:9c8dbab2937638ad39ae8835f63365f0feb60aa47f8311588c37fc50831aab6e"
+    },
+    "results/raw/experiment_7462_v654_option_protocol/option_readout_contract.json": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "results/raw/experiment_7462_v654_option_protocol/option_readout_contract.json",
+      "sha256": "sha256:084b9f00c669264055aa1c9a9df4dca7753be67fdc68ab89084ff0ebb1d07e75"
+    },
+    "results/raw/experiment_7462_v654_option_protocol/planned_rows.jsonl": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "results/raw/experiment_7462_v654_option_protocol/planned_rows.jsonl",
+      "sha256": "sha256:8c291f84b7d5ad50574df61e0558f6a507361dcb3442a611264fb9e7468e5e90"
+    },
+    "scripts/experiment_template.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    "scripts/experiments/experiment_7476_v655_option_qualification.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "scripts/experiments/experiment_7476_v655_option_qualification.py",
+      "sha256": "sha256:7247d3cdd53e8a7fb19f90a4fce24fff0eb66ac7625a3669aa886e7a1d49c147"
+    },
+    "tests/python/test_experiment_7462_v654_option_protocol.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "tests/python/test_experiment_7462_v654_option_protocol.py",
+      "sha256": "sha256:818f69b98390271afdc12f4d23ec5f48a4a6be8da8befa0d60be948ab8560aa2"
+    },
+    "tests/python/test_experiment_7476_v655_option_qualification.py": {
+      "device_id": 64770,
+      "original_flagged_adversarial": null,
+      "owner_gid": 1000,
+      "owner_uid": 1000,
+      "path": "tests/python/test_experiment_7476_v655_option_qualification.py",
+      "sha256": "sha256:0e6af950c6e10dad7f5364eb7092ac6096a9078943cf330acfe87b86ccfcc628"
+    }
+  },
+  "started_at_utc": "2026-09-21T04:32:52.567515+00:00",
+  "started_monotonic_ns": 69161075652873,
+  "status": "complete",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7476_v655_option_qualification",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7476_v655_option_qualification"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.1743368129973533,
+      "ended_at_utc": "2026-09-21T04:32:53.864365+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:cdc863a8f2b6808f3e05c9cfdcc4f496a96a5edfaff7d61e4fa325a6be0d8402",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7476_v655_option_qualification\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7476_v655_option_qualification.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7476_v655_option_qualification": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7476_v655_option_qualification.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T04:32:52.689548+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7476-validation-7spsid0n/basetemp/focused tests/python/test_experiment_7476_v655_option_qualification.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7476-validation-7spsid0n/basetemp/focused",
+        "tests/python/test_experiment_7476_v655_option_qualification.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 3.786171325991745,
+      "ended_at_utc": "2026-09-21T04:32:57.650890+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:eec6000455e1e7ef018057a2c943fc0c9fea2bb21d1a0993f8b13bea2d6bd3b8",
+      "name": "focused_pytest",
+      "output_tail": ".......                                                                  [100%]\n7 passed in 1.56s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-21T04:32:53.864425+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7476-validation-7spsid0n/coverage/.coverage '--include=*/experiment_7476_v655_option_qualification.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7476-validation-7spsid0n/basetemp/coverage tests/python/test_experiment_7476_v655_option_qualification.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7476-validation-7spsid0n/coverage/.coverage",
+        "--include=*/experiment_7476_v655_option_qualification.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7476-validation-7spsid0n/basetemp/coverage",
+        "tests/python/test_experiment_7476_v655_option_qualification.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 6.055157853988931,
+      "ended_at_utc": "2026-09-21T04:33:03.706355+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:814402fda0b3f247785de9ef412e0b7072284e7f6fbf141c1bec2ac2d996c7f7",
+      "name": "changed_module_coverage",
+      "output_tail": ".......                                                                  [100%]\n7 passed in 2.78s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-21T04:32:57.650926+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7476_v655_option_qualification.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7476_v655_option_qualification.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7476-validation-7spsid0n/coverage/.coverage"
+      },
+      "duration_s": 0.07202389700978529,
+      "ended_at_utc": "2026-09-21T04:33:03.778774+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:bfefd6f1174c12f9d5afdbdb8ede39e77167696516d7bd86872ac98c88512e69",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                         Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------------\npython/carnot/experiment_7476_v655_option_qualification.py     124      0   100%\n------------------------------------------------------------------------------------------\nTOTAL                                                          124      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T04:33:03.706386+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7476_v655_option_qualification.py scripts/experiments/experiment_7476_v655_option_qualification.py tests/python/test_experiment_7476_v655_option_qualification.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7476_v655_option_qualification.py",
+        "scripts/experiments/experiment_7476_v655_option_qualification.py",
+        "tests/python/test_experiment_7476_v655_option_qualification.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.015009621987701394,
+      "ended_at_utc": "2026-09-21T04:33:03.794275+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-21T04:33:03.778823+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7476_v655_option_qualification.py scripts/experiments/experiment_7476_v655_option_qualification.py tests/python/test_experiment_7476_v655_option_qualification.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7476_v655_option_qualification.py",
+        "scripts/experiments/experiment_7476_v655_option_qualification.py",
+        "tests/python/test_experiment_7476_v655_option_qualification.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.012194895010907203,
+      "ended_at_utc": "2026-09-21T04:33:03.806966+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-21T04:33:03.794311+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7476_v655_option_qualification.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7476_v655_option_qualification.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.126981480003451,
+      "ended_at_utc": "2026-09-21T04:33:03.934302+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T04:33:03.807010+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7476_v655_option_qualification.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7476_v655_option_qualification.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.015037243007100187,
+      "ended_at_utc": "2026-09-21T04:33:03.949696+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-21T04:33:03.934331+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/experiments/experiment_7476_v655_option_qualification.py --date 20260921 --root . --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7476_v655_option_qualification/measured_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7476_v655_option_qualification.py",
+        "--date",
+        "20260921",
+        "--root",
+        ".",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7476_v655_option_qualification/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.32195520499954,
+      "ended_at_utc": "2026-09-21T04:33:05.327660+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_artifact",
+      "started_at_utc": "2026-09-21T04:33:04.005164+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/experiments/experiment_7476_v655_option_qualification.py --date 20260921 --root . --independent-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7476_v655_option_qualification/measured_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7476_v655_option_qualification.py",
+        "--date",
+        "20260921",
+        "--root",
+        ".",
+        "--independent-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7476_v655_option_qualification/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.292945367997163,
+      "ended_at_utc": "2026-09-21T04:33:06.621206+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/terminal/01_independent_raw_reduction/00_independent_raw_reduction.log",
+      "log_sha256": "sha256:2b56508c581b9117896c8bd7871907d83abe73bd9d245ca6ea517c3ed7f40a69",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"passed\": true, \"reduced\": {\"acceptance_gate_results\": [{\"category\": \"required_validity\", \"check\": \"option_interface_replay\", \"expected\": true, \"observed\": true, \"op\": \"==\", \"passed\": true, \"principle\": \"Wrong token positions or option mappings would make the readout invalid.\"}, {\"category\": \"required_validity\", \"check\": \"sealed_cohort_identity\", \"expected\": true, \"observed\": true, \"op\": \"==\", \"passed\": true, \"principle\": \"Changed cohort identities could hide overlap or outcome-driven replacement.\"}, {\"category\": \"required_validity\", \"check\": \"statistical_protocol_frozen\", \"expected\": true, \"observed\": true, \"op\": \"==\", \"passed\": true, \"principle\": \"Post-capture metric or cost changes could select a favorable analysis.\"}, {\"category\": \"required_validity\", \"check\": \"source_artifact_hashes\", \"expected\": true, \"observed\": true, \"op\": \"==\", \"passed\": true, \"principle\": \"Unbound source bytes could change after the qualification was reported.\"}, {\"category\": \"required_validity\", \"check\": \"required_validity\", \"expected\": true, \"observed\": true, \"op\": \"==\", \"passed\": true, \"principle\": \"A positive scientific metric cannot excuse invalid evidence.\"}, {\"category\": \"readiness\", \"check\": \"current_required_checks\", \"expected\": true, \"observed\": true, \"op\": \"==\", \"passed\": true, \"principle\": \"A failed affected check must close readiness even when old failures are unrelated.\"}, {\"category\": \"readiness\", \"check\": \"readiness\", \"expected\": true, \"observed\": true, \"op\": \"==\", \"passed\": true, \"principle\": \"A valid null must not suppress an independent measurement.\"}, {\"category\": \"scientific_benefit\", \"check\": \"scientific_benefit_deferred\", \"expected\": false, \"observed\": false, \"op\": \"==\", \"passed\": true, \"principle\": \"A small sample, a favorable seed or an analytic fixture cannot substitute for held-out value.\"}], \"all_cells_unstarted\": true, \"group_counts\": {\"calibration_tuning\": 60, \"external\": 74, \"internal_test\": 60, \"online\": 160, \"training\": 180}, \"honest_verdict\": \"complete_null_option_qualification_ready_no_efficacy_measurement\", \"option_protocol_ready_score\": 1, \"planned_cells\": 1228, \"promotion_score\": 0, \"raw_manifest_hash\": \"sha256:3eeed2ea2cbda0a21e8b4659697a1c5be9999a6d5cc2a2893057b8c7af9aab87\", \"repository_health_status\": \"degraded_unrelated_baseline\", \"required_validation_passed\": true, \"selected_response_ids_hash\": \"sha256:e7a251a6eb577dbfe93e4a555151f62a171004c60394533d66929422760c5539\", \"source_artifact_hashes_passed\": true, \"status\": \"complete\", \"total_groups\": 534, \"verdict_class\": \"null\"}}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_raw_rows",
+      "started_at_utc": "2026-09-21T04:33:05.327710+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7476_v655_option_qualification/measured_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7476_v655_option_qualification/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5357227400090778,
+      "ended_at_utc": "2026-09-21T04:33:07.157314+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_artifact",
+      "started_at_utc": "2026-09-21T04:33:06.621263+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7476_v655_option_qualification/measured_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7476_v655_option_qualification/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.03126083499228116,
+      "ended_at_utc": "2026-09-21T04:33:07.188804+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7476_v655_option_qualification/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_artifact",
+      "started_at_utc": "2026-09-21T04:33:07.157343+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}
