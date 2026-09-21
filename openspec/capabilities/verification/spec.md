@@ -44083,3 +44083,114 @@ favorable seed, fixture, or low-support result cannot replace held-out value.
 **When** the declared unbuffered entrypoint executes
 **Then** scoped checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
 **And** only the measured terminal JSON publishes at the declared result path.
+
+### REQ-VERIFY-7492: V656 Window Pilot SHALL Measure Native Transport And Capture Cost
+
+Exp7492 SHALL consume Exp7491 only when its exact schema, experiment identity,
+terminal status, honest verdict, verdict class, adversarial flag, gate summary,
+and `window_protocol_ready_score` pass their frozen checks. It SHALL also run
+the Exp7491 cold validator against the original hash-bound raw shards. A
+missing, changed, blocked, or guessed V656 prerequisite SHALL stop model work.
+
+The pilot SHALL use eight fixed eligible training groups from Exp7491. The
+groups SHALL span response byte lengths and sentence counts. Selection SHALL
+not read evaluator labels or current model outcomes. Each group SHALL retain
+its whole-response baseline, every lossless focus window, and both stable
+option orders. The schedule SHALL match the sealed Exp7491 request hashes and
+token lengths. It SHALL use no more than 72 forwards.
+
+The task SHALL load cached `unsloth/Qwen3.8-27B-GGUF` once through the native
+llama.cpp runtime. It SHALL authenticate the exact GGUF path, SHA-256,
+Q4_K_M quantization, native module bytes and build identity, owned PID, GPU
+UUID, requested offload, observed placement, and peak owned-process VRAM. It
+SHALL use fresh KV state for every prompt and generate zero tokens. The
+inference class SHALL be `model_load_no_generation`. A small model or a load
+failure SHALL not count as a headline forward.
+
+Each attempted call SHALL retain its terminal disposition. Each completed call
+SHALL retain the exact prompt hash, prompt token IDs, native option token IDs,
+display-label mapping, stable option-ID remapping, requested final position,
+actual final evaluated position, raw logits, normalized stable-ID
+probabilities, KV reset receipt, and zero-generation receipt. Tokenization,
+prefill, and final-logit readout times SHALL be measured separately. Model load
+time SHALL also be separate. Analytic token-mapping fixtures SHALL use separate
+scripted rows and SHALL not become semantic observations.
+
+The reducer SHALL report real label-order sensitivity after stable-ID
+remapping. It SHALL not require predictive accuracy, a preferred class, or
+near-equality between label orders for transport validity. Transport validity
+SHALL require complete accounting, sealed prompt identity, native option-token
+identity, finite final-position logits, fresh KV state, zero generation, and
+passing analytic mapping controls.
+
+The pilot SHALL forecast the complete sealed fit and evaluation request
+manifests from their individual planned prompt lengths. Each forecast SHALL
+use the measured per-token prefill p90, a multiplier of at least 1.25, and the
+measured model-load time. Each fixed live-work cap SHALL be 3,300 seconds. The
+artifact SHALL publish the estimate, estimator, sample size, range,
+uncertainty, planned tokens, planned calls, and unstarted count. A failing
+forecast SHALL set `window_native_ready_score=0` and SHALL block the later full
+capture without shrinking the roster or truncating text. A completed measured
+pilot MAY retain `pilot_complete_score=1`.
+
+The artifact SHALL publish at
+`results/experiment_7492_v656_window_pilot.json`. It SHALL declare both model
+spec fields, current invocation accounting, `scored_runtime_parity_score=0`,
+per-group rows, raw `pilot_call_rows`, hash-bound raw shards, phase spans,
+source byte hashes, exact validation receipts, and a reproducibility checksum.
+Every top-level field and acceptance gate SHALL carry one line that names the
+failure it prevents. Validity gates SHALL state that a favorable metric cannot
+excuse invalid evidence. Readiness gates SHALL state that a valid scientific
+null must not block independent measurements. Benefit gates SHALL state that a
+favorable seed, fixture, or low-support result cannot replace held-out value.
+
+The affected-file manifest SHALL contain only the Exp7492 test, module, and
+thin entrypoint. Required checks SHALL be scoped pytest with `-n 0 -o addopts=
+--no-cov` and a private basetemp, 100 percent changed-module coverage with a
+command-local `COVERAGE_FILE`, scoped Ruff check and format, changed-module
+mypy, scoped spec coverage, fresh-process entrypoint replay, independent raw
+reduction, adversarial verification, and strict verdict-row consistency. No
+numbered runtime E2E applies because the task does not change shared runtime,
+sampler, training, binding, ARC, telemetry, Rust, or deployment behavior.
+
+#### SCENARIO-VERIFY-7492-PREREQUISITE: The Window Protocol Passes Exactly
+
+**Given** the terminal Exp7491 artifact and its hash-bound raw shards
+**When** Exp7492 checks every frozen prerequisite field and runs the cold validator
+**Then** model work starts only after the exact structured gate passes
+**And** absent or changed producer evidence remains blocked rather than guessed.
+
+#### SCENARIO-VERIFY-7492-SCHEDULE: Eight Frozen Groups Preserve Both Orders
+
+**Given** eight fixed eligible training groups that span response size and sentence count
+**When** the pilot rebuilds their whole and focused prompts from sealed text and windows
+**Then** both label orders and every whole-response baseline remain present
+**And** every prompt hash matches Exp7491 within the 72-forward ceiling.
+
+#### SCENARIO-VERIFY-7492-TRANSPORT: Native Final-Position Logits Stay Auditable
+
+**Given** one owned authenticated Qwen load and a fresh KV state per request
+**When** each prompt is tokenized, prefetched, and read at its final evaluated position
+**Then** native option tokens, raw logits, stable remapping, positions, hashes, and timings remain recorded
+**And** all completed calls report zero generated tokens.
+
+#### SCENARIO-VERIFY-7492-ORDER: Semantic Order Sensitivity Is An Observation
+
+**Given** paired original and reversed label orders for the same whole or focused input
+**When** the reducer remaps both outputs to stable option IDs
+**Then** it reports probability and log-odds sensitivity without an equality threshold
+**And** a predictive result or one favorable ordering cannot define transport validity.
+
+#### SCENARIO-VERIFY-7492-FORECAST: Full Sealed Captures Keep Their Budgets
+
+**Given** measured load cost, per-token prefill samples, and both sealed call-length manifests
+**When** the pilot applies at least 1.25 times the measured p90 estimate
+**Then** each forecast names its fixed calls, tokens, uncertainty, 3,300-second cap, and feasibility
+**And** either infeasible forecast closes readiness without shrinking or truncating the capture.
+
+#### SCENARIO-VERIFY-7492-E2E: Scoped Readers Publish One Atomic Pilot
+
+**Given** the measured raw call shard and a frozen affected-file manifest
+**When** the declared unbuffered entrypoint runs its scoped and terminal checks
+**Then** cold replay, independent reduction, adversarial verification, and strict row lint pass
+**And** only the final validated candidate publishes atomically at the result path.
