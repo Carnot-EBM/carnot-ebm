@@ -3491,3 +3491,122 @@ Given the event shards, retention rows, service costs, checkpoints, source
 hashes, and frozen validation manifest, when a fresh reader changes any row,
 hash, gate, invocation declaration, or verdict operand, then terminal
 validation fails and publication is refused.
+
+## REQ-KAN-7487: Retained-State Learning Placement Measurement
+
+Exp7487 MUST authenticate the Exp7482 importance learner before numeric work.
+Missing or invalid learner evidence MUST block only the numeric branch. The
+board evidence branch MUST always run. It MUST preserve the latest authenticated
+KV260 and PolarFire graduation dates and scopes. It MUST preserve GateMate as
+blocked when no dated operator-authored cable, port, power, board, JTAG, or
+DirtyJTAG change exists after the last physical failure. That state MUST issue
+zero new detect, flash, power, or remote commands. Future KV260 access MUST use
+`ssh kria` only and MUST retain `k_max<=5`.
+
+The numeric branch MUST measure a retained-state anchor at 32, 64, 128, and 256
+coefficients. It MUST use 1000 updates and three frozen seeds. Each size and seed
+MUST compare float64, float32, and an explicit signed fixed-point emulation. The
+fixed-point scale, clipping range, and nearest-even rounding rule MUST freeze
+before outcomes. Each arm MUST report prediction, active data-gradient, complete
+diagonal penalty, importance update, coefficient update, serialization, durable
+write, `fsync`, and recovery costs. Each arm MUST also run an identical durable
+no-update control. Dense anchor work MUST remain separate from active data work.
+
+The float64 arm MUST define numeric correctness. Float32 and fixed-point replay
+MUST use the same fixtures and update order. Every arm MUST report maximum
+probability error, decision flips, terminal coefficient error, exact recovered
+state, and unchanged acknowledgement order. Fixed-point emulation MAY be called
+deployable only when decision flips equal zero and maximum probability error is
+at most `1e-4` on the fixed fixture. Numeric fitting MUST appear only in a
+separate `small_ebm_training` receipt. These measurements run on the host CPU;
+they are not FPGA execution or observed accelerator performance.
+
+A measured end-to-end service denominator MUST include compatible tokenization,
+prefill, verifier work, feedback processing, every update, serialization,
+durable writes, and `fsync`. Missing any component MUST leave the service
+envelope conditional. The experiment MUST not add incompatible medians, archived
+active-basis estimates, or simulated chip latencies. For accelerated fraction
+`f` and kernel speed `r`, it MUST report
+`S = 1 / ((1 - f) + f / r)`, including `r` approaching infinity. A 100x path
+requires an unaccelerated fraction below one percent. Sparse arithmetic targets
+MUST stay separate from observed service performance.
+
+The placement map MUST distinguish CPU counters and durable state, GPU batches,
+and future FPGA or TSU support. It MUST not authorize a purchase, installation,
+vendor call, board flash, or prefix-cache implementation. The current run MUST
+declare `MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, zero current
+LLM calls, `inference_substrate_class="no_model_load"`, and
+`execution_venue="host"`. Archived model-shaped evidence MUST remain hash-bound
+and MUST not count as current inference.
+
+The experiment MUST publish
+`results/experiment_7487_v655_learning_placement.json` atomically only after a
+frozen affected-file validation plan, 100 percent changed-module coverage, a
+fresh-process cold replay, independent row reduction, adversarial verification,
+and strict verdict-row consistency checks pass. Required validity, placement
+completion, and scientific benefit MUST remain separate. Every gate MUST carry
+one failure-prevention principle. `placement_complete_score` MAY equal one when
+the measured numeric branch and conditional service and board branches reconcile.
+It MUST NOT imply hardware speed or a 100x service result. A valid failed speed
+gate MUST produce a complete null.
+
+### SCENARIO-KAN-7487-01: Learner Evidence Gates Only Numeric Work
+
+Given the exact Exp7482 artifact bytes, when its schema, experiment identity,
+ready score, verdict class, adversarial flag, and model-call declarations pass,
+then numeric work can run. A missing or changed learner blocks numeric rows but
+does not remove any board row.
+
+### SCENARIO-KAN-7487-02: Full Anchor Cost Uses Frozen Arithmetic Arms
+
+Given one size and seed fixture, when float64, float32, and fixed-point arms run
+1000 updates, then they share the same active indices, labels, update order, and
+initial state. Their rows report each required timing component and keep active
+data-gradient work separate from all retained anchor coefficients.
+
+### SCENARIO-KAN-7487-03: Durable No-Update Controls Do Not Move State
+
+Given the same serialized state as an update arm, when the no-update control
+writes, synchronizes, and recovers it 1000 times, then the acknowledgement count,
+state hash, and predictions remain unchanged while serialization, durable-write,
+`fsync`, and recovery costs remain measured.
+
+### SCENARIO-KAN-7487-04: Replay Parity Precedes Cost Interpretation
+
+Given the float64 reference replay, when another arithmetic arm changes a
+decision, exceeds `1e-4` probability error for fixed-point, changes event order,
+or fails exact recovery, then that arm is not deployable and no lower numeric
+cost can override the failure.
+
+### SCENARIO-KAN-7487-05: Incomplete Service Accounting Stays Conditional
+
+Given compatible raw-capture and online-service sources, when tokenization,
+prefill, verifier work, feedback, updates, serialization, durable writes, or
+`fsync` lacks a compatible measured row, then no measured end-to-end speedup is
+reported. The artifact reports the missing components and symbolic Amdahl bounds.
+
+### SCENARIO-KAN-7487-06: Amdahl Bounds Expose The 100x Limit
+
+Given any accelerated fraction `f` and kernel speed `r`, when the service bound
+is reduced, then speedup equals `1/((1-f)+f/r)`. Infinite kernel speed still
+fails the 100x target unless the unaccelerated fraction is below one percent.
+
+### SCENARIO-KAN-7487-07: Board Continuity Issues No Hardware Operation
+
+Given authenticated KV260, PolarFire, and GateMate history with no new GateMate
+physical receipt, when the board branch reduces, then KV260 and PolarFire retain
+their exact historical dates and scopes, GateMate is terminally blocked, and
+`hardware_operations_issued` is an empty list.
+
+### SCENARIO-KAN-7487-08: Placement Completion Is Not A Speed Claim
+
+Given valid numeric rows, conditional service bounds, and all three board rows,
+when the 100x benefit gate fails, then `placement_complete_score` remains one,
+the verdict is a complete null, and no hardware-ready or hardware-value claim is
+made.
+
+### SCENARIO-KAN-7487-09: Terminal Evidence Fails Closed
+
+Given the raw per-unit rows and frozen validation receipts, when a fresh process
+changes a row, source hash, current-inference declaration, board date, gate,
+score, or checksum, then validation fails and terminal publication is refused.
