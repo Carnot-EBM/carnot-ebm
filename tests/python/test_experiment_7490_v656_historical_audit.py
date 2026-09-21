@@ -25,6 +25,12 @@ def test_pinned_annotation_semantics_determine_probability_polarity() -> None:
             "annotation_disposition": "contains_unsupported",
             "label_policy": "one_if_no_human_unsupported_span",
         },
+        {
+            "group_id": "separate-corpus-policy",
+            "label": 1,
+            "annotation_disposition": "supported",
+            "label_policy": "worst_severity_consistent_or_benign_is_one",
+        },
     ]
 
     semantics = audit.resolve_label_polarity(evaluator_rows)
@@ -138,6 +144,29 @@ def test_probability_accounting_rejects_bad_rows_and_retains_missing_coverage() 
     invalid = [dict(base[0], probability=1.5)]
     with pytest.raises(ValueError, match="probability_invalid"):
         audit.recompute_probability_accounting(invalid)
+
+
+# REQ-REPORT-7490; SCENARIO-REPORT-7490-ARTIFACT
+def test_probability_rows_use_one_canonical_terminal_projection() -> None:
+    raw = [{"group_id": "g1", "role": "external", "row_kind": "static_group"}]
+
+    projected = audit.completed_probability_rows(raw)
+
+    assert projected == [
+        {
+            "group_id": "g1",
+            "role": "external",
+            "row_kind": "static_group",
+            "unit_id": "external_probability:g1",
+            "attempted": True,
+            "complete": True,
+            "failed": False,
+            "censored": False,
+            "excluded": False,
+            "unstarted": False,
+        }
+    ]
+    assert raw == [{"group_id": "g1", "role": "external", "row_kind": "static_group"}]
 
 
 def _ledger_rows() -> list[dict[str, object]]:

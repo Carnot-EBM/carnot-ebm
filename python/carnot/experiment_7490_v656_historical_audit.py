@@ -88,7 +88,8 @@ def resolve_label_polarity(rows: Sequence[Mapping[str, Any]]) -> Json:
     relevant = [
         row
         for row in rows
-        if row.get("annotation_disposition") in {"supported", "contains_unsupported"}
+        if row.get("label_policy") == "one_if_no_human_unsupported_span"
+        and row.get("annotation_disposition") in {"supported", "contains_unsupported"}
     ]
     policies = {str(row.get("label_policy")) for row in relevant}
     supported = {
@@ -177,6 +178,25 @@ def recompute_probability_accounting(rows: Sequence[Mapping[str, Any]]) -> Json:
         ),
         "arms": arms,
     }
+
+
+def completed_probability_rows(rows: Sequence[Mapping[str, Any]]) -> list[Json]:
+    """Add terminal unit accounting without changing independent reducer rows."""
+
+    output = [deepcopy(dict(row)) for row in rows]
+    for row in output:
+        row.update(
+            {
+                "unit_id": f"external_probability:{row['group_id']}",
+                "attempted": True,
+                "complete": True,
+                "failed": False,
+                "censored": False,
+                "excluded": False,
+                "unstarted": False,
+            }
+        )
+    return output
 
 
 def reconstruct_shuffled_chronology(
@@ -632,21 +652,9 @@ def _base_artifact(
         reduction_complete=reduction_complete,
         scientific_benefit=scientific_benefit,
     )
-    probability_rows = [
-        deepcopy(dict(row)) for row in reduction.get("historical_probability_rows") or []
-    ]
-    for row in probability_rows:
-        row.update(
-            {
-                "unit_id": f"external_probability:{row['group_id']}",
-                "attempted": True,
-                "complete": True,
-                "failed": False,
-                "censored": False,
-                "excluded": False,
-                "unstarted": False,
-            }
-        )
+    probability_rows = completed_probability_rows(
+        reduction.get("historical_probability_rows") or []
+    )
     feedback_rows = reduction.get("feedback_chronology_rows") or []
     duration = (ended_monotonic_ns - started_monotonic_ns) / 1_000_000_000
     value: Json = {
@@ -1275,7 +1283,10 @@ def independent_replay(path: Path, *, root: Path = REPO_ROOT) -> list[str]:  # p
         "historical_claim_limits",
         "reduction_errors",
     ):
-        if value.get(field) != current.get(field):
+        current_value = current.get(field)
+        if field == "historical_probability_rows":
+            current_value = completed_probability_rows(current_value or [])
+        if value.get(field) != current_value:
             errors.append(f"independent_replay_mismatch:{field}")
     if value.get("preconditions_checked") != preconditions:
         errors.append("independent_replay_mismatch:preconditions_checked")
