@@ -6560,3 +6560,117 @@ not change.
 **And** the artifact records retirement of the unchanged mixture construction without promotion.
 
 Spec: REQ-AUTO-7454, SCENARIO-AUTO-7454-01, SCENARIO-AUTO-7454-02, SCENARIO-AUTO-7454-03, SCENARIO-AUTO-7454-04, SCENARIO-AUTO-7454-05, SCENARIO-AUTO-7454-06
+
+### REQ-AUTO-7481: Calibrate typed source decisions from authenticated native readouts
+
+Exp7481 SHALL consume only complete, unflagged Exp7479 and Exp7480 capture
+artifacts. It SHALL preserve their exact byte hashes and historical flags. The
+current task SHALL make no model call. It SHALL declare `MODEL_SPECS=[]`,
+`model_specs=[]`, `model_invoked=false`, zero current invocation counts,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Numeric
+head fitting SHALL have a separate `small_ebm_training` receipt.
+
+One source group SHALL remain the independent unit. The predictor SHALL average
+the two native option orders only after remapping their logits to stable option
+IDs. Its fixed six inputs SHALL be native unsupported-content log odds, the
+existing bounded falsifiability, numeric-novelty, content-overlap, and maximum
+sentence-overlap signals, plus source missingness. Gold spans, source IDs,
+response-generator identity, future labels, annotation notes, and source-
+shuffled control rows SHALL not enter fitting features. Source-shuffled capture
+rows SHALL remain sensitivity evidence without factual gold labels.
+
+Only training groups SHALL fit numeric weights. Seeds SHALL be 655101 through
+655105. The fixed comparisons SHALL include raw native readout, scalar
+temperature calibration, regularized logistic with the identical six inputs,
+full-input Gibbs, verifier-only Gibbs, shuffled-training-label Gibbs, and a
+source-removal Gibbs ablation. Calibration groups alone SHALL select scalar
+temperatures and every accept/reject threshold. Architectures, transforms,
+optimizer settings, initial states, and checkpoint hashes SHALL freeze before
+held-out labels open. A child-process fit boundary SHALL receive no internal or
+external row or label.
+
+The frozen policies SHALL evaluate all eligible internal-test and external
+groups. Per-seed rows SHALL remain visible, but repeated seeds SHALL be averaged
+within source group before uncertainty estimation. The primary external
+probability gate SHALL require a Gibbs binary-Brier improvement of at least
+0.01 against both temperature and identical-feature logistic controls. Each
+paired source-group bootstrap upper bound SHALL be below zero after Holm
+correction across the two comparisons. The corresponding log-loss upper deltas
+SHALL be at most 0.01. AUROC, ECE, binary class support, failures, and coverage
+SHALL remain reported for each role and arm.
+
+Every arm SHALL report accept, reject, and escalate decisions for the complete
+grid with false-reject cost 1, false-accept costs 1, 5, and 20, and escalation
+costs 0.1, 0.5, and 1. Each policy SHALL be chosen on calibration only. A
+decision benefit SHALL require at least 20 percent non-escalation and a negative
+cost delta whose Holm-adjusted source-group upper interval is below zero versus
+the calibration-selected best simple policy on at least one of the nine cells.
+The artifact SHALL publish all cells and SHALL set every deployment-certificate
+field false.
+
+`calibration_complete_score=1` SHALL require authenticated inputs, exact fit
+isolation, complete frozen evaluation, all required validation, independent row
+reduction, and passing terminal readers. It SHALL not depend on benefit.
+`probability_benefit_score` and `decision_benefit_score` SHALL remain separate.
+A valid shortfall or tie SHALL produce a complete null. Frozen Exp7483 initial
+states SHALL publish even for that null. Numeric fitting and interval estimation
+SHALL stop within 1,200 seconds.
+
+The terminal artifact SHALL publish atomically after the frozen affected-file
+checks, declared-entrypoint capability run, fresh-process cold replay,
+independent row reduction, adversarial verification, and strict row-consistency
+lint. No numbered runtime E2E applies because shared training, sampling,
+bindings, ARC, telemetry, and Rust code do not change. Each required-validity,
+readiness, and benefit gate SHALL state the registered one-line failure-mode
+principle.
+
+#### SCENARIO-AUTO-7481-01: Stable option identities define one group feature row
+
+**Given** original and reversed native option-order rows for one source group
+**When** the predictor feature row is reduced
+**Then** unsupported-content logits are remapped before their log odds are averaged
+**And** shuffled-source rows and evaluator-only fields cannot become predictors.
+
+#### SCENARIO-AUTO-7481-02: Fitting cannot observe held-out labels
+
+**Given** training, calibration, internal-test, and external roles
+**When** the five seeded numeric heads and controls fit in a child process
+**Then** only training labels determine weights and only calibration labels determine tuning
+**And** checkpoint and policy hashes freeze before internal-test or external labels open.
+
+#### SCENARIO-AUTO-7481-03: Seed rows do not multiply independent support
+
+**Given** five predictions per fitted arm for one held-out source group
+**When** proper-score contrasts and bootstrap intervals are reduced
+**Then** predictions or losses first average within that source group
+**And** each bootstrap draw resamples source groups rather than seed rows.
+
+#### SCENARIO-AUTO-7481-04: Probability benefit keeps matched controls and multiplicity
+
+**Given** complete external predictions from Gibbs, temperature, and logistic arms
+**When** the registered probability gate runs
+**Then** both Brier deltas meet the effect-size and Holm-adjusted upper-bound rules
+**And** log-loss noninferiority, AUROC, ECE, support, failures, and coverage stay visible.
+
+#### SCENARIO-AUTO-7481-05: Typed value uses calibration-only policies
+
+**Given** the nine registered cost cells and frozen calibration predictions
+**When** accept, reject, and escalate policies are selected and evaluated
+**Then** every cell compares Gibbs with its calibration-selected best simple policy
+**And** value requires 20 percent non-escalation plus a Holm-adjusted negative cost interval.
+
+#### SCENARIO-AUTO-7481-06: Ablations cannot fabricate source value
+
+**Given** shuffled training labels, source-removal inputs, and source-shuffled capture controls
+**When** the ablation report is built
+**Then** each fitted ablation keeps its own checkpoint and held-out metrics
+**And** source-shuffled responses never receive invented negative labels.
+
+#### SCENARIO-AUTO-7481-07: Completion and benefit remain independent
+
+**Given** valid fitting, complete held-out rows, frozen Exp7483 states, and passing readers
+**When** either scientific benefit gate ties or falls short
+**Then** calibration completion remains one and the relevant benefit score remains zero
+**And** the terminal verdict is a complete null without a deployment certificate.
+
+Spec: REQ-AUTO-7481, SCENARIO-AUTO-7481-01, SCENARIO-AUTO-7481-02, SCENARIO-AUTO-7481-03, SCENARIO-AUTO-7481-04, SCENARIO-AUTO-7481-05, SCENARIO-AUTO-7481-06, SCENARIO-AUTO-7481-07
