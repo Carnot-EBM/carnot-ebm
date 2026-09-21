@@ -299,6 +299,96 @@ scored submission, an extra model, or a production-default change.
 Implementation status: specified 2026-09-21. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7485: Capture Panel A live ARC decision cost without changing the policy
+
+Experiment 7485 SHALL use run date `20260921` and milestone `2026.09.655`.
+It SHALL require Experiment 7478's ready, unflagged interval protocol before
+dependent work. It SHALL use exactly `sk48`, `tr87`, `s5i5`, `lp85`, `lf52`,
+and `cn04`, with seeds `65501`, `65502`, and `65503`. The sealed panel SHALL
+contain eighteen rows. An unavailable game SHALL remain unavailable and SHALL
+not be replaced. Panel B SHALL not depend on Panel A's outcome.
+
+The live child SHALL run the actual E3 `choose_action` and `is_done` loop from
+clean per-game state. It SHALL disable per-game adapters, stored engines,
+banked trajectories, cross-game fitted state, and game-source reads. It SHALL
+permit only the agent's observations, actions, and runtime induction. It SHALL
+keep the shipped AVO memory and supervision path unchanged and record whether
+each opportunity was reached. It SHALL not use offline ground-truth search or
+a hand `GameAdapter`.
+
+The child SHALL use `cached_current_model()` to resolve
+`unsloth/Qwen3.8-27B-GGUF`, its cached GGUF, and embedded tokenizer. It SHALL
+use one owned native CUDA lease. It SHALL record requested and observed CUDA
+offload separately. Each episode SHALL allow at most two generation requests,
+256 new tokens per request, 180 actions, and 240 seconds. Current live work
+SHALL stop by 3600 seconds. Any attempted load or generation SHALL remain in
+the current invocation ledger after failure, timeout, or cancellation.
+
+The qualified interval schema SHALL record exclusive episode timing, raw
+options and selected decisions, request tokens, failed calls, induction
+completion, verifier-feedback exposure, action outcomes, and censored actions
+to progress. World-model generation and verification SHALL remain
+nonreplaceable unless a valid semantic replacement exists. Each episode SHALL
+report a genuine lower and upper replaceable-cost bound. The reducer SHALL
+report per-game and per-seed rows, supervision opportunity, no-op or delegate
+decisions, and every failed, censored, unavailable, or unstarted disposition.
+
+Current level progress SHALL receive `solve_provenance` exactly
+`live_agent_self_discovery` only after the agent's action trace reproduces in a
+fresh environment. Registered public levels SHALL receive no new credit. The
+artifact SHALL set `generalization_scope=public_adapter_withheld_proxy` and
+SHALL not claim hidden-game efficacy, selector efficacy, E0 parity, or E4/E5
+readiness. Its scientific verdict SHALL remain null unless a narrow measured
+cost finding passes the declared support, retention, and multiplicity gates.
+
+The producer SHALL freeze an affected-file validation manifest. It SHALL use
+the Experiment 7358 and Experiment 7303 scope helpers for worktree imports,
+focused tests, separate 100 percent changed-module coverage, scoped Ruff,
+changed-module mypy, and scoped spec coverage. It SHALL run E2E-009,
+E2E-010, E2E-011, the private real-environment smoke, a declared-entrypoint
+cold replay, independent row reduction, the unchanged adversarial verifier,
+and strict verdict-row consistency. It SHALL publish the terminal JSON
+atomically only after required checks pass.
+
+### SCENARIO-ARC-WMTE-7485-SCHEDULE
+
+- **GIVEN** the Experiment 7478 schedule is ready and hash-bound
+- **WHEN** Panel A is selected without inspecting an outcome
+- **THEN** it has exactly eighteen rows in game-major and seed-minor order
+- **AND** every row keeps the fixed action, request, token, episode, and panel limits.
+
+### SCENARIO-ARC-WMTE-7485-INTERVALS
+
+- **GIVEN** nested decision, generation, verifier, and action intervals
+- **WHEN** one episode is reduced through the qualified interval protocol
+- **THEN** every clock tick is counted at most once in the exclusive cost rows
+- **AND** generation or verification cannot become replaceable without a semantic replacement.
+
+### SCENARIO-ARC-WMTE-7485-FAILURES
+
+- **GIVEN** a model call fails, an episode is censored, or the panel budget expires
+- **WHEN** the terminal rows are built
+- **THEN** attempted calls retain terminal accounting and all unstarted rows remain explicit
+- **AND** the actual substrate class records any attempted model work without a fallback.
+
+### SCENARIO-ARC-WMTE-7485-PROGRESS
+
+- **GIVEN** a live episode observes level progress
+- **WHEN** its own current action trace is replayed in a fresh environment
+- **THEN** `offline_reproduced` is true only after the replay reaches that level
+- **AND** the registered public level adds zero new solve credit.
+
+### SCENARIO-ARC-WMTE-7485-TERMINAL
+
+- **GIVEN** all eighteen dispositions, current invocation receipts, raw shards,
+  scoped checks, and terminal readers
+- **WHEN** a fresh process reduces the exact terminal candidate
+- **THEN** `arc_panel_a_complete_score` is one only when validity checks pass
+- **AND** benefit remains separate from readiness and unsupported claims stay null.
+
+Implementation status: specified 2026-09-21. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7471: Observe live E3 decision seams without changing decisions
 
 Experiment 7471 SHALL use run date `20260921`, milestone `2026.09.654`, and
