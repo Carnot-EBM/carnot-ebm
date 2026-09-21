@@ -76561,6 +76561,81 @@ publication. No numbered runtime end-to-end scenario applies.
 |---|---|---|
 | REQ-REPORT-7490 and SCENARIO-REPORT-7490-* | Planned: V655 historical host reducer and thin entrypoint. | Requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
 
+## V656 independent raw-row science audit — 2026-09-21
+
+**Status:** Specified. This host aggregation always runs. It preserves missing
+or invalid producer branches instead of treating them as scientific nulls.
+
+### REQ-REPORT-7498: Independently reduce every available V656 science branch
+
+Exp7498 SHALL resolve Exp7491 through Exp7497 from their exact deliverables in
+the active `2026.09.656` roadmap. It SHALL distinguish available, pre-gated,
+missing, flagged, and disqualified inputs. It SHALL hash each available
+artifact and every referenced raw shard or checkpoint before reduction.
+
+The audit SHALL independently recompute role disjointness, lossless response
+coverage, stable option mapping, frozen-label boundaries, and group and seed
+counts from available raw rows. When Exp7495 is available, it SHALL recompute
+Brier loss, log loss, all nine utility cells, bootstrap decisions, and
+multiplicity decisions. When Exp7497 is available, it SHALL replay feedback
+chronology, state transitions, real and shuffled availability, class-changing
+permutation support, prequential effects, and retention. It SHALL not import a
+producer headline verdict as a substitute for these reductions. It SHALL not
+fit a model or make a current model call.
+
+The current task SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, balanced zero invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+
+`science_audit_complete_score` SHALL equal one only when every present claim
+has an independent reduction and every absent branch has an exact diagnosis.
+A missing required scientific input SHALL set `verdict_class=blocked`. Invalid
+present required evidence SHALL set `verdict_class=disqualified`. Only the
+auditor's own unfinished work MAY use `partial`. Valid branch findings SHALL
+remain visible without upgrading the aggregate verdict.
+
+The artifact SHALL contain all fields required by the V656 roadmap. Each
+field and each acceptance gate SHALL have a one-line principle that states the
+failure it prevents. The affected manifest SHALL remain scoped to this module,
+test, and thin entrypoint. The entrypoint, fresh-process cold replay,
+independent raw reduction, adversarial verifier, and strict row consistency
+reader SHALL pass before atomic publication. No numbered runtime E2E applies.
+
+#### SCENARIO-REPORT-7498-RAW: Available capture claims come from raw rows
+
+**Given** authenticated protocol, plan, and native-readout shards
+**When** the auditor reduces coverage, roles, options, and independent units
+**Then** every public capture field matches the raw operands
+**And** a summary-only producer claim cannot open an audit gate.
+
+#### SCENARIO-REPORT-7498-MISSING: Missing branches remain diagnosed
+
+**Given** one or more exact roadmap deliverables are absent
+**When** all available branches reduce without error
+**Then** the science audit completes with each missing branch named
+**And** the aggregate class is blocked rather than null or partial.
+
+#### SCENARIO-REPORT-7498-MUTATIONS: Causal and checkpoint mutations fail
+
+**Given** private causal event rows and a hash-bound terminal checkpoint
+**When** one future label or terminal checkpoint is mutated
+**Then** chronology or checkpoint authentication fails
+**And** the unchanged controls continue to pass.
+
+#### SCENARIO-REPORT-7498-ARTIFACT: Exact readers control publication
+
+**Given** the frozen affected manifest and a measured terminal candidate
+**When** fresh processes validate, replay, reduce, verify, and lint it
+**Then** identity, provenance, row, gate, principle, or checksum drift fails
+**And** only the validated candidate publishes at the roadmap path.
+
+## Implementation Status (REQ-REPORT-7498)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7498 and SCENARIO-REPORT-7498-* | Planned: always-run V656 raw-row audit and thin entrypoint. | Requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
 ## V655 independent source-decision and delayed-learning audit — 2026-09-21
 
 **Status:** Specified. This host aggregation audits every available V655
