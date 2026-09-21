@@ -4946,6 +4946,41 @@ private kernel, frozen prompts, partial-result writer, and exact scored launch.
 
 **Spec traces:** REQ-INFRA-7089
 
+### REQ-INFRA-7090: Scored vLLM Probe MUST Reuse the Live Server Safely
+
+**Statement:** The scored submission kernel MUST keep its vLLM log-probability
+probe off by default. When enabled, the probe MUST run only after the existing
+server check reports that vLLM is alive. It MUST use the already-running
+loopback HTTP server. It MUST NOT start, stop, restart, or reconfigure that
+server. It MUST NOT require `--max-logprobs` on the server launch.
+
+The probe MUST preserve the REQ-INFRA-7089 fixtures and result fields. It MUST
+record the server launch argv when the caller supplies it. Its default wall
+budget MUST be 240 seconds. Every HTTP call MUST have a timeout. A timeout,
+HTTP rejection, malformed reply, or other exception MUST return an honest
+`blocked_*` verdict and MUST NOT raise. The probe MUST write no file except the
+caller-provided output path.
+
+### SCENARIO-INFRA-7090-SCORED-SERVER: The Scored Server Is Alive
+
+**Given** the scored kernel has started vLLM and its existing health check passed
+**When** the default-off probe is enabled
+**Then** it runs once against that server and writes bounded option-score evidence
+
+### SCENARIO-INFRA-7090-BLOCKED: The Live Server Rejects or Hangs
+
+**Given** the probe is enabled against an already-running loopback server
+**When** log-probability requests return an error or exceed their timeout
+**Then** the probe returns within its wall budget with an honest blocked verdict
+
+**Implementation:** `python/carnot/agentic/arc_vllm_logprob_probe.py` owns the
+bounded HTTP probe. `scripts/kaggle/submission_kernel/main.py` owns the
+default-off scored-path call.
+
+**Tests:** `tests/python/test_arc_vllm_logprob_probe.py`.
+
+**Spec traces:** REQ-INFRA-7090
+
 ### REQ-PIPELINE-6703: Cold Audit Rows Own The Readiness Gate
 
 Exp6703 SHALL reduce `planning_fixture_audit_passed` only from raw coverage,

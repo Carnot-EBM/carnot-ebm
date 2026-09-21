@@ -107,6 +107,7 @@ import time
 from pathlib import Path
 
 COMP = "/kaggle/input/competitions/arc-prize-2026-arc-agi-3"
+RUN_LOGPROB_PROBE = False
 
 # CARNOT_ARC_SERVER_LOG_DIR (2026-08-08 adversarial review, Gaps finding 7). Unset, the agent's
 # llama-server stderr log falls back to tempfile.gettempdir() -- inside the ephemeral Kaggle
@@ -1085,6 +1086,30 @@ else:
           "the target weights and the matching MTP drafter).",
           flush=True)
 """
+
+# Append this block only when enabled. The default keeps my_agent.py byte-identical.
+_SCORED_LOGPROB_PROBE_SRC = r"""
+if os.getenv("KAGGLE_IS_COMPETITION_RERUN") and globals().get("_vllm_active") and globals().get("_vup"):
+    try:
+        from carnot.agentic.arc_vllm_logprob_probe import run_logprob_probe
+
+        _logprob_result = run_logprob_probe(
+            "http://127.0.0.1:8919",
+            "m",
+            "/kaggle/working/vllm_logprob_probe.json",
+            240,
+            server_launch_argv=getattr(_vp, "last_launch_argv", None),
+        )
+        print(
+            f"LLM VLLM LOGPROB PROBE: {_logprob_result.get('honest_verdict')} "
+            f"in {_logprob_result.get('duration_s')}s",
+            flush=True,
+        )
+    except Exception as _logprob_exc:
+        print(f"LLM VLLM LOGPROB PROBE ERROR (non-fatal): {_logprob_exc!r}", flush=True)
+"""
+if RUN_LOGPROB_PROBE:
+    AGENT_SRC += _SCORED_LOGPROB_PROBE_SRC
 
 # The framework bind is SPLIT OUT of the diagnostics block above (2026-08-11) so the preview
 # branch below can execute the diagnostics WITHOUT the framework import. `from agents.agent

@@ -2977,3 +2977,12 @@ REQ-INFRA-7089 and its scenario map to
 `tests/python/test_vllm_logprob_probe_kernel.py`. The private kernel preserves
 partial evidence. It uses the scored wheel, model, FlashInfer cache, and launch.
 Only the maximum log-probability cap differs from the scored server command.
+
+## 2026-09-20 — REQ-INFRA-7090 scored-server vLLM log-probability probe
+
+REQ-INFRA-7090 maps to
+`python/carnot/agentic/arc_vllm_logprob_probe.py`,
+`scripts/kaggle/submission_kernel/main.py`, and
+`tests/python/test_arc_vllm_logprob_probe.py`. The module reuses the running
+loopback server. It does not control the server lifecycle. The kernel switch
+is false by default. The probe has bounded HTTP calls and blocked verdicts.

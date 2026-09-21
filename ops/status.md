@@ -16744,3 +16744,16 @@ environment variables.
 The REQ-INFRA-7089 kernel source is ready for an operator-run private Kaggle
 probe. Local CPU tests cover its pure helpers and frozen prompts. The exact
 wheel schema, Blackwell server startup, and option scores remain unverified.
+
+## 2026-09-20 — Scored-server vLLM log-probability probe ready
+
+REQ-INFRA-7090 moves the measurement to the already-running scored vLLM
+server. The kernel switch is false by default. The probe has a 240-second
+default budget and writes `/kaggle/working/vllm_logprob_probe.json` when
+enabled. The `carnot-agent-code` dataset must be re-versioned before that run.
+The submission kernel must also be pushed as a new version. No Kaggle upload
+or GPU run occurred. Blackwell evidence remains pending.
+
+Two static tests pass in this worktree. Three fake-server tests skipped because
+the execution sandbox denies loopback sockets. Run them in a socket-capable
+environment before enabling the probe.
