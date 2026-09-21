@@ -46017,3 +46017,36 @@ identified below. Author results are not Carnot measurements.
 
 No model execution, hardware operation, purchase, contact, or publication occurred
 during this review. Existing model and board availability must be checked at runtime.
+
+## 2026-09-21: State of Thought, an internal-state controller for reasoning (reference note)
+
+Requested by the operator as a reference note only. No task, experiment or
+dependency follows from it.
+
+- **Paper:** [State of Thought Enables Endogenous Reasoning, arXiv 2609.16055](https://arxiv.org/html/2609.16055v1)
+  (Gong, Hou, Zeng, Xiao, Yuen, Lim; Nanyang Technological University and KTH).
+  This project did NOT read the full paper. Every claim below comes from one
+  automated summary of the HTML page and is unverified, numbers included.
+- **Idea:** a frozen 582-parameter controller reads a 4-number state taken from
+  the model's own activations: local structure concentration, stepwise progress,
+  directional consistency, and predictive uncertainty. It makes two decisions:
+  which earlier reasoning steps to bring back into context, and when to stop.
+- **Reported results (unchecked):** accuracy up 1.34x to 2.51x over baselines on 16
+  benchmarks in four domains; 62.6% fewer tokens; 44.6% lower latency. A
+  training-free variant reportedly gains 38.2% and an embedding-only variant 36.5%.
+  Models: Llama-3.1-8B, Qwen2.5-14B, Mixtral-8x7B, and Qwen2.5-VL for vision.
+- **Possible use for Carnot:** a cheaper template for the induction-timing gate
+  (plan section 4, B2) than a model call, and predictive uncertainty as a candidate
+  feature for the calibrated-decision floor. Either would need a Brier and ECE
+  test first. The paper reports neither.
+- **Why it may not transfer:**
+  - It needs internal activations. Local llama.cpp can supply them. The scored
+    vLLM path exposes only token log-probabilities, and the embedding-only variant
+    is reported to lose about 18% accuracy.
+  - All benchmarks are static question answering. Nothing tests game or
+    environment-stepping agents such as ARC-AGI-3.
+  - The controller trains on offline trajectory pools. Weights fitted on public
+    games conflict with the hidden-game framing rule unless used training-free.
+  - No leave-one-out check and no calibration metrics.
+- **Status:** unreplicated and second-hand. Read the full paper and its appendix
+  before relying on any number or on the state definition.
