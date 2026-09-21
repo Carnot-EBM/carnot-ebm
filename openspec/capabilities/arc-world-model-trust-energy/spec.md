@@ -190,6 +190,115 @@ before atomic publication.
 Implementation status: specified 2026-09-20. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7478: Qualify exclusive ARC interval accounting and seal the E6 panels
+
+Experiment 7478 SHALL use run date `20260921` and milestone `2026.09.655`.
+It SHALL aggregate immutable Experiment 7471 evidence without a current model
+or game call. It SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Archived
+model events SHALL remain hash-bound historical evidence. Numeric training
+SHALL remain absent in a separate `small_ebm_training` receipt.
+
+The reducer SHALL key events by run, process, episode, decision, and seam. It
+SHALL form interval unions separately for each episode and compatible monotonic
+clock domain. It SHALL report exact duplicate rows, repeated decision IDs,
+nested spans, crossing spans, retries, incomplete spans, zero-duration spans,
+and incompatible clocks. An exact or forged duplicate SHALL not increase a
+union. The reducer SHALL reset all state at each episode boundary.
+
+Each episode row SHALL reconcile observed episode duration into the union of
+complete measured stages and unattributed time within one nanosecond of input
+timestamp resolution. Exclusive stage time SHALL subtract the union of valid
+children. Crossing intervals and missing parentage SHALL remain ambiguous. An
+unfinished span MAY extend an upper bound only to the episode boundary. It
+SHALL never add to a completed lower bound.
+
+Text generation, world-model construction, verifier work, dispatch, idle time,
+and observer overhead SHALL stay separate when the raw event identifies them.
+A generation or blocked-call span SHALL not become directly replaceable because
+it is nested in a decision seam. The bounds SHALL always satisfy
+`0 <= replaceable_lower <= replaceable_upper <= observed_episode_duration`.
+Unknown attribution SHALL widen the upper bound and SHALL not create a positive
+cost or efficacy claim.
+
+The interval protocol SHALL require a run ID, process ID, episode ID, decision
+ID, seam, monotonic clock identity, start or terminal boundary, explicit parent
+decision ID, work class, and terminal disposition. An observer-only fixture
+SHALL prove that recording preserves actions, provenance, random state, and call
+order. Existing private ARC plumbing and telemetry parity checks SHALL remain
+green. Test-environment calls SHALL be reported separately from archived model
+events. This experiment SHALL make no live-model claim.
+
+The E6-only roster SHALL contain the frozen E4 games plus `vc33`, `g50t`, and
+`dc22`. It SHALL not alter the E4 roster. Panel A SHALL contain `sk48`, `tr87`,
+`s5i5`, `lp85`, `lf52`, and `cn04`. Panel B SHALL contain `tu93`, `g50t`,
+`tn36`, `vc33`, `re86`, and `dc22`. Every game SHALL use seeds `65501`,
+`65502`, and `65503`. Each of the 36 archived rows SHALL start as `unstarted`.
+Each row SHALL retain 180 actions, two requests, 256 new tokens per request, a
+240-second episode cap, and a 3600-second panel live cap. An unavailable game
+SHALL remain unavailable and SHALL not be replaced.
+
+The terminal artifact SHALL preserve Experiment 7471's original inclusive sum
+and live duration as historical facts. It SHALL publish corrected per-episode
+unions, bounds, overlap diagnoses, raw shard hashes, and an independent replay.
+It SHALL include the frozen affected-file manifest, exact scoped validation
+receipts, applicable E2E receipts, a declared-entrypoint cold replay, the
+unchanged adversarial verifier, and strict row-consistency lint. It SHALL write
+the terminal result atomically after required checks pass.
+
+`arc_interval_protocol_ready_score` SHALL equal one only when the reducer,
+accounting invariants, observer parity, raw-field sufficiency protocol, schedule
+identity, and required readers pass. This readiness score is independent of ARC
+progress and scientific benefit. The readout SHALL remain a soft feature. This
+experiment SHALL not authorize selector control, an E4 or E5 intervention, a
+scored submission, an extra model, or a production-default change.
+
+### SCENARIO-ARC-WMTE-7478-INTERVAL-UNION
+
+- **GIVEN** nested, crossing, repeated, zero-duration, and exact duplicate spans
+- **WHEN** one episode is reduced
+- **THEN** its complete-stage union counts each clock tick at most once
+- **AND** exclusive time, ambiguous overlap, and unattributed time reconcile.
+
+### SCENARIO-ARC-WMTE-7478-INCOMPLETE-AND-CLOCKS
+
+- **GIVEN** absent ends, a killed child, or events from incompatible clock domains
+- **WHEN** lower and upper replaceable bounds are reduced
+- **THEN** incomplete or mismatched evidence cannot increase the lower bound
+- **AND** every bound stays inside the observed episode boundary.
+
+### SCENARIO-ARC-WMTE-7478-EPISODE-RESET
+
+- **GIVEN** repeated decision identifiers in two episodes
+- **WHEN** both episodes are reduced in one call
+- **THEN** no start, parent, duplicate, or retry state crosses the episode boundary
+- **AND** a forged duplicate cannot increase either episode union.
+
+### SCENARIO-ARC-WMTE-7478-OBSERVER-PARITY
+
+- **GIVEN** deterministic policy, environment, provenance, and random state
+- **WHEN** the interval observer is disabled and enabled
+- **THEN** actions, provenance, random state, and call order are identical
+- **AND** only the enabled run emits explicit parent and work-class fields.
+
+### SCENARIO-ARC-WMTE-7478-SCHEDULE
+
+- **GIVEN** the frozen nine-game E4 roster and its published hash rule
+- **WHEN** the E6 schedule is sealed before new outcomes
+- **THEN** the next unused game in each interface stratum extends it to twelve games
+- **AND** the two exact six-game panels contain 36 unstarted game-seed rows.
+
+### SCENARIO-ARC-WMTE-7478-TERMINAL
+
+- **GIVEN** the eight historical episodes, sealed schedule, scoped checks, and readers
+- **WHEN** a fresh process independently reduces the exact terminal candidate
+- **THEN** corrected interval claims and readiness reproduce from hash-bound inputs
+- **AND** readiness stays independent of progress, benefit, and archived model calls.
+
+Implementation status: specified 2026-09-21. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7471: Observe live E3 decision seams without changing decisions
 
 Experiment 7471 SHALL use run date `20260921`, milestone `2026.09.654`, and
