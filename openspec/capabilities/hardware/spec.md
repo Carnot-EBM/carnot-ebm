@@ -1979,3 +1979,158 @@ for each route, keeps vendor reports separate from local timing, infers no
 access from a web page, and leaves `hardware_value_score=0`.
 
 **Implementation status:** Implemented (Exp 7459)
+
+---
+
+### REQ-HW-7473
+
+**Title:** Exp7473 board continuity MUST preserve exact historical scopes and require dated GateMate physical evidence
+
+**Description:**
+Experiment 7473 SHALL produce
+`results/experiment_7473_v654_board_continuity.json` for run date 20260921
+and milestone 2026.09.654. The experiment SHALL be a host-only aggregation.
+It SHALL set `MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, and
+all current model invocation counters to zero. It SHALL set
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, `execution_venue=host`, and
+`hardware_operations_issued=[]`.
+
+The experiment SHALL authenticate the exact Exp7459 and Exp7314 bytes before
+it reduces any claim. It SHALL preserve each source artifact's original
+terminal class and adversarial flag. The artifact SHALL contain one current
+row for KV260, PolarFire, and GateMate. KV260 SHALL retain only the historical
+fabric-sampling scope, the `k_max<=5` architecture limit, and `ssh kria` as
+the only future access mechanism. PolarFire SHALL retain only the historical
+hash-matched CPU-dispatch scope. It SHALL explicitly state that FPGA sampling
+was not measured.
+
+The experiment SHALL use the approved local receipt parser. The parser SHALL
+search only the existing operator sources named by the Exp6559 contract. A
+qualifying GateMate receipt MUST be operator-authored, newer than 20260823,
+and name a material cable, port, power, board, JTAG, or DirtyJTAG change. The
+current task MUST issue no detect, flash, power, USB, SSH, remote, synthesis,
+purchase, vendor-contact, or other board command. Without a qualifying
+receipt, the GateMate row SHALL use
+`blocked_unchanged_physical_prerequisite`. Its `gate_check_summary` SHALL name
+the missing dated operator receipt and the exact search receipt path. A valid
+receipt MAY authorize only a separately reviewed future probe. It SHALL not
+authorize an implicit flash or other current hardware action.
+
+Exp7473 SHALL inspect the earlier same-milestone typed-selector artifact and
+prefix-service artifact only when each producer output exists. Missing
+optional outputs SHALL remain explicit and SHALL not block the board audit.
+The hardware-wishlist mapping SHALL carry forward the AMD XDNA NPU software
+prerequisite and authenticated Extropic TSU access prerequisite. A paper,
+SDK, or vendor page SHALL not prove local device availability. The mapping
+MUST make no purchase, vendor-contact, board-speed, power, energy, or
+production-readiness claim.
+
+The artifact SHALL be terminal documentation with `verdict_class=null` when
+all validity checks pass and no new board value is measured. It SHALL publish
+atomically only after affected validation, a fresh-process cold replay,
+independent raw-row reduction, adversarial verification, and strict verdict-
+row consistency checks pass. Its affected validation manifest MUST name only
+the new module, thin entrypoint, exact new tests, and directly reused helper
+tests. It MUST NOT contain a full-suite target.
+
+Required artifact fields:
+
+- `schema`
+- `run_date`
+- `preconditions_checked`
+- `MODEL_SPECS`
+- `model_specs`
+- `model_invoked`
+- `invocation_counts`
+- `inference_substrate`
+- `inference_substrate_class`
+- `execution_venue`
+- `duration_s`
+- `phase_spans`
+- `random_seed`
+- `reproducibility_checksum`
+- `source_artifact_hashes`
+- `rows`
+- `sample_size_budget`
+- `acceptance_gate_results`
+- `gate_check_summary`
+- `honest_verdict`
+- `verdict_class`
+- `verifier_is_oracle`
+- `flagged_adversarial`
+- `validation_receipts`
+- `field_principles`
+- `board_rows`
+- `gatemate_changed_state_score`
+- `hardware_operations_issued`
+- `hardware_wishlist_disposition`
+
+Required field principles:
+
+- `board_rows`: principle "Separate historical graduation, current receipt availability, and future physical prerequisites."
+- `gatemate_changed_state_score`: principle "Use a bare 0 or 1 from a dated operator physical-change receipt, not a tool-detection retry."
+- `hardware_operations_issued`: principle "Keep zero because this task is a read-only evidence audit."
+- `hardware_wishlist_disposition`: principle "Map selector and full-service evidence to explicit NPU and TSU prerequisites without inferring local availability."
+
+**Acceptance criteria:**
+- The declared entrypoint writes the required terminal JSON for 20260921.
+- The artifact has exactly three hash-bound board rows and zero current model
+  calls and hardware operations.
+- KV260 retains `k_max<=5` and `ssh kria` access. PolarFire retains CPU
+  dispatch and makes no FPGA-sampling claim.
+- GateMate has a row-level gate summary. Without a qualifying receipt, its
+  verdict is `blocked_unchanged_physical_prerequisite` and its changed-state
+  score is zero.
+- Optional selector and prefix-service inputs are used only when their
+  terminal producer bytes exist and authenticate. Their absence stays visible.
+- The NPU route names its software prerequisite. The TSU route names its
+  access prerequisite. Both routes reject papers and SDKs as availability.
+- A fresh process validates the candidate. Independent reduction reproduces
+  all three dispositions, the GateMate score, and zero hardware operations.
+
+**Implementation status:** Planned (Exp 7473)
+
+---
+
+### SCENARIO-HW-7473-UNCHANGED
+
+**Scenario:** Exp7473 completes a null audit when GateMate physical state is unchanged.
+
+**Given:** Exp7459 and Exp7314 authenticate, and the approved parser finds no
+dated operator-authored material GateMate change after Exp6559,
+**When:** Exp7473 reduces the current board dispositions,
+**Then:** KV260 and PolarFire retain only their narrow historical scopes,
+GateMate uses `blocked_unchanged_physical_prerequisite`, every blocked row has
+an exact gate summary, and all current hardware operation counts stay zero.
+
+**Implementation status:** Planned (Exp 7473)
+
+---
+
+### SCENARIO-HW-7473-CHANGED
+
+**Scenario:** Exp7473 records a valid GateMate change only as future eligibility.
+
+**Given:** The approved parser finds a complete post-Exp6559 operator receipt,
+**When:** Exp7473 reduces the GateMate row,
+**Then:** it binds the receipt date, path, hash, and changed fields, sets the
+changed-state score to one, authorizes only a separate future reviewed probe,
+and issues no current detect, flash, power, SSH, USB, or remote command.
+
+**Implementation status:** Planned (Exp 7473)
+
+---
+
+### SCENARIO-HW-7473-WISHLIST
+
+**Scenario:** Exp7473 maps available selector and prefix evidence without claiming hardware availability.
+
+**Given:** Either earlier same-milestone producer can be present, absent, or
+terminally null,
+**When:** Exp7473 builds the hardware-wishlist disposition,
+**Then:** it records each producer state separately, carries forward the NPU
+software and TSU access prerequisites, treats papers and SDKs as context only,
+and makes no hardware speed, purchase, or vendor-contact claim.
+
+**Implementation status:** Planned (Exp 7473)
