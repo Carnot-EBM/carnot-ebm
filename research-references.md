@@ -45838,3 +45838,32 @@ the conflicting attribution in the broader integration plan into a new claim.
 
 No model inference, hardware probe, download of weights, vendor contact,
 purchase or publication occurred in this planning review.
+
+## 2026-09-21: Grassmann Flows, an attention-free sequence model (reference note)
+
+Requested by the operator as a reference note only. No task, experiment or
+dependency follows from it.
+
+- **Paper:** [Attention Is Not What You Need: Grassmann Flows as an Attention-Free
+  Alternative for Sequence Modeling, arXiv 2512.19428](https://arxiv.org/abs/2512.19428)
+  (December 2025). Summaries read: [Emergent Mind](https://www.emergentmind.com/papers/2512.19428),
+  [alphaXiv](https://www.alphaxiv.org/overview/2512.19428v1),
+  [Moonlight review](https://www.themoonlight.io/en/review/attention-is-not-what-you-need).
+  The full paper was NOT read by this project. Every claim below is second-hand.
+- **Idea:** replace pairwise attention scores with a geometric feature. A pair of
+  local token vectors defines a 2D plane, a point on a Grassmann manifold. The
+  layer encodes the plane with Plücker coordinates (pairwise determinants) and
+  feeds them back into the hidden state. The model is called the Causal Grassmann
+  Transformer.
+- **Cost:** linear in sequence length for a fixed rank, against O(L^2) for attention.
+- **Reported result:** on SNLI, a Grassmann head on DistilBERT reached 0.8538 test
+  accuracy against 0.8511 for a Transformer head. That margin is small and comes
+  from one task. A recollection that small language-modeling runs trailed a
+  Transformer is unconfirmed.
+- **Status for Carnot:** unreplicated and small-scale. It does not touch the
+  mandated Qwen3.8-27B generator. It could matter only for a small trained model,
+  for example a world-model or selector component. Revisit only after an
+  independent reproduction or a concrete need for linear-cost sequence mixing.
+- **Related lines:** the geometry-as-interpretability angle is loosely adjacent to
+  the energy-model view of verifiers. No experiment ID or gap in
+  `ops/verifier_gaps.md` is tied to it.
