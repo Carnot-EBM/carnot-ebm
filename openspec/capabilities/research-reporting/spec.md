@@ -76362,6 +76362,115 @@ end-to-end scenario applies.
 **Then** identity, source, row, gate, principle, or checksum drift fails
 **And** only a validated terminal JSON publishes at the declared result path.
 
+## V656 contract and method evidence audit — 2026-09-21
+
+**Status:** Specified. This advisory host aggregation binds the active V656
+contract to terminal V655 evidence. It performs no current model inference,
+numeric fitting, roadmap activation, external publication, or generator change.
+
+### REQ-REPORT-7489: Authenticate V656 without repairing V655 evidence
+
+Exp7489 SHALL resolve only a roadmap whose milestone is `2026.09.656`. It SHALL
+prefer `research-roadmap-next.yaml` before activation and use
+`research-roadmap.yaml` after activation. The selected YAML and the V656
+Markdown task table SHALL match exactly for fourteen ordered task IDs from
+Exp7489 through Exp7502. The comparison SHALL include titles, phases,
+deliverables, substrate classes, and complete structured gate triples. Private
+count, order, ID, path, gate-field, and milestone mutations in each authority
+SHALL fail while the unchanged peer remains readable.
+
+The reducer SHALL authenticate all fourteen V655 dispositions from the
+Exp7488 capstone and the exact producer or conductor pre-gate bytes. It SHALL
+retain the failed Exp7475 overdue-priority receipt, the failed Exp7484
+adversarial receipt, all historical flags and classes, and the disqualified
+Exp7488 capstone. Exp7486 SHALL remain an absent producer with no invented
+null result, completed panel, or source hash. The reducer SHALL not require the
+lagging completion archive to contain V655.
+
+The task SHALL ingest at most six primary methods from the dated V656 review:
+response granularity, input-evidence alignment, corpus leakage controls,
+budgeted feedback, KAN support limits, and on-chip locality. Each row SHALL
+include the paper revision, reusable component, limitation, and exact V656 task
+mapping. A paper result SHALL never become a Carnot measurement.
+
+The overdue-priority disposition SHALL parse the actual known-issues headings.
+It SHALL preserve that the NEW circuit-breaker entry is marked addressed by
+Exp7435. It SHALL report that the parser associates the later resolved
+`retro_timing_fallback_wiring` slug with that entry. The task SHALL inspect the
+timing fallback call site separately. A slug match or green lint SHALL not
+prove that wiring. Any open parser or operator obligation SHALL name its scope,
+source path, observed state, and prohibited action. This task SHALL not modify
+`scripts/research_conductor.py` or weaken enforcement.
+
+The repository checks SHALL run the unchanged roadmap schema, gate audit,
+exclusion, ARC floor, and overdue-priority guards. The current run SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, balanced zero load,
+forward, and generation counts, `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+model evidence SHALL remain hash-bound provenance and SHALL not count as current
+inference.
+
+The artifact SHALL include measured UTC and monotonic process identity, phase
+spans, exact preconditions, source hashes, per-unit rows, sample accounting,
+principle-bearing acceptance gates, an exact failure summary, validation
+receipts, method rows, all fourteen V655 dispositions, unresolved obligations,
+field principles, and a reproducibility checksum. Each emitted field and each
+acceptance gate SHALL include a one-line principle that states the failure it
+prevents. `contract_ready_score` SHALL be a bare zero or one. It SHALL equal one
+only when the exact contract and all current required checks pass. It SHALL not
+certify scientific benefit or gate later V656 science.
+
+The affected validation plan SHALL reuse the Exp7358 command plan and Exp7303
+streaming runner. It SHALL use one exact test file, one changed module, one thin
+entrypoint, a private pytest base directory, command-local coverage, focused
+pytest without coverage, separate 100 percent changed-module coverage, scoped
+Ruff, changed-module mypy, and exact-test specification coverage. The declared
+entrypoint and a fresh-process cold replay are the capability end-to-end checks.
+Independent reduction, adversarial verification, and strict row consistency
+SHALL pass before atomic publication. No numbered runtime end-to-end scenario
+applies.
+
+#### SCENARIO-REPORT-7489-CONTRACT: Both V656 authorities fail closed
+
+**Given** the exact fourteen-task V656 Markdown table and selected YAML roadmap
+**When** count, order, ID, path, gate field, or milestone differs in one private copy
+**Then** contract authentication fails while the other authority remains readable
+**And** all later V656 science tasks remain independent of this advisory result.
+
+#### SCENARIO-REPORT-7489-EVIDENCE: Every V655 slot retains its source state
+
+**Given** thirteen producer artifacts, one absent panel, and the terminal capstone
+**When** Exp7489 authenticates Exp7475 through Exp7488 in contract order
+**Then** paths, hashes, verdicts, flags, failed receipts, and absence reproduce
+**And** completion never converts invalid, blocked, null, or circular evidence.
+
+#### SCENARIO-REPORT-7489-METHODS: Six bounded methods map to V656 tasks
+
+**Given** the dated V656 primary-source review
+**When** the method map is reduced and written to the research notes
+**Then** each row names a revision, reusable component, limitation, and task mapping
+**And** no external paper result is reported as a Carnot measurement.
+
+#### SCENARIO-REPORT-7489-PRIORITY: Parser association is not implementation proof
+
+**Given** the NEW circuit-breaker heading, its addressed Exp7435 evidence, and a later resolved timing heading
+**When** the current parser and selected roadmap are inspected
+**Then** the cross-heading slug association remains explicit
+**And** source call-site evidence, not the slug or lint exit, determines wiring state.
+
+#### SCENARIO-REPORT-7489-ARTIFACT: Exact readers control atomic publication
+
+**Given** immutable evidence rows, source hashes, and a frozen affected manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, source, row, gate, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared result path.
+
+## Implementation Status (REQ-REPORT-7489)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7489 and SCENARIO-REPORT-7489-* | Planned: advisory V656 contract and method reducer with a thin entrypoint. | Requires spec-linked tests, 100 percent changed-module coverage, scoped checks, capability replay, cold reduction, adversarial verification, and strict row consistency. |
+
 ## V655 independent source-decision and delayed-learning audit — 2026-09-21
 
 **Status:** Specified. This host aggregation audits every available V655
