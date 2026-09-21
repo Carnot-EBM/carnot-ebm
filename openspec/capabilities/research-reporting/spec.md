@@ -76458,3 +76458,123 @@ No numbered runtime end-to-end scenario applies.
 **When** fresh readers replay, verify, and lint the terminal candidate
 **Then** `audit_complete_score` can equal one for a valid scientific null
 **And** only a validated terminal JSON publishes at the declared result path.
+
+## V655 fourteen-disposition capstone — 2026-09-21
+
+**Status:** Specified. This host aggregation closes the reporting task without
+turning an invalid, absent, censored, or valid-null branch into scientific
+success. It performs no current model call, numeric fitting, hardware action,
+roadmap activation, external publication, or generator change.
+
+### REQ-REPORT-7488: Reconcile fourteen outcomes without promoting missing science
+
+Exp7488 SHALL authenticate the active V655 Markdown and YAML authorities. It
+SHALL require exactly fourteen ordered tasks from Exp7475 through Exp7488.
+The current task SHALL receive a current-work disposition and SHALL never read
+its terminal result as an input. Each gate SHALL include a one-line principle
+that names the failure mode it prevents.
+
+The reducer SHALL authenticate each Exp7475 through Exp7487 producer or its
+exact conductor pre-gate bytes. Each disposition SHALL retain the expected and
+observed path, source hash, original identity, original status and verdict,
+adversarial flag, required validation state, and exact failure. Missing source
+evidence SHALL be blocked. Present invalid required evidence SHALL disqualify
+the capstone. Neither state SHALL stop an available peer branch. `partial`
+SHALL be used only for retryable unfinished work owned by Exp7488.
+
+The reducer SHALL use valid Exp7484 independent metrics when available. It
+SHALL otherwise audit the available raw source rows and list each missing
+check. Static calibration, typed cost-grid value, prequential improvement,
+retention, and complete service cost SHALL remain separate. Flagged or invalid
+science SHALL remain visible but SHALL not enter a positive aggregate.
+
+ARC panels SHALL pool only when model and build identity, budget, observer
+schema, and clock semantics match. The reducer SHALL recompute each available
+episode interval union and game-cluster interval from nonoverlapping eligible
+intervals. E6 support SHALL require at least 30 fully attributed completed
+episodes across at least 10 independent games. Planned episodes SHALL not count
+as measured episodes. Missing panels, censored episodes, unavailable games, or
+a missed floor SHALL produce a sample-limited null while retaining every row.
+Older partial episodes SHALL not augment the V655 panels.
+
+Replaceable cost share and its perfect-removal ceiling SHALL use only eligible
+nonoverlapping intervals. A measured opportunity SHALL require a strictly
+positive 95 percent game-cluster lower bound. This opportunity SHALL remain
+separate from intervention benefit. The capstone SHALL state that E4/E5,
+Blackwell parity, hidden-game efficacy, and selector efficacy were not tested.
+It SHALL preserve actions-to-progress censoring and every observed failure.
+
+Each research branch SHALL receive `continue`, `defer`, or `retire`, one exact
+measured cause, and one changed prerequisite. Compact-span extraction, the
+four-expert mixture, general external-text reranking, and unchanged GateMate
+physical retries SHALL stay retired or deferred. Repeated valid null mechanisms
+SHALL use task, prior experiment, prior verdict, and changed-mechanism metadata.
+External blocks SHALL not count as scientific mechanism failure.
+
+The artifact SHALL include exactly fourteen ordered `task_dispositions`, raw
+disposition rows, separate science reductions, `arc_combined_reduction`,
+continuation rows, retirement metadata, unresolved obligations, and the
+unchanged G1–G4 publication result. The publication result SHALL retain its
+FoVer-only scope and SHALL not certify V655 claims. Reporting completion,
+required validity, readiness, scientific benefit, and publication scope SHALL
+remain separate. `capstone_complete_score` SHALL be one only when the fourteen
+dispositions and current required validation are complete.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, balanced zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Archived
+model events SHALL remain hash-bound sidecars. Numeric fitting SHALL be absent
+and recorded in a separate zero `small_ebm_training` receipt.
+
+The affected validation manifest SHALL freeze one test, one changed module,
+and one thin entrypoint before checks. The plan SHALL reuse the Exp7358 and
+Exp7303 scope helpers. It SHALL run worktree imports, focused pytest without
+coverage, separate 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, and exact-test specification coverage. The
+declared entrypoint and a fresh-process cold replay SHALL be capability checks.
+Independent reduction, adversarial verification, strict verdict-row
+consistency, and the historical publication gate SHALL pass before atomic
+publication. No numbered runtime end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7488-CONTRACT: Both V655 authorities fail closed
+
+**Given** the exact fourteen-task V655 Markdown table and active YAML roadmap
+**When** count, ID, order, title, phase, deliverable, substrate, gate, or milestone differs
+**Then** contract authentication fails without consulting an older capstone
+**And** Exp7488 remains current work instead of becoming its own prerequisite.
+
+#### SCENARIO-REPORT-7488-DISPOSITIONS: Every slot keeps its source state
+
+**Given** valid producers, invalid present evidence, conductor pre-gates, and missing producers
+**When** Exp7488 authenticates the thirteen predecessor slots
+**Then** each slot keeps its path, hash, identity, class, flag, and validation state
+**And** invalid evidence is disqualified while missing external evidence is blocked.
+
+#### SCENARIO-REPORT-7488-SCIENCE: Decision claims remain independent
+
+**Given** Exp7484 metrics and available calibration, learning, and service rows
+**When** the capstone reduces scientific benefit
+**Then** calibration, typed utility, prequential change, retention, and complete cost remain separate
+**And** invalid or flagged sources cannot contribute to a positive aggregate.
+
+#### SCENARIO-REPORT-7488-ARC: Measured panel support controls pooling
+
+**Given** zero, one, or two V655 ARC panels with episode interval rows
+**When** episode unions, game clusters, support floors, and opportunity bounds are rebuilt
+**Then** only compatible panels and nonoverlapping eligible intervals contribute
+**And** fewer than 30 completed episodes or 10 games remains a sample-limited null.
+
+#### SCENARIO-REPORT-7488-CONTINUATION: Branch decisions need changed evidence
+
+**Given** valid nulls, external blocks, prior retirements, and board prerequisites
+**When** continuation rows and retirement metadata are produced
+**Then** every branch names a measured cause and an exact changed prerequisite
+**And** completion does not reopen retired mechanisms or unchanged physical retries.
+
+#### SCENARIO-REPORT-7488-ARTIFACT: Exact readers control atomic publication
+
+**Given** fourteen dispositions, source hashes, raw reductions, and a frozen validation manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, source, row, branch, gate, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared result path.
