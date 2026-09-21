@@ -43952,3 +43952,134 @@ seed or an analytic fixture cannot substitute for held-out value.
 **When** the declared unbuffered entrypoint runs
 **Then** scoped checks, cold replay, raw reduction, adversarial verification, and strict row lint pass
 **And** only the measured terminal JSON publishes at the declared result path.
+
+### REQ-VERIFY-7491: V656 Window Protocol SHALL Seal Lossless Focus And Fresh Roles
+
+Exp7491 SHALL preserve the sealed Exp7462 training and calibration rosters at
+exactly 180 and 60 source groups. It SHALL select exactly 120 new test groups
+and 160 new online groups from the authenticated RAGTruth revision
+`c103204b9ce28d6bbad859304bf30de72b8ed8fe`. Selection SHALL use split seed
+656001 and fixed hashes over source and response identities before label access.
+There SHALL be one response per normalized source group and no replacement
+after outcome inspection.
+
+The freshness search SHALL exclude source hashes, source IDs, and group aliases
+from the V651 fit, final-test, and prospective-stream shards; the V653 source
+protocol; the V654 cohort manifest; and all later fit, evaluation, calibration,
+or online captures in that source lineage. The artifact SHALL list the searched
+paths, patterns, hashes, match counts, and inaccessible archives. Any missing or
+unreadable required archive SHALL set freshness incomplete and block readiness.
+Prior calibration-only membership MAY supply a new role when it is absent from
+all excluded fit and evaluation roles. Existing V654 training and calibration
+membership SHALL remain unchanged even when older protocol aliases exist.
+
+Predictor evidence SHALL contain only opaque row identity, source family, role,
+complete source text, complete response text, and text hashes. Annotation text,
+gold labels, annotation spans, source IDs, response IDs, and response-generator
+identity SHALL remain in a separate evaluator shard. Test class support SHALL
+be inspected only after predictor roles and requests are frozen. Readiness SHALL
+require eligible minima of 150 training, 40 calibration, 100 test, and 120
+online groups, plus at least two test labels with at least 20 examples each.
+
+The protocol SHALL segment each UTF-8 response into at most three contiguous
+windows. Sentence boundary version `carnot-utf8-sentence-v1` SHALL end a sentence
+at `.`, `?`, `!`, `。`, `？`, or `！`, include trailing closing punctuation and
+whitespace, and retain any remaining suffix. Window grouping version
+`carnot-balanced-contiguous-v1` SHALL group complete sentence spans in original
+order without splitting one sentence. An empty response SHALL have one empty
+window and a single long sentence SHALL remain one whole window. Concatenating
+all byte slices SHALL reproduce the exact original response bytes.
+
+The existing Exp7462 whole-response prompt SHALL remain byte-for-byte unchanged.
+Each focused prompt SHALL contain the complete source and one copy of the full
+original response with ASCII focus markers inserted only at recorded UTF-8 byte
+boundaries. Removing those markers SHALL recover the response bytes exactly.
+Focused and whole prompts SHALL use both stable option orders and the same native
+score mapping. No prompt SHALL contain group IDs, source IDs, response IDs,
+annotations, annotation spans, labels, or response-generator identity.
+
+Every group SHALL reserve two whole-response calls and two calls for each focus
+window, for at most eight forwards. The complete set of required prompts SHALL
+be tokenized before label access with a no-weight tokenizer whose identity is
+proven against archived embedded-GGUF prompt IDs. If any required prompt exceeds
+2,048 tokens, the group SHALL be excluded without truncation or replacement.
+The fit request ceiling SHALL be 1,960 forwards: at most 240 times eight plus
+40 two-order source-derangement controls. The evaluation request ceiling SHALL
+be 2,240 forwards: at most 280 times eight. Derangement controls SHALL be fixed
+before labels and SHALL carry no invented gold label.
+
+The frozen feature contract SHALL contain whole-response log odds, maximum and
+mean focused unsupported probability, focused disagreement, and the existing
+numeric verifier and missingness signals. It SHALL exclude identity, annotation,
+and response-generator features. The protocol SHALL state that deterministic
+windows are not atomic-claim extraction, HallDetect reproduction, or a trained
+entailment encoder.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current load, forward, and generation calls,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. Its
+substrate SHALL name deterministic UTF-8 segmentation, tokenizer-only prompt
+accounting, freshness search, and protocol sealing. A zero-work
+`small_ebm_training` receipt SHALL state that no fit occurred.
+
+The affected-file manifest SHALL include only the Exp7491 test, module, and thin
+entrypoint. Required checks SHALL be affected pytest with `-n 0 -o addopts=
+--no-cov` and a private basetemp, 100 percent changed-module coverage with a
+command-local `COVERAGE_FILE`, scoped Ruff check and format, changed-module mypy,
+scoped spec coverage, fresh-process entrypoint replay, independent raw reduction,
+adversarial verification, and strict verdict-row consistency. The broad Python
+suite SHALL not run. No numbered runtime E2E applies because no shared runtime,
+binding, model, or hardware path changes.
+
+`window_protocol_ready_score` SHALL equal one only when authenticated inputs,
+complete freshness search, exact role counts, role minima, evaluator-only class
+support, lossless windows, prompt isolation, tokenizer accounting, budgets,
+independent reduction, and all required validation pass. It is structural
+readiness, not predictive benefit. Every artifact field and gate SHALL carry a
+one-line principle that states the failure it prevents. Validity gates SHALL use
+the principle that favorable metrics cannot excuse invalid evidence. Readiness
+gates SHALL use the principle that a valid scientific null must not block an
+independent measurement. Benefit gates SHALL retain the principle that a
+favorable seed, fixture, or low-support result cannot replace held-out value.
+
+#### SCENARIO-VERIFY-7491-ROLES: Fresh Roles Are Assigned Before Labels
+
+**Given** the preserved fit roster, pinned RAGTruth bytes, and complete exposure search
+**When** Exp7491 hashes sources and one response per source with split seed 656001
+**Then** it preserves 180 training and 60 calibration groups and seals 120 new test and 160 new online groups
+**And** labels are opened only after predictor roles, text hashes, and requests are frozen.
+
+#### SCENARIO-VERIFY-7491-WINDOWS: Windows Partition Exact UTF-8 Bytes
+
+**Given** responses containing negation, pronouns, dates, Unicode, repeated text, one long sentence, or empty text
+**When** the deterministic sentence and grouping versions build at most three windows
+**Then** the ordered byte ranges are contiguous, nonoverlapping, and concatenate to the original bytes
+**And** no qualifier or complete sentence is dropped, duplicated, or split.
+
+#### SCENARIO-VERIFY-7491-PROMPTS: Focus Keeps Full Context Without Leakage
+
+**Given** a lossless window and either stable option order
+**When** whole and focused requests are built
+**Then** the whole prompt equals Exp7462 and the focused prompt contains the full source and one marked copy of the response
+**And** removing focus markers recovers exact response bytes with no IDs, labels, annotations, spans, or generator identity.
+
+#### SCENARIO-VERIFY-7491-BUDGET: Token And Forward Ceilings Fail Closed
+
+**Given** every required whole and focused prompt before evaluator access
+**When** the bound tokenizer checks prompt length and the request reducer counts calls
+**Then** any group with a prompt above 2,048 tokens is excluded without truncation or replacement
+**And** each group uses at most eight forwards while fit and evaluation remain at or below 1,960 and 2,240.
+
+#### SCENARIO-VERIFY-7491-NO-MODEL: Protocol Work Is Not Inference
+
+**Given** deterministic CPU segmentation, role hashing, and tokenizer-only accounting
+**When** current-work provenance is reduced
+**Then** both model-spec fields are empty and every current model counter is zero
+**And** archived model receipts and tokenizer parity rows do not become current inference.
+
+#### SCENARIO-VERIFY-7491-E2E: Scoped Readers Publish One Atomic Protocol
+
+**Given** hash-bound predictor, evaluator, role, window, request, and exposure shards
+**When** the declared unbuffered entrypoint executes
+**Then** scoped checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
+**And** only the measured terminal JSON publishes at the declared result path.
