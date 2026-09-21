@@ -18335,3 +18335,4 @@ code |
 | 2026-09-21 01:37 UTC | Measure missing decision seams on adapter-withheld | OK | 118 passed, 1 warning in 11.36s |
 | 2026-09-21 01:39 UTC | Measure exact-prefix reuse and complete decision-s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7465-source-option-capture, exp7465-source-option-capture, exp7465-source-option-capture) |
 | 2026-09-21 01:53 UTC | Preserve board terminal states and dated GateMate  | OK | 88 passed, 1 warning in 7.43s |
+| 2026-09-21 02:17 UTC | Reconcile fourteen outcomes and decide native-ener | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 10.84s |
