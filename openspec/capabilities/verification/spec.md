@@ -44194,3 +44194,140 @@ sampler, training, binding, ARC, telemetry, Rust, or deployment behavior.
 **When** the declared unbuffered entrypoint runs its scoped and terminal checks
 **Then** cold replay, independent reduction, adversarial verification, and strict row lint pass
 **And** only the final validated candidate publishes atomically at the result path.
+
+### REQ-VERIFY-7493: V656 Window Fit Capture SHALL Preserve Every Sealed Development Call
+
+Exp7493 SHALL consume Exp7491 and Exp7492 only after their exact schemas,
+experiment identities, terminal states, honest verdicts, verdict classes,
+adversarial flags, gate summaries, task-specific readiness scores, and original
+hash-bound evidence pass cold validation. It SHALL use the Exp7491 predictor,
+group, window, and request shards without rebuilding or guessing an earlier V656
+deliverable. It SHALL use the authenticated Exp7492 model path, weight hash,
+Q4_K_M quantization, embedded tokenizer identity, native build identity, GPU
+placement contract, and prompt transport.
+
+The capture SHALL include only the sealed 180 training and 60 calibration
+groups. It SHALL retain all 1,936 planned request cells, including frozen
+overlength exclusions. It SHALL attempt only the 1,904 eligible cells. Test and
+online groups SHALL not enter this shard. A call reused from Exp7492 SHALL be
+marked archived and SHALL not count as current inference unless its complete
+request bytes and full model identity match. The normal run SHALL not depend on
+pilot reuse.
+
+The task SHALL load cached `unsloth/Qwen3.8-27B-GGUF` once under one owned GPU
+lease. It SHALL authenticate the exact GGUF path and SHA-256, Q4_K_M
+quantization, native module bytes and build identity, owned PID, GPU UUID,
+requested offload, observed layer placement, and peak owned-process VRAM. It
+SHALL generate zero tokens. The inference class SHALL be
+`model_load_no_generation`. A small model, simulated result, load failure, or
+archived pilot row SHALL not count as a current headline forward.
+
+Each eligible request SHALL use the exact sealed Exp7491 prompt. Both stable
+option orders SHALL remain present for the whole response and every required
+focus window. Each completed call SHALL retain raw display-label logits, raw
+stable-option logits, remapped probabilities, native option token IDs, prompt
+token IDs, complete source text, complete response text, prompt and text hashes,
+window byte offsets, arm, option order, source version, window versions, call
+status, error, tokenization time, prefill time, readout time, KV reset receipt,
+and zero generated tokens. Labels, annotation text, annotation spans, and
+response-generator identity SHALL not enter prompts or feature construction.
+
+Every planned call and group SHALL end as complete, failed, excluded, censored,
+or unstarted. Planned, attempted, complete, failed, excluded, censored, and
+unstarted counts SHALL reconcile independently for calls and source groups. A
+timeout or error SHALL remain explicit and SHALL close readiness. Missing or
+nonfinite values SHALL not become zeros. The live-work cap SHALL be 3,300
+seconds and the current forward ceiling SHALL be 1,960.
+
+The task SHALL checkpoint after every source group. Resume SHALL require the
+same Exp7491 request-manifest hash, exact request rows, model path, model hash,
+tokenizer identity, prompt hashes, role roster, and capture schema. A mismatched
+binding SHALL fail before a model forward. Raw JSONL shards SHALL each remain
+below 20 MiB. Every shard SHALL be content-addressed and independently reloaded
+before a headline reduction.
+
+`capture_complete_score` SHALL equal one only when every planned call and group
+has an explicit terminal disposition. `role_support_score` SHALL independently
+require at least 150 eligible training groups and 40 eligible calibration
+groups. `window_fit_ready_score` SHALL equal one only when all eligible calls
+are valid and complete, source and transport identities pass, role support
+passes, invocation accounting balances, required validation passes, and no
+adversarial flag is present. Model accuracy, probability-change sign, label
+balance, and later held-out benefit SHALL not define capture readiness. Fresh
+evaluation labels SHALL remain sealed.
+
+The terminal artifact SHALL publish at
+`results/experiment_7493_v656_window_fit_capture.json`. It SHALL declare both
+model-spec fields, current invocation accounting, per-group rows, call and group
+sample budgets, raw shard receipts, phase spans, original source hashes, exact
+validation receipts, and a reproducibility checksum. Every top-level field and
+acceptance gate SHALL carry one line that names the failure it prevents.
+Validity gates SHALL state that a favorable metric cannot excuse invalid
+evidence. Readiness gates SHALL state that a valid scientific null must not
+block independent measurements. Benefit gates SHALL state that a favorable
+seed, fixture, or low-support result cannot replace held-out value.
+
+The affected-file manifest SHALL contain only the Exp7493 test, module, and thin
+entrypoint. Required checks SHALL be scoped pytest with `-n 0 -o addopts=
+--no-cov` and a private basetemp, 100 percent changed-module coverage with a
+command-local `COVERAGE_FILE`, scoped Ruff check and format, changed-module
+mypy, scoped spec coverage, fresh-process entrypoint replay, independent raw
+reduction, adversarial verification, and strict verdict-row consistency. No
+numbered runtime E2E applies because the task does not change shared runtime,
+sampler, training, binding, ARC, telemetry, Rust, or deployment behavior.
+
+#### SCENARIO-VERIFY-7493-PREREQUISITE: Both V656 Producers Pass Exactly
+
+**Given** terminal Exp7491 protocol evidence and terminal Exp7492 pilot evidence
+**When** Exp7493 authenticates their structured gates, bytes, raw shards, and cold validators
+**Then** model work starts only after both exact producer contracts pass
+**And** missing, changed, blocked, or guessed producer evidence stops current inference.
+
+#### SCENARIO-VERIFY-7493-ROSTER: Only Fit Roles Enter The Capture
+
+**Given** the sealed Exp7491 role and request manifests
+**When** Exp7493 freezes its schedule before native outcomes
+**Then** it retains 180 training groups, 60 calibration groups, and 1,936 planned request cells
+**And** test and online groups never enter the fit shard or role minima.
+
+#### SCENARIO-VERIFY-7493-CALLS: Whole And Focused Orders Remain Recheckable
+
+**Given** one eligible source group with its complete text and lossless windows
+**When** native scoring completes for its sealed request cells
+**Then** both option orders remain present for the whole response and every focus window
+**And** raw logits, probabilities, token IDs, hashes, offsets, versions, status, and timings remain in raw evidence.
+
+#### SCENARIO-VERIFY-7493-LABELS: Capture Features Stay Label Blind
+
+**Given** separate Exp7491 predictor and evaluator stores
+**When** Exp7493 loads text, constructs prompts, and writes native call rows
+**Then** prompts and feature inputs contain no label, annotation, span, or generator identity
+**And** held-out evaluation labels remain sealed until later fitted policies freeze.
+
+#### SCENARIO-VERIFY-7493-ACCOUNTING: Failures Cannot Become Missing Zeros
+
+**Given** planned calls that can complete, fail, exceed the live cap, or remain excluded
+**When** Exp7493 reduces calls and independent source groups
+**Then** every call and group receives one explicit disposition and all budgets reconcile
+**And** any failed, censored, or unstarted eligible call closes readiness without a fabricated zero.
+
+#### SCENARIO-VERIFY-7493-RESUME: Checkpoints Require Exact Manifest Identity
+
+**Given** a durable checkpoint saved after a completed source group
+**When** a later owned process requests resume
+**Then** request-manifest, model, tokenizer, role, prompt, and schema hashes must match
+**And** any changed binding rejects reuse before the next model forward.
+
+#### SCENARIO-VERIFY-7493-READY: Completeness And Support Stay Separate From Benefit
+
+**Given** independently reloaded raw shards and terminal validation receipts
+**When** Exp7493 reduces capture status
+**Then** capture completeness, fit-role support, and window-fit readiness have separate bare scores
+**And** model accuracy, effect sign, or forbidden label balance cannot open or close readiness.
+
+#### SCENARIO-VERIFY-7493-E2E: One Live Command Publishes A Cold-Valid Capture
+
+**Given** one owned Qwen load, group checkpoints, hash-bound shards, and a frozen affected-file manifest
+**When** the declared unbuffered entrypoint runs
+**Then** scoped checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
+**And** only the final measured terminal JSON publishes atomically at the declared result path.
