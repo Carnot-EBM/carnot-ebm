@@ -43610,3 +43610,100 @@ checks and protocol-validity checks passing may publish
 **When** the declared unbuffered entrypoint runs
 **Then** affected checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
 **And** the validated terminal JSON publishes atomically without invoking the broad Python suite.
+
+### REQ-VERIFY-7477: V655 Native Readout Pilot SHALL Measure Transport Without Generation
+
+Exp7477 SHALL run one bounded native llama.cpp readout pilot with the current
+cached `unsloth/Qwen3.8-27B-GGUF`. It SHALL use `cached_current_model()`, the
+embedded GGUF tokenizer, `CARNOT_FORCE_LIVE=1`, and one owned GPU lease. It
+SHALL request full CUDA offload and record requested offload separately from
+observed device and resident-memory evidence. It SHALL not start a server,
+download weights, use a prefix cache, substitute a small model, or generate a
+token. The inference class SHALL be `model_load_no_generation`.
+
+The pilot SHALL freeze twelve development source groups by hash before reading
+model outcomes. These groups SHALL be disjoint from every sealed V654 cohort
+role. Each group SHALL run once in each option order. Four additional
+deterministic transport-control forwards SHALL make the complete budget at most
+28 forwards. Each unrelated prompt SHALL start with fresh KV state. Current live
+model work SHALL stop at 600 seconds.
+
+Every completed forward SHALL retain the model weight hash, embedded tokenizer
+identity, exact chat-template bytes or their explicit absence, llama.cpp build
+identity, complete prompt token IDs, one-token option IDs, prompt-plus-label
+boundary checks, requested score position, actual last evaluated position,
+finite raw option logits, stable option-ID mapping, KV reset receipt, elapsed
+prefill time, and zero generated tokens. All requested option logits and every
+attempted invocation SHALL be accounted for.
+
+Production reducers SHALL detect a display-label swap, a wrong token position,
+a constant scripted vector, and accidental KV-state reuse through explicit
+controlled fixtures. These controls SHALL test transport integrity. A naturally
+uniform model row, an inaccurate prediction, or disagreement between real
+source-case option orders SHALL remain an observation and SHALL not fail native
+transport readiness.
+
+The artifact SHALL report measured load and per-prompt prefill distributions.
+It SHALL apply the fixed 534-group, two-order capture roster and its two hard
+capture-shard caps to the measured throughput. If either shard cannot finish,
+the artifact SHALL report a feasibility shortfall and every unstarted cell. It
+SHALL not lower a confidence gate, pad a duration, or substitute another model.
+
+`native_readout_ready_score` SHALL equal one only when model, tokenizer,
+offload, lease, token boundary, score-position, finite-logit, fresh-state, and
+invocation-accounting checks pass. Predictive accuracy SHALL not be a
+precondition. `scored_runtime_parity_score` SHALL remain zero because this
+pilot makes no server, scored-runtime, or Blackwell parity claim. E0 SHALL
+remain deferred and scored deployment SHALL stay closed.
+
+The affected-file manifest SHALL contain only the Exp7477 test, module, and
+thin entrypoint. Required checks SHALL include affected pytest with `-n 0 -o
+addopts= --no-cov` and a private existing basetemp parent, 100 percent
+changed-module coverage with a command-local `COVERAGE_FILE`, scoped Ruff check
+and format, changed-module mypy, scoped spec coverage, fresh-process entrypoint
+replay, independent raw reduction, adversarial verification, and strict
+verdict-row consistency. The terminal JSON SHALL publish atomically only after
+all checks pass. Each acceptance gate SHALL include a one-line principle that
+names the failure mode it prevents.
+
+#### SCENARIO-VERIFY-7477-IDENTITY: Native Load Is Authenticated
+
+**Given** the cached current Qwen GGUF, an idle CUDA device, and an owned lease
+**When** the native runner loads the model with its embedded tokenizer
+**Then** exact weight, tokenizer, chat-template, llama.cpp, lease, and offload receipts remain bound
+**And** no server, substitute model, download, prefix cache, or generation call occurs.
+
+#### SCENARIO-VERIFY-7477-READOUT: Twenty-Eight Forwards Preserve The Token Boundary
+
+**Given** twelve frozen disjoint groups, two option orders, and four controls
+**When** the runner evaluates each complete prompt from fresh KV state
+**Then** every row records exact prompt IDs, option IDs, final evaluated position, finite raw logits, and elapsed prefill
+**And** invocation accounting balances at no more than 28 forwards and zero generations.
+
+#### SCENARIO-VERIFY-7477-CONTROLS: Known Transport Mutations Fail Closed
+
+**Given** controlled rows with known option mapping, score position, vector diversity, and state resets
+**When** one fixture swaps labels, shifts the score position, repeats one constant vector, or reuses state
+**Then** each mutation is rejected by a named production reducer check
+**And** the authentic control fixture passes all four checks.
+
+#### SCENARIO-VERIFY-7477-NULL: Predictive Outcomes Do Not Define Transport
+
+**Given** authenticated native rows whose natural probabilities can be uniform, inaccurate, or order-sensitive
+**When** readiness and scientific benefit are reduced
+**Then** transport readiness depends only on authenticated raw-logit delivery
+**And** predictive outcomes remain observations with scientific benefit deferred.
+
+#### SCENARIO-VERIFY-7477-COST: Measured Prefill Bounds Capture Feasibility
+
+**Given** measured model-load and per-prompt prefill durations
+**When** the fixed two-order cohort roster is projected into two bounded shards
+**Then** each shard reports its fixed group count, hard cap, projected seconds, and unstarted cells
+**And** an infeasible projection remains a shortfall without changing the roster or model.
+
+#### SCENARIO-VERIFY-7477-E2E: Scoped Readers Publish One Atomic Pilot
+
+**Given** one frozen affected-file manifest and a measured terminal candidate
+**When** affected checks and fresh-process terminal readers inspect the exact candidate
+**Then** all required command vectors, exits, timings, and log hashes remain in the artifact
+**And** only the cold-valid JSON publishes at the declared result path.
