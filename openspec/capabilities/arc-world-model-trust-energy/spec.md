@@ -13,6 +13,92 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## E6 current live-loop decision cost reduction — 2026-09-21
+
+**Status:** Specified. This is a CPU-only reduction of existing artifacts. It
+does not call a model, run a game, use a GPU, use the network, or submit work.
+
+### REQ-ARC-WMTE-7490: Reduce existing ARC traces without publishing unsupported shares
+
+Experiment 7490 SHALL inventory ARC artifacts with provenance, induction
+attempts, request manifests, or phase spans. Each inventory row SHALL record
+the path, model name and version, adversarial flag state, available cost fields,
+episode count, and game count. Evidence under `results/arc_e3` and
+`results/raw` SHALL be read only. Every imported file SHALL retain a SHA-256
+receipt.
+
+The reducer SHALL exclude every artifact with `flagged_adversarial=true`,
+including Experiment 7234. It SHALL exclude every non-current model from a
+numeric share. Experiments 5972 and 7457 SHALL be parser and schema controls
+only. Repeated reductions of the same episode SHALL not increase the sample
+count.
+
+The reducer SHALL map exclusive episode work to candidate selection, induction
+and generation, world-model verification, supervisor, planner, and environment.
+It SHALL report field coverage, cold and warm coverage, and an Amdahl ceiling
+for each seam. It SHALL reconcile non-concurrent subphase time to episode wall
+time and attributed tokens to backend usage. A real row whose non-concurrent
+subphase time exceeds its episode time SHALL fail. Missing timing or token
+fields SHALL remain missing and SHALL not become zero.
+
+The reducer SHALL run a synthetic positive control with known phase spans and
+token rows. One injected delay and one injected token count SHALL be recovered
+exactly. A concurrent span MAY overlap episode time only when the row explicitly
+marks it concurrent.
+
+A numeric real-data share SHALL be published only with at least 30 complete
+current-Qwen3.8 episodes across at least 10 games. Otherwise the artifact SHALL
+publish coverage only and SHALL name the exact missing fields for every artifact
+class. If candidate selection, generation, verification, planner, and
+environment time cannot be separated, or if every replaceable decision seam is
+below five percent of wall time, the artifact SHALL stop all speed claims.
+
+The terminal artifact SHALL declare
+`inference_substrate=aggregation_from_upstream_artifacts`. It SHALL contain
+`cited_upstream_artifacts` rows with experiment ID, imported fields, and SHA-256,
+a random seed, a reproducibility checksum, measured reduction duration, an
+`honest_verdict` with a terminal prefix, per-artifact claim rows, gate results,
+and `missing_verifier_gaps`. The writer SHALL accept an explicit output path so
+tests can write only below `tmp_path`.
+
+#### SCENARIO-ARC-WMTE-7490-POSITIVE-CONTROL
+
+- **GIVEN** synthetic exclusive spans and backend token usage with one injected delay and token count
+- **WHEN** the reducer partitions the episode
+- **THEN** it recovers both injections exactly and reconciles wall time and tokens
+- **AND** an unmarked overlap that exceeds episode wall time is rejected.
+
+#### SCENARIO-ARC-WMTE-7490-EXCLUSIONS
+
+- **GIVEN** a flagged current-model artifact, an older-model artifact, and a clean control
+- **WHEN** the inventory is reduced
+- **THEN** none contributes to the current-model numeric sample
+- **AND** each retains its path, model identity, flag state, fields, and exclusion reason.
+
+#### SCENARIO-ARC-WMTE-7490-COVERAGE-GATE
+
+- **GIVEN** fewer than 30 complete current-model episodes or fewer than 10 games
+- **WHEN** the terminal profile is built
+- **THEN** every real wall-time share, token share, and Amdahl ceiling is null
+- **AND** coverage counts and exact missing shadow-timer fields remain visible.
+
+#### SCENARIO-ARC-WMTE-7490-KILL-RULE
+
+- **GIVEN** traces that do not separate verifier, planner, and environment work
+- **WHEN** speed-claim eligibility is checked
+- **THEN** the artifact records that the seam-separation kill rule fired
+- **AND** it makes no acceleration or routing-speed claim.
+
+#### SCENARIO-ARC-WMTE-7490-TERMINAL
+
+- **GIVEN** immutable upstream artifacts and an explicit output path
+- **WHEN** the CPU-only entrypoint runs
+- **THEN** it writes one checksum-bound terminal coverage artifact at that path
+- **AND** no model, game, GPU, network, submission, or tracked test output is used.
+
+Implementation status: implemented 2026-09-21 by the Experiment 7490 reducer,
+focused tests, and terminal coverage artifact named above.
+
 ## ARC decision shadow telemetry — 2026-09-20
 
 **Status:** Implemented. This instrument records existing decisions. It does not

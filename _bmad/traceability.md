@@ -1,6 +1,18 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-20
+**Last Updated:** 2026-09-21
+**Operational Note:** 2026-09-21 REQ-ARC-WMTE-7490 maps the CPU-only E6
+reducer in
+`scripts/experiments/experiment_7490_e6_live_loop_cost_profile.py` to
+`tests/python/test_experiment_7490_e6_live_loop_cost_profile.py` and
+`epics/stories/arc-e6-live-loop-cost-profile.md`. The reducer inventories
+existing ARC cost evidence, excludes flagged and non-current artifacts, proves
+its accounting with injected delay and token controls, and keeps real shares
+null when the sample gate fails. Experiment 7490 found 26 complete current-model
+episodes across 10 games. The 30-episode gate is short by four. Verifier,
+planner, and environment timing also remain inseparable, so speed claims stop.
+No model, game, GPU, network, or submission was used.
+
 **Operational Note:** 2026-09-20 REQ-ARC-WMTE-7465 maps the live ARC decision
 recorder in `python/carnot/agentic/arc_decision_telemetry.py` and its hooks in
 `python/carnot/agentic/arc_competition_agent.py` to

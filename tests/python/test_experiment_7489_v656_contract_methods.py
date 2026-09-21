@@ -97,9 +97,7 @@ def test_v656_authorities_match_and_all_private_mutations_fail() -> None:
     comparison = exp.compare_contract_authorities(markdown, roadmap)
 
     assert comparison["passed"] is True
-    assert [row["unit_id"] for row in comparison["contract_rows"]] == list(
-        exp.EXPECTED_TASK_IDS
-    )
+    assert [row["unit_id"] for row in comparison["contract_rows"]] == list(exp.EXPECTED_TASK_IDS)
     assert len(comparison["contract_rows"]) == 14
     assert all(row["principle"] for row in comparison["contract_rows"])
 
@@ -154,8 +152,7 @@ def test_v655_dispositions_preserve_failures_absence_and_capstone() -> None:
     assert all(row["authenticated"] is True for row in rows)
     assert by_id["exp7475-contract-methods"]["original_verdict_class"] == "disqualified"
     assert [
-        row["name"]
-        for row in by_id["exp7475-contract-methods"]["failed_validation_receipts"]
+        row["name"] for row in by_id["exp7475-contract-methods"]["failed_validation_receipts"]
     ] == ["overdue_priority"]
     assert [
         row["name"] for row in by_id["exp7484-decision-audit"]["failed_validation_receipts"]
@@ -248,7 +245,7 @@ def test_repository_and_affected_validation_plans_are_exact(tmp_path: Path) -> N
     assert "tests/python" not in commands["focused_pytest"].argv
     assert "--no-cov" in commands["focused_pytest"].argv
     assert any(arg.startswith("--basetemp=") for arg in commands["focused_pytest"].argv)
-    assert dict(getattr(commands["changed_module_coverage_report"], "command_environment"))[
+    assert dict(commands["changed_module_coverage_report"].command_environment)[
         "COVERAGE_FILE"
     ].startswith("/tmp/")
 
@@ -288,9 +285,7 @@ def test_cold_validator_rejects_drift_and_failed_required_validation() -> None:
     artifact = _artifact()
     drifted = deepcopy(artifact)
     drifted["method_rows"][0]["source_revision"] = "changed"
-    drifted["source_artifact_hashes"][exp.DESIGN_PATH.as_posix()]["sha256"] = (
-        "sha256:" + "0" * 64
-    )
+    drifted["source_artifact_hashes"][exp.DESIGN_PATH.as_posix()]["sha256"] = "sha256:" + "0" * 64
     drifted["contract_ready_score"] = 0
     drifted["field_principles"].pop("schema")
     drifted["acceptance_gate_results"][0]["principle"] = ""
@@ -307,6 +302,37 @@ def test_cold_validator_rejects_drift_and_failed_required_validation() -> None:
     assert failed["contract_ready_score"] == 0
     assert failed["verdict_class"] == "disqualified"
     assert failed["gate_check_summary"]["failed_count"] >= 1
+
+    defensive = deepcopy(artifact)
+    defensive.update(
+        {
+            "schema": "changed",
+            "invocation_counts": {},
+            "task_contract_rows": [],
+            "contract_comparison": {},
+            "contract_mutation_rows": [],
+            "v655_dispositions": [],
+            "priority_disposition": {},
+            "unresolved_obligations": [],
+            "validation_receipts": [],
+            "promotion_score": 1,
+        }
+    )
+    assert {
+        "identity_invalid",
+        "model_contract_invalid",
+        "task_contract_rows_mismatch",
+        "contract_comparison_mismatch",
+        "contract_mutations_invalid",
+        "v655_dispositions_mismatch",
+        "priority_disposition_mismatch",
+        "unresolved_obligations_mismatch",
+        "affected_validation_invalid",
+        "repository_validation_invalid",
+        "terminal_validation_invalid",
+        "promotion_score_nonzero",
+    }.issubset(exp.validate_artifact(defensive, root=ROOT))
+    assert exp._hashes_match({"source_artifact_hashes": None}, ROOT) is False
 
 
 def test_defensive_loaders_receipts_and_terminal_classification(tmp_path: Path) -> None:
@@ -328,6 +354,7 @@ def test_defensive_loaders_receipts_and_terminal_classification(tmp_path: Path) 
 
     good = [_receipt(name) for name in exp.REPOSITORY_CHECK_NAMES]
     assert exp.receipts_pass(good, exp.REPOSITORY_CHECK_NAMES) is True
+    assert exp.receipts_pass({}, exp.REPOSITORY_CHECK_NAMES) is False
     assert exp.receipts_recorded(good, exp.REPOSITORY_CHECK_NAMES) is True
     assert exp.receipts_pass(good + [deepcopy(good[0])], exp.REPOSITORY_CHECK_NAMES) is False
     assert exp.receipts_recorded({}, exp.REPOSITORY_CHECK_NAMES) is False
@@ -353,4 +380,3 @@ def test_contract_parse_failure_and_cli_are_explicit(tmp_path: Path) -> None:
     candidate.write_text(json.dumps(_artifact()), encoding="utf-8")
     args = exp.parse_args(["--date", "20260921", "--validate", str(candidate)])
     assert args.validate == candidate
-

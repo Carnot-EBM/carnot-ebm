@@ -1,6 +1,16 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-20
+**Last Updated:** 2026-09-21
+
+## 2026-09-21 — Experiment 7490 E6 cost profile is coverage only
+
+REQ-ARC-WMTE-7490 reduces existing ARC provenance, interval, and backend-usage
+artifacts on CPU. It found 26 complete current-Qwen3.8 episodes across 10 games.
+The fixed numeric gate needs 30 episodes, so no real wall-time share, token
+share, or Amdahl ceiling is published. World-model verification, planner, and
+environment time are not separate in the existing traces. The speed-claim kill
+rule fired. A later run needs the shadow timers listed in the terminal artifact.
+No model, game, GPU, network call, or submission was made.
 
 ## 2026-09-20 — ARC decision shadow telemetry added
 

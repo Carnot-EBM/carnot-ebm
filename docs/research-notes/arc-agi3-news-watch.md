@@ -330,3 +330,9 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 - Kaggle analyzed 500 failed submissions: roughly one-third had no traceable visible error, while nearly 20% involved GPU-dependent code submitted without enabling a GPU. [Host announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-09-21 13:13 UTC -- NEW
+
+- ARC Prize reported GPT-6 Astra scoring 62.7% on the Semi-Private set with its Standard harness and 99.9% with a Provider Adapter harness. ARC will now label both harness categories separately on its leaderboard. [ARC Prize announcement](https://arcprize.org/blog/astra)
+
+- Lord Han Solo improved from 15.60% to 18.42%, moving from third to second place and overtaking NVARC3. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+

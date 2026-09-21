@@ -6040,3 +6040,12 @@ budgeted feedback, efficiency controls, and hardware locality map to V655.
 KAN-CL is a head-component study, not the full CNN and backbone system.
 Exact revisions, failure modes, and task mappings are in
 `docs/research-notes/v655-method-ingestion.md`.
+
+<!-- EXP7489-V656-METHOD-INGESTION -->
+## 2026-09-21 Exp7489 — V656 methods — INGESTED
+
+Response granularity, evidence alignment, corpus leakage controls,
+budgeted feedback, KAN support limits, and on-chip locality map to V656.
+External paper results are not Carnot measurements. Exact revisions,
+limits, and task mappings are in
+`docs/research-notes/v656-method-ingestion.md`.
