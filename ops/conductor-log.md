@@ -18359,3 +18359,4 @@ code |
 | 2026-09-21 13:34 UTC | OPERATOR-ATTENTION: GPU_CHECK_UNAVAILABLE | WARN | host 2026-09-21: nvidia-smi could not run; GPU health is UNKNOWN, not clean |
 | 2026-09-21 13:47 UTC | Requalify historical probability and feedback evid | OK | 90 passed, 1 warning in 7.54s |
 | 2026-09-21 14:16 UTC | Seal lossless response windows and genuinely fresh | OK | 98 passed, 1 warning in 7.57s |
+| 2026-09-21 14:41 UTC | Measure native Qwen window readout feasibility bef | OK | 104 passed, 1 warning in 8.51s |
