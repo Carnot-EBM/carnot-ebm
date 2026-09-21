@@ -649,3 +649,7 @@ nearest available stand-in for hidden levels.
 
 **Needs the operator's confirmation:** (a) allow cross-game pretrained state under this
 held-out gate, replacing the Q8 fresh-head-only decision; (b) the training-data source in item 4.
+
+### 12.4 Operator decision, 2026-09-21: defer the training preference (append-only)
+
+The operator set the 12.3 preference aside for now. Choose the primary engine by the most natural fit for adapting to hidden levels with no prior training knowledge. The 12.2 rule (speed, accuracy, efficiency) still governs. The pretrained-arm amendment in 12.3 stays PROPOSED, not adopted. Follow-up: after the no-training engine result lands, run the pretrained arm under a leave-one-game-out gate and compare actions-to-progress. Recorded in the memory `project-jev-pretrained-arm-followup`.

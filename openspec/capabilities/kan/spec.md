@@ -3175,3 +3175,107 @@ zero or false.
 Given the raw replay and timing rows plus the frozen validation manifest, when
 fresh processes reduce and lint the candidate, then changed rows, hashes, gates,
 scores, or invocation claims make publication fail closed.
+
+## REQ-KAN-7468: Delayed-Feedback Local Residual Energy Learner
+
+The KAN capability MUST provide one bounded local residual energy head on top of
+a frozen readout. The energy difference MUST be
+`E_bad - E_good = frozen_readout_log_odds + bounded_local_residual`. The
+implementation MUST test the sign against analytic probabilities. It MUST use
+at most four scalar features, eight fixed cubic B-spline coefficients per
+feature, and one shared bias. Knots and the learning rate MUST use training or
+calibration inputs only. The implementation MUST reuse the Exp7425 sparse cubic
+basis and MUST NOT use fixed-share weights, a mixture of experts, or generator
+weight updates.
+
+A prediction event MUST become immutable before its label is visible. It MUST
+contain the feature vector, active spline support, frozen prediction, residual
+prediction, and predictor state hash. Feedback MUST admit at most one clipped
+gradient update. Duplicate, reordered, missing, and rejected feedback MUST not
+silently change state. The learner MUST qualify delays zero and eight, atomic
+checkpoint restart, and rollback after a rejected update. Sparse and
+independently dense gradients MUST agree within `1e-10`.
+
+The learner MUST compare the local residual arm with a matched linear residual
+updater, a frozen residual arm, and a no-feedback arm. A bounded training-only
+replay guard MUST reject and roll back an update when replay loss exceeds its
+preregistered tolerance. The artifact MUST report rejection frequency and all
+guard computation costs. Distant probes with disjoint spline support MUST
+separate local coefficient retention from the shared-bias change. Analytic
+fixtures MAY provide `circular_positive` implementation evidence, but MUST NOT
+claim real source-support benefit.
+
+The experiment MUST freeze the Exp7469 protocol before online outcomes exist.
+It MUST register five seeds, two label-blind group orders, delays zero and eight,
+the frozen and matched-linear controls, audit probability `0.5`, a separate
+full-feedback diagnostic, inverse-propensity clipping, moving-block lengths 16
+and 32, 10000 resamples, and no state carry between replicates. No test or
+online outcome MAY tune the learner.
+
+The current run MUST declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current LLM calls,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Numeric head fitting MUST have a separate `small_ebm_training` receipt.
+Historical model-shaped evidence MUST remain hash-bound sidecars. The terminal
+artifact MUST publish only after frozen affected-file validation, fresh-process
+cold replay, independent raw-row reduction, adversarial verification, and the
+strict verdict-row consistency reader pass.
+
+### SCENARIO-KAN-7468-01: Energy Sign Matches Analytic Probability
+
+Given a frozen class-good probability and one bounded local residual, when the
+two-state energy difference is evaluated, then a positive `E_bad-E_good`
+produces the matching class-good sigmoid probability and the analytic sign
+cases pass.
+
+### SCENARIO-KAN-7468-02: Prediction Precedes Delayed Feedback
+
+Given delays zero and eight, when predictions and feedback are processed, then
+each immutable prediction hash exists before label reveal and each admitted
+event changes state at most once.
+
+### SCENARIO-KAN-7468-03: Feedback Admission Fails Closed
+
+Given duplicate, reordered, missing, or changed feedback, when the learner
+checks the immutable prediction ledger, then the event is rejected and the
+committed state does not change.
+
+### SCENARIO-KAN-7468-04: Sparse Gradient And Dense Reference Agree
+
+Given identical spline states and one analytic label, when sparse and dense
+gradients are computed independently, then their maximum absolute disagreement
+is at most `1e-10` and the update touches only active support plus the bias.
+
+### SCENARIO-KAN-7468-05: Replay Guard Rolls Back Unsafe Updates
+
+Given a bounded training-only replay set and a preregistered loss tolerance,
+when a candidate update exceeds the tolerance, then coefficients and bias roll
+back exactly and the guard receipt reports rejection and computation cost.
+
+### SCENARIO-KAN-7468-06: Local Retention Excludes Shared Bias
+
+Given two distant probes with disjoint spline support, when one probe updates,
+then coefficients active only at the distant probe stay byte-identical. Any
+prediction change caused by the shared bias is reported separately and does not
+count as local-weight retention.
+
+### SCENARIO-KAN-7468-07: Restart And Controls Preserve Chronology
+
+Given a committed checkpoint between delayed events, when a fresh process
+continues the stream, then terminal state equals uninterrupted replay. The
+matched linear, frozen residual, and no-feedback controls keep their registered
+update laws and receive no unregistered outcome information.
+
+### SCENARIO-KAN-7468-08: Exp7469 Protocol Is Frozen Before Outcomes
+
+Given the protocol record, when it is independently read, then all seeds,
+orders, delays, controls, audit and diagnostic policies, clipping, block lengths,
+resample count, and replicate reset rule match REQ-KAN-7468 exactly.
+
+### SCENARIO-KAN-7468-09: Terminal Artifact Fails Closed
+
+Given raw analytic rows and exact validation receipts, when a fresh process
+recomputes readiness, then altered rows, state hashes, invocation declarations,
+source hashes, gates, or scores invalidate the candidate. Readiness can produce
+only `circular_positive` implementation evidence because the verifier uses
+analytic fixtures as its oracle.
