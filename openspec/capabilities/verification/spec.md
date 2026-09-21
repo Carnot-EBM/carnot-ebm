@@ -44469,3 +44469,126 @@ deployment behavior.
 **When** the declared unbuffered entrypoint runs
 **Then** scoped checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
 **And** only the final measured terminal JSON publishes atomically at the declared result path.
+
+### REQ-VERIFY-7495: V656 Window Calibration SHALL Test Fresh Conditional Value
+
+Exp7495 SHALL authenticate the exact terminal Exp7493 fit capture and Exp7494
+evaluation capture before numeric work. It SHALL preserve each producer's
+original bytes, verdict class, adversarial flag, ready score, raw-shard hashes,
+and cold-validator result. Missing, changed, blocked, flagged, or unready
+producer evidence SHALL publish a precise blocked record without fitting.
+
+The task SHALL load the sealed Exp7491 evaluator rows only after it has reduced
+label-free native readouts into group features. It SHALL fit on the training
+role only. It SHALL use calibration-tuning labels only to select feature
+transforms, regularization, temperatures, simple baselines, and typed-decision
+policies. It SHALL freeze and hash every fitted state and policy before a
+separate process opens test labels. FaithBench74 SHALL remain historical and
+SHALL NOT enter fitting, selection, or confirmatory evaluation.
+
+The registered target SHALL be a conditional binary Gibbs head with exact
+two-state normalization. Its score SHALL use the frozen whole-response and
+lossless focus-window features. Its additive spline state SHALL contain no more
+than 256 spline coefficients. The controls SHALL include a whole-only Gibbs
+head, logistic regression over the identical window feature matrix, raw whole
+and raw window scores, and a temperature-calibrated whole score. Five frozen
+fit seeds, 656101 through 656105, SHALL use the same optimization-step and
+regularization-candidate budgets. The artifact SHALL record equations, losses,
+parameter counts, and measured `small_ebm_training` receipts. The current run
+SHALL load no LLM, train no Qwen weights, and report zero current model calls.
+
+The probability gate SHALL use fresh test source groups as the independent
+units. Repeated fit seeds SHALL be averaged inside each group before inference.
+The conditional Gibbs head SHALL improve mean Brier loss by at least 0.01
+against both identical-feature logistic and whole-only Gibbs. Each paired
+source-group bootstrap comparison SHALL have a Holm-adjusted one-sided 95
+percent upper bound below zero. The paired log-loss upper delta SHALL be at
+most 0.01 for each control. Confirmatory support SHALL require at least 100
+test groups, at least 20 groups in each class, an intact label seal, and
+complete eligible predictions. The report SHALL also retain all arm metrics,
+AUROC, ECE, coverage, exclusions, response-length slices, and source-family
+slices.
+
+The decision gate SHALL register false-reject cost 1, false-accept costs 1, 5,
+and 20, and escalation costs 0.1, 0.5, and 1. Each arm's thresholds and the
+best simple comparison policy SHALL be selected on calibration only. Benefit
+SHALL require at least 20 percent test non-escalation and a Holm-adjusted upper
+paired cost delta below zero in all nine cells. One favorable cost cell SHALL
+not authorize a universal deployment claim.
+
+`window_calibration_complete_score` SHALL equal one after authenticated fitting,
+policy freeze, separate-process test opening, complete evaluation, independent
+reduction, and required validation, even when both benefit scores equal zero.
+`confirmatory_support_score`, `probability_benefit_score`, and
+`decision_benefit_score` SHALL remain separate bare integers derived only from
+their registered checks. Partial capture or insufficient class support SHALL
+retain descriptive rows while closing confirmatory benefit.
+
+The terminal artifact SHALL publish atomically at
+`results/experiment_7495_v656_window_calibration.json`. Per-group prediction
+rows SHALL live in a hash-bound sidecar below 20 MiB and support fresh-process
+reduction. Every top-level artifact field and acceptance gate SHALL have a
+one-line principle that names the failure it prevents. Validity principles
+SHALL state that a favorable metric cannot excuse invalid evidence. Readiness
+principles SHALL state that a valid scientific null must not block independent
+measurements. Benefit principles SHALL state that a favorable seed, fixture,
+or low-support result cannot replace held-out value.
+
+The frozen affected-file manifest SHALL contain only the Exp7495 test, module,
+and thin entrypoint. Required checks SHALL be scoped pytest with `-n 0 -o
+addopts= --no-cov` and a private basetemp, 100 percent changed-module coverage
+with a command-local `COVERAGE_FILE`, scoped Ruff check and format,
+changed-module mypy, scoped spec coverage, fresh-process entrypoint replay,
+independent raw reduction, adversarial verification, and strict verdict-row
+consistency. No numbered runtime E2E applies because this reporting task does
+not change shared runtime, sampler, training, binding, ARC, telemetry, Rust, or
+deployment behavior.
+
+#### SCENARIO-VERIFY-7495-PREREQUISITE: Exact Captures Gate Numeric Work
+
+**Given** the roadmap-named Exp7493 and Exp7494 artifacts and their raw shards
+**When** Exp7495 authenticates identities, ready scores, original flags, bytes, and cold validators
+**Then** fitting starts only when both exact producer contracts pass
+**And** any absent or changed producer publishes a blocked record without guessed inputs.
+
+#### SCENARIO-VERIFY-7495-SEAL: Test Labels Open Only After Policy Freeze
+
+**Given** label-free fit and evaluation readouts plus access-separated evaluator rows
+**When** Exp7495 fits training states and selects calibration policies
+**Then** a hash-bound frozen manifest exists before a separate process opens test labels
+**And** no test label can influence a transform, regularizer, checkpoint, temperature, arm, or threshold.
+
+#### SCENARIO-VERIFY-7495-HEADS: Conditional Energy And Controls Share Evidence Fairly
+
+**Given** paired whole-response and lossless-window readouts for one group
+**When** the registered numeric heads are fitted and scored
+**Then** the conditional Gibbs and logistic arms receive the identical frozen window feature matrix
+**And** whole-only, raw-score, temperature, parameter-count, exact-normalization, and five-seed controls remain explicit.
+
+#### SCENARIO-VERIFY-7495-PROBABILITY: Fresh Groups Define Probability Benefit
+
+**Given** at least 100 fresh test groups with at least 20 examples per class
+**When** repeated seeds are averaged within groups and paired losses are bootstrapped by group
+**Then** probability benefit requires the registered Brier effect and Holm upper bound against both controls
+**And** both paired log-loss noninferiority limits pass without counting seeds as new samples.
+
+#### SCENARIO-VERIFY-7495-UTILITY: All Nine Cost Cells Must Retain Benefit
+
+**Given** calibration-selected typed policies for the registered three-by-three cost grid
+**When** the frozen policies are applied to fresh test groups
+**Then** every cell reaches 20 percent non-escalation and has a Holm-adjusted upper cost delta below zero
+**And** one successful cell cannot become a universal deployment certificate.
+
+#### SCENARIO-VERIFY-7495-NULL: Completion Does Not Depend On Benefit
+
+**Given** valid fitting, freeze, evaluation, reduction, and validation with a null effect
+**When** Exp7495 classifies its terminal result
+**Then** `window_calibration_complete_score` remains one while failed benefit scores remain zero
+**And** the honest verdict is a complete null rather than blocked or partial.
+
+#### SCENARIO-VERIFY-7495-E2E: One Command Publishes A Cold-Valid Calibration
+
+**Given** a frozen affected-file manifest and authenticated V656 capture inputs
+**When** the declared unbuffered Exp7495 entrypoint runs
+**Then** scoped checks, cold replay, independent row reduction, adversarial verification, and strict row lint pass
+**And** only the final measured terminal JSON occupies the declared deliverable path.
