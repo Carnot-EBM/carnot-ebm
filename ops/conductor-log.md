@@ -18348,3 +18348,4 @@ code |
 | 2026-09-21 07:07 UTC | Prototype importance anchoring on the existing del | OK | 89 passed, 1 warning in 8.58s |
 | 2026-09-21 07:34 UTC | Measure prequential residual learning with delayed | OK | 88 passed, 1 warning in 48.27s |
 | 2026-09-21 08:33 UTC | Independently reduce source decisions and delayed  | OK | 90 passed, 1 warning in 94.44s (0:01:34) |
+| 2026-09-21 09:50 UTC | Measure exclusive live ARC decision cost on sealed | OK | 88 passed, 1 warning in 7.56s |
