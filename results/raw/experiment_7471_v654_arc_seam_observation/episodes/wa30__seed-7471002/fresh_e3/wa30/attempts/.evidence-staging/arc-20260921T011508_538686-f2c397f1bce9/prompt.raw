@@ -1,0 +1,139 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'wa30'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 1, 2, 4, 7, 9, 14]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/wa30/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:1x64
+r1:1x64
+r2:1x64
+r3:1x64
+r4:1x64
+r5:1x64
+r6:1x64
+r7:1x64
+r8:1x64
+r9:1x64
+r10:1x64
+r11:1x64
+r12:1x64
+r13:1x64
+r14:1x64
+r15:1x64
+r16:1x64
+r17:1x64
+r18:1x64
+r19:1x64
+r20:1x64
+r21:1x64
+r22:1x64
+r23:1x64
+r24:1x44,4x4,1x16
+r25:1x44,4x1,9x2,4x1,1x16
+r26:1x44,4x1,9x2,4x1,1x16
+r27:1x44,4x4,1x16
+r28:1x16,4x4,1x8,9x12,1x24
+r29:1x16,4x1,9x2,4x1,1x8,9x1,2x10,9x1,1x24
+r30:1x16,4x1,9x2,4x1,1x8,9x1,2x10,9x1,1x24
+r31:1x16,4x4,1x8,9x12,1x24
+r32:1x64
+r33:1x64
+r34:1x64
+r35:1x64
+r36:1x32,4x4,1x28
+r37:1x32,4x1,9x2,4x1,1x28
+r38:1x32,4x1,9x2,4x1,1x28
+r39:1x32,4x4,1x28
+r40:1x64
+r41:1x64
+r42:1x64
+r43:1x64
+r44:1x64
+r45:1x64
+r46:1x64
+r47:1x64
+r48:1x32,0x4,1x28
+r49:1x32,14x4,1x28
+r50:1x32,14x4,1x28
+r51:1x32,14x4,1x28
+r52:1x64
+r53:1x64
+r54:1x64
+r55:1x64
+r56:1x64
+r57:1x64
+r58:1x64
+r59:1x64
+r60:1x64
+r61:1x64
+r62:1x64
+r63:7x64
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r44c32:0x4 r45c32:14x4 r46c32:14x4 r47c32:14x4 r48c32:1x4 r49c32:1x4 r50c32:1x4 r51c32:1x4
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r44c32:1x4 r45c32:1x4 r46c32:1x4 r47c32:1x4 r48c32:14x4 r49c32:14x4 r50c32:14x4 r51c32:0x4 r63c63:4x1
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r48c32:1x4 r49c32:1x4 r50c32:1x4 r51c32:1x4 r52c32:14x4 r53c32:14x4 r54c32:14x4 r55c32:0x4
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r52c32:1x4 r53c32:1x4 r54c32:1x4 r55c32:1x4 r56c32:14x4 r57c32:14x4 r58c32:14x4 r59c32:0x4
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r56c32:1x4 r57c32:1x4 r58c32:1x4 r59c32:1x4 r60c32:14x4 r61c32:14x4 r62c32:14x4 r63c62:4x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r60c28:0x1,14x3,1x4 r61c28:0x1,14x3,1x4 r62c28:0x1,14x3,1x4
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r56c28:0x4 r57c28:14x4 r58c28:14x4 r59c28:14x4 r60c28:1x4 r61c28:1x4 r62c28:1x4 r63c61:4x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r52c28:0x4 r53c28:14x4 r54c28:14x4 r55c28:14x4 r56c28:1x4 r57c28:1x4 r58c28:1x4 r59c28:1x4
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r48c28:0x4 r49c28:14x4 r50c28:14x4 r51c28:14x4 r52c28:1x4 r53c28:1x4 r54c28:1x4 r55c28:1x4
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r44c28:0x4 r45c28:14x4 r46c28:14x4 r47c28:14x4 r48c28:1x4 r49c28:1x4 r50c28:1x4 r51c28:1x4 r63c60:4x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r40c28:0x4 r41c28:14x4 r42c28:14x4 r43c28:14x4 r44c28:1x4 r45c28:1x4 r46c28:1x4 r47c28:1x4
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r36c28:0x4 r37c28:14x4 r38c28:14x4 r39c28:14x4 r40c28:1x4 r41c28:1x4 r42c28:1x4 r43c28:1x4
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r32c28:0x4 r33c28:14x4 r34c28:14x4 r35c28:14x4 r36c28:1x4 r37c28:1x4 r38c28:1x4 r39c28:1x4
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r28c28:0x4 r29c28:14x4 r30c28:14x4 r31c28:14x4 r32c28:1x4 r33c28:1x4 r34c28:1x4 r35c28:1x4 r63c59:4x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r24c28:0x4 r25c28:14x4 r26c28:14x4 r27c28:14x4 r28c28:9x4 r29c28:9x1,2x3 r30c28:9x1,2x3 r31c28:9x4
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r20c28:0x4 r21c28:14x4 r22c28:14x4 r23c28:14x4 r24c28:1x4 r25c28:1x4 r26c28:1x4 r27c28:1x4
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = (no change)
+OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):
+INITIAL OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>):
+  obj0: color=1 bbox=(0, 0, 62, 63) px=3920 centroid=(30.9,31.5) shape=9ccf70e9e331c152
+  obj11: color=7 bbox=(63, 0, 63, 63) px=64 centroid=(63.0,31.5) shape=5e3f8f7e26d7b8fd
+  obj4: color=9 bbox=(28, 28, 31, 39) px=28 centroid=(29.5,33.5) shape=5914ca713de7c9eb
+  obj6: color=2 bbox=(29, 29, 30, 38) px=20 centroid=(29.5,33.5) shape=89fa4cb382299409
+  obj1: color=4 bbox=(24, 44, 27, 47) px=12 centroid=(25.5,45.5) shape=a0ac9d6340e9b45a
+  obj3: color=4 bbox=(28, 16, 31, 19) px=12 centroid=(29.5,17.5) shape=a0ac9d6340e9b45a
+  obj7: color=4 bbox=(36, 32, 39, 35) px=12 centroid=(37.5,33.5) shape=a0ac9d6340e9b45a
+  obj10: color=14 bbox=(49, 32, 51, 35) px=12 centroid=(50.0,33.5) shape=a60d3cf01420038d
+  obj2: color=9 bbox=(25, 45, 26, 46) px=4 centroid=(25.5,45.5) shape=919bb5bf66c14ac3
+  obj5: color=9 bbox=(29, 17, 30, 18) px=4 centroid=(29.5,17.5) shape=919bb5bf66c14ac3
+  obj8: color=9 bbox=(37, 33, 38, 34) px=4 centroid=(37.5,33.5) shape=919bb5bf66c14ac3
+  obj9: color=0 bbox=(48, 32, 48, 35) px=4 centroid=(48.0,33.5) shape=8b1757581ef4dd0e
+  containment (parent->children): {0: [1, 3, 4, 7, 9, 10], 1: [2], 3: [5], 4: [6], 7: [8]}
+  adjacency (touching id pairs): [[0, 1], [0, 3], [0, 4], [0, 7], [0, 9], [0, 10], [0, 11], [1, 2], [3, 5], [4, 6], [7, 8], [9, 10]]
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.
+
+Return ONLY one ```python code block defining engine(grid, action, data).
