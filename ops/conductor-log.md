@@ -18363,3 +18363,4 @@ code |
 | 2026-09-21 15:39 UTC | Capture lossless native Qwen evidence for fitting | OK | 100 passed, 1 warning in 7.93s |
 | 2026-09-21 16:47 UTC | Capture lossless native Qwen evidence for fresh ev | OK | 99 passed, 1 warning in 7.96s |
 | 2026-09-21 17:12 UTC | Test calibrated energy decisions against controls  | FAIL | Codex CLI error: Stalled after 600s silence. Last output: manifest = exp.V |
+| 2026-09-21 17:33 UTC | Test calibrated energy decisions against controls  | FAIL | Codex CLI error: Stalled after 600s silence. Last output: manifest = exp.V |
