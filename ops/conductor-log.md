@@ -18342,3 +18342,4 @@ code |
 | 2026-09-21 04:34 UTC | Qualify the existing option protocol with an expli | OK | 88 passed, 1 warning in 7.29s |
 | 2026-09-21 04:52 UTC | Measure native Qwen option transport before source | OK | 95 passed, 1 warning in 7.64s |
 | 2026-09-21 05:25 UTC | Qualify exclusive ARC timing and seal two independ | OK | 93 passed, 1 warning in 33.87s |
+| 2026-09-21 05:51 UTC | Capture Qwen training and calibration source-optio | OK | 96 passed, 1 warning in 7.43s |
