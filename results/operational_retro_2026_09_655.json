@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.655",
+  "generated_at": "2026-09-21T10:55:25Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 91.3,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 13,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure exclusive live ARC decision cost on sealed panel A",
+      "duration_minutes": 56.85,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture Qwen internal-test, online and external source-option rows",
+      "duration_minutes": 10.14,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture Qwen training and calibration source-option rows",
+      "duration_minutes": 8.66,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently reduce source decisions and delayed learning from raw rows",
+      "duration_minutes": 7.84,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure prequential residual learning with delayed human-source feedback",
+      "duration_minutes": 2.51,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.655 completed 13 experiments, all compute-bound, in 91.3 wall-time minutes. 'Measure exclusive live ARC decision cost on sealed panel A' was the dominant critical path at 56.85 minutes, followed by 'Capture Qwen internal-test, online and external source-option rows' at 10.14 minutes and 'Capture Qwen training and calibration source-option rows' at 8.66 minutes. Intra-task phase timing was not recorded in the milestone data to isolate specific execution bottlenecks within these runs.",
+  "bottlenecks_identified": [
+    "'Measure exclusive live ARC decision cost on sealed panel A' consumed 56.85 out of 91.3 minutes (over 62% of milestone wall time), but sub-phase timing was not recorded, leaving internal evaluation bottlenecks unisolated.",
+    "The remaining 12 compute-bound tasks totaled approximately 34.45 minutes, led by Qwen source-option row capture (10.14 minutes and 8.66 minutes) and reduction (7.84 minutes), with timestamps reconstructed from disk mtimes rather than continuous stage logs.",
+    "The GPU monitor report provides an end-of-run snapshot (0% utilization, 4MB allocated) after execution completed rather than continuous per-task telemetry across active compute intervals.",
+    "Experiment launch records omit model concurrency and runner dispatch details, preventing verification of whether any multi-model workload qualified for DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Instrument fine-grained sub-phase monotonic timers and iteration logging within live ARC decision evaluation to separate inference duration from environment and harness overhead.",
+    "Deploy task-scoped continuous accelerator telemetry to record GPU utilization percentage and VRAM occupancy across active compute execution spans.",
+    "Log concurrent model counts and runner selection at job launch, verifying DualGPURunner engagement whenever two or more models execute simultaneously.",
+    "Implement bounded iteration or early-stagnation checkpoints for long-running ARC decision tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument fine-grained phase timers and iteration telemetry in the live ARC decision cost evaluation harness.",
+    "Deploy continuous, task-aligned accelerator telemetry to sample GPU utilization across active compute execution intervals.",
+    "Record model concurrency and runner dispatch at job initiation, verifying DualGPURunner usage for workloads running two or more models in parallel."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone critical path is clearly concentrated in the 56.85-minute live ARC decision cost measurement, but absent sub-phase telemetry prevents causal diagnosis of internal delays. A post-run GPU snapshot cannot evaluate active compute-window efficiency, and without multi-model logging, no DualGPURunner omission can be confirmed."
+}

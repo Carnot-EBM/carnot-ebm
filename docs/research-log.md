@@ -6892,3 +6892,10 @@ The critical path for milestone .250:
 - theme: adapter-withheld live ARC seam measurement dominated milestone duration across an all-compute set lacking sub-task telemetry
 - key result: honest operational negative — ARC decision seam observation consumed 25.9 of 37.3 total minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.655
+
+- exp_range: no data available this milestone
+- theme: live ARC decision cost on sealed panel A dominated milestone wall time across an all-compute execution lacking sub-task telemetry
+- key result: honest operational negative — live ARC decision cost consumed 56.85 of 91.3 total minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
+- acceptance: no data available this milestone
