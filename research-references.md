@@ -45867,3 +45867,80 @@ dependency follows from it.
 - **Related lines:** the geometry-as-interpretability angle is loosely adjacent to
   the energy-model view of verifiers. No experiment ID or gap in
   `ops/verifier_gaps.md` is tied to it.
+
+## 2026-09-21 — V655 planning source review
+
+Recorded before writing the V655 experiment design. The local calendar date is
+2026-09-20; the review and latest V654 artifacts use UTC 2026-09-21. This is a
+targeted update to the V654 review, not a claim that previously logged papers
+are new. No inference, board operation, submission or vendor contact occurred.
+
+### Findings selected for experiment design
+
+| Primary source and date | Finding and limitation | Carnot implication |
+|---|---|---|
+| [KAN-CL, 2605.12306v1](https://arxiv.org/html/2605.12306v1), 12 May 2026; method section and ablations read | Per-knot importance-weighted anchoring protects spline coefficients. The reported vision gains combine a KAN head with backbone regularization; head-only results are weaker. Replay can make a strong anchor harmful. | Test the anchoring component on the existing frozen-feature residual head, with zero-anchor, uniform-anchor and linear controls. Measure retention and adaptation separately. This is a component study, not a reproduction of the full vision system. |
+| [Online Learning with LLM Experts from Limited Feedback, 2609.05820](https://arxiv.org/abs/2609.05820), 5 September 2026; rechecked | Separates full-information and feedback-budgeted routing. | Record when labels become available and the probability of requesting feedback. A small residual learner inherits no routing regret guarantee. |
+| [Efficiency Hallucination, 2609.14839v1](https://arxiv.org/html/2609.14839v1), 13 September 2026 | Studies unnecessary code edits and unsupported performance claims on already-optimized programs. Its guardrail results are author measurements on code optimization. | Include identity and no-update controls, unchanged-state costs, and complete-service denominators. Do not call a changed kernel faster from an operation-count estimate alone. |
+| [SemIf source](https://github.com/TheoLeeCJ/SemIf), rechecked September 2026 | Reads probabilities over a declared option set without text generation; shared-prefix evaluation is a separate optimization. | Capture native GGUF option logits before attempting prefix reuse. Use token-position, option-order and source-shuffle controls; keep probabilities distinct from truth. Preserve the V654 pinned revision when implementing. |
+
+### Required topic sweep and deferred methods
+
+- **EBM verification/reasoning:** reopened [EBT, 2507.02092](https://arxiv.org/abs/2507.02092)
+  and [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4).
+  Learned energy and autoregressive probability are not independent correctness
+  certificates. Full generator training and the retired general text reranker
+  remain outside this milestone.
+- **Neural constraint satisfaction:** rechecked [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461).
+  Its linear-feasibility setting does not repair natural-language grounding.
+  Followed the EBT citation lead [Solver-Hard Is Not Model-Hard, 2607.17047](https://arxiv.org/abs/2607.17047):
+  solver difficulty is not a substitute for measured model error headroom.
+- **Ising applications:** rechecked [Thermodynamic learning, 2609.04732](https://arxiv.org/abs/2609.04732)
+  and followed [Cross-Block Conditioning, 2609.14934](https://arxiv.org/abs/2609.14934).
+  Statistical data fusion and physical learning remain useful leads; neither
+  establishes better source-support decisions on Carnot's current data.
+- **Hallucination detection/mitigation:** selected natural source labels,
+  abstention-aware calibration and the efficiency-claim controls above. Also
+  inspected the [UAI 2026 fact-verification record](https://proceedings.mlr.press/v337/kostka26a.html).
+  Dependence-aware risk calibration is relevant, but multi-agent agreement is
+  not a label source for the planned single-generator study.
+- **KAN and online learning:** use the KAN-CL component test alongside the
+  already logged [support-overlap caution, 2511.12828](https://arxiv.org/abs/2511.12828).
+  Local support alone does not guarantee retention.
+- **Energy-guided/constrained generation:** opened [DCCD, 2603.03305](https://arxiv.org/abs/2603.03305).
+  Draft conditioning separates planning from syntax enforcement but adds a
+  generation pass. Defer it: the compact-span lineage has a valid repeated null,
+  and a new source-support readout can be measured without reopening it.
+- **Hardware sampling/learning:** reopened [on-chip spline learning, 2602.02056v4](https://arxiv.org/abs/2602.02056v4).
+  Sparse update arithmetic motivates a placement study; durable writes, feedback
+  acquisition and model prefill stay in the complete-service denominator.
+
+### Secondary-channel receipts
+
+- **OpenReview:** searched NeurIPS/ICML/ICLR EBM and verification submissions.
+  The indexed [EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) was discoverable;
+  its forum returned a browser challenge. Readable records included
+  [AtomGraph](https://openreview.net/forum?id=dNsIZln2uv) and
+  [VerifierQ](https://openreview.net/forum?id=qhOT0MisId). Neither becomes an
+  additional model-training branch on this evidence.
+- **Semantic Scholar:** browser API opens failed, then direct Graph API requests
+  returned HTTP 200 for both requested seeds. The [EBT citation request](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=20)
+  returned 20 entries and `next=20`; the [ARM–EBM request](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=20)
+  returned eight and no next page. Followed the constraint-hardness and
+  cross-block-conditioning leads to primary arXiv pages. This is a partial EBT
+  citation walk, not an exhaustive or citation-count comparison.
+- **Hugging Face Papers:** checked the [verification search](https://huggingface.co/papers?q=verification)
+  and [limited-feedback paper page](https://huggingface.co/papers/2609.05820).
+  Method claims above use the primary papers, not generated summaries.
+- **GitHub trending:** checked [today](https://github.com/trending) and
+  [weekly Python](https://github.com/trending/python?since=weekly). No relevant
+  new dependency was selected from the returned lists. SemIf is an existing
+  operator lead; this review does not assert that it is trending.
+- **Extropic:** checked [writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t), dated 4 September 2026. The vendor
+  describes sparse probabilistic/digital co-design and FPGA-based estimates.
+  These are not local hardware availability or Carnot performance receipts.
+- **Logical Intelligence:** checked the [current site](https://logicalintelligence.com/)
+  and [Kona architecture page](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  The language/constraint split remains relevant context. No new reproducible
+  local Kona checkpoint or training recipe was established.

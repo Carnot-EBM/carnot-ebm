@@ -9,38 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| UNKNOWN | 4 |
+| CHECKABLE | 8 |
 
-## experiment_7453_energy_calibration.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked before running by a conductor pre-gate check because upstream dependency `exp7452-source-embeddings` reported `embedding_capture_ready_score` = 0 instead of the expected 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7454_v653_continuous_learning.json
-
-**UNKNOWN**
-
-jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
-
-## experiment_7455_v653_decision_audit.json
-
-**UNKNOWN**
-
-jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
-
-## experiment_7456_v653_extraction_audit.json
+## experiment_7464_v654_semif_e6_decision_cost_profile.json
 
 **CHECKABLE**
 
@@ -48,7 +19,7 @@ jetski: no output produced — a tool required the "command" permission that hea
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims an honest null disposition (`honest_verdict`: "complete_null_span_capture_development_gate_closed") with zero span value score, failing the evaluation benefit gate because no evaluation effect was established.
+The artifact reports an honest scientific null where E6 acceptance gates were not met due to insufficient sample size (8 of 30 episodes, 2 of 10 game clusters) and low trace time attribution (10.3%).
 
 ## WHAT IS MISSING
 nothing
@@ -56,19 +27,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7457_v653_arc_exposure.json
-
-**UNKNOWN**
-
-jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
-
-## experiment_7458_v653_durable_updates.json
-
-**UNKNOWN**
-
-jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
-
-## experiment_7459_v653_board_continuity.json
+## experiment_7465_source_option_capture.json
 
 **CHECKABLE**
 
@@ -76,7 +35,7 @@ jetski: no output produced — a tool required the "command" permission that hea
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports an honest null audit finding that GateMate remains blocked by an unchanged physical prerequisite while KV260 and PolarFire retain historical continuity with no new hardware value.
+The task was blocked at `conductor_pre_gate` because upstream dependency `exp7462-option-protocol` failed three evaluated gate checks.
 
 ## WHAT IS MISSING
 nothing
@@ -84,7 +43,87 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7460_v653_capstone.json
+## experiment_7467_v654_factual_span_canary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The result is null because the development gate stayed closed: the factual canary produced only 1 usable span output and 2 usable verbatim outputs, below the required 3 per arm.
+
+## WHAT IS MISSING
+nothing; `"development_gate"`, `"factual.failures"`, `"usable_by_arm"`, `"required_usable_per_arm"`, and per-unit `"development_rows"` record the failed check and observed values.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7468_v654_residual_learner.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7470_v654_independent_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+An honest null independent audit concluding that two upstream branches were blocked due to missing producer evidence while the extraction branch produced a null result.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7471_v654_arc_seam_observation.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The live ARC seam observation resulted in an honest complete null with zero reproduced progress across all four games and eight episodes.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7473_v654_board_continuity.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact reports an honest null finding that historical continuity is preserved for KV260 and PolarFire, while GateMate remains blocked by an unchanged physical prerequisite.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7474_v654_capstone.json
 
 **CHECKABLE**
 

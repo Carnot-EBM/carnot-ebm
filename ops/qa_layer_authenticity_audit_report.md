@@ -3,140 +3,63 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-20
 
-Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 8 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 0 |
+| `CLEAN` | 3 |
 | `MINOR_RISK` | 0 |
-| `REAL_BUG` | 2 |
-| `SILENT_NON_FIRING` | 4 |
+| `REAL_BUG` | 1 |
+| `SILENT_NON_FIRING` | 3 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 14 |
+| `UNKNOWN` | 1 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::check_substrate_declaration_shape` — {"inference_substrate": {"principle": "observed execution environment", "value": {"executes_models": false, "remote_gpu": false}}}
-- `adversarial_verify.py::check_duration_vs_claim` — {"inference_substrate": "deterministic_verifier", "duration_s": 0.0}
-- `adversarial_verify.py::check_gate_passed_without_data` — json {"acceptance_gate_passed": true, "auroc": 0.0} ``` A fabricated or failed run claiming gate passage with a 0.0 AUROC (or an artifact like `{"acceptance_gate_passed": true}` where metric fields are completely missing). Because auroc is not in `("threshold", "delta", "rate", "score", "lift", "ratio")`, and missing keys are never validated against an expected metric schema, this input is silentl
-- `adversarial_verify.py::check_implausible_tight_ci` — json { "seeds": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19], "delta_alpha_ci_95": [0.15040, 0.15200] } ``` The CI width is 0.0016 on 10 seeds, which is ~4x tighter than the N=10 sample-variance floor (threshold ~0.0062). Because `seeds` is provided as a list of integers, `int(n_seeds_raw)` raises TypeError, resetting `n_seeds` to 0 and triggering `n_seeds_for_floor = 1000`. This artificially drops th
+- `adversarial_verify.py::_claims_moat` — json { "honest_verdict": "complete: v402_s3_open_arc_levels_23_action_efficiency_improves_publication_ready", "verifier_thesis_state": "moat_proven_leak_robust_but_s3_utility_open", "verifier_is_oracle": false }
+- `adversarial_verify.py::_flips_gate` — json { "diffusiongemma_gate_status": { "principle": "Record the qualified gate determination.", "value": "MET_oracle_distinct_leak_robust_replicated" } } ``` This is a convention-compliant positive gate assertion, but the function returns false because the field is a dictionary rather than a bare string.
+- `adversarial_verify.py::_moat_rigor_claim_text` — results/experiment_4357_capstone_v402.json` contains `verifier_thesis_state: "moat_proven_leak_robust_but_s3_utility_open"`, but the helper does not extract that field.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::check_substrate_declaration_shape` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_execution_venue` — **REAL_BUG**
-- `adversarial_verify.py::check_duration_vs_claim` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_gate_passed_without_data` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_methodology_present` — **REAL_BUG**
-- `adversarial_verify.py::check_implausible_tight_ci` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_marker_present` — **REAL_BUG**
+- `adversarial_verify.py::_claims_moat` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_flips_gate` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_claim_text` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_cheap_learned_value_marker
+## adversarial_verify.py::_normalize_principle_wrapped_fields
 
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::_has_cheap_learned_value_methodology
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::_cheap_learned_value_floor_descriptor
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::_is_aggregation_only
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::_is_deterministic_verifier
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::_descriptor_key_present
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::offline_arc_methodology_descriptor
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::_validated_substrate_class_floor
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::duration_floor_for_artifact
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::check_substrate_declaration_shape
-
-**Verdict:** `SILENT_NON_FIRING`
+**Verdict:** `CLEAN`
 
 ## VERDICT
-SILENT_NON_FIRING
+CLEAN
 
 ## CLAIM
-The function claims to warn when `inference_substrate` is a dict with no `value` because it is not a declaration.
+Normalize top-level principle-annotated artifact fields to their bare values before downstream checks run.
 
 ## FINDINGS
-1. Field extraction assumption and missing unwrap: At `value = d.get("inference_substrate")` and `if isinstance(value, dict) and "value" not in value:`, the code assumes that any dictionary possessing a `"value"` key is a valid declaration. Under the project's principle-annotated field convention, an artifact can wrap evidence booleans as an outer dictionary where `"value"` contains the inner dictionary. Because the code never unwraps the field or inspects the type of the inner value, `"value" not in value` evaluates to false, silently missing the malformed evidence dictionary.
-2. Accidental key collision: At `if isinstance(value, dict) and "value" not in value:`, if a producer writes an evidence dictionary that happens to contain a key named `"value"` (such as a benchmark metric or parameter setting), `"value" not in value` evaluates to false and silently suppresses the warning.
-3. Narrower than declaration shape concept: `check_substrate_declaration_shape` claims to check the declaration shape, but the implementation only inspects dictionaries via `isinstance(value, dict)`. If a producer writes an invalid non-string, non-dictionary shape (such as a list of substrates or a bare boolean), the check silently ignores it rather than flagging the malformed declaration.
-4. Substring boundaries, negation, and formatting: Free-text matching and negation blindness do not apply as no free-text search is performed; `sorted(map(str, value))[:6]` safely maps keys to strings to construct the detail message.
+none found
 
 ## COUNTEREXAMPLE
-```json
-{
-  "inference_substrate": {
-    "principle": "observed execution environment",
-    "value": {
-      "executes_models": false,
-      "remote_gpu": false
-    }
-  }
-}
-```
+none constructed
 
 ## MISSED INPUT
-{"inference_substrate": {"principle": "observed execution environment", "value": {"executes_models": false, "remote_gpu": false}}}
+none found
 
 ## RECOMMENDATION
-ADD_FIELD_UNWRAP
+KEEP
 
 ## RATIONALE
-The condition `if isinstance(value, dict) and "value" not in value:` assumes that any dictionary containing a `"value"` key is an honest declaration rather than a principle-annotated wrapper holding evidence booleans. As a result, principle-annotated evidence dictionaries and evidence dictionaries that contain a `"value"` key bypass `flags.append` completely. The function must unwrap the field and verify that the inner declaration is a valid string rather than relying on `"value" not in value` on the outer dictionary.
+The implementation checks exact dictionary keys, validates their presence before indexing, and safely leaves lists, nulls, scalars, and unrelated dictionaries unchanged. It contains no free-text matching, numeric boundaries, recognizer defaults, filesystem targets, writes, or measurements; recursive normalization is explicitly outside its documented scope.
 
 
-## adversarial_verify.py::check_execution_venue
+## adversarial_verify.py::_moat_marker_present
 
 **Verdict:** `REAL_BUG`
 
@@ -144,43 +67,93 @@ The condition `if isinstance(value, dict) and "value" not in value:` assumes tha
 REAL_BUG
 
 ## CLAIM
-Hold a declared `execution_venue` to a closed set without enforcing a duration floor.
+`Marker match with a RIGHT token boundary only.`
 
 ## FINDINGS
-1. Field extraction type assumption: At `raw_venue = d.get(EXECUTION_VENUE_FIELD)`, the code assumes `raw_venue` is a bare `str`. Under the project convention where any field may be wrapped in a dictionary containing principle and value keys, `raw_venue` is a dict. This causes `not isinstance(raw_venue, str)` to evaluate to True and append a `Flag` with `severity="critical"`, falsely quarantining honest artifacts.
-2. Divergence from claim: The function claims to validate whether `execution_venue` belongs to `EXECUTION_VENUES`, but because it lacks field unwrapping, it rejects valid closed-set venues whenever they carry principle annotations.
+1. No dict-field reads occur. Principle wrappers are irrelevant here; non-string inputs instead fail at `_MOAT_MARKER_RES.get(marker)`, `re.escape(marker)`, or `pattern.search(text)`.
+2. `rf"{re.escape(marker)}(?![a-z0-9])"` has no left boundary. Every marker may therefore match inside an unrelated longer identifier; one exceptional concatenated artifact has weakened all marker matching.
+3. `pattern.search(text)` is context-blind. Although `Negated spellings` are delegated to `_moat_rigor_claims_win`, this helper neither enforces that precedence nor handles blocked, avoided, merely-mentioned, or unattempted contexts.
+4. No numeric thresholds or off-by-one comparisons occur.
+5. The implementation literally provides the claimed right-only boundary, but “token boundary” is broader than normal token semantics on the left and ASCII-only on the right.
+6. `[a-z0-9]` represents token-continuation characters but omits uppercase and Unicode alphanumerics. Without an undocumented lowercase-normalization precondition, those characters create false boundaries.
+7. The right-boundary rule is tested, but its digit alternative is not isolated: removing the digit portion left all 26 directly relevant tests green.
+8. No absolute path, filesystem write, tracked-state mutation, or operator-document side effect occurs.
+9. There is no permissive terminal null/default branch; `return bool(pattern.search(text))` always returns a boolean.
+10. No duration, counter, or other measurement is computed.
 
 ## COUNTEREXAMPLE
-```json
-{"execution_venue": {"principle": "Hardware-Task Continuity", "value": "dev_host"}}
-```
-An honest artifact declaring a valid venue wrapped in the project-standard principle annotation dictionary. In `check_execution_venue`, `raw_venue` is evaluated as a dict, failing `isinstance(raw_venue, str)` and triggering a critical `EXECUTION_VENUE_INVALID_KIND` flag.
+`{"honest_verdict": "blocked_service_heartbeat_self_consistency_check_did_not_run"}` with marker `beat_self_consistency` returns true because the marker occurs inside `heartbeat_self_consistency`. A downstream moat-claim check can therefore quarantine a blocked infrastructure-monitor artifact as a beats-self-consistency claim.
 
 ## MISSED INPUT
 none found
 
 ## RECOMMENDATION
-ADD_FIELD_UNWRAP
+NEEDS_REDESIGN
 
 ## RATIONALE
-The function assumes `raw_venue` is a bare `str` and does not unwrap principle-annotated dictionary fields allowed by project convention. When an honest artifact records `execution_venue` with metadata annotations, `not isinstance(raw_venue, str)` triggers a false positive with `severity="critical"`. Unwrapping dict values before validating membership against `EXECUTION_VENUES` resolves this defect.
+A single legacy concatenation exception has created an unlimited class of left-substring false positives, while semantic negation remains dependent on callers. Use two-sided boundaries by default, preserve the documented legacy spelling through a narrowly scoped exception, and add explicit blocked/negated-context coverage.
 
 
-## adversarial_verify.py::_artifact_run_date
+## adversarial_verify.py::_claims_moat
 
-**Verdict:** `UNKNOWN`
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+`True if the artifact headlines a verifier moat / superiority win.`
+
+## FINDINGS
+
+1. The recognizer scans only `("honest_verdict", "status", "headline_outcome", "headline")`. A real artifact declares its result through verifier_thesis_state with value moat_proven_leak_robust_but_s3_utility_open; the terminal `return False` makes that indistinguishable from a genuine nonclaim.
+
+2. Negation is ignored. `_moat_marker_present(v.lower(), m)` treats the positive marker inside local_not_beats_vote as a win, causing an honest null verdict to be classified as a superiority claim.
+
+3. `if d.get("verifier_value_added") is True or d.get("verifier_efficiency_win") is True:` requires bare booleans. Likewise, `v = d.get(key)` followed by `isinstance(v, str)` rejects wrapped strings, lists, and None. Production caller-side normalization repairs standard principle wrappers, but this function itself does not support them.
+
+4. Boundary behavior is completely delegated to `_moat_marker_present`. The current helper protects only the right boundary, leaving markers matchable at the end of longer prefixed tokens; the demonstrated corpus failure is semantic context blindness rather than a right-boundary collision.
+
+5. The implementation is both narrower and broader than its claim: narrower because it ignores real claim fields and omitted vocabulary such as beats_sc, broader because negated occurrences count as wins.
+
+6. The field tuple stands for claim-bearing headline surfaces but omits verifier_thesis_state. The two explicit boolean reads stand for structured moat-win declarations but omit moat_realized. `_MOAT_HEADLINE_MARKERS` stands for superiority vocabulary but omits beats_sc.
+
+7. The moat_proven marker is mutation-weak: its negative boundary test still passes if the marker is deleted, while its positive gate test is independently satisfied by the gate-flip recognizer. No supplied test uniquely proves that rule remains active.
+
+8. There are no numeric thresholds, absolute paths, writes, or measurements in this function. However, the default `return False` silently approves every unsupported field, type, and vocabulary spelling; callers cannot distinguish “no claim” from “unrecognized claim.”
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "honest_verdict": "complete: capstone_v369_gap4_UNCONFIRMED_NOT_DECENTRALIZED_NOT_DEPLOYED_local_not_beats_vote_games3_new_levels2_missing5_flagged_skipped0"
+}
+```
+
+This real null verdict returns true because beats_vote is present under negation.
+
+## MISSED INPUT
+
+```json
+{
+  "honest_verdict": "complete: v402_s3_open_arc_levels_23_action_efficiency_improves_publication_ready",
+  "verifier_thesis_state": "moat_proven_leak_robust_but_s3_utility_open",
+  "verifier_is_oracle": false
+}
+```
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+`_claims_moat` silently misses a real top-level moat declaration while falsely accepting a real negated verdict. Widening one token will merely move the defect; claim surfaces and polarity need centralized, structural classification with an explicit unrecognized state instead of `return False`.
 
 
-
-
-## adversarial_verify.py::check_substrate_class
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::check_duration_vs_claim
+## adversarial_verify.py::_flips_gate
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -188,189 +161,151 @@ The function assumes `raw_venue` is a bare `str` and does not unwrap principle-a
 SILENT_NON_FIRING
 
 ## CLAIM
-`check_duration_vs_claim` claims to flag any `Compute-bound artifact with implausibly short duration.`
+`True if the artifact asserts a (DiffusionGemma) gate is MET / flipped.`
 
 ## FINDINGS
-1. Field extraction type assumption: Line 3 executes `duration = d.get("duration_s")` assuming a bare numeric scalar. Under the project convention where fields can be wrapped dicts containing principle and value keys, `duration` evaluates to a dictionary. Line 26 checks `if not _is_finite_number(duration):` which evaluates to false on dict inputs, causing an early `return` at line 27 that silently bypasses all subsequent duration floor checks.
-2. Pattern list narrower than concept: The marker gate at lines 83-89 requires `not _has_compute_bound_marker(d)`, `not _is_live_llm_inference(d)`, `not _declares_arc_live_no_llm`, and `not _claim_requires_live_floor`. The standalone non-compute exception `_declares_arc_live_no_llm` checks only `_is_arc_live_agent_no_llm(d)`. The concept this exception guards is any declared substrate requiring an offline duration floor. The hardcoded check omits `deterministic_verifier`, even though a dedicated duration check exists downstream. As a result, clean artifacts declaring `deterministic_verifier` with zero or implausibly short duration exit at line 89 via `return` without evaluating their floor.
-3. Default branch disables check: At line 90, `floor = duration_floor_for_artifact(d)` is called, followed at line 91 by `if floor is None:` and `return`. For an artifact that carries compute-bound markers but declares an unrecognized substrate or omits the substrate declaration entirely, the helper returns None and line 92 triggers an early `return`. This skips the default fallback floor check at the bottom of the function.
-4. Untested pattern and unsafe runtime assertion: The branch checking aggregation at line 132 is redundant because aggregation artifacts with non-live claims are intercepted and exit via `return` at lines 33-51. Additionally, line 37 executes `assert floor is not None`, which raises an unhandled AssertionError crashing the verifier if `duration_floor_for_artifact(d)` returns None for an artifact classified as aggregation.
-5. Strict inequality on floor threshold: Comparisons across all branches use `float(duration) < min_duration`. An artifact with a measured duration exactly equal to the threshold passes without warning, despite the warning messages asserting that execution takes greater than or equal to minimum time.
-6. Implementation diverges from docstring claim: The docstring states `Compute-bound artifact with implausibly short duration.`, but the implementation covers non-compute substrates (`deterministic_verifier`, `arc_live_agent_no_llm`). Because non-compute substrates other than ARC live agent are filtered out by the marker guard, the function neither honors its broad logic nor satisfies a consistent compute-only contract.
+1. Silent false negative: `v = d.get("diffusiongemma_gate_status")` is recognized only by `if isinstance(v, str) and _MET_LEADING_RE.match(v.strip().upper()):`. A principle-wrapped value, list, or None silently becomes indistinguishable from an artifact making no MET claim.
+
+2. `g = d.get("diffusiongemma_gate")` assumes the relevant keys are directly present in a bare mapping. A principle wrapper still passes `isinstance(g, dict)` but its payload is never unwrapped, so the check silently misses it.
+
+3. `g.get("met") is True` assumes a bare built-in boolean. A principle-wrapped boolean, list, string, or other representation fails without reporting an unsupported shape.
+
+4. `_MET_LEADING_RE.match(str(g.get("status", "")).strip().upper())` repeats the documented field-shape bug exactly: a wrapped status is converted to its Python dictionary representation and cannot match the intended status token.
+
+5. `hv = d.get("honest_verdict")` followed by `if isinstance(hv, str):` silently ignores principle-wrapped verdicts, lists, and None. This is another false-negative path across a field explicitly treated as evidence.
+
+6. `_GATE_MET_RE.search(hv_lower) or _DIFFUSIONGEMMA_MET_RE.search(hv_lower)` has no visible negation or assertion-context analysis. The documented underscore boundary prevents collisions with longer words but still treats a marker followed by a negating suffix as a positive assertion.
+
+7. The implementation is both narrower and broader than its claim. It is narrower because the structured mapping recognizes only `met` and `status`, omitting the claimed flipped state; it is broader because any matching free-text mention is treated as an assertion.
+
+8. The hardcoded field/key recognizers stand in for the concept “artifact records a positive gate transition.” That concept includes a flipped member explicitly named by the docstring, but the visible structured recognizer omits it.
+
+9. The terminal `return False` conflates a recognized negative result with an unrecognized field shape, omitted state name, or unsupported representation. Callers cannot distinguish a genuine pass from a disabled check.
+
+10. There are no numeric thresholds, filesystem paths, writes, side effects, or measurements in this function. Consequently, no off-by-one, absolute-write-target, tracked-state mutation, or pre-work measurement defect is visible here.
+
+11. The definitions of `_MET_LEADING_RE`, `_GATE_MET_RE`, and `_DIFFUSIONGEMMA_MET_RE` are absent, so their exact word boundaries, alternations, omissions, overlap, and mutation coverage cannot be audited. No rule can responsibly be declared deletable with the suite still green because no tests were supplied.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "inference_substrate": "deterministic_verifier",
-  "duration_s": 0.0,
-  "honest_verdict": "deterministic_verifier_passed"
+  "honest_verdict": "blocked_diffusiongemma_met_check_not_attempted"
 }
 ```
-This is a false negative. The artifact declares `deterministic_verifier` with an impossible duration of 0.0 seconds. Because it lacks compute-bound markers, is not live inference, and is not an ARC live agent, it satisfies the guard condition at line 83 and triggers an early return. The dedicated floor check at line 147 never executes, and the artifact is silently approved.
+
+Under the documented underscore-boundary behavior, the `diffusiongemma_met_` span matches and the function returns true even though the verdict says the MET check was blocked and not attempted.
 
 ## MISSED INPUT
-`{"inference_substrate": "deterministic_verifier", "duration_s": 0.0}`
+```json
+{
+  "diffusiongemma_gate_status": {
+    "principle": "Record the qualified gate determination.",
+    "value": "MET_oracle_distinct_leak_robust_replicated"
+  }
+}
+```
+
+This is a convention-compliant positive gate assertion, but the function returns false because the field is a dictionary rather than a bare string.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The function collapses unsupported shapes and recognized negatives into the same `return False`, silently approving artifacts whose gate claim is wrapped or represented as flipped. Its free-text search also confuses mention with assertion, making negated verdicts false-trigger. Extraction should be centralized and shape-aware, while classification should distinguish positive, negative, and unrecognized inputs.
+
+
+## adversarial_verify.py::_moat_rigor_claim_text
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+With no docstring, the name `_moat_rigor_claim_text` claims to collect normalized text containing an artifact’s moat-rigor claims.
+
+## FINDINGS
+1. Field extraction is unsafe. `return " ".join(str(d.get(key, "")) for key in _MOAT_RIGOR_CLAIM_KEYS).lower()` stringifies wrapped dictionaries, lists, and explicit nulls instead of extracting their semantic values. A wrapper’s principle text contaminates the claim text, while null becomes “none.”
+2. The function contains no substring, prefix, suffix, or regex matching, so boundary and negation handling cannot be evaluated here. It merely lowercases and concatenates text; downstream code must supply those protections.
+3. There are no numeric thresholds or comparison operators, so no numeric boundary error exists in this function.
+4. `_MOAT_RIGOR_CLAIM_KEYS` represents the concept “fields capable of carrying a moat-rigor conclusion,” but it is an exact-key sample. It omits the real corpus field verifier_thesis_state, along with moat_verdict and p01_route2_fair_verdict.
+5. The implementation is simultaneously narrower and broader than its name: narrower because unlisted claim-bearing fields disappear, and broader because `str(d.get(key, ""))` admits wrapper metadata rather than only the field value.
+6. Silent non-firing is confirmed on a real artifact: experiment_4357_capstone_v402.json declares “moat_proven_leak_robust_but_s3_utility_open” in verifier_thesis_state, yet `_moat_rigor_claim_text` omits it and the moat-rigor guard emits no flag.
+7. Mutation coverage is inadequate. In the focused 26-test moat suite, deleting headline_outcome, headline, paper_summary, decision, or oracle_distinct_status from the key list left all 26 tests green; deleting `.lower()` also left all 26 green. Only honest_verdict and status were mutation-locked.
+8. The function computes no absolute path, performs no writes, measures no duration, and has no terminal null-return branch. However, its exact-key allowlist is effectively a permissive default: an unknown claim-bearing field is silently indistinguishable from an artifact containing no claim.
+
+## COUNTEREXAMPLE
+```json
+{
+  "honest_verdict": "complete: v402_s3_open_arc_levels_23_action_efficiency_improves_publication_ready",
+  "verifier_thesis_state": "moat_proven_leak_robust_but_s3_utility_open",
+  "verifier_is_oracle": false
+}
+```
+The explicit moat claim is omitted from the returned text, so the artifact is treated as irrelevant to moat-rigor validation.
+
+## MISSED INPUT
+`results/experiment_4357_capstone_v402.json` contains `verifier_thesis_state: "moat_proven_leak_robust_but_s3_utility_open"`, but the helper does not extract that field.
 
 ## RECOMMENDATION
 WIDEN_PATTERN_TO_CONCEPT
 
 ## RATIONALE
-The guard at line 83 hardcodes `_declares_arc_live_no_llm` as the sole offline exception, omitting other offline substrates such as `deterministic_verifier` that have explicit floor checks. Consequently, clean deterministic-verifier artifacts with zero or implausibly short durations hit `return` and are silently approved. The pattern in the guard must be widened to match the concept of all substrates that possess an affirmative duration floor.
+An exact-key allowlist cannot reliably represent every field that carries a research conclusion, and the live corpus already proves the omission is not hypothetical. Centralize semantic claim-field discovery, unwrap principle-annotated values before text extraction, and add an isolating regression test for verifier_thesis_state.
 
 
-## adversarial_verify.py::check_sample_size
+## adversarial_verify.py::_moat_rigor_norm
 
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::check_gate_passed_without_data
-
-**Verdict:** `SILENT_NON_FIRING`
+**Verdict:** `CLEAN`
 
 ## VERDICT
-SILENT_NON_FIRING
+CLEAN
 
 ## CLAIM
-The function claims to detect when `acceptance_gate_passed=true but key metric fields are null/missing/0.`
+The function `_moat_rigor_norm` converts string input to lowercase ASCII alphanumeric tokens separated by underscores.
 
 ## FINDINGS
-1. Field extraction assumes bare booleans and scalar types: Line `if d.get("acceptance_gate_passed") is not True:` uses identity comparison against bare True, failing to unwrap principle-annotated dicts of the form {"principle": ..., "value": True} and causing the check to exit immediately without running. Additionally, checks on `v` (`v is None` and `_is_finite_number(v)`) do not unwrap principle annotations on metric values.
-2. Missing metric data is never checked despite the claim: The function only inspects keys present in the artifact via `for k, v in d.items():`. If an artifact sets `acceptance_gate_passed` to True but omits key metric fields entirely, `suspect` remains empty and the function silently passes without raising flags.
-3. String matching without word boundaries: The check `if any(s in kl for s in ("threshold", "delta", "rate", "score", "lift", "ratio")):` matches substrings without word boundaries (`s in kl`), causing false positives on unrelated configuration or environment keys containing rate such as accelerate or generate.
-4. Pattern list narrower than concept: The tuple `("threshold", "delta", "rate", "score", "lift", "ratio")` omits fundamental machine learning experiment metrics like auroc, auc, accuracy, precision, recall, and loss, as well as gate itself (which is mentioned in the function's own comment).
-5. False positive on valid zero metrics and boolean values: The check `elif _is_finite_number(v) and float(v) == 0.0:` flags all zero values as critical defects (`suspect.append(f"{k}=0")`), falsely quarantining honest experiments where zero is the ideal outcome (such as error_rate or false_positive_rate) or boolean False flags whose names contain matched substrings.
+none found
 
 ## COUNTEREXAMPLE
-```json
-{"acceptance_gate_passed": true, "error_rate": 0.0}
-```
-An honest experiment achieving a 0.0 error rate triggers `s in kl` on substring "rate" and `float(v) == 0.0`, resulting in a false-positive `GATE_PASSED_WITHOUT_DATA` critical flag.
-
-## MISSED INPUT
-```json
-{"acceptance_gate_passed": true, "auroc": 0.0}
-```
-A fabricated or failed run claiming gate passage with a 0.0 AUROC (or an artifact like `{"acceptance_gate_passed": true}` where metric fields are completely missing). Because auroc is not in `("threshold", "delta", "rate", "score", "lift", "ratio")`, and missing keys are never validated against an expected metric schema, this input is silently accepted without flagging.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The function silently fails to detect missing metric fields because `for k, v in d.items():` only inspects fields already present, and it ignores principle-annotated values via `d.get("acceptance_gate_passed") is not True`. Simultaneously, it causes severe false positives by treating legitimate zero values like error_rate as fabricated and matching substrings without word boundaries. Resolving these defects requires restructuring the logic to validate required metric keys, unwrap annotations, and respect metric directionality.
-
-
-## adversarial_verify.py::check_preconditions_declared
-
-**Verdict:** `UNKNOWN`
-
-
-
-
-## adversarial_verify.py::check_methodology_present
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-Compute-bound artifact missing methodology evidence.
-
-## FINDINGS
-1. Field extraction assumptions: Line 81 executes `has_duration = _is_finite_number(d.get("duration_s"))` assuming a bare numeric type. Under the project's Principle-Annotated Artifact Fields convention, fields may be wrapped as dictionaries containing principle and value keys; passing such a dictionary causes `_is_finite_number(d.get("duration_s"))` to evaluate to false and falsely flag compliant artifacts. Similarly, lines 58-59 execute `preconditions = d.get("preconditions_checked", {})` followed by `nested_seeds = preconditions.get("seeds") if isinstance(preconditions, dict) else None`. If `preconditions_checked` is wrapped in a principle dictionary, `preconditions.get("seeds")` queries the wrapper rather than the inner value, returning None. Additionally, line 67 executes `has_repro = d.get("reproducibility_checksum")` relying on dictionary truthiness, which treats wrapped dictionaries containing null or empty values as present.
-2. String/substring matching without boundaries: None found. `check_methodology_present` performs dictionary key lookups and set membership checks rather than substring matching on free-text fields.
-3. Negation / context blindness: None found. The function does not scan free-text fields for flagged or forbidden phrases.
-4. Boundary / off-by-one errors: In `has_seed` (lines 60-66), `d.get("seeds")` and `nested_seeds` are evaluated in a boolean context (`or d.get("seeds") or nested_seeds`), unlike `d.get("random_seed") is not None` and `d.get("seed") is not None`. If an experiment sets a valid random seed of 0 under `seeds` or inside preconditions, integer 0 evaluates to false, causing `has_seed` to falsely evaluate to false.
-5. Implementation vs claim: The claim `Compute-bound artifact missing methodology evidence.` is violated in both directions. It is broader than claimed because it flags valid artifacts using principle-wrapped duration, seed 0, or standard synonyms; it is narrower than claimed because wrapped null seeds or checksums satisfy truthiness and pass.
-6. Pattern list narrower than concept: In `has_model_spec`, the concept is the identifier of the evaluated model, but the hardcoded alternatives (`d.get("model_specs")`, `d.get("MODEL_SPECS")`, `d.get("target_model")`, `d.get("models_tested")`) omit model, model_spec, and model_name. In `has_seed`, the concept is random seeds used for reproducibility, but `d.get("random_seeds_used")` omits the standard plural form random_seeds, and `nested_seeds` omits singular seed and random_seed within preconditions. In `no_model_spec_required`, the concept is non-LLM compute substrates, but the hardcoded predicates omit any newly added non-LLM substrate lacking a dedicated recognizer.
-7. Untested pattern: Line 15 (`if _is_precondition_check_only_blocked(d):`) is dead code double-covered by line 4 (`if claim["state"] in {CLAIM_STATE_BLOCKED, CLAIM_STATE_NON_LIVE}:`). Because `_classify_current_task_inference_claim(d)` already sets `CLAIM_STATE_BLOCKED` for blocked precondition checks, line 15 can be deleted with the test suite remaining green.
-8. Default branch disables check: Line 34 (`if _is_artifact_qa_lint_tests(d):`) executes an early return that completely skips `has_seed`, `has_repro`, and `has_duration`, despite the immediately preceding comment explicitly asserting that non-model measurements still require seeds and checksums.
-9. Hardcoded absolute write target: None found.
-10. Side-effect mutation of tracked state: None found.
-11. Metric computed before work: None found.
-
-## COUNTEREXAMPLE
-```json
-{
-  "inference_substrate": "live_model_inference",
-  "target_model": "claude-3-5-sonnet",
-  "random_seed": 42,
-  "reproducibility_checksum": "9b74c9897bac770ffc029102a200c5de",
-  "duration_s": {
-    "principle": "wall_clock_measurement",
-    "value": 34.8
-  }
-}
-```
-This compliant, compute-bound artifact is misclassified as a false positive with `METHODOLOGY_MISSING: duration_s` because `_is_finite_number(d.get("duration_s"))` receives the principle wrapper dictionary and evaluates to false.
+none constructed
 
 ## MISSED INPUT
 none found
 
 ## RECOMMENDATION
-ADD_FIELD_UNWRAP
+KEEP
 
 ## RATIONALE
-The function fails to unwrap principle-annotated fields, causing `has_duration = _is_finite_number(d.get("duration_s"))` to evaluate to false on dictionary-wrapped metrics and falsely quarantine honest work. Additionally, `has_seed` and `has_model_spec` use narrow hardcoded key sets that reject standard synonyms while zero seeds evaluate to false. Adding field unwrapping and widening pattern recognizers to match their underlying concepts resolves these false positive failures.
+This function performs no artifact-field reads, detection decisions, threshold comparisons, recognizer branching, filesystem writes, or measurements. Its `text: str` contract is explicit, and `text.lower()` rejects wrapped dictionaries, lists, and nulls instead of silently treating them as valid normalized text.
 
 
-## adversarial_verify.py::check_implausible_tight_ci
+## adversarial_verify.py::_moat_rigor_numeric_items
 
-**Verdict:** `SILENT_NON_FIRING`
+**Verdict:** `CLEAN`
 
 ## VERDICT
-SILENT_NON_FIRING
+CLEAN
 
 ## CLAIM
-`check_implausible_tight_ci` claims to `Detect bootstrap/empirical CIs much tighter than sample-variance floor.`
+By its name, `_moat_rigor_numeric_items` claims to extract numeric items used by moat-rigor checks.
 
 ## FINDINGS
-1. Field extraction type assumptions: `n_seeds_raw = d.get("n_seeds") or d.get("seeds") or 0` assumes a scalar integer or numeric string. When "seeds" is a list of seed integers, `int(n_seeds_raw)` raises TypeError, caught by `except (TypeError, ValueError):` which sets `n_seeds = 0` and triggers fallback `n_seeds_for_floor = 1000`, silently depressing the floor threshold. Furthermore, inside `for k, v in d.items():`, the guard `if not isinstance(v, list) or len(v) != 2:` assumes a bare list; any field formatted under the project's Principle-Annotated Artifact Fields convention as {"principle": "...", "value": [...]} evaluates `isinstance(v, list)` to False and is silently skipped via `continue`.
-2. Suffix matching boundaries and omissions: `if not any(k.lower().endswith(s) for s in ci_field_suffixes):` hardcodes leading underscores on every pattern in `ci_field_suffixes` (e.g. `_ci`, `_ci_95`, `_confidence_interval`), failing to match top-level bare field names like "ci", "ci_95", or "confidence_interval". Conversely, unrelated fields ending in `_ci` (such as Continuous Integration status or pipeline ranges) falsely match if formatted as a two-element float list.
-3. Context blindness and disclosure ignorance: The docstring states that an abnormally tight interval signals "either a deterministic-by-construction invariant (which must be disclosed) or a bootstrap bug", and the flag detail cites `methodology_note`. However, the code never reads `methodology_note` or any other disclosure field; an honest artifact that documents a deterministic invariant in `methodology_note` is falsely flagged.
-4. Boundary error suppressing zero-width intervals: `if hi <= lo:` treats `hi == lo` (exact zero-width interval with zero variance, the most extreme possible tight CI) as invalid and silently executes `continue` instead of flagging.
-5. Suppression of zero-centered deltas: `if midpoint < 0.01:` executes `continue`, discarding any metric centered near zero. Genuine dimensionless delta comparisons (such as treatment effects centered around zero with non-zero spread) are skipped because a near-zero midpoint is conflated with a tiny metric scale.
-6. Threshold calculation divergence: The docstring explicitly claims that a 95% CI whose total width is below 0.1 / sqrt(N) on a metric near 0.1+ is flagged. The actual calculation `floor_full_width = 3.92 * floor_half_width` followed by `flagging_threshold = floor_full_width / 10.0` evaluates to 0.0196 / sqrt(N) — roughly 5x smaller and more permissive than the docstring claim, silently passing intervals that are an order of magnitude tighter than sample variance.
-7. Untested and redundant patterns: In `ci_field_suffixes`, `_bootstrap_ci_95` is fully subsumed by `_ci_95`, `_bootstrap_ci_90` is fully subsumed by `_ci_90`, and `_bootstrap_ci` is fully subsumed by `_ci`. All three `_bootstrap_*` entries are decorative and can be deleted with the suite remaining green.
-8. Pattern list narrower than concept: `ci_field_suffixes` omits standard 99% intervals ("_ci_99", "_bootstrap_ci_99"), credible intervals with levels ("_credible_interval_95"), and bare field names ("ci_95").
-9. Default branch disables check: `if n_seeds <= 0:` assigns `n_seeds_for_floor = 1000`. When seed counts cannot be parsed or are omitted, assuming N=1000 reduces the detection threshold by ~31.6x, disabling the check for all but microscopic widths.
+none found
 
 ## COUNTEREXAMPLE
-A false negative caused by the Principle-Annotated Artifact Fields convention:
-```json
-{
-  "n_seeds": 30,
-  "delta_alpha_ci": {
-    "principle": "Empirical 95% bootstrap confidence interval over seeds",
-    "value": [0.15040, 0.15070]
-  }
-}
-```
-The reported width is 0.00030 on midpoint 0.15055 at N=30 seeds (the exact exp1693 pattern). Because the field is wrapped in a dict with "principle" and "value", `isinstance(v, list)` evaluates to False, and the function executes `continue` without flagging.
+none constructed
 
 ## MISSED INPUT
-```json
-{
-  "seeds": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
-  "delta_alpha_ci_95": [0.15040, 0.15200]
-}
-```
-The CI width is 0.0016 on 10 seeds, which is ~4x tighter than the N=10 sample-variance floor (threshold ~0.0062). Because `seeds` is provided as a list of integers, `int(n_seeds_raw)` raises TypeError, resetting `n_seeds` to 0 and triggering `n_seeds_for_floor = 1000`. This artificially drops the flagging threshold to 0.00062, causing this fabricated result to silently pass.
-
-Additionally, `{"n_seeds": 30, "eval_accuracy_ci_99": [0.85040, 0.85070]}` is completely ignored because `_ci_99` is omitted from `ci_field_suffixes`, and `{"n_seeds": 30, "delta_alpha_ci": [0.15040, 0.15040]}` is silently dropped by `if hi <= lo: continue`.
+none found
 
 ## RECOMMENDATION
-NEEDS_REDESIGN
+KEEP
 
 ## RATIONALE
-The function fails silently on principle-annotated fields, list-formatted seeds, 99% confidence intervals, and zero-width intervals where `if hi <= lo:` triggers `continue`. Its fallback `n_seeds_for_floor = 1000` and midpoint suppression on zero-centered deltas further prevent the check from running when it should. Because multiple compounding defects disable detection across standard artifact shapes, the implementation requires a full redesign.
+The function has no direct field reads, text matching, thresholds, recognizer lists, writes, or measurements. It delegates recursive extraction to `_moat_rigor_real_fields(d)`, filters through `_is_finite_number(value)`, and returns the promised lowercase path/value pairs; an empty list means no numeric items, not approval.
 
 
-## adversarial_verify.py::_flatten_metrics
+## adversarial_verify.py::_moat_rigor_positive_delta_items
 
-**Verdict:** `UNKNOWN`
-
-
-
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)

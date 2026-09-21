@@ -177,3 +177,5 @@ of truth, not this line.)
 | 2026-09-20 | qa_layer_authenticity_audit | adversarial_verify.py::check_substrate_declaration_shape | SILENT_NON_FIRING | OPEN | |
 | 2026-09-20 | qa_layer_authenticity_audit | adversarial_verify.py::check_execution_venue | REAL_BUG | OPEN | |
 | 2026-09-20 | qa_layer_authenticity_audit | adversarial_verify.py::check_methodology_present | REAL_BUG | OPEN | |
+| 2026-09-21 | experiment_claim_audit | experiment_7468_v654_residual_learner.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-21 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_marker_present | REAL_BUG | OPEN | |

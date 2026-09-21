@@ -76214,3 +76214,52 @@ runtime end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7474 and SCENARIO-REPORT-7474-* | Implemented: V654 fourteen-disposition capstone with a small reducer and thin entrypoint. | The entrypoint requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, strict row consistency, and unchanged publication gates. |
+
+### REQ-REPORT-655: V655 Planning Contract
+
+The proposed milestone 2026.09.655 SHALL contain exactly fourteen ordered tasks,
+exp7475 through exp7488. `research-roadmap-next.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md` SHALL agree on each task ID,
+title, phase, deliverable, substrate class and structured gate. The previous
+V654 design SHALL remain available in
+`openspec/change-proposals/research-roadmap-v654-preserved-20260921.md`.
+
+Every prompt SHALL contain CONTEXT, EXISTING CODE TO READ FIRST, TASK, numbered
+CONCRETE STEPS, principle-annotated REQUIRED ARTIFACT FIELDS and a Run command
+using `{project_root}` and `{date}`. Numbered steps SHALL require flushed output
+at phase boundaries, before and after long calls, and within long loops with
+gaps below 600 seconds. Every prompt SHALL end with the push/conductor prohibition.
+
+All gates SHALL reference an earlier task in this roadmap and an identically
+spelled required artifact field. Comparative tasks SHALL require per-unit rows.
+Scope-similar failures SHALL record all four prior-failure fields, including
+`retire_if_same_verdict: true`. A current LLM task SHALL include
+`unsloth/Qwen3.8-27B-GGUF` and the substrate class of its actual work. Native
+readout uses no-generation classification; bounded ARC output uses bounded
+generation. Planning SHALL preserve the active roadmap and conductor bytes.
+
+#### SCENARIO-REPORT-655-1: Matching Plan Loads Without Activation
+
+**Given** the V655 markdown and next YAML,
+**When** the real roadmap schema, gate audit and contract comparison load them,
+**Then** fourteen matching tasks and all same-roadmap gate fields validate,
+**And** no experiment, model load, board operation or activation occurs.
+
+#### SCENARIO-REPORT-655-2: Contract Drift Is Rejected
+
+**Given** private copies of the matching plan,
+**When** a count, task ID, order, title, phase, path, substrate, gate or milestone
+is changed in only one copy,
+**Then** the contract check fails without modifying either authority.
+
+#### SCENARIO-REPORT-655-3: Runtime Gates Preserve Evidence Boundaries
+
+**Given** private prerequisite artifacts carrying the declared V655 fields,
+**When** readiness is zero, the field is missing, evidence is quarantined, or a
+verdict class is inadmissible,
+**Then** the real conductor gate evaluator blocks the dependent task,
+**And** unconditional audits, board accounting and the capstone still have no gate.
+
+**Status:** Planning contract delivered; all fourteen experiments remain proposed.
+Verification uses existing schema/gate tests and a private plan-contract smoke;
+this documentation change does not alter runtime behavior.
