@@ -16,9 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (95 modul
 
 ## Hostile LLM review
 
-**TL;DR: NO EVIDENCE OF PROGRESS — zero recent solve artifacts exist; reachability passes, but no live self-discovery advance is demonstrated.**
+**TL;DR: UNCLEAR — zero recent solve artifacts means no self-discovery advance is demonstrated; reachability alone proves no live capability.**
 
-Per-artifact review: none. `RECENT ARC SOLVE ARTIFACTS` is empty, so there are no claims to classify.
+Per-artifact: none in the last 7 days.
 
-**Pattern watch:** No outer-loop drift is observable because nothing was submitted. Do not treat the clean orphan-solver lint as solving evidence—it proves only code-path reachability, not that the live agent autonomously discovered a hidden-game solution.
+Pattern watch: The 95-module live closure passes the off-path check, but this is only wiring evidence. Do not claim progress until artifacts capture the live entrypoint, autonomous attempts/runtime reverse-engineering, and a previously unsolved hidden-game result.
 

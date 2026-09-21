@@ -9,57 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 8 |
+| CHECKABLE | 7 |
+| AGGREGATE_ONLY | 1 |
 
-## experiment_7464_v654_semif_e6_decision_cost_profile.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact reports an honest scientific null where E6 acceptance gates were not met due to insufficient sample size (8 of 30 episodes, 2 of 10 game clusters) and low trace time attribution (10.3%).
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7465_source_option_capture.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked at `conductor_pre_gate` because upstream dependency `exp7462-option-protocol` failed three evaluated gate checks.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7467_v654_factual_span_canary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The result is null because the development gate stayed closed: the factual canary produced only 1 usable span output and 2 usable verbatim outputs, below the required 3 per arm.
-
-## WHAT IS MISSING
-nothing; `"development_gate"`, `"factual.failures"`, `"usable_by_arm"`, `"required_usable_per_arm"`, and per-unit `"development_rows"` record the failed check and observed values.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7468_v654_residual_learner.json
+## experiment_7480_v655_source_eval_capture.json
 
 **CHECKABLE**
 
@@ -75,7 +28,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7470_v654_independent_audit.json
+## experiment_7481_v655_typed_calibration.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The candidate met the decision-benefit gate but failed the probability-benefit gate, leaving `"deployment_certificate_valid": false`.
+
+## WHAT IS MISSING
+Per-group evaluation rows containing each of the 74 groups’ candidate and comparator costs; `"decision_cost_grid.cells[].comparison"` provides only aggregate `"delta"`, `"ci95"`, `"group_count"`, and p-values, while `"rows"` is mentioned only in `"field_principles"` and no actual per-unit rows are present.
+
+## THE CHECK A READER CANNOT DO
+Was the reported decision-cost benefit broad across the 74 groups, or driven by a few outliers or degenerate groups?
+
+## experiment_7482_v655_importance_anchor.json
 
 **CHECKABLE**
 
@@ -83,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-An honest null independent audit concluding that two upstream branches were blocked due to missing producer evidence while the extraction branch produced a null result.
+The importance anchor arm passes the scientific fixture benefit gate by improving adaptation loss by ~0.150 (above the 0.005 threshold) while maintaining a retention drift ratio of ~0.736 relative to the unanchored arm (below the 0.80 maximum threshold) across all three evaluation seeds.
 
 ## WHAT IS MISSING
 nothing
@@ -91,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7471_v654_arc_seam_observation.json
+## experiment_7483_v655_continuous_learning.json
 
 **CHECKABLE**
 
@@ -99,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The live ARC seam observation resulted in an honest complete null with zero reproduced progress across all four games and eight episodes.
+The experiment completed validly but found no registered importance-anchor benefit because the Holm-adjusted comparisons against the unanchored residual failed at delays 0 and 8.
 
 ## WHAT IS MISSING
 nothing
@@ -107,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7473_v654_board_continuity.json
+## experiment_7484_v655_decision_audit.json
 
 **CHECKABLE**
 
@@ -115,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports an honest null finding that historical continuity is preserved for KV260 and PolarFire, while GateMate remains blocked by an unchanged physical prerequisite.
+The independent audit completed with a null result because `static_and_online_benefit` was not demonstrated.
 
 ## WHAT IS MISSING
 nothing
@@ -123,7 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7474_v654_capstone.json
+## experiment_7485_v655_arc_cost_panel_a.json
 
 **CHECKABLE**
 
@@ -135,6 +104,38 @@ no claim
 
 ## WHAT IS MISSING
 nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7487_v655_learning_placement.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment completed placement and fixed-point replay validation, but did not establish the 100× end-to-end service target because the service denominator was incomplete.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7488_v655_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The capstone is disqualified because required evidence failed validation, panel B is missing, and the ARC evidence is a sample-limited null without established intervention benefit.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary.failed_checks"` records each failed check with `"field"`, `"expected"`, `"observed"`, `"path"`, and `"upstream"`, while `"arc_combined_reduction.episode_rows"` provides per-game/per-seed rows.
 
 ## THE CHECK A READER CANNOT DO
 none

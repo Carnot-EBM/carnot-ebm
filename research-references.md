@@ -45944,3 +45944,76 @@ are new. No inference, board operation, submission or vendor contact occurred.
   and [Kona architecture page](https://logicalintelligence.com/kona-ebms-energy-based-models).
   The language/constraint split remains relevant context. No new reproducible
   local Kona checkpoint or training recipe was established.
+
+## 2026-09-21 — V656 planning source review
+
+Recorded before drafting the V656 experiments. This pass checked the requested
+eight research topics and six secondary channels. Rechecked papers remain
+identified below. Author results are not Carnot measurements.
+
+### Findings selected for design
+
+| Primary source | Finding and limitation | Candidate use |
+|---|---|---|
+| [HallDetect, 2608.05823v1](https://arxiv.org/html/2608.05823v1), 6 August 2026 | Decomposes responses and checks entailment against source evidence. Its limitations include a confounded ablation, missing discriminative baselines, and unmeasured efficiency. | Test response granularity while holding the verifier, source, and runtime fixed. A lossless response-window experiment would test one component; it would not reproduce HallDetect's extractor or encoder. Compare whole-response and window features with identical-information simple controls. |
+| [Input-side evidence alignment, 2608.15804](https://arxiv.org/abs/2608.15804), 16 August 2026 | Jointly studies hallucinated spans and alignment to input evidence through masked-token prediction. | Preserve response offsets and full source evidence. A source-conditioned score must carry a trace to the text it evaluated. Defer training its separate encoder. |
+| [PARALLAX, 2605.17028](https://arxiv.org/abs/2605.17028), 16 May 2026 | Finds benchmark construction shortcuts in several hallucination corpora. Its evaluation motivates separating answer leakage from actual detection. | Audit label polarity, source access, annotation leakage, and corpus roles before fitting. Source documents are legitimate inputs to source-support verification; gold labels and annotation explanations are not. |
+| [Online Learning with LLM Experts from Limited Feedback, 2609.05820](https://arxiv.org/abs/2609.05820), 5 September 2026; rechecked | Distinguishes full-information and feedback-budgeted learning. | Freeze feedback opportunities and delay. Require real label-feature pairing to beat shuffled pairing and an intercept-only learner. This component experiment inherits no routing regret theorem. |
+| [Catastrophic Forgetting in KANs, 2511.12828](https://arxiv.org/abs/2511.12828), November 2025; rechecked | Local spline support alone does not guarantee retention. | Keep frozen, simple online, and permuted-feedback controls. Retire the unchanged importance-anchor comparison after its measured null; use a proper-loss update on newly measured local evidence instead. |
+| [On-chip spline learning, 2602.02056](https://arxiv.org/abs/2602.02056), February 2026, later revisions; rechecked | Studies sparse local learning on FPGA. | Count active coefficients and state bytes, then measure the whole CPU service. Model prefill and durable acknowledgement remain in the denominator. CPU arithmetic does not establish FPGA speed. |
+
+### Topic sweep and deferred work
+
+- **EBM reasoning:** rechecked [EBT](https://arxiv.org/abs/2507.02092) and
+  [ARM–EBM, revision 4](https://arxiv.org/abs/2512.15605v4). Followed the latter's
+  citation lead [distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871).
+  These sources do not reopen Carnot's retired general text-reranking mechanism.
+  A small conditional energy head remains separate from generator training.
+- **Neural constraints:** rechecked [T-SKM-Net](https://arxiv.org/abs/2512.10461).
+  Linear-feasibility projection is distinct from identifying faithful natural
+  language statements. No solver port is selected this cycle.
+- **Ising applications:** checked [Thermodynamic learning](https://arxiv.org/abs/2609.04732)
+  and [codon optimization](https://arxiv.org/abs/2606.17327). Physical learning and
+  hardware energy estimates remain leads, not available Carnot substrates.
+- **Hallucinations:** selected the granularity and dataset-control methods above.
+  Keep probability quality separate from cost-sensitive accept/reject/escalate utility.
+- **KAN:** rechecked [KAN-CL](https://arxiv.org/abs/2605.12306) alongside the
+  forgetting paper. The existing importance-anchor result is a local null;
+  repeating its coefficient penalty is not the next experiment.
+- **Constrained generation:** checked [DCCD](https://arxiv.org/abs/2603.03305)
+  and [energy-guided object hallucination decoding](https://arxiv.org/abs/2507.07731).
+  Draft generation adds cost; the second paper concerns vision-language models.
+  Neither justifies another compact-span generation attempt in this cycle.
+- **Hardware sampling:** checked [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985).
+  Host coordination and data movement must remain visible in placement estimates.
+- **Continual memory:** the EBT citation walk surfaced
+  [Memoir](https://arxiv.org/abs/2607.20792). It asks when reasoning should update
+  memory. Defer architectural adoption; the immediate question is whether
+  correctly paired feedback causes any measured benefit.
+
+### Secondary-channel receipts
+
+- **OpenReview:** searched NeurIPS 2025 and ICLR/ICML 2026 EBM submissions.
+  Search exposed [Energy Matching](https://openreview.net/pdf?id=WYSCCw7mCe)
+  and [Energy-Based Physics-Informed Diffusion](https://openreview.net/pdf?id=rdiElRhUU1).
+  Direct opens of the latter and the EBT forum returned browser challenges.
+  No inaccessible review or acceptance decision is inferred.
+- **Semantic Scholar:** direct Graph API citation requests returned HTTP 200
+  for both [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=20).
+  EBT returned 20 entries with `next=20`; ARM–EBM returned eight without a next
+  page. Followed Memoir and distributional EBMs to arXiv. This is a partial walk.
+- **Hugging Face Papers:** the [hallucination discovery page](https://huggingface.co/papers?q=hallucination)
+  opened. The direct HallDetect page failed to load. Method claims use arXiv.
+- **GitHub trending:** checked [weekly Python](https://github.com/trending/python?since=weekly)
+  and [monthly Rust](https://github.com/trending/rust?since=monthly).
+  No relevant new dependency was selected from the returned lists.
+- **Extropic:** checked [writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). The vendor describes sparse probabilistic
+  and digital co-design. This review establishes no local TSU access or speedup.
+- **Logical Intelligence:** checked the [Kona architecture page](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  Its constraint-reasoning architecture remains context. No new reproducible
+  local checkpoint or training recipe was established.
+
+No model execution, hardware operation, purchase, contact, or publication occurred
+during this review. Existing model and board availability must be checked at runtime.
