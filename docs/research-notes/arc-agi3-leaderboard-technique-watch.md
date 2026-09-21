@@ -354,3 +354,5 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant:** **Matija Ludvig & Zhongwei Wang** entered at **#3 with 11.64**. No submission-linked public notebook or new technique disclosure was found; **exploit/general-purpose classification remains unknown**. [Current leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Matija Ludvig’s public notebooks](https://www.kaggle.com/matijaludvig/code)
 
+## 2026-09-21 13:36 UTC -- checked, nothing new
+

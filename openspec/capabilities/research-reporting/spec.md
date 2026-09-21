@@ -76471,6 +76471,96 @@ applies.
 |---|---|---|
 | REQ-REPORT-7489 and SCENARIO-REPORT-7489-* | Planned: advisory V656 contract and method reducer with a thin entrypoint. | Requires spec-linked tests, 100 percent changed-module coverage, scoped checks, capability replay, cold reduction, adversarial verification, and strict row consistency. |
 
+## V655 historical probability and feedback audit — 2026-09-21
+
+**Status:** Specified. This host aggregation replays V655 rows under a new
+identity. It does not change the V655 artifacts or make a current model call.
+
+### REQ-REPORT-7490: Requalify historical rows with canonical aggregation provenance
+
+Exp7490 SHALL preserve the exact bytes, verdicts, flags, and failed reader
+output from Exp7481, Exp7483, and Exp7484. The current run SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, zero current load,
+forward, and generation counts, `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+model evidence SHALL stay hash-bound provenance.
+
+The reducer SHALL reuse the corrected Exp7484 raw-row reduction under the new
+identity. It SHALL recompute Brier loss, log loss, all nine typed cost cells,
+coverage, class support, seed counts, and group counts. The label polarity
+SHALL follow the pinned annotation policy: evaluator label one means supported,
+and the audit target one means contains unsupported content. The 74 FaithBench
+groups SHALL remain previously evaluated diagnostic history. They SHALL not be
+called a fresh holdout.
+
+The reducer SHALL reproduce the Exp7483 shuffled-control construction from its
+frozen order and audit seeds. Each assigned control label SHALL name its origin
+group, origin event time, availability time, target event time, assignment time,
+and future-origin result. A future origin SHALL invalidate only the shuffled
+negative control. It SHALL not prove that the main learner used a future label.
+A chronology-preserving block permutation SHALL accept only labels available at
+assignment time. Its result SHALL be a protocol control, not a post-hoc efficacy
+estimate.
+
+The artifact SHALL include the required identity, clocks, preconditions, source
+hashes, per-unit rows, sample accounting, principle-bearing gates, exact failure
+summary, validation receipts, field principles, `historical_probability_rows`,
+`feedback_chronology_rows`, `historical_claim_limits`, and a reproducibility
+checksum. `historical_audit_complete_score` SHALL be one only when raw inputs,
+metric reduction, provenance, chronology diagnosis, independent replay, and all
+required checks pass. A complete scientific null is valid. Missing external
+input SHALL be blocked and SHALL not be partial.
+
+The affected manifest SHALL freeze one test, one changed module, and one thin
+entrypoint. It SHALL use the Exp7358 command plan and Exp7303 streaming runner.
+Checks SHALL include focused pytest without coverage, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test specification coverage. The entrypoint and a fresh-process cold
+replay SHALL be capability checks. Independent reduction, the unchanged
+adversarial reader, and strict row consistency SHALL pass before atomic
+publication. No numbered runtime end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7490-PROBABILITY: Raw rows reproduce historical limits
+
+**Given** authenticated native logits, frozen checkpoints, and prediction rows
+**When** Exp7490 reduces each external group and all nine typed cost cells
+**Then** Brier, log loss, coverage, support, seed counts, and group counts agree
+**And** typed utility stays separate from worse external probability quality.
+
+#### SCENARIO-REPORT-7490-POLARITY: Pinned annotations control label meaning
+
+**Given** evaluator rows with `label_policy=one_if_no_human_unsupported_span`
+**When** probabilities are scored as unsupported-content risk
+**Then** evaluator label one maps to audit target zero
+**And** metric direction cannot select or reverse the label polarity.
+
+#### SCENARIO-REPORT-7490-CHRONOLOGY: Control labels retain origin times
+
+**Given** the frozen Exp7483 order, audit seeds, delays, and feedback ledger
+**When** the global pre-replay shuffle is reconstructed
+**Then** every assigned label has an origin and an availability time
+**And** any future-origin assignment invalidates the shuffled control only.
+
+#### SCENARIO-REPORT-7490-MUTATIONS: Future access fails and causal blocks pass
+
+**Given** private chronology rows
+**When** one origin availability moves after assignment
+**Then** the future-label mutation fails the chronology check
+**And** a block permutation that uses only available prior labels passes.
+
+#### SCENARIO-REPORT-7490-ARTIFACT: Canonical provenance controls publication
+
+**Given** historical limits, chronology rows, and a frozen affected manifest
+**When** fresh readers replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, accounting, source, metric, chronology, gate, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared result path.
+
+## Implementation Status (REQ-REPORT-7490)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7490 and SCENARIO-REPORT-7490-* | Planned: V655 historical host reducer and thin entrypoint. | Requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
 ## V655 independent source-decision and delayed-learning audit — 2026-09-21
 
 **Status:** Specified. This host aggregation audits every available V655
