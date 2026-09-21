@@ -18375,3 +18375,6 @@ code |
 | 2026-09-21 21:38 UTC | Complete withheld-game live ARC panel B with exclu | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ", ("pytest", |
 | 2026-09-21 22:04 UTC | Reduce cross-game ARC opportunity and supervisor e | FAIL | Codex CLI error: Stalled after 600s silence. Last output: epcopy(artifact) + |
 | 2026-09-21 22:27 UTC | Reduce cross-game ARC opportunity and supervisor e | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ooling"]["pooling_a |
+| 2026-09-21 23:07 UTC | Reduce cross-game ARC opportunity and supervisor e | OK | 95 passed, 1 warning in 8.17s |
+| 2026-09-21 23:09 UTC | Conductor re-exec: fresh committed source | OK | 575c17974d28 -> 3e409d258f1a; argv preserved |
+| 2026-09-21 23:09 UTC | Measure durable feedback service and retain honest | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7496-causal-update-fixture, exp7496-causal-update-fixture, exp7496-causal-update-fixture) |
