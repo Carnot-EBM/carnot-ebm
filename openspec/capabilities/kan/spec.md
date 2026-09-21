@@ -3374,3 +3374,120 @@ a complete null. A fixture benefit pass MAY produce only
 Given the raw fixture rows and exact validation receipts, when a fresh process
 changes a row, source hash, invocation declaration, gate, score, or state
 replay result, then validation fails and terminal publication is refused.
+
+## REQ-KAN-7483: Controlled Prequential Continuous Learning Replay
+
+The KAN capability MUST replay the sealed V655 online panel as a controlled
+prequential experiment. It MUST use the temperature-calibrated native readout
+as the canonical frozen baseline. It MUST load its initial state from Exp7481
+when that valid artifact exists. If Exp7481 is absent, it MUST fit the same
+temperature baseline from training and calibration roles only. The artifact
+MUST name which branch supplied the state. The experiment MUST keep generator
+weights and Qwen feature values frozen.
+
+Selection MUST use only training and calibration pseudo-streams. It MUST freeze
+the learning rate, anchor strength, replay size, feature view, five order seeds,
+delays zero and eight, audit probability `0.5`, block construction, bootstrap
+seeds, and 10000-resample inference before online or internal-test labels open.
+Each online order MUST use label-independent source-family blocks and a fixed
+label-independent order inside each block. The five order replicates MUST reset
+state. They MUST NOT count as independent groups.
+
+The replay MUST compare a frozen baseline, online affine calibration, the
+historical unanchored residual with replay, uniform anchoring with replay,
+importance anchoring with the identical replay, a shuffled-feedback control,
+and a zero-rate control. Every adaptive arm MUST receive the same randomized
+audit opportunities. Only labels revealed by that audit MAY enter updates.
+Predictions MUST be sealed before label release. Each event row MUST record
+event time, propensity, feedback time, accepted or rejected update status, and
+the predictor state hashes before and after processing.
+
+The primary gate MUST use at least 120 eligible independent online groups. For
+each delay separately, it MUST first average the five order replicates within
+each group. Importance anchoring MUST improve binary Brier score by at least
+`0.01` against the frozen baseline. Its paired group and source-family block
+bootstrap upper delta MUST be below zero against frozen, affine, and
+unanchored residual controls after Holm correction across the three tests.
+Both delay gates MUST pass for a positive headline.
+
+The internal-test retention panel MUST remain unavailable to selection and
+update acceptance. Each stream MUST score that panel before and after replay.
+The importance arm's one-sided retention Brier upper delta MUST be at most
+`0.01`. The experiment MUST also require zero feedback chronology violations
+and exact fresh-process replay of acknowledged updates. Uniform and importance
+anchoring MUST remain separate arms. A valid benefit or retention failure MUST
+produce a complete null, not a blocked or partial result.
+
+The experiment MUST measure prediction, feedback processing, update, replay
+guard, serialization, `fsync`, restart, and no-op costs on a common event
+denominator. It MUST save hash-bound event shards and state checkpoints. Numeric
+work MUST stop before 1500 seconds. The artifact MUST declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, zero current LLM
+calls, `inference_substrate_class="no_model_load"`, and
+`execution_venue="host"`. Archived model events MUST remain hash-bound sidecars.
+
+The terminal artifact MUST publish atomically only after the frozen affected
+checks, changed-module coverage, a fresh-process cold replay, independent raw
+row reduction, adversarial verification, and strict verdict-row consistency
+checks pass. Required validity, measurement readiness, and scientific benefit
+MUST remain separate. Each gate MUST include its failure-prevention principle.
+
+### SCENARIO-KAN-7483-01: Selection Cannot Read Held-Out Labels
+
+Given training, calibration, online, and internal-test roles, when the protocol
+selects its numeric settings, then only training and calibration rows enter the
+selection hash. Opening online or internal-test labels does not change any
+selected setting or initial state.
+
+### SCENARIO-KAN-7483-02: Orders And Audit Masks Are Label Independent
+
+Given the five registered order seeds and audit seeds, when streams are built,
+then source-family blocks and within-block positions depend only on sealed row
+identity. Every compared arm receives the same audit mask, delay, and feedback
+opportunity for a stream.
+
+### SCENARIO-KAN-7483-03: Prediction Precedes Randomized Feedback
+
+Given delay zero or eight, when one stream replays, then every prediction hash
+exists before its label release. Unrevealed labels do not enter state. Early,
+duplicate, reordered, or unaudited feedback changes no acknowledged state.
+
+### SCENARIO-KAN-7483-04: Controls Keep Their Registered Update Laws
+
+Given identical sealed events, when all seven arms replay, then the frozen and
+zero-rate arms do not move, affine calibration stays affine, residual arms use
+the Exp7468 update path, and shuffled feedback changes only label assignment.
+No arm receives more feedback or oracle labels.
+
+### SCENARIO-KAN-7483-05: Group Aggregation Precedes Multiplicity Tests
+
+Given five order replicates of one online group, when Brier deltas are reduced,
+then those values are averaged into one group value before paired source-family
+block bootstrap. Holm correction covers the frozen, affine, and unanchored
+comparisons separately for each delay.
+
+### SCENARIO-KAN-7483-06: Retention Never Becomes An Update Oracle
+
+Given the frozen internal-test panel, when each stream begins and ends, then
+the panel supplies only before-and-after scores. Its labels never enter update
+acceptance, hyperparameter choice, replay rows, or the audit mask.
+
+### SCENARIO-KAN-7483-07: Crash Replay And Service Costs Share Evidence
+
+Given an acknowledged midpoint checkpoint, when a fresh process continues the
+same delayed stream, then terminal state hashes and acknowledgement hashes equal
+uninterrupted replay. Prediction, feedback, update, guard, serialization,
+`fsync`, restart, and no-op costs use the same event denominator.
+
+### SCENARIO-KAN-7483-08: Completion Does Not Depend On Benefit
+
+Given valid prequential evidence on at least 120 groups, when an effect,
+retention, or Holm gate fails, then `online_complete_score` remains one,
+`online_benefit_score` is zero, and the verdict is a complete null.
+
+### SCENARIO-KAN-7483-09: Terminal Readers Fail Closed
+
+Given the event shards, retention rows, service costs, checkpoints, source
+hashes, and frozen validation manifest, when a fresh reader changes any row,
+hash, gate, invocation declaration, or verdict operand, then terminal
+validation fails and publication is refused.
