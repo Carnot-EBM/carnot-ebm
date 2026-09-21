@@ -197,7 +197,9 @@ def test_scenario_arc_wmte_7499_comparability_stratifies_code_drift() -> None:
 
     panel_a = panel.load_object(REPO / panel.PANEL_A_PATH)
     model_specs = panel_a["model_specs"]
-    current = panel.current_comparability_inputs(REPO, model_specs, panel_a["execution_venue_details"])
+    current = panel.current_comparability_inputs(
+        REPO, model_specs, panel_a["execution_venue_details"]
+    )
     receipt = panel.compare_panel_a(panel_a, current)
     assert receipt["comparable"] is False
     assert receipt["pooling_allowed"] is False
@@ -225,6 +227,23 @@ def test_req_arc_wmte_7499_fixture_reduces_required_fields() -> None:
     assert len(json.dumps(artifact)) < 20 * 1024 * 1024
     assert set(artifact).issubset(artifact["field_principles"])
     assert all(row["principle"] for row in artifact["acceptance_gate_results"])
+    assert all(
+        {
+            "category",
+            "expected",
+            "observed",
+            "op",
+            "passed",
+            "upstream",
+            "path",
+            "field",
+            "artifact_field",
+            "principle",
+        }.issubset(row)
+        for row in artifact["acceptance_gate_results"]
+    )
+    assert artifact["invocation_counts"]["model_loads_attempted"] == 1
+    assert artifact["invocation_counts"]["generation_calls_attempted"] <= 36
 
     changed = deepcopy(artifact)
     changed["supervisor_opportunity_rows"][0]["abstention_count"] += 1
@@ -236,9 +255,7 @@ def test_req_arc_wmte_7499_fixture_reduces_required_fields() -> None:
 def test_scenario_arc_wmte_7499_preconditions_preserve_absence_and_registry() -> None:
     """SCENARIO-7499-PRECONDITIONS keeps Exp7486 absence external and typed."""
 
-    checks, hashes, protocol, panel_a, registry = panel.collect_preconditions(
-        REPO, force_live="1"
-    )
+    checks, hashes, protocol, panel_a, registry = panel.collect_preconditions(REPO, force_live="1")
     assert all(row["passed"] is True for row in checks)
     assert protocol["arc_interval_protocol_ready_score"] == 1
     assert panel_a["arc_panel_a_complete_score"] == 1
@@ -279,3 +296,56 @@ def test_scenario_arc_wmte_7499_terminal_scope_and_replay(tmp_path: Path) -> Non
     assert "oracle_positive_forbidden" in panel.validate_artifact(broken, require_terminal=False)
     with pytest.raises(SystemExit):
         panel.parse_args([])
+
+
+def test_req_arc_wmte_7499_guards_fail_closed(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7499 rejects identity, budget, scope and schema drift."""
+
+    assert panel.utc_now().endswith("Z")
+    assert (
+        panel._source_hash_by_role(
+            {"source_artifact_hashes": {"not-a-row": "invalid"}}, suffix="missing"
+        )
+        is None
+    )
+    assert panel._receipts_pass([], ["missing"]) is False
+
+    artifact = panel.build_artifact_for_test()
+    broken = deepcopy(artifact)
+    broken["schema"] = "wrong"
+    broken["invocation_counts"]["model_loads_attempted"] = 2
+    broken["invocation_counts"]["generation_calls_attempted"] = 37
+    broken["invocation_counts"]["generation_calls_completed"] = 37
+    broken["model_specs"] = []
+    broken["verdict_class"] = "unknown"
+    broken["new_level_credit"] = 1
+    broken["field_principles"].pop("schema")
+    broken["acceptance_gate_results"][0]["principle"] = ""
+    broken["validation_receipts"] = []
+    errors = panel.validate_artifact(broken, require_terminal=True)
+    assert {
+        "identity_mismatch:schema",
+        "unbalanced_invocations:model_loads",
+        "model_load_count_invalid",
+        "generation_budget_exceeded",
+        "required_model_missing",
+        "invalid_verdict_class",
+        "registered_public_credit_nonzero",
+        "field_principle_missing",
+        "gate_principle_missing",
+        "required_validation_missing_or_failed",
+    }.issubset(errors)
+
+    oversized = deepcopy(artifact)
+    oversized["oversized_test_field"] = "x" * (20 * 1024 * 1024)
+    oversized["field_principles"]["oversized_test_field"] = (
+        "The size guard prevents oversized committed artifacts."
+    )
+    assert "artifact_exceeds_20_mib" in panel.validate_artifact(oversized, require_terminal=False)
+
+    plan = panel.build_validation_plan(REPO, tmp_path / "guard-plan")
+    broad = panel.validation_scope.CommandSpec("broad_probe", ("pytest", "tests/python"), "invalid")
+    plan = [row for row in plan if row.name != "e2e_009"] + [broad]
+    scope_errors = panel.validate_validation_plan(REPO, plan)
+    assert "command_count:e2e_009:0" in scope_errors
+    assert "broad_test_target:broad_probe" in scope_errors
