@@ -1,6 +1,6 @@
 # Carnot — E2E Test Plan
 
-**Last Updated:** 2026-09-05
+**Last Updated:** 2026-09-20
 
 ## E2E Test Strategy
 
@@ -175,3 +175,15 @@ the transport/error-feedback scope and supplies no ARC efficacy evidence.
 Also retain E2E-009's real offline environment smoke. It is LLM-off plumbing,
 not a grammar or ARC improvement measurement. Any efficacy claim requires a
 separate local-model trial; no default enablement follows from these checks.
+
+### E2E-011: ARC decision telemetry parity (CPU)
+
+Spec ref: REQ-ARC-WMTE-7465.
+
+Run `tests/python/test_arc_decision_telemetry.py` with the worktree
+`PYTHONPATH`, `--no-cov`, and `-n0`. The scripted fake environment must drive
+the real `E3AgentPolicy` once with telemetry off and once with it on. Actions,
+existing provenance, fake model calls, environment calls, and random state
+must match. The enabled run must write bounded JSONL to `tmp_path`.
+
+This check uses no real game, model, network, or GPU.

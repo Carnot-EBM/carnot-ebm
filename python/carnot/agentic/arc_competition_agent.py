@@ -31,6 +31,7 @@ from typing import Any, Callable, Mapping, Optional, Sequence
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
+import carnot.agentic.arc_decision_telemetry as arc_decision_telemetry
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401
 from carnot.agentic.arc_amortized_exploration import coerce_amortized_first_contact_prior
@@ -1616,6 +1617,7 @@ class StepwiseExplorer:
         # `_fd_gate` ladder below (explicit kwarg -> env override -> the kit's own
         # BUDGET_AWARE_SEARCH_ENABLED default).
         budget_aware_search: bool | None = None,
+        decision_telemetry: Any | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         self.auto_hud_mask = bool(auto_hud_mask)
@@ -1890,6 +1892,7 @@ class StepwiseExplorer:
         # REQ-ARC-WMTE-7024: None keeps the pre-selector candidate path exact.
         # The enabled object can only reorder the rows already produced above.
         self.belief_candidate_selector = belief_candidate_selector
+        self._decision_telemetry = decision_telemetry or arc_decision_telemetry.NOOP_RECORDER
         if isinstance(dense_curiosity, DenseCuriosityProgress):
             self.dense_curiosity: DenseCuriosityProgress | None = dense_curiosity
         elif dense_curiosity:
@@ -2805,6 +2808,7 @@ class StepwiseExplorer:
         except Exception:
             return None
 
+    @arc_decision_telemetry.capture_candidate_decision
     def _candidates(
         self,
         frame,
@@ -5291,6 +5295,9 @@ class E3AgentPolicy:
         from carnot.agentic.arc_invariant_projector import InvariantProjectionConfig
 
         self.short = str(game_id).split("-", 1)[0]
+        self._decision_telemetry = arc_decision_telemetry.maybe_make_recorder(
+            str(game_id), episode_id=str(game_id)
+        )
         # REQ-ARC-WMTE-7024: preserve the caller's durable ledger object. The
         # explicit Boolean overrides the exact `=1` environment opt-in.
         self.belief_ledger = belief_ledger
@@ -5471,6 +5478,7 @@ class E3AgentPolicy:
             structured_evidence_memory=self.structured_evidence_memory,
             two_sided_goal_contract=self.two_sided_goal_contract,
             belief_candidate_selector=self.belief_candidate_selector,
+            decision_telemetry=self._decision_telemetry,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -5997,7 +6005,12 @@ class E3AgentPolicy:
                 # every level after the first.
                 diversity_active=diversity_in_effect(explorer),
             )
-            redirect = supervisor.observe(snapshot)
+            decision_telemetry = getattr(
+                self,
+                "_decision_telemetry",
+                arc_decision_telemetry.NOOP_RECORDER,
+            )
+            redirect = decision_telemetry.time_supervisor_selection(supervisor, snapshot)
             if redirect is not None and self._trajectory_supervisor_applies:
                 self._apply_trajectory_redirect(redirect)
             self.record_typed_obligation_shadow_monitor(
@@ -6117,6 +6130,7 @@ class E3AgentPolicy:
         receipt["policy_error_count"] = self._typed_arc_shadow_monitor_errors
         return receipt
 
+    @arc_decision_telemetry.capture_induction_decision
     def _should_enter_induction(self, *, stalled: bool, won: bool) -> tuple[bool, Optional[str]]:
         if (
             self._level_reinduction_pending
@@ -6860,6 +6874,12 @@ class E3AgentPolicy:
         which is the pre-instrument `next_move` with constant-string branch labels added at
         its return sites.
         """
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
+        decision_telemetry.begin_policy_step(self, latest)
         self._record_first_party_tool_gap_outcome(latest)
         if self._provenance is None:
             move = self._next_move_routed(frames, latest)
@@ -7542,6 +7562,17 @@ class E3AgentPolicy:
         """
         return self._provenance
 
+    def decision_telemetry(self):
+        return getattr(self, "_decision_telemetry", arc_decision_telemetry.NOOP_RECORDER)
+
+    def finish_decision_telemetry(
+        self, *, level_end: int | None, actions_used: int | None = None
+    ) -> None:
+        self.decision_telemetry().finish_episode(
+            level_end=level_end,
+            actions_used=actions_used,
+        )
+
     def _world_model_hud_mask(self):
         """REQ-ARC-WMTE-6010: the explorer's live HUD mask, in LOGICAL-grid coordinates.
 
@@ -7607,6 +7638,13 @@ class E3AgentPolicy:
 
         if witness_feedback_enabled():
             kwargs["transition_witness_enabled"] = True
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
+        if decision_telemetry.enabled:
+            kwargs["decision_telemetry"] = decision_telemetry
         outcome = execute_bounded_llm_reinduction(**kwargs)
         if not self.think_arm_fallback_enabled:
             attempt["think_arm_fallback"] = {"enabled": False}
@@ -7719,7 +7757,16 @@ class E3AgentPolicy:
         mask, mask_reason = self._world_model_hud_mask()
         diag["hud_mask_reason"] = mask_reason
         try:
-            vr = e3.WorldModelVerifier(list(active_transitions), hud_mask=mask).score(engine)
+            decision_telemetry = getattr(
+                self,
+                "_decision_telemetry",
+                arc_decision_telemetry.NOOP_RECORDER,
+            )
+            vr = decision_telemetry.time_world_model_verification(
+                e3.WorldModelVerifier(list(active_transitions), hud_mask=mask),
+                engine,
+                candidate_source="carried_engine",
+            )
         except Exception as exc:
             diag["reason"] = "carried_engine_verification_raised"
             diag["error"] = repr(exc)[:160]
@@ -7814,6 +7861,12 @@ class E3AgentPolicy:
             if attempt is not None:
                 for key in ("reason", "planned", "skipped", "transition_count"):
                     payload[key] = attempt.get(key)
+                decision_telemetry = getattr(
+                    self,
+                    "_decision_telemetry",
+                    arc_decision_telemetry.NOOP_RECORDER,
+                )
+                decision_telemetry.complete_induction(self, attempt, wall_s)
             self._notify_induction_progress("induction_finished", payload)
 
     def _notify_induction_progress(self, kind: str, payload: dict[str, Any]) -> None:
@@ -7830,6 +7883,12 @@ class E3AgentPolicy:
         import os
 
         from carnot.agentic import arc_executable_world_model as e3
+
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
 
         # PLAN/PI RESET (2026-08-08, adversarial review finding). This is the single call site
         # that ever assigns `self.phase = "execute" if self.plan else "explore"` right after this
@@ -7964,9 +8023,11 @@ class E3AgentPolicy:
                         # STEP-COUNTER HUD / rails". The step-counter half is a MEASUREMENT
                         # artifact, not a model limitation, and masking it is what this flag does.
                         _nav_mask, _nav_mask_reason = self._world_model_hud_mask()
-                        nav_vr = e3.WorldModelVerifier(
-                            active_transitions, hud_mask=_nav_mask
-                        ).score(nav_eng)
+                        nav_vr = decision_telemetry.time_world_model_verification(
+                            e3.WorldModelVerifier(active_transitions, hud_mask=_nav_mask),
+                            nav_eng,
+                            candidate_source="structured_nav",
+                        )
                         attempt["structured_nav_heldout"] = round(float(nav_vr.accuracy), 4)
                         attempt["structured_nav_cell_recall"] = round(float(nav_vr.cell_recall), 4)
                         attempt["structured_nav_change_fidelity"] = round(
@@ -8600,7 +8661,8 @@ class E3AgentPolicy:
                 # (cn04/ar25/sc25/sk48/wa30) and grepped ZERO for `hud_mask` until 2026-07-27.
                 _hs_mask, _hs_mask_reason = self._world_model_hud_mask()
                 attempt["hud_mask_reason"] = _hs_mask_reason
-                self.world_model_trust_selection = select_trusted_world_model(
+                self.world_model_trust_selection = decision_telemetry.time_world_model_selection(
+                    select_trusted_world_model,
                     active_transitions,
                     candidate_pool,
                     hidden_state=True,
@@ -8694,7 +8756,14 @@ class E3AgentPolicy:
                 # `_hud_reason` is recorded UNCONDITIONALLY -- an unresolved mask must be
                 # distinguishable in the artifact from a mask that was never requested.
                 _hud_mask, _hud_reason = self._world_model_hud_mask()
-                vr = e3.WorldModelVerifier(active_transitions, hud_mask=_hud_mask).score(engine)
+                if decision_telemetry.enabled:
+                    vr = decision_telemetry.time_world_model_verification(
+                        e3.WorldModelVerifier(active_transitions, hud_mask=_hud_mask),
+                        engine,
+                        candidates=candidate_pool,
+                    )
+                else:
+                    vr = e3.WorldModelVerifier(active_transitions, hud_mask=_hud_mask).score(engine)
                 # REQ-ARC-WMTE-6410 (default OFF): one bounded re-draw when this draw collapsed
                 # AND the trust gate below would reject it anyway. Placed BEFORE the gate logic
                 # so everything downstream reads the KEPT engine's verdict unchanged. The gate
@@ -9072,7 +9141,16 @@ class E3AgentPolicy:
             record["error"] = repr(exc)[:160]
             self._restore_engine_store(old_code, record)
             return engine, is_done, vr
-        new_vr = e3.WorldModelVerifier(transitions, hud_mask=hud_mask).score(new_engine)
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
+        new_vr = decision_telemetry.time_world_model_verification(
+            e3.WorldModelVerifier(transitions, hud_mask=hud_mask),
+            new_engine,
+            candidate_source="recall_gated_resample",
+        )
         record["resample_cell_recall"] = round(float(new_vr.cell_recall), 4)
         record["resample_accuracy"] = round(float(new_vr.accuracy), 4)
         new_passes = not self._plain_trust_rejects(new_vr)
@@ -9731,6 +9809,19 @@ def make_carnot_agent(
                 try:
                     self._emit_generator_liveness_witness()
                 except Exception:  # pragma: no cover - the witness must never break the run
+                    pass
+                try:
+                    finish_telemetry = getattr(
+                        self._policy,
+                        "finish_decision_telemetry",
+                        None,
+                    )
+                    if finish_telemetry is not None:
+                        finish_telemetry(
+                            level_end=getattr(self, "levels_completed", None),
+                            actions_used=int(getattr(self, "action_counter", 0) or 0),
+                        )
+                except Exception:  # pragma: no cover - measurement must never break the run
                     pass
                 # Flush the per-action provenance rows, if the instrument was armed. Inside
                 # the same once-only guard and for the same reason the witness is: cleanup()

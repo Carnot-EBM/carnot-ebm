@@ -2,6 +2,14 @@
 
 **Last Updated:** 2026-09-20
 
+## 2026-09-20 — ARC decision shadow telemetry added
+
+REQ-ARC-WMTE-7465 adds default-off JSONL telemetry to the live ARC policy.
+It records candidate rankings, induction decisions, world-model gates, and
+supervisor arm choices. It also records episode boundaries. The recorder is
+bounded and fail-open. The focused CPU suite proves action, provenance, call,
+environment, and random-state parity. No real game or model was used.
+
 ## 2026-09-20 — Autoresearch Codex binary selection repaired
 
 REQ-AUTO-027 now preserves both required behaviors: direct adapter calls use

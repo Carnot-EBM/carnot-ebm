@@ -1358,8 +1358,7 @@ def _tool_loop_refactor(
             "available": bool(witness_payload and witness_payload.get("available")),
             "delivered": bool(witness_instruction),
             "payload_sha256": (
-                "sha256:"
-                + hashlib.sha256(canonical_witness_bytes(witness_payload)).hexdigest()
+                "sha256:" + hashlib.sha256(canonical_witness_bytes(witness_payload)).hexdigest()
                 if witness_payload is not None
                 else None
             ),
@@ -1643,6 +1642,7 @@ def execute_bounded_llm_reinduction(
     hud_mask: Any = None,
     induction_memory: Any = None,
     transition_witness_enabled: bool = False,
+    decision_telemetry: Any = None,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -1851,11 +1851,21 @@ def execute_bounded_llm_reinduction(
         try:
             engine, goal = load_engine(game)
             candidates = _normalise_candidates(candidate_provider(engine, goal), engine, goal)
-            selection = select_trusted_world_model(
-                list(transitions),
-                candidates,
-                hidden_state=True,
-            )
+            selection_transitions = list(transitions)
+            if decision_telemetry is None:
+                selection = select_trusted_world_model(
+                    selection_transitions,
+                    candidates,
+                    hidden_state=True,
+                )
+            else:
+                selection = decision_telemetry.time_world_model_selection(
+                    select_trusted_world_model,
+                    selection_transitions,
+                    candidates,
+                    acceptance_threshold=verifier_threshold,
+                    hidden_state=True,
+                )
             selected = selection.selected
             selected_goal = selected.is_level_complete or goal
             if structural_goal_candidate is not None:

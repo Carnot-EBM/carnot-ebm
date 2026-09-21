@@ -13,6 +13,67 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## ARC decision shadow telemetry — 2026-09-20
+
+**Status:** Implemented. This instrument records existing decisions. It does not
+change an action, model call, environment call, or random draw.
+
+### REQ-ARC-WMTE-7465: Record bounded ARC decisions without changing the live policy
+
+The live `E3AgentPolicy` SHALL own one decision telemetry recorder. The
+recorder SHALL default to a no-op object. The operator SHALL enable it only
+with `CARNOT_ARC_DECISION_TELEMETRY=1`. The recorder SHALL use
+`CARNOT_ARC_DECISION_TELEMETRY_PATH` when that path is set. Otherwise, it MAY
+write below an existing run output directory. It SHALL refuse activation with
+one warning when no safe output directory exists.
+
+The recorder SHALL write JSON Lines with `schema_version=1`. Every decision
+row SHALL contain a run ID, episode ID, game ID, step index, level before,
+phase, monotonic timestamp, and decision wall time. It SHALL record the ranked
+candidate-action set, the induction timing decision, the world-model gate, and
+the supervisor arm selection. It SHALL also record episode start and end rows.
+It SHALL not record an outcome at decision time. A reducer SHALL join later
+outcomes through the run ID, episode ID, and step index.
+
+Candidate rows SHALL keep at most the top 15 incumbent options. They SHALL
+report the omitted count. State text SHALL have a fixed length cap. Each
+episode and run SHALL have record and byte caps. A cap stop SHALL write one
+`telemetry_truncated` row and stop that episode. No row SHALL contain game
+source, hidden information, future frames, or per-game adapter data.
+
+Telemetry failures SHALL never raise into the policy. They SHALL never add a
+model call or environment call. They SHALL never consume a random number. The
+writer SHALL use one buffered append file. It SHALL flush at episode end and
+at a fixed record interval. The scored submission kernel SHALL remain
+unchanged.
+
+The same module SHALL provide a pure offline reader. The reader SHALL report
+record counts per seam, the option-count distribution, and total and per-seam
+wall time for each episode.
+
+#### SCENARIO-ARC-WMTE-7465-PARITY
+
+- **GIVEN** one scripted fake environment and one real `E3AgentPolicy` path
+- **WHEN** the same episode runs once with telemetry off and once with it on
+- **THEN** both runs emit the same actions and the same existing provenance
+- **AND** both runs make the same model calls, environment calls, and random draws.
+
+#### SCENARIO-ARC-WMTE-7465-BOUNDS
+
+- **GIVEN** more than 15 click options or an episode that reaches a storage cap
+- **WHEN** the recorder serializes the decision stream
+- **THEN** it keeps the top 15 options and reports the omitted count
+- **AND** it writes one truncation row before it stops the episode.
+
+#### SCENARIO-ARC-WMTE-7465-FAILURE
+
+- **GIVEN** no safe default output directory or a write failure
+- **WHEN** the operator enables telemetry
+- **THEN** the recorder warns or counts the failure and the live policy continues
+- **AND** the reader never receives a game-source or hidden-information field.
+
+Implementation status: implemented 2026-09-20.
+
 ## V653 ARC supervisor exposure comparison — 2026-09-20
 
 **Status:** Specified. This work measures exposure to the shipped supervisor
@@ -127,6 +188,92 @@ before atomic publication.
 - AND any scientific null is limited to completed applied-versus-shadow evidence.
 
 Implementation status: specified 2026-09-20. The conductor owns later status,
+changelog, and traceability reconciliation.
+
+## REQ-ARC-WMTE-7471: Observe live E3 decision seams without changing decisions
+
+Experiment 7471 SHALL use run date `20260921`, milestone `2026.09.654`, and
+phase 4. It SHALL authenticate Experiment 7464 and preserve its original status,
+verdict class, adversarial flag, and four-seam observation schema. It SHALL check
+the exclusion manifest and solve registry before model work.
+
+The experiment SHALL freeze four accessible public development games other than
+`bp35` and `cn04` by stable hash before it observes outcomes. It SHALL run two
+seeds per game through `make_carnot_agent` and `E3AgentPolicy`. Each of the eight
+episodes SHALL stop at 180 actions, 240 seconds, or two 256-token callbacks. The
+complete live session, including load and cleanup, SHALL stop at 2400 seconds.
+The run SHALL use the cached `unsloth/Qwen3.8-27B-GGUF`, its embedded tokenizer,
+one owned GPU lease, and actual CUDA-offload receipts. It SHALL not substitute a
+model or simulate a callback.
+
+The observation layer SHALL be opt-in and local to the development harness. It
+SHALL record the candidate-action, hypothesis-gate, supervisor-arm, and
+induction-timing seams at their E3 call sites. Each reached seam SHALL keep stage
+boundaries, stable candidate identifiers when the call site supplies them,
+missing-option reasons, selected values, action count, state and level context,
+supervisor firing, applied redirection, later progress, token counts, and CPU/GPU
+intervals. It SHALL persist callback and action boundaries before dependent work.
+It SHALL not reconstruct an unlogged candidate set from later outcomes.
+
+Observation SHALL not change action order, request order, submitted defaults,
+supervisor threshold, supervisor arm order, or request budgets. Scripted parity
+tests SHALL compare observation enabled and disabled through the actual policy
+hooks. Per-game adapters, stored engines, banked trajectories, cross-game state,
+game source, ground-truth search, and per-game models SHALL remain unavailable.
+
+The reducer SHALL account for complete, failed, censored, and unstarted episodes.
+It SHALL report four-game clustered uncertainty, actions to progress, and
+replaceable-cost bounds. A reached level SHALL receive credit only after fresh
+reproduction of the agent's own trace with
+`solve_provenance=live_agent_self_discovery`. A registered level SHALL receive no
+new solve credit. Zero reached levels and absent seam opportunities are findings.
+
+The terminal artifact SHALL contain every required experiment field, immutable
+hash-bound seam shards, independent raw-row reduction, scoped validation, the
+applicable ARC end-to-end checks, a fresh-process cold replay, adversarial
+verification, and strict verdict-row consistency. `arc_observation_complete_score`
+SHALL be one only when all episode dispositions and actual invocation receipts
+exist. This public development proxy SHALL not claim hidden-game efficacy,
+improve a selector, add a supervisor arm, change production defaults, or enable
+E7 through E12.
+
+### SCENARIO-ARC-WMTE-7471-OBSERVER-PARITY
+
+- **GIVEN** one scripted E3 policy input and one fixed request budget
+- **WHEN** the local seam observer is disabled and enabled in separate fresh policies
+- **THEN** both runs emit identical actions and request reservation sequences
+- **AND** only the enabled run emits the four typed decision-seam schemas.
+
+### SCENARIO-ARC-WMTE-7471-FROZEN-PANEL
+
+- **GIVEN** accessible public games and the solve registry
+- **WHEN** the schedule is sealed before outcomes
+- **THEN** stable hashes select four games other than `bp35` and `cn04` with two seeds each
+- **AND** every row retains the fixed action, callback, token, time, and withheld-input limits.
+
+### SCENARIO-ARC-WMTE-7471-SEAM-RECEIPTS
+
+- **GIVEN** a reached E3 action, gate, supervisor, induction, or callback boundary
+- **WHEN** the observer writes its append-only event shard
+- **THEN** start and terminal events share a decision identity and monotonic clock
+- **AND** unavailable candidates, tokens, offload, or later outcomes remain explicit instead of inferred.
+
+### SCENARIO-ARC-WMTE-7471-REDUCTION
+
+- **GIVEN** eight sealed episode rows and their hash-bound seam shards
+- **WHEN** the independent reducer recomputes the result
+- **THEN** it reproduces dispositions, invocation accounting, per-game clusters,
+  actions-to-progress, and replaceable-cost bounds
+- **AND** unfinished work remains censored and contributes no solve or efficacy credit.
+
+### SCENARIO-ARC-WMTE-7471-TERMINAL
+
+- **GIVEN** measured work, scoped checks, applicable ARC end-to-end checks, and terminal readers
+- **WHEN** the exact candidate passes independent reduction and is published atomically
+- **THEN** complete accounting may report a null finding with the observation score set to one
+- **AND** a required validation failure disqualifies the record while a pre-model external absence blocks it.
+
+Implementation status: specified 2026-09-21. The conductor owns later status,
 changelog, and traceability reconciliation.
 
 ## REQ-ARC-WMTE-7464: Profile typed-decision cost from existing ARC traces

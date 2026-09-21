@@ -1,6 +1,13 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-20
+**Operational Note:** 2026-09-20 REQ-ARC-WMTE-7465 maps the live ARC decision
+recorder in `python/carnot/agentic/arc_decision_telemetry.py` and its hooks in
+`python/carnot/agentic/arc_competition_agent.py` to
+`tests/python/test_arc_decision_telemetry.py`. The tests cover default-off
+behavior, JSONL shape, caps, write failures, safe fields, import reachability,
+and on/off policy parity. The test uses a fake environment and fake proposer.
+It makes no network, GPU, real game, or real model call.
 
 **Operational Note:** 2026-09-20 REQ-AUTO-027 now distinguishes canonical
 direct `codex exec` argv from the unattended round's configured executable.
