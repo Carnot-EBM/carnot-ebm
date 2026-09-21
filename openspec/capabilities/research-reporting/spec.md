@@ -76113,3 +76113,104 @@ end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7470 and SCENARIO-REPORT-7470-* | Implemented: small independent V654 branch reducer with a thin entrypoint. | The entrypoint requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
+## V654 fourteen-disposition capstone — 2026-09-21
+
+**Status:** Specified. This host aggregation closes each V654 task slot. It
+performs no current model inference, numeric fitting, promotion, roadmap
+activation, external publication, or generator-weight change.
+
+### REQ-REPORT-7474: Reconcile fourteen outcomes without promoting missing or invalid science
+
+Exp7474 SHALL resolve the active V654 Markdown and YAML authorities. It SHALL
+require exactly fourteen ordered tasks from Exp7461 through Exp7474. The
+current capstone SHALL receive a current-work disposition. Its final artifact
+SHALL never become its own prerequisite.
+
+The reducer SHALL authenticate each declared Exp7461 through Exp7473 result or
+its exact conductor pre-gate record. Each disposition SHALL retain the expected
+and observed path, raw identity, milestone, class, structural flag, gate
+values, validation receipts, and source byte hash. Missing producer evidence
+SHALL become a terminal blocked disposition. It SHALL not become a retryable
+partial result. Present invalid required evidence SHALL disqualify the
+capstone. Other available branches SHALL still finish their reductions.
+
+The reducer SHALL use Exp7470's independent rows to separate probability
+evidence, typed-decision utility, online retention and benefit, and extraction
+coverage. It SHALL keep Exp7463 local runtime parity separate from scored
+runtime parity. It SHALL keep Exp7464 replaceable-cost bounds separate from
+efficacy. It SHALL keep Exp7471 current live self-discovery separate from public
+development history. Source-conditioned option scores SHALL not reopen the
+retired general external-text verifier construction.
+
+Each branch SHALL receive `continue`, `defer`, or `retire` with one measured
+cause and one exact changed prerequisite. Each prior-failure decision SHALL
+retain the task, prior experiment, prior verdict, and changed mechanism.
+Repeated valid nulls MAY retire only their measured construction. The retired
+four-expert mixture and unchanged GateMate physical retry SHALL remain retired
+or deferred without retiring all learning, model use, or hardware research.
+
+The artifact SHALL contain exactly fourteen ordered `task_dispositions`, raw
+per-slot rows, branch reductions, continuation rows, unresolved obligations,
+and the unchanged G1–G4 publication result. Publication gates SHALL retain
+their FoVer-only scope and SHALL not certify V654 science. Contract completion,
+scientific validity, benefit, and publication scope SHALL remain separate.
+`promotion_score` SHALL remain zero. `capstone_complete_score` SHALL equal one
+only when all fourteen dispositions and current required validation complete.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, balanced zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Archived
+model-shaped events SHALL remain hash-bound sidecars. Numeric head fitting
+SHALL have a separate zero `small_ebm_training` receipt.
+
+The affected plan SHALL reuse the Exp7358 command plan and Exp7303 runner. It
+SHALL run worktree imports, focused pytest without coverage, separate 100
+percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test specification coverage. The declared entrypoint and a
+fresh-process cold replay SHALL be capability end-to-end checks. Independent
+reduction, adversarial verification, strict verdict-row consistency, and the
+unchanged publication gate SHALL pass before atomic publication. No numbered
+runtime end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7474-CONTRACT: Both V654 authorities fail closed
+
+**Given** the exact fourteen-task V654 Markdown table and active YAML roadmap
+**When** count, ID, order, title, phase, path, substrate, gate, or milestone differs
+**Then** contract authentication fails without reading an old capstone contract
+**And** the current task remains a current-work row instead of a self-read.
+
+#### SCENARIO-REPORT-7474-DISPOSITIONS: Every slot retains its evidence state
+
+**Given** valid producers, one invalid producer, exact pre-gate evidence, and missing producers
+**When** Exp7474 authenticates all thirteen predecessor slots
+**Then** each slot retains its raw identity, path, class, flag, gate values, and validation state
+**And** missing external evidence is blocked while present invalid evidence is disqualified.
+
+#### SCENARIO-REPORT-7474-BRANCHES: Independent scientific claims stay separate
+
+**Given** the Exp7470 reduction and the E0, E6, extraction, ARC, and board artifacts
+**When** branch metrics and continuation decisions are reduced
+**Then** probability, typed utility, retention, extraction, cost, efficacy, and proxy history remain distinct
+**And** no source-option result reopens the retired external-text verifier construction.
+
+#### SCENARIO-REPORT-7474-RETIREMENT: Scope and changed prerequisite control retirement
+
+**Given** prior-failure mechanics, the retired four-expert mixture, and unchanged physical prerequisites
+**When** continuation rows are produced
+**Then** only a repeated measured construction retires
+**And** unrelated learning, model, and hardware mechanisms remain eligible after an exact change.
+
+#### SCENARIO-REPORT-7474-ARTIFACT: Exact readers control atomic publication
+
+**Given** fourteen dispositions, source hashes, raw reductions, and a frozen affected manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, source, row, branch, decision, gate, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared result path.
+
+## Implementation Status (REQ-REPORT-7474)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7474 and SCENARIO-REPORT-7474-* | Implemented: V654 fourteen-disposition capstone with a small reducer and thin entrypoint. | The entrypoint requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint E2E, cold replay, independent reduction, adversarial verification, strict row consistency, and unchanged publication gates. |
