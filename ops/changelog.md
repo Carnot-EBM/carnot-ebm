@@ -20222,3 +20222,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-20: [outer-loop] Recorded operator decisions on the SemIf plan questions (plan section 12) and froze the E4 game roster (nine games, fixed hash rule, three per action-interface stratum). Docs only.
 - 2026-09-20: [outer-loop] Operator accepted the E5 (scored-path change) eligibility rule for SemIf plan question 7; recorded as plan section 12.1. Docs only.
 - 2026-09-20: [outer-loop] Recorded the operator-directed rule for choosing the primary Jev engine (SemIf plan question 9, section 12.2): judge by ARC outcomes under one frozen budget, cost as tie-break and feasibility limit. Docs only.
+- 2026-09-20: [outer-loop] Recorded the operator preference to favor the easier-to-train Jev engine as a PROPOSED amendment (SemIf plan section 12.3), with a leave-one-game-out gate because it conflicts with the ARC framing rule and Q8. Pending operator confirmation. Docs only.

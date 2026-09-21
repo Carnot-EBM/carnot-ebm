@@ -615,3 +615,37 @@ have each passed on their own):
 
 **Note on rosters.** E4's nine-game roster (question 6) is for the first adapter-free A/B
 tests. The head-to-head above uses the full section 6 units.
+
+### 12.3 Proposed amendment, 2026-09-20 (later): prefer the easier-to-train engine. PENDING operator confirmation.
+
+**Operator preference (stated in chat).** When the two engines tie, prefer the one that is easier
+to train. Reason given: the operator wants to train the model on the public game levels, to
+introduce it to those world models during local iteration and training, before it meets hidden
+levels in the live agent.
+
+**Tension with existing rules, stated plainly.**
+
+- CLAUDE.md "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent" says weights trained on the 25 public games do not carry a hidden game's specific mechanics, and the reusable method is the asset, not the weights. The project also retired an earlier trained-weights graft for this reason.
+- Decision Q8 chose a fresh runtime head, and rule 4 of section 12.2 excludes an engine that "carries fitted state across games at scoring time". Training on public levels is exactly fitted state across games.
+- The 2026-09-08 leave-one-game-out run found that withholding a game's adapter code did not withhold the knowledge. Training on public games puts that knowledge in the weights.
+
+Public-game training can still help if it teaches general priors (objects, movement, goal-directed
+play) and not per-game answers. That is an empirical question, and the framing rules exist so we
+test it and do not assume it.
+
+**Proposed way to honor both.** Add a pretrained arm, gated by strict leave-one-game-out.
+
+1. Arms: E9a is the fresh runtime head (unchanged, Q8). E9b is a head pretrained on public game levels. For the frozen-readout engine, E8b is an adapter or head trained the same way. The zero-training SemIf readout stays as the untrained control.
+2. Gate: for each held-out game, train only on the other 24 games and evaluate on the held-out one, paired against E9a and the baseline cascade under one frozen `(A, T, W)` tuple. Report held-out deltas only, never in-sample numbers.
+3. Promotion: a head trained on all 25 games may be used for hidden levels only if the pretrained arm beats both the fresh-head arm and the baseline on held-out games, with a positive game-clustered interval. Otherwise it is not used.
+4. Training data: the agent's own adapter-free self-discovery trajectories on the training games, with provenance recorded. Banked solves from outer-loop reverse engineering are excluded, because they are the anti-pattern the framing rule names. The operator may overrule this in writing.
+5. Wording change to section 12.2: rule 3 (tie-break) becomes "prefer the engine that is easier to train, measured as training GPU-hours to reach the frozen held-out criterion, data volume, and stability across seeds; then lower budget use". Rule 4's exclusion becomes "carries fitted state across games unless that state passed the held-out gate in item 2".
+6. Note that "easier to train" is not automatic. SemIf is training-free as a zero-shot readout (only a calibrator is fitted). It is easier only if the untrained readout already wins. NanoJev-style heads have a training pipeline. The tie-break uses measured cost, not the name.
+7. Shipping: trained weights must fit the offline kernel dataset, have a license that allows shipping, and be mirrored (Hugging Face plus IPFS) per the decentralization rules. Section 12.1 still governs any scored-path change.
+
+**Still unknown.** Whether public-game pretraining transfers to hidden games. Public games are a
+development proxy. The held-out gate measures transfer to unseen public games, which is the
+nearest available stand-in for hidden levels.
+
+**Needs the operator's confirmation:** (a) allow cross-game pretrained state under this
+held-out gate, replacing the Q8 fresh-head-only decision; (b) the training-data source in item 4.
