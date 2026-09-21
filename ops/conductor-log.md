@@ -18329,3 +18329,5 @@ code |
 | 2026-09-21 00:00 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_strip_verdict_terminal_prefix age-week 0: OPEN 1 days: S |
 | 2026-09-21 00:00 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_declaration_shape age-week 0: OPEN 1 days |
 | 2026-09-21 00:00 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_methodology_present age-week 0: OPEN 1 days: REAL_B |
+| 2026-09-21 00:13 UTC | Prototype local residual energy updates with reten | OK | 92 passed, 2 warnings in 8.69s |
+| 2026-09-21 00:15 UTC | Measure delayed continuous learning from native so | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7465-source-option-capture, exp7465-source-option-capture, exp7465-source-option-capture) |
