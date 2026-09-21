@@ -18365,3 +18365,4 @@ code |
 | 2026-09-21 17:12 UTC | Test calibrated energy decisions against controls  | FAIL | Codex CLI error: Stalled after 600s silence. Last output: manifest = exp.V |
 | 2026-09-21 17:33 UTC | Test calibrated energy decisions against controls  | FAIL | Codex CLI error: Stalled after 600s silence. Last output: manifest = exp.V |
 | 2026-09-21 17:56 UTC | Test calibrated energy decisions against controls  | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ion = exp.reduce_pr |
+| 2026-09-21 18:19 UTC | Qualify Brier updates and chronology-preserving fe | FAIL | Codex CLI error: Stalled after 600s silence. Last output: uild_fixture_artifa |

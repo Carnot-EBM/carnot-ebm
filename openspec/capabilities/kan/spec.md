@@ -3612,3 +3612,112 @@ made.
 Given the raw per-unit rows and frozen validation receipts, when a fresh process
 changes a row, source hash, current-inference declaration, board date, gate,
 score, or checksum, then validation fails and terminal publication is refused.
+
+## REQ-KAN-7496: Bounded Brier Residual And Causal Release-Batch Control
+
+Exp7496 MUST qualify a local spline residual head with binary Brier loss. The
+coefficient gradient MUST equal
+`2 * (p - y) * p * (1 - p) * residual_derivative * basis`. The head MUST use
+the current learner state when feedback arrives. It MUST retain the sealed
+prediction-time probability and features as evidence. The existing Bernoulli
+log-loss head MUST remain an unchanged control. The protocol MUST use no
+importance penalty and MUST not change the four-expert mixture.
+
+Training and calibration fixtures MUST select from learning rates `0.001`,
+`0.01`, and `0.03` and residual bounds `0.5` and `1.0`. The selection MUST
+finish before online fixture labels open. The head MUST contain no more than
+256 coefficients. Receipts MUST report gradient clipping and no-op rates.
+Finite-difference checks MUST cover an interior point, a point close to the
+residual boundary, and a clipped point.
+
+Source groups MUST arrive in fixed blocks of eight. A seeded audit mask MUST
+select each event with probability `0.25` without using predictions or labels.
+Selected labels MUST become available only after their block ends and after a
+delay of zero or eight arrivals. The real and shuffled arms MUST receive the
+same selected batch at the same release time. The shuffled arm MUST permute
+only labels from that released batch. It MUST use a seeded derangement when
+the batch permits one. Singleton and identical-label batches MUST remain
+explicit no-op controls. No future-batch label MAY enter either learner state.
+
+Event identities MUST remain unique when source IDs repeat. Early,
+out-of-order, duplicate, and conflicting deliveries MUST not create an
+unregistered update. Checkpoints MUST restore predictions, acknowledgements,
+numeric state, and idempotent replay exactly. A training-only replay guard MAY
+reject and roll back an update. Retention labels MUST NOT select, reject, or
+veto an update.
+
+The fixture MUST export its sealed update and control configuration and raw
+per-event traces. `causal_update_ready_score` MUST depend only on gradient,
+lifecycle, causal-access, and replay checks. It MUST not depend on analytic
+fixture benefit. Analytic evidence MAY produce only `circular_positive`.
+The current run MUST declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current model calls,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Actual numeric fitting MUST have a `small_ebm_training` receipt. The terminal
+artifact MUST publish atomically only after scoped validation, 100 percent
+changed-module coverage, fresh-process replay, independent reduction,
+adversarial verification, and strict row-consistency checks pass. Each field
+and acceptance gate MUST state the failure that its evidence prevents.
+
+### SCENARIO-KAN-7496-01: Brier Gradient Matches Finite Differences
+
+Given an interior, near-boundary, or clipped residual, when Brier loss is
+differentiated, then the analytic gradient matches centered finite differences
+where differentiable and is zero beyond the clipping boundary.
+
+### SCENARIO-KAN-7496-02: Feedback Uses Current State
+
+Given two sealed predictions, when the first feedback changes the head before
+the second label arrives, then the second update uses its sealed features and
+frozen probability with the current coefficients. It MUST not use the old
+prediction-time gradient.
+
+### SCENARIO-KAN-7496-03: Release Batches Are Causal And Shared
+
+Given fixed blocks of eight and a seeded 25 percent audit mask, when a block is
+released at block end plus delay zero or eight, then both adaptive arms receive
+the same event identities at that time. The shuffled labels originate only
+from that batch.
+
+### SCENARIO-KAN-7496-04: Degenerate Batches Stay Explicit No-Ops
+
+Given a singleton or identical-label release batch, when the shuffled control
+runs, then its permutation is marked as a no-op. Given a nondegenerate batch,
+the protocol uses a seeded index derangement and records effective label
+changes.
+
+### SCENARIO-KAN-7496-05: Future Labels Cannot Change Earlier State
+
+Given two streams that differ only in labels from an unreleased future batch,
+when replay stops before that batch release, then all prior prediction rows,
+update receipts, acknowledgement hashes, and learner state hashes are equal.
+
+### SCENARIO-KAN-7496-06: Lifecycle Attacks Fail Closed
+
+Given no-feedback gaps, repeated source IDs, early or out-of-order feedback,
+duplicate delivery, and conflicting replay, when the ledger processes each
+case, then only one chronological matching delivery can update the state.
+
+### SCENARIO-KAN-7496-07: Rollback And Restart Preserve State
+
+Given a training-only guard rejection and a checkpoint between releases, when
+the stream resumes, then rejected state is byte-equivalent to its prior state
+and restarted replay matches uninterrupted acknowledgements and numeric state.
+
+### SCENARIO-KAN-7496-08: Selection And Retention Cannot Read Online Labels
+
+Given training, calibration, online, and retention roles, when settings and
+update admission are computed, then only training and calibration choose the
+settings. Retention labels only score before-and-after predictions.
+
+### SCENARIO-KAN-7496-09: Readiness Is Not Held-Out Benefit
+
+Given valid gradient, lifecycle, causal-access, and replay evidence, when an
+analytic loss comparison is favorable or unfavorable, then readiness remains
+an implementation result. The verifier is an oracle, so positive is forbidden.
+
+### SCENARIO-KAN-7496-10: Terminal Readers Fail Closed
+
+Given raw event traces, source hashes, model-call declarations, gates, and
+validation receipts, when a fresh reader changes any operand, then independent
+reduction or validation fails and terminal publication is refused.
