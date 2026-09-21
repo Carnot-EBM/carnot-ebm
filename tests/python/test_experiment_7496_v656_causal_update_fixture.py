@@ -1,4 +1,4 @@
-"""Tests for REQ-CL-7496 and SCENARIO-CL-7496-*.
+"""Tests for REQ-KAN-7496 and SCENARIO-KAN-7496-*.
 
 The labels are analytic fixture values. These tests qualify update mechanics
 and causal access. They do not measure learning on human data.
@@ -32,7 +32,7 @@ def _zero_head(*, bound: float = 1.0, guard_rows: list[dict[str, object]] | None
     return head
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-GRADIENT.
+# REQ-KAN-7496; SCENARIO-KAN-7496-01.
 def test_brier_gradient_matches_finite_differences_at_clip_cases() -> None:
     head = _zero_head()
     features = exp.training_fixture()[3]
@@ -52,7 +52,7 @@ def test_brier_gradient_matches_finite_differences_at_clip_cases() -> None:
         head.sparse_gradient(features, 2, frozen_probability=0.43)
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-CURRENT and SCENARIO-CL-7496-LIFECYCLE.
+# REQ-KAN-7496; SCENARIO-KAN-7496-02 and SCENARIO-KAN-7496-06.
 def test_feedback_uses_current_state_and_invalid_delivery_is_idempotent(tmp_path: Path) -> None:
     head = _zero_head()
     features = exp.training_fixture()[2]
@@ -107,7 +107,7 @@ def test_feedback_uses_current_state_and_invalid_delivery_is_idempotent(tmp_path
     assert reordered.apply_feedback("order-1", label=0, visible_at=1)["status"] == "reordered"
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-LIFECYCLE.
+# REQ-KAN-7496; SCENARIO-KAN-7496-07 and SCENARIO-KAN-7496-08.
 def test_training_guard_rolls_back_without_retention_labels() -> None:
     features = exp.training_fixture()[4]
     guard = [{"features": features.tolist(), "label": 0, "frozen_probability": 0.5}]
@@ -128,7 +128,7 @@ def test_training_guard_rolls_back_without_retention_labels() -> None:
     assert receipt["retention_labels_used"] == 0
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-CONTROLS.
+# REQ-KAN-7496; SCENARIO-KAN-7496-04.
 def test_release_batch_permutations_name_derangements_and_noops() -> None:
     deranged = exp.permute_released_labels([0, 1, 0, 1], ["a", "b", "c", "d"], seed=7)
     assert deranged["mode"] == "derangement"
@@ -144,7 +144,7 @@ def test_release_batch_permutations_name_derangements_and_noops() -> None:
         exp.permute_released_labels([0], [], seed=7)
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-RELEASE.
+# REQ-KAN-7496; SCENARIO-KAN-7496-03 and SCENARIO-KAN-7496-05.
 @pytest.mark.parametrize("delay", [0, 8])
 def test_release_batches_are_common_and_future_label_invariant(delay: int) -> None:
     events = exp.fixture_events()
@@ -169,7 +169,7 @@ def test_release_batches_are_common_and_future_label_invariant(delay: int) -> No
     assert original["out_of_order_probe"]["status"] == "batch_not_available"
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-GRADIENT and SCENARIO-CL-7496-GATES.
+# REQ-KAN-7496; SCENARIO-KAN-7496-01 and SCENARIO-KAN-7496-09.
 def test_analytic_controls_freeze_candidates_and_keep_log_loss_control(tmp_path: Path) -> None:
     evidence = exp.run_analytic_controls(tmp_path)
     assert evidence["gradient_checks"] and all(row["passed"] for row in evidence["gradient_checks"])
@@ -185,7 +185,7 @@ def test_analytic_controls_freeze_candidates_and_keep_log_loss_control(tmp_path:
     assert evidence["numeric_elapsed_s"] < 600.0
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-GATES and SCENARIO-CL-7496-ARTIFACT.
+# REQ-KAN-7496; SCENARIO-KAN-7496-09 and SCENARIO-KAN-7496-10.
 def test_artifact_reduction_and_mutations_fail_closed(tmp_path: Path) -> None:
     artifact = exp.build_fixture_artifact(tmp_path)
     assert exp.validate_artifact(artifact, verify_sources=False) == []
@@ -221,7 +221,7 @@ def test_artifact_reduction_and_mutations_fail_closed(tmp_path: Path) -> None:
     assert any(error.startswith("source_hash_row_invalid:") for error in exp.validate_artifact(malformed_source))
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-ARTIFACT.
+# REQ-KAN-7496; SCENARIO-KAN-7496-10.
 def test_preconditions_protocol_and_reader_edges(tmp_path: Path) -> None:
     checks, hashes = exp.collect_preconditions(exp.REPO_ROOT)
     assert checks and all(row["passed"] is True for row in checks)
@@ -243,7 +243,7 @@ def test_preconditions_protocol_and_reader_edges(tmp_path: Path) -> None:
     assert exp._load_object(malformed) == {}
 
 
-# REQ-CL-7496; SCENARIO-CL-7496-ARTIFACT.
+# REQ-KAN-7496; SCENARIO-KAN-7496-10.
 def test_cli_reader_modes(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     artifact = exp.build_fixture_artifact(tmp_path / "fixture")
     path = tmp_path / "candidate.json"
