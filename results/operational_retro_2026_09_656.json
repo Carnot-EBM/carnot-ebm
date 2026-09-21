@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.656",
+  "generated_at": "2026-09-21T23:53:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 69.2,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Capture lossless native Qwen evidence for fresh evaluation",
+      "duration_minutes": 35.23,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture lossless native Qwen evidence for fitting",
+      "duration_minutes": 30.23,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure native Qwen window readout feasibility before the full capture",
+      "duration_minutes": 1.27,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind the V656 contract and disposition terminal V655 evidence",
+      "duration_minutes": 0.69,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Requalify historical probability and feedback evidence with canonical provenance",
+      "duration_minutes": 0.68,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.656 completed 9 experiments, all compute-bound, in 69.2 wall-time minutes. The milestone was dominated by two native Qwen capture tasks: 'Capture lossless native Qwen evidence for fresh evaluation' at 35.23 minutes and 'Capture lossless native Qwen evidence for fitting' at 30.23 minutes. Sub-phase timing was not recorded within these capture runs to isolate internal inference duration from data processing or I/O overhead.",
+  "bottlenecks_identified": [
+    "Two native Qwen evidence capture runs accounted for 65.46 out of 69.2 total wall-time minutes (over 94% of milestone time): 'Capture lossless native Qwen evidence for fresh evaluation' took 35.23 minutes and 'Capture lossless native Qwen evidence for fitting' took 30.23 minutes, but intra-task sub-phase timing was not recorded to isolate inference execution from serialization.",
+    "The remaining 7 compute-bound tasks completed rapidly (under 4 minutes combined, led by feasibility readout at 1.27 minutes, contract binding at 0.69 minutes, and historical requalification at 0.68 minutes), with timestamps reconstructed from disk mtimes rather than continuous stage logs.",
+    "The GPU monitor report provides an end-of-run snapshot (0% utilization, 4MB allocated across both RTX 3090 GPUs) after milestone completion, rather than continuous accelerator telemetry sampled across active compute execution spans.",
+    "Task launch records did not log model concurrency or runner dispatch details, though all captured tasks were single-model Qwen runs where DualGPURunner multi-model dispatch is not applicable."
+  ],
+  "improvements_suggested": [
+    "Instrument granular sub-phase timers and checkpoint logging within lossless native Qwen evidence capture scripts to separate token preparation, model forward-pass inference, and artifact serialization.",
+    "Deploy continuous, task-aligned accelerator telemetry during compute-bound runs to measure active-window device utilization, memory bandwidth, and VRAM occupancy.",
+    "Implement intermediate batching and checkpoint streaming for the 30+ minute Qwen capture tasks to avoid monolithic end-to-end runs.",
+    "Log model concurrency and runner selection explicitly in task receipts to audit DualGPURunner eligibility whenever multiple models execute in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration timers and per-batch progress logging inside the native Qwen evidence capture pipeline.",
+    "Deploy continuous, task-aligned accelerator monitoring during compute-bound task execution to record live GPU utilization and VRAM occupancy.",
+    "Emit explicit model concurrency and runner dispatch metadata in experiment receipts to confirm DualGPURunner engagement for eligible multi-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone wall time was overwhelmingly concentrated in two sequential native Qwen evidence captures totaling 65.46 of the 69.2 minutes. The post-run GPU snapshot cannot evaluate active-window compute efficiency, and because only single-model Qwen inference was executed, no DualGPURunner multi-model dispatch opportunity was missed. Sub-phase instrumentation in future capture runs is needed to separate model inference from serialization overhead."
+}

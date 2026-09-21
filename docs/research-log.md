@@ -6899,3 +6899,10 @@ The critical path for milestone .250:
 - theme: live ARC decision cost on sealed panel A dominated milestone wall time across an all-compute execution lacking sub-task telemetry
 - key result: honest operational negative — live ARC decision cost consumed 56.85 of 91.3 total minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.656
+
+- exp_range: no data available this milestone
+- theme: lossless native Qwen evidence capture dominated milestone wall time across an all-compute execution lacking sub-task telemetry
+- key result: honest operational negative — native Qwen evidence captures consumed 65.46 of 69.2 total minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
+- acceptance: no data available this milestone
