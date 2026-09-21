@@ -18350,3 +18350,4 @@ code |
 | 2026-09-21 08:33 UTC | Independently reduce source decisions and delayed  | OK | 90 passed, 1 warning in 94.44s (0:01:34) |
 | 2026-09-21 09:50 UTC | Measure exclusive live ARC decision cost on sealed | OK | 88 passed, 1 warning in 7.56s |
 | 2026-09-21 10:09 UTC | Measure anchor service costs and preserve board pr | FAIL | Codex CLI error: Stalled after 600s silence. Last output: act = exp.build_fix |
+| 2026-09-21 10:28 UTC | Measure anchor service costs and preserve board pr | OK | 101 passed, 1 warning in 7.87s |
