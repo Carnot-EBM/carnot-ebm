@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.654",
+  "generated_at": "2026-09-21T02:23:12Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 37.3,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 10,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure missing decision seams on adapter-withheld live ARC episodes",
+      "duration_minutes": 25.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prototype typed option energies and seal disjoint source cohorts",
+      "duration_minutes": 4.26,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently audit typed decisions, residual learning, and extraction",
+      "duration_minutes": 2.11,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and ingest native decision methods",
+      "duration_minutes": 1.97,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure E0 runtime option-logprob parity and pin scored support",
+      "duration_minutes": 1.14,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.654 executed 10 experiments in 37.3 wall-time minutes, with all 10 designated compute-bound. The runtime was concentrated in 'Measure missing decision seams on adapter-withheld live ARC episodes' at 25.9 minutes, followed by 'Prototype typed option energies and seal disjoint source cohorts' at 4.26 minutes. Sub-phase timing was not recorded in the data to attribute the internal delays of these tasks.",
+  "bottlenecks_identified": [
+    "'Measure missing decision seams on adapter-withheld live ARC episodes' consumed 25.9 out of 37.3 minutes (over 69% of the milestone wall time), but intra-task timing is absent, leaving the exact bottlenecks within episode evaluation unknown.",
+    "The subsequent 9 compute-bound experiments completed in approximately 11.4 minutes combined (led by typed option energy prototyping at 4.26 minutes), with timestamps reconstructed from disk mtimes rather than active git commit logs.",
+    "The GPU monitor report provides an end-of-run snapshot showing 0% utilization and 4MB memory allocated after process completion, rather than continuous per-task telemetry during active compute windows.",
+    "Job launch records omit model concurrency and engine dispatch details, so DualGPURunner applicability cannot be verified."
+  ],
+  "improvements_suggested": [
+    "Instrument sub-phase monotonic timestamps and episode progress logging within the ARC live evaluation harness to isolate inference from environment steps.",
+    "Record task-scoped GPU utilization and memory metrics sampled continuously across compute execution intervals.",
+    "Persist model cardinality and dispatch mechanism at job initiation, engaging DualGPURunner specifically when two or more models run concurrently.",
+    "Implement an early-stopping or bounded evaluation threshold for ARC episode observation when decision seams show negligible progression."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument fine-grained phase timers and episode iteration logging in live ARC episode evaluation.",
+    "Deploy continuous, task-aligned accelerator telemetry to sample GPU utilization during active execution spans.",
+    "Record model concurrency at launch and verify DualGPURunner dispatch for workloads running two or more models in parallel."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone critical path is clearly concentrated in the 25.9-minute live ARC seam observation task, but without phase-level telemetry, root-cause diagnosis remains unsubstantiated. A static post-run GPU snapshot cannot assess active compute-window efficiency, and absent model-count metadata prevents verifying DualGPURunner utilization."
+}

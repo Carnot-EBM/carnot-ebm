@@ -6885,3 +6885,10 @@ The critical path for milestone .250:
 - theme: live supervisor exposure dominated execution time during an all-compute window lacking phase-level instrumentation
 - key result: honest operational negative — supervisor exposure consumed 27.04 of 34.5 total minutes, but available data cannot attribute intra-task duration, prove active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.654
+
+- exp_range: no data available this milestone
+- theme: adapter-withheld live ARC seam measurement dominated milestone duration across an all-compute set lacking sub-task telemetry
+- key result: honest operational negative — ARC decision seam observation consumed 25.9 of 37.3 total minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
+- acceptance: no data available this milestone
