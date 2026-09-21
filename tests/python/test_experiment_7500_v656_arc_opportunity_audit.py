@@ -58,9 +58,7 @@ def _decision(
             decision_id,
             "eligible_candidate_set",
             left + 1,
-            candidates=[
-                {"stable_candidate_id": selected, "rank": 0, "eligibility": eligibility}
-            ],
+            candidates=[{"stable_candidate_id": selected, "rank": 0, "eligibility": eligibility}],
             candidate_ids=[selected],
         ),
         _event(
@@ -142,9 +140,7 @@ def _panel_a_fixture(root: Path) -> None:
         "seam_event_shards": shards,
         "model_specs": [{"sha256": "sha256:model", "runtime_settings": {"n_ctx": 4096}}],
         "source_artifact_hashes": {
-            "python/carnot/agentic/arc_decision_telemetry.py": {
-                "sha256": "sha256:observer"
-            },
+            "python/carnot/agentic/arc_decision_telemetry.py": {"sha256": "sha256:observer"},
             "python/carnot/agentic/arc_competition_agent.py": {"sha256": "sha256:policy"},
             "python/carnot/experiment_7478_v655_arc_interval_protocol.py": {
                 "sha256": "sha256:protocol"
@@ -155,17 +151,74 @@ def _panel_a_fixture(root: Path) -> None:
     _write_json(root / audit.PANEL_A_PATH, artifact)
 
 
+def _panel_b_fixture(root: Path, *, eligible_first: bool = False) -> None:
+    games = ("tu93", "g50t", "tn36", "vc33", "re86", "dc22")
+    rows: list[dict[str, object]] = []
+    shards: list[dict[str, object]] = []
+    for index, (game, seed) in enumerate(
+        (game, seed) for game in games for seed in (65501, 65502, 65503)
+    ):
+        episode_id = f"panel-b:{game}:seed-{seed}"
+        path = Path("results/raw/panel-b") / f"{game}-{seed}.jsonl"
+        absolute = root / path
+        absolute.parent.mkdir(parents=True, exist_ok=True)
+        selected = "redirect" if eligible_first and index == 0 else "no_redirect"
+        eligibility = True if eligible_first and index == 0 else None
+        events = _decision(
+            episode_id,
+            f"{episode_id}:supervisor:0",
+            100,
+            120,
+            selected=selected,
+            eligibility=eligibility,
+        )
+        absolute.write_text(
+            "".join(json.dumps(row, sort_keys=True) + "\n" for row in events),
+            encoding="utf-8",
+        )
+        shards.append(
+            {
+                "episode_id": episode_id,
+                "path": path.as_posix(),
+                "sha256": _sha256(absolute),
+                "row_count": len(events),
+            }
+        )
+        rows.append(
+            {
+                "panel": "B",
+                "episode_id": episode_id,
+                "game": game,
+                "seed": seed,
+                "disposition": "complete",
+                "elapsed_s": 0.0000001,
+                "exclusive_cost": {"episode_start_ns": 90, "episode_end_ns": 190},
+                "solve_provenance": "live_agent_self_discovery",
+                "offline_reproduced": False,
+            }
+        )
+    panel_a = json.loads((root / audit.PANEL_A_PATH).read_text(encoding="utf-8"))
+    panel_a.update(
+        {
+            "schema": "carnot.exp7499.v656.arc_panel_b.v1",
+            "experiment_id": "exp7499-arc-panel-b",
+            "arc_panel_b_complete_score": 1,
+            "honest_verdict": "complete_null_live_arc_cost_panel_b",
+            "rows": rows,
+            "seam_event_shards": shards,
+        }
+    )
+    panel_a.pop("arc_panel_a_complete_score")
+    _write_json(root / audit.PANEL_B_PATH, panel_a)
+
+
 def test_exclusive_union_is_identity_scoped_and_incomplete_is_not_lower_bound() -> None:
     """SCENARIO-ARC-WMTE-7500-EXCLUSIVE-UNION."""
 
     episode_id = "panel-a:g1:seed-1"
-    events = _decision(
-        episode_id, "complete", 100, 150, selected="redirect", eligibility=True
-    )
+    events = _decision(episode_id, "complete", 100, 150, selected="redirect", eligibility=True)
     events.extend(deepcopy(events))
-    events.extend(
-        _decision(episode_id, "nested", 110, 130, selected="redirect", eligibility=True)
-    )
+    events.extend(_decision(episode_id, "nested", 110, 130, selected="redirect", eligibility=True))
     events.extend(
         _decision(episode_id, "incomplete", 160, None, selected="redirect", eligibility=True)
     )
@@ -330,3 +383,200 @@ def test_gate_rejects_unknown_operator() -> None:
             field="value",
             principle="An unknown comparison could silently invert a gate.",
         )
+
+
+def test_valid_panel_b_opens_pooling_but_observation_remains_null(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7500 keeps support separate from observational efficacy."""
+
+    _panel_a_fixture(tmp_path)
+    _panel_b_fixture(tmp_path)
+    supported = audit.build_artifact_for_test(tmp_path)
+
+    assert supported["pooling"]["pooling_allowed"] is True
+    assert supported["verdict_class"] == "null"
+    assert supported["opportunity_present_score"] == 0
+
+    _panel_b_fixture(tmp_path, eligible_first=True)
+    opportunity = audit.build_artifact_for_test(tmp_path)
+    assert opportunity["opportunity_present_score"] == 1
+    assert opportunity["efficacy_estimate"] is None
+    assert opportunity["verdict_class"] == "null"
+
+
+def test_failed_required_receipts_disqualify_without_changing_rows(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7500 validity failures override favorable measurements."""
+
+    _panel_a_fixture(tmp_path)
+    artifact = audit.build_artifact(
+        tmp_path,
+        run_date=audit.RUN_DATE,
+        duration_s=0.1,
+        phase_spans=[],
+        validation_receipts=[],
+        require_terminal=True,
+    )
+
+    assert artifact["verdict_class"] == "disqualified"
+    assert artifact["arc_opportunity_audit_complete_score"] == 0
+
+
+def test_fail_closed_parsers_and_validation_scope(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7500 malformed evidence and broad scope fail closed."""
+
+    assert audit.utc_now().endswith("Z")
+    assert audit.load_object(tmp_path / "missing.json") == {}
+    malformed = tmp_path / "malformed.json"
+    malformed.write_text("{", encoding="utf-8")
+    assert audit.load_object(malformed) == {}
+    array = tmp_path / "array.json"
+    array.write_text("[]", encoding="utf-8")
+    assert audit.load_object(array) == {}
+    assert audit._tick({"event_monotonic_ns": 9}, "missing") == 9
+    assert audit._tick({"event_monotonic_ns": True}, "missing") is None
+    assert audit._episode_bounds({}) is None
+    assert audit._hash_for_suffix({}, "absent") is None
+
+    malformed_jsonl = tmp_path / "bad.jsonl"
+    malformed_jsonl.write_text("{\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="malformed_jsonl"):
+        audit._read_jsonl(malformed_jsonl)
+    malformed_jsonl.write_text("[]\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="non_object_jsonl"):
+        audit._read_jsonl(malformed_jsonl)
+
+    private = tmp_path / "private"
+    plan = audit.build_validation_plan(audit.REPO_ROOT, private)
+    assert audit.validate_validation_plan(audit.REPO_ROOT, plan) == []
+    assert [row.name for row in audit.terminal_command_specs(audit.REPO_ROOT, tmp_path / "x")] == [
+        *audit.REQUIRED_TERMINAL_NAMES
+    ]
+    assert audit.parse_args(["--date", audit.RUN_DATE]).date == audit.RUN_DATE
+    assert audit.parse_args(["--replay", "candidate.json"]).replay == Path("candidate.json")
+    with pytest.raises(SystemExit):
+        audit.parse_args([])
+
+
+def test_supervisor_rejects_malformed_candidates_and_mismatched_clocks() -> None:
+    """SCENARIO-ARC-WMTE-7500-SUPERVISOR-ELIGIBILITY fails closed."""
+
+    episode = "panel-a:g1:seed-1"
+    rows = _decision(episode, "mismatch", 10, 20, selected="redirect", eligibility=True)
+    rows[1]["candidates"] = ["not-an-object"]
+    rows[-1]["clock_identity"] = "other-clock"
+
+    reduced = audit.reduce_supervisor_episode(episode, rows)
+
+    assert reduced["unknown_eligibility_selected_count"] == 1
+    assert reduced["mismatched_selected_clock_count"] == 1
+    assert reduced["eligible_service_upper_ns"] == 0
+
+
+def test_panel_and_shard_failures_remain_explicit(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7500 never launders malformed upstream evidence."""
+
+    assert audit._panel_validity({}, panel="A", path_exists=True)[0] == "blocked_invalid"
+    bad = {
+        "experiment_id": "wrong",
+        "arc_panel_a_complete_score": 0,
+        "flagged_adversarial": True,
+        "verdict_class": "blocked",
+        "rows": [],
+    }
+    state, errors = audit._panel_validity(bad, panel="A", path_exists=True)
+    assert state == "blocked_invalid"
+    assert len(errors) == 6
+
+    _panel_a_fixture(tmp_path)
+    path = tmp_path / audit.PANEL_A_PATH
+    panel = json.loads(path.read_text(encoding="utf-8"))
+    panel["seam_event_shards"].pop(0)
+    missing_manifest = audit._reduce_panel(tmp_path, panel="A", artifact_path=path, artifact=panel)
+    assert any(error.startswith("shard_missing:") for error in missing_manifest["errors"])
+
+    _panel_a_fixture(tmp_path)
+    panel = json.loads(path.read_text(encoding="utf-8"))
+    first = tmp_path / panel["seam_event_shards"][0]["path"]
+    first.unlink()
+    missing_file = audit._reduce_panel(tmp_path, panel="A", artifact_path=path, artifact=panel)
+    assert any(error.startswith("shard_missing:") for error in missing_file["errors"])
+
+    _panel_a_fixture(tmp_path)
+    panel = json.loads(path.read_text(encoding="utf-8"))
+    panel["rows"][0]["exclusive_cost"] = {}
+    missing_bounds = audit._reduce_panel(tmp_path, panel="A", artifact_path=path, artifact=panel)
+    assert any(error.startswith("episode_bounds_missing:") for error in missing_bounds["errors"])
+
+    _panel_a_fixture(tmp_path)
+    panel = json.loads(path.read_text(encoding="utf-8"))
+    first = tmp_path / panel["seam_event_shards"][0]["path"]
+    first.write_text("{\n", encoding="utf-8")
+    panel["seam_event_shards"][0]["sha256"] = _sha256(first)
+    malformed = audit._reduce_panel(tmp_path, panel="A", artifact_path=path, artifact=panel)
+    assert any(error.startswith("malformed_jsonl:") for error in malformed["errors"])
+
+
+def test_source_paths_spec_precondition_and_plan_drift_are_checked(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7500 binds paths, its requirement, and exact validation scope."""
+
+    root = tmp_path / "root"
+    root.mkdir()
+    outside = tmp_path / "outside.json"
+    outside.write_text("{}", encoding="utf-8")
+    assert audit._source_record(outside, root=root, role="fixture")["path"] == str(
+        outside.resolve()
+    )
+
+    spec = root / audit.SPEC_PATH
+    spec.parent.mkdir(parents=True)
+    spec.write_text("## REQ-ARC-WMTE-7500\n", encoding="utf-8")
+    reduction = {"panel_results": {"A": {"state": "valid"}, "B": {"state": "blocked_missing"}}}
+    assert audit._preconditions(root, reduction)[-1]["passed"] is True
+    assert audit._input_hashes(audit.REPO_ROOT, {"source_artifact_hashes": {}})
+
+    plan = audit.build_validation_plan(audit.REPO_ROOT, tmp_path / "scope")
+    extra = audit.validation_scope.CommandSpec("e2e_forbidden", ("pytest", "tests/python"), "bad")
+    errors = audit.validate_validation_plan(audit.REPO_ROOT, [*plan[1:], extra])
+    assert any(error.startswith("command_count:") for error in errors)
+    assert "runtime_e2e_forbidden:e2e_forbidden" in errors
+    assert "broad_test_target:e2e_forbidden" in errors
+
+
+def test_artifact_validator_reports_each_terminal_contract_failure(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7500 validator failures cannot be hidden by a good row."""
+
+    _panel_a_fixture(tmp_path)
+    artifact = audit.build_artifact_for_test(tmp_path)
+    broken = deepcopy(artifact)
+    broken.pop("schema")
+    broken["run_date"] = "wrong"
+    broken["invocation_counts"] = {"model_loads_attempted": 1}
+    broken["verdict_class"] = "unknown"
+    broken["honest_verdict"] = "unfinished"
+    broken["field_principles"].pop("rows")
+    broken["acceptance_gate_results"][0]["principle"] = ""
+    broken["preconditions_checked"][0]["passed"] = False
+    broken["validation_receipts"] = []
+    broken["reproducibility_checksum"] = "bad"
+    broken["padding"] = "x" * (20 * 1024 * 1024)
+
+    errors = audit.validate_artifact(broken, root=tmp_path, require_terminal=True)
+    assert "missing_field:schema" in errors
+    assert "identity_mismatch:run_date" in errors
+    assert "current_invocation_counts_not_zero" in errors
+    assert "invalid_verdict_class" in errors
+    assert "honest_verdict_not_terminal_complete" in errors
+    assert "field_principle_missing" in errors
+    assert "gate_principle_missing" in errors
+    assert "precondition_failed" in errors
+    assert "affected_validation_missing_or_failed" in errors
+    assert "terminal_validation_missing_or_failed" in errors
+    assert "reproducibility_checksum_mismatch" in errors
+    assert "artifact_exceeds_20_mib" in errors
+
+    oracle = deepcopy(artifact)
+    oracle["verdict_class"] = "positive"
+    oracle["verifier_is_oracle"] = True
+    oracle["reproducibility_checksum"] = audit.artifact_checksum(oracle)
+    assert "oracle_positive_forbidden" in audit.validate_artifact(
+        oracle, root=tmp_path, require_terminal=False
+    )
