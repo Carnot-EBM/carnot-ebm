@@ -76361,3 +76361,100 @@ end-to-end scenario applies.
 **When** fresh processes replay, reduce, adversarially verify, and lint the candidate
 **Then** identity, source, row, gate, principle, or checksum drift fails
 **And** only a validated terminal JSON publishes at the declared result path.
+
+## V655 independent source-decision and delayed-learning audit — 2026-09-21
+
+**Status:** Specified. This host aggregation audits every available V655
+source-decision branch. It performs no current model call, numeric fitting,
+hardware call, production change, or external publication.
+
+### REQ-REPORT-7484: Independently reduce V655 decisions after every upstream outcome
+
+Exp7484 SHALL run after complete, null, blocked, or disqualified upstream
+outcomes. It SHALL resolve the exact Exp7479, Exp7480, Exp7481, and Exp7483
+producer paths or an exact-identity conductor pre-gate path. Each source SHALL
+retain its byte hash, original verdict class, and original adversarial flag.
+Missing evidence SHALL produce a terminal blocked branch. Invalid available
+evidence SHALL produce a disqualified branch. Neither condition SHALL stop an
+available peer branch.
+
+The static reducer SHALL reconstruct both token-label orders from raw native
+logits. It SHALL keep source groups disjoint across training, calibration,
+internal, online, and external roles. It SHALL rebuild the frozen text-feature
+views, score the frozen checkpoints without fitting, and recompute group-level
+Brier loss, log loss, typed cost-grid actions, and multiplicity-aware intervals.
+Producer headline reducers SHALL not serve as the audit oracle. Native readout
+receipts SHALL have zero generation calls and balanced current load and forward
+counts.
+
+The delayed-learning reducer SHALL replay prediction hashes, reveal times,
+feedback order, state transitions, group-level loss, retention loss, and frozen
+checkpoint hashes from immutable rows. Online and test labels SHALL not enter
+fitting, anchor estimation, replay-guard selection, or policy choice. Stream
+seeds SHALL remain repeated measurements of the same source groups. Support,
+class balance, exclusions, failures, and missing rows SHALL reconcile to the
+original roster.
+
+Private controls SHALL swap option IDs, duplicate a source group, reveal a
+future label, remove a failed row, change a checkpoint, fabricate a speedup,
+and change the oracle flag. Every control SHALL fail its named check. A valid
+benefit shortfall SHALL remain null. Defective available evidence SHALL be
+disqualified. External absence SHALL be blocked and never partial.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, balanced zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Numeric
+fitting SHALL be absent from current work and SHALL have a separate zero
+`small_ebm_training` receipt. Archived model-shaped events SHALL remain
+hash-bound source evidence.
+
+The terminal artifact SHALL contain all task-required identity, clock,
+precondition, source-hash, row, sample, gate, verdict, validation, principle,
+branch, metric, attack, and checksum fields. `audit_complete_score` SHALL be a
+bare zero or one. It SHALL measure complete independent accounting and SHALL
+not depend on scientific benefit.
+
+The affected plan SHALL reuse the Exp7358 command-plan helper and Exp7303
+streaming runner. It SHALL freeze one exact test, module, and thin-entrypoint
+manifest. It SHALL run focused pytest without coverage, separate 100 percent
+changed-module coverage, scoped Ruff, changed-module mypy, and exact-test
+specification coverage. The declared entrypoint and fresh-process cold replay
+SHALL be the capability end-to-end checks. Independent reduction, adversarial
+verification, and strict row consistency SHALL pass before atomic publication.
+No numbered runtime end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7484-BRANCHES: Every upstream outcome gets one terminal disposition
+
+**Given** any mix of complete, null, blocked, disqualified, invalid, or absent inputs
+**When** Exp7484 authenticates all four exact producer identities
+**Then** every branch retains its original class, flag, path, and byte hash
+**And** every available peer branch still completes its independent reduction.
+
+#### SCENARIO-REPORT-7484-STATIC: Frozen rows reproduce calibration and typed decisions
+
+**Given** authenticated native-logit shards, roster rows, and frozen fit checkpoints
+**When** token mappings, feature views, probabilities, losses, policies, and intervals are rebuilt
+**Then** each stored group-level prediction and cost has an inspectable independent row
+**And** held-out labels do not influence fitting or policy selection.
+
+#### SCENARIO-REPORT-7484-UPDATES: Prediction-time evidence controls delayed replay
+
+**Given** online prediction rows, delayed feedback rows, retention rows, and checkpoints
+**When** reveal order, event hashes, state transitions, and group losses are replayed
+**Then** every accepted update follows its prediction and declared delay
+**And** stream seeds remain repeated measurements rather than extra source groups.
+
+#### SCENARIO-REPORT-7484-ATTACKS: Seven private corruptions fail closed
+
+**Given** private copies of valid option, roster, update, checkpoint, timing, and oracle evidence
+**When** each registered corruption changes one protected claim
+**Then** all seven corruptions are rejected by distinct named checks
+**And** no corruption changes an upstream artifact.
+
+#### SCENARIO-REPORT-7484-ARTIFACT: Completion stays separate from benefit
+
+**Given** branch dispositions, per-group reductions, attacks, and a frozen validation manifest
+**When** fresh readers replay, verify, and lint the terminal candidate
+**Then** `audit_complete_score` can equal one for a valid scientific null
+**And** only a validated terminal JSON publishes at the declared result path.
