@@ -43827,3 +43827,128 @@ seed or an analytic fixture cannot substitute for held-out value.
 **When** the declared unbuffered entrypoint runs
 **Then** scoped checks, cold replay, raw reduction, adversarial verification, and strict row lint pass
 **And** only the measured terminal JSON publishes at the declared result path.
+
+### REQ-VERIFY-7480: V655 Source Evaluation Capture SHALL Measure Only Sealed Held-Out Roles
+
+Exp7480 SHALL capture native two-option readouts for only the sealed 60
+internal-test, 160 online, and 74 external FaithBench groups. It SHALL reuse
+the qualified Exp7462 prompt contract, the Exp7477 native runner, and the
+pinned human annotations. One selected response per source group SHALL remain
+the independent unit. Labels and annotation text SHALL never enter prompts or
+feature transforms. Exp7479 fit rows SHALL remain a separate upstream capture
+and SHALL not count as current model calls.
+
+The task SHALL load the cached `unsloth/Qwen3.8-27B-GGUF` once under one owned
+GPU lease. It SHALL use `cached_current_model()`, the embedded GGUF tokenizer,
+`CARNOT_FORCE_LIVE=1`, full requested CUDA offload, and observed owned-process
+CUDA receipts. It SHALL generate zero tokens. The inference class SHALL be
+`model_load_no_generation`. A small or simulated model SHALL not replace the
+headline model.
+
+Every sealed group SHALL keep its original roster position. The embedded
+tokenizer SHALL test both complete prompt orders against the 2,048-token
+ceiling before scoring. Overlength groups SHALL remain explicit exclusions and
+SHALL not be truncated or replaced. Each eligible group SHALL run in original
+and reversed option order. The reducer SHALL remap both distributions to stable
+option IDs before averaging them.
+
+Twenty internal-test groups SHALL be selected by a frozen, label-independent
+identity rule. A frozen derangement SHALL pair each selected response with a
+different sealed source. Each shuffled-source group SHALL run in both option
+orders. These 40 control forwards SHALL test source sensitivity only and SHALL
+have no factual gold label. The complete budget SHALL be at most 628 forwards:
+588 main forwards and 40 shuffled-source control forwards.
+
+Each completed group SHALL checkpoint its hash-bound requests and terminal
+cell dispositions. A resume SHALL accept only the same schedule, model, prompt,
+source, response, option-order, and tokenizer hashes. Every cell SHALL end as
+complete, failed, censored, excluded, or unstarted. Budget expiry SHALL not
+remove a cell or convert partial work into complete work.
+
+Raw evidence SHALL retain option logits, option token IDs, prompt token IDs,
+source, response, and prompt hashes, stable-ID probabilities, option order,
+service time, model receipt, errors, and completion state. Final raw shards
+SHALL remain below 20 MiB and SHALL be independently rehashed and reduced.
+Labels and annotation provenance SHALL remain in evaluator evidence only.
+
+`capture_complete_score` SHALL equal one only when every planned cell has a
+terminal disposition. `confirmatory_support_score` SHALL independently require
+at least 40 eligible internal-test groups, 120 eligible online groups, and 60
+eligible external groups. `evaluation_capture_ready_score` SHALL equal one only
+when capture is complete, all eligible main and control calls are complete with
+valid receipts, the three role minima pass, required validation passes, and no
+adversarial flag is present. Predictive ties, null effects, and model errors
+SHALL not change benefit thresholds. Missing, empty, or nonfinite required
+outputs SHALL close readiness.
+
+The task SHALL stop live model work at 3,300 seconds. It SHALL freeze an
+affected-file manifest containing only the Exp7480 test, module, and thin
+entrypoint. Required checks SHALL include affected pytest with `-n 0 -o
+addopts= --no-cov` and a private existing basetemp parent, 100 percent
+changed-module coverage with a command-local `COVERAGE_FILE`, scoped Ruff check
+and format, changed-module mypy, scoped spec coverage, fresh-process entrypoint
+replay, independent raw reduction, adversarial verification, and strict
+verdict-row consistency. The terminal artifact SHALL publish atomically only
+after all checks pass.
+
+Each required-validity gate SHALL state this principle: a positive scientific
+metric cannot excuse invalid evidence. Each readiness gate SHALL state this
+principle: a valid null must not suppress an independent measurement. Each
+scientific-benefit gate SHALL state this principle: a small sample, a favorable
+seed or an analytic fixture cannot substitute for held-out value.
+
+#### SCENARIO-VERIFY-7480-ROSTER: Only Held-Out Evaluation Roles Enter The Shard
+
+**Given** the qualified 534-group V654 cohort
+**When** Exp7480 freezes its capture schedule before model outcomes
+**Then** the roster contains exactly 60 internal-test, 160 online, and 74 external groups in original order
+**And** training and calibration roles do not enter this capture shard.
+
+#### SCENARIO-VERIFY-7480-LENGTH: Complete Inputs Are Excluded Without Truncation
+
+**Given** both complete option-order prompts for each frozen group
+**When** the embedded tokenizer checks the 2,048-token ceiling
+**Then** every overlength group keeps its original roster position and exclusion reason
+**And** no source or response is truncated, replaced, or scored after exclusion.
+
+#### SCENARIO-VERIFY-7480-ORDERS: Stable IDs Are Remapped Before Averaging
+
+**Given** finite native logits for original and reversed display orders
+**When** Exp7480 reduces one eligible source group
+**Then** each softmax distribution maps through its displayed stable option IDs
+**And** the two mapped distributions are averaged only after that remapping.
+
+#### SCENARIO-VERIFY-7480-SHUFFLE: Frozen Derangement Tests Source Sensitivity Only
+
+**Given** twenty preregistered internal-test groups and sealed source identities
+**When** the label-independent derangement supplies a different source to each response
+**Then** both option orders produce exactly 40 bounded control forwards
+**And** the shuffled rows have no factual gold label or benefit-gate role.
+
+#### SCENARIO-VERIFY-7480-ACCOUNTING: Every Planned Cell Has One Honest Disposition
+
+**Given** 588 main cells and 40 shuffled-source cells before exclusions
+**When** calls complete, fail, expire, or remain unstarted
+**Then** planned, attempted, complete, failed, censored, excluded, and unstarted counts reconcile
+**And** no partial, empty, or nonfinite output can satisfy capture readiness.
+
+#### SCENARIO-VERIFY-7480-RESUME: Only Identical Requests Resume
+
+**Given** a per-group checkpoint from an interrupted owned run
+**When** a later process requests resume
+**Then** model, schedule, prompt, source, response, order, and tokenizer hashes must match
+**And** any changed hash rejects reuse before a model forward occurs.
+
+#### SCENARIO-VERIFY-7480-READY: Completeness And Role Support Stay Separate From Benefit
+
+**Given** independently reloaded raw shards and terminal validation receipts
+**When** Exp7480 reduces readiness
+**Then** capture completeness and all three role minima have separate bare scores
+**And** predictive ties, model errors, or null effects cannot redefine scientific benefit.
+
+#### SCENARIO-VERIFY-7480-E2E: One Live Command Publishes A Cold-Valid Capture
+
+**Given** one owned Qwen load, a frozen affected-file manifest, and checkpointed raw rows
+**When** the declared unbuffered entrypoint runs
+**Then** scoped checks, cold replay, raw reduction, adversarial verification, and strict row lint pass
+**And** only the measured terminal JSON publishes at the declared result path.
