@@ -18292,3 +18292,108 @@ before one atomic terminal publication. No numbered E2E check applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7458 and SCENARIO-CL-7458-* | Planned: reusable durable stores and experiment logic in `python/carnot/experiment_7458_v653_durable_updates.py` with a thin executable entrypoint. | Planned: `tests/python/test_experiment_7458_v653_durable_updates.py`, affected shared-module tests, 100 percent changed-module coverage, scoped validation, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
+## REQ-CL-7496: Causal Brier Update Fixture
+
+Exp7496 SHALL qualify a bounded local residual head that uses binary Brier
+loss. Its data gradient SHALL be
+`2 * (p - y) * p * (1 - p) * basis` through the declared residual clip. The
+fixture SHALL compare this head with the existing Bernoulli log-loss head. It
+SHALL reuse the prediction ledger and fixed cubic-spline basis. It SHALL use at
+most 256 spline coefficients. It SHALL not use an importance penalty, a
+mixture of experts, or generator-weight updates.
+
+Learning-rate candidates SHALL be `0.001`, `0.01`, and `0.03`. Residual-bound
+candidates SHALL be `0.5` and `1.0`. Training and calibration fixtures alone
+SHALL select these values. The artifact SHALL report gradient clipping and
+bounded-residual no-op rates. Centered finite differences SHALL qualify
+interior and saturated gradients. One-sided finite differences SHALL qualify
+the declared zero subgradient at both exact clip boundaries.
+
+Source groups SHALL arrive in fixed blocks of eight. A seeded 25 percent audit
+mask SHALL depend only on event identity. Selected labels SHALL become
+available only after their block ends, plus zero or eight additional arrivals.
+The real-label and shuffled-label arms SHALL receive the same selected batch at
+the same release time. The shuffled arm SHALL permute only labels in that
+released batch. It SHALL use a seeded derangement when the labels permit one.
+Singleton and identical-label batches SHALL remain named no-op controls. No
+future release batch label MAY enter learner state or permutation memory.
+
+Each prediction SHALL retain its prediction-time features and probability.
+The optimizer SHALL recompute its gradient from the current learner state when
+feedback becomes available. Repeated source identifiers SHALL use distinct
+event identities. Duplicate delivery, early or out-of-order availability,
+no-feedback gaps, a rejected guard update, restart, and idempotent replay SHALL
+not apply an extra state change. A training-only replay guard MAY reject an
+update. A held-out retention label SHALL not select or veto an update.
+
+`causal_update_ready_score` SHALL depend only on Brier-gradient correctness,
+prediction and release chronology, causal shuffle access, rollback, and exact
+replay. Analytic fixture evidence MAY produce only `circular_positive`. It
+SHALL not claim human-data benefit. Every artifact field and gate SHALL include
+a one-line failure-prevention principle.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current model calls,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Numeric fitting SHALL have a separate `small_ebm_training` receipt. Numeric
+fixture work SHALL stop before 600 seconds. The entrypoint and a fresh-process
+cold replay SHALL serve as the capability E2E. No numbered runtime E2E applies.
+The terminal artifact SHALL publish atomically only after scoped affected
+checks, independent reduction, adversarial verification, and strict row
+consistency pass.
+
+### SCENARIO-CL-7496-GRADIENT: Brier Gradients Match The Declared Bounded Loss
+
+- GIVEN an interior, exact-boundary, or saturated residual state
+- WHEN analytic and finite-difference Brier gradients are compared
+- THEN interior and saturated values agree with centered differences
+- AND each exact boundary agrees with its declared outward zero derivative.
+
+### SCENARIO-CL-7496-CURRENT: Released Feedback Uses Current State
+
+- GIVEN a sealed prediction followed by an earlier accepted update
+- WHEN the sealed event's label becomes available
+- THEN its receipt keeps the prediction-time features and probability
+- AND its gradient probability comes from the current state, not the sealed probability.
+
+### SCENARIO-CL-7496-RELEASE: Shuffling Cannot Read A Future Batch
+
+- GIVEN fixed blocks, a label-independent audit mask, and delay zero or eight
+- WHEN one selected batch reaches its common release time
+- THEN both adaptive arms receive exactly that batch at that time
+- AND changing labels in a later batch cannot change earlier permutations or states.
+
+### SCENARIO-CL-7496-CONTROLS: Degenerate Release Batches Stay Explicit
+
+- GIVEN a singleton, an identical-label batch, or a mixed batch
+- WHEN the shuffled control assigns labels
+- THEN singleton and identical-label batches are named no-ops
+- AND a seeded derangement is used whenever the mixed labels permit one.
+
+### SCENARIO-CL-7496-LIFECYCLE: Invalid Delivery Cannot Change Acknowledged State
+
+- GIVEN repeated source identifiers, gaps, duplicates, early or out-of-order batches, and a guard rejection
+- WHEN feedback is delivered or replayed
+- THEN only a valid next release can apply one update
+- AND rollback, restart, and idempotent replay preserve the acknowledged state exactly.
+
+### SCENARIO-CL-7496-GATES: Readiness Does Not Claim External Benefit
+
+- GIVEN complete analytic gradient, lifecycle, causal-access, and replay rows
+- WHEN the independent reducer computes the terminal disposition
+- THEN `causal_update_ready_score` can equal one without a human-data benefit claim
+- AND the strongest permitted verdict class is `circular_positive`.
+
+### SCENARIO-CL-7496-ARTIFACT: Fresh Readers Control Atomic Publication
+
+- GIVEN raw per-event traces, source hashes, and scoped validation receipts
+- WHEN fresh readers change a row, score, gate, source hash, or invocation field
+- THEN the candidate fails closed
+- AND only a valid terminal artifact is published atomically.
+
+## Implementation Status (REQ-CL-7496)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7496 and SCENARIO-CL-7496-* | Planned: bounded Brier residual helper, causal release-batch fixture, terminal artifact producer, and thin entrypoint. | Planned: specification-linked focused tests, 100 percent changed-module coverage, scoped validation, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
