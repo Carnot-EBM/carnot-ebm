@@ -1,249 +1,350 @@
 """Tests for REQ-VERIFY-7495 and SCENARIO-VERIFY-7495-*.
 
-The tests use small numeric fixtures. They test the scientific contract without
-loading a model or reading the sealed production test labels.
+The fixtures use small numeric rows. They test the production reducers without
+loading a language model or opening the real test labels.
 """
 
 from __future__ import annotations
 
 from copy import deepcopy
 import json
+from pathlib import Path
 
-import numpy as np
 import pytest
 
 from carnot import experiment_7495_v656_window_calibration as exp
 
 
-def _readout_rows(role: str = "training") -> list[dict[str, object]]:
-    rows: list[dict[str, object]] = []
-    for arm, index, first, second in (
-        ("whole_response", None, -1.0, -0.8),
-        ("focused_window", 0, -2.0, -1.8),
-        ("focused_window", 1, 1.0, 1.2),
-    ):
-        for order, value in (
-            (("supported", "contains_unsupported"), first),
-            (("contains_unsupported", "supported"), second),
+def _native_rows(group: str, role: str, whole: float, windows: list[float]) -> list[exp.JsonDict]:
+    """Build both stable option orders for a whole response and its windows."""
+
+    output: list[exp.JsonDict] = []
+    for arm, window_index, value in [("whole_response", None, whole), *[
+        ("focused_window", index, score) for index, score in enumerate(windows)
+    ]]:
+        for order in (
+            ["supported", "contains_unsupported"],
+            ["contains_unsupported", "supported"],
         ):
-            rows.append(
+            output.append(
                 {
-                    "eligible": True,
-                    "disposition": "complete",
-                    "group_id": "g1",
-                    "source_group_id": "g1",
+                    "group_id": group,
+                    "source_group_id": group,
                     "role": role,
                     "arm": arm,
-                    "window_index": index,
-                    "option_order": list(order),
+                    "window_index": window_index,
+                    "option_order": order,
                     "raw_logits_by_option_id": {
                         "supported": 0.0,
                         "contains_unsupported": value,
                     },
-                    "source_version": {"corpus": "fixture"},
+                    "eligible": True,
+                    "disposition": "complete",
                 }
             )
-    return rows
+    return output
 
 
-def _numeric_rows(role: str, count: int, offset: int = 0) -> list[dict[str, object]]:
-    rows = []
+def _feature_rows(count: int, role: str) -> list[exp.JsonDict]:
+    """Return separable ten-feature rows for bounded optimizer tests."""
+
+    rows: list[exp.JsonDict] = []
     for index in range(count):
-        label = (index + offset) % 2
-        signal = 2.0 if label else -2.0
+        label = index % 2
+        sign = 1.0 if label else -1.0
         rows.append(
             {
                 "group_id": f"{role}-{index:03d}",
                 "role": role,
                 "label": label,
-                "feature_vector": [
-                    signal * 0.6,
-                    signal,
-                    signal * 0.8,
-                    signal * 1.1,
-                    1.0,
-                    1.0,
-                    1.0,
+                "features": [
+                    2.0 * sign,
+                    0.9 if label else 0.1,
+                    0.8 if label else 0.2,
+                    0.7 if label else 0.1,
+                    float(index % 3) / 2.0,
+                    0.6 if label else 0.2,
+                    0.2 if label else 0.8,
+                    0.3 if label else 0.9,
+                    0.4 if label else 0.8,
+                    0.0,
                 ],
-                "whole_log_odds": signal * 0.6,
-                "window_log_odds": [signal, signal * 0.8, signal * 1.1],
-                "source_family": "fixture",
-                "response_length": 100 + index,
+                "raw_whole_probability": 0.88 if label else 0.12,
+                "raw_window_probability": 0.9 if label else 0.1,
+                "response_length_bytes": 100 + index * 20,
+                "source_family": "family-a" if index % 3 else "family-b",
             }
         )
     return rows
 
 
-def test_aggregate_readouts_preserves_each_window_and_rejects_bad_pairs() -> None:
-    """SCENARIO-VERIFY-7495-HEADS: option order and windows stay explicit."""
+def test_req_verify_7495_spec_and_scenarios_precede_code() -> None:
+    """REQ-VERIFY-7495 fixes the calibration boundary before implementation."""
 
-    groups, controls = exp.aggregate_readouts(_readout_rows())
-    assert controls == []
-    assert len(groups) == 1
-    assert groups[0]["whole_log_odds"] == pytest.approx(-0.9)
-    assert groups[0]["window_log_odds"] == pytest.approx([-1.9, 1.1])
-    assert groups[0]["feature_vector"] == pytest.approx(
-        [-0.9, -1.9, 1.1, 0.0, 1.0, 1.0, 0.0]
-    )
+    text = exp.SPEC_PATH.read_text(encoding="utf-8")
+    assert "REQ-VERIFY-7495" in text
+    for suffix in (
+        "PREREQUISITE",
+        "SEAL",
+        "HEADS",
+        "PROBABILITY",
+        "UTILITY",
+        "NULL",
+        "E2E",
+    ):
+        assert f"SCENARIO-VERIFY-7495-{suffix}" in text
 
-    malformed = _readout_rows()[:-1]
-    with pytest.raises(ValueError, match="option_order_pair_invalid"):
-        exp.aggregate_readouts(malformed)
+
+def test_scenario_prerequisite_authenticates_exact_capture_fields() -> None:
+    """SCENARIO-VERIFY-7495-PREREQUISITE rejects changed producer flags."""
+
+    fit = json.loads(exp.FIT_ARTIFACT.read_text(encoding="utf-8"))
+    evaluation = json.loads(exp.EVAL_ARTIFACT.read_text(encoding="utf-8"))
+    reduced = exp.reduce_upstream_gates(fit, evaluation, fit_errors=[], eval_errors=[])
+    assert reduced["passed"] is True
+    assert all(row["passed"] and "prevent" in row["principle"] for row in reduced["checks"])
+
+    changed = deepcopy(evaluation)
+    changed["flagged_adversarial"] = True
+    assert exp.reduce_upstream_gates(fit, changed, fit_errors=[], eval_errors=[])["passed"] is False
 
 
-def test_fit_bundle_uses_frozen_seeds_spline_bound_and_exact_normalization() -> None:
-    """SCENARIO-VERIFY-7495-HEADS: fair compact heads normalize exactly."""
+def test_scenario_heads_builds_lossless_window_features_without_labels() -> None:
+    """SCENARIO-VERIFY-7495-HEADS gives energy and logistic the same evidence."""
 
-    training = _numeric_rows("training", 24)
-    calibration = _numeric_rows("calibration_tuning", 12, offset=1)
-    bundle = exp.fit_window_bundle(training, calibration, steps=12)
+    native = _native_rows("g-1", "training", -1.0, [-2.0, 0.5, 1.5])
+    predictors = [
+        {
+            "group_id": "g-1",
+            "role": "training",
+            "source_text": "The source gives 10 units.",
+            "response_text": "The response gives 12 units.",
+            "corpus": "fixture",
+        }
+    ]
+    rows = exp.build_feature_rows(native, predictors)
 
-    assert bundle["training_seeds"] == list(exp.TRAINING_SEEDS)
-    assert bundle["heldout_labels_consumed"] is False
-    assert bundle["feature_transform"]["spline_coefficient_count"] <= 256
-    assert bundle["feature_transform"]["input_sha256"] == exp.canonical_hash(
-        [row["feature_vector"] for row in training]
-    )
-    assert set(bundle["heads"]) == {
+    assert len(rows) == 1
+    assert rows[0]["label"] is None
+    assert len(rows[0]["features"]) == len(exp.FEATURE_NAMES) == 10
+    assert rows[0]["features"][0] == pytest.approx(-1.0)
+    assert rows[0]["raw_window_probability"] > rows[0]["raw_whole_probability"]
+    assert rows[0]["window_count"] == 3
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda rows: rows.pop(), "option_order_pair_invalid"),
+        (
+            lambda rows: rows[0].__setitem__("raw_logits_by_option_id", None),
+            "native_logits_missing",
+        ),
+        (
+            lambda rows: rows[0].__setitem__(
+                "raw_logits_by_option_id",
+                {"supported": 0.0, "contains_unsupported": float("inf")},
+            ),
+            "native_logits_nonfinite",
+        ),
+    ],
+)
+def test_window_feature_mutations_fail_closed(mutation: object, message: str) -> None:
+    """SCENARIO-VERIFY-7495-HEADS rejects incomplete or nonfinite evidence."""
+
+    rows = _native_rows("g-1", "training", -1.0, [])
+    mutation(rows)  # type: ignore[operator]
+    predictors = [{"group_id": "g-1", "source_text": "a", "response_text": "b"}]
+    with pytest.raises(ValueError, match=message):
+        exp.build_feature_rows(rows, predictors)
+
+
+def test_scenario_seal_fits_five_compact_heads_on_train_and_calibration_only() -> None:
+    """SCENARIO-VERIFY-7495-SEAL freezes every state before test labels open."""
+
+    training = _feature_rows(16, "training")
+    calibration = _feature_rows(12, "calibration_tuning")
+    first = exp.fit_numeric_bundle(training, calibration, steps=4)
+    second = exp.fit_numeric_bundle(training, calibration, steps=4)
+
+    assert first == second
+    assert first["training_seeds"] == list(exp.TRAINING_SEEDS)
+    assert first["roles_consumed"] == ["training", "calibration_tuning"]
+    assert first["test_labels_consumed"] is False
+    assert first["bundle_sha256"] == exp.numeric_bundle_hash(first)
+    assert set(first["heads"]) == {
         "conditional_gibbs",
         "whole_only_gibbs",
-        "window_logistic",
-        "shuffled_label_gibbs",
+        "identical_feature_logistic",
+        "shuffled_label_conditional_gibbs",
     }
-    assert all(len(states) == 5 for states in bundle["heads"].values())
-    assert all(
-        state["hyperparameter_budget"] == bundle["identical_hyperparameter_budget"]
-        for states in bundle["heads"].values()
-        for state in states
+    assert all(len(states) == 5 for states in first["heads"].values())
+    assert max(state["spline_coefficient_count"] for state in first["heads"]["conditional_gibbs"]) <= 256
+    assert all(state["normalization"] == "exact_binary_partition" for state in first["heads"]["conditional_gibbs"])
+    assert len(first["policies"]) == 9
+    assert first["frozen_before_test_labels"] is True
+
+
+def test_fit_rejects_role_leakage_shape_errors_and_one_class_support() -> None:
+    """SCENARIO-VERIFY-7495-SEAL prevents test outcomes from selecting states."""
+
+    training = _feature_rows(8, "training")
+    calibration = _feature_rows(8, "calibration_tuning")
+    bad_role = deepcopy(training)
+    bad_role[0]["role"] = "test"
+    with pytest.raises(ValueError, match="training_role_invalid"):
+        exp.fit_numeric_bundle(bad_role, calibration, steps=1)
+    bad_shape = deepcopy(training)
+    bad_shape[0]["features"] = [0.0]
+    with pytest.raises(ValueError, match="feature_shape_invalid"):
+        exp.fit_numeric_bundle(bad_shape, calibration, steps=1)
+    one_class = deepcopy(training)
+    for row in one_class:
+        row["label"] = 0
+    with pytest.raises(ValueError, match="class_support_invalid"):
+        exp.fit_numeric_bundle(one_class, calibration, steps=1)
+
+
+def test_frozen_bundle_scores_all_registered_test_arms_without_ablation() -> None:
+    """SCENARIO-VERIFY-7495-HEADS retains controls and excludes shuffle from test."""
+
+    bundle = exp.fit_numeric_bundle(
+        _feature_rows(12, "training"),
+        _feature_rows(10, "calibration_tuning"),
+        steps=2,
     )
-    probabilities = exp.exact_binary_gibbs_probabilities(np.asarray([-3.0, 0.0, 2.0]))
-    assert np.allclose(probabilities.sum(axis=1), 1.0)
-    assert np.all(probabilities > 0.0)
-    assert bundle["bundle_sha256"] == exp.bundle_hash(bundle)
+    rows = _feature_rows(4, "test")
+    scored = exp.score_numeric_bundle(bundle, rows)
+
+    assert {row["arm"] for row in scored} == set(exp.ALL_ARMS)
+    assert not any("shuffled" in str(row["arm"]) for row in scored)
+    assert len([row for row in scored if row["arm"] == "conditional_gibbs"]) == 20
+    assert all(0.0 <= row["probability"] <= 1.0 for row in scored)
 
 
-def test_score_and_reduce_average_seeds_before_fresh_group_inference() -> None:
-    """SCENARIO-VERIFY-7495-PROBABILITY: seeds never multiply test support."""
-
-    training = _numeric_rows("training", 24)
-    calibration = _numeric_rows("calibration_tuning", 20, offset=1)
-    test = _numeric_rows("test", 100)
-    bundle = exp.fit_window_bundle(training, calibration, steps=15)
-    calibration_predictions = exp.score_bundle(bundle, calibration)
-    policies = exp.freeze_cost_policies(calibration_predictions)
-    test_predictions = exp.score_bundle(bundle, test)
-    reduction = exp.reduce_prediction_rows(
-        [*calibration_predictions, *test_predictions],
-        frozen_policies=policies,
-        bootstrap_draws=200,
-    )
-
-    assert reduction["confirmatory_support_score"] == 1
-    assert reduction["test_group_count"] == 100
-    assert reduction["test_class_support"] == {"0": 50, "1": 50}
-    assert reduction["probability_report"]["test"]["conditional_gibbs"]["n_groups"] == 100
-    assert set(reduction["probability_comparisons"]["brier"]) == {
-        "window_logistic",
-        "whole_only_gibbs",
-    }
-    assert len(reduction["decision_report"]["cells"]) == 9
-    assert reduction["decision_benefit_score"] == int(
-        all(row["benefit_passed"] for row in reduction["decision_report"]["cells"])
-    )
-    assert reduction["length_slices"]
-    assert reduction["source_family_slices"]["fixture"]
-
-
-def test_support_and_all_nine_utility_gates_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
-    """SCENARIO-VERIFY-7495-UTILITY/NULL: low support or one weak cell is null."""
-
-    rows = _numeric_rows("calibration_tuning", 8) + _numeric_rows("test", 10)
-    prediction_rows = []
-    for row in rows:
+def _prediction_fixture(groups: int, *, role: str) -> list[exp.JsonDict]:
+    output: list[exp.JsonDict] = []
+    for index in range(groups):
+        label = index % 2
         for arm in exp.ALL_ARMS:
-            seeds = exp.TRAINING_SEEDS if arm in exp.SEEDED_ARMS else (None,)
+            probability = {
+                "conditional_gibbs": 0.98 if label else 0.02,
+                "identical_feature_logistic": 0.70 if label else 0.30,
+                "whole_only_gibbs": 0.68 if label else 0.32,
+                "raw_whole": 0.60 if label else 0.40,
+                "raw_window": 0.62 if label else 0.38,
+                "temperature_whole": 0.65 if label else 0.35,
+            }[arm]
+            seeds = exp.TRAINING_SEEDS if arm in exp.LEARNED_ARMS else (None,)
             for seed in seeds:
-                prediction_rows.append(
+                output.append(
                     {
-                        **{key: row[key] for key in exp.PREDICTION_CONTEXT_FIELDS},
+                        "group_id": f"{role}-{index:03d}",
+                        "role": role,
                         "arm": arm,
                         "seed": seed,
-                        "probability": 0.8 if row["label"] else 0.2,
+                        "label": label,
+                        "probability": probability,
+                        "response_length_slice": "short" if index % 2 else "long",
+                        "source_family": "family-a" if index % 3 else "family-b",
                         "failed": False,
                     }
                 )
-    policies = exp.freeze_cost_policies(
-        [row for row in prediction_rows if row["role"] == "calibration_tuning"]
-    )
-    reduction = exp.reduce_prediction_rows(
-        prediction_rows, frozen_policies=policies, bootstrap_draws=50
-    )
+    return output
+
+
+def test_scenario_probability_averages_seeds_and_requires_both_controls() -> None:
+    """SCENARIO-VERIFY-7495-PROBABILITY uses groups and both Holm contrasts."""
+
+    rows = _prediction_fixture(100, role="test")
+    reduction = exp.reduce_prediction_rows(rows, bootstrap_draws=200)
+
+    assert reduction["confirmatory_support_score"] == 1
+    assert reduction["probability_benefit_score"] == 1
+    assert reduction["test_group_count"] == 100
+    assert set(reduction["probability_comparisons"]["brier"]) == {
+        "identical_feature_logistic",
+        "whole_only_gibbs",
+    }
+    assert all(row["group_count"] == 100 for row in reduction["probability_comparisons"]["brier"].values())
+    assert reduction["probability_report"]["conditional_gibbs"]["n_groups"] == 100
+    assert reduction["length_slices"] and reduction["source_family_slices"]
+
+
+def test_support_and_all_nine_decision_cells_fail_closed() -> None:
+    """SCENARIO-VERIFY-7495-UTILITY and NULL keep support and completion separate."""
+
+    rows = _prediction_fixture(40, role="test")
+    reduction = exp.reduce_prediction_rows(rows, bootstrap_draws=100)
     assert reduction["confirmatory_support_score"] == 0
     assert reduction["probability_benefit_score"] == 0
+    assert reduction["decision_benefit_score"] == 0
+    assert len(reduction["decision_report"]["cells"]) == 9
 
-    fake_cells = [
-        {"cell_id": str(index), "benefit_passed": index != 8} for index in range(9)
-    ]
-    monkeypatch.setattr(exp, "_decision_cells", lambda *args, **kwargs: fake_cells)
-    changed = exp.reduce_prediction_rows(
-        prediction_rows, frozen_policies=policies, bootstrap_draws=20
-    )
-    assert changed["decision_benefit_score"] == 0
+    changed = deepcopy(reduction["decision_report"])
+    for cell in changed["cells"]:
+        cell["benefit_passed"] = True
+    changed["cells"][0]["benefit_passed"] = False
+    assert exp.decision_score(changed, confirmatory_support=True) == 0
 
 
-def test_fixture_artifact_validates_and_mutations_fail(tmp_path) -> None:
-    """SCENARIO-VERIFY-7495-E2E: raw rows and frozen hashes cold-replay."""
+def test_fixture_artifact_cold_validates_and_reduces_raw_rows(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-7495-NULL/E2E derives a valid complete null from rows."""
 
-    artifact = exp.fixture_artifact(tmp_path)
-    assert exp.validate_artifact(artifact, root=tmp_path) == []
+    artifact = exp.build_artifact_for_test(tmp_path)
+    assert exp.validate_artifact(artifact, root=tmp_path, require_validation=False) == []
+    assert artifact["window_calibration_complete_score"] == 1
+    assert artifact["confirmatory_support_score"] == 0
+    assert artifact["probability_benefit_score"] == 0
+    assert artifact["decision_benefit_score"] == 0
+    assert artifact["verdict_class"] == "null"
+    assert artifact["honest_verdict"].startswith("complete_null")
+    assert artifact["MODEL_SPECS"] == artifact["model_specs"] == []
+    assert artifact["model_invoked"] is False
+    assert set(artifact["field_principles"]) == set(artifact)
+    assert all("prevent" in text for text in artifact["field_principles"].values())
     assert exp.independent_reduce(artifact, root=tmp_path) == artifact["independent_reduction"]
-    assert set(exp.REQUIRED_FIELDS) <= set(artifact["field_principles"])
-    assert all("prevent" in row["principle"] for row in artifact["acceptance_gate_results"])
-
-    changed = deepcopy(artifact)
-    changed["MODEL_SPECS"] = ["historical-model"]
-    assert "current_model_declaration_invalid" in exp.validate_artifact(changed, root=tmp_path)
-    changed = deepcopy(artifact)
-    changed["frozen_policy_manifest"]["bundle_sha256"] = "sha256:changed"
-    assert "frozen_policy_hash_mismatch" in exp.validate_artifact(changed, root=tmp_path)
-    changed = deepcopy(artifact)
-    changed["window_calibration_complete_score"] = 0
-    assert "completion_score_mismatch" in exp.validate_artifact(changed, root=tmp_path)
 
 
-def test_preconditions_preserve_original_flags_and_missing_input_blocks(tmp_path) -> None:
-    """SCENARIO-VERIFY-7495-PREREQUISITE: exact producer fields gate fitting."""
+def test_validator_rejects_checksum_rows_scores_principles_and_receipts(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-7495-E2E fails closed when terminal evidence drifts."""
 
-    fit = {
-        "experiment_id": exp.FIT_EXPECTED["experiment_id"],
-        "schema": exp.FIT_EXPECTED["schema"],
-        "milestone": exp.MILESTONE,
-        "terminal_status": "complete",
-        "honest_verdict": "complete_null_window_fit_capture_ready_predictive_benefit_not_tested",
-        "verdict_class": "null",
-        "flagged_adversarial": False,
-        "window_fit_ready_score": 1,
-        "raw_logit_shards": [],
-    }
-    evaluation = {
-        "experiment_id": exp.EVAL_EXPECTED["experiment_id"],
-        "schema": exp.EVAL_EXPECTED["schema"],
-        "milestone": exp.MILESTONE,
-        "terminal_status": "complete",
-        "honest_verdict": "complete_null_window_evaluation_capture_ready_predictive_benefit_not_tested",
-        "verdict_class": "null",
-        "flagged_adversarial": False,
-        "window_evaluation_ready_score": 1,
-        "raw_logit_shards": [],
-    }
-    (tmp_path / "fit.json").write_text(json.dumps(fit), encoding="utf-8")
-    (tmp_path / "eval.json").write_text(json.dumps(evaluation), encoding="utf-8")
-    checks, hashes = exp.capture_preconditions(tmp_path / "fit.json", tmp_path / "eval.json")
-    assert all(row["passed"] for row in checks)
-    assert hashes["fit.json"]["original_flagged_adversarial"] is False
-    assert hashes["eval.json"]["original_verdict_class"] == "null"
+    for expected, mutate in (
+        ("identity_mismatch:schema", lambda value: value.__setitem__("schema", "wrong")),
+        ("field_principles_incomplete", lambda value: value.__setitem__("field_principles", {})),
+        ("independent_reduction_mismatch", lambda value: value.__setitem__("independent_reduction", {})),
+        ("score_mismatch:window_calibration_complete_score", lambda value: value.__setitem__("window_calibration_complete_score", 0)),
+    ):
+        artifact = exp.build_artifact_for_test(tmp_path)
+        mutate(artifact)
+        assert expected in exp.validate_artifact(artifact, root=tmp_path, require_validation=False)
 
-    (tmp_path / "eval.json").unlink()
-    failed, _ = exp.capture_preconditions(tmp_path / "fit.json", tmp_path / "eval.json")
-    assert any(row["passed"] is False for row in failed)
+    artifact = exp.build_artifact_for_test(tmp_path)
+    artifact["validation_receipts"] = []
+    artifact["reproducibility_checksum"] = exp.artifact_checksum(artifact)
+    assert "required_validation_failed" in exp.validate_artifact(
+        artifact,
+        root=tmp_path,
+        require_validation=True,
+    )
 
+
+def test_validation_manifest_is_frozen_to_three_exp7495_paths() -> None:
+    """SCENARIO-VERIFY-7495-E2E forbids a broad Python-suite target."""
+
+    manifest = exp.VALIDATION_MANIFEST
+    assert manifest.test_paths == (exp.TEST_PATH.as_posix(),)
+    assert manifest.changed_modules == (exp.MODULE_PATH.as_posix(),)
+    assert manifest.static_paths == (exp.WRAPPER_PATH.as_posix(),)
+    assert all(path not in {"tests", "tests/python"} for path in manifest.test_paths)
+
+
+def test_helpers_reject_invalid_probability_and_policy_inputs() -> None:
+    """REQ-VERIFY-7495 keeps malformed numeric rows outside the evidence."""
+
+    with pytest.raises(ValueError, match="probability_metric_input_invalid"):
+        exp.probability_metrics([], [])
+    with pytest.raises(ValueError, match="policy_input_invalid"):
+        exp.select_cost_policy([], [], false_accept_cost=1.0, escalation_cost=0.1)
+    with pytest.raises(ValueError, match="bootstrap_input_invalid"):
+        exp.paired_bootstrap([], draws=0, seed=1)
