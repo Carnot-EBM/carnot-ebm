@@ -4764,6 +4764,12 @@ regex over prompts reported zero of twelve tasks carrying an instruction that el
 carried in different words. Such a lint measures phrasing drift, not compliance, and it fails
 toward false alarm. The honest enforcement is the planner prompt plus this rule.
 
+**ADDENDUM 2026-09-21 (append-only): large tool calls also cause silence.** A replay of a stalled task
+showed 937 seconds of silence with no command running. The model was writing one very large file in a
+single tool call, and codex reports an event only when a call finishes. A progress line cannot fix this.
+Write any file over about 200 lines in several tool calls, and send a progress message between them.
+See `ops/known-issues.md` 2026-09-21. CODEX.md and the planner prompt carry the same instruction.
+
 **Cross-references:** 2026-09-08 operator directive (origin) · `ops/known-issues.md` 2026-09-08
 entries on the three kill mechanisms and the 1201-second signature ·
 `scripts/research_conductor.py:_plan_next_milestone` (the matching planner-prompt clause) ·

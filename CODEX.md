@@ -8,6 +8,9 @@ This file provides guidance to Codex when working with code in this repository.
 - Never claim tests passed when command output shows failures.
 - Keep progress updates concise and high-signal.
 - Use parallel helpers only when they materially improve the result.
+- Write any file over about 200 lines in several tool calls, not one. Send a short progress message
+  between the calls. One very large tool call can leave the output silent for more than 600 seconds,
+  and the conductor then kills the task as stalled. Measured 2026-09-21, see `ops/known-issues.md`.
 
 ## Required Workflow
 

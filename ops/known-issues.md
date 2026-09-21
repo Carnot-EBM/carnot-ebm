@@ -27286,3 +27286,28 @@ findings as regression tests, not just re-testing the implementation.
 
 Spec: `openspec/capabilities/autoresearch/spec.md` REQ-AUTO-025's own
 "CORRECTION 2026-09-16" section and SCENARIO-AUTO-025-E through I.
+
+### 2026-09-21 — Codex 600 s stalls reproduced: silent model generation, no command running
+
+**Finding (measured).** Replayed the stalling task exp7496 ("Qualify Brier updates...") with the exact
+conductor launch flags plus `codex exec --json`, with every event timestamped. After a short progress
+message the stream went silent for 937 s. During the silence: no test or shell command was running
+(the only child of codex was the idle `codex-code-mode-host`), codex held open HTTPS connections, and CPU was
+near zero. So codex was waiting on the model while it generated one very large tool call (a new module
+and its tests). Codex emits an event only when an item completes, so a long generation looks like
+silence. The conductor's 600 s stall rule kills it. The same last-output pattern (the tail of a test file being
+written) appeared in the 8 stalls of 2026-09-21; 6 of them fell on two tasks, retried 3 times each.
+
+**What this means.** The Task Progress-Line Requirement cannot help here. An agent cannot print a line
+in the middle of a single generation. The fix must make each tool call finish sooner, or change the kill rule.
+
+**Not verified.** Only one task was replayed, once. Other stalls (panel B idle timeouts, the hard cap at
+4801 s) may have other causes. Panel B needs 75 of 80 minutes by its own estimate, so its hard cap is a
+sizing problem, not this one.
+
+**Candidate fixes (none applied).**
+1. Prompt rule: write any file over about 200 lines in several tool calls, and send a progress message
+   between them, so each item completes inside 600 s.
+2. Conductor rule: when the only child of codex is the idle code-mode host and an API connection is open,
+   count the silence against a longer limit, still bounded by the wall-clock cap.
+3. Split large tasks (panel B) into build-and-test and live-run tasks.

@@ -18374,3 +18374,4 @@ code |
 | 2026-09-21 20:15 UTC | Complete withheld-game live ARC panel B with exclu | FAIL | Codex CLI error: Wall-clock+idle timeout after 1202s (685s silence). Last out |
 | 2026-09-21 21:38 UTC | Complete withheld-game live ARC panel B with exclu | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ", ("pytest", |
 | 2026-09-21 22:04 UTC | Reduce cross-game ARC opportunity and supervisor e | FAIL | Codex CLI error: Stalled after 600s silence. Last output: epcopy(artifact) + |
+| 2026-09-21 22:27 UTC | Reduce cross-game ARC opportunity and supervisor e | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ooling"]["pooling_a |
