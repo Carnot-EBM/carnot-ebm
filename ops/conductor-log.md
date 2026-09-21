@@ -18332,3 +18332,5 @@ code |
 | 2026-09-21 00:13 UTC | Prototype local residual energy updates with reten | OK | 92 passed, 2 warnings in 8.69s |
 | 2026-09-21 00:15 UTC | Measure delayed continuous learning from native so | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7465-source-option-capture, exp7465-source-option-capture, exp7465-source-option-capture) |
 | 2026-09-21 00:45 UTC | Independently audit typed decisions, residual lear | OK | 97 passed, 1 warning in 50.52s |
+| 2026-09-21 01:37 UTC | Measure missing decision seams on adapter-withheld | OK | 118 passed, 1 warning in 11.36s |
+| 2026-09-21 01:39 UTC | Measure exact-prefix reuse and complete decision-s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7465-source-option-capture, exp7465-source-option-capture, exp7465-source-option-capture) |
