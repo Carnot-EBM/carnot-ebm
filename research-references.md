@@ -46050,3 +46050,40 @@ dependency follows from it.
   - No leave-one-out check and no calibration metrics.
 - **Status:** unreplicated and second-hand. Read the full paper and its appendix
   before relying on any number or on the state definition.
+
+### Addendum 2026-09-21: State of Thought, read from the full PDF (corrects the note above)
+
+Source read: the 49-page PDF, [arXiv 2609.16055v1](https://arxiv.org/pdf/2609.16055v1).
+The paper links code, a project page and a tutorial. This project ran nothing. The
+first note came from a summary of the HTML page; these points correct or add to it.
+
+- **The headline gains are against the MEAN of the baselines.** The abstract's
+  1.34x to 2.51x compare SoT with the mean baseline accuracy. Several baselines score
+  below plain greedy decoding in the paper's own Table 1 (Llama-3.1-8B): on CSQA,
+  vanilla 48.0, CoT 32.8, self-consistency 28.5; the RL-style baseline scores near 0.
+  So a mean over these baselines flatters the method. Against vanilla the gain is
+  smaller on some tasks (GSM8K 79.0 to 81.8) and large on others (DROP F1 6.2 to
+  40.5, where a vanilla score that low may be an output-format artifact).
+- **Controller quality:** the only held-out figure for the learned controller is a
+  selector AUC of 0.779 (plus or minus 0.005) over 5 problem-held-out refits.
+- **Limited-access variants:** the training-free and embedding-only variants land
+  about 17.5% and 17.9% below full SoT. On general-understanding tasks they fall
+  below the top-3 baselines (52.0 against 61.5 average). The "38.2% and 36.5% gains"
+  are, again, against mean baselines.
+- **SoT-Judge (section 4.2) is the part closest to Carnot's verifier work.** A small
+  predictor reads only the embedded sentence trajectory of a finished answer and
+  predicts whether the answer is correct, with no extra rollouts. It reports 76.7 to
+  79.3 agreement with reference correctness against about 59 for self-consistency,
+  self-verification and LLM-as-a-judge, over GPT-5.4, Claude Opus 4.7 and Qwen-Max
+  outputs. It is weaker than the best judges on two of four domains. Its long-context
+  numbers (81.0 to 99.0) may reflect a lopsided correct/incorrect split; the paper
+  reports agreement, not AUROC, Brier score or ECE. Treat it as a candidate
+  oracle-distinct verifier feature for `GAP-ORACLE-DISTINCT` only after an AUROC and
+  base-rate check on our own data.
+- **The paper's own limits:** only text and one vision-language family; no tool-use,
+  agent or interactive settings ("outside our evaluated scope"); a 4-number state that
+  may under-describe long or branching trajectories; mechanism evidence "supportive
+  but not uniquely identifying".
+- **Net for Carnot:** the white-box control idea stays a loose analogy for the
+  induction-timing gate. The trajectory-only judge is the more concrete lead. Neither
+  is a task yet.
