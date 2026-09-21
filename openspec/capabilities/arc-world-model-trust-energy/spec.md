@@ -591,6 +591,111 @@ required readers pass.
 Implementation status: specified 2026-09-21. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7500: Audit cross-game ARC intervention opportunity without intervention
+
+Experiment 7500 SHALL use run date `20260921` and milestone `2026.09.656`.
+It SHALL run as host aggregation with `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`, and
+`inference_substrate_class=aggregation`. Referenced model work SHALL remain
+hash-bound historical provenance and SHALL not become current inference.
+
+The reducer SHALL read Panel A and the exact Experiment 7499 deliverable on
+every run. An absent or invalid Panel B SHALL remain an explicit blocked panel.
+It SHALL not become eighteen zero-valued episodes. The reducer SHALL preserve
+each upstream verdict class, adversarial flag, solve provenance, and exact byte
+hash without changing either producer.
+
+For every available episode, the reducer SHALL read its hash-bound interval
+shard. It SHALL independently union intervals by run, process, episode, and
+clock identity through the qualified Experiment 7478 reducer. It SHALL
+recompute duration, replaceable bounds, missingness, censoring, and supervisor
+selection counts. Duplicate or nested spans SHALL not increase a union.
+Incomplete or incompatible evidence SHALL not increase the lower bound.
+
+Eligible service time SHALL include only a supervisor interval that has an
+explicit true arm-eligibility observation and a reproducible runtime outcome.
+A selected arm with null eligibility SHALL remain an observed selection with
+unknown eligibility. It SHALL not become eligible time. A zero eligible bound
+is a measured result. It SHALL not authorize assigning generation, verifier,
+or unattributed time to a proposed optimization.
+
+The producer SHALL require compatible observer, policy, model, and protocol
+identities before pooling panels. A pooled cross-game cost claim SHALL also
+require at least 30 valid episodes across at least 10 games. Missing games or
+version drift SHALL close pooled support and keep panel strata separate. The
+planned support SHALL remain 36 episodes across 12 games.
+
+The artifact SHALL report selected-arm exposure, explicit eligibility,
+abstention, and reproducible runtime outcomes. If no eligible opportunity
+triggered, `intervention_ledger` SHALL be empty and `efficacy_estimate` SHALL be
+null. Observational selection SHALL not establish arm benefit. The producer
+SHALL not inspect game source or generate a game-specific rule.
+
+The artifact SHALL report eligible service fractions and an Amdahl upper bound.
+It SHALL name every omitted stage. `arc_opportunity_audit_complete_score` SHALL
+equal one only when available rows, absent branches, source hashes, independent
+replay, and required readers are valid. `opportunity_present_score` SHALL equal
+one only when real eligible work and compatible support both exist. No selector
+default, E4 or E5 gate, submission, registry increment, hardware acceleration
+claim, or scored change follows from this reporting task.
+
+The producer SHALL freeze an affected-file manifest before checks. It SHALL use
+the Experiment 7358 and Experiment 7303 scope helpers for focused pytest,
+separate 100 percent changed-module coverage, scoped Ruff, changed-module mypy,
+and exact-test spec coverage. It SHALL run the entrypoint and a fresh-process
+cold replay as its capability E2E. No numbered runtime E2E applies because this
+change is pure reporting. It SHALL independently reduce per-unit rows and run
+the unchanged adversarial verifier and strict row-consistency lint against the
+exact candidate. Terminal publication SHALL be atomic after required checks
+pass. Every artifact field and gate SHALL include a one-line principle that
+names the failure it prevents.
+
+### SCENARIO-ARC-WMTE-7500-MISSING-PANEL
+
+- **GIVEN** valid Panel A bytes and an absent or invalid exact Panel B deliverable
+- **WHEN** the opportunity audit runs unconditionally
+- **THEN** Panel B remains one explicit blocked panel with no fabricated episodes
+- **AND** Panel A remains independently reducible without opening pooled support.
+
+### SCENARIO-ARC-WMTE-7500-EXCLUSIVE-UNION
+
+- **GIVEN** nested, duplicate, incomplete, or clock-separated interval events
+- **WHEN** an episode is reduced from its hash-bound shard
+- **THEN** each compatible clock tick contributes at most once to its union
+- **AND** incomplete or incompatible evidence cannot inflate the lower bound.
+
+### SCENARIO-ARC-WMTE-7500-SUPERVISOR-ELIGIBILITY
+
+- **GIVEN** logged arm selections with true, false, or null eligibility
+- **WHEN** supervisor opportunity and service time are reduced
+- **THEN** selected arms and abstentions stay visible with their original eligibility
+- **AND** only explicit true eligibility with a reproducible outcome contributes eligible time.
+
+### SCENARIO-ARC-WMTE-7500-POOLING
+
+- **GIVEN** two panel strata and their observer, policy, model, and protocol identities
+- **WHEN** pooled cross-game support is evaluated
+- **THEN** every identity must match and support must reach 30 episodes and 10 games
+- **AND** version drift, missing games, or low support retains separate panels.
+
+### SCENARIO-ARC-WMTE-7500-ZERO-OPPORTUNITY
+
+- **GIVEN** no authenticated triggered supervisor opportunity
+- **WHEN** service fractions and intervention evidence are published
+- **THEN** the intervention ledger is empty and the efficacy estimate is null
+- **AND** zero service time does not reclassify omitted generation or verifier work.
+
+### SCENARIO-ARC-WMTE-7500-TERMINAL
+
+- **GIVEN** source hashes, per-unit reductions, scoped checks, and terminal readers
+- **WHEN** a fresh process replays the exact candidate
+- **THEN** accounting completeness stays separate from opportunity presence
+- **AND** the terminal artifact makes no intervention, solve, hardware, or submission claim.
+
+Implementation status: specified 2026-09-21. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7471: Observe live E3 decision seams without changing decisions
 
 Experiment 7471 SHALL use run date `20260921`, milestone `2026.09.654`, and
