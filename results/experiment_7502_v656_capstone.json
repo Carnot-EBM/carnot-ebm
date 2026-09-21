@@ -1,0 +1,4350 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "contract_authorities_agree",
+      "expected": true,
+      "field": "comparison_passed",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "principle": "A favorable metric cannot excuse invalid evidence.",
+      "upstream": "v656_contract"
+    },
+    {
+      "category": "validity",
+      "check": "required_present_evidence_valid",
+      "expected": true,
+      "field": "valid",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "task_dispositions",
+      "principle": "A favorable metric cannot excuse invalid evidence.",
+      "upstream": "v656_producers"
+    },
+    {
+      "category": "validity",
+      "check": "current_scoped_and_terminal_validation",
+      "expected": true,
+      "field": "all_required_passed",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "validation_receipts",
+      "principle": "A favorable metric cannot excuse invalid evidence.",
+      "upstream": "exp7502-capstone"
+    },
+    {
+      "category": "readiness",
+      "check": "fourteen_dispositions_recorded",
+      "expected": 14,
+      "field": "length",
+      "observed": 14,
+      "op": "==",
+      "passed": true,
+      "path": "task_dispositions",
+      "principle": "A valid scientific null must not block independent measurements.",
+      "upstream": "exp7502-capstone"
+    },
+    {
+      "category": "benefit",
+      "check": "current_probability_support_effect_and_multiplicity",
+      "expected": "positive",
+      "field": "finding",
+      "observed": "blocked_missing",
+      "op": "==",
+      "passed": false,
+      "path": "supported_claims.current_probability_quality",
+      "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+      "upstream": "exp7498-independent-audit"
+    },
+    {
+      "category": "benefit",
+      "check": "causal_feedback_benefit_and_retention",
+      "expected": "positive",
+      "field": "finding",
+      "observed": "blocked_missing",
+      "op": "==",
+      "passed": false,
+      "path": "supported_claims.causal_feedback_benefit",
+      "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+      "upstream": "exp7498-independent-audit"
+    },
+    {
+      "category": "benefit",
+      "check": "arc_cross_game_support",
+      "expected": {
+        "episodes": 30,
+        "games": 10
+      },
+      "field": "episode_and_game_support",
+      "observed": {
+        "episodes": 18,
+        "games": 6
+      },
+      "op": ">=",
+      "passed": false,
+      "path": "supported_claims.arc_generalization",
+      "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+      "upstream": "exp7500-arc-opportunity-audit"
+    },
+    {
+      "category": "benefit",
+      "check": "durable_service_measurement",
+      "expected": "measured",
+      "field": "finding",
+      "observed": "blocked_missing",
+      "op": "==",
+      "passed": false,
+      "path": "supported_claims.hardware_placement",
+      "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+      "upstream": "exp7501-service-placement"
+    }
+  ],
+  "capstone_complete_score": 1,
+  "clock_identity": {
+    "monotonic": "time.monotonic_ns",
+    "wall": "datetime.now(datetime.UTC)"
+  },
+  "completed_at_utc": "2026-09-21T23:45:15.034434+00:00",
+  "current_invocation_events": [],
+  "device_identity": {
+    "cuda_used": false,
+    "machine": "x86_64",
+    "processor": "unknown"
+  },
+  "duration_components_s": {
+    "aggregation": 0.1343387529705069,
+    "forward": 0.0,
+    "generation": 0.0,
+    "model_load": 0.0,
+    "optimization": 0.0,
+    "validation": 18.90933758502797
+  },
+  "duration_s": 19.043676337998477,
+  "ended_monotonic_ns": 36332246278630,
+  "execution_venue": "host",
+  "experiment_id": "exp7502-capstone",
+  "external_contact_performed": false,
+  "field_principles": {
+    "MODEL_SPECS": "Aggregation has no current model; both model-spec fields must remain empty.",
+    "acceptance_gate_results": "Each gate names validity, support, or benefit with exact operands and purpose.",
+    "capstone_complete_score": "Fourteen explicit dispositions measure reporting completion, not scientific success.",
+    "clock_identity": "Retain exact clock_identity evidence so a later reader cannot infer an unstated result.",
+    "completed_at_utc": "Retain exact completed_at_utc evidence so a later reader cannot infer an unstated result.",
+    "current_invocation_events": "Retain exact current_invocation_events evidence so a later reader cannot infer an unstated result.",
+    "device_identity": "Retain exact device_identity evidence so a later reader cannot infer an unstated result.",
+    "duration_components_s": "Retain exact duration_components_s evidence so a later reader cannot infer an unstated result.",
+    "duration_s": "Measure actual work and separate aggregation from validation without a synthetic floor.",
+    "ended_monotonic_ns": "Retain exact ended_monotonic_ns evidence so a later reader cannot infer an unstated result.",
+    "execution_venue": "Host execution stays distinct from archived board evidence.",
+    "experiment_id": "Retain exact experiment_id evidence so a later reader cannot infer an unstated result.",
+    "external_contact_performed": "Retain exact external_contact_performed evidence so a later reader cannot infer an unstated result.",
+    "flagged_adversarial": "Retain actual reader flags and never clear a flag to open a gate.",
+    "gate_check_summary": "Every blocked verdict names its upstream path, field, expected value, and observation.",
+    "generator_weights_changed": "Retain exact generator_weights_changed evidence so a later reader cannot infer an unstated result.",
+    "historical_evidence_sidecars": "Retain exact historical_evidence_sidecars evidence so a later reader cannot infer an unstated result.",
+    "honest_verdict": "Use a complete terminal finding and preserve blocked conductor records as received.",
+    "inference_substrate": "Aggregation uses exactly aggregation_from_upstream_artifacts.",
+    "inference_substrate_class": "The aggregation class prevents model or numeric work from being implied.",
+    "invocation_counts": "Reconcile attempted, completed, failed, cancelled, and in-flight current calls.",
+    "milestone": "Retain exact milestone evidence so a later reader cannot infer an unstated result.",
+    "model_invoked": "Attempted live loads, forwards, and generations differ from historical model events.",
+    "model_specs": "Retain exact model_specs evidence so a later reader cannot infer an unstated result.",
+    "next_reopen_conditions": "A changed prerequisite or method is required before any repeat.",
+    "phase": "Retain exact phase evidence so a later reader cannot infer an unstated result.",
+    "phase_spans": "Flushed progress and checkpoints expose unfinished operations and stalls.",
+    "preconditions_checked": "Record exact resource paths, observed values, ownership, and input validity.",
+    "prior_failure_rows": "Retain exact prior_failure_rows evidence so a later reader cannot infer an unstated result.",
+    "process_identity": "Retain exact process_identity evidence so a later reader cannot infer an unstated result.",
+    "production_defaults_changed": "Retain exact production_defaults_changed evidence so a later reader cannot infer an unstated result.",
+    "publication_performed": "Retain exact publication_performed evidence so a later reader cannot infer an unstated result.",
+    "push_performed": "Retain exact push_performed evidence so a later reader cannot infer an unstated result.",
+    "random_seed": "Freeze role, optimizer, audit, order, and interval seeds and explain null seeds.",
+    "repository_health": "Retain exact repository_health evidence so a later reader cannot infer an unstated result.",
+    "research_conductor_changed": "Retain exact research_conductor_changed evidence so a later reader cannot infer an unstated result.",
+    "retirement_rows": "Repeated verdicts and mechanism-level stop decisions remain permanent.",
+    "retrospective": "Retain exact retrospective evidence so a later reader cannot infer an unstated result.",
+    "roadmap_activated": "Retain exact roadmap_activated evidence so a later reader cannot infer an unstated result.",
+    "rows": "Per-task rows with failures and censoring permit independent headline reduction.",
+    "run_date": "Use 20260921 and retain measured UTC, monotonic clock, and process identity.",
+    "sample_size_budget": "Separate planned, attempted, complete, failed, excluded, censored, and unstarted units.",
+    "schema": "Versioned schema, exact experiment_id, milestone and terminal status prevent reader drift.",
+    "small_ebm_training": "Retain exact small_ebm_training evidence so a later reader cannot infer an unstated result.",
+    "source_artifact_hashes": "Preserve exact upstream bytes, verdicts, and flags without laundering.",
+    "started_at_utc": "Retain exact started_at_utc evidence so a later reader cannot infer an unstated result.",
+    "started_monotonic_ns": "Retain exact started_monotonic_ns evidence so a later reader cannot infer an unstated result.",
+    "status": "Retain exact status evidence so a later reader cannot infer an unstated result.",
+    "submission_performed": "Retain exact submission_performed evidence so a later reader cannot infer an unstated result.",
+    "supported_claims": "Every retained claim cites valid rows, support, and independent reduction.",
+    "task_dispositions": "Exact ordered IDs and paths include missing, pre-gated, and current tasks.",
+    "validation_manifest": "Retain exact validation_manifest evidence so a later reader cannot infer an unstated result.",
+    "validation_receipts": "Exact commands, exits, scope, and log hashes make current checks reviewable.",
+    "verdict_class": "Use the closed enum and reserve partial for this capstone's unfinished repair.",
+    "verifier_is_oracle": "Oracle-defined fixture benefits cannot become positive efficacy claims."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      {
+        "check": "producer_evidence",
+        "expected": true,
+        "field": "path",
+        "observed": false,
+        "op": "exists",
+        "passed": false,
+        "path": "results/experiment_7495_v656_window_calibration.json",
+        "upstream": "exp7495-window-calibration"
+      },
+      {
+        "check": "producer_evidence",
+        "expected": true,
+        "field": "path",
+        "observed": false,
+        "op": "exists",
+        "passed": false,
+        "path": "results/experiment_7496_v656_causal_update_fixture.json",
+        "upstream": "exp7496-causal-update-fixture"
+      },
+      {
+        "check": "producer_evidence",
+        "expected": true,
+        "field": "path",
+        "observed": false,
+        "op": "exists",
+        "passed": false,
+        "path": "results/experiment_7497_v656_causal_online_learning.json",
+        "upstream": "exp7497-causal-online-learning"
+      },
+      {
+        "check": "producer_terminal_disposition",
+        "expected": [
+          "blocked"
+        ],
+        "field": "verdict_class",
+        "observed": "blocked",
+        "op": "not in",
+        "passed": false,
+        "path": "results/experiment_7498_v656_independent_audit.json",
+        "upstream": "exp7498-independent-audit"
+      },
+      {
+        "check": "producer_evidence",
+        "expected": true,
+        "field": "path",
+        "observed": false,
+        "op": "exists",
+        "passed": false,
+        "path": "results/experiment_7499_v656_arc_panel_b.json",
+        "upstream": "exp7499-arc-panel-b"
+      },
+      {
+        "check": "producer_terminal_disposition",
+        "expected": [
+          "blocked"
+        ],
+        "field": "verdict_class",
+        "observed": "blocked",
+        "op": "not in",
+        "passed": false,
+        "path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+        "upstream": "exp7500-arc-opportunity-audit"
+      },
+      {
+        "check": "producer_evidence",
+        "expected": true,
+        "field": "path",
+        "observed": false,
+        "op": "exists",
+        "passed": false,
+        "path": "results/experiment_7501_v656_service_placement.json",
+        "upstream": "exp7501-service-placement"
+      }
+    ],
+    "failed_count": 7,
+    "first_failure": {
+      "check": "producer_evidence",
+      "expected": true,
+      "field": "path",
+      "observed": false,
+      "op": "exists",
+      "passed": false,
+      "path": "results/experiment_7495_v656_window_calibration.json",
+      "upstream": "exp7495-window-calibration"
+    },
+    "passed": false
+  },
+  "generator_weights_changed": false,
+  "historical_evidence_sidecars": [
+    {
+      "counted_as_current_invocation": false,
+      "original_model_invoked": false,
+      "path": "results/experiment_7489_v656_contract_methods.json",
+      "scope": "upstream_model_or_aggregation_receipt",
+      "sha256": "sha256:a63dd5bc6159529f33b14f4563b639e5debda496909efeecbe2b083ffb529ac6",
+      "task_id": "exp7489-contract-methods"
+    },
+    {
+      "counted_as_current_invocation": false,
+      "original_model_invoked": false,
+      "path": "results/experiment_7490_v656_historical_audit.json",
+      "scope": "upstream_model_or_aggregation_receipt",
+      "sha256": "sha256:5b1fd18378fef3bc06aec546a256f4aaf57ec83e03d46b8bcb77788ec2936cc7",
+      "task_id": "exp7490-historical-audit"
+    },
+    {
+      "counted_as_current_invocation": false,
+      "original_model_invoked": false,
+      "path": "results/experiment_7491_v656_window_protocol.json",
+      "scope": "upstream_model_or_aggregation_receipt",
+      "sha256": "sha256:03a221d7cb1a8da7bf0afc9f4827ee8a95db39e47ba09cb8c16dcd6869c70405",
+      "task_id": "exp7491-window-protocol"
+    },
+    {
+      "counted_as_current_invocation": false,
+      "original_model_invoked": true,
+      "path": "results/experiment_7492_v656_window_pilot.json",
+      "scope": "upstream_model_or_aggregation_receipt",
+      "sha256": "sha256:04f55e4f093966d7e317d64ab625ee2add8e7997c5c8399238d2d733b6c1cea1",
+      "task_id": "exp7492-window-pilot"
+    },
+    {
+      "counted_as_current_invocation": false,
+      "original_model_invoked": true,
+      "path": "results/experiment_7493_v656_window_fit_capture.json",
+      "scope": "upstream_model_or_aggregation_receipt",
+      "sha256": "sha256:47580e4c3d0f4119b2bd43985a34f229eeb2a808f1f4a650ed29d7054e5f1d91",
+      "task_id": "exp7493-window-fit-capture"
+    },
+    {
+      "counted_as_current_invocation": false,
+      "original_model_invoked": true,
+      "path": "results/experiment_7494_v656_window_eval_capture.json",
+      "scope": "upstream_model_or_aggregation_receipt",
+      "sha256": "sha256:b28319796c5fa7d7e0c27858480f029396a4ce626e2f8470e32889a6b780f136",
+      "task_id": "exp7494-window-eval-capture"
+    },
+    {
+      "counted_as_current_invocation": false,
+      "original_model_invoked": false,
+      "path": "results/experiment_7498_v656_independent_audit.json",
+      "scope": "upstream_model_or_aggregation_receipt",
+      "sha256": "sha256:a113713479c2548ab22b8f9c86c8118c7b173ede7c92f85fa528bfe59d8d92d0",
+      "task_id": "exp7498-independent-audit"
+    },
+    {
+      "counted_as_current_invocation": false,
+      "original_model_invoked": false,
+      "path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+      "scope": "upstream_model_or_aggregation_receipt",
+      "sha256": "sha256:7fa41fe4e21a004a7801aeafae06cd1b7ea6d6edac58ef8de278479e3ef69153",
+      "task_id": "exp7500-arc-opportunity-audit"
+    }
+  ],
+  "honest_verdict": "complete_blocked_required_v656_evidence_absent_or_externally_gated",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_cancelled": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "forward_calls_in_flight": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.656",
+  "model_invoked": false,
+  "model_specs": [],
+  "next_reopen_conditions": [
+    {
+      "branch": "importance_anchoring",
+      "changed_prerequisite": "Use a new causal objective with held-out benefit; do not repeat the registered importance anchor.",
+      "state": "closed"
+    },
+    {
+      "branch": "compact_generated_spans",
+      "changed_prerequisite": "Use a lossless natural-text method that preserves all qualifiers and complete sentences.",
+      "state": "closed"
+    },
+    {
+      "branch": "four_expert_reweighting",
+      "changed_prerequisite": "Register a different expert construction with an oracle-distinct held-out advantage.",
+      "state": "closed"
+    },
+    {
+      "branch": "generic_external_text_reranking",
+      "changed_prerequisite": "Provide a new external-text mechanism and held-out gate that is distinct from source-option readout.",
+      "state": "closed"
+    },
+    {
+      "branch": "current_window_probability",
+      "changed_prerequisite": "Produce Exp7495 from the sealed fit and evaluation captures with support, proper-score, and multiplicity gates.",
+      "state": "closed"
+    },
+    {
+      "branch": "causal_feedback_learning",
+      "changed_prerequisite": "Produce the causal fixture and online learner with chronological feedback, retention, and independent reduction.",
+      "state": "closed"
+    },
+    {
+      "branch": "arc_cross_game_generalization",
+      "changed_prerequisite": "Publish a compatible terminal panel B and reach 30 valid episodes across 10 games before efficacy work.",
+      "state": "closed"
+    },
+    {
+      "branch": "durable_service_and_hardware_placement",
+      "changed_prerequisite": "Publish the same-process durable service trace; treat board placement as hypothetical until a board runs it.",
+      "state": "closed"
+    }
+  ],
+  "phase": 4,
+  "phase_spans": [
+    {
+      "checkpoint": "thirteen_predecessor_slots_observed",
+      "completed_units": 13,
+      "duration_s": 0.10959312599879922,
+      "ended_elapsed_s": 0.10973673599801259,
+      "phase": "preconditions",
+      "started_elapsed_s": 0.0001436099992133677
+    },
+    {
+      "checkpoint": "affected_validation_manifest_frozen",
+      "completed_units": 8,
+      "duration_s": 0.0016063270013546571,
+      "ended_elapsed_s": 0.11137224800040713,
+      "phase": "plan",
+      "started_elapsed_s": 0.10976592099905247
+    },
+    {
+      "checkpoint": "no_current_model_load",
+      "completed_units": 0,
+      "duration_s": 3.2560055842623115e-06,
+      "ended_elapsed_s": 0.11138924000260886,
+      "phase": "model_load",
+      "started_elapsed_s": 0.1113859839970246
+    },
+    {
+      "checkpoint": "no_current_generation",
+      "completed_units": 0,
+      "duration_s": 3.1460003810934722e-06,
+      "ended_elapsed_s": 0.11139590299717383,
+      "phase": "generation",
+      "started_elapsed_s": 0.11139275699679274
+    },
+    {
+      "checkpoint": "affected_checks_complete",
+      "completed_units": 8,
+      "duration_s": 16.989505051002197,
+      "ended_elapsed_s": 17.100911433000874,
+      "phase": "validation",
+      "started_elapsed_s": 0.1114063819986768
+    },
+    {
+      "checkpoint": "fourteen_dispositions_reduced",
+      "completed_units": 14,
+      "duration_s": 7.424001523759216e-06,
+      "ended_elapsed_s": 17.100941418997536,
+      "phase": "reduction",
+      "started_elapsed_s": 17.100933994996012
+    },
+    {
+      "checkpoint": "cold_readers_complete",
+      "completed_units": 4,
+      "duration_s": 1.9258630000040284,
+      "ended_elapsed_s": 19.043611537003017,
+      "phase": "terminal_validation",
+      "started_elapsed_s": 17.117748536998988
+    },
+    {
+      "checkpoint": "terminal_artifact_ready",
+      "completed_units": 1,
+      "duration_s": 3.2661002478562295e-05,
+      "ended_elapsed_s": 19.043665969002177,
+      "phase": "write",
+      "started_elapsed_s": 19.0436333079997
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "AGENTS.md",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "CODEX.md",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "research-program.md",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "source_bytes:results/experiment_7488_v655_capstone.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "results/experiment_7488_v655_capstone.json",
+      "upstream": "results/experiment_7488_v655_capstone.json"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7488_v655_capstone.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "python/carnot/experiment_7488_v655_capstone.py",
+      "upstream": "python/carnot/experiment_7488_v655_capstone.py"
+    },
+    {
+      "check": "source_bytes:ops/north-star.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "ops/north-star.md",
+      "upstream": "ops/north-star.md"
+    },
+    {
+      "check": "source_bytes:research-hardware-wishlist.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "research-hardware-wishlist.md",
+      "upstream": "research-hardware-wishlist.md"
+    },
+    {
+      "check": "source_bytes:research-roadmap.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "source_bytes:docs/research-notes/v656-retrospective.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "docs/research-notes/v656-retrospective.md",
+      "upstream": "docs/research-notes/v656-retrospective.md"
+    },
+    {
+      "check": "source_bytes:research-studying.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "owner": "repository",
+      "passed": true,
+      "path": "research-studying.md",
+      "upstream": "research-studying.md"
+    },
+    {
+      "check": "contract_authority_equivalence",
+      "expected": true,
+      "field": "comparison_passed",
+      "observed": true,
+      "owner": "repository",
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md + research-roadmap.yaml",
+      "upstream": "v656_contract"
+    },
+    {
+      "check": "execution_venue",
+      "expected": "host",
+      "field": "venue",
+      "observed": "host",
+      "owner": "current_process",
+      "passed": true,
+      "path": "/proc/self",
+      "upstream": "exp7502-capstone"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "terminal",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7489_v656_contract_methods.json",
+      "upstream": "exp7489-contract-methods"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "terminal",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7490_v656_historical_audit.json",
+      "upstream": "exp7490-historical-audit"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "terminal",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7491_v656_window_protocol.json",
+      "upstream": "exp7491-window-protocol"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "terminal",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7492_v656_window_pilot.json",
+      "upstream": "exp7492-window-pilot"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "terminal",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7493_v656_window_fit_capture.json",
+      "upstream": "exp7493-window-fit-capture"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "terminal",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7494_v656_window_eval_capture.json",
+      "upstream": "exp7494-window-eval-capture"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "missing",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7495_v656_window_calibration.json",
+      "upstream": "exp7495-window-calibration"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "missing",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7496_v656_causal_update_fixture.json",
+      "upstream": "exp7496-causal-update-fixture"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "missing",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7497_v656_causal_online_learning.json",
+      "upstream": "exp7497-causal-online-learning"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "terminal",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7498_v656_independent_audit.json",
+      "upstream": "exp7498-independent-audit"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "missing",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7499_v656_arc_panel_b.json",
+      "upstream": "exp7499-arc-panel-b"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "terminal",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+      "upstream": "exp7500-arc-opportunity-audit"
+    },
+    {
+      "check": "predecessor_state_observed",
+      "expected": "one explicit state",
+      "field": "evidence_state",
+      "observed": "missing",
+      "owner": "upstream_producer_or_conductor",
+      "passed": true,
+      "path": "results/experiment_7501_v656_service_placement.json",
+      "upstream": "exp7501-service-placement"
+    }
+  ],
+  "prior_failure_rows": [
+    {
+      "addressed_by": "Explicitly inspect the resolved circuit-breaker and misassociated timing-fallback priority; keep the contract advisory and independently checked.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_v656_contract_methods_ingested",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7475-contract-methods",
+      "prior_honest_verdict": "complete_disqualified_v655_contract_or_validation",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7489-contract-methods"
+    },
+    {
+      "addressed_by": "Current source has the canonical aggregator spelling; produce a fresh independently validated replay without rewriting the invalid historical artifact.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_historical_probability_limit_and_invalid_shuffled_control",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7484-decision-audit",
+      "prior_honest_verdict": "complete_null_independent_v655_decision_and_learning_audit",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "The current mechanism repeated the prior no-benefit scientific disposition.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "exp7490-historical-audit"
+    },
+    {
+      "addressed_by": "The probability subclaim failed despite typed utility: change evidence granularity and use fresh source-group evaluation rather than retune on FaithBench.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_structural_window_protocol_ready",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7481-typed-calibration",
+      "prior_honest_verdict": "complete_positive_probability_or_typed_decision_benefit",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7491-window-protocol"
+    },
+    {
+      "addressed_by": "Extend the working transport to a new lossless focus prompt with measured capture feasibility, without reopening scored-runtime parity.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_window_native_transport_and_capture_forecasts_ready",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7477-native-readout-pilot",
+      "prior_honest_verdict": "complete_null_native_readout_transport_ready_predictive_benefit_deferred",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "The current mechanism repeated the prior no-benefit scientific disposition.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "exp7492-window-pilot"
+    },
+    {
+      "addressed_by": "Capture a new lossless response-granularity method; historical whole-response readiness is retained, not relabeled as efficacy.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_window_fit_capture_ready_predictive_benefit_not_tested",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7479-source-fit-capture",
+      "prior_honest_verdict": "complete_null_fit_capture_ready_predictive_benefit_not_tested",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "The current mechanism repeated the prior no-benefit scientific disposition.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "exp7493-window-fit-capture"
+    },
+    {
+      "addressed_by": "Capture a new lossless response-granularity method; historical whole-response readiness is retained, not relabeled as efficacy.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_window_evaluation_capture_ready_predictive_benefit_not_tested",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7480-source-eval-capture",
+      "prior_honest_verdict": "complete_null_evaluation_capture_ready_predictive_benefit_not_tested",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "The current mechanism repeated the prior no-benefit scientific disposition.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "exp7494-window-eval-capture"
+    },
+    {
+      "addressed_by": "Replace coarse evidence with lossless windows and require new held-out probability contrasts; preserve the historical utility-only positive.",
+      "comparison_state": "current_absent",
+      "current_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "current_verdict_class": "blocked",
+      "exact_text_match": false,
+      "prior_experiment": "exp7481-typed-calibration",
+      "prior_honest_verdict": "complete_positive_probability_or_typed_decision_benefit",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7495-window-calibration"
+    },
+    {
+      "addressed_by": "Change log-loss importance anchoring to a bounded Brier component and causal release-batch controls; the unchanged anchor mechanism stays retired.",
+      "comparison_state": "current_absent",
+      "current_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "current_verdict_class": "blocked",
+      "exact_text_match": false,
+      "prior_experiment": "exp7483-continuous-learning",
+      "prior_honest_verdict": "complete_null_no_registered_importance_anchor_benefit",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7496-causal-update-fixture"
+    },
+    {
+      "addressed_by": "Use fresh source groups, a different Brier objective, intercept/log-loss comparators and strictly available release-batch permutations; do not rerun unchanged importance anchoring.",
+      "comparison_state": "current_absent",
+      "current_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "current_verdict_class": "blocked",
+      "exact_text_match": false,
+      "prior_experiment": "exp7483-continuous-learning",
+      "prior_honest_verdict": "complete_null_no_registered_importance_anchor_benefit",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7497-causal-online-learning"
+    },
+    {
+      "addressed_by": "Canonical aggregation provenance and a new independent reduction scope prevent repeating the failed terminal schema receipt.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_blocked_missing_v656_scientific_inputs",
+      "current_verdict_class": "blocked",
+      "exact_text_match": false,
+      "prior_experiment": "exp7484-decision-audit",
+      "prior_honest_verdict": "complete_null_independent_v655_decision_and_learning_audit",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7498-independent-audit"
+    },
+    {
+      "addressed_by": "Complete only the previously absent panel B on its original roster; no unchanged rerun of panel A or completed public solves.",
+      "comparison_state": "current_absent",
+      "current_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "current_verdict_class": "blocked",
+      "exact_text_match": false,
+      "prior_experiment": "exp7485-arc-cost-panel-a",
+      "prior_honest_verdict": "complete_null_live_arc_cost_panel_a",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7499-arc-panel-b"
+    },
+    {
+      "addressed_by": "Apply the qualified union reducer to the previously absent cross-game evidence; do not repeat its earlier undersupported cost claim.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_blocked_panel_b_blocked_missing_opportunity_audit",
+      "current_verdict_class": "blocked",
+      "exact_text_match": false,
+      "prior_experiment": "exp7478-arc-interval-protocol",
+      "prior_honest_verdict": "complete_null_interval_protocol_ready_sample_limited",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7500-arc-opportunity-audit"
+    },
+    {
+      "addressed_by": "Replace the incomplete stitched denominator with same-process model-to-fsync replay and explicitly exclude unknown human feedback acquisition.",
+      "comparison_state": "current_absent",
+      "current_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "current_verdict_class": "blocked",
+      "exact_text_match": false,
+      "prior_experiment": "exp7487-learning-placement",
+      "prior_honest_verdict": "complete_null_retained_state_placement_measured_service_100x_not_established",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7501-service-placement"
+    },
+    {
+      "addressed_by": "New V656 ledger includes canonical audits, explicit missing-panel status and blocked terminal semantics; old disqualification is preserved.",
+      "comparison_state": "current_work",
+      "current_honest_verdict": null,
+      "current_verdict_class": null,
+      "exact_text_match": false,
+      "prior_experiment": "exp7488-capstone",
+      "prior_honest_verdict": "complete_disqualified_required_present_v655_evidence",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "No same-disposition terminal comparison triggered retirement.",
+      "retirement_triggered": false,
+      "same_scientific_disposition": false,
+      "task_id": "exp7502-capstone"
+    }
+  ],
+  "process_identity": {
+    "node": "icbfl1",
+    "pid": 296801
+  },
+  "production_defaults_changed": false,
+  "publication_performed": false,
+  "push_performed": false,
+  "random_seed": {
+    "audit": 750265603,
+    "deterministic_null_seed_explanation": "The capstone performs deterministic aggregation, so optimizer and interval seeds do not apply.",
+    "interval": null,
+    "optimizer": null,
+    "order": 750265602,
+    "role": 656001
+  },
+  "repository_health": {
+    "status": "outside_current_affected_validity"
+  },
+  "reproducibility_checksum": "sha256:3f3ee545f73e9635e0bbb8aa3647f4966dda7778e1135e16d46aedb7afc8d33e",
+  "research_conductor_changed": false,
+  "retirement_rows": [
+    {
+      "addressed_by": "Current source has the canonical aggregator spelling; produce a fresh independently validated replay without rewriting the invalid historical artifact.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_historical_probability_limit_and_invalid_shuffled_control",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7484-decision-audit",
+      "prior_honest_verdict": "complete_null_independent_v655_decision_and_learning_audit",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "The current mechanism repeated the prior no-benefit scientific disposition.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "exp7490-historical-audit"
+    },
+    {
+      "addressed_by": "Extend the working transport to a new lossless focus prompt with measured capture feasibility, without reopening scored-runtime parity.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_window_native_transport_and_capture_forecasts_ready",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7477-native-readout-pilot",
+      "prior_honest_verdict": "complete_null_native_readout_transport_ready_predictive_benefit_deferred",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "The current mechanism repeated the prior no-benefit scientific disposition.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "exp7492-window-pilot"
+    },
+    {
+      "addressed_by": "Capture a new lossless response-granularity method; historical whole-response readiness is retained, not relabeled as efficacy.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_window_fit_capture_ready_predictive_benefit_not_tested",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7479-source-fit-capture",
+      "prior_honest_verdict": "complete_null_fit_capture_ready_predictive_benefit_not_tested",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "The current mechanism repeated the prior no-benefit scientific disposition.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "exp7493-window-fit-capture"
+    },
+    {
+      "addressed_by": "Capture a new lossless response-granularity method; historical whole-response readiness is retained, not relabeled as efficacy.",
+      "comparison_state": "compared",
+      "current_honest_verdict": "complete_null_window_evaluation_capture_ready_predictive_benefit_not_tested",
+      "current_verdict_class": "null",
+      "exact_text_match": false,
+      "prior_experiment": "exp7480-source-eval-capture",
+      "prior_honest_verdict": "complete_null_evaluation_capture_ready_predictive_benefit_not_tested",
+      "retire_if_same_verdict": true,
+      "retirement_reason": "The current mechanism repeated the prior no-benefit scientific disposition.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "exp7494-window-eval-capture"
+    },
+    {
+      "prior_experiment": "exp7483-continuous-learning",
+      "prior_honest_verdict": "complete_null_no_registered_importance_anchor_benefit",
+      "retirement_reason": "The unchanged importance-anchor mechanism has no registered benefit.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "importance_anchoring"
+    },
+    {
+      "prior_experiment": "exp7467-factual-span-canary",
+      "prior_honest_verdict": "complete_null_natural_text_extraction",
+      "retirement_reason": "Compact spans remain closed until a lossless natural-text method changes.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "compact_generated_spans"
+    },
+    {
+      "prior_experiment": "exp7468-residual-learner",
+      "prior_honest_verdict": "complete_null_unchanged_four_expert_mixture",
+      "retirement_reason": "The unchanged four-expert mechanism has repeated no-benefit evidence.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "four_expert_reweighting"
+    },
+    {
+      "prior_experiment": "exp7470-independent-audit",
+      "prior_honest_verdict": "complete_null_external_text_verifier_moat",
+      "retirement_reason": "Source-option readout does not establish a generic external-text reranking benefit.",
+      "retirement_triggered": true,
+      "same_scientific_disposition": true,
+      "task_id": "generic_external_text_reranking"
+    }
+  ],
+  "retrospective": {
+    "document_path": "docs/research-notes/v656-retrospective.md",
+    "dominant_actual_timings": [
+      {
+        "artifact_path": "results/experiment_7494_v656_window_eval_capture.json",
+        "artifact_sha256": "sha256:b28319796c5fa7d7e0c27858480f029396a4ce626e2f8470e32889a6b780f136",
+        "dominant_duration_s": 2064.0710159470163,
+        "dominant_stage": "prefill",
+        "task_id": "exp7494-window-eval-capture",
+        "total_duration_s": 2113.805215668
+      },
+      {
+        "artifact_path": "results/experiment_7493_v656_window_fit_capture.json",
+        "artifact_sha256": "sha256:47580e4c3d0f4119b2bd43985a34f229eeb2a808f1f4a650ed29d7054e5f1d91",
+        "dominant_duration_s": 1769.1327632709808,
+        "dominant_stage": "prefill",
+        "task_id": "exp7493-window-fit-capture",
+        "total_duration_s": 1813.618480766
+      },
+      {
+        "artifact_path": "results/experiment_7492_v656_window_pilot.json",
+        "artifact_sha256": "sha256:04f55e4f093966d7e317d64ab625ee2add8e7997c5c8399238d2d733b6c1cea1",
+        "dominant_duration_s": 40.42216393899889,
+        "dominant_stage": "prefill",
+        "task_id": "exp7492-window-pilot",
+        "total_duration_s": 76.265874327
+      },
+      {
+        "artifact_path": "results/experiment_7489_v656_contract_methods.json",
+        "artifact_sha256": "sha256:a63dd5bc6159529f33b14f4563b639e5debda496909efeecbe2b083ffb529ac6",
+        "dominant_duration_s": 40.3539168490388,
+        "dominant_stage": "validation",
+        "task_id": "exp7489-contract-methods",
+        "total_duration_s": 41.514503529
+      },
+      {
+        "artifact_path": "results/experiment_7490_v656_historical_audit.json",
+        "artifact_sha256": "sha256:5b1fd18378fef3bc06aec546a256f4aaf57ec83e03d46b8bcb77788ec2936cc7",
+        "dominant_duration_s": 27.65261206399998,
+        "dominant_stage": "validation",
+        "task_id": "exp7490-historical-audit",
+        "total_duration_s": 40.661970464
+      },
+      {
+        "artifact_path": "results/experiment_7491_v656_window_protocol.json",
+        "artifact_sha256": "sha256:03a221d7cb1a8da7bf0afc9f4827ee8a95db39e47ba09cb8c16dcd6869c70405",
+        "dominant_duration_s": 18.284925312999803,
+        "dominant_stage": "protocol_and_validation",
+        "task_id": "exp7491-window-protocol",
+        "total_duration_s": 18.284925312999803
+      },
+      {
+        "artifact_path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+        "artifact_sha256": "sha256:7fa41fe4e21a004a7801aeafae06cd1b7ea6d6edac58ef8de278479e3ef69153",
+        "dominant_duration_s": 16.10149414501211,
+        "dominant_stage": "validation",
+        "task_id": "exp7500-arc-opportunity-audit",
+        "total_duration_s": 19.68169191799825
+      },
+      {
+        "artifact_path": "results/experiment_7498_v656_independent_audit.json",
+        "artifact_sha256": "sha256:a113713479c2548ab22b8f9c86c8118c7b173ede7c92f85fa528bfe59d8d92d0",
+        "dominant_duration_s": 10.204723323997314,
+        "dominant_stage": "validation",
+        "task_id": "exp7498-independent-audit",
+        "total_duration_s": 10.825721212
+      }
+    ],
+    "next_reopen_conditions": [
+      {
+        "branch": "importance_anchoring",
+        "changed_prerequisite": "Use a new causal objective with held-out benefit; do not repeat the registered importance anchor.",
+        "state": "closed"
+      },
+      {
+        "branch": "compact_generated_spans",
+        "changed_prerequisite": "Use a lossless natural-text method that preserves all qualifiers and complete sentences.",
+        "state": "closed"
+      },
+      {
+        "branch": "four_expert_reweighting",
+        "changed_prerequisite": "Register a different expert construction with an oracle-distinct held-out advantage.",
+        "state": "closed"
+      },
+      {
+        "branch": "generic_external_text_reranking",
+        "changed_prerequisite": "Provide a new external-text mechanism and held-out gate that is distinct from source-option readout.",
+        "state": "closed"
+      },
+      {
+        "branch": "current_window_probability",
+        "changed_prerequisite": "Produce Exp7495 from the sealed fit and evaluation captures with support, proper-score, and multiplicity gates.",
+        "state": "closed"
+      },
+      {
+        "branch": "causal_feedback_learning",
+        "changed_prerequisite": "Produce the causal fixture and online learner with chronological feedback, retention, and independent reduction.",
+        "state": "closed"
+      },
+      {
+        "branch": "arc_cross_game_generalization",
+        "changed_prerequisite": "Publish a compatible terminal panel B and reach 30 valid episodes across 10 games before efficacy work.",
+        "state": "closed"
+      },
+      {
+        "branch": "durable_service_and_hardware_placement",
+        "changed_prerequisite": "Publish the same-process durable service trace; treat board placement as hypothetical until a board runs it.",
+        "state": "closed"
+      }
+    ],
+    "prd_gaps": [
+      {
+        "gap": "calibrated_source_decision",
+        "limit": "Historical typed utility exists, but current held-out probability and utility rows are absent.",
+        "status": "blocked_missing_exp7495"
+      },
+      {
+        "gap": "causal_continuous_learning",
+        "limit": "No current causal fixture, feedback-benefit, or retention evidence is terminal.",
+        "status": "blocked_missing_exp7496_and_exp7497"
+      },
+      {
+        "gap": "arc_service_and_hardware_scope",
+        "limit": "Panel A has low support, panel B is absent, and hardware placement remains hypothetical.",
+        "status": "blocked_missing_exp7499_and_exp7501"
+      }
+    ],
+    "support_limits": {
+      "arc_episode_floor": 30,
+      "arc_game_floor": 10,
+      "arc_triggered_opportunity_count": 0,
+      "arc_valid_episode_count": 18,
+      "arc_valid_game_count": 6,
+      "current_learning_rows": 0,
+      "current_probability_rows": 0,
+      "current_utility_rows": 0
+    }
+  },
+  "roadmap_activated": false,
+  "rows": [
+    {
+      "acceptance_gates": [
+        {
+          "check": "preconditions_authenticated",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid or missing evidence."
+        },
+        {
+          "check": "exact_v656_contract",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "Exact paired authorities prevent task identity and gate drift."
+        },
+        {
+          "check": "private_contract_mutations_rejected",
+          "expected": 12,
+          "observed": 12,
+          "op": "==",
+          "passed": true,
+          "principle": "Planted count, identity, order, path, gate, and milestone defects must fail."
+        },
+        {
+          "check": "v655_dispositions_authenticated",
+          "expected": 14,
+          "observed": 14,
+          "op": "==",
+          "passed": true,
+          "principle": "Thirteen producers and one absence prevent completed-task inflation."
+        },
+        {
+          "check": "method_rows_bounded",
+          "expected": 6,
+          "observed": 6,
+          "op": "==",
+          "passed": true,
+          "principle": "Bounded method intake prevents paper results from becoming Carnot measurements."
+        },
+        {
+          "check": "affected_validation",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "Scoped checks prevent unrelated suite state from laundering changed code."
+        },
+        {
+          "check": "repository_guards",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "Unchanged schema, gate, exclusion, ARC, and priority guards retain policy."
+        },
+        {
+          "check": "terminal_readers",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "Fresh readers prevent an in-process producer from acting as its own oracle."
+        },
+        {
+          "check": "advisory_contract_ready",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent V656 measurements."
+        },
+        {
+          "check": "scientific_benefit_not_claimed",
+          "expected": false,
+          "observed": false,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable seed, fixture, or low-support result cannot replace held-out value."
+        }
+      ],
+      "artifact_path": "results/experiment_7489_v656_contract_methods.json",
+      "artifact_sha256": "sha256:a63dd5bc6159529f33b14f4563b639e5debda496909efeecbe2b083ffb529ac6",
+      "attempted": true,
+      "benefit_gate_status": "not_declared",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7489_v656_contract_methods.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_v656_contract_methods_ingested",
+      "order": 1,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7489-contract-methods",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_advisory_v656_contract_and_methods",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 49,
+      "rows_available": true,
+      "support_gate_status": "not_declared",
+      "task_id": "exp7489-contract-methods",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "historical_inputs_authentic",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence."
+        },
+        {
+          "category": "validity",
+          "check": "independent_reduction_errors",
+          "expected": [],
+          "observed": [],
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence."
+        },
+        {
+          "category": "validity",
+          "check": "canonical_current_provenance",
+          "expected": "aggregation_from_upstream_artifacts",
+          "observed": "aggregation_from_upstream_artifacts",
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence."
+        },
+        {
+          "category": "validity",
+          "check": "required_current_validation",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence."
+        },
+        {
+          "category": "readiness",
+          "check": "historical_audit_complete",
+          "expected": 1,
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements."
+        },
+        {
+          "category": "benefit",
+          "check": "historical_probability_benefit",
+          "expected": "positive",
+          "observed": "null",
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value."
+        },
+        {
+          "category": "benefit",
+          "check": "historical_online_benefit",
+          "expected": "positive",
+          "observed": "null",
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value."
+        },
+        {
+          "category": "benefit",
+          "check": "shuffled_negative_control_chronology",
+          "expected": 0,
+          "observed": 376,
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value."
+        }
+      ],
+      "artifact_path": "results/experiment_7490_v656_historical_audit.json",
+      "artifact_sha256": "sha256:5b1fd18378fef3bc06aec546a256f4aaf57ec83e03d46b8bcb77788ec2936cc7",
+      "attempted": true,
+      "benefit_gate_status": "failed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7490_v656_historical_audit.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_historical_probability_limit_and_invalid_shuffled_control",
+      "order": 2,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7490-historical-audit",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_null_historical_probability_limit_and_invalid_shuffled_control",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 74,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7490-historical-audit",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "preconditions_authenticated",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "preconditions_checked"
+        },
+        {
+          "category": "readiness",
+          "check": "freshness_search_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "prior_exposure_exclusions"
+        },
+        {
+          "category": "readiness",
+          "check": "exact_role_counts",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "role_manifest"
+        },
+        {
+          "category": "readiness",
+          "check": "eligible_role_minima",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "role_manifest"
+        },
+        {
+          "category": "readiness",
+          "check": "held_out_test_class_support",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "evaluator_store"
+        },
+        {
+          "category": "validity",
+          "check": "windows_lossless",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "window_definition"
+        },
+        {
+          "category": "validity",
+          "check": "prompts_label_blind",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "request_manifest"
+        },
+        {
+          "category": "validity",
+          "check": "forward_budgets_valid",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "sample_size_budget"
+        },
+        {
+          "category": "validity",
+          "check": "required_validation_passed",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "category": "benefit",
+          "check": "predictive_benefit_not_claimed",
+          "expected": false,
+          "observed": false,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "honest_verdict"
+        }
+      ],
+      "artifact_path": "results/experiment_7491_v656_window_protocol.json",
+      "artifact_sha256": "sha256:03a221d7cb1a8da7bf0afc9f4827ee8a95db39e47ba09cb8c16dcd6869c70405",
+      "attempted": true,
+      "benefit_gate_status": "passed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7491_v656_window_protocol.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_structural_window_protocol_ready",
+      "order": 3,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7491-v656-window-protocol",
+      "raw_milestone": "2026.09.656",
+      "raw_status": null,
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 520,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7491-window-protocol",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "authenticated_identity_and_accounting",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "preconditions_checked"
+        },
+        {
+          "category": "validity",
+          "check": "native_window_transport",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "transport_reduction"
+        },
+        {
+          "category": "validity",
+          "check": "required_validation",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "category": "readiness",
+          "check": "capture_forecasts_fit",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "capture_budget_forecasts"
+        },
+        {
+          "category": "readiness",
+          "check": "capture_forecasts_evaluation",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "capture_budget_forecasts"
+        },
+        {
+          "category": "benefit",
+          "check": "predictive_benefit_not_claimed",
+          "expected": false,
+          "observed": false,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "honest_verdict"
+        }
+      ],
+      "artifact_path": "results/experiment_7492_v656_window_pilot.json",
+      "artifact_sha256": "sha256:04f55e4f093966d7e317d64ab625ee2add8e7997c5c8399238d2d733b6c1cea1",
+      "attempted": true,
+      "benefit_gate_status": "passed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7492_v656_window_pilot.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_window_native_transport_and_capture_forecasts_ready",
+      "order": 4,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7492-v656-window-pilot",
+      "raw_milestone": "2026.09.656",
+      "raw_status": null,
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 8,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7492-window-pilot",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "authenticated_identity_and_accounting",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence; this check prevents invalid evidence from being promoted.",
+          "upstream": "preconditions_checked"
+        },
+        {
+          "category": "validity",
+          "check": "required_validation",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence; this check prevents invalid evidence from being promoted.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "category": "readiness",
+          "check": "capture_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "readiness",
+          "check": "role_support",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "readiness",
+          "check": "eligible_calls_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "benefit",
+          "check": "predictive_benefit_not_measured",
+          "expected": false,
+          "observed": false,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value; this check prevents capture data from becoming a benefit claim.",
+          "upstream": "honest_verdict"
+        }
+      ],
+      "artifact_path": "results/experiment_7493_v656_window_fit_capture.json",
+      "artifact_sha256": "sha256:47580e4c3d0f4119b2bd43985a34f229eeb2a808f1f4a650ed29d7054e5f1d91",
+      "attempted": true,
+      "benefit_gate_status": "passed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7493_v656_window_fit_capture.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_window_fit_capture_ready_predictive_benefit_not_tested",
+      "order": 5,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7493-v656-window-fit-capture",
+      "raw_milestone": "2026.09.656",
+      "raw_status": null,
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 240,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7493-window-fit-capture",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "authenticated_identity_and_accounting",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence; this check prevents invalid evidence from being promoted.",
+          "upstream": "preconditions_checked"
+        },
+        {
+          "category": "validity",
+          "check": "required_validation",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence; this check prevents invalid evidence from being promoted.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "category": "readiness",
+          "check": "capture_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "readiness",
+          "check": "role_support",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "readiness",
+          "check": "eligible_calls_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "benefit",
+          "check": "predictive_benefit_not_measured",
+          "expected": false,
+          "observed": false,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value; this check prevents capture data from becoming a benefit claim.",
+          "upstream": "honest_verdict"
+        }
+      ],
+      "artifact_path": "results/experiment_7494_v656_window_eval_capture.json",
+      "artifact_sha256": "sha256:b28319796c5fa7d7e0c27858480f029396a4ce626e2f8470e32889a6b780f136",
+      "attempted": true,
+      "benefit_gate_status": "passed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7494_v656_window_eval_capture.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_window_evaluation_capture_ready_predictive_benefit_not_tested",
+      "order": 6,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7494-v656-window-eval-capture",
+      "raw_milestone": "2026.09.656",
+      "raw_status": null,
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 280,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7494-window-eval-capture",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7495_v656_window_calibration.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 7,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7495-window-calibration",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7496_v656_causal_update_fixture.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 8,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7496-causal-update-fixture",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7497_v656_causal_online_learning.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 9,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7497-causal-online-learning",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "independent_reduction_errors",
+          "expected": [],
+          "observed": [],
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "current_audit"
+        },
+        {
+          "category": "validity",
+          "check": "private_attack_controls",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "current_audit"
+        },
+        {
+          "category": "validity",
+          "check": "required_current_validation",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "current_audit"
+        },
+        {
+          "category": "readiness",
+          "check": "window_protocol_available",
+          "expected": "valid",
+          "observed": "valid",
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7491_v656_window_protocol.json"
+        },
+        {
+          "category": "readiness",
+          "check": "window_pilot_available",
+          "expected": "valid",
+          "observed": "valid",
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7492_v656_window_pilot.json"
+        },
+        {
+          "category": "readiness",
+          "check": "fit_capture_available",
+          "expected": "valid",
+          "observed": "valid",
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7493_v656_window_fit_capture.json"
+        },
+        {
+          "category": "readiness",
+          "check": "evaluation_capture_available",
+          "expected": "valid",
+          "observed": "valid",
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7494_v656_window_eval_capture.json"
+        },
+        {
+          "category": "readiness",
+          "check": "probability_and_utility_available",
+          "expected": "valid",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7495_v656_window_calibration.json"
+        },
+        {
+          "category": "readiness",
+          "check": "causal_fixture_available",
+          "expected": "valid",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7496_v656_causal_update_fixture.json"
+        },
+        {
+          "category": "readiness",
+          "check": "causal_learning_and_retention_available",
+          "expected": "valid",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7497_v656_causal_online_learning.json"
+        },
+        {
+          "category": "benefit",
+          "check": "probability_support_effect_and_multiplicity",
+          "expected": "passed",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "results/experiment_7495_v656_window_calibration.json"
+        },
+        {
+          "category": "benefit",
+          "check": "nine_utility_cells",
+          "expected": 9,
+          "observed": 0,
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "results/experiment_7495_v656_window_calibration.json"
+        },
+        {
+          "category": "benefit",
+          "check": "causal_learning_and_retention",
+          "expected": "passed",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "results/experiment_7497_v656_causal_online_learning.json"
+        }
+      ],
+      "artifact_path": "results/experiment_7498_v656_independent_audit.json",
+      "artifact_sha256": "sha256:a113713479c2548ab22b8f9c86c8118c7b173ede7c92f85fa528bfe59d8d92d0",
+      "attempted": true,
+      "benefit_gate_status": "failed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7498_v656_independent_audit.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_blocked_missing_v656_scientific_inputs",
+      "order": 10,
+      "original_verdict_class": "blocked",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7498-independent-audit",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_blocked_missing_v656_scientific_inputs",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 520,
+      "rows_available": true,
+      "support_gate_status": "failed",
+      "task_id": "exp7498-independent-audit",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7499_v656_arc_panel_b.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 11,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7499-arc-panel-b",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "artifact_field": "required_scoped_checks",
+          "category": "validity",
+          "check": "affected_validation",
+          "expected": true,
+          "field": "required_scoped_checks",
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "path": "validation_receipts",
+          "principle": "A favorable metric cannot excuse invalid affected code or imports.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "artifact_field": "terminal_readers",
+          "category": "validity",
+          "check": "terminal_independent_readers",
+          "expected": true,
+          "field": "terminal_readers",
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "path": "validation_receipts",
+          "principle": "A self-reported reduction cannot replace cold replay and unchanged readers.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "artifact_field": "rows[].bounds_valid",
+          "category": "validity",
+          "check": "exclusive_bounds_valid",
+          "expected": true,
+          "field": "rows[].bounds_valid",
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "path": "rows",
+          "principle": "Duplicate, nested or incompatible intervals cannot inflate eligible cost.",
+          "upstream": "rows"
+        },
+        {
+          "artifact_field": "arc_opportunity_audit_complete_score",
+          "category": "readiness",
+          "check": "opportunity_audit_complete",
+          "expected": true,
+          "field": "arc_opportunity_audit_complete_score",
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "path": "rows|panel_results|validation_receipts",
+          "principle": "A valid scientific null must not block independent accounting completeness.",
+          "upstream": "rows|panel_results|validation_receipts"
+        },
+        {
+          "artifact_field": "pooling.valid_episode_count",
+          "category": "scientific_benefit",
+          "check": "pooled_episode_support",
+          "expected": 30,
+          "field": "pooling.valid_episode_count",
+          "observed": 18,
+          "op": ">=",
+          "passed": false,
+          "path": "pooling",
+          "principle": "A favorable seed or low-support panel cannot replace cross-game evidence.",
+          "upstream": "pooling"
+        },
+        {
+          "artifact_field": "pooling.valid_game_count",
+          "category": "scientific_benefit",
+          "check": "pooled_game_support",
+          "expected": 10,
+          "field": "pooling.valid_game_count",
+          "observed": 6,
+          "op": ">=",
+          "passed": false,
+          "path": "pooling",
+          "principle": "Repeated episodes cannot substitute for independent games.",
+          "upstream": "pooling"
+        },
+        {
+          "artifact_field": "pooling.identities_compatible",
+          "category": "scientific_benefit",
+          "check": "identity_compatible_pooling",
+          "expected": true,
+          "field": "pooling.identities_compatible",
+          "observed": false,
+          "op": "==",
+          "passed": false,
+          "path": "panel_identities",
+          "principle": "Version drift cannot become one pooled cost claim.",
+          "upstream": "panel_identities"
+        },
+        {
+          "artifact_field": "eligible_service_fractions.eligible_service_upper_ns",
+          "category": "scientific_benefit",
+          "check": "eligible_service_present",
+          "expected": 0,
+          "field": "eligible_service_fractions.eligible_service_upper_ns",
+          "observed": 0,
+          "op": ">",
+          "passed": false,
+          "path": "rows[].supervisor",
+          "principle": "Hypothesized removable generation cannot replace actual eligible supervisor work.",
+          "upstream": "rows[].supervisor"
+        },
+        {
+          "artifact_field": "efficacy_estimate",
+          "category": "scientific_benefit",
+          "check": "effect_size_threshold",
+          "expected": true,
+          "field": "efficacy_estimate",
+          "observed": false,
+          "op": "==",
+          "passed": false,
+          "path": "observation_only_no_intervention",
+          "principle": "Observational arm selection cannot establish a causal effect.",
+          "upstream": "observation_only_no_intervention"
+        },
+        {
+          "artifact_field": "retention",
+          "category": "scientific_benefit",
+          "check": "retention_threshold",
+          "expected": true,
+          "field": "retention",
+          "observed": false,
+          "op": "==",
+          "passed": false,
+          "path": "observation_only_no_intervention",
+          "principle": "A cost opportunity cannot excuse lost ARC progress.",
+          "upstream": "observation_only_no_intervention"
+        },
+        {
+          "artifact_field": "multiplicity",
+          "category": "scientific_benefit",
+          "check": "multiplicity_threshold",
+          "expected": "not_applicable_no_intervention_family",
+          "field": "multiplicity",
+          "observed": "not_applicable_no_intervention_family",
+          "op": "==",
+          "passed": true,
+          "path": "observation_scope",
+          "principle": "One selected observation cannot bypass a declared hypothesis-family correction.",
+          "upstream": "observation_scope"
+        }
+      ],
+      "artifact_path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+      "artifact_sha256": "sha256:7fa41fe4e21a004a7801aeafae06cd1b7ea6d6edac58ef8de278479e3ef69153",
+      "attempted": true,
+      "benefit_gate_status": "failed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_blocked_panel_b_blocked_missing_opportunity_audit",
+      "order": 12,
+      "original_verdict_class": "blocked",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7500-arc-opportunity-audit",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_blocked_panel_b_blocked_missing_opportunity_audit",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 18,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7500-arc-opportunity-audit",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7501_v656_service_placement.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 13,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7501-service-placement",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": true,
+      "benefit_gate_status": "not_declared",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "current_work",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7502_v656_capstone.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_blocked_required_v656_evidence_absent_or_externally_gated",
+      "order": 14,
+      "original_verdict_class": "blocked",
+      "principle": "Current work stays distinct from its future output, which prevents circular self-authentication.",
+      "raw_experiment_id": "exp7502-capstone",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_blocked_required_v656_evidence_absent_or_externally_gated",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 1,
+      "rows_available": true,
+      "support_gate_status": "not_declared",
+      "task_id": "exp7502-capstone",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "blocked"
+    }
+  ],
+  "run_date": "20260921",
+  "sample_size_budget": {
+    "attempted": 9,
+    "censored": 5,
+    "complete": 9,
+    "excluded": 6,
+    "failed": 0,
+    "independent_unit": "ordered_v656_task_disposition",
+    "planned": 14,
+    "unstarted": 5
+  },
+  "schema": "carnot.exp7502.v656.capstone.v1",
+  "small_ebm_training": {
+    "attempted": 0,
+    "completed": 0,
+    "duration_s": 0.0,
+    "failed": 0,
+    "receipt_scope": "current_exp7502_work_only"
+  },
+  "source_artifact_hashes": [
+    {
+      "evidence_class": "required_source",
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "CODEX.md",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "CLAUDE.md",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:35972102ea077beb17323f305a128409f88ac8125a11e8537e402171d0356f73"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "results/experiment_7488_v655_capstone.json",
+      "sha256": "sha256:53320025ee6b32628bc7d42aa45855842a215353ba238107f0942c41ab7805e8"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "python/carnot/experiment_7488_v655_capstone.py",
+      "sha256": "sha256:38a940ab1c9b9f5f12de9f286b344944ec2fbd8dee394535818a711f8eeb0c3e"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "ops/north-star.md",
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "research-hardware-wishlist.md",
+      "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:be06c4f2c0284e2077f264e3e949b319f5d77fbac808ac5324b20683e045e10e"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:225ff3ea6c6a88573b4e449224b8ae640b44948ac80e5e0bb8f4c50158f4f805"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:3c4f29856a196cbc91ee27c1e6db6157422aee17cc821913f0ff45676889bde7"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "docs/research-notes/v656-retrospective.md",
+      "sha256": "sha256:8cfe26e48335fb14a773bce69c3a0eb8b36cd9419a8459f5f25f964737857191"
+    },
+    {
+      "evidence_class": "required_source",
+      "path": "research-studying.md",
+      "sha256": "sha256:8274e48641f0a3218164ab021f11e821fd220923eee004c2ba9fd224872c2909"
+    },
+    {
+      "evidence_class": "current_implementation",
+      "path": "python/carnot/experiment_7502_v656_capstone.py",
+      "sha256": "sha256:7a7b3fd3af4570592d1eff3cd27e90998f9b0fa7517964ec7e000c730a4bb46e"
+    },
+    {
+      "evidence_class": "current_implementation",
+      "path": "scripts/experiments/experiment_7502_v656_capstone.py",
+      "sha256": "sha256:93a2014e259d6ca900478e155d035bb08d2299c863eb97bfaaff7eead0b44b72"
+    },
+    {
+      "evidence_class": "current_implementation",
+      "path": "tests/python/test_experiment_7502_v656_capstone.py",
+      "sha256": "sha256:861f16bd3b66009bff97ea2e7a9956a6d18ee0703f6bbd4413c55d55d3e4efa7"
+    },
+    {
+      "evidence_class": "terminal",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_v656_contract_methods_ingested",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7489_v656_contract_methods.json",
+      "sha256": "sha256:a63dd5bc6159529f33b14f4563b639e5debda496909efeecbe2b083ffb529ac6",
+      "task_id": "exp7489-contract-methods"
+    },
+    {
+      "evidence_class": "terminal",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_historical_probability_limit_and_invalid_shuffled_control",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7490_v656_historical_audit.json",
+      "sha256": "sha256:5b1fd18378fef3bc06aec546a256f4aaf57ec83e03d46b8bcb77788ec2936cc7",
+      "task_id": "exp7490-historical-audit"
+    },
+    {
+      "evidence_class": "terminal",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_structural_window_protocol_ready",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7491_v656_window_protocol.json",
+      "sha256": "sha256:03a221d7cb1a8da7bf0afc9f4827ee8a95db39e47ba09cb8c16dcd6869c70405",
+      "task_id": "exp7491-window-protocol"
+    },
+    {
+      "evidence_class": "terminal",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_window_native_transport_and_capture_forecasts_ready",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7492_v656_window_pilot.json",
+      "sha256": "sha256:04f55e4f093966d7e317d64ab625ee2add8e7997c5c8399238d2d733b6c1cea1",
+      "task_id": "exp7492-window-pilot"
+    },
+    {
+      "evidence_class": "terminal",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_window_fit_capture_ready_predictive_benefit_not_tested",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7493_v656_window_fit_capture.json",
+      "sha256": "sha256:47580e4c3d0f4119b2bd43985a34f229eeb2a808f1f4a650ed29d7054e5f1d91",
+      "task_id": "exp7493-window-fit-capture"
+    },
+    {
+      "evidence_class": "terminal",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_window_evaluation_capture_ready_predictive_benefit_not_tested",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7494_v656_window_eval_capture.json",
+      "sha256": "sha256:b28319796c5fa7d7e0c27858480f029396a4ce626e2f8470e32889a6b780f136",
+      "task_id": "exp7494-window-eval-capture"
+    },
+    {
+      "evidence_class": "missing",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "original_verdict_class": null,
+      "path": "results/experiment_7495_v656_window_calibration.json",
+      "sha256": null,
+      "task_id": "exp7495-window-calibration"
+    },
+    {
+      "evidence_class": "missing",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "original_verdict_class": null,
+      "path": "results/experiment_7496_v656_causal_update_fixture.json",
+      "sha256": null,
+      "task_id": "exp7496-causal-update-fixture"
+    },
+    {
+      "evidence_class": "missing",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "original_verdict_class": null,
+      "path": "results/experiment_7497_v656_causal_online_learning.json",
+      "sha256": null,
+      "task_id": "exp7497-causal-online-learning"
+    },
+    {
+      "evidence_class": "terminal",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_missing_v656_scientific_inputs",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7498_v656_independent_audit.json",
+      "sha256": "sha256:a113713479c2548ab22b8f9c86c8118c7b173ede7c92f85fa528bfe59d8d92d0",
+      "task_id": "exp7498-independent-audit"
+    },
+    {
+      "evidence_class": "missing",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "original_verdict_class": null,
+      "path": "results/experiment_7499_v656_arc_panel_b.json",
+      "sha256": null,
+      "task_id": "exp7499-arc-panel-b"
+    },
+    {
+      "evidence_class": "terminal",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_panel_b_blocked_missing_opportunity_audit",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+      "sha256": "sha256:7fa41fe4e21a004a7801aeafae06cd1b7ea6d6edac58ef8de278479e3ef69153",
+      "task_id": "exp7500-arc-opportunity-audit"
+    },
+    {
+      "evidence_class": "missing",
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "blocked_missing_declared_producer_evidence",
+      "original_verdict_class": null,
+      "path": "results/experiment_7501_v656_service_placement.json",
+      "sha256": null,
+      "task_id": "exp7501-service-placement"
+    }
+  ],
+  "started_at_utc": "2026-09-21T23:44:55.990767+00:00",
+  "started_monotonic_ns": 36313202603324,
+  "status": "complete_blocked_required_v656_evidence_absent_or_externally_gated",
+  "submission_performed": false,
+  "supported_claims": {
+    "arc_generalization": {
+      "efficacy_estimate": null,
+      "episode_support_floor": 30,
+      "finding": "blocked_low_support_and_missing_panel_b",
+      "game_support_floor": 10,
+      "row_count": 18,
+      "source_path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+      "source_sha256": "sha256:7fa41fe4e21a004a7801aeafae06cd1b7ea6d6edac58ef8de278479e3ef69153",
+      "source_valid": true,
+      "source_verdict_class": "blocked",
+      "triggered_opportunity_count": 0,
+      "valid_episode_count": 18,
+      "valid_game_count": 6
+    },
+    "causal_feedback_benefit": {
+      "audit_disposition": {
+        "availability": "absent",
+        "benefit_state": "absent",
+        "disposition": "absent",
+        "original_flagged_adversarial": null,
+        "original_honest_verdict": null,
+        "original_verdict_class": null,
+        "path": "results/experiment_7497_v656_causal_online_learning.json",
+        "producer_number": 7497,
+        "reduction_errors": [],
+        "task_id": "exp7497-causal-online-learning"
+      },
+      "finding": "blocked_missing",
+      "independent_learning_row_count": 0,
+      "row_count": 0,
+      "source_path": "results/experiment_7497_v656_causal_online_learning.json",
+      "source_sha256": null,
+      "source_valid": false,
+      "source_verdict_class": "blocked"
+    },
+    "causal_fixture": {
+      "efficacy_authorized": false,
+      "finding": "blocked_missing",
+      "row_count": 0,
+      "source_path": "results/experiment_7496_v656_causal_update_fixture.json",
+      "source_sha256": null,
+      "source_valid": false,
+      "source_verdict_class": "blocked",
+      "verifier_is_oracle": null
+    },
+    "current_probability_quality": {
+      "audit_disposition": {
+        "availability": "absent",
+        "benefit_state": "absent",
+        "disposition": "absent",
+        "original_flagged_adversarial": null,
+        "original_honest_verdict": null,
+        "original_verdict_class": null,
+        "path": "results/experiment_7495_v656_window_calibration.json",
+        "producer_number": 7495,
+        "reduction_errors": [],
+        "task_id": "exp7495-window-calibration"
+      },
+      "finding": "blocked_missing",
+      "independent_probability_row_count": 0,
+      "row_count": 0,
+      "source_path": "results/experiment_7495_v656_window_calibration.json",
+      "source_sha256": null,
+      "source_valid": false,
+      "source_verdict_class": "blocked"
+    },
+    "current_typed_decision_utility": {
+      "audit_disposition": {
+        "availability": "absent",
+        "benefit_state": "absent",
+        "disposition": "absent",
+        "original_flagged_adversarial": null,
+        "original_honest_verdict": null,
+        "original_verdict_class": null,
+        "path": "results/experiment_7495_v656_window_calibration.json",
+        "producer_number": 7495,
+        "reduction_errors": [],
+        "task_id": "exp7495-window-calibration"
+      },
+      "finding": "blocked_missing",
+      "independent_utility_row_count": 0,
+      "row_count": 0,
+      "source_path": "results/experiment_7495_v656_window_calibration.json",
+      "source_sha256": null,
+      "source_valid": false,
+      "source_verdict_class": "blocked"
+    },
+    "fixture_efficacy_promoted": false,
+    "hardware_placement": {
+      "finding": "blocked_missing",
+      "hypothetical_only": true,
+      "measured_board_performance": false,
+      "row_count": 0,
+      "source_path": "results/experiment_7501_v656_service_placement.json",
+      "source_sha256": null,
+      "source_valid": false,
+      "source_verdict_class": "blocked"
+    },
+    "historical_probability_quality": {
+      "finding": "null",
+      "fresh_holdout": false,
+      "row_count": 74,
+      "scope": "external_faithbench_diagnostic_history",
+      "source_path": "results/experiment_7490_v656_historical_audit.json",
+      "source_sha256": "sha256:5b1fd18378fef3bc06aec546a256f4aaf57ec83e03d46b8bcb77788ec2936cc7",
+      "source_valid": true,
+      "source_verdict_class": "null",
+      "support": "74 external FaithBench groups from historical diagnostic evidence"
+    },
+    "historical_typed_decision_utility": {
+      "finding": "historical_observed",
+      "fresh_holdout": false,
+      "passed_cost_cells": 7,
+      "probability_claim_authorized": false,
+      "row_count": 74,
+      "source_path": "results/experiment_7490_v656_historical_audit.json",
+      "source_sha256": "sha256:5b1fd18378fef3bc06aec546a256f4aaf57ec83e03d46b8bcb77788ec2936cc7",
+      "source_valid": true,
+      "source_verdict_class": "null",
+      "total_cost_cells": 9
+    },
+    "hypothetical_placement_promoted_to_hardware_measurement": false,
+    "retention": {
+      "benefit_borrowed_from_fixture": false,
+      "finding": "blocked_missing",
+      "reported_separately": true,
+      "row_count": 0,
+      "source_path": "results/experiment_7497_v656_causal_online_learning.json",
+      "source_sha256": null,
+      "source_valid": false,
+      "source_verdict_class": "blocked"
+    },
+    "typed_utility_promoted_to_probability": false
+  },
+  "task_dispositions": [
+    {
+      "acceptance_gates": [
+        {
+          "check": "preconditions_authenticated",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid or missing evidence."
+        },
+        {
+          "check": "exact_v656_contract",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "Exact paired authorities prevent task identity and gate drift."
+        },
+        {
+          "check": "private_contract_mutations_rejected",
+          "expected": 12,
+          "observed": 12,
+          "op": "==",
+          "passed": true,
+          "principle": "Planted count, identity, order, path, gate, and milestone defects must fail."
+        },
+        {
+          "check": "v655_dispositions_authenticated",
+          "expected": 14,
+          "observed": 14,
+          "op": "==",
+          "passed": true,
+          "principle": "Thirteen producers and one absence prevent completed-task inflation."
+        },
+        {
+          "check": "method_rows_bounded",
+          "expected": 6,
+          "observed": 6,
+          "op": "==",
+          "passed": true,
+          "principle": "Bounded method intake prevents paper results from becoming Carnot measurements."
+        },
+        {
+          "check": "affected_validation",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "Scoped checks prevent unrelated suite state from laundering changed code."
+        },
+        {
+          "check": "repository_guards",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "Unchanged schema, gate, exclusion, ARC, and priority guards retain policy."
+        },
+        {
+          "check": "terminal_readers",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "Fresh readers prevent an in-process producer from acting as its own oracle."
+        },
+        {
+          "check": "advisory_contract_ready",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent V656 measurements."
+        },
+        {
+          "check": "scientific_benefit_not_claimed",
+          "expected": false,
+          "observed": false,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable seed, fixture, or low-support result cannot replace held-out value."
+        }
+      ],
+      "artifact_path": "results/experiment_7489_v656_contract_methods.json",
+      "artifact_sha256": "sha256:a63dd5bc6159529f33b14f4563b639e5debda496909efeecbe2b083ffb529ac6",
+      "attempted": true,
+      "benefit_gate_status": "not_declared",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7489_v656_contract_methods.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_v656_contract_methods_ingested",
+      "order": 1,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7489-contract-methods",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_advisory_v656_contract_and_methods",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 49,
+      "rows_available": true,
+      "support_gate_status": "not_declared",
+      "task_id": "exp7489-contract-methods",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "historical_inputs_authentic",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence."
+        },
+        {
+          "category": "validity",
+          "check": "independent_reduction_errors",
+          "expected": [],
+          "observed": [],
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence."
+        },
+        {
+          "category": "validity",
+          "check": "canonical_current_provenance",
+          "expected": "aggregation_from_upstream_artifacts",
+          "observed": "aggregation_from_upstream_artifacts",
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence."
+        },
+        {
+          "category": "validity",
+          "check": "required_current_validation",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence."
+        },
+        {
+          "category": "readiness",
+          "check": "historical_audit_complete",
+          "expected": 1,
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements."
+        },
+        {
+          "category": "benefit",
+          "check": "historical_probability_benefit",
+          "expected": "positive",
+          "observed": "null",
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value."
+        },
+        {
+          "category": "benefit",
+          "check": "historical_online_benefit",
+          "expected": "positive",
+          "observed": "null",
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value."
+        },
+        {
+          "category": "benefit",
+          "check": "shuffled_negative_control_chronology",
+          "expected": 0,
+          "observed": 376,
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value."
+        }
+      ],
+      "artifact_path": "results/experiment_7490_v656_historical_audit.json",
+      "artifact_sha256": "sha256:5b1fd18378fef3bc06aec546a256f4aaf57ec83e03d46b8bcb77788ec2936cc7",
+      "attempted": true,
+      "benefit_gate_status": "failed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7490_v656_historical_audit.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_historical_probability_limit_and_invalid_shuffled_control",
+      "order": 2,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7490-historical-audit",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_null_historical_probability_limit_and_invalid_shuffled_control",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 74,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7490-historical-audit",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "preconditions_authenticated",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "preconditions_checked"
+        },
+        {
+          "category": "readiness",
+          "check": "freshness_search_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "prior_exposure_exclusions"
+        },
+        {
+          "category": "readiness",
+          "check": "exact_role_counts",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "role_manifest"
+        },
+        {
+          "category": "readiness",
+          "check": "eligible_role_minima",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "role_manifest"
+        },
+        {
+          "category": "readiness",
+          "check": "held_out_test_class_support",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "evaluator_store"
+        },
+        {
+          "category": "validity",
+          "check": "windows_lossless",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "window_definition"
+        },
+        {
+          "category": "validity",
+          "check": "prompts_label_blind",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "request_manifest"
+        },
+        {
+          "category": "validity",
+          "check": "forward_budgets_valid",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "sample_size_budget"
+        },
+        {
+          "category": "validity",
+          "check": "required_validation_passed",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "category": "benefit",
+          "check": "predictive_benefit_not_claimed",
+          "expected": false,
+          "observed": false,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "honest_verdict"
+        }
+      ],
+      "artifact_path": "results/experiment_7491_v656_window_protocol.json",
+      "artifact_sha256": "sha256:03a221d7cb1a8da7bf0afc9f4827ee8a95db39e47ba09cb8c16dcd6869c70405",
+      "attempted": true,
+      "benefit_gate_status": "passed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7491_v656_window_protocol.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_structural_window_protocol_ready",
+      "order": 3,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7491-v656-window-protocol",
+      "raw_milestone": "2026.09.656",
+      "raw_status": null,
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 520,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7491-window-protocol",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "authenticated_identity_and_accounting",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "preconditions_checked"
+        },
+        {
+          "category": "validity",
+          "check": "native_window_transport",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "transport_reduction"
+        },
+        {
+          "category": "validity",
+          "check": "required_validation",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "category": "readiness",
+          "check": "capture_forecasts_fit",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "capture_budget_forecasts"
+        },
+        {
+          "category": "readiness",
+          "check": "capture_forecasts_evaluation",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "capture_budget_forecasts"
+        },
+        {
+          "category": "benefit",
+          "check": "predictive_benefit_not_claimed",
+          "expected": false,
+          "observed": false,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "honest_verdict"
+        }
+      ],
+      "artifact_path": "results/experiment_7492_v656_window_pilot.json",
+      "artifact_sha256": "sha256:04f55e4f093966d7e317d64ab625ee2add8e7997c5c8399238d2d733b6c1cea1",
+      "attempted": true,
+      "benefit_gate_status": "passed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7492_v656_window_pilot.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_window_native_transport_and_capture_forecasts_ready",
+      "order": 4,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7492-v656-window-pilot",
+      "raw_milestone": "2026.09.656",
+      "raw_status": null,
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 8,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7492-window-pilot",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "authenticated_identity_and_accounting",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence; this check prevents invalid evidence from being promoted.",
+          "upstream": "preconditions_checked"
+        },
+        {
+          "category": "validity",
+          "check": "required_validation",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence; this check prevents invalid evidence from being promoted.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "category": "readiness",
+          "check": "capture_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "readiness",
+          "check": "role_support",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "readiness",
+          "check": "eligible_calls_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "benefit",
+          "check": "predictive_benefit_not_measured",
+          "expected": false,
+          "observed": false,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value; this check prevents capture data from becoming a benefit claim.",
+          "upstream": "honest_verdict"
+        }
+      ],
+      "artifact_path": "results/experiment_7493_v656_window_fit_capture.json",
+      "artifact_sha256": "sha256:47580e4c3d0f4119b2bd43985a34f229eeb2a808f1f4a650ed29d7054e5f1d91",
+      "attempted": true,
+      "benefit_gate_status": "passed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7493_v656_window_fit_capture.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_window_fit_capture_ready_predictive_benefit_not_tested",
+      "order": 5,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7493-v656-window-fit-capture",
+      "raw_milestone": "2026.09.656",
+      "raw_status": null,
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 240,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7493-window-fit-capture",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "authenticated_identity_and_accounting",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence; this check prevents invalid evidence from being promoted.",
+          "upstream": "preconditions_checked"
+        },
+        {
+          "category": "validity",
+          "check": "required_validation",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence; this check prevents invalid evidence from being promoted.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "category": "readiness",
+          "check": "capture_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "readiness",
+          "check": "role_support",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "readiness",
+          "check": "eligible_calls_complete",
+          "expected": true,
+          "observed": true,
+          "op": "eq",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements; this check prevents efficacy from redefining capture readiness.",
+          "upstream": "capture_reduction"
+        },
+        {
+          "category": "benefit",
+          "check": "predictive_benefit_not_measured",
+          "expected": false,
+          "observed": false,
+          "op": "eq",
+          "passed": true,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value; this check prevents capture data from becoming a benefit claim.",
+          "upstream": "honest_verdict"
+        }
+      ],
+      "artifact_path": "results/experiment_7494_v656_window_eval_capture.json",
+      "artifact_sha256": "sha256:b28319796c5fa7d7e0c27858480f029396a4ce626e2f8470e32889a6b780f136",
+      "attempted": true,
+      "benefit_gate_status": "passed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7494_v656_window_eval_capture.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_null_window_evaluation_capture_ready_predictive_benefit_not_tested",
+      "order": 6,
+      "original_verdict_class": "null",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7494-v656-window-eval-capture",
+      "raw_milestone": "2026.09.656",
+      "raw_status": null,
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 280,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7494-window-eval-capture",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "null"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7495_v656_window_calibration.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 7,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7495-window-calibration",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7496_v656_causal_update_fixture.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 8,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7496-causal-update-fixture",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7497_v656_causal_online_learning.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 9,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7497-causal-online-learning",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "category": "validity",
+          "check": "independent_reduction_errors",
+          "expected": [],
+          "observed": [],
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "current_audit"
+        },
+        {
+          "category": "validity",
+          "check": "private_attack_controls",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "current_audit"
+        },
+        {
+          "category": "validity",
+          "check": "required_current_validation",
+          "expected": true,
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "principle": "A favorable metric cannot excuse invalid evidence.",
+          "upstream": "current_audit"
+        },
+        {
+          "category": "readiness",
+          "check": "window_protocol_available",
+          "expected": "valid",
+          "observed": "valid",
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7491_v656_window_protocol.json"
+        },
+        {
+          "category": "readiness",
+          "check": "window_pilot_available",
+          "expected": "valid",
+          "observed": "valid",
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7492_v656_window_pilot.json"
+        },
+        {
+          "category": "readiness",
+          "check": "fit_capture_available",
+          "expected": "valid",
+          "observed": "valid",
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7493_v656_window_fit_capture.json"
+        },
+        {
+          "category": "readiness",
+          "check": "evaluation_capture_available",
+          "expected": "valid",
+          "observed": "valid",
+          "op": "==",
+          "passed": true,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7494_v656_window_eval_capture.json"
+        },
+        {
+          "category": "readiness",
+          "check": "probability_and_utility_available",
+          "expected": "valid",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7495_v656_window_calibration.json"
+        },
+        {
+          "category": "readiness",
+          "check": "causal_fixture_available",
+          "expected": "valid",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7496_v656_causal_update_fixture.json"
+        },
+        {
+          "category": "readiness",
+          "check": "causal_learning_and_retention_available",
+          "expected": "valid",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A valid scientific null must not block independent measurements.",
+          "upstream": "results/experiment_7497_v656_causal_online_learning.json"
+        },
+        {
+          "category": "benefit",
+          "check": "probability_support_effect_and_multiplicity",
+          "expected": "passed",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "results/experiment_7495_v656_window_calibration.json"
+        },
+        {
+          "category": "benefit",
+          "check": "nine_utility_cells",
+          "expected": 9,
+          "observed": 0,
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "results/experiment_7495_v656_window_calibration.json"
+        },
+        {
+          "category": "benefit",
+          "check": "causal_learning_and_retention",
+          "expected": "passed",
+          "observed": "absent",
+          "op": "==",
+          "passed": false,
+          "principle": "A favorable seed, fixture or low-support result cannot replace held-out value.",
+          "upstream": "results/experiment_7497_v656_causal_online_learning.json"
+        }
+      ],
+      "artifact_path": "results/experiment_7498_v656_independent_audit.json",
+      "artifact_sha256": "sha256:a113713479c2548ab22b8f9c86c8118c7b173ede7c92f85fa528bfe59d8d92d0",
+      "attempted": true,
+      "benefit_gate_status": "failed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7498_v656_independent_audit.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_blocked_missing_v656_scientific_inputs",
+      "order": 10,
+      "original_verdict_class": "blocked",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7498-independent-audit",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_blocked_missing_v656_scientific_inputs",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 520,
+      "rows_available": true,
+      "support_gate_status": "failed",
+      "task_id": "exp7498-independent-audit",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7499_v656_arc_panel_b.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 11,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7499-arc-panel-b",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [
+        {
+          "artifact_field": "required_scoped_checks",
+          "category": "validity",
+          "check": "affected_validation",
+          "expected": true,
+          "field": "required_scoped_checks",
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "path": "validation_receipts",
+          "principle": "A favorable metric cannot excuse invalid affected code or imports.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "artifact_field": "terminal_readers",
+          "category": "validity",
+          "check": "terminal_independent_readers",
+          "expected": true,
+          "field": "terminal_readers",
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "path": "validation_receipts",
+          "principle": "A self-reported reduction cannot replace cold replay and unchanged readers.",
+          "upstream": "validation_receipts"
+        },
+        {
+          "artifact_field": "rows[].bounds_valid",
+          "category": "validity",
+          "check": "exclusive_bounds_valid",
+          "expected": true,
+          "field": "rows[].bounds_valid",
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "path": "rows",
+          "principle": "Duplicate, nested or incompatible intervals cannot inflate eligible cost.",
+          "upstream": "rows"
+        },
+        {
+          "artifact_field": "arc_opportunity_audit_complete_score",
+          "category": "readiness",
+          "check": "opportunity_audit_complete",
+          "expected": true,
+          "field": "arc_opportunity_audit_complete_score",
+          "observed": true,
+          "op": "==",
+          "passed": true,
+          "path": "rows|panel_results|validation_receipts",
+          "principle": "A valid scientific null must not block independent accounting completeness.",
+          "upstream": "rows|panel_results|validation_receipts"
+        },
+        {
+          "artifact_field": "pooling.valid_episode_count",
+          "category": "scientific_benefit",
+          "check": "pooled_episode_support",
+          "expected": 30,
+          "field": "pooling.valid_episode_count",
+          "observed": 18,
+          "op": ">=",
+          "passed": false,
+          "path": "pooling",
+          "principle": "A favorable seed or low-support panel cannot replace cross-game evidence.",
+          "upstream": "pooling"
+        },
+        {
+          "artifact_field": "pooling.valid_game_count",
+          "category": "scientific_benefit",
+          "check": "pooled_game_support",
+          "expected": 10,
+          "field": "pooling.valid_game_count",
+          "observed": 6,
+          "op": ">=",
+          "passed": false,
+          "path": "pooling",
+          "principle": "Repeated episodes cannot substitute for independent games.",
+          "upstream": "pooling"
+        },
+        {
+          "artifact_field": "pooling.identities_compatible",
+          "category": "scientific_benefit",
+          "check": "identity_compatible_pooling",
+          "expected": true,
+          "field": "pooling.identities_compatible",
+          "observed": false,
+          "op": "==",
+          "passed": false,
+          "path": "panel_identities",
+          "principle": "Version drift cannot become one pooled cost claim.",
+          "upstream": "panel_identities"
+        },
+        {
+          "artifact_field": "eligible_service_fractions.eligible_service_upper_ns",
+          "category": "scientific_benefit",
+          "check": "eligible_service_present",
+          "expected": 0,
+          "field": "eligible_service_fractions.eligible_service_upper_ns",
+          "observed": 0,
+          "op": ">",
+          "passed": false,
+          "path": "rows[].supervisor",
+          "principle": "Hypothesized removable generation cannot replace actual eligible supervisor work.",
+          "upstream": "rows[].supervisor"
+        },
+        {
+          "artifact_field": "efficacy_estimate",
+          "category": "scientific_benefit",
+          "check": "effect_size_threshold",
+          "expected": true,
+          "field": "efficacy_estimate",
+          "observed": false,
+          "op": "==",
+          "passed": false,
+          "path": "observation_only_no_intervention",
+          "principle": "Observational arm selection cannot establish a causal effect.",
+          "upstream": "observation_only_no_intervention"
+        },
+        {
+          "artifact_field": "retention",
+          "category": "scientific_benefit",
+          "check": "retention_threshold",
+          "expected": true,
+          "field": "retention",
+          "observed": false,
+          "op": "==",
+          "passed": false,
+          "path": "observation_only_no_intervention",
+          "principle": "A cost opportunity cannot excuse lost ARC progress.",
+          "upstream": "observation_only_no_intervention"
+        },
+        {
+          "artifact_field": "multiplicity",
+          "category": "scientific_benefit",
+          "check": "multiplicity_threshold",
+          "expected": "not_applicable_no_intervention_family",
+          "field": "multiplicity",
+          "observed": "not_applicable_no_intervention_family",
+          "op": "==",
+          "passed": true,
+          "path": "observation_scope",
+          "principle": "One selected observation cannot bypass a declared hypothesis-family correction.",
+          "upstream": "observation_scope"
+        }
+      ],
+      "artifact_path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+      "artifact_sha256": "sha256:7fa41fe4e21a004a7801aeafae06cd1b7ea6d6edac58ef8de278479e3ef69153",
+      "attempted": true,
+      "benefit_gate_status": "failed",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "terminal",
+      "excluded_from_positive_aggregate": false,
+      "expected_artifact_path": "results/experiment_7500_v656_arc_opportunity_audit.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_blocked_panel_b_blocked_missing_opportunity_audit",
+      "order": 12,
+      "original_verdict_class": "blocked",
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": "exp7500-arc-opportunity-audit",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_blocked_panel_b_blocked_missing_opportunity_audit",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 18,
+      "rows_available": true,
+      "support_gate_status": "passed",
+      "task_id": "exp7500-arc-opportunity-audit",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": false,
+      "benefit_gate_status": "not_run",
+      "censored": true,
+      "completed": false,
+      "evidence_state": "missing",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7501_v656_service_placement.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "blocked_missing_declared_producer_evidence",
+      "order": 13,
+      "original_verdict_class": null,
+      "principle": "An exact per-task record prevents absent, invalid, or low-support evidence from becoming completed benefit.",
+      "raw_experiment_id": null,
+      "raw_milestone": null,
+      "raw_status": null,
+      "required_validation_passed": false,
+      "required_validation_status": "not_run",
+      "row_count": 0,
+      "rows_available": false,
+      "support_gate_status": "not_run",
+      "task_id": "exp7501-service-placement",
+      "unstarted": true,
+      "validation_failures": [
+        "producer_evidence_missing"
+      ],
+      "verdict_class": "blocked"
+    },
+    {
+      "acceptance_gates": [],
+      "artifact_path": null,
+      "artifact_sha256": null,
+      "attempted": true,
+      "benefit_gate_status": "not_declared",
+      "censored": false,
+      "completed": true,
+      "evidence_state": "current_work",
+      "excluded_from_positive_aggregate": true,
+      "expected_artifact_path": "results/experiment_7502_v656_capstone.json",
+      "failed": false,
+      "flagged_adversarial": false,
+      "flags": {
+        "flagged_adversarial": false
+      },
+      "honest_verdict": "complete_blocked_required_v656_evidence_absent_or_externally_gated",
+      "order": 14,
+      "original_verdict_class": "blocked",
+      "principle": "Current work stays distinct from its future output, which prevents circular self-authentication.",
+      "raw_experiment_id": "exp7502-capstone",
+      "raw_milestone": "2026.09.656",
+      "raw_status": "complete_blocked_required_v656_evidence_absent_or_externally_gated",
+      "required_validation_passed": true,
+      "required_validation_status": "passed",
+      "row_count": 1,
+      "rows_available": true,
+      "support_gate_status": "not_declared",
+      "task_id": "exp7502-capstone",
+      "unstarted": false,
+      "validation_failures": [],
+      "verdict_class": "blocked"
+    }
+  ],
+  "validation_manifest": {
+    "changed_modules": [
+      "python/carnot/experiment_7502_v656_capstone.py"
+    ],
+    "experiment_id": "exp7502-capstone",
+    "frozen_before_checks": true,
+    "static_paths": [
+      "scripts/experiments/experiment_7502_v656_capstone.py"
+    ],
+    "test_paths": [
+      "tests/python/test_experiment_7502_v656_capstone.py"
+    ]
+  },
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7502_v656_capstone",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7502_v656_capstone"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5237181819975376,
+      "ended_at_utc": "2026-09-21T23:44:56.626259+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:926837b6b1717363fb2ae25baff61ddaaf041d14001af5d4ca2880ab22395f80",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7502_v656_capstone\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7502_v656_capstone.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7502_v656_capstone": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7502_v656_capstone.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T23:44:56.102188+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7502-b_e6udut/basetemp/focused tests/python/test_experiment_7502_v656_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7502-b_e6udut/basetemp/focused",
+        "tests/python/test_experiment_7502_v656_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 5.849581316004333,
+      "ended_at_utc": "2026-09-21T23:45:02.476278+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:bcd4f368bcefe549ee58325f4c30ca48cd350c6b95012d195b287dab888ca269",
+      "name": "focused_pytest",
+      "output_tail": "..............                                                           [100%]\n14 passed in 3.79s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-21T23:44:56.626291+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7502-b_e6udut/coverage/.coverage '--include=*/experiment_7502_v656_capstone.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7502-b_e6udut/basetemp/coverage tests/python/test_experiment_7502_v656_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7502-b_e6udut/coverage/.coverage",
+        "--include=*/experiment_7502_v656_capstone.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7502-b_e6udut/basetemp/coverage",
+        "tests/python/test_experiment_7502_v656_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 10.356067484004598,
+      "ended_at_utc": "2026-09-21T23:45:12.832822+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:a90b1c4a8a5ec8be961416707dffd986c1cbcc83251a9aad2a885dc1b9679f72",
+      "name": "changed_module_coverage",
+      "output_tail": "..............                                                           [100%]\n14 passed in 7.08s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-21T23:45:02.476311+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7502_v656_capstone.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7502_v656_capstone.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7502-b_e6udut/coverage/.coverage"
+      },
+      "duration_s": 0.10163576200284297,
+      "ended_at_utc": "2026-09-21T23:45:12.934900+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:6d4ee8e13c1c82d231dbc0424029bb648dc2557fe5e7a0c7b555fdae3b857871",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                             Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------\npython/carnot/experiment_7502_v656_capstone.py     382      0   100%\n------------------------------------------------------------------------------\nTOTAL                                              382      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T23:45:12.832853+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7502_v656_capstone.py scripts/experiments/experiment_7502_v656_capstone.py tests/python/test_experiment_7502_v656_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7502_v656_capstone.py",
+        "scripts/experiments/experiment_7502_v656_capstone.py",
+        "tests/python/test_experiment_7502_v656_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01434454200352775,
+      "ended_at_utc": "2026-09-21T23:45:12.949729+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-21T23:45:12.934949+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7502_v656_capstone.py scripts/experiments/experiment_7502_v656_capstone.py tests/python/test_experiment_7502_v656_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7502_v656_capstone.py",
+        "scripts/experiments/experiment_7502_v656_capstone.py",
+        "tests/python/test_experiment_7502_v656_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011433043000579346,
+      "ended_at_utc": "2026-09-21T23:45:12.961779+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-21T23:45:12.949771+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7502_v656_capstone.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7502_v656_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.1000009819981642,
+      "ended_at_utc": "2026-09-21T23:45:13.062050+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-21T23:45:12.961810+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7502_v656_capstone.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7502_v656_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02900107000459684,
+      "ended_at_utc": "2026-09-21T23:45:13.091415+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-21T23:45:13.062080+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7502_v656_capstone.py --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7502_v656_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7502_v656_capstone.py",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7502_v656_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.636555914003111,
+      "ended_at_utc": "2026-09-21T23:45:13.745609+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:e639d5c123943630c69bb03a8ae1a3b8aefd60a9c87cb1c5381b300818ad9530",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "[exp7502] phase=startup event=flushed\n{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_capability_e2e",
+      "started_at_utc": "2026-09-21T23:45:13.108564+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7502_v656_capstone.py --independent-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7502_v656_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7502_v656_capstone.py",
+        "--independent-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7502_v656_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.6759331920038676,
+      "ended_at_utc": "2026-09-21T23:45:14.422091+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/terminal/01_independent_cold_reducer/00_independent_cold_reducer.log",
+      "log_sha256": "sha256:e639d5c123943630c69bb03a8ae1a3b8aefd60a9c87cb1c5381b300818ad9530",
+      "name": "independent_cold_reducer",
+      "output_tail": "[exp7502] phase=startup event=flushed\n{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_raw_reduction",
+      "started_at_utc": "2026-09-21T23:45:13.745663+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7502_v656_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7502_v656_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5850498450017767,
+      "ended_at_utc": "2026-09-21T23:45:15.007696+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_safety",
+      "started_at_utc": "2026-09-21T23:45:14.422144+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7502_v656_capstone/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7502_v656_capstone/measured_terminal_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.026016253003035672,
+      "ended_at_utc": "2026-09-21T23:45:15.034304+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7502_v656_capstone/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_row_consistency",
+      "started_at_utc": "2026-09-21T23:45:15.007748+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

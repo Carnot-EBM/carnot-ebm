@@ -1218,3 +1218,96 @@ retired_extras:
   blocked_patterns:
   - rerun exp7406 through the unchanged current-invocation evidence mechanism
   - promote historical ARC proxy rows as current live generalization evidence
+- id: v656_historical_audit_same_disposition_retired_exp7490
+  experiment_scope: repeat the V656 historical probability and delayed-feedback
+    audit without new held-out evidence or a new causal control
+  reason: >-
+    retire_if_same_verdict: Exp7490 again found no historical probability or
+    online-learning benefit. It also found that the shuffled negative control
+    used future-origin labels. A new spelling cannot reopen this evidence.
+  experiment_ids:
+  - exp7484-decision-audit
+  - exp7490-historical-audit
+  retired_milestone: 2026.09.656
+  retired_by_artifact: results/experiment_7490_v656_historical_audit.json
+  recorded_by_artifact: results/experiment_7502_v656_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - repeat the V656 historical audit without fresh held-out evidence
+  - reuse the future-origin shuffled control as causal evidence
+- id: v656_window_transport_capture_same_disposition_retired_exp7492_7494
+  experiment_scope: repeat the same V656 lossless-window pilot or capture after
+    transport readiness with predictive benefit still deferred
+  reason: >-
+    retire_if_same_verdict: Exp7492, Exp7493, and Exp7494 repeated the prior
+    null readiness disposition. The lossless window transport and both sealed
+    captures completed. Another identical capture does not test benefit.
+  experiment_ids:
+  - exp7492-window-pilot
+  - exp7493-window-fit-capture
+  - exp7494-window-eval-capture
+  retired_milestone: 2026.09.656
+  retired_by_artifact: results/experiment_7494_v656_window_eval_capture.json
+  recorded_by_artifact: results/experiment_7502_v656_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - repeat the same lossless-window capture without a new readout method
+  - rerun the V656 window pilot after transport readiness
+- id: v656_importance_anchoring_mechanism_closed
+  experiment_scope: unchanged importance-anchored residual learning without a
+    new causal objective and registered held-out benefit
+  reason: >-
+    Exp7483 found no registered importance-anchor benefit. V656 did not produce
+    a terminal changed causal mechanism. The unchanged anchor remains closed.
+  experiment_ids:
+  - exp7483-continuous-learning
+  retired_milestone: 2026.09.656
+  recorded_by_artifact: results/experiment_7502_v656_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - repeat the same importance anchor without a new causal objective
+- id: v656_compact_generated_spans_mechanism_closed
+  experiment_scope: compact generated-span extraction that can discard natural-
+    text qualifiers or split complete sentences
+  reason: >-
+    The compact-span route ended as a valid natural-text extraction null. V656
+    qualified lossless windows instead. The compact route remains closed.
+  experiment_ids:
+  - exp7467-factual-span-canary
+  retired_milestone: 2026.09.656
+  recorded_by_artifact: results/experiment_7502_v656_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - reopen compact generated spans without a lossless natural-text method
+- id: v656_four_expert_reweighting_mechanism_closed
+  experiment_scope: unchanged four-expert reweighting without a different
+    expert construction and oracle-distinct held-out advantage
+  reason: >-
+    The unchanged four-expert mixture already has repeated valid null evidence.
+    V656 supplied no new expert construction. This route remains closed.
+  experiment_ids:
+  - exp7468-residual-learner
+  retired_milestone: 2026.09.656
+  recorded_by_artifact: results/experiment_7502_v656_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - repeat four-expert reweighting without a different expert construction
+- id: v656_generic_external_text_reranking_mechanism_closed
+  experiment_scope: generic external-text reranking inferred from source-option
+    readout without an oracle-distinct held-out method
+  reason: >-
+    Source-conditioned option readout does not establish a generic external-text
+    reranking benefit. V656 supplied no distinct held-out reranking mechanism.
+  experiment_ids:
+  - exp7470-independent-audit
+  retired_milestone: 2026.09.656
+  recorded_by_artifact: results/experiment_7502_v656_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - infer generic external-text reranking from source-option readout

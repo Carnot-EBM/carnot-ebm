@@ -76852,3 +76852,107 @@ publication. No numbered runtime end-to-end scenario applies.
 **When** fresh processes replay, reduce, adversarially verify, and lint the candidate
 **Then** identity, source, row, branch, gate, principle, or checksum drift fails
 **And** only a validated terminal JSON publishes at the declared result path.
+
+## V656 fourteen-disposition capstone — 2026-09-21
+
+**Status:** Specified. This host aggregation closes V656 with a complete
+disposition ledger. Missing producer evidence remains blocked. Invalid present
+evidence remains disqualified. Neither state becomes retryable capstone work.
+
+### REQ-REPORT-7502: Close V656 from authenticated raw evidence
+
+Exp7502 SHALL resolve the active `2026.09.656` roadmap and its Markdown
+authority. It SHALL require exactly fourteen ordered tasks from Exp7489 through
+Exp7502. It SHALL authenticate each predecessor from the declared deliverable
+or an exact conductor pre-gate artifact. It SHALL not guess an earlier V656
+path. The current task SHALL remain current work and SHALL not read its result
+as an input.
+
+Each disposition SHALL retain the expected path, observed evidence path, byte
+hash, original honest verdict, original verdict class, adversarial flag,
+required-validation state, row availability, and declared support and benefit
+gates. Missing external evidence SHALL be blocked. Failed required present
+evidence SHALL be disqualified. Valid independent branches SHALL remain
+visible. `partial` SHALL apply only to unfinished repair work owned by Exp7502.
+
+The capstone SHALL cross-check Exp7490, Exp7498, Exp7500, and Exp7501 against
+their authenticated producer rows. It SHALL report probability quality, typed
+decision utility, causal feedback benefit, retention, ARC generalization
+observations, and hypothetical hardware placement as separate claims. An
+oracle-defined fixture MAY be `circular_positive`. It SHALL not become efficacy.
+A typed-decision result SHALL not become a probability-quality result.
+
+Every V656 `prior_failures` row SHALL retain its exact prior experiment,
+verdict, remedy, and `retire_if_same_verdict` value. The reducer SHALL decide
+whether current evidence repeats the same scientific disposition. An unchanged
+mechanism with another no-benefit wording SHALL count as repeated. Existing
+stronger exclusions SHALL remain. External absence alone SHALL not retire a
+scientific mechanism.
+
+The artifact SHALL include a retrospective with three product-requirement
+gaps, support limits, dominant measured timings, and one concrete reopen
+condition per closed branch. Importance anchoring, compact generated spans,
+four-expert reweighting, and generic external-text reranking SHALL remain
+closed unless a separately justified method changes.
+
+The current task SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, balanced zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical model receipts SHALL remain hash-bound provenance only.
+
+Every artifact field and acceptance gate SHALL include a one-line principle
+that states the failure it prevents. `capstone_complete_score` SHALL equal one
+when all fourteen dispositions and the current required checks are complete.
+This score SHALL not depend on aggregate scientific success. A blocked or
+disqualified milestone MAY therefore have a complete capstone.
+
+The affected-file manifest SHALL freeze one test, one changed module, and one
+thin entrypoint before validation. Validation SHALL use the Exp7358 planning
+helpers and the Exp7303 streaming runner. It SHALL run focused pytest without
+coverage, separate 100 percent changed-module coverage, scoped Ruff, changed-
+module mypy, and scoped specification coverage. The entrypoint and a fresh-
+process cold replay SHALL be capability checks. Independent reduction,
+adversarial verification, and strict row consistency SHALL pass before atomic
+publication. No numbered runtime end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7502-DISPOSITIONS: Every V656 slot keeps its actual state
+
+**Given** valid producers, absent producers, conductor pre-gates, and current work
+**When** Exp7502 reduces the active V656 contract in order
+**Then** exactly fourteen dispositions retain paths, hashes, verdicts, flags, validation, rows, and gates
+**And** absence is blocked while invalid present evidence is disqualified.
+
+#### SCENARIO-REPORT-7502-CLAIMS: Claim types do not borrow support
+
+**Given** the historical audit, science audit, ARC audit, and service scope
+**When** producer rows and headline reductions are cross-checked
+**Then** probability, utility, feedback, retention, ARC, and placement claims stay separate
+**And** fixture circularity, typed utility, or hypothetical placement cannot imply efficacy.
+
+#### SCENARIO-REPORT-7502-RETIREMENT: Repeated mechanisms stay closed
+
+**Given** every declared prior failure and the permanent exclusion manifest
+**When** current scientific dispositions are compared with exact prior verdicts
+**Then** repeated unchanged mechanisms receive permanent retirement rows
+**And** different wording cannot reopen the same no-benefit finding.
+
+#### SCENARIO-REPORT-7502-COMPLETION: Reporting completion is not benefit
+
+**Given** fourteen explicit dispositions and passing current validation
+**When** one or more upstream branches are absent, blocked, null, or disqualified
+**Then** `capstone_complete_score` equals one and the honest aggregate class stays unchanged
+**And** `partial` remains reserved for Exp7502's own unfinished repair.
+
+#### SCENARIO-REPORT-7502-ARTIFACT: Exact readers control publication
+
+**Given** the frozen affected manifest and terminal candidate
+**When** fresh processes replay, reduce, adversarially verify, and strictly lint it
+**Then** identity, source, row, claim, retirement, gate, principle, or checksum drift fails
+**And** only the validated terminal JSON publishes at the declared result path.
+
+## Implementation Status (REQ-REPORT-7502)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7502 and SCENARIO-REPORT-7502-* | Implemented: V656 raw-evidence capstone reducer, retrospective, permanent retirement rows, and thin entrypoint. | Spec-linked tests cover contract order, evidence states, claim separation, retirement, completion, mutations, and scoped validation. The entrypoint records 100 percent changed-module coverage and all required terminal readers before publication. |

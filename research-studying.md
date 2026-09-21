@@ -6049,3 +6049,13 @@ budgeted feedback, KAN support limits, and on-chip locality map to V656.
 External paper results are not Carnot measurements. Exact revisions,
 limits, and task mappings are in
 `docs/research-notes/v656-method-ingestion.md`.
+
+<!-- EXP7502-V656-RETROSPECTIVE -->
+## 2026-09-21 Exp7502 — V656 retrospective — CLOSED
+
+The V656 capstone retains three open product gaps: calibrated source decisions,
+causal feedback learning, and ARC service with hardware scope. It records actual
+support and dominant producer timings in
+`docs/research-notes/v656-retrospective.md`. Importance anchoring, compact
+generated spans, four-expert reweighting, and generic external-text reranking
+remain closed until their stated method changes occur.
