@@ -4923,6 +4923,29 @@ never retries it with Claude
 
 **Spec traces:** REQ-INFRA-7088
 
+### REQ-INFRA-7089: Private Kaggle Probe MUST Measure Exact vLLM Option Scores
+
+**Statement:** A private, offline Kaggle kernel MUST inspect the same vLLM wheel,
+FlashInfer cache, model, and server launch used by the scored kernel. It MUST add
+only the option-score log-probability cap to the launch. The probe MUST preserve
+partial results after each phase. It MUST record the exact request schema, option
+token IDs, raw responses, declared-option probabilities, latency, determinism,
+runtime preconditions, and an honest terminal verdict. The probe MUST remain
+separate from the scored kernel and its competition inputs.
+
+### SCENARIO-INFRA-7089-PARTIAL-EVIDENCE: The Probe Cannot Finish Every Phase
+
+**Given** an offline Blackwell probe run with the scored wheel and model assets
+**When** a server, schema, or request variant fails before the probe finishes
+**Then** the kernel exits zero and keeps the completed phase evidence in its JSON output
+
+**Implementation:** `scripts/kaggle/vllm_logprob_probe_kernel/` contains the
+private kernel, frozen prompts, partial-result writer, and exact scored launch.
+
+**Tests:** `tests/python/test_vllm_logprob_probe_kernel.py`.
+
+**Spec traces:** REQ-INFRA-7089
+
 ### REQ-PIPELINE-6703: Cold Audit Rows Own The Readiness Gate
 
 Exp6703 SHALL reduce `planning_fixture_audit_passed` only from raw coverage,

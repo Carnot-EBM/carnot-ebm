@@ -2962,3 +2962,11 @@ REQ-AUTO-028 and its two scenarios map to
 `tests/python/test_jevbench_readout_eval.py`. The evaluator uses one option-logit
 forward pass per order. It reports out-of-fold calibration and the option-order
 probe. It writes no artifact unless the caller supplies `--output`.
+
+## 2026-09-20 — REQ-INFRA-7089 private vLLM log-probability probe
+
+REQ-INFRA-7089 and its scenario map to
+`scripts/kaggle/vllm_logprob_probe_kernel/` and
+`tests/python/test_vllm_logprob_probe_kernel.py`. The private kernel preserves
+partial evidence. It uses the scored wheel, model, FlashInfer cache, and launch.
+Only the maximum log-probability cap differs from the scored server command.

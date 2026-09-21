@@ -16730,3 +16730,9 @@ environment variables.
 - **Open operator questions:** plan section 11 (readout authority, parity bounds, public
   game roster, permission to probe the vLLM wheel on a Blackwell run).
 - **Not verified:** SemIf, Needle 3 and NanoJev claims; weights licenses; ARC transfer.
+
+## 2026-09-20 — Private vLLM log-probability probe ready
+
+The REQ-INFRA-7089 kernel source is ready for an operator-run private Kaggle
+probe. Local CPU tests cover its pure helpers and frozen prompts. The exact
+wheel schema, Blackwell server startup, and option scores remain unverified.
