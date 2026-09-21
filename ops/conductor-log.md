@@ -18334,3 +18334,4 @@ code |
 | 2026-09-21 00:45 UTC | Independently audit typed decisions, residual lear | OK | 97 passed, 1 warning in 50.52s |
 | 2026-09-21 01:37 UTC | Measure missing decision seams on adapter-withheld | OK | 118 passed, 1 warning in 11.36s |
 | 2026-09-21 01:39 UTC | Measure exact-prefix reuse and complete decision-s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7465-source-option-capture, exp7465-source-option-capture, exp7465-source-option-capture) |
+| 2026-09-21 01:53 UTC | Preserve board terminal states and dated GateMate  | OK | 88 passed, 1 warning in 7.43s |
