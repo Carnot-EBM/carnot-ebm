@@ -76263,3 +76263,101 @@ verdict class is inadmissible,
 **Status:** Planning contract delivered; all fourteen experiments remain proposed.
 Verification uses existing schema/gate tests and a private plan-contract smoke;
 this documentation change does not alter runtime behavior.
+
+## V655 contract and method evidence audit — 2026-09-21
+
+**Status:** Specified. This advisory host aggregation binds the active V655
+contract to terminal V654 evidence. It performs no current model inference,
+numeric fitting, roadmap activation, external publication, or generator change.
+
+### REQ-REPORT-7475: Authenticate the next contract without repairing historical evidence
+
+Exp7475 SHALL resolve only a roadmap whose milestone is `2026.09.655`. It SHALL
+prefer `research-roadmap-next.yaml` before activation and use
+`research-roadmap.yaml` only after activation. The selected YAML and the V655
+Markdown task table SHALL match exactly for fourteen ordered IDs, titles,
+phases, deliverables, substrate classes, and complete structured gate triples.
+Private count, order, ID, field, path, and milestone mutations in either
+authority SHALL fail without modifying either source.
+
+The reducer SHALL authenticate all fourteen immutable V654 dispositions from
+the Exp7474 capstone and each available producer or conductor pre-gate byte
+stream. It SHALL use `results/experiment_7465_source_option_capture.json` for
+the actual Exp7465 pre-gate evidence. It SHALL retain absent producers,
+original verdict classes, flags, validation failures, and extraction retirement.
+It SHALL not require the completion archive to describe the active milestone.
+
+The task SHALL ingest at most six primary methods from the dated V655 review:
+SemIf native readout, KAN-CL importance anchoring, support-overlap limits,
+budgeted feedback, efficiency-claim controls, and hardware locality. Each row
+SHALL include a source revision, usable component, failure mode, and exact task
+mapping. The KAN-CL row SHALL describe a head-component study and SHALL not
+claim reproduction of the full CNN and backbone system.
+
+The repository checks SHALL run the unchanged roadmap schema, gate audit,
+exclusion, ARC floor, and overdue-priority guards. Priority rows SHALL map the
+live E6 follow-up to Exp7478, Exp7485, and Exp7486; calibration to Exp7481; and
+FR-11 to Exp7482 and Exp7483. The inaccessible scored Blackwell runtime and the
+user-forbidden conductor obligation SHALL remain deferred. This advisory task
+SHALL not gate the thirteen later tasks.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, balanced zero invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+model-shaped events SHALL remain hash-bound sidecars. Numeric fitting SHALL be
+absent and recorded in a separate zero `small_ebm_training` receipt.
+
+The artifact SHALL contain measured clock and device identity, phase spans,
+exact preconditions, source hashes, per-unit rows, balanced sample accounting,
+categorized principle-bearing gates, failure summaries, validation receipts,
+contract rows, mutation rows, method rows, all fourteen V654 dispositions,
+priority mappings, unresolved obligations, field principles, and a
+reproducibility checksum. `contract_ready_score` SHALL be a bare zero or one
+that depends on exact contract and required validation checks, not scientific
+benefit. A valid advisory completion SHALL have a null verdict.
+
+The affected plan SHALL reuse the Exp7358 command plan and Exp7303 streaming
+runner. It SHALL use one exact test file, one changed module, one thin
+entrypoint, a private existing pytest base directory, command-local coverage,
+focused pytest without coverage, separate 100 percent changed-module coverage,
+scoped Ruff, changed-module mypy, and exact-test specification coverage. The
+declared entrypoint and a fresh-process cold replay are the capability
+end-to-end checks. Independent reduction, adversarial verification, and strict
+row consistency SHALL pass before atomic publication. No numbered runtime
+end-to-end scenario applies.
+
+#### SCENARIO-REPORT-7475-CONTRACT: Both V655 authorities fail closed
+
+**Given** the exact fourteen-task V655 Markdown table and selected YAML roadmap
+**When** count, order, ID, title, phase, path, substrate, gate, or milestone differs
+**Then** contract authentication fails while the other authority remains readable
+**And** later V655 science remains independent of this advisory result.
+
+#### SCENARIO-REPORT-7475-EVIDENCE: Every V654 slot retains its source state
+
+**Given** terminal artifacts, one conductor pre-gate record, and absent producers
+**When** Exp7475 authenticates all fourteen Exp7461 through Exp7474 dispositions
+**Then** exact paths, hashes, classes, flags, failures, and absences reproduce
+**And** completion never converts blocked, invalid, null, or circular evidence.
+
+#### SCENARIO-REPORT-7475-METHODS: Six bounded methods map to executable tasks
+
+**Given** the dated V655 primary-source review and bounded access receipts
+**When** the method map is reduced
+**Then** each source supplies a revision, component, failure mode, and task mapping
+**And** KAN-CL head anchoring remains distinct from its full vision system.
+
+#### SCENARIO-REPORT-7475-PRIORITIES: Open obligations remain explicit
+
+**Given** the live E6, calibration, FR-11, runtime, and conductor obligations
+**When** priority and deferral rows are built
+**Then** each scientific follow-up maps to its exact V655 task IDs
+**And** inaccessible or prohibited work remains deferred without becoming partial.
+
+#### SCENARIO-REPORT-7475-ARTIFACT: Exact readers control atomic publication
+
+**Given** immutable evidence rows, source hashes, and a frozen affected manifest
+**When** fresh processes replay, reduce, adversarially verify, and lint the candidate
+**Then** identity, source, row, gate, principle, or checksum drift fails
+**And** only a validated terminal JSON publishes at the declared result path.

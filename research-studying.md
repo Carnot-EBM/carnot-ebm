@@ -6031,3 +6031,12 @@ on-chip locality, and ARM–EBM categorical energy were mapped to V654 controls.
 The JevBench 72-to-21 reversal is attributed to open-alternative-jev, not SemIf.
 Exact revisions and claim limits are in
 `docs/research-notes/v654-method-ingestion.md`.
+
+<!-- EXP7475-V655-METHOD-INGESTION -->
+## 2026-09-21 Exp7475 — V655 methods — INGESTED
+
+SemIf native readout, KAN-CL head anchoring, support-overlap limits,
+budgeted feedback, efficiency controls, and hardware locality map to V655.
+KAN-CL is a head-component study, not the full CNN and backbone system.
+Exact revisions, failure modes, and task mappings are in
+`docs/research-notes/v655-method-ingestion.md`.

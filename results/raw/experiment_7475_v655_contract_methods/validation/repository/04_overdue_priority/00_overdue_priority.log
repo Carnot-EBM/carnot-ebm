@@ -1,0 +1,17 @@
+========================================================================
+overdue_priority_lint: refusing roadmap-next activation
+========================================================================
+
+CLAUDE.md "Overdue-Priority Forcing Function" mandates pickup
+of any priority with pending_count >= 3. The
+following priorities have aged past that threshold without
+being picked up or operator-overridden:
+
+  Priority filed 2026-09-19 (pending_count=3): "AUTORESEARCH CIRCUIT BREAKER SELF-LOCKS ON A CUMULATIVE, NEVER-RESET COUNTER — H..." deliverable_slug='retro_timing_fallback_wiring' -- NOT in research-roadmap-next.yaml and no operator_override present.
+
+To unblock: either (a) add a task to research-roadmap-next.yaml
+with a deliverable matching the priority's slug, or (b) add an
+explicit operator_override: field citing the authorization, or
+(c) remove the stale priority entry from known-issues.md.
+
+========================================================================
