@@ -44331,3 +44331,141 @@ sampler, training, binding, ARC, telemetry, Rust, or deployment behavior.
 **When** the declared unbuffered entrypoint runs
 **Then** scoped checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
 **And** only the final measured terminal JSON publishes atomically at the declared result path.
+
+### REQ-VERIFY-7494: V656 Window Evaluation Capture SHALL Preserve Every Sealed Held-Out Call
+
+Exp7494 SHALL consume Exp7491 and Exp7492 only after their exact schemas,
+experiment identities, terminal states, honest verdicts, verdict classes,
+adversarial flags, task-specific readiness scores, original hashes, and cold
+validators pass. It SHALL load the Exp7491 predictor, group, window, and request
+shards rather than reconstructing or guessing a V656 input. It SHALL use the
+authenticated Exp7492 model path, weight hash, Q4_K_M quantization, embedded
+tokenizer identity, native build identity, GPU placement contract, and prompt
+transport.
+
+The schedule SHALL include only the sealed 120 test groups and 160 online
+groups. It SHALL retain all 2,192 planned request cells, attempt only the 2,152
+eligible cells, and preserve the 40 complete-context overlength exclusions.
+Training and calibration-tuning groups SHALL not enter this shard. Current
+forwards SHALL never exceed 2,240. An Exp7492 pilot call MAY be recorded only as
+archived unless every request byte and the complete model identity match; the
+normal run SHALL not depend on pilot reuse.
+
+The task SHALL load cached `unsloth/Qwen3.8-27B-GGUF` exactly once under one
+owned GPU lease. It SHALL authenticate the exact GGUF path and SHA-256, Q4_K_M
+quantization, native module bytes and build identity, owned PID, GPU UUID,
+requested offload, observed layer placement, and peak owned-process VRAM. It
+SHALL generate zero tokens and declare `model_load_no_generation`. A small
+model, simulated output, load failure, archived call, or foreign process SHALL
+not count as current headline inference. Live work SHALL stop at 3,300 seconds
+without sleeping or truncating an input to meet a time target.
+
+Each eligible request SHALL use the exact sealed Exp7491 prompt and complete
+source context. Both stable option orders SHALL remain present for the whole
+response and every required focus window. Each completed call SHALL retain raw
+display-label logits, raw stable-option logits, remapped probabilities, native
+option token IDs, prompt token IDs, complete source and response text, prompt
+and text hashes, window byte offsets, arm, option order, source and window
+versions, call status, error, tokenization time, prefill time, readout time, KV
+reset receipt, and zero generated tokens. Labels, annotation text, annotation
+spans, outcomes, and response-generator identity SHALL not enter prompts or
+feature construction. Fresh test and online labels SHALL remain sealed until
+all later fitted policies are frozen.
+
+Every planned call and group SHALL end as complete, failed, excluded, censored,
+or unstarted. Planned, attempted, complete, failed, excluded, censored, and
+unstarted counts SHALL reconcile independently for calls and groups. A timeout,
+error, missing value, or nonfinite value SHALL remain explicit and SHALL close
+readiness rather than becoming zero. The task SHALL checkpoint after every
+source group, and resume SHALL require the same request-manifest bytes, exact
+request rows, model path, model hash, tokenizer identity, prompt hashes, role
+roster, and capture schema. Raw JSONL shards SHALL each remain below 20 MiB,
+carry byte hashes, and reload independently before a headline reduction.
+
+`capture_complete_score` SHALL equal one only when every planned call has an
+explicit disposition and every group reduces from those calls.
+`role_support_score` SHALL independently require at least 100 eligible test
+groups and 120 eligible online groups. `window_evaluation_ready_score` SHALL
+equal one only when every eligible required call is valid and complete, source
+and transport identity checks pass, role support passes, invocation accounting
+balances, required validation passes, and no adversarial flag is present. Model
+accuracy, probability-change sign, later class balance, and predictive benefit
+SHALL not define capture readiness.
+
+The terminal artifact SHALL publish atomically at
+`results/experiment_7494_v656_window_eval_capture.json`. It SHALL declare both
+model-spec fields, current invocation accounting, per-group rows, call and group
+budgets, role counts, hash-bound raw shards, phase spans, original source
+hashes and producer flags, exact validation receipts, and a reproducibility
+checksum. Every top-level field and acceptance gate SHALL carry one line naming
+the failure it prevents. Validity gates SHALL state that a favorable metric
+cannot excuse invalid evidence. Readiness gates SHALL state that a valid
+scientific null must not block independent measurements. Benefit gates SHALL
+state that a favorable seed, fixture, or low-support result cannot replace
+held-out value.
+
+The frozen affected-file manifest SHALL contain only the Exp7494 test, module,
+and thin entrypoint. Required checks SHALL be scoped pytest with `-n 0 -o
+addopts= --no-cov` and a private basetemp, 100 percent changed-module coverage
+with a command-local `COVERAGE_FILE`, scoped Ruff check and format,
+changed-module mypy, scoped spec coverage, fresh-process entrypoint replay,
+independent raw reduction, adversarial verification, and strict verdict-row
+consistency. No numbered runtime E2E applies because this isolated capture does
+not change shared runtime, sampler, training, binding, ARC, telemetry, Rust, or
+deployment behavior.
+
+#### SCENARIO-VERIFY-7494-PREREQUISITE: Exact V656 Producers Gate Current Work
+
+**Given** terminal Exp7491 protocol evidence and terminal Exp7492 qualified model evidence
+**When** Exp7494 authenticates their structured fields, bytes, raw shards, and cold validators
+**Then** current model work starts only after both exact producer contracts pass
+**And** missing, changed, blocked, or guessed producer evidence prevents a model load.
+
+#### SCENARIO-VERIFY-7494-ROSTER: Only Test And Online Roles Enter Evaluation
+
+**Given** the sealed Exp7491 group and request manifests
+**When** Exp7494 freezes its schedule before native outcomes
+**Then** it retains 120 test groups, 160 online groups, and 2,192 planned request cells
+**And** training and calibration-tuning groups never enter this shard or its support count.
+
+#### SCENARIO-VERIFY-7494-CALLS: Complete Context And Both Orders Stay Recheckable
+
+**Given** one eligible held-out group with its complete source, response, and lossless windows
+**When** native scoring completes for its sealed requests
+**Then** both option orders remain present for the whole response and every focus window
+**And** raw logits, probabilities, token IDs, hashes, offsets, versions, status, and timings remain in raw evidence.
+
+#### SCENARIO-VERIFY-7494-LABELS: Held-Out Outcomes Remain Sealed
+
+**Given** access-separated predictor and evaluator evidence
+**When** Exp7494 constructs prompts, scores calls, and writes feature evidence
+**Then** no label, annotation, span, outcome, or generator identity enters a prompt or feature
+**And** test and online labels remain sealed until all later fitted policies are frozen.
+
+#### SCENARIO-VERIFY-7494-ACCOUNTING: Failures Cannot Become Missing Zeros
+
+**Given** calls that can complete, fail, exceed the cap, or remain frozen exclusions
+**When** Exp7494 reduces calls and independent groups
+**Then** every call and group receives one explicit disposition and all budgets reconcile
+**And** any failed, censored, or unstarted eligible call closes readiness without a fabricated zero.
+
+#### SCENARIO-VERIFY-7494-RESUME: Checkpoints Require Exact Evaluation Identity
+
+**Given** a durable checkpoint saved after a completed held-out group
+**When** an owned process requests resume
+**Then** request-manifest, model, tokenizer, role, prompt, and schema hashes must match
+**And** any changed binding rejects reuse before the next model forward.
+
+#### SCENARIO-VERIFY-7494-READY: Evaluation Readiness Is Not Efficacy
+
+**Given** independently reloaded raw shards and terminal validation receipts
+**When** Exp7494 reduces capture status
+**Then** capture completeness, label-blind role support, and evaluation readiness have separate bare scores
+**And** accuracy, effect sign, or forbidden class balance cannot open or close readiness.
+
+#### SCENARIO-VERIFY-7494-E2E: One Live Command Publishes A Cold-Valid Capture
+
+**Given** one owned Qwen load, group checkpoints, hash-bound shards, and a frozen affected-file manifest
+**When** the declared unbuffered entrypoint runs
+**Then** scoped checks, cold replay, independent reduction, adversarial verification, and strict row lint pass
+**And** only the final measured terminal JSON publishes atomically at the declared result path.
