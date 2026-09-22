@@ -181,6 +181,17 @@ def _check(check: str, path: str, field: str, expected: Any, observed: Any, pass
     }
 
 
+def _normalize_check_location(row: Mapping[str, Any]) -> Json:
+    """Copy an inherited check and expose its exact resource under this contract."""
+
+    copied = dict(row)
+    if not copied.get("path"):
+        copied["path"] = copied.get("upstream") or "runtime_preconditions"
+    if not copied.get("field"):
+        copied["field"] = copied.get("artifact_field") or copied.get("check")
+    return copied
+
+
 def authenticate_upstream_fields(upstream: Mapping[str, Any]) -> list[Json]:
     """Authenticate the producer's terminal identity before using its panel."""
 
@@ -1663,7 +1674,7 @@ def collect_runtime_preconditions(
     progress(started, "runtime_preconditions", "before_model_cuda_probe")
     base_checks, hashes, resources = exp7471._runtime_preconditions(root, started)
     progress(started, "runtime_preconditions", "after_model_cuda_probe")
-    checks.extend(dict(row) for row in base_checks)
+    checks.extend(_normalize_check_location(row) for row in base_checks)
     resources["environment_dir"] = environment_dir
     model_path = resources.get("model_path")
     model_name = Path(str(model_path)).name if model_path else None

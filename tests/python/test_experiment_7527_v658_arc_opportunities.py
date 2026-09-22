@@ -386,6 +386,24 @@ def test_invalid_panel_and_gate_operator_raise() -> None:
         exp._gate("x", "validity", 1, 1, "!=", "test")
 
 
+def test_inherited_runtime_check_names_exact_path_and_field() -> None:
+    """SCENARIO-ARC-7527-PRECONDITIONS: inherited blockers keep their location."""
+
+    row = exp._normalize_check_location(
+        {
+            "check": "owned_gpu",
+            "upstream": "nvidia-smi",
+            "artifact_field": "idle_gpu_with_20GB",
+            "expected": True,
+            "observed": False,
+            "passed": False,
+        }
+    )
+
+    assert row["path"] == "nvidia-smi"
+    assert row["field"] == "idle_gpu_with_20GB"
+
+
 def test_natural_interface_strata_cover_coordinate_discrete_and_empty() -> None:
     """REQ-ARC-7527: descriptive strata follow observed action labels."""
 
