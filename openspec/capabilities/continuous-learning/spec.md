@@ -18661,3 +18661,112 @@ EBM efficacy claim follows from this timing experiment.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7514 and SCENARIO-CL-7514-* | Implemented: reusable controlled service reducer, owned native trace producer, durable paired arms, and thin entrypoint. | `tests/python/test_experiment_7514_v657_service_trace.py` passes 19 focused tests with 100 percent changed-module coverage. The declared entrypoint, cold replay, independent reduction, adversarial verifier, and strict row consistency checks pass. |
+
+## REQ-CL-7534: V659 Frozen-Bin Count-Memory Qualification
+
+Exp7534 SHALL qualify a fixture-only count-memory learner without data, GPU,
+model loading, MCMC, or generator training. The learner SHALL freeze eight
+equal-width probability bins before a real stream begins. For clipped
+`p0` in `[1e-4, 1-1e-4]`, it SHALL select
+`k = min(7, floor(8 * p0))`. Each bin SHALL initialize from a label-free mean
+`mu_k` with prior mass `kappa = 8`, `a_k = kappa * mu_k`, and
+`b_k = kappa * (1 - mu_k)`. Legal feedback `y` SHALL add `y` to `a_k` and
+`1-y` to `b_k`.
+
+Prediction SHALL be
+`p_t = sigmoid(logit(p0) + logit(a_k / (a_k + b_k)) - logit(mu_k))`.
+The exact binary energy SHALL be `E(x, 0) = 0` and
+`E(x, 1) = -logit(p_t)`, with normalized probabilities computed from both
+energies. The library API SHALL expose matched frozen, shared global-count,
+and local-count states. The global arm SHALL use one initialization mean and
+one count pair. The local feedback-permuted control SHALL consume exactly the
+same released label multiset and update count at each release, but MAY assign
+labels only to different records in that already-released batch.
+
+The event machine SHALL seal every prediction row and chosen action before
+feedback. No future-origin label or prerelease read MAY affect state. Duplicate
+feedback SHALL be rejected or idempotent, and a release earlier than the next
+legal release SHALL be rejected. Frozen bin means and global means SHALL not
+change after the stream starts.
+
+Durable state SHALL include schema, priors, counts, processed event IDs, sealed
+predictions, pending releases, durable acknowledgments, and a hash-chain
+journal. Crash recovery SHALL be tested after prediction, after release, before
+durable acknowledgment, and after durable acknowledgment. Each released label
+SHALL update state exactly once, and cold reload SHALL reproduce uninterrupted
+predictions and state.
+
+The qualification SHALL use deterministic analytical streams only: unchanged
+information, conditional drift with stable global prevalence, global-only
+drift, alternating recurrence, no feedback, all-one-class labels, and
+adversarial delayed IDs. It SHALL assert arithmetic posterior values, zero
+effect without feedback, legal release ordering, and an independently reduced
+oracle-distinctness classification. Constructed gains MAY support only
+`circular_positive`; they SHALL not support a real-data, distribution-free
+calibration, or V657 benefit claim. Existing V657 local-gradient and older
+importance-anchor nulls SHALL remain unchanged.
+
+The terminal artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current model invocation counts,
+`inference_substrate_class=no_model_load`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and host CPU
+execution. `count_memory_ready_score` SHALL be a bare numeric one only when
+arithmetic, chronology, restart, required scoped validation, cold replay, and
+independent reduction pass. This readiness field SHALL never assert empirical
+benefit. A fixed small numerical sanity panel MAY detect pathological update
+cost, but the full service comparison belongs to Exp7544.
+
+The affected validation SHALL freeze an Exp7358 `AffectedManifest` and use the
+Exp7303 scoped runner for serial focused pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+and exact-test specification coverage. The declared entrypoint, fresh-process
+cold replay, independent reduction, adversarial verifier, and strict row
+consistency reader SHALL inspect the exact candidate before atomic publication.
+Missing external prerequisites SHALL instead publish `complete_blocked_*` with
+`verdict_class=blocked` and an exact upstream, path or field, expected value,
+and observed value.
+
+### SCENARIO-CL-7534-ARITHMETIC: Exact Counts Define Exact Binary Energy
+
+- GIVEN frozen bin means and a legal released binary label
+- WHEN local and global count states update
+- THEN their posterior counts, corrected probability, two energies, and exact normalized probability match the registered equations.
+
+### SCENARIO-CL-7534-CHRONOLOGY: Feedback Cannot Arrive From The Future
+
+- GIVEN sealed predictions and delayed feedback with adversarial event identifiers
+- WHEN releases are delivered in legal and illegal orders
+- THEN only the next due release changes counts, predictions remain immutable, and future-origin or prerelease labels are rejected.
+
+### SCENARIO-CL-7534-PERMUTATION: The Local Control Uses The Same Released Evidence
+
+- GIVEN a mixed released batch
+- WHEN matched and feedback-permuted local arms update
+- THEN both consume the same label multiset and update count at the same release time
+- AND every permuted origin names a different already-released record when a nontrivial permutation exists.
+
+### SCENARIO-CL-7534-RESTART: Exactly-Once State Survives Every Interruption
+
+- GIVEN crashes after prediction, after release, before acknowledgment, and after acknowledgment
+- WHEN each checkpoint resumes once
+- THEN duplicate feedback cannot double-update counts and cold state predictions match uninterrupted execution.
+
+### SCENARIO-CL-7534-CONTROLS: Constructed Streams Qualify Mechanism Only
+
+- GIVEN all seven analytical streams and the fixed numerical sanity panel
+- WHEN fixture rows are independently reduced
+- THEN arithmetic, no-feedback, chronology, recurrence, and one-class controls pass
+- AND any constructed gain remains `circular_positive` with `positive_claim=false`.
+
+### SCENARIO-CL-7534-ARTIFACT: Readiness Is Independent Of Benefit
+
+- GIVEN complete raw fixture, restart, validation, and terminal-reader evidence
+- WHEN a fresh process recomputes every gate and checksum
+- THEN `count_memory_ready_score` can equal one without an empirical benefit claim
+- AND any failed required validation disqualifies the candidate before atomic publication.
+
+## Implementation Status (REQ-CL-7534)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7534 and SCENARIO-CL-7534-* | Implemented: frozen-bin count-memory API, causal durable event machine, seven analytical controls, restart qualification, terminal artifact producer, and thin entrypoint. | `tests/python/test_experiment_7534_v659_count_memory.py` covers arithmetic, chronology, permutation, exactly-once restart, controls, fail-closed readers, and blocked evidence. Focused tests and 100 percent changed-module coverage pass; the declared entrypoint runs the remaining scoped and terminal checks before publication. |
