@@ -1,0 +1,1129 @@
+{
+  "MODEL_SPECS": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "acceptance_gate_results": [
+    {
+      "category": "external_precondition",
+      "check": "owned_gpu_available",
+      "condition": "admissible_single_gpu == expected",
+      "expected": true,
+      "field": "admissible_single_gpu",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "nvidia-smi_compute_process_inventory",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "nvidia-smi"
+    }
+  ],
+  "adversarial_corrections": [],
+  "applicable_numbered_e2e": [],
+  "benefit_measured": false,
+  "capture_forecasts": null,
+  "complete": 1,
+  "development_panel": null,
+  "duration_breakdown_s": {
+    "authoring": 0.0,
+    "current_measurement_and_validation": 324.61163216800196,
+    "historical": 0.0
+  },
+  "duration_s": 324.61163216800196,
+  "eval_capture_feasible_score": 0,
+  "execution_device": "none_precondition_blocked",
+  "execution_venue": "host",
+  "experiment_id": "exp7535-v659-native-pilot",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "The current model ID prevents a hidden legacy substitution.",
+    "acceptance_gate_results": "Validity, readiness, support, and benefit cannot substitute for each other.",
+    "adversarial_corrections": "The adversarial_corrections field preserves one auditable terminal operand.",
+    "applicable_numbered_e2e": "The applicable_numbered_e2e field preserves one auditable terminal operand.",
+    "benefit_measured": "The benefit_measured field preserves one auditable terminal operand.",
+    "capture_forecasts": "The capture_forecasts field preserves one auditable terminal operand.",
+    "complete": "The complete field preserves one auditable terminal operand.",
+    "development_panel": "The development_panel field preserves one auditable terminal operand.",
+    "duration_breakdown_s": "The duration_breakdown_s field preserves one auditable terminal operand.",
+    "duration_s": "Monotonic current work exposes implausible or stale compute claims.",
+    "eval_capture_feasible_score": "Bare 0/1 binds the fixed evaluation roster to its own forecast.",
+    "execution_device": "The execution_device field preserves one auditable terminal operand.",
+    "execution_venue": "Real CUDA and CPU-only execution remain distinct evidence classes.",
+    "experiment_id": "The experiment_id field preserves one auditable terminal operand.",
+    "external_publication_authorized": "The external_publication_authorized field preserves one auditable terminal operand.",
+    "field_principles": "The field_principles field preserves one auditable terminal operand.",
+    "fit_capture_feasible_score": "Bare 0/1 binds the fixed fitting roster to the conservative forecast.",
+    "flagged_adversarial": "Actual verifier findings cannot be cleared to open a gate.",
+    "gate_check_summary": "A block names exact upstream, field, expected, and observed values.",
+    "generator_weights_changed": "The generator_weights_changed field preserves one auditable terminal operand.",
+    "gpu_admission_receipt": "The gpu_admission_receipt field preserves one auditable terminal operand.",
+    "historical_invocation_counts": "The historical_invocation_counts field preserves one auditable terminal operand.",
+    "honest_no_headroom_annotation": "The honest_no_headroom_annotation field preserves one auditable terminal operand.",
+    "honest_verdict": "A complete terminal prefix separates blocked, null, and positive outcomes.",
+    "inference_substrate": "Native option scoring cannot be mistaken for embedding vectors or generation.",
+    "inference_substrate_class": "The actual load-without-generation class sets the duration floor.",
+    "invocation_counts": "Balanced attempts and terminals expose failed or unfinished work.",
+    "milestone": "The milestone field preserves one auditable terminal operand.",
+    "model_invoked": "Current invocation status stays separate from historical calls.",
+    "model_specs": "Resolved path, hash, quantization, tokenizer, and runtime bind the model.",
+    "native_tool_ready_score": "Bare 0/1 requires owned CUDA logit custody, not predictive quality.",
+    "ownership_receipt": "GPU UUID and PID/start ticks prevent foreign compute from becoming evidence.",
+    "phase_spans": "Boundaries and completed units expose silent or unfinished operations.",
+    "pilot_cost_rows": "Per-forward length and duration prevent optimistic capture budgeting.",
+    "planned_inference_substrate": "The planned_inference_substrate field preserves one auditable terminal operand.",
+    "planned_inference_substrate_class": "The planned_inference_substrate_class field preserves one auditable terminal operand.",
+    "positive_claim": "The positive_claim field preserves one auditable terminal operand.",
+    "preconditions_checked": "Exact observations and hashes prevent fabricated readiness.",
+    "private_llm_off_real_environment_smoke": "The private_llm_off_real_environment_smoke field preserves one auditable terminal operand.",
+    "process_identity": "The process_identity field preserves one auditable terminal operand.",
+    "production_defaults_changed": "The production_defaults_changed field preserves one auditable terminal operand.",
+    "random_seed": "Frozen sampling, fitting, arrival, and bootstrap seeds prevent outcome selection.",
+    "raw_native_rows": "The raw_native_rows field preserves one auditable terminal operand.",
+    "readout_kind": "Option logits with zero output tokens distinguish scoring from generation.",
+    "ready": "The ready field preserves one auditable terminal operand.",
+    "reproducibility_checksum": "One digest binds code, settings, roles, model, and raw receipts.",
+    "rows": "Every compared development group retains absolute metrics and disposition.",
+    "run_date": "The run_date field preserves one auditable terminal operand.",
+    "sample_size_budget": "Planned, attempted, complete, failed, censored, excluded, and unstarted units stay distinct.",
+    "schema": "Exact experiment, milestone, version, and date prevent contract drift.",
+    "schema_binding": "The schema_binding field preserves one auditable terminal operand.",
+    "source_artifact_hashes": "The source_artifact_hashes field preserves one auditable terminal operand.",
+    "title": "The title field preserves one auditable terminal operand.",
+    "transport_reduction": "The transport_reduction field preserves one auditable terminal operand.",
+    "validation_receipts": "Exact commands, exits, hashes, and cold replay make validation auditable.",
+    "verdict_class": "The closed enum prevents external absence from becoming partial work.",
+    "verifier_is_oracle": "Injected labels cannot establish natural factuality or formal correctness.",
+    "version": "The version field preserves one auditable terminal operand."
+  },
+  "fit_capture_feasible_score": 0,
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": false,
+    "failed_checks": [
+      "owned_gpu_available"
+    ],
+    "failed_count": 1,
+    "first_failure": {
+      "category": "external_precondition",
+      "check": "owned_gpu_available",
+      "condition": "admissible_single_gpu == expected",
+      "expected": true,
+      "field": "admissible_single_gpu",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "nvidia-smi_compute_process_inventory",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "nvidia-smi"
+    }
+  },
+  "generator_weights_changed": false,
+  "gpu_admission_receipt": {
+    "evictions_attempted": 0,
+    "last_observation": {
+      "elapsed_s": 300.0636674149864,
+      "inventory": [
+        {
+          "compute_apps": [
+            {
+              "pid": 772157,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 18054
+            }
+          ],
+          "free_memory_mb": 6114,
+          "index": 0,
+          "memory_used_mb": 18064,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_memory_mb": 24576,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "compute_apps": [
+            {
+              "pid": 1007909,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 256
+            },
+            {
+              "pid": 1008047,
+              "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "used_memory_mb": 18054
+            },
+            {
+              "pid": 1008021,
+              "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "used_memory_mb": 536
+            }
+          ],
+          "free_memory_mb": 5312,
+          "index": 1,
+          "memory_used_mb": 18866,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_memory_mb": 24576,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "selected_uuid": null
+    },
+    "observation_count": 61,
+    "signals_sent": [],
+    "wait_limit_s": 300.0,
+    "waited_s": 300.0636687669903
+  },
+  "historical_invocation_counts": {},
+  "honest_no_headroom_annotation": "external_precondition_absent",
+  "honest_verdict": "complete_blocked_owned_gpu_available",
+  "inference_substrate": "blocked_no_run",
+  "inference_substrate_class": "blocked_no_run",
+  "invocation_counts": {
+    "cancellations": 0,
+    "failures": 0,
+    "forward_calls_attempted": 0,
+    "forward_calls_completed": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_completed": 0,
+    "in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_completed": 0
+  },
+  "milestone": "2026.09.659",
+  "model_invoked": false,
+  "model_specs": [],
+  "native_tool_ready_score": 0,
+  "ownership_receipt": null,
+  "phase_spans": [
+    {
+      "checkpoint": "inputs_authenticated",
+      "completed_units": 37,
+      "duration_s": 9.058643262993428,
+      "end_s": 9.058664814001531,
+      "ended_at_utc": "2026-09-22T22:57:15.302056Z",
+      "phase": "preconditions",
+      "start_s": 2.155100810341537e-05
+    },
+    {
+      "checkpoint": "scoped_commands_complete",
+      "completed_units": 8,
+      "duration_s": 15.489066580994404,
+      "end_s": 24.547754227998666,
+      "ended_at_utc": "2026-09-22T22:57:30.791144Z",
+      "phase": "affected_validation",
+      "start_s": 9.058687647004263
+    },
+    {
+      "checkpoint": "wait_closed",
+      "completed_units": 0,
+      "duration_s": 300.06377750200045,
+      "end_s": 324.6115487220086,
+      "ended_at_utc": "2026-09-22T23:02:30.854940Z",
+      "phase": "gpu_admission",
+      "start_s": 24.547771220008144
+    }
+  ],
+  "pilot_cost_rows": [],
+  "planned_inference_substrate": "live_llm_embedding_extraction",
+  "planned_inference_substrate_class": "model_load_no_generation",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "category": "external_precondition",
+      "check": "run_date",
+      "condition": "--date == expected",
+      "expected": "20260922",
+      "field": "--date",
+      "observed": "20260922",
+      "op": "==",
+      "passed": true,
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "command_line"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:AGENTS.md",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:CLAUDE.md",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:CODEX.md",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:research-program.md",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "research-program.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:python/carnot/experiment_7477_v655_native_readout_pilot.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7477_v655_native_readout_pilot.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python/carnot/experiment_7477_v655_native_readout_pilot.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:python/carnot/experiment_7514_v657_service_trace.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7514_v657_service_trace.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python/carnot/experiment_7514_v657_service_trace.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:python/carnot/experiment_7531_b2_induction_gate_measurement.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7531_b2_induction_gate_measurement.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python/carnot/experiment_7531_b2_induction_gate_measurement.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:python/carnot/inference/sota_models.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/inference/sota_models.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python/carnot/inference/sota_models.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:results/experiment_7533_v659_tool_protocol.json",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:openspec/capabilities/verification/spec.md",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/verification/spec.md",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:python/carnot/experiment_7535_v659_native_pilot.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7535_v659_native_pilot.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python/carnot/experiment_7535_v659_native_pilot.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:scripts/experiments/experiment_7535_v659_native_pilot.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7535_v659_native_pilot.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "scripts/experiments/experiment_7535_v659_native_pilot.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "source_bytes:tests/python/test_experiment_7535_v659_native_pilot.py",
+      "condition": "readable_nonempty_bytes == expected",
+      "expected": true,
+      "field": "readable_nonempty_bytes",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7535_v659_native_pilot.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "tests/python/test_experiment_7535_v659_native_pilot.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "requirement_present",
+      "condition": "REQ-VERIFY-7535 == expected",
+      "expected": true,
+      "field": "REQ-VERIFY-7535",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/verification/spec.md",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:tool_protocol_ready_score",
+      "condition": "tool_protocol_ready_score == expected",
+      "expected": 1,
+      "field": "tool_protocol_ready_score",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:verdict_class",
+      "condition": "verdict_class == expected",
+      "expected": "null",
+      "field": "verdict_class",
+      "observed": "null",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:flagged_adversarial",
+      "condition": "flagged_adversarial == expected",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:run_date",
+      "condition": "run_date == expected",
+      "expected": "20260922",
+      "field": "run_date",
+      "observed": "20260922",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:exclusions",
+      "condition": "sealed_shards.exclusions.sha256 == expected",
+      "expected": "sha256:19431746b12a022406a9d1f157912fe52ca09a6e6be207ee7add702d2e889b08",
+      "field": "sealed_shards.exclusions.sha256",
+      "observed": "sha256:19431746b12a022406a9d1f157912fe52ca09a6e6be207ee7add702d2e889b08",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/exclusions.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:fit_labels",
+      "condition": "sealed_shards.fit_labels.sha256 == expected",
+      "expected": "sha256:6f00300898f03d3bb442f9d87d3d132330e90008ebdb2093d7a1c1ce125557bc",
+      "field": "sealed_shards.fit_labels.sha256",
+      "observed": "sha256:6f00300898f03d3bb442f9d87d3d132330e90008ebdb2093d7a1c1ce125557bc",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/fit_labels.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:interventions_000",
+      "condition": "sealed_shards.interventions_000.sha256 == expected",
+      "expected": "sha256:739d0a170e0650e232f0c97b716f2cb2e14d38140b454a5119584a32b7fc5e06",
+      "field": "sealed_shards.interventions_000.sha256",
+      "observed": "sha256:739d0a170e0650e232f0c97b716f2cb2e14d38140b454a5119584a32b7fc5e06",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/interventions_000.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:interventions_001",
+      "condition": "sealed_shards.interventions_001.sha256 == expected",
+      "expected": "sha256:891a37c86837d0a298c17a0aa5c406ee17faf7529b8ffa5d74cfa9d7c44babbc",
+      "field": "sealed_shards.interventions_001.sha256",
+      "observed": "sha256:891a37c86837d0a298c17a0aa5c406ee17faf7529b8ffa5d74cfa9d7c44babbc",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/interventions_001.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:online_release",
+      "condition": "sealed_shards.online_release.sha256 == expected",
+      "expected": "sha256:bfefdbae90658702233b81bb0fe1f047884a9a3852f16c2e12ab289437185f7d",
+      "field": "sealed_shards.online_release.sha256",
+      "observed": "sha256:bfefdbae90658702233b81bb0fe1f047884a9a3852f16c2e12ab289437185f7d",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/online_release.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:policy_labels",
+      "condition": "sealed_shards.policy_labels.sha256 == expected",
+      "expected": "sha256:c8fddf13d7e04080ac3104b2e79439cc9728a24058b0656764f4969c71ccdc1d",
+      "field": "sealed_shards.policy_labels.sha256",
+      "observed": "sha256:c8fddf13d7e04080ac3104b2e79439cc9728a24058b0656764f4969c71ccdc1d",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/policy_labels.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:predictor",
+      "condition": "sealed_shards.predictor.sha256 == expected",
+      "expected": "sha256:9ef4d93c2da56381ac13153376026a2dbf8e401d483ddeaef31661d126178095",
+      "field": "sealed_shards.predictor.sha256",
+      "observed": "sha256:9ef4d93c2da56381ac13153376026a2dbf8e401d483ddeaef31661d126178095",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/predictor.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:test_labels",
+      "condition": "sealed_shards.test_labels.sha256 == expected",
+      "expected": "sha256:cd3698eeb97d51a3807692d6605ef690436e969c313d94cb032df11aeeb9514e",
+      "field": "sealed_shards.test_labels.sha256",
+      "observed": "sha256:cd3698eeb97d51a3807692d6605ef690436e969c313d94cb032df11aeeb9514e",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/test_labels.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:sealed_shard:tune_labels",
+      "condition": "sealed_shards.tune_labels.sha256 == expected",
+      "expected": "sha256:121c6bb706b15593744c49360ec188424ab0785cdf3f4eadc28ac542e60d7b3b",
+      "field": "sealed_shards.tune_labels.sha256",
+      "observed": "sha256:121c6bb706b15593744c49360ec188424ab0785cdf3f4eadc28ac542e60d7b3b",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/tune_labels.jsonl",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exp7533:frozen_role_components",
+      "condition": "role_manifest.groups.unique_component_count == expected",
+      "expected": 480,
+      "field": "role_manifest.groups.unique_component_count",
+      "observed": 480,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "cached_current_model",
+      "condition": "hf_id_quantization_path == expected",
+      "expected": {
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "quantization": "Q4_K_M"
+      },
+      "field": "hf_id_quantization_path",
+      "observed": {
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "quantization": "Q4_K_M"
+      },
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "carnot.inference.sota_models.cached_current_model"
+    },
+    {
+      "category": "external_precondition",
+      "check": "llama_cpp_runtime",
+      "condition": "llama_cpp.available == expected",
+      "expected": true,
+      "field": "llama_cpp.available",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "python_environment"
+    },
+    {
+      "category": "external_precondition",
+      "check": "owned_gpu_available",
+      "condition": "admissible_single_gpu == expected",
+      "expected": true,
+      "field": "admissible_single_gpu",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "nvidia-smi_compute_process_inventory",
+      "principle": "A missing or changed external input must block dependent model work.",
+      "upstream": "nvidia-smi"
+    }
+  ],
+  "private_llm_off_real_environment_smoke": "not_applicable_isolated_readout_pilot",
+  "process_identity": {
+    "clock": "time.monotonic",
+    "pid": 1028546,
+    "python": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12"
+  },
+  "production_defaults_changed": false,
+  "random_seed": {
+    "arrival": 659037,
+    "bootstrap": 659038,
+    "fitting": 659036,
+    "sampling": 659035
+  },
+  "raw_native_rows": null,
+  "readout_kind": "option_logits",
+  "ready": 0,
+  "reproducibility_checksum": "sha256:f21ad5a98e8cd77e9a3f0b00002213d39661660f2d9f06897b5256f67817e4f8",
+  "rows": [],
+  "run_date": "20260922",
+  "sample_size_budget": {
+    "attempted": 0,
+    "censored": 0,
+    "complete": 0,
+    "excluded": 0,
+    "failed": 0,
+    "planned": 72,
+    "unstarted": 72
+  },
+  "schema": "carnot.exp7535.v659.native_pilot.v1",
+  "schema_binding": {
+    "experiment_id": "exp7535-v659-native-pilot",
+    "milestone": "2026.09.659",
+    "run_date": "20260922",
+    "version": "v659"
+  },
+  "source_artifact_hashes": [
+    {
+      "bytes": 1165,
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "bytes": 318291,
+      "path": "CLAUDE.md",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+    },
+    {
+      "bytes": 2697,
+      "path": "CODEX.md",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+    },
+    {
+      "bytes": 28560,
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "bytes": 63348,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65"
+    },
+    {
+      "bytes": 10701,
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac"
+    },
+    {
+      "bytes": 115811,
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    {
+      "bytes": 12790,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "bytes": 54324,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    {
+      "bytes": 13393,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    {
+      "bytes": 69409,
+      "path": "python/carnot/experiment_7477_v655_native_readout_pilot.py",
+      "sha256": "sha256:5af46058486638dc8a86f77d4c8c3eedb64377df5fb9369590c68896a58b1ecd"
+    },
+    {
+      "bytes": 75864,
+      "path": "python/carnot/experiment_7514_v657_service_trace.py",
+      "sha256": "sha256:dfd422ba574b7c15833456e7b015e1ba3ab27a22f8634e56a1f2eddf0e0afea2"
+    },
+    {
+      "bytes": 18991,
+      "path": "python/carnot/experiment_7531_b2_induction_gate_measurement.py",
+      "sha256": "sha256:00e559cd0c8dfa3a30b6dbcce0461f45dc88d57ba1be4829b1431982ba7c0930"
+    },
+    {
+      "bytes": 14328,
+      "path": "python/carnot/inference/sota_models.py",
+      "sha256": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719"
+    },
+    {
+      "bytes": 334260,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "sha256": "sha256:4b6d0c6185bc645f9459afb31f0d973e387243a6ebd1f5b9d4d6c1ec6a8259b6"
+    },
+    {
+      "bytes": 2781811,
+      "path": "openspec/capabilities/verification/spec.md",
+      "sha256": "sha256:957953657ef77ed1a679717ab74336594eb09a98bf460961cb24c12b565792c9"
+    },
+    {
+      "bytes": 97866,
+      "path": "python/carnot/experiment_7535_v659_native_pilot.py",
+      "sha256": "sha256:53549bc8542e370a208b4939a54dc10201e081e37cd942d5c09dc6c6b5712498"
+    },
+    {
+      "bytes": 175,
+      "path": "scripts/experiments/experiment_7535_v659_native_pilot.py",
+      "sha256": "sha256:67dab6d4a21b933568e9863d0252ec45bc8f4cb171a70bd7762f76de0f054381"
+    },
+    {
+      "bytes": 19663,
+      "path": "tests/python/test_experiment_7535_v659_native_pilot.py",
+      "sha256": "sha256:52d4cd81139e6ce3216c45e66cca39dc5f9df1ae711d44c7ab15682426b7e414"
+    },
+    {
+      "bytes": 321272,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/exclusions.jsonl",
+      "sha256": "sha256:19431746b12a022406a9d1f157912fe52ca09a6e6be207ee7add702d2e889b08"
+    },
+    {
+      "bytes": 40868,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/fit_labels.jsonl",
+      "sha256": "sha256:6f00300898f03d3bb442f9d87d3d132330e90008ebdb2093d7a1c1ce125557bc"
+    },
+    {
+      "bytes": 12563005,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/interventions_000.jsonl",
+      "sha256": "sha256:739d0a170e0650e232f0c97b716f2cb2e14d38140b454a5119584a32b7fc5e06"
+    },
+    {
+      "bytes": 5733125,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/interventions_001.jsonl",
+      "sha256": "sha256:891a37c86837d0a298c17a0aa5c406ee17faf7529b8ffa5d74cfa9d7c44babbc"
+    },
+    {
+      "bytes": 40430,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/online_release.jsonl",
+      "sha256": "sha256:bfefdbae90658702233b81bb0fe1f047884a9a3852f16c2e12ab289437185f7d"
+    },
+    {
+      "bytes": 9978,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/policy_labels.jsonl",
+      "sha256": "sha256:c8fddf13d7e04080ac3104b2e79439cc9728a24058b0656764f4969c71ccdc1d"
+    },
+    {
+      "bytes": 3107787,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/predictor.jsonl",
+      "sha256": "sha256:9ef4d93c2da56381ac13153376026a2dbf8e401d483ddeaef31661d126178095"
+    },
+    {
+      "bytes": 19633,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/test_labels.jsonl",
+      "sha256": "sha256:cd3698eeb97d51a3807692d6605ef690436e969c313d94cb032df11aeeb9514e"
+    },
+    {
+      "bytes": 10235,
+      "path": "results/raw/experiment_7533_v659_tool_protocol/tune_labels.jsonl",
+      "sha256": "sha256:121c6bb706b15593744c49360ec188424ab0785cdf3f4eadc28ac542e60d7b3b"
+    },
+    {
+      "bytes": 17106775008,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "role": "current_model_weights",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+    }
+  ],
+  "title": "V659 4096-context native tool-source pilot",
+  "transport_reduction": null,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7535_v659_native_pilot",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7535_v659_native_pilot"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.3254960699996445,
+      "ended_at_utc": "2026-09-22T22:57:16.628780+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7535_v659_native_pilot/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:6455e5c6facd928fba7b6345ccc5b5f099d849024ead2c2d23582100981fac18",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7535_v659_native_pilot\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7535_v659_native_pilot.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7535_v659_native_pilot": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7535_v659_native_pilot.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T22:57:15.302843+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7535-validation-recji7dj/basetemp/focused tests/python/test_experiment_7535_v659_native_pilot.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7535-validation-recji7dj/basetemp/focused",
+        "tests/python/test_experiment_7535_v659_native_pilot.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.743960310996044,
+      "ended_at_utc": "2026-09-22T22:57:21.373044+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7535_v659_native_pilot/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:ea0ccfde18347e3ef52776b30981487c57effdbc13dc814831d730df46820313",
+      "name": "focused_pytest",
+      "output_tail": "..............................                                           [100%]\n30 passed in 1.97s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-22T22:57:16.628816+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7535-validation-recji7dj/coverage/.coverage '--include=*/experiment_7535_v659_native_pilot.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7535-validation-recji7dj/basetemp/coverage tests/python/test_experiment_7535_v659_native_pilot.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7535-validation-recji7dj/coverage/.coverage",
+        "--include=*/experiment_7535_v659_native_pilot.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7535-validation-recji7dj/basetemp/coverage",
+        "tests/python/test_experiment_7535_v659_native_pilot.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 7.773695572002907,
+      "ended_at_utc": "2026-09-22T22:57:29.147037+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7535_v659_native_pilot/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:88b48be7be1a3eed5dfda935551c614ef36e481c27db9a7a8fc3848fec6b30dd",
+      "name": "changed_module_coverage",
+      "output_tail": "..............................                                           [100%]\n30 passed in 3.62s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-22T22:57:21.373078+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7535_v659_native_pilot.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7535_v659_native_pilot.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7535-validation-recji7dj/coverage/.coverage"
+      },
+      "duration_s": 0.12539864399877843,
+      "ended_at_utc": "2026-09-22T22:57:29.272887+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7535_v659_native_pilot/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:763b54698afce49f4d7d911c5c42f4c22321140513b28f37da32ee71ec6014d3",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                 Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------\npython/carnot/experiment_7535_v659_native_pilot.py     354      0   100%\n----------------------------------------------------------------------------------\nTOTAL                                                  354      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T22:57:29.147071+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7535_v659_native_pilot.py scripts/experiments/experiment_7535_v659_native_pilot.py tests/python/test_experiment_7535_v659_native_pilot.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7535_v659_native_pilot.py",
+        "scripts/experiments/experiment_7535_v659_native_pilot.py",
+        "tests/python/test_experiment_7535_v659_native_pilot.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01171433599665761,
+      "ended_at_utc": "2026-09-22T22:57:29.285008+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7535_v659_native_pilot/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-22T22:57:29.272949+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7535_v659_native_pilot.py scripts/experiments/experiment_7535_v659_native_pilot.py tests/python/test_experiment_7535_v659_native_pilot.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7535_v659_native_pilot.py",
+        "scripts/experiments/experiment_7535_v659_native_pilot.py",
+        "tests/python/test_experiment_7535_v659_native_pilot.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.010587722004856914,
+      "ended_at_utc": "2026-09-22T22:57:29.295963+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7535_v659_native_pilot/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-22T22:57:29.285055+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7535_v659_native_pilot.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7535_v659_native_pilot.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.4687866360036423,
+      "ended_at_utc": "2026-09-22T22:57:30.765209+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7535_v659_native_pilot/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T22:57:29.295993+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7535_v659_native_pilot.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7535_v659_native_pilot.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.025160242003039457,
+      "ended_at_utc": "2026-09-22T22:57:30.790961+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7535_v659_native_pilot/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-22T22:57:30.765270+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false,
+  "version": "v659"
+}

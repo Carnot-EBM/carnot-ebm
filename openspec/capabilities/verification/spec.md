@@ -45153,3 +45153,101 @@ No numbered runtime E2E applies to this CPU-only protocol work.
 **When** the declared unbuffered entrypoint and fresh-process replay run
 **Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
 **And** only the exact validated terminal JSON publishes at the deliverable path.
+
+### REQ-VERIFY-7535: V659 Native Pilot SHALL Measure The 4096-Context Tool-Source Shape
+
+Exp7535 SHALL authenticate the completed Exp7533 protocol and its sealed public
+shards before measurement. It SHALL select exactly twelve official-training
+components outside every Exp7533 role by a deterministic hash fixed before
+model outcomes. The development panel SHALL span the available complete-prompt
+length range and at least two tool types. Selection SHALL use no labels,
+annotation spans, outcomes, generator identities, or corpus labels. Each target
+SHALL receive a distinct donor from the same development tool-type stratum.
+
+The pilot SHALL freeze original, absent, and same-development-stratum donor
+conditions in both semantic option orders. It SHALL execute exactly 72 native
+forwards at `n_ctx=4096` and generate zero tokens. Each row SHALL retain the
+exact prompt text and byte hash, component and donor identities, condition,
+stable semantic option IDs, display mapping, complete prompt token IDs and
+count, full option logits, probabilities, measured forward duration, runtime
+receipt, and an explicit error disposition. Hidden prompt truncation,
+non-finite probabilities, an incorrect last-token score position, unstable
+option IDs, or a semantic order-map failure SHALL fail custody before any
+scientific reduction. Source-detection quality SHALL NOT gate transport.
+
+Before loading weights, the task SHALL resolve only cached
+`unsloth/Qwen3.8-27B-GGUF` Q4_K_M through `cached_current_model()` or
+`cached_sota_pair()`. It SHALL bind the resolved path, file hash, embedded GGUF
+tokenizer, llama.cpp runtime, one selected GPU UUID, the owned PID and process
+start ticks, and observed CUDA offload. Admission MAY wait for at most 300
+seconds with truthful heartbeats. It SHALL not require both GPUs to be idle,
+evict another process, substitute a legacy model, or publish a CPU-only
+headline. The inference declarations SHALL be
+`model_load_no_generation`, `live_llm_embedding_extraction`, and
+`readout_kind=option_logits`.
+
+The task SHALL forecast the registered 1,440-forward fitting capture and the
+separate 1,440-forward evaluation capture as measured model load plus
+`1440*p95_forward_seconds`, checkpoint overhead, and 600 seconds of validation.
+Each bare feasibility score SHALL equal one only when its independent forecast
+is at most 3,600 seconds. A closed forecast SHALL block that capture without
+sample shrinking or transport retuning. The pilot SHALL retain actual load and
+forward durations and hash-bound raw native receipts below 20 MiB.
+
+Missing external prerequisites SHALL publish a schema-complete
+`complete_blocked_*` artifact with `verdict_class=blocked`. Its gate summary
+SHALL name the failed check, exact upstream, field or path, expected value, and
+observed value. A required validation failure SHALL be disqualified. A complete
+valid lack of predictive benefit SHALL remain null. `partial` SHALL be used only
+for retryable unfinished work owned by Exp7535.
+
+The affected manifest SHALL name only the Exp7535 test, module, and thin
+entrypoint. Required checks SHALL include scoped pytest with a private basetemp,
+separate 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, scoped specification coverage, declared-entrypoint cold
+replay, independent raw reduction, adversarial verification, and strict verdict
+row consistency. No numbered runtime E2E applies to this isolated native
+readout pilot. The terminal artifact SHALL publish atomically at
+`results/experiment_7535_v659_native_pilot.json` only after all required checks.
+
+#### SCENARIO-VERIFY-7535-PANEL: Twelve Label-Blind Development Groups Freeze
+
+**Given** the complete Exp7533 official-training inventory and frozen role hashes
+**When** the deterministic development selector runs before labels or outcomes open
+**Then** it returns twelve role-external components spanning prompt lengths and tool types
+**And** every mismatched source is a distinct same-development-tool donor.
+
+#### SCENARIO-VERIFY-7535-CUSTODY: Seventy-Two Native Rows Preserve Exact Readout
+
+**Given** twelve groups, three source conditions, and two semantic option orders
+**When** the owned Qwen model evaluates every full prompt at 4096 context
+**Then** exactly 72 zero-generation rows retain text, token, logit, probability, and runtime receipts
+**And** truncation, mapping drift, non-finite values, or an incorrect final position fails custody.
+
+#### SCENARIO-VERIFY-7535-FORECAST: Fit And Evaluation Budgets Stay Independent
+
+**Given** measured load time, pilot forward durations, checkpoint overhead, and validation reserve
+**When** the two 1,440-forward capture forecasts are computed
+**Then** each feasibility score is the bare integer from its own 3,600-second bound
+**And** a closed forecast blocks only the registered capture without shrinking its sample.
+
+#### SCENARIO-VERIFY-7535-OWNERSHIP: One Owned CUDA Runtime Binds The Receipt
+
+**Given** at least one admissible GPU and the cached current Qwen Q4_K_M file
+**When** the model loads and its native forwards execute
+**Then** the receipt binds GPU UUID, owned PID/start ticks, model hash, tokenizer, runtime, and offload
+**And** no foreign process is stopped and no legacy or CPU-only substitute is used.
+
+#### SCENARIO-VERIFY-7535-BLOCKED: External Absence Publishes Exact Evidence
+
+**Given** a missing protocol field, sealed shard, model, runtime, or owned GPU
+**When** preconditions close before dependent measurement
+**Then** a complete blocked artifact reports zero fabricated forwards and readiness
+**And** the gate summary retains exact upstream, field, expected, and observed operands.
+
+#### SCENARIO-VERIFY-7535-E2E: One Command Publishes A Cold-Valid Native Pilot
+
+**Given** a frozen affected-file manifest and one exact terminal candidate
+**When** the declared unbuffered entrypoint and fresh-process readers run
+**Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
+**And** only the exact validated terminal JSON publishes at the deliverable path.
