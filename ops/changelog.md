@@ -20333,3 +20333,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-22: Bind fourteen tasks and ingest source-grounding methods (⚠️ Blocked) — honest_verdict=complete_blocked_incomplete_v659_authorities; results/experiment_7532_v659_contract_methods.json
 - 2026-09-22: Seal an available tool-grounding corpus and independent roles (⚠️ Research Finding) — honest_verdict=complete_null_tool_protocol_ready_benefit_unmeasured; results/experiment_7533_v659_tool_protocol.json
 - 2026-09-22: Build an independent conjugate energy memory for delayed feedback (⚠️ Research Finding) — honest_verdict=complete_circular_positive_count_memory_qualified; results/experiment_7534_v659_count_memory.json
+- 2026-09-22: Qualify source-intervention transport and bounded capture cost (⚠️ Blocked) — honest_verdict=complete_blocked_owned_gpu_available; results/experiment_7535_v659_native_pilot.json
