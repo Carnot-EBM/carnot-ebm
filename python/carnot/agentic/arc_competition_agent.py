@@ -5537,6 +5537,14 @@ class E3AgentPolicy:
             _make_trajectory_supervisor()
         )
         self._trajectory_supervisor_errors = 0
+        # REQ-ARC-7526: a default-off observer captures the exact live arm
+        # predicates. Construction is once per episode so recording cannot be
+        # enabled halfway through a trajectory and mistaken for complete data.
+        from carnot.experiment_7526_v658_arc_eligibility import (
+            maybe_make_eligibility_recorder,
+        )
+
+        self._trajectory_eligibility_recorder = maybe_make_eligibility_recorder(self.short)
         # REQ-ARC-6846: default-off typed obligation shadow monitor. The live
         # seam is reachable, but the submitted default constructs no monitor
         # and never changes a returned action.
@@ -5980,6 +5988,17 @@ class E3AgentPolicy:
         supervisor = self._trajectory_supervisor
         if supervisor is None or latest is None:
             return
+        from carnot import experiment_7526_v658_arc_eligibility as _eligibility
+
+        recorder = getattr(
+            self,
+            "_trajectory_eligibility_recorder",
+            _eligibility.NOOP_ELIGIBILITY_RECORDER,
+        )
+        mode = "applied" if self._trajectory_supervisor_applies else "shadow"
+        action_id = int(getattr(supervisor, "_actions_total", 0)) + 1
+        level: int | None = None
+        selection_recorded = False
         try:
             from carnot.agentic.arc_arm_eligibility import diversity_in_effect
             from carnot.agentic.arc_trajectory_supervisor import TrajectorySnapshot
@@ -5987,7 +6006,7 @@ class E3AgentPolicy:
             try:
                 level = int(_level_of(latest))
             except Exception:
-                return
+                raise ValueError("unreadable_level") from None
             explorer = getattr(self, "explorer", None)
             new_transitions = len(self.transitions) - int(
                 self._transitions_at_last_induction_attempt
@@ -6005,22 +6024,73 @@ class E3AgentPolicy:
                 # every level after the first.
                 diversity_active=diversity_in_effect(explorer),
             )
+            predicate_reader = getattr(supervisor, "arm_eligibility", None)
+            predicates = predicate_reader(snapshot) if callable(predicate_reader) else []
             decision_telemetry = getattr(
                 self,
                 "_decision_telemetry",
                 arc_decision_telemetry.NOOP_RECORDER,
             )
             redirect = decision_telemetry.time_supervisor_selection(supervisor, snapshot)
+            applied = False
+            old_state_hash: str | None = None
+            new_state_hash: str | None = None
+            disposition = "no_selection" if redirect is None else "shadow_recommendation"
             if redirect is not None and self._trajectory_supervisor_applies:
-                self._apply_trajectory_redirect(redirect)
+                old_state_hash = _eligibility.canonical_hash(
+                    _eligibility.policy_redirect_state(self)
+                )
+                try:
+                    self._apply_trajectory_redirect(redirect)
+                except Exception as exc:
+                    new_state_hash = _eligibility.canonical_hash(
+                        _eligibility.policy_redirect_state(self)
+                    )
+                    recorder.record_selection(
+                        supervisor=supervisor,
+                        snapshot=snapshot,
+                        predicates=predicates,
+                        redirect=redirect,
+                        mode=mode,
+                        applied=False,
+                        application_disposition=f"exception:{type(exc).__name__}",
+                        old_state_hash=old_state_hash,
+                        new_state_hash=new_state_hash,
+                    )
+                    selection_recorded = True
+                    raise
+                new_state_hash = _eligibility.canonical_hash(
+                    _eligibility.policy_redirect_state(self)
+                )
+                applied = old_state_hash != new_state_hash
+                disposition = "applied" if applied else "no_state_change"
+            recorder.record_selection(
+                supervisor=supervisor,
+                snapshot=snapshot,
+                predicates=predicates,
+                redirect=redirect,
+                mode=mode,
+                applied=applied,
+                application_disposition=disposition,
+                old_state_hash=old_state_hash,
+                new_state_hash=new_state_hash,
+            )
+            selection_recorded = True
             self.record_typed_obligation_shadow_monitor(
                 ("trajectory_supervisor_observe", {"level": level}),
                 seam="trajectory_supervisor_observe",
                 latest_level=level,
                 prospective_move=None,
             )
-        except Exception:
+        except Exception as exc:
             self._trajectory_supervisor_errors += 1
+            if not selection_recorded:
+                recorder.record_observation_failure(
+                    mode=mode,
+                    error=f"{type(exc).__name__}:{exc}",
+                    action_id=action_id,
+                    level_id=level,
+                )
 
     def _apply_trajectory_redirect(self, redirect: Any) -> None:
         """REQ-ARC-WMTE-6600 rule 5: apply an arm ONLY through existing seams.

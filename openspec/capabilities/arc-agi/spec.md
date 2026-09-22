@@ -3282,3 +3282,86 @@ The artifact SHALL contain `field_principles`, `preconditions_checked`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7144 and SCENARIO-ARC-7144-* | `python/carnot/experiment_7127_v626_adapter_withheld_arc_loo.py` | `tests/python/test_experiment_7127_v626_adapter_withheld_arc_loo.py` |
+
+## REQ-ARC-7526: Live supervisor eligibility receipts SHALL preserve policy behavior
+
+The live `E3AgentPolicy` supervisor seam SHALL support a bounded, default-off
+eligibility recorder. The recorder SHALL observe the existing curated arm table
+without changing its order, window, predicates, selected redirect, applied
+mutation, action, random state, model calls, or environment calls. It SHALL
+record one row per supervisor observation with an action identifier, level,
+mode, predicate inputs, and separate `enabled`, `eligible`, `selected`, and
+`applied` values for every curated arm. A selected shadow recommendation SHALL
+have `applied=false`. An exception, missing explorer, unsupported arm, or
+state-preserving no-op SHALL not be reported as an applied mutation.
+
+The supervisor SHALL expose the same predicate evaluation used by its fixed
+selector. Eligibility SHALL remain `null` when the observation cannot be
+completed. Old and new policy-state hashes SHALL be recorded only when the
+existing applied-mode mutation path is attempted. Recorder failures SHALL be
+counted and fail open so the policy still returns the action it would have
+returned with recording disabled.
+
+Exp7526 SHALL use no model load and SHALL declare `MODEL_SPECS=[]`,
+`model_specs=[]`, `model_invoked=false`, zero current invocation counts,
+`inference_substrate_class=no_model_load`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. It SHALL import the
+Exp7491 exclusive timing helper without editing that prior module. Before live
+outcomes, it SHALL freeze six games selected by hash seed 658026 from the E6
+roster and seeds 658027 and 658028. Each public adapter-withheld episode SHALL
+use the shipped supervisor window, action cap `max(840, 2*window+40)`, a
+180-second episode cap, and a 3000-second collection cap. Such episodes are a
+hidden-game proxy, never an official hidden score or a new public solve.
+
+The terminal artifact SHALL include all common experiment identity, timing,
+precondition, model, invocation, source hash, row, sample budget, gate,
+validation, principle, and verdict fields. It SHALL also include
+`eligibility_receipt_ready_score`, `parity_rows`, `panel_manifest`,
+`solve_provenance`, and `registry_precheck`. The readiness score SHALL be the
+bare number 1 only when authentic live-boundary eligibility is explicit and
+all policy parity checks pass. Readiness SHALL be independent of benefit. A
+valid run with insufficient support or no measured effect SHALL be `null`.
+Missing unchanged external resources SHALL be `blocked`; failed required
+validation SHALL be `disqualified`; `partial` is reserved for unfinished owned
+work.
+
+### SCENARIO-ARC-7526-PREDICATES: The selector and receipt use one predicate table
+
+**Given** each curated arm, spent arms, an ineligible state, and the optional tool arm
+**When** the supervisor evaluates a live snapshot
+**Then** the receipt reports the exact enabled and eligible values used by selection
+**And** the first selected arm remains unchanged.
+
+### SCENARIO-ARC-7526-APPLICATION: Recommendation is not mutation
+
+**Given** shadow mode, applied mode, a missing explorer, a no-op, and an exception
+**When** a supervisor recommendation crosses the policy application seam
+**Then** `selected` and `applied` remain separate facts
+**And** hashes appear only for an attempted existing mutation.
+
+### SCENARIO-ARC-7526-PARITY: Recording is observational
+
+**Given** matched policy fixtures with the recorder disabled and enabled
+**When** both fixtures consume the same states and random seeds
+**Then** actions, random state, model calls, environment calls, and state transitions match
+**And** recorder failure does not interrupt the policy.
+
+### SCENARIO-ARC-7526-PANEL: The proxy panel is frozen before outcomes
+
+**Given** the E6 roster and registry precheck
+**When** Exp7526 builds its 6-by-2 schedule
+**Then** hash seed 658026, episode seeds 658027 and 658028, shipped thresholds, and caps are fixed
+**And** no proxy result is credited as an official hidden score or public re-solve.
+
+### SCENARIO-ARC-7526-TERMINAL: Validation and science are independent
+
+**Given** complete live receipts and required scoped validation
+**When** Exp7526 reduces the exact terminal candidate in a fresh process
+**Then** readiness is numeric and independent of benefit
+**And** the verdict preserves null, blocked, and disqualified boundaries.
+
+## Implementation Status (REQ-ARC-7526)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7526 and SCENARIO-ARC-7526-* | `python/carnot/experiment_7526_v658_arc_eligibility.py`, `python/carnot/agentic/arc_trajectory_supervisor.py`, and `python/carnot/agentic/arc_competition_agent.py` | `tests/python/test_experiment_7526_v658_arc_eligibility.py` |

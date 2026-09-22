@@ -260,49 +260,88 @@ class TrajectorySupervisor:
             }
         )
 
-    def _first_eligible_arm(self, s: TrajectorySnapshot) -> tuple[str | None, str]:
-        """The decision table. Fixed order, one winner, plain-words diagnosis."""
+    def arm_eligibility(self, s: TrajectorySnapshot) -> list[dict[str, Any]]:
+        """Expose the exact fixed-table predicates without selecting or mutating.
 
-        if ARM_DROP_GOAL_BIAS not in self._arms_used and s.goal_bias_installed:
-            return (
-                ARM_DROP_GOAL_BIAS,
-                f"goal bias installed through {self.window} stagnant actions; "
-                "it is steering and not working",
-            )
-        if (
+        The observation recorder needs the reason each arm could or could not run.
+        Keeping those booleans here prevents a reporting-only experiment from
+        inventing a second, subtly different copy of the live decision table.
+        """
+
+        drop_eligible = ARM_DROP_GOAL_BIAS not in self._arms_used and s.goal_bias_installed
+        allow_eligible = (
             ARM_ALLOW_REINDUCTION not in self._arms_used
             and s.induced
             and s.new_transitions_since_induction >= self.reinduction_evidence_floor
             and s.induction_attempts < self.reinduction_attempt_cap
-        ):
-            return (
-                ARM_ALLOW_REINDUCTION,
-                f"induction latch set with {s.new_transitions_since_induction} new "
-                "transitions the model has never seen",
-            )
+        )
         # Fires only AFTER a plain re-induction has already been spent on this level and the
         # stagnation continued -- that is the written evidence that the single-shot draw is not
         # the thing that will explain this level, which is the only honest reason to pay for a
         # multi-turn loop. Reaching this rung with every earlier arm used is also exactly the
         # "all arms exhausted and stagnation continued" state the refinement spec calls the
         # specification for a NEW arm.
-        if (
-            tool_loop_arm_enabled()
+        tool_enabled = tool_loop_arm_enabled()
+        tool_eligible = (
+            tool_enabled
             and ARM_TOOL_LOOP_REINDUCTION not in self._arms_used
             and ARM_ALLOW_REINDUCTION in self._arms_used
             and s.induction_attempts < self.reinduction_attempt_cap
-        ):
-            return (
-                ARM_TOOL_LOOP_REINDUCTION,
-                "single-shot re-induction was already spent on this level and stagnation "
-                "continued; re-induce through the callable-tool loop instead",
-            )
-        if ARM_FORCE_DIVERSITY not in self._arms_used and not s.diversity_active:
-            return (
-                ARM_FORCE_DIVERSITY,
-                "deterministic frontier draw exhausted its ideas; switch to the "
-                "randomized top-k draw",
-            )
+        )
+        diversity_eligible = ARM_FORCE_DIVERSITY not in self._arms_used and not s.diversity_active
+        return [
+            {
+                "arm": ARM_DROP_GOAL_BIAS,
+                "enabled": True,
+                "eligible": bool(drop_eligible),
+                "diagnosis": (
+                    f"goal bias installed through {self.window} stagnant actions; "
+                    "it is steering and not working"
+                    if drop_eligible
+                    else ""
+                ),
+            },
+            {
+                "arm": ARM_ALLOW_REINDUCTION,
+                "enabled": True,
+                "eligible": bool(allow_eligible),
+                "diagnosis": (
+                    f"induction latch set with {s.new_transitions_since_induction} new "
+                    "transitions the model has never seen"
+                    if allow_eligible
+                    else ""
+                ),
+            },
+            {
+                "arm": ARM_TOOL_LOOP_REINDUCTION,
+                "enabled": tool_enabled,
+                "eligible": bool(tool_eligible),
+                "diagnosis": (
+                    "single-shot re-induction was already spent on this level and stagnation "
+                    "continued; re-induce through the callable-tool loop instead"
+                    if tool_eligible
+                    else ""
+                ),
+            },
+            {
+                "arm": ARM_FORCE_DIVERSITY,
+                "enabled": True,
+                "eligible": bool(diversity_eligible),
+                "diagnosis": (
+                    "deterministic frontier draw exhausted its ideas; switch to the "
+                    "randomized top-k draw"
+                    if diversity_eligible
+                    else ""
+                ),
+            },
+        ]
+
+    def _first_eligible_arm(self, s: TrajectorySnapshot) -> tuple[str | None, str]:
+        """Return the first eligible row from the observable fixed decision table."""
+
+        for row in self.arm_eligibility(s):
+            if row["eligible"]:
+                return str(row["arm"]), str(row["diagnosis"])
         return None, ""
 
     def receipt(self) -> dict:
