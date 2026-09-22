@@ -44897,3 +44897,141 @@ reporting-only CPU evaluation.
 **When** the declared unbuffered Exp7507 entrypoint and fresh-process replay run
 **Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
 **And** only the validated terminal JSON publishes at the deliverable path.
+
+### REQ-VERIFY-7517: V658 Source Protocol SHALL Freeze Fresh Source Interventions
+
+Exp7517 SHALL authenticate the pinned RAGTruth release and build an exposure
+union from every prior selected source/response manifest, raw capture,
+normalized source hash, and V657 service trace before selecting a group. It
+SHALL consider only official-training responses with registered good-quality,
+byte-complete metadata. It SHALL select one response per normalized source
+group by `SHA256(seed=658017, source_hash, response identity)` without opening
+human labels. The official test split SHALL remain untouched. If fewer than
+480 unexposed groups remain, it SHALL publish the schema-complete terminal
+verdict `complete_blocked_fresh_source_inventory`, class `blocked`, and name
+the exact expected and observed inventory in `gate_check_summary`; it SHALL
+not reuse an exposed group.
+
+When inventory permits, the protocol SHALL freeze exactly 480 groups with
+roles 160 training, 40 calibration-tuning, 40 calibration-policy, 120 test,
+and 120 online. Role allocation SHALL use deterministic hashes within source
+family without labels or label stratification. Exact and normalized source
+duplicates SHALL remain in one role. Predictor rows SHALL contain only natural
+source and response text plus public text identities, source family, and role.
+Labels, annotations, corpus identifiers, response identifiers, and response-
+generator identity SHALL remain in a physically separate evaluator store.
+
+Every selected group SHALL register original-source, absent-source, and
+mismatched-source full-response conditions in both stable option orders. The
+absent condition SHALL use the explicit empty-evidence marker
+`[NO SOURCE EVIDENCE PROVIDED]`. The mismatched donor SHALL come from the same
+role and source family, use the nearest frozen source-token-length bin with a
+deterministic hash tie break, and SHALL never be the target or an exact or
+normalized duplicate. One donor map SHALL serve every reader. Every complete
+prompt SHALL be tokenizer-checked before selection against 2,048 tokens;
+overlength or byte-incomplete items SHALL be excluded without truncation or
+replacement after labels or outcomes are opened.
+
+The future native capture SHALL reserve six forwards per group: three source
+conditions by two option orders. Both orders SHALL map display labels back to
+the stable semantic `contains_unsupported` probability before reduction. The
+two frozen three-vector views SHALL be `logit(p_original)`,
+`logit(p_absent)`, and `logit(p_mismatched)`, with each value clipped to
+[-12, 12]. No response windows, response-length covariates, annotation fields,
+corpus IDs, or generator IDs SHALL enter this primary head. Human labels SHALL
+apply only to the original-source prediction; mismatched sources are
+sensitivity probes and SHALL not receive invented factual labels.
+
+Fit readers MAY open training and calibration-tuning labels. Policy readers
+MAY open only calibration-policy labels after fit bytes are frozen. Predict
+readers SHALL open no labels. Evaluate readers MAY open test labels only after
+authenticating prior prediction bytes. Online readers SHALL expose labels only
+in the frozen arrival order and feedback schedule. Label availability on disk
+SHALL remain distinct from actual reader access, and mutation of forbidden
+labels or source identities SHALL fail or leave label-free views invariant as
+appropriate.
+
+The protocol SHALL freeze equal-information controls, online arrival order,
+the downstream cost matrix, and strict unchanged guard behavior before native
+capture. All-null, identical-arm, mixed-label, and missing-row qualification
+fixtures SHALL retain absolute arm metrics and explicit honest no-headroom
+annotations; malformed or missing evidence SHALL continue to fail closed.
+Fixture behavior is schema qualification and SHALL be circular evidence at
+most.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current model loads, forwards, and generations,
+`inference_substrate_class=no_model_load`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. It SHALL describe
+future native option forwards as `live_llm_embedding_extraction` with
+`readout_kind=option_logits` and zero generated tokens, without counting
+historical Qwen receipts as current calls. `source_protocol_ready_score` SHALL
+be the bare integer one only for an authenticated 480-group disjoint roster,
+lossless prompts, complete intervention map, passing readers and guards, and
+all required validation; benefit remains unmeasured.
+
+The terminal artifact SHALL publish atomically at
+`results/experiment_7517_v658_source_protocol.json`. Hash-bound sidecars SHALL
+remain below 20 MiB. The affected manifest SHALL name only the Exp7517 test,
+module, and thin entrypoint. Required checks SHALL include scoped pytest with a
+private basetemp, separate 100 percent changed-module coverage, scoped Ruff
+check and format, changed-module mypy, scoped specification coverage,
+declared-entrypoint cold replay, independent reduction, adversarial
+verification, and strict verdict-row consistency. No numbered runtime E2E
+applies because this is CPU-only protocol/reporting work.
+
+#### SCENARIO-VERIFY-7517-FRESHNESS: Exhausted Inventory Blocks Without Reuse
+
+**Given** the pinned official-training release and the complete historical exposure union
+**When** fewer than 480 eligible normalized source groups remain
+**Then** the artifact is `complete_blocked_fresh_source_inventory` with class `blocked`
+**And** the failed gate names the inventory path, expected 480, observed count, and no selected rows.
+
+#### SCENARIO-VERIFY-7517-ROLES: Family-Aware Roles Freeze Before Labels
+
+**Given** at least 480 fresh quality-complete source groups
+**When** seed 658017 selects and allocates the roster
+**Then** role counts are exactly 160, 40, 40, 120, and 120 within deterministic family strata
+**And** source duplicates share one role while evaluator-only fields never enter predictors.
+
+#### SCENARIO-VERIFY-7517-INTERVENTIONS: Donors Are Same-Role Same-Family Nonduplicates
+
+**Given** a frozen public roster and tokenizer lengths
+**When** original, absent, and mismatched conditions are registered
+**Then** each target has one nearest-bin hash-tied donor from the same role and family
+**And** self donors, exact duplicates, normalized duplicates, truncation, and invented mismatch labels are forbidden.
+
+#### SCENARIO-VERIFY-7517-READOUT: Two Orders Produce Clipped Semantic Views
+
+**Given** six finite native option-logit forwards for one group
+**When** display labels are remapped through both option orders
+**Then** the reducer emits only the two registered clipped three-vector views
+**And** swapping option order, adding a response-length field, or leaking source identity cannot change semantics.
+
+#### SCENARIO-VERIFY-7517-ACCESS: Reader Roles Open Only Registered Labels
+
+**Given** separate predictor, evaluator, fit, policy, prediction, and arrival bytes
+**When** fit, policy, predict, evaluate, or online mode opens the protocol
+**Then** each reader sees only its registered roles and label timing
+**And** missing freeze hashes, forbidden roles, or premature online labels fail closed.
+
+#### SCENARIO-VERIFY-7517-GUARDS: Qualification Fixtures Preserve Strict Detection
+
+**Given** all-null, identical-arm, mixed-label, and missing-row fixtures
+**When** the unchanged strict reducer qualifies their schema
+**Then** absolute metrics and honest no-headroom annotations remain explicit
+**And** missing rows still fail rather than being converted to zero or a favorable null.
+
+#### SCENARIO-VERIFY-7517-NO-MODEL: Protocol Work Is CPU Aggregation
+
+**Given** historical Qwen provenance and tokenizer-only current work
+**When** current invocation accounting is reduced
+**Then** both model-spec fields are empty and all load, forward, and generation counts are zero
+**And** the future six-forward contract does not become a current model invocation claim.
+
+#### SCENARIO-VERIFY-7517-E2E: Scoped Readers Publish One Atomic Protocol
+
+**Given** a frozen affected-file manifest and hash-bound inventory evidence
+**When** the declared unbuffered entrypoint and fresh-process replay run
+**Then** scoped validation, independent reduction, adversarial verification, and strict row lint pass
+**And** only the validated terminal JSON occupies the deliverable path.

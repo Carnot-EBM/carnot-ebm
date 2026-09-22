@@ -336,3 +336,9 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 - Lord Han Solo improved from 15.60% to 18.42%, moving from third to second place and overtaking NVARC3. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-09-22 13:17 UTC -- NEW
+
+- On July 27, organizers clarified that final-selected submissions are **not rerun**; their private scores are fixed during the original scoring run. Each submission evaluates against all 110 environments, while only the public-half score is displayed during the competition. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+
+- On July 17, ARC Prize published an analysis of 500 failed submissions: roughly one-third had no traceable notebook error, nearly 20% requested GPU workloads without enabling a GPU, and smaller categories included missing datasets/dependencies, CUDA OOM, incorrect API endpoints, and writes to read-only `/kaggle/input`. Organizers also confirmed that submission logs are intentionally restricted and private notebooks remain inaccessible to them until open-sourced. [Kaggle announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+
