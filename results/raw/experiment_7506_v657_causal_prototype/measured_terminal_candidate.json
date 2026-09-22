@@ -1,0 +1,2226 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "gradient_parity",
+      "expected": 2e-07,
+      "observed": 1.1448461623153605e-10,
+      "op": "<=",
+      "passed": true,
+      "principle": "Finite differences expose an incorrect chain rule."
+    },
+    {
+      "category": "validity",
+      "check": "nonzero_derivative",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "A nonzero witness prevents a vacuous all-zero gradient."
+    },
+    {
+      "category": "validity",
+      "check": "causal_chronology",
+      "expected": 0,
+      "observed": 0,
+      "op": "==",
+      "passed": true,
+      "principle": "Zero violations prevent future or alternate-delay labels from entering updates."
+    },
+    {
+      "category": "validity",
+      "check": "restart_parity",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Byte parity proves the whole machine resumed together."
+    },
+    {
+      "category": "validity",
+      "check": "static_controls",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Frozen and zero-step controls expose hidden mutation."
+    },
+    {
+      "category": "validity",
+      "check": "scoped_validation",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Required commands can disqualify favorable fixture metrics."
+    }
+  ],
+  "affected_validation_manifest": {
+    "changed_modules": [
+      "python/carnot/experiment_7506_v657_causal_prototype.py"
+    ],
+    "experiment_id": "exp7506-v657-causal-prototype",
+    "static_paths": [
+      "scripts/experiments/experiment_7506_v657_causal_prototype.py"
+    ],
+    "test_paths": [
+      "tests/python/test_experiment_7506_v657_causal_prototype.py"
+    ]
+  },
+  "capability_e2e": {
+    "declared_entrypoint": "scripts/experiments/experiment_7506_v657_causal_prototype.py",
+    "fresh_process_cold_replay": true,
+    "numbered_runtime_e2e_applicable": false
+  },
+  "causal_update_ready_score": 1,
+  "causality_rows": [
+    {
+      "delay": 8,
+      "future_access_violations": 0,
+      "predict_before_update": true,
+      "prediction_rows": [
+        {
+          "arrival_index": 0,
+          "audit_selected": false,
+          "base_probability": 0.26680408367338365,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-00",
+          "features": [
+            -2.0,
+            -1.0,
+            0.0,
+            1.0
+          ],
+          "prediction_hash": "sha256:dea1913f2829c888d1741db4571e71c21f7bbc7781ad5f93cafcebe03ca6feb4",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.26680408367338365,
+          "release_time": 15,
+          "shuffled_probability": 0.26680408367338365,
+          "source_id": "repeated-source-0"
+        },
+        {
+          "arrival_index": 1,
+          "audit_selected": false,
+          "base_probability": 0.3048074868033751,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-01",
+          "features": [
+            -1.5,
+            -0.5,
+            0.5,
+            1.5
+          ],
+          "prediction_hash": "sha256:ebbb4bf19b7095ff39ebb45bcb77e5393ab0597590e404f17aae979c32712d96",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3048074868033751,
+          "release_time": 15,
+          "shuffled_probability": 0.3048074868033751,
+          "source_id": "repeated-source-1"
+        },
+        {
+          "arrival_index": 2,
+          "audit_selected": false,
+          "base_probability": 0.3400476867664871,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-02",
+          "features": [
+            -1.0,
+            0.0,
+            1.0,
+            2.0
+          ],
+          "prediction_hash": "sha256:80fc8f33847ad53b4d7b0d9b52e5cd7816851b7c4c1a983a6185966853e2ac2e",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3400476867664871,
+          "release_time": 15,
+          "shuffled_probability": 0.3400476867664871,
+          "source_id": "repeated-source-2"
+        },
+        {
+          "arrival_index": 3,
+          "audit_selected": false,
+          "base_probability": 0.3733440076742796,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-03",
+          "features": [
+            0.0,
+            0.5,
+            1.5,
+            2.5
+          ],
+          "prediction_hash": "sha256:c29bd2dc57092af26b816e3b702385539b11407eedd60255396418368bf2f307",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3733440076742796,
+          "release_time": 15,
+          "shuffled_probability": 0.3733440076742796,
+          "source_id": "repeated-source-3"
+        },
+        {
+          "arrival_index": 4,
+          "audit_selected": false,
+          "base_probability": 0.40526467641447733,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-04",
+          "features": [
+            1.0,
+            1.0,
+            2.0,
+            3.0
+          ],
+          "prediction_hash": "sha256:889673edba7574c74431adb9c0d42d2a7e681e1e5bbb5da47d12a90be7af047c",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.4052646764144774,
+          "release_time": 15,
+          "shuffled_probability": 0.4052646764144774,
+          "source_id": "repeated-source-4"
+        },
+        {
+          "arrival_index": 5,
+          "audit_selected": false,
+          "base_probability": 0.43623668466626253,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-05",
+          "features": [
+            2.0,
+            1.5,
+            2.5,
+            3.5
+          ],
+          "prediction_hash": "sha256:87b2bf7d9b272bcea74615fce772a598b1ef222fb59ed983309e71a0f5ebd726",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.43623668466626253,
+          "release_time": 15,
+          "shuffled_probability": 0.43623668466626253,
+          "source_id": "repeated-source-0"
+        },
+        {
+          "arrival_index": 6,
+          "audit_selected": true,
+          "base_probability": 0.46660467617300144,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-06",
+          "features": [
+            -1.98,
+            -0.98,
+            0.02,
+            1.02
+          ],
+          "prediction_hash": "sha256:d7591da4a3f42443e3ee458e54039c80b6aaa573523fc89de70b3a00f9300145",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.46660467617300144,
+          "release_time": 15,
+          "shuffled_probability": 0.46660467617300144,
+          "source_id": "repeated-source-1"
+        },
+        {
+          "arrival_index": 7,
+          "audit_selected": false,
+          "base_probability": 0.49666660493566517,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-07",
+          "features": [
+            -1.48,
+            -0.48,
+            0.52,
+            1.52
+          ],
+          "prediction_hash": "sha256:ae381548f9f508968a963be5eeae8fa7ff09c9af13b3d8e9ba2c42836ec8fc59",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.49666660493566517,
+          "release_time": 15,
+          "shuffled_probability": 0.49666660493566517,
+          "source_id": "repeated-source-2"
+        },
+        {
+          "arrival_index": 8,
+          "audit_selected": true,
+          "base_probability": 0.5266983573155635,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-08",
+          "features": [
+            -0.98,
+            0.02,
+            1.02,
+            2.02
+          ],
+          "prediction_hash": "sha256:6338eca90e9cf500b2e66193181216714d5bcfc170d11c4d43e3455125f8ff21",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.5266983573155635,
+          "release_time": 23,
+          "shuffled_probability": 0.5266983573155635,
+          "source_id": "repeated-source-3"
+        },
+        {
+          "arrival_index": 9,
+          "audit_selected": true,
+          "base_probability": 0.5569736998319271,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-09",
+          "features": [
+            0.02,
+            0.52,
+            1.52,
+            2.52
+          ],
+          "prediction_hash": "sha256:7ae9f671a179208164462db601ae09fa647bd53f7b39d1b202a32285c6a973bd",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.5569736998319271,
+          "release_time": 23,
+          "shuffled_probability": 0.5569736998319271,
+          "source_id": "repeated-source-4"
+        },
+        {
+          "arrival_index": 10,
+          "audit_selected": false,
+          "base_probability": 0.5877837963531524,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-10",
+          "features": [
+            1.02,
+            1.02,
+            2.02,
+            3.02
+          ],
+          "prediction_hash": "sha256:ffbf714d42f67f5ed0f70993d19a464be6a0227971a6d0959c38619fe7c5a042",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.5877837963531524,
+          "release_time": 23,
+          "shuffled_probability": 0.5877837963531524,
+          "source_id": "repeated-source-0"
+        },
+        {
+          "arrival_index": 11,
+          "audit_selected": false,
+          "base_probability": 0.6194603547386859,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-11",
+          "features": [
+            2.02,
+            1.52,
+            2.52,
+            3.52
+          ],
+          "prediction_hash": "sha256:9818ddfbc2de252a93aca06d4e1aeaabbd7e802370d5e44dac89be60bac80305",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.6194603547386859,
+          "release_time": 23,
+          "shuffled_probability": 0.6194603547386859,
+          "source_id": "repeated-source-1"
+        },
+        {
+          "arrival_index": 12,
+          "audit_selected": false,
+          "base_probability": 0.26680408367338365,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-12",
+          "features": [
+            -1.96,
+            -0.96,
+            0.04,
+            1.04
+          ],
+          "prediction_hash": "sha256:4cd4703b3dfa61a9b918aaccb1b333137ae8881968384da42fbdfd356d189924",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.26680408367338365,
+          "release_time": 23,
+          "shuffled_probability": 0.26680408367338365,
+          "source_id": "repeated-source-2"
+        },
+        {
+          "arrival_index": 13,
+          "audit_selected": false,
+          "base_probability": 0.3048074868033751,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-13",
+          "features": [
+            -1.46,
+            -0.46,
+            0.54,
+            1.54
+          ],
+          "prediction_hash": "sha256:3719c510fd66e36fa8bcb2caa0d59390f3912dfaa793da7e27fdd779fc123c9a",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3048074868033751,
+          "release_time": 23,
+          "shuffled_probability": 0.3048074868033751,
+          "source_id": "repeated-source-3"
+        },
+        {
+          "arrival_index": 14,
+          "audit_selected": false,
+          "base_probability": 0.3400476867664871,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-14",
+          "features": [
+            -0.96,
+            0.04,
+            1.04,
+            2.04
+          ],
+          "prediction_hash": "sha256:13e1d1983c6d7cc0cc54b5ac9cb69107d4079195187d986711be2f2a0116cd4f",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3400476867664871,
+          "release_time": 23,
+          "shuffled_probability": 0.3400476867664871,
+          "source_id": "repeated-source-4"
+        },
+        {
+          "arrival_index": 15,
+          "audit_selected": true,
+          "base_probability": 0.3733440076742796,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-15",
+          "features": [
+            0.04,
+            0.54,
+            1.54,
+            2.54
+          ],
+          "prediction_hash": "sha256:3c3c511bcb6d1e2aacfefed52560862411b2b0115f69d7a75898026caeb5ddc5",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3733440076742796,
+          "release_time": 23,
+          "shuffled_probability": 0.3733440076742796,
+          "source_id": "repeated-source-0"
+        }
+      ],
+      "release_rows": [
+        {
+          "block_end": 7,
+          "block_id": 0,
+          "effective_changes": 0,
+          "event_ids": [
+            "fixture-event-06"
+          ],
+          "label_origins": [
+            "fixture-event-06"
+          ],
+          "permutation_mode": "singleton_noop",
+          "release_time": 15,
+          "released_at": 15,
+          "update_count": 1
+        },
+        {
+          "block_end": 15,
+          "block_id": 1,
+          "effective_changes": 2,
+          "event_ids": [
+            "fixture-event-08",
+            "fixture-event-09",
+            "fixture-event-15"
+          ],
+          "label_origins": [
+            "fixture-event-09",
+            "fixture-event-08",
+            "fixture-event-15"
+          ],
+          "permutation_mode": "best_effort_permutation",
+          "release_time": 23,
+          "released_at": 23,
+          "update_count": 3
+        }
+      ],
+      "terminal_state_hash": "sha256:5481c8fe6df610a6ac436b5e42e09518748b5a1d7ad7387b22fc603b4fe643cf",
+      "update_rows": [
+        {
+          "arm": "real",
+          "block_id": 0,
+          "event_id": "fixture-event-06",
+          "feature_order": 6,
+          "gradient_probability": 0.46660467617300144,
+          "label": 0,
+          "label_origin": "fixture-event-06",
+          "prediction_hash": "sha256:d7591da4a3f42443e3ee458e54039c80b6aaa573523fc89de70b3a00f9300145",
+          "prediction_time": 6,
+          "release_time": 15,
+          "state_hash_after": "sha256:44bb34a8b0669ffdd028235ee44327c4968deab936158f9a3b46c377fa6a142f",
+          "status": "committed",
+          "updated_at": 15
+        },
+        {
+          "arm": "shuffled",
+          "block_id": 0,
+          "event_id": "fixture-event-06",
+          "feature_order": 6,
+          "gradient_probability": 0.46660467617300144,
+          "label": 0,
+          "label_origin": "fixture-event-06",
+          "prediction_hash": "sha256:d7591da4a3f42443e3ee458e54039c80b6aaa573523fc89de70b3a00f9300145",
+          "prediction_time": 6,
+          "release_time": 15,
+          "state_hash_after": "sha256:44bb34a8b0669ffdd028235ee44327c4968deab936158f9a3b46c377fa6a142f",
+          "status": "committed",
+          "updated_at": 15
+        },
+        {
+          "arm": "real",
+          "block_id": 1,
+          "event_id": "fixture-event-08",
+          "feature_order": 8,
+          "gradient_probability": 0.5249579512758775,
+          "label": 0,
+          "label_origin": "fixture-event-08",
+          "prediction_hash": "sha256:6338eca90e9cf500b2e66193181216714d5bcfc170d11c4d43e3455125f8ff21",
+          "prediction_time": 8,
+          "release_time": 23,
+          "state_hash_after": "sha256:5a5ecfb381c85b44986d65781ee9b8d92f87dc67f560013a813a11d40caab0bb",
+          "status": "committed",
+          "updated_at": 23
+        },
+        {
+          "arm": "shuffled",
+          "block_id": 1,
+          "event_id": "fixture-event-08",
+          "feature_order": 8,
+          "gradient_probability": 0.5249579512758775,
+          "label": 1,
+          "label_origin": "fixture-event-09",
+          "prediction_hash": "sha256:6338eca90e9cf500b2e66193181216714d5bcfc170d11c4d43e3455125f8ff21",
+          "prediction_time": 8,
+          "release_time": 23,
+          "state_hash_after": "sha256:d770e2a97d930d6712d360678b14a44430bcd5627b7995dec37471cbf9ec126a",
+          "status": "committed",
+          "updated_at": 23
+        },
+        {
+          "arm": "real",
+          "block_id": 1,
+          "event_id": "fixture-event-09",
+          "feature_order": 9,
+          "gradient_probability": 0.5517004999715774,
+          "label": 1,
+          "label_origin": "fixture-event-09",
+          "prediction_hash": "sha256:7ae9f671a179208164462db601ae09fa647bd53f7b39d1b202a32285c6a973bd",
+          "prediction_time": 9,
+          "release_time": 23,
+          "state_hash_after": "sha256:254e1bf4e79e68dd249335371308e9de0c63de69a0031b4e11530dbf1fdcede1",
+          "status": "committed",
+          "updated_at": 23
+        },
+        {
+          "arm": "shuffled",
+          "block_id": 1,
+          "event_id": "fixture-event-09",
+          "feature_order": 9,
+          "gradient_probability": 0.5584648366085055,
+          "label": 0,
+          "label_origin": "fixture-event-08",
+          "prediction_hash": "sha256:7ae9f671a179208164462db601ae09fa647bd53f7b39d1b202a32285c6a973bd",
+          "prediction_time": 9,
+          "release_time": 23,
+          "state_hash_after": "sha256:568bf49d06ad0184989cd7a45d3a0e55bdeb8c841f955e5d308c052c684171c9",
+          "status": "committed",
+          "updated_at": 23
+        },
+        {
+          "arm": "real",
+          "block_id": 1,
+          "event_id": "fixture-event-15",
+          "feature_order": 15,
+          "gradient_probability": 0.3730414519958678,
+          "label": 1,
+          "label_origin": "fixture-event-15",
+          "prediction_hash": "sha256:3c3c511bcb6d1e2aacfefed52560862411b2b0115f69d7a75898026caeb5ddc5",
+          "prediction_time": 15,
+          "release_time": 23,
+          "state_hash_after": "sha256:9b666407fa8ecc88535dd5ddac7a78bb88a7a631873dffc191649ab38efee839",
+          "status": "committed",
+          "updated_at": 23
+        },
+        {
+          "arm": "shuffled",
+          "block_id": 1,
+          "event_id": "fixture-event-15",
+          "feature_order": 15,
+          "gradient_probability": 0.3689672266414668,
+          "label": 1,
+          "label_origin": "fixture-event-15",
+          "prediction_hash": "sha256:3c3c511bcb6d1e2aacfefed52560862411b2b0115f69d7a75898026caeb5ddc5",
+          "prediction_time": 15,
+          "release_time": 23,
+          "state_hash_after": "sha256:e4b397dad1139d76e68ef46a5579e7d020dfe9b2f92ebd91504314390ec263eb",
+          "status": "committed",
+          "updated_at": 23
+        }
+      ]
+    },
+    {
+      "delay": 0,
+      "future_access_violations": 0,
+      "predict_before_update": true,
+      "prediction_rows": [
+        {
+          "arrival_index": 0,
+          "audit_selected": false,
+          "base_probability": 0.26680408367338365,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-00",
+          "features": [
+            -2.0,
+            -1.0,
+            0.0,
+            1.0
+          ],
+          "prediction_hash": "sha256:629d07769cf33eb72f3747ac3bc5a64cf2edd34e46e74908d7acb3bd69211905",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.26680408367338365,
+          "release_time": 7,
+          "shuffled_probability": 0.26680408367338365,
+          "source_id": "repeated-source-0"
+        },
+        {
+          "arrival_index": 1,
+          "audit_selected": false,
+          "base_probability": 0.3048074868033751,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-01",
+          "features": [
+            -1.5,
+            -0.5,
+            0.5,
+            1.5
+          ],
+          "prediction_hash": "sha256:9050f489fed8ee50ddebe42f8d3f2852778e6724b8feb3841f954f78f9f6c7cb",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3048074868033751,
+          "release_time": 7,
+          "shuffled_probability": 0.3048074868033751,
+          "source_id": "repeated-source-1"
+        },
+        {
+          "arrival_index": 2,
+          "audit_selected": false,
+          "base_probability": 0.3400476867664871,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-02",
+          "features": [
+            -1.0,
+            0.0,
+            1.0,
+            2.0
+          ],
+          "prediction_hash": "sha256:de93e0686aa90add1d79e7a0804db07a27a8f505b2d371147fa5f3e053ac9202",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3400476867664871,
+          "release_time": 7,
+          "shuffled_probability": 0.3400476867664871,
+          "source_id": "repeated-source-2"
+        },
+        {
+          "arrival_index": 3,
+          "audit_selected": false,
+          "base_probability": 0.3733440076742796,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-03",
+          "features": [
+            0.0,
+            0.5,
+            1.5,
+            2.5
+          ],
+          "prediction_hash": "sha256:9d93ba44e4def283260b5b6136877f91eeee280ffa6822a1baa123c0768786af",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.3733440076742796,
+          "release_time": 7,
+          "shuffled_probability": 0.3733440076742796,
+          "source_id": "repeated-source-3"
+        },
+        {
+          "arrival_index": 4,
+          "audit_selected": false,
+          "base_probability": 0.40526467641447733,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-04",
+          "features": [
+            1.0,
+            1.0,
+            2.0,
+            3.0
+          ],
+          "prediction_hash": "sha256:6db3eb685136ccc80f7b0b2ed13a4a59371efeede6f453f793982c202ce9764c",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.4052646764144774,
+          "release_time": 7,
+          "shuffled_probability": 0.4052646764144774,
+          "source_id": "repeated-source-4"
+        },
+        {
+          "arrival_index": 5,
+          "audit_selected": false,
+          "base_probability": 0.43623668466626253,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-05",
+          "features": [
+            2.0,
+            1.5,
+            2.5,
+            3.5
+          ],
+          "prediction_hash": "sha256:476413bc05fc9bd56a3763c812b0e63392e2e33c443d85362f657e0b7adae0ff",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.43623668466626253,
+          "release_time": 7,
+          "shuffled_probability": 0.43623668466626253,
+          "source_id": "repeated-source-0"
+        },
+        {
+          "arrival_index": 6,
+          "audit_selected": true,
+          "base_probability": 0.46660467617300144,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-06",
+          "features": [
+            -1.98,
+            -0.98,
+            0.02,
+            1.02
+          ],
+          "prediction_hash": "sha256:54bdc23ce0b93ffa283ba0250119fc145d8e4c66d093586267a0f4453db76e03",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.46660467617300144,
+          "release_time": 7,
+          "shuffled_probability": 0.46660467617300144,
+          "source_id": "repeated-source-1"
+        },
+        {
+          "arrival_index": 7,
+          "audit_selected": false,
+          "base_probability": 0.49666660493566517,
+          "block_end": 7,
+          "block_id": 0,
+          "event_id": "fixture-event-07",
+          "features": [
+            -1.48,
+            -0.48,
+            0.52,
+            1.52
+          ],
+          "prediction_hash": "sha256:645c86221cc13cbd9301e384ee00228533d4f9f41cf7acd68d4b5c6999624ccf",
+          "prediction_state_hash": "sha256:dabd9e74f97bcff3ce5534dfd52c0848ef4daffebe32ab3b8e65a5a3856cf7e6",
+          "real_probability": 0.49666660493566517,
+          "release_time": 7,
+          "shuffled_probability": 0.49666660493566517,
+          "source_id": "repeated-source-2"
+        },
+        {
+          "arrival_index": 8,
+          "audit_selected": true,
+          "base_probability": 0.5266983573155635,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-08",
+          "features": [
+            -0.98,
+            0.02,
+            1.02,
+            2.02
+          ],
+          "prediction_hash": "sha256:934c66ca6133b338cf6e01d0c9b9f112142841b9a9a2a719ad55ea0c08d04ccb",
+          "prediction_state_hash": "sha256:7c4c2760476ec3059980c5430ca37125824265073206f02d24e122dc6d5a1b90",
+          "real_probability": 0.5249579512758775,
+          "release_time": 15,
+          "shuffled_probability": 0.5249579512758775,
+          "source_id": "repeated-source-3"
+        },
+        {
+          "arrival_index": 9,
+          "audit_selected": true,
+          "base_probability": 0.5569736998319271,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-09",
+          "features": [
+            0.02,
+            0.52,
+            1.52,
+            2.52
+          ],
+          "prediction_hash": "sha256:9ad6fe42168145d49cc6a79192979287f8e6cdade98fcba8cc48514a9b158e5e",
+          "prediction_state_hash": "sha256:7c4c2760476ec3059980c5430ca37125824265073206f02d24e122dc6d5a1b90",
+          "real_probability": 0.5552536969176529,
+          "release_time": 15,
+          "shuffled_probability": 0.5552536969176529,
+          "source_id": "repeated-source-4"
+        },
+        {
+          "arrival_index": 10,
+          "audit_selected": false,
+          "base_probability": 0.5877837963531524,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-10",
+          "features": [
+            1.02,
+            1.02,
+            2.02,
+            3.02
+          ],
+          "prediction_hash": "sha256:359e304f22afd021602f1756c80ef4b027d44b36a061695d0ab0c0b14d3a56b1",
+          "prediction_state_hash": "sha256:7c4c2760476ec3059980c5430ca37125824265073206f02d24e122dc6d5a1b90",
+          "real_probability": 0.586094529619344,
+          "release_time": 15,
+          "shuffled_probability": 0.586094529619344,
+          "source_id": "repeated-source-0"
+        },
+        {
+          "arrival_index": 11,
+          "audit_selected": false,
+          "base_probability": 0.6194603547386859,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-11",
+          "features": [
+            2.02,
+            1.52,
+            2.52,
+            3.52
+          ],
+          "prediction_hash": "sha256:88a382f762d52f01bf8f33f34adcc9f68d486f07c46c21ae99f2e0d45a546572",
+          "prediction_state_hash": "sha256:7c4c2760476ec3059980c5430ca37125824265073206f02d24e122dc6d5a1b90",
+          "real_probability": 0.6178164944262831,
+          "release_time": 15,
+          "shuffled_probability": 0.6178164944262831,
+          "source_id": "repeated-source-1"
+        },
+        {
+          "arrival_index": 12,
+          "audit_selected": false,
+          "base_probability": 0.26680408367338365,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-12",
+          "features": [
+            -1.96,
+            -0.96,
+            0.04,
+            1.04
+          ],
+          "prediction_hash": "sha256:88f28faf05a7bc50abc091d642052413b3c8d9b535136ab4d0116f6b5cc8ebf4",
+          "prediction_state_hash": "sha256:7c4c2760476ec3059980c5430ca37125824265073206f02d24e122dc6d5a1b90",
+          "real_probability": 0.2615883595081869,
+          "release_time": 15,
+          "shuffled_probability": 0.2615883595081869,
+          "source_id": "repeated-source-2"
+        },
+        {
+          "arrival_index": 13,
+          "audit_selected": false,
+          "base_probability": 0.3048074868033751,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-13",
+          "features": [
+            -1.46,
+            -0.46,
+            0.54,
+            1.54
+          ],
+          "prediction_hash": "sha256:8c6596d9cbe085cbaaebc0101550b3574ed0adc97c0b12adbbf0b3eda41e14f2",
+          "prediction_state_hash": "sha256:7c4c2760476ec3059980c5430ca37125824265073206f02d24e122dc6d5a1b90",
+          "real_probability": 0.30319518879757057,
+          "release_time": 15,
+          "shuffled_probability": 0.30319518879757057,
+          "source_id": "repeated-source-3"
+        },
+        {
+          "arrival_index": 14,
+          "audit_selected": false,
+          "base_probability": 0.3400476867664871,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-14",
+          "features": [
+            -0.96,
+            0.04,
+            1.04,
+            2.04
+          ],
+          "prediction_hash": "sha256:1eb8eaa6d5f7cbe4d1a21d4bb31b0d983580f582e14db04d5d0cfd492177344d",
+          "prediction_state_hash": "sha256:7c4c2760476ec3059980c5430ca37125824265073206f02d24e122dc6d5a1b90",
+          "real_probability": 0.33848322653022944,
+          "release_time": 15,
+          "shuffled_probability": 0.33848322653022944,
+          "source_id": "repeated-source-4"
+        },
+        {
+          "arrival_index": 15,
+          "audit_selected": true,
+          "base_probability": 0.3733440076742796,
+          "block_end": 15,
+          "block_id": 1,
+          "event_id": "fixture-event-15",
+          "features": [
+            0.04,
+            0.54,
+            1.54,
+            2.54
+          ],
+          "prediction_hash": "sha256:e157b77d31f6c4fd171c653b76ecdc45ba598a4f788398d21451bb046e67c60a",
+          "prediction_state_hash": "sha256:7c4c2760476ec3059980c5430ca37125824265073206f02d24e122dc6d5a1b90",
+          "real_probability": 0.3717152834933106,
+          "release_time": 15,
+          "shuffled_probability": 0.3717152834933106,
+          "source_id": "repeated-source-0"
+        }
+      ],
+      "release_rows": [
+        {
+          "block_end": 7,
+          "block_id": 0,
+          "effective_changes": 0,
+          "event_ids": [
+            "fixture-event-06"
+          ],
+          "label_origins": [
+            "fixture-event-06"
+          ],
+          "permutation_mode": "singleton_noop",
+          "release_time": 7,
+          "released_at": 7,
+          "update_count": 1
+        },
+        {
+          "block_end": 15,
+          "block_id": 1,
+          "effective_changes": 2,
+          "event_ids": [
+            "fixture-event-08",
+            "fixture-event-09",
+            "fixture-event-15"
+          ],
+          "label_origins": [
+            "fixture-event-15",
+            "fixture-event-09",
+            "fixture-event-08"
+          ],
+          "permutation_mode": "best_effort_permutation",
+          "release_time": 15,
+          "released_at": 15,
+          "update_count": 3
+        }
+      ],
+      "terminal_state_hash": "sha256:ede17e250016b6a73bc96f4de7fc787d09a85d34cd0b4b657e5d26ecb1762129",
+      "update_rows": [
+        {
+          "arm": "real",
+          "block_id": 0,
+          "event_id": "fixture-event-06",
+          "feature_order": 6,
+          "gradient_probability": 0.46660467617300144,
+          "label": 0,
+          "label_origin": "fixture-event-06",
+          "prediction_hash": "sha256:54bdc23ce0b93ffa283ba0250119fc145d8e4c66d093586267a0f4453db76e03",
+          "prediction_time": 6,
+          "release_time": 7,
+          "state_hash_after": "sha256:44bb34a8b0669ffdd028235ee44327c4968deab936158f9a3b46c377fa6a142f",
+          "status": "committed",
+          "updated_at": 7
+        },
+        {
+          "arm": "shuffled",
+          "block_id": 0,
+          "event_id": "fixture-event-06",
+          "feature_order": 6,
+          "gradient_probability": 0.46660467617300144,
+          "label": 0,
+          "label_origin": "fixture-event-06",
+          "prediction_hash": "sha256:54bdc23ce0b93ffa283ba0250119fc145d8e4c66d093586267a0f4453db76e03",
+          "prediction_time": 6,
+          "release_time": 7,
+          "state_hash_after": "sha256:44bb34a8b0669ffdd028235ee44327c4968deab936158f9a3b46c377fa6a142f",
+          "status": "committed",
+          "updated_at": 7
+        },
+        {
+          "arm": "real",
+          "block_id": 1,
+          "event_id": "fixture-event-08",
+          "feature_order": 8,
+          "gradient_probability": 0.5249579512758775,
+          "label": 0,
+          "label_origin": "fixture-event-08",
+          "prediction_hash": "sha256:934c66ca6133b338cf6e01d0c9b9f112142841b9a9a2a719ad55ea0c08d04ccb",
+          "prediction_time": 8,
+          "release_time": 15,
+          "state_hash_after": "sha256:5a5ecfb381c85b44986d65781ee9b8d92f87dc67f560013a813a11d40caab0bb",
+          "status": "committed",
+          "updated_at": 15
+        },
+        {
+          "arm": "shuffled",
+          "block_id": 1,
+          "event_id": "fixture-event-08",
+          "feature_order": 8,
+          "gradient_probability": 0.5249579512758775,
+          "label": 1,
+          "label_origin": "fixture-event-15",
+          "prediction_hash": "sha256:934c66ca6133b338cf6e01d0c9b9f112142841b9a9a2a719ad55ea0c08d04ccb",
+          "prediction_time": 8,
+          "release_time": 15,
+          "state_hash_after": "sha256:d770e2a97d930d6712d360678b14a44430bcd5627b7995dec37471cbf9ec126a",
+          "status": "committed",
+          "updated_at": 15
+        },
+        {
+          "arm": "real",
+          "block_id": 1,
+          "event_id": "fixture-event-09",
+          "feature_order": 9,
+          "gradient_probability": 0.5517004999715774,
+          "label": 1,
+          "label_origin": "fixture-event-09",
+          "prediction_hash": "sha256:9ad6fe42168145d49cc6a79192979287f8e6cdade98fcba8cc48514a9b158e5e",
+          "prediction_time": 9,
+          "release_time": 15,
+          "state_hash_after": "sha256:254e1bf4e79e68dd249335371308e9de0c63de69a0031b4e11530dbf1fdcede1",
+          "status": "committed",
+          "updated_at": 15
+        },
+        {
+          "arm": "shuffled",
+          "block_id": 1,
+          "event_id": "fixture-event-09",
+          "feature_order": 9,
+          "gradient_probability": 0.5584648366085055,
+          "label": 1,
+          "label_origin": "fixture-event-09",
+          "prediction_hash": "sha256:9ad6fe42168145d49cc6a79192979287f8e6cdade98fcba8cc48514a9b158e5e",
+          "prediction_time": 9,
+          "release_time": 15,
+          "state_hash_after": "sha256:69319c0991bc0da0245449b2a769d079973d8bd1d01c6c0ac76eab5f622ee62a",
+          "status": "committed",
+          "updated_at": 15
+        },
+        {
+          "arm": "real",
+          "block_id": 1,
+          "event_id": "fixture-event-15",
+          "feature_order": 15,
+          "gradient_probability": 0.3730414519958678,
+          "label": 1,
+          "label_origin": "fixture-event-15",
+          "prediction_hash": "sha256:e157b77d31f6c4fd171c653b76ecdc45ba598a4f788398d21451bb046e67c60a",
+          "prediction_time": 15,
+          "release_time": 15,
+          "state_hash_after": "sha256:9b666407fa8ecc88535dd5ddac7a78bb88a7a631873dffc191649ab38efee839",
+          "status": "committed",
+          "updated_at": 15
+        },
+        {
+          "arm": "shuffled",
+          "block_id": 1,
+          "event_id": "fixture-event-15",
+          "feature_order": 15,
+          "gradient_probability": 0.37922973139738975,
+          "label": 0,
+          "label_origin": "fixture-event-08",
+          "prediction_hash": "sha256:e157b77d31f6c4fd171c653b76ecdc45ba598a4f788398d21451bb046e67c60a",
+          "prediction_time": 15,
+          "release_time": 15,
+          "state_hash_after": "sha256:0bbd20d53c3a30746ad75ba1f9c0686c063187bc13c537dbd09404295fde04d2",
+          "status": "committed",
+          "updated_at": 15
+        }
+      ]
+    }
+  ],
+  "checkpoint_schema": {
+    "name": "carnot.exp7506.v657.causal_machine_checkpoint.v1",
+    "required_parts": [
+      "models",
+      "pending_queue",
+      "audit_rng_state",
+      "order_cursor"
+    ]
+  },
+  "completed_at_utc": "2026-09-22T04:14:52Z",
+  "duration_breakdown_s": {
+    "authoring": 0.0,
+    "computation": 0.09794776499620639,
+    "historical_capture": 0.0,
+    "validation": 14.786843892004981
+  },
+  "duration_s": 14.884791657001188,
+  "execution_venue": "host",
+  "experiment_id": "exp7506-v657-causal-prototype",
+  "expert_ensemble_present": false,
+  "external_publication_performed": false,
+  "field_principles": {
+    "MODEL_SPECS": "An empty list prevents historical model evidence from becoming a current load.",
+    "acceptance_gate_results": "The acceptance_gate_results field prevents silent omission or reinterpretation.",
+    "affected_validation_manifest": "The affected_validation_manifest field prevents silent omission or reinterpretation.",
+    "capability_e2e": "The capability_e2e field prevents silent omission or reinterpretation.",
+    "causal_update_ready_score": "A bare structural score stays independent of fixture benefit.",
+    "causality_rows": "Raw release and origin evidence exposes future-label access.",
+    "checkpoint_schema": "Whole-machine state makes restart parity meaningful.",
+    "completed_at_utc": "The completed_at_utc field prevents silent omission or reinterpretation.",
+    "duration_breakdown_s": "The duration_breakdown_s field prevents silent omission or reinterpretation.",
+    "duration_s": "The duration_s field prevents silent omission or reinterpretation.",
+    "execution_venue": "The execution_venue field prevents silent omission or reinterpretation.",
+    "experiment_id": "The experiment_id field prevents silent omission or reinterpretation.",
+    "expert_ensemble_present": "The expert_ensemble_present field prevents silent omission or reinterpretation.",
+    "external_publication_performed": "The external_publication_performed field prevents silent omission or reinterpretation.",
+    "field_principles": "The field_principles field prevents silent omission or reinterpretation.",
+    "fixture_rows": "Analytic witnesses keep oracle evidence separate from real benefit.",
+    "flagged_adversarial": "The flagged_adversarial field prevents silent omission or reinterpretation.",
+    "frozen_temperature_baseline": "The frozen_temperature_baseline field prevents silent omission or reinterpretation.",
+    "gate_check_summary": "The gate_check_summary field prevents silent omission or reinterpretation.",
+    "generator_weights_changed": "The generator_weights_changed field prevents silent omission or reinterpretation.",
+    "historical_model_provenance": "The historical_model_provenance field prevents silent omission or reinterpretation.",
+    "honest_verdict": "The honest_verdict field prevents silent omission or reinterpretation.",
+    "importance_anchor_present": "The importance_anchor_present field prevents silent omission or reinterpretation.",
+    "inference_substrate": "The substrate names the CPU numerical work that produced the rows.",
+    "inference_substrate_class": "The inference_substrate_class field prevents silent omission or reinterpretation.",
+    "invocation_counts": "Balanced zero counters expose attempted or unfinished model work.",
+    "milestone": "The milestone field prevents silent omission or reinterpretation.",
+    "model_invoked": "A false flag separates CPU fixture work from current inference.",
+    "model_specs": "The lowercase mirror prevents schema aliases from hiding a model load.",
+    "phase_spans": "The phase_spans field prevents silent omission or reinterpretation.",
+    "preconditions_checked": "The preconditions_checked field prevents silent omission or reinterpretation.",
+    "predictive_benefit_measured": "The predictive_benefit_measured field prevents silent omission or reinterpretation.",
+    "process_identity": "The process_identity field prevents silent omission or reinterpretation.",
+    "production_defaults_changed": "The production_defaults_changed field prevents silent omission or reinterpretation.",
+    "push_performed": "The push_performed field prevents silent omission or reinterpretation.",
+    "random_seed": "The random_seed field prevents silent omission or reinterpretation.",
+    "real_delayed_feedback_evaluation": "The real_delayed_feedback_evaluation field prevents silent omission or reinterpretation.",
+    "release_batch_protocol": "The release_batch_protocol field prevents silent omission or reinterpretation.",
+    "reproducibility_checksum": "The reproducibility_checksum field prevents silent omission or reinterpretation.",
+    "research_conductor_modified": "The research_conductor_modified field prevents silent omission or reinterpretation.",
+    "retention_labels_used_for_selection_or_rollback": "The retention_labels_used_for_selection_or_rollback field prevents silent omission or reinterpretation.",
+    "rows": "Per-delay units prevent one delay from hiding a chronology failure in an average.",
+    "run_date": "The fixed run date prevents evidence from moving between milestones.",
+    "sample_size_budget": "The sample_size_budget field prevents silent omission or reinterpretation.",
+    "schema": "Versioned structure prevents a reader from applying the wrong contract.",
+    "small_ebm_training": "The small_ebm_training field prevents silent omission or reinterpretation.",
+    "source_artifact_hashes": "The source_artifact_hashes field prevents silent omission or reinterpretation.",
+    "started_at_utc": "The started_at_utc field prevents silent omission or reinterpretation.",
+    "status": "The status field prevents silent omission or reinterpretation.",
+    "terminal_status": "The terminal_status field prevents silent omission or reinterpretation.",
+    "update_equations": "The update_equations field prevents silent omission or reinterpretation.",
+    "validation_receipts": "The validation_receipts field prevents silent omission or reinterpretation.",
+    "verdict_class": "The verdict_class field prevents silent omission or reinterpretation.",
+    "verifier_is_oracle": "The verifier_is_oracle field prevents silent omission or reinterpretation.",
+    "version": "The version field prevents silent omission or reinterpretation."
+  },
+  "fixture_rows": {
+    "claim_limit": "oracle_fixture_circular_positive_only",
+    "gradient_checks": [
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.34178003737005397,
+        "label": 0,
+        "max_abs_error": 5.2507137526802694e-11,
+        "passed": true,
+        "raw_scale": 0.0,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y0-u0.0"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.20913354850028346,
+        "label": 0,
+        "max_abs_error": 1.519046000098001e-11,
+        "passed": true,
+        "raw_scale": 0.9,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y0-u0.9"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.12071107454367998,
+        "label": 0,
+        "max_abs_error": 1.1078865255753634e-11,
+        "passed": true,
+        "raw_scale": -0.9,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y0-u-0.9"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 2.061167130656552e-07,
+        "label": 0,
+        "max_abs_error": 3.648993156613543e-11,
+        "passed": true,
+        "raw_scale": 8.0,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y0-u8.0"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 9.594345710365581e-08,
+        "label": 0,
+        "max_abs_error": 1.865019019463348e-11,
+        "passed": true,
+        "raw_scale": -8.0,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y0-u-8.0"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.4918298098739803,
+        "label": 1,
+        "max_abs_error": 1.1448461623153605e-10,
+        "passed": true,
+        "raw_scale": 0.0,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y1-u0.0"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.21035350614383694,
+        "label": 1,
+        "max_abs_error": 3.7903083449641883e-11,
+        "passed": true,
+        "raw_scale": 0.9,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y1-u0.9"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.24851772944222633,
+        "label": 1,
+        "max_abs_error": 6.152117357216547e-11,
+        "passed": true,
+        "raw_scale": -0.9,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y1-u-0.9"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 1.7990124588563365e-07,
+        "label": 1,
+        "max_abs_error": 3.7327256883636447e-11,
+        "passed": true,
+        "raw_scale": 8.0,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y1-u8.0"
+      },
+      {
+        "bound": 0.5,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 2.2763063516810566e-07,
+        "label": 1,
+        "max_abs_error": 1.0388781925561267e-10,
+        "passed": true,
+        "raw_scale": -8.0,
+        "status": "complete",
+        "unit_id": "gradient-b0.5-y1-u-8.0"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.34178003737005397,
+        "label": 0,
+        "max_abs_error": 5.2507137526802694e-11,
+        "passed": true,
+        "raw_scale": 0.0,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y0-u0.0"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.23882884892784026,
+        "label": 0,
+        "max_abs_error": 9.899425723602917e-11,
+        "passed": true,
+        "raw_scale": 0.9,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y0-u0.9"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.08047173539072312,
+        "label": 0,
+        "max_abs_error": 1.2188881848285149e-11,
+        "passed": true,
+        "raw_scale": -0.9,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y0-u-0.9"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 2.2956000274739702e-07,
+        "label": 0,
+        "max_abs_error": 1.1261202571804231e-10,
+        "passed": true,
+        "raw_scale": 8.0,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y0-u8.0"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 5.120936158845544e-08,
+        "label": 0,
+        "max_abs_error": 9.336038019895908e-12,
+        "passed": true,
+        "raw_scale": -8.0,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y0-u-8.0"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.4918298098739803,
+        "label": 1,
+        "max_abs_error": 1.1448461623153605e-10,
+        "passed": true,
+        "raw_scale": 0.0,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y1-u0.0"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.16790774457386176,
+        "label": 1,
+        "max_abs_error": 5.751868425996065e-11,
+        "passed": true,
+        "raw_scale": 0.9,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y1-u0.9"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 0.23702586187366267,
+        "label": 1,
+        "max_abs_error": 6.147900244446447e-11,
+        "passed": true,
+        "raw_scale": -0.9,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y1-u-0.9"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 1.2152622066988443e-07,
+        "label": 1,
+        "max_abs_error": 5.747251656928647e-11,
+        "passed": true,
+        "raw_scale": 8.0,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y1-u8.0"
+      },
+      {
+        "bound": 1.0,
+        "censored": false,
+        "failed": false,
+        "gradient_norm": 2.0031427555227741e-07,
+        "label": 1,
+        "max_abs_error": 1.0843405334686567e-10,
+        "passed": true,
+        "raw_scale": -8.0,
+        "status": "complete",
+        "unit_id": "gradient-b1.0-y1-u-8.0"
+      }
+    ],
+    "head_controls": [
+      {
+        "arm": "local_brier",
+        "basis_kind": "local",
+        "gradient_clip_count": 0,
+        "loss": "brier",
+        "parameter_count": 33,
+        "state_changed": true,
+        "update_count": 8
+      },
+      {
+        "arm": "local_log_loss",
+        "basis_kind": "local",
+        "gradient_clip_count": 1,
+        "loss": "log_loss",
+        "parameter_count": 33,
+        "state_changed": true,
+        "update_count": 8
+      },
+      {
+        "arm": "affine_brier",
+        "basis_kind": "affine",
+        "gradient_clip_count": 0,
+        "loss": "brier",
+        "parameter_count": 5,
+        "state_changed": true,
+        "update_count": 8
+      },
+      {
+        "arm": "intercept_brier",
+        "basis_kind": "intercept",
+        "gradient_clip_count": 0,
+        "loss": "brier",
+        "parameter_count": 1,
+        "state_changed": true,
+        "update_count": 8
+      },
+      {
+        "arm": "frozen",
+        "basis_kind": "local",
+        "gradient_clip_count": 0,
+        "loss": "brier",
+        "parameter_count": 33,
+        "state_changed": false,
+        "update_count": 0
+      },
+      {
+        "arm": "zero_step",
+        "basis_kind": "local",
+        "gradient_clip_count": 0,
+        "loss": "brier",
+        "parameter_count": 33,
+        "state_changed": false,
+        "update_count": 0
+      }
+    ],
+    "hyperparameter_selection": {
+      "budget_frozen_before_online": true,
+      "candidate_rows": [
+        {
+          "calibration_brier": 0.2294401705612102,
+          "learning_rate": 0.001,
+          "residual_bound": 0.5
+        },
+        {
+          "calibration_brier": 0.229440126143038,
+          "learning_rate": 0.001,
+          "residual_bound": 1.0
+        },
+        {
+          "calibration_brier": 0.22467825708606273,
+          "learning_rate": 0.01,
+          "residual_bound": 0.5
+        },
+        {
+          "calibration_brier": 0.2246409141359771,
+          "learning_rate": 0.01,
+          "residual_bound": 1.0
+        },
+        {
+          "calibration_brier": 0.21607269884997293,
+          "learning_rate": 0.03,
+          "residual_bound": 0.5
+        },
+        {
+          "calibration_brier": 0.21545938762551978,
+          "learning_rate": 0.03,
+          "residual_bound": 1.0
+        }
+      ],
+      "learning_rate_candidates": [
+        0.001,
+        0.01,
+        0.03
+      ],
+      "online_labels_used": false,
+      "residual_bound_candidates": [
+        0.5,
+        1.0
+      ],
+      "retention_labels_used": false,
+      "selected_learning_rate": 0.03,
+      "selected_residual_bound": 1.0,
+      "selection_roles": [
+        "training",
+        "calibration_tuning"
+      ]
+    },
+    "restart_check": {
+      "checkpoint_schema": "carnot.exp7506.v657.causal_machine_checkpoint.v1",
+      "passed": true,
+      "stable_trace_equal": true,
+      "terminal_bytes_equal": true
+    }
+  },
+  "flagged_adversarial": false,
+  "frozen_temperature_baseline": {
+    "mutable": false,
+    "selected_temperature": 1.5,
+    "source": "results/raw/experiment_7505_v657_energy_fit/frozen_checkpoints.json"
+  },
+  "gate_check_summary": {
+    "failed_checks": [],
+    "first_failure": null,
+    "passed": true
+  },
+  "generator_weights_changed": false,
+  "historical_model_provenance": {
+    "current_model_calls": 0,
+    "description": "Cached Qwen evidence came from upstream artifacts and was not loaded.",
+    "scope": "historical_only"
+  },
+  "honest_verdict": "complete_circular_positive_causal_prototype_ready_real_learning_deferred_to_exp7509",
+  "importance_anchor_present": false,
+  "inference_substrate": "cpu_numpy_smooth_residual_fixture",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.657",
+  "model_invoked": false,
+  "model_specs": [],
+  "phase_spans": [
+    {
+      "completed_units": 31,
+      "duration_s": 0.007726134004769847,
+      "end_offset_s": 0.007755108999845106,
+      "phase": "preconditions",
+      "start_offset_s": 2.8974995075259358e-05
+    },
+    {
+      "completed_units": 32,
+      "duration_s": 0.5789760570041835,
+      "end_offset_s": 0.5887952539997059,
+      "phase": "fixture_computation",
+      "start_offset_s": 0.009819196995522361
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 14.295610768996994,
+      "end_offset_s": 14.884781697997823,
+      "phase": "affected_validation",
+      "start_offset_s": 0.5891709290008293
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "AGENTS.md",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "CLAUDE.md",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "CODEX.md",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "research-program.md",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/experiment_7468_v654_residual_learner.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/experiment_7490_v656_historical_audit.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7490_v656_historical_audit.json",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "tests/python/test_experiment_7496_v656_causal_update_fixture.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "openspec/capabilities/continuous-learning/spec.md",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "openspec/capabilities/kan/spec.md",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7503_v657_contract_methods.json",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7504_v657_evidence_interface.json",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/experiment_7505_v657_energy_fit.json",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "results/raw/experiment_7505_v657_energy_fit/frozen_checkpoints.json",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "python/carnot/experiment_7506_v657_causal_prototype.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "scripts/experiments/experiment_7506_v657_causal_prototype.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "path",
+      "check": "resource_readable",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "tests/python/test_experiment_7506_v657_causal_prototype.py",
+      "upstream": "worktree_or_upstream"
+    },
+    {
+      "artifact_field": "terminal_status",
+      "check": "upstream_terminal",
+      "expected": "complete",
+      "observed": "complete",
+      "passed": true,
+      "path": "results/experiment_7505_v657_energy_fit.json",
+      "upstream": "Exp7505"
+    },
+    {
+      "artifact_field": "energy_fit_ready_score",
+      "check": "upstream_ready",
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "path": "results/experiment_7505_v657_energy_fit.json",
+      "upstream": "Exp7505"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "upstream_adversarial",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "path": "results/experiment_7505_v657_energy_fit.json",
+      "upstream": "Exp7505"
+    },
+    {
+      "artifact_field": "model_invoked",
+      "check": "upstream_model_invoked",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "path": "results/experiment_7505_v657_energy_fit.json",
+      "upstream": "Exp7505"
+    },
+    {
+      "artifact_field": "temperature_baseline.selected_temperature",
+      "check": "frozen_temperature_available",
+      "expected": 1.5,
+      "observed": 1.5,
+      "passed": true,
+      "path": "results/raw/experiment_7505_v657_energy_fit/frozen_checkpoints.json",
+      "upstream": "Exp7505"
+    },
+    {
+      "artifact_field": "future_origin_assignment_count",
+      "check": "historical_future_origin_failure",
+      "expected": 376,
+      "observed": 376,
+      "passed": true,
+      "path": "results/experiment_7490_v656_historical_audit.json",
+      "upstream": "Exp7490"
+    },
+    {
+      "artifact_field": "REQ-CL-7506",
+      "check": "requirement_present",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "openspec/capabilities/continuous-learning/spec.md",
+      "upstream": "OpenSpec"
+    },
+    {
+      "artifact_field": "REQ-KAN-7506",
+      "check": "requirement_present",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "path": "openspec/capabilities/kan/spec.md",
+      "upstream": "OpenSpec"
+    }
+  ],
+  "predictive_benefit_measured": false,
+  "process_identity": {
+    "hostname": "icbfl1",
+    "pid": 414130
+  },
+  "production_defaults_changed": false,
+  "push_performed": false,
+  "random_seed": {
+    "arrival": 750602,
+    "audit": 750603,
+    "bootstrap": 750605,
+    "fit": 750601,
+    "shuffle": 750604
+  },
+  "real_delayed_feedback_evaluation": "deferred_to_Exp7509",
+  "release_batch_protocol": {
+    "alternate_delay_label_access_allowed": false,
+    "audit_probability": 0.25,
+    "audit_uses_labels": false,
+    "audit_uses_scores": false,
+    "block_size": 8,
+    "future_label_access_allowed": false,
+    "primary_delay": 8,
+    "secondary_delay": 0,
+    "shuffle_scope": "same_released_batch_only"
+  },
+  "reproducibility_checksum": "sha256:cc1dc4197c5445dc887fe73dff134d41bb48e6d1f1744a6fa3773bc15c706268",
+  "research_conductor_modified": false,
+  "retention_labels_used_for_selection_or_rollback": false,
+  "rows": [
+    {
+      "attempted_events": 16,
+      "censored": false,
+      "censored_events": 0,
+      "completed_events": 16,
+      "delay": 8,
+      "excluded_events": 0,
+      "failed": false,
+      "failed_events": 0,
+      "future_access_violations": 0,
+      "planned_events": 16,
+      "released_batches": 2,
+      "status": "complete",
+      "unit_id": "delay-8",
+      "updates_per_arm": 4
+    },
+    {
+      "attempted_events": 16,
+      "censored": false,
+      "censored_events": 0,
+      "completed_events": 16,
+      "delay": 0,
+      "excluded_events": 0,
+      "failed": false,
+      "failed_events": 0,
+      "future_access_violations": 0,
+      "planned_events": 16,
+      "released_batches": 2,
+      "status": "complete",
+      "unit_id": "delay-0",
+      "updates_per_arm": 4
+    }
+  ],
+  "run_date": "20260922",
+  "sample_size_budget": {
+    "attempted": 32,
+    "censored": 0,
+    "completed": 32,
+    "excluded": 0,
+    "failed": 0,
+    "planned": 32,
+    "unit": "event_delay_pairs",
+    "unstarted": 0
+  },
+  "schema": "carnot.exp7506.v657.causal_prototype.v1",
+  "small_ebm_training": {
+    "budget_s": 300.0,
+    "candidate_count": 6,
+    "elapsed_s": 0.09794776499620639,
+    "optimizer_updates": 288,
+    "roles": [
+      "training",
+      "calibration_tuning"
+    ],
+    "scope": "current_cpu_work",
+    "within_budget": true
+  },
+  "source_artifact_hashes": [
+    {
+      "bytes": 1165,
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "bytes": 318291,
+      "path": "CLAUDE.md",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+    },
+    {
+      "bytes": 2697,
+      "path": "CODEX.md",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+    },
+    {
+      "bytes": 28560,
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "bytes": 63348,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65"
+    },
+    {
+      "bytes": 9718,
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:cfce8e864485cfa9eeec33d639e74f5a2a748b9277fb8a9d9673fb6fc4a9c1e9"
+    },
+    {
+      "bytes": 115811,
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    {
+      "bytes": 12790,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "bytes": 54324,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    {
+      "bytes": 13393,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    {
+      "bytes": 76289,
+      "path": "python/carnot/experiment_7468_v654_residual_learner.py",
+      "sha256": "sha256:adaa7ca174fd392b1bb338012de95e7f0dfad9cd864625d0552c0c08c1cf194b"
+    },
+    {
+      "bytes": 63926,
+      "path": "python/carnot/experiment_7490_v656_historical_audit.py",
+      "sha256": "sha256:0a5b7beb873a465ef0b757580418330b4f05336c68405c2d1f267de3b0b83917"
+    },
+    {
+      "bytes": 632489,
+      "path": "results/experiment_7490_v656_historical_audit.json",
+      "sha256": "sha256:5b1fd18378fef3bc06aec546a256f4aaf57ec83e03d46b8bcb77788ec2936cc7"
+    },
+    {
+      "bytes": 11887,
+      "path": "tests/python/test_experiment_7496_v656_causal_update_fixture.py",
+      "sha256": "sha256:4eef7a85db03255bb89a6cf2bbba28e7edd8890da785a39a9e454e8d3c7739ac"
+    },
+    {
+      "bytes": 1061681,
+      "path": "openspec/capabilities/continuous-learning/spec.md",
+      "sha256": "sha256:5e9b7a5295fac182546cb95c69e482bac83f475cd33826ac650fdc841a6bcf19"
+    },
+    {
+      "bytes": 215029,
+      "path": "openspec/capabilities/kan/spec.md",
+      "sha256": "sha256:9ae98447b5ab20c6bdc46d36849a5c61772b9cff882681b82682c63bbbf1ec3a"
+    },
+    {
+      "bytes": 239591,
+      "path": "results/experiment_7503_v657_contract_methods.json",
+      "sha256": "sha256:7aea0031a55720ae67832f78d2a243b196a46c3219ef6f0b41d035a2adc7a5ce"
+    },
+    {
+      "bytes": 196698,
+      "path": "results/experiment_7504_v657_evidence_interface.json",
+      "sha256": "sha256:7ec8623504a8fd88660e8c920d5b0273169723c4ebfe8fc9e393a9b3919f0949"
+    },
+    {
+      "bytes": 95318,
+      "path": "results/experiment_7505_v657_energy_fit.json",
+      "sha256": "sha256:cd050eb3a67cf4c69e19136e6c46d33a43babbbc447733622a8d568ac69e3031"
+    },
+    {
+      "bytes": 155583,
+      "path": "results/raw/experiment_7505_v657_energy_fit/frozen_checkpoints.json",
+      "sha256": "sha256:188ec235a7b02bd8080b27e724b33cc14254570294cfe2381fe793be82101550"
+    },
+    {
+      "bytes": 72953,
+      "path": "python/carnot/experiment_7506_v657_causal_prototype.py",
+      "sha256": "sha256:a4669fd558ed07137d796c963dfacc79aa31ff2b25035b91e5ea6c92604a1d50"
+    },
+    {
+      "bytes": 422,
+      "path": "scripts/experiments/experiment_7506_v657_causal_prototype.py",
+      "sha256": "sha256:16d198df044ca6ee738283c921b24d3bda30ceb552612cf13686d01644952822"
+    },
+    {
+      "bytes": 18203,
+      "path": "tests/python/test_experiment_7506_v657_causal_prototype.py",
+      "sha256": "sha256:57afdb99549c76d01b8ff4f68aa0e962f786ed9da8c67a656665e0960b10ff27"
+    }
+  ],
+  "started_at_utc": "2026-09-22T04:14:36Z",
+  "status": "complete_circular_positive_causal_prototype_ready",
+  "terminal_status": "complete",
+  "update_equations": {
+    "basis": "four_feature_open_cubic_spline_plus_bias",
+    "brier_gradient": "2*(p-y)*p*(1-p)*(1-tanh(u/b)^2)*basis",
+    "learning_rate_candidates": [
+      0.001,
+      0.01,
+      0.03
+    ],
+    "log_loss_gradient": "(p-y)*(1-tanh(u/b)^2)*basis",
+    "maximum_coefficients": 256,
+    "observed_local_coefficients": 33,
+    "probability": "p=sigmoid(logit(p_base)+r)",
+    "residual": "r=b*tanh(u/b)",
+    "residual_bound_candidates": [
+      0.5,
+      1.0
+    ]
+  },
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7506_v657_causal_prototype",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7506_v657_causal_prototype"
+      ],
+      "duration_s": 0.4166763999965042,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7506_v657_causal_prototype/validation/affected/00_worktree_imports.log",
+      "log_sha256": "sha256:7c73d88883f10b190baca7869320896f6c81873ccf056e1c9770b72b36678d10",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7506_v657_causal_prototype\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7506_v657_causal_prototype.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7506_v657_causal_prototype": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7506_v657_causal_prototype.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7506-validation-emv25515/pytest/focused tests/python/test_experiment_7506_v657_causal_prototype.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7506-validation-emv25515/pytest/focused",
+        "tests/python/test_experiment_7506_v657_causal_prototype.py",
+        "-q"
+      ],
+      "duration_s": 5.347985768006765,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7506_v657_causal_prototype/validation/affected/01_focused_pytest.log",
+      "log_sha256": "sha256:62da530ac9b4d41aeb416dfd4c20d2147d9c871ca03771601dea860ea7af4171",
+      "name": "focused_pytest",
+      "output_tail": "................................                                         [100%]\n=============================== warnings summary ===============================\ntests/python/test_experiment_7506_v657_causal_prototype.py::test_numeric_and_machine_inputs_fail_closed\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/numpy/linalg/_linalg.py:2767: RuntimeWarning: overflow encountered in dot\n    sqnorm = x.dot(x)\n\ntests/python/test_experiment_7506_v657_causal_prototype.py::test_numeric_and_machine_inputs_fail_closed\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7506_v657_causal_prototype.py:248: RuntimeWarning: overflow encountered in multiply\n    candidate = self.coefficients - self.learning_rate * gradient * scale\n\ntests/python/test_experiment_7506_v657_causal_prototype.py::test_numeric_and_machine_inputs_fail_closed\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7506_v657_causal_prototype.py:248: RuntimeWarning: invalid value encountered in multiply\n    candidate = self.coefficients - self.learning_rate * gradient * scale\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n32 passed, 3 warnings in 3.42s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7506-validation-emv25515/.coverage.exp7506 '--include=*/experiment_7506_v657_causal_prototype.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7506-validation-emv25515/pytest/coverage tests/python/test_experiment_7506_v657_causal_prototype.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7506-validation-emv25515/.coverage.exp7506",
+        "--include=*/experiment_7506_v657_causal_prototype.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7506-validation-emv25515/pytest/coverage",
+        "tests/python/test_experiment_7506_v657_causal_prototype.py",
+        "-q"
+      ],
+      "duration_s": 8.184686372005672,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7506_v657_causal_prototype/validation/affected/02_changed_module_coverage.log",
+      "log_sha256": "sha256:cc22ce08c7597662a9f2ce07f0c72c5ecdd5b1af9e0b0cf1850f98a6fc67e827",
+      "name": "changed_module_coverage",
+      "output_tail": "................................                                         [100%]\n=============================== warnings summary ===============================\ntests/python/test_experiment_7506_v657_causal_prototype.py::test_numeric_and_machine_inputs_fail_closed\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/numpy/linalg/_linalg.py:2767: RuntimeWarning: overflow encountered in dot\n    sqnorm = x.dot(x)\n\ntests/python/test_experiment_7506_v657_causal_prototype.py::test_numeric_and_machine_inputs_fail_closed\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7506_v657_causal_prototype.py:248: RuntimeWarning: overflow encountered in multiply\n    candidate = self.coefficients - self.learning_rate * gradient * scale\n\ntests/python/test_experiment_7506_v657_causal_prototype.py::test_numeric_and_machine_inputs_fail_closed\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7506_v657_causal_prototype.py:248: RuntimeWarning: invalid value encountered in multiply\n    candidate = self.coefficients - self.learning_rate * gradient * scale\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n32 passed, 3 warnings in 5.16s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7506-validation-emv25515/.coverage.exp7506 '--include=*/experiment_7506_v657_causal_prototype.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7506-validation-emv25515/.coverage.exp7506",
+        "--include=*/experiment_7506_v657_causal_prototype.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.10090240600402467,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7506_v657_causal_prototype/validation/affected/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:d23a66ff0bbf47b4132c61817fa3502894f4c5d7a47de16388026f7c871f8bca",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7506_v657_causal_prototype.py     569      0   100%\n--------------------------------------------------------------------------------------\nTOTAL                                                      569      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7506_v657_causal_prototype.py scripts/experiments/experiment_7506_v657_causal_prototype.py tests/python/test_experiment_7506_v657_causal_prototype.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7506_v657_causal_prototype.py",
+        "scripts/experiments/experiment_7506_v657_causal_prototype.py",
+        "tests/python/test_experiment_7506_v657_causal_prototype.py"
+      ],
+      "duration_s": 0.0156854469969403,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7506_v657_causal_prototype/validation/affected/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7506_v657_causal_prototype.py scripts/experiments/experiment_7506_v657_causal_prototype.py tests/python/test_experiment_7506_v657_causal_prototype.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7506_v657_causal_prototype.py",
+        "scripts/experiments/experiment_7506_v657_causal_prototype.py",
+        "tests/python/test_experiment_7506_v657_causal_prototype.py"
+      ],
+      "duration_s": 0.015136735994019546,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7506_v657_causal_prototype/validation/affected/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7506_v657_causal_prototype.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7506_v657_causal_prototype.py"
+      ],
+      "duration_s": 0.19852721299685072,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7506_v657_causal_prototype/validation/affected/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7506_v657_causal_prototype.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7506_v657_causal_prototype.py"
+      ],
+      "duration_s": 0.01476390499738045,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7506_v657_causal_prototype/validation/affected/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true,
+  "version": 1
+}

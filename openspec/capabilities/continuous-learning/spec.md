@@ -18397,3 +18397,67 @@ consistency pass.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7496 and SCENARIO-CL-7496-* | Planned: bounded Brier residual helper, causal release-batch fixture, terminal artifact producer, and thin entrypoint. | Planned: specification-linked focused tests, 100 percent changed-module coverage, scoped validation, entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+
+## REQ-CL-7506: V657 Causal Prototype Qualification
+
+Exp7506 SHALL qualify a fixture-only online learner before any real delayed-
+feedback evaluation. It SHALL place a bounded residual
+`r = b * tanh(u / b)` above the frozen Exp7505 temperature baseline. The
+probability SHALL be `sigmoid(logit(p_base) + r)`. The local spline arm SHALL
+use at most 256 coefficients. Its Brier gradient SHALL be
+`2 * (p - y) * p * (1 - p) * (1 - tanh(u / b)^2) * basis`.
+
+Training and calibration fixtures alone SHALL select a learning rate from
+`0.001`, `0.01`, and `0.03` and a residual bound from `0.5` and `1.0`. The
+fixture SHALL also include affine and intercept Brier controls. A local
+log-loss control SHALL use the same capacity and residual bound. A retention
+label SHALL score only. It SHALL not select settings, reject an update, or
+cause rollback. The prototype SHALL not add an importance anchor or an expert
+ensemble.
+
+The event machine SHALL seal features and probabilities before update. It
+SHALL select audits without scores or labels. It SHALL release one block of
+eight only at `block_end + delay`, with delay eight primary and delay zero
+secondary. The shuffled arm SHALL permute labels only within the same released
+batch. It SHALL preserve reveal times, feature order, and update counts. It
+SHALL record singleton and identical-label batches as uninformative no-ops.
+No future, unrevealed, or alternate-delay label MAY enter an update.
+
+One checkpoint SHALL bind model state, pending events, audit random state, and
+the order cursor. Restart SHALL reproduce uninterrupted bytes. Frozen and
+zero-step controls SHALL not move. Every update SHALL record its label origin.
+`causal_update_ready_score` SHALL equal one only when gradients, chronology,
+causal permutation, and restart parity pass. Fixture gain MAY support only
+`circular_positive`. It SHALL not claim real or human-label benefit.
+
+### SCENARIO-CL-7506-MATH: Every Bounded Branch Has A Numeric Witness
+
+- GIVEN interior, near-saturation, positive-boundary, and negative-boundary states
+- WHEN analytic Brier gradients are compared with finite differences
+- THEN all differentiable branches agree and every nonzero interior derivative remains visible.
+
+### SCENARIO-CL-7506-CAUSAL: Releases Cannot Borrow Labels
+
+- GIVEN two blocks that differ only in future labels
+- WHEN replay stops before the later release
+- THEN predictions, updates, permutations, and state bytes are equal
+- AND the old future-origin shuffle counterexample is rejected.
+
+### SCENARIO-CL-7506-LIFECYCLE: Prediction And Checkpoint State Stay Immutable
+
+- GIVEN prediction, withheld feedback, invalid delivery, update, and restart
+- WHEN the event machine resumes from its checkpoint
+- THEN original predictions do not change and resumed bytes equal uninterrupted bytes.
+
+### SCENARIO-CL-7506-GATES: Structural Readiness Is Not Benefit
+
+- GIVEN complete fixture evidence and required scoped validation
+- WHEN independent readers reduce the candidate
+- THEN readiness can equal one while the verdict remains `circular_positive`
+- AND any failed required check disqualifies the terminal candidate.
+
+## Implementation Status (REQ-CL-7506)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7506 and SCENARIO-CL-7506-* | Implemented: reusable smooth bounded learner and causal fixture machine with a thin Exp7506 entrypoint. | `tests/python/test_experiment_7506_v657_causal_prototype.py` covers gradients, controls, withholding, permutation, lifecycle, restart, reduction, and readers. The scoped runner enforces 100 percent changed-module coverage and terminal checks. |

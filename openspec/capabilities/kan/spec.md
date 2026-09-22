@@ -3721,3 +3721,67 @@ an implementation result. The verifier is an oracle, so positive is forbidden.
 Given raw event traces, source hashes, model-call declarations, gates, and
 validation receipts, when a fresh reader changes any operand, then independent
 reduction or validation fails and terminal publication is refused.
+
+## REQ-KAN-7506: Smooth Brier Residual And Causal Fixture Machine
+
+Exp7506 MUST implement `r = b * tanh(u / b)` above the frozen Exp7505
+temperature probability. It MUST compute
+`p = sigmoid(logit(p_base) + r)`. Its local Brier gradient MUST equal
+`2 * (p - y) * p * (1 - p) * (1 - tanh(u / b)^2) * basis`. The same bounded
+parameterization MUST support a matched local log-loss control. Affine and
+intercept Brier controls MUST be present. The spline arm MUST use no more than
+256 coefficients.
+
+Only training and calibration fixtures MAY select the learning rate and bound.
+The candidate sets MUST be `{0.001, 0.01, 0.03}` and `{0.5, 1.0}`. Online
+fixture labels MUST not change this choice. Retention labels MUST not control
+updates or rollback. No importance anchor, expert ensemble, model load, or
+generator-weight update is permitted.
+
+The independent event machine MUST predict before update. It MUST persist each
+original feature vector and probability. A label-independent audit generator
+MUST select feedback. Block-eight labels MUST release only at block end plus
+delay eight or zero. The shuffled control MUST use only its current release
+batch. It MUST preserve reveal times, update counts, and feature order. Each
+label origin MUST remain explicit. Frozen and zero-step controls MUST not move.
+
+The checkpoint MUST include the model, pending queue, audit random state, and
+order cursor. It MUST restore byte-equivalent replay. The terminal artifact
+MUST use `MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, zero current
+model calls, `inference_substrate_class="no_model_load"`, and host CPU venue.
+The artifact MUST publish only after scoped validation and strict fresh readers
+pass.
+
+### SCENARIO-KAN-7506-01: Smooth Residual Gradients Match Differences
+
+Given all smooth residual branches and both labels, analytic and finite-
+difference Brier gradients agree. At least one derivative is nonzero.
+
+### SCENARIO-KAN-7506-02: Prediction Always Precedes Available Feedback
+
+Given delay zero or eight, every prediction is immutable before any due batch
+updates. Early and unavailable labels cause no state change.
+
+### SCENARIO-KAN-7506-03: Shuffling Is Release-Local
+
+Given a mixed release batch, the shuffle uses a seeded derangement when one
+exists. A singleton or identical-label batch is an explicit no-op. A future-
+origin assignment that the historical control allowed is rejected.
+
+### SCENARIO-KAN-7506-04: Checkpoints Bind The Whole Machine
+
+Given a checkpoint between releases, model state, pending queue, audit random
+state, and order cursor restore together. Resumed and uninterrupted replay
+produce byte-equivalent stable evidence.
+
+### SCENARIO-KAN-7506-05: Fixture Readiness Has A Limited Claim
+
+Given valid structural fixture evidence, `causal_update_ready_score` can equal
+one. The verifier remains an oracle, so the verdict cannot exceed
+`circular_positive` and real learning remains unmeasured.
+
+## Implementation Status (REQ-KAN-7506)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-KAN-7506 and SCENARIO-KAN-7506-* | Implemented in `python/carnot/experiment_7506_v657_causal_prototype.py` with a thin script entrypoint. | Focused tests cover the smooth Brier derivative, matched controls, release-local shuffle, unavailable-label rejection, counterexample, and byte-equivalent restart. The terminal producer runs scoped validation and strict fresh readers. |
