@@ -18441,3 +18441,4 @@ code |
 | 2026-09-22 21:42 UTC | Seal an available tool-grounding corpus and indepe | OK | 101 passed, 1 warning in 7.85s |
 | 2026-09-22 22:15 UTC | Build an independent conjugate energy memory for d | OK | 102 passed, 1 warning in 10.93s |
 | 2026-09-22 23:03 UTC | Qualify source-intervention transport and bounded  | OK | 111 passed, 1 warning in 8.72s |
+| 2026-09-22 23:05 UTC | Capture fitting evidence from whole tool-source in | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7535-native-pilot.native_tool_ready_score (actual=0 == expected=1) |
