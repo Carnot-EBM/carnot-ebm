@@ -44592,3 +44592,107 @@ deployment behavior.
 **When** the declared unbuffered Exp7495 entrypoint runs
 **Then** scoped checks, cold replay, independent row reduction, adversarial verification, and strict row lint pass
 **And** only the final measured terminal JSON occupies the declared deliverable path.
+
+### REQ-VERIFY-7504: V657 Evidence Interface SHALL Seal Role-Separated Window Features
+
+Exp7504 SHALL authenticate the terminal Exp7491 protocol and the terminal
+Exp7493 and Exp7494 native captures before it transforms any row. It SHALL
+rehash the original protocol and capture shards, retain the historical Qwen
+model receipts, and verify every group, normalized source hash, option ID,
+option order, request disposition, window identity, and sealed role. It SHALL
+read these captures as immutable historical evidence and SHALL make no model
+load, forward, generation, optimizer, or predictive-benefit claim.
+
+The interface SHALL preserve 520 planned groups and nine exclusions. Its
+eligible role counts SHALL be 176 training, 60 calibration-tuning, 116 test,
+and 159 online groups. Independent support SHALL count unique normalized
+source hashes. It SHALL reject duplicate calls, absent order partners, changed
+source or response hashes, changed window offsets or hashes, unknown options,
+and any group that appears in more than one role.
+
+The label-free transform SHALL arithmetic-average the two semantic
+`contains_unsupported` probabilities for each whole response or window. It
+SHALL freeze these ten proposed features in this order: mean whole log-odds;
+minimum, mean, maximum, and population standard deviation of window
+unsupported probabilities; maximum window order disagreement; whole order
+disagreement; `log1p(window_count)`; `log1p(response_bytes)`; and
+`log1p(source_bytes)`. It SHALL also export raw whole expectation and raw
+maximum-window probability controls. These quantities are proposed inputs,
+not scientific findings.
+
+The interface SHALL provide `fit`, `predict`, and `evaluate` reader modes.
+Fit MAY open only training and calibration-tuning labels. Predict SHALL open no
+labels. Both fit and predict SHALL be invariant to mutation of the test and
+online evaluator bytes. Evaluate MAY open test or online labels only after it
+authenticates an existing prediction or checkpoint hash. Normalization SHALL
+fit on training features only. The artifact SHALL record label access, equal
+detector access, evaluator separation, and exposure limits. Unknown earlier
+exposure SHALL make later primary claims exploratory. FaithBench SHALL remain
+previously exposed and outside new primary claims.
+
+The interface SHALL freeze the V656 static primary comparisons against
+identical-feature logistic and whole-only Gibbs. It SHALL freeze the online
+primary settings at delay 8, audit fraction 0.25, block release size 8, and
+seeds 656201 through 656205. `evidence_ready_score` SHALL equal one only when
+raw identity, complete eligible rows, role separation, reader access, and
+required validation pass. Readiness SHALL remain independent of later efficacy.
+
+The terminal artifact SHALL publish atomically at
+`results/experiment_7504_v657_evidence_interface.json`. Feature rows and the
+access/exposure manifest SHALL be hash-bound sidecars below
+`results/raw/experiment_7504_v657_evidence_interface/`. The affected-file
+manifest SHALL name only the Exp7504 test, module, and thin entrypoint.
+Required checks SHALL be scoped pytest without coverage, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+scoped specification coverage, declared-entrypoint cold replay, independent
+row reduction, adversarial verification, and strict verdict-row consistency.
+No numbered runtime E2E applies to this reporting-only data boundary.
+
+#### SCENARIO-VERIFY-7504-IDENTITY: Historical Bytes And Semantic Options Stay Bound
+
+**Given** the sealed V656 protocol plus fit and evaluation capture shards
+**When** Exp7504 authenticates and joins their label-free rows
+**Then** every original shard, live-model receipt, option ID, order, group, source, response, and window identity matches
+**And** a missing call, duplicate call, reversed mapping error, or changed hash fails before feature publication.
+
+#### SCENARIO-VERIFY-7504-FEATURES: Both Orders Produce Ten Frozen Features
+
+**Given** two semantic option orders for the whole response and every lossless window
+**When** Exp7504 maps display labels to semantic options and transforms one group
+**Then** it arithmetic-averages paired probabilities and emits the ten registered features and two raw controls
+**And** complete qualifier-bearing response bytes and window joins remain unchanged.
+
+#### SCENARIO-VERIFY-7504-ACCESS: Fit And Predict Cannot Observe Held-Out Labels
+
+**Given** physically separate predictor and evaluator stores
+**When** a fit or predict reader constructs feature rows
+**Then** mutation of test and online label bytes cannot change its output or freeze hash
+**And** role leakage or an attempt to open a forbidden label fails closed.
+
+#### SCENARIO-VERIFY-7504-EVALUATE: Evaluation Requires A Prior Frozen Hash
+
+**Given** label-free held-out feature rows and a previously written prediction or checkpoint
+**When** the evaluate reader requests test or online labels
+**Then** it opens only the requested evaluator roles after the supplied hash matches exact bytes
+**And** a missing or mismatched freeze hash prevents label access.
+
+#### SCENARIO-VERIFY-7504-REAL-ROWS: Production Features Stay Label-Blind
+
+**Given** all 520 protocol groups and both historical native captures
+**When** Exp7504 reduces the real feature rows
+**Then** it reports 511 eligible unique groups with roles 176, 60, 116, and 159
+**And** the real-row pass does not open evaluation labels or count windows as independent groups.
+
+#### SCENARIO-VERIFY-7504-READY: Structural Readiness Is Not Predictive Benefit
+
+**Given** authenticated sidecars, reader access receipts, independent reduction, and required validation
+**When** Exp7504 classifies its terminal artifact
+**Then** `evidence_ready_score` reflects only authentic complete role-separated evidence
+**And** the verdict states that the features are proposed and efficacy remains unmeasured.
+
+#### SCENARIO-VERIFY-7504-E2E: One Command Publishes A Cold-Valid Interface
+
+**Given** a frozen affected-file manifest and no current model calls
+**When** the declared unbuffered Exp7504 entrypoint runs and a fresh process replays it
+**Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
+**And** only the final validated JSON publishes atomically at the terminal path.

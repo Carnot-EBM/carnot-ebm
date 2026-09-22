@@ -1,0 +1,99 @@
+{
+  "equal_access": {
+    "arms": [
+      "conditional_gibbs",
+      "identical_feature_logistic",
+      "whole_only_gibbs"
+    ],
+    "hidden_arm_specific_fields": [],
+    "identical_feature_sidecar": "results/raw/experiment_7504_v657_evidence_interface/features.jsonl",
+    "identical_roles": true
+  },
+  "evaluator_separation": {
+    "evaluator_store": "results/raw/experiment_7491_v656_window_protocol/evaluators.jsonl",
+    "evaluator_store_parsed_during_feature_build": false,
+    "predictor_store": "results/raw/experiment_7491_v656_window_protocol/predictors.jsonl"
+  },
+  "exposure_audit": {
+    "claim_scope": "exploratory_support_only",
+    "earlier_ragtruth_exposure_found": true,
+    "faithbench_status": "previously_exposed_outside_new_primary_claims",
+    "fresh_confirmatory_claim_allowed": false,
+    "raw_receipt": {
+      "inaccessible_archives": [],
+      "raw_shard": {
+        "bytes": 4361,
+        "path": "exposure_search.jsonl",
+        "rows": 21,
+        "sha256": "sha256:e61bf3c70dde60a47224ce5d8a61d368862bbe706c93c53cb5785abd079c9457"
+      },
+      "search_complete": true
+    },
+    "search_complete": true,
+    "source": "Exp7491 prior exposure search"
+  },
+  "feature_sha256": "sha256:ab57107c23bcf87911f08a4f9f6c8206db350edfd0d160d9c0417d4db287b3f8",
+  "label_access_receipts": [
+    {
+      "feature_sha256": "sha256:ab57107c23bcf87911f08a4f9f6c8206db350edfd0d160d9c0417d4db287b3f8",
+      "held_out_labels_opened": false,
+      "label_roles_opened": [],
+      "labels_opened": false,
+      "mode": "predict"
+    },
+    {
+      "executed": false,
+      "mode": "fit",
+      "policy_qualified_by_tests": true
+    },
+    {
+      "executed": false,
+      "mode": "evaluate",
+      "prediction_freeze_required": true
+    }
+  ],
+  "manifest_sha256": "sha256:ec3f389fcb230aa545de54bc8b2f56607407f3342558d9b975489d9130cf0660",
+  "reader_modes": {
+    "evaluate": {
+      "feature_roles": [
+        "test",
+        "online"
+      ],
+      "label_roles": [
+        "test",
+        "online"
+      ],
+      "requires_prediction_or_checkpoint_hash": true
+    },
+    "fit": {
+      "feature_roles": [
+        "training",
+        "calibration_tuning"
+      ],
+      "forbidden_label_roles": [
+        "test",
+        "online"
+      ],
+      "label_roles": [
+        "training",
+        "calibration_tuning"
+      ]
+    },
+    "predict": {
+      "feature_roles": [
+        "training",
+        "calibration_tuning",
+        "test",
+        "online"
+      ],
+      "forbidden_label_roles": [
+        "training",
+        "calibration_tuning",
+        "test",
+        "online"
+      ],
+      "label_roles": []
+    }
+  },
+  "schema": "carnot.exp7504.v657.access_exposure.v1"
+}
