@@ -20324,3 +20324,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - Root cause confirmed (experiment 10005): 85.67% of Tetris turns offer more than 16 placements, so the truncation bit almost every turn. Fixed to rank by the engine's own evaluate() score before capping. One-seed recheck: 28 to 67 pieces survived, 0 to 17 lines cleared.
 - Terminal corrected comparison (experiment 10006, commit range TBD): Qwen3.8-27B cleared 17/112/116 lines across seeds 1-3, reaching the 300-piece cap twice and overlapping the cited cloud Jev range (23-115). Qwen3.5-9B cleared 1/6/2 lines, staying below all cited non-random baselines.
 - Experiment 10004 kept unchanged with an additive corrigendum pointing to 10006, per never-prune.
+- 2026-09-22: Independently audit source decisions and feedback information (⚠️ Blocked) — honest_verdict=complete_blocked_required_science_incomplete; results/experiment_7525_v658_decision_audit.json
