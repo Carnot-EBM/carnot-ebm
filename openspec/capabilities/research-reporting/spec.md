@@ -77051,3 +77051,77 @@ verification, and strict row consistency run
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7503 and SCENARIO-REPORT-7503-* | Implemented: V657 authority comparison, V656 custody reducer, bounded method map, scoped validation, and thin entrypoint. | Spec-linked tests cover contract drift, milestone resolution, conductor and raw custody, methods, validation scope, reduction, defensive readers, and changed-module coverage. |
+
+## REQ-REPORT-7508: Independently audit V657 static probability and decisions
+
+The repository SHALL provide Exp7508 as an aggregation-only audit. It SHALL
+inventory Exp7504, Exp7505, and Exp7507 even when an input is absent. Missing
+external evidence SHALL produce a complete blocked ledger with the exact path.
+Present evidence with an invalid required receipt, source hash, access order,
+role, checkpoint, prediction freeze, or adversarial flag SHALL be disqualified.
+
+The audit SHALL recompute Brier score and log loss from Exp7507 raw rows. Log
+loss SHALL clip probabilities to `[1e-6, 1-1e-6]` only for metric computation.
+It SHALL average repeated fit seeds within each source before paired inference.
+It SHALL use 2,000 source-paired bootstrap draws with seed 657007. It SHALL
+recompute both registered Brier contrasts, the registered log-loss contrast,
+and all nine accept, reject, or escalate cost cells. Holm correction SHALL use
+one family of two Brier contrasts and one family of nine decision cells.
+
+The audit SHALL authenticate the sealed roles, both semantic option orders,
+the frozen checkpoint and policy hashes, the label-free prediction hash, source
+support, and prediction-before-label access. It SHALL reject duplicate sources,
+favorable seed selection, omitted escalation rows, wrong checkpoints, changed
+multiplicity families, and promotion of descriptive evidence. Private mutation
+fixtures SHALL not enter the terminal result artifact.
+
+`static_audit_complete_score` SHALL report complete accounting. It MAY equal one
+for a blocked ledger. `static_claims_qualified_score` SHALL equal one only when
+all present scientific rows and receipts reproduce. The separate qualified
+probability and selective-decision scores SHALL not exceed the recomputed frozen
+producer gates. Prior exposure SHALL keep confirmatory value scores at zero.
+
+The task SHALL declare empty `MODEL_SPECS` and `model_specs`, no current model
+invocation, balanced zero call counts, `aggregation_from_upstream_artifacts`,
+the `aggregation` class, and host execution. Validation SHALL freeze one test,
+one changed module, and one thin entrypoint. It SHALL run focused pytest,
+100 percent changed-module coverage, scoped Ruff, changed-module mypy, scoped
+specification coverage, the declared entrypoint, fresh-process replay,
+independent raw reduction, adversarial verification, and strict row consistency.
+No numbered runtime end-to-end scenario applies.
+
+### SCENARIO-REPORT-7508-INVENTORY: Absence and invalid evidence stay distinct
+
+**Given** the three declared V657 upstream paths
+**When** Exp7508 inventories their terminal states, hashes, flags, and receipts
+**Then** an absent path yields a complete blocked ledger with the observed path
+**And** invalid present evidence yields a disqualified ledger.
+
+### SCENARIO-REPORT-7508-REDUCTION: Raw source rows control every metric
+
+**Given** label-free predictions, labeled evaluation rows, and policy rows
+**When** the audit recomputes scores and source-paired uncertainty
+**Then** seeds never multiply support and metric clipping does not change evidence
+**And** the two probability and nine decision Holm families match the protocol.
+
+### SCENARIO-REPORT-7508-MUTATIONS: Private corruptions fail closed
+
+**Given** a valid compact audit fixture
+**When** labels, option order, sources, seeds, escalation, checkpoints,
+multiplicity, or claim scope are changed one at a time
+**Then** every mutation fails its named check
+**And** no private corrupted fixture appears in the published artifact.
+
+### SCENARIO-REPORT-7508-NULL: Completion and benefit remain separate
+
+**Given** valid exploratory rows that fail the frozen benefit thresholds
+**When** the static audit classifies the result
+**Then** accounting and claim qualification remain complete
+**And** both qualified value scores remain zero with a terminal null verdict.
+
+### SCENARIO-REPORT-7508-E2E: Exact readers control atomic publication
+
+**Given** the frozen affected-file manifest and measured terminal candidate
+**When** fresh processes replay, independently reduce, and run both strict guards
+**Then** identity, source, receipt, row, gate, principle, or checksum drift fails
+**And** only the validated terminal JSON publishes at the declared result path.
