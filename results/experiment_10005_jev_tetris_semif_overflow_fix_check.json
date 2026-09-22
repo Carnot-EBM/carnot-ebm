@@ -1,0 +1,178 @@
+{
+  "schema": "carnot.jev_tetris_semif_overflow_fix_check.v1",
+  "experiment_id": 10005,
+  "created_at": "2026-09-22T11:56:48Z",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_justification": "The after row used live option-logit reads from the cached Qwen3.8-27B GGUF through CUDA llama.cpp. The placement-count measurement used the real local Tetris engine without an LLM.",
+  "random_seed": 1,
+  "reproducibility_checksum": "be4bf836332312ab4820f67bf34b6d528ad566b979282d92edd7d8852e28281d",
+  "reproducibility_checksum_scope": "Canonical sorted JSON over model_specs, placement_count_measurement, overflow_fix, before_after, methodology, and source.",
+  "duration_s": 394.029,
+  "duration_measurement": "Sum of the 67 client-reported request latencies. This excludes model hashing, model load, preflight, and short client-side gaps.",
+  "model_specs": [
+    {
+      "arm": "qwen3.8-27b",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_bytes": 17106775008,
+      "sha256": "7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "n_ctx": 32768,
+      "n_gpu_layers_requested": -1,
+      "physical_gpu_index": 1,
+      "gpu_offload_confirmed": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "node",
+      "available": true,
+      "detail": "v26.9.0; required at least 22"
+    },
+    {
+      "resource": "cached model",
+      "available": true,
+      "detail": "Qwen3.8-27B-Q4_K_M.gguf resolved from the local Hugging Face cache"
+    },
+    {
+      "resource": "CUDA_VISIBLE_DEVICES",
+      "available": true,
+      "detail": "Set to 1 for preflight and server launch"
+    },
+    {
+      "resource": "GPU index 1 exclusivity",
+      "available": true,
+      "detail": "4 MiB total and 0 MiB from other compute PIDs before load"
+    },
+    {
+      "resource": "llama.cpp CUDA offload",
+      "available": true,
+      "detail": "llama_supports_gpu_offload returned true; server PID 582157 held 19738 MiB on physical GPU 1 and no compute allocation appeared on GPU 0"
+    },
+    {
+      "resource": "GPU release",
+      "available": true,
+      "detail": "Both GPUs returned to 4 MiB and no compute process remained after shutdown"
+    }
+  ],
+  "placement_count_measurement": {
+    "player": "heuristic",
+    "engine": "vendored jev-tetris enumeratePlacements and heuristicPick",
+    "seeds": [
+      1,
+      2
+    ],
+    "requested_pieces_per_seed": 300,
+    "pieces_observed": 600,
+    "topped_out_by_seed": {
+      "1": false,
+      "2": false
+    },
+    "distribution": {
+      "min": 9,
+      "median": 17,
+      "p90": 34,
+      "max": 35
+    },
+    "percentile_method": "Linear interpolation over the sorted 600 observed counts.",
+    "exceeded_16_count": 514,
+    "exceeded_16_fraction": 0.8566666666666667,
+    "exceeded_16_percent": 85.66666666666667,
+    "interpretation": "The 16-label cap affected most measured turns, so quality-independent truncation was a plausible material confound. This is a descriptive engine measurement, not an inferential population claim."
+  },
+  "overflow_fix": {
+    "policy": "Rank placement evaluations before applying the 16-label cap.",
+    "rank_tiebreak": [
+      "holesCreated ascending",
+      "bumpinessDelta ascending",
+      "maxHeight ascending",
+      "aggregateHeight ascending",
+      "cleared descending",
+      "original engine order ascending"
+    ],
+    "named_slots": 15,
+    "delegate_slot": 16,
+    "delegate_behavior": "The delegate maps to the first placement in the remaining ranked tail.",
+    "later_tail_probability": 0.0,
+    "regression_fixture": "A 20-placement fixture puts the best evaluation at raw-order p19. The exposed named list starts with p19, and the delegate targets ranked-tail p14.",
+    "source_sha256": {
+      "readout_server.py": "e423862f9bb637d1316095bfe7eb59c2e723e123bc5ca08e95f69b238a0e99a2",
+      "play_local.js": "ee20fa27ad4a3fb207428ad5b45e9bc9211ffa87618caa04a6d9f2b2fc718e42",
+      "tetris.js": "4cc04590602aa174ee5b88321bd520feb5f17e8bead430ebaebfaf4847f0020e",
+      "test_jev_tetris_local_readout.py": "ac29398685623c7d9b236fd4197f4ad5e75f81d9038ab6a70585b925127c6b63"
+    }
+  },
+  "before_after": {
+    "comparison_type": "Same model, seed, piece cap, composite mode, sum blend, and non-shuffled condition. The overflow ranking policy is the intended changed variable.",
+    "before_source": "results/experiment_10004_jev_tetris_semif_comparison.json",
+    "before": {
+      "pieces": 28,
+      "lines": 0,
+      "score": 0,
+      "holes": 5,
+      "max_height": 20,
+      "latency_ms": {
+        "median": 6899,
+        "min": 4101,
+        "max": 8167
+      }
+    },
+    "after": {
+      "pieces": 67,
+      "lines": 17,
+      "score": 920,
+      "holes": 7,
+      "max_height": 20,
+      "latency_ms": {
+        "median": 5534,
+        "min": 3351,
+        "max": 8439,
+        "sum": 394029,
+        "count": 67
+      },
+      "holes_buried": 8,
+      "avoidable_holes_buried": 2,
+      "bad_turns": 1,
+      "ignored_clean_turns": 0,
+      "topped_out": true
+    },
+    "delta_after_minus_before": {
+      "pieces": 39,
+      "lines": 17,
+      "score": 920,
+      "holes": 2,
+      "max_height": 0,
+      "median_latency_ms": -1365,
+      "survival_ratio": 2.392857142857143
+    },
+    "holes_comparison_note": "The after run ended with two more holes only after surviving 39 more pieces. Final hole count alone is not a quality regression."
+  },
+  "methodology": {
+    "placement_measurement": "Run the real engine for 300 pieces each at seeds 1 and 2. Select every move with heuristicPick and record enumeratePlacements(board, current).length before the move.",
+    "live_command": "JEV_LOCAL_ENDPOINT=http://127.0.0.1:8940/ask node scripts/experiments/jev_tetris_semif/vendor/jev-tetris/spike/play_local.js --player jev --pieces 300 --seed 1 --mode composite --blend sum",
+    "server_command": "CUDA_VISIBLE_DEVICES=1 PYTHONPATH=<worktree>/python:<worktree> <cuda-llamacpp-python> scripts/experiments/jev_tetris_semif/readout_server.py --model qwen3.8-27b",
+    "controls": "No shuffle flag and no uniform flag. No second model or additional seed was run."
+  },
+  "source": {
+    "repository": "https://github.com/thelau/jev-tetris",
+    "commit": "9869b602965cf002afff766013f8c068846d36aa",
+    "first_pass_artifact_preserved": true
+  },
+  "sample_size_note": "The placement distribution has 600 turns across two deterministic heuristic games. The live before/after check has one pre-specified seed and supports only a targeted confound diagnosis, not a population effect or general model ranking.",
+  "surprising_result_acknowledgment": "The 2.39 times survival increase is preliminary because the live comparison has one seed. It is not headline-eligible until replicated, but it is large enough to reject use of the first-pass seed-1 number as an overflow-unconfounded readout result.",
+  "honest_verdict": "complete_positive_overflow_fix_materially_changed_single_seed_outcome_but_did_not_reach_300",
+  "plain_language_verdict": "The ranking fix changed the seed-1 outcome meaningfully: survival rose from 28 to 67 pieces and lines rose from 0 to 17. This shows that the earlier stable-order truncation materially contributed to the poor result, so the first-pass numbers should not be trusted as a clean SemIf-versus-Tetris finding. The fix does not explain all weakness: the corrected run still topped out at 67 of 300 pieces, so the readout and policy still need harder evaluation.",
+  "claim_limits": [
+    "One live seed cannot estimate an average treatment effect or establish a broad model claim.",
+    "The model inference is not deterministic enough to treat the difference as a perfectly controlled paired intervention.",
+    "The placement-count distribution came from heuristic-played boards, not the model's state distribution.",
+    "The corrected run still topped out, so this artifact does not claim parity with the keyword or El-Tetris baselines."
+  ],
+  "flagged_adversarial": false,
+  "adversarial_verification": {
+    "tool": "scripts/adversarial_verify.py",
+    "result": "clean",
+    "flags": []
+  },
+  "arc_relevance": null
+}

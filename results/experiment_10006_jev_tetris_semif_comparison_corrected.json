@@ -1,0 +1,250 @@
+{
+  "schema": "carnot.jev_tetris_semif_comparison_corrected.v1",
+  "experiment_id": 10006,
+  "created_at": "2026-09-22T13:33:03Z",
+  "honest_verdict": "complete: corrected_qwen38_readout_reaches_300_pieces_on_two_of_three_seeds_while_qwen35_remains_below_cited_cloud_and_heuristic_baselines",
+  "inference_substrate": "live_llm_embedding_extraction",
+  "inference_substrate_justification": "This is the closest declared substrate. Each server loaded real local GGUF weights and performed one prompt forward pass to read final-position option-token logits. It did not run an autoregressive decoding loop.",
+  "duration_s": 4846.288,
+  "duration_measurement": "Sum of Bash elapsed durations for all twelve game clients. This includes request time and client overhead. It excludes model hashing, model load, preflight, and short inter-run gaps.",
+  "random_seed": {
+    "tetris_seeds": [1, 2, 3],
+    "shuffle_rng_seed": "same integer as each Tetris seed, as implemented by the unchanged upstream shuffle control",
+    "readout_rng_seed": null,
+    "readout_determinism": "greedy probability readout; no sampling"
+  },
+  "reproducibility_checksum": "sha256:7c2d9f9fbcd87cd3f75633f6784bbf4be8ac20ce75e15a95e2afa1b1a5a2d564",
+  "reproducibility_checksum_scope": "Canonical sorted JSON over model_specs, random_seed, runs, placement_overflow_policy, placement_count_distribution, methodology_differences, source, and supersedes.",
+  "supersedes": "results/experiment_10004_jev_tetris_semif_comparison.json",
+  "supersedes_reason": "Experiment 10004 applied the 16-label limit by raw BFS placement order. Experiment 10005 showed that quality-ranked truncation changed Qwen3.8-27B seed 1 from 28 pieces and 0 lines to 67 pieces and 17 lines. This artifact reruns the complete matrix with the corrected policy and is the terminal SemIf-versus-Tetris comparison.",
+  "source": {
+    "repository": "https://github.com/thelau/jev-tetris",
+    "commit": "9869b602965cf002afff766013f8c068846d36aa",
+    "license": "MIT",
+    "vendored_files_unmodified": [
+      "src/tetris.js",
+      "src/describe.js",
+      "src/heuristic.js",
+      "src/words.js",
+      "spike/play.js",
+      "LICENSE"
+    ],
+    "audit_tier": "evaluation",
+    "audit_result": "The executed upstream engine, description, heuristic, words, and harness files contain no subprocess, file-write, package, or network path. The cloud client was replaced with a loopback-only client. The corrected ranking is in the local readout server and uses exact fields from upstream tetris.js evaluate().",
+    "source_sha256": {
+      "readout_server.py": "e423862f9bb637d1316095bfe7eb59c2e723e123bc5ca08e95f69b238a0e99a2",
+      "play_local.js": "ee20fa27ad4a3fb207428ad5b45e9bc9211ffa87618caa04a6d9f2b2fc718e42",
+      "tetris.js": "4cc04590602aa174ee5b88321bd520feb5f17e8bead430ebaebfaf4847f0020e",
+      "heuristic.js": "e2a88c589b4774e03342359777e54a011fc9b7fc1d13f58e9b72576e5749d948",
+      "test_jev_tetris_local_readout.py": "ac29398685623c7d9b236fd4197f4ad5e75f81d9038ab6a70585b925127c6b63"
+    }
+  },
+  "preconditions_checked": [
+    {"resource": "node", "available": true, "detail": "v26.9.0; required at least 22"},
+    {"resource": "unsloth/Qwen3.8-27B-GGUF", "available": true, "detail": "Qwen3.8-27B-Q4_K_M.gguf resolved from the local Hugging Face cache"},
+    {"resource": "unsloth/Qwen3.5-9B-GGUF", "available": true, "detail": "Qwen3.5-9B-Q4_K_M.gguf resolved from the local Hugging Face cache"},
+    {"resource": "CUDA_VISIBLE_DEVICES", "available": true, "detail": "Already set to 1 for preflight and both server launches"},
+    {"resource": "GPU index 1 exclusivity", "available": true, "detail": "4 MiB total and 0 MiB from other compute PIDs before each model load"},
+    {"resource": "Qwen3.8-27B CUDA offload", "available": true, "detail": "Server PID 630183 held 19738 MiB on physical GPU 1 after load and no compute allocation appeared on GPU 0"},
+    {"resource": "Qwen3.5-9B CUDA offload", "available": true, "detail": "Server PID 658821 held 7328 MiB on physical GPU 1 after load and no compute allocation appeared on GPU 0"},
+    {"resource": "GPU release", "available": true, "detail": "Both GPUs returned to 4 MiB and no compute process remained after both server shutdowns"}
+  ],
+  "model_specs": [
+    {
+      "arm": "qwen3.8-27b",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_bytes": 17106775008,
+      "sha256": "7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "n_ctx": 32768,
+      "n_gpu_layers_requested": -1,
+      "physical_gpu_index": 1,
+      "gpu_memory_after_load_mib": 19738,
+      "gpu_offload_confirmed": true
+    },
+    {
+      "arm": "qwen3.5-9b",
+      "hf_id": "unsloth/Qwen3.5-9B-GGUF",
+      "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_bytes": 5680522464,
+      "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+      "n_ctx": 32768,
+      "n_gpu_layers_requested": -1,
+      "physical_gpu_index": 1,
+      "gpu_memory_after_load_mib": 7328,
+      "gpu_offload_confirmed": true
+    }
+  ],
+  "placement_overflow_policy": {
+    "label_budget": 16,
+    "labels": "single-token leading-space capital letters selected from A through Z; these models used the first 16 usable labels",
+    "at_most_16": "Rank all placement evaluations, then name every placement.",
+    "over_16": "Rank all placement evaluations before applying the limit. Name the first 15 ranked placements. Label 16 is delegate_to_incumbent_tail and maps to the first placement in the remaining ranked tail.",
+    "rank_order": [
+      "holesCreated ascending",
+      "bumpinessDelta ascending",
+      "maxHeight ascending",
+      "aggregateHeight ascending",
+      "cleared descending",
+      "original engine order ascending"
+    ],
+    "incumbent": "The first placement in the quality-ranked tail.",
+    "limitation": "The model cannot distinguish placements after the first ranked tail item. The policy is also a strong heuristic prefilter, so this experiment measures model readout after heuristic candidate ordering rather than an unrestricted cloud-Jev interface."
+  },
+  "placement_count_distribution": {
+    "source_artifact": "results/experiment_10005_jev_tetris_semif_overflow_fix_check.json",
+    "player": "heuristic",
+    "seeds": [1, 2],
+    "requested_pieces_per_seed": 300,
+    "pieces_observed": 600,
+    "distribution": {"min": 9, "median": 17, "p90": 34, "max": 35},
+    "percentile_method": "Linear interpolation over the sorted 600 observed counts.",
+    "exceeded_16_count": 514,
+    "exceeded_16_fraction": 0.8566666666666667,
+    "exceeded_16_percent": 85.66666666666667,
+    "interpretation": "The label limit affected most measured turns. Raw-order truncation was therefore a material confound, not a rare edge case."
+  },
+  "local_readout_server_design": {
+    "transport": "HTTP POST to 127.0.0.1:8940/ask; environment overrides are rejected unless the host is loopback",
+    "credentials": "No API key is read or sent.",
+    "scoring": "The server reuses scripts/jevbench_readout_eval.py LlamaCppLogitScorer. It evaluates the prompt once, reads final-position scores for the declared option token IDs, and applies a softmax.",
+    "choice_response": "Each game-relevant answer contains choice, probabilities, and confidence.",
+    "ambient_questions": "danger score and doomed noul are skipped because upstream play reads them only for debug output and they do not affect placement.",
+    "voice_execution": "Five VOICES prompts are evaluated sequentially per piece."
+  },
+  "methodology_differences": [
+    "The local arms use open Qwen GGUFs and next-token logits. Published Jev uses the typesafe.ai cloud service.",
+    "The local server makes five sequential forward passes per piece in composite mode. The cloud service may batch them.",
+    "The corrected local server uses upstream evaluate() fields to rank candidates before the 15-plus-one label limit. Published Jev receives every placement ID and does not need this prefilter.",
+    "The local server omits the two non-game ambient outputs.",
+    "Local measurements use Tetris seeds 1, 2, and 3. The cited upstream writeup reports its own three-seed study, so cited cloud results are not paired to local rows.",
+    "play_local.js differs from play.js only in the client import, the local-semif dispatch condition, and additional run telemetry. Engine scoring is unchanged."
+  ],
+  "sanity_check": {
+    "trustworthy_engine_port": true,
+    "local_keyword_rows": [
+      {"seed": 1, "pieces": 275, "lines": 97, "score": 6000, "holes": 6, "max_height": 19},
+      {"seed": 2, "pieces": 300, "lines": 118, "score": 7220, "holes": 0, "max_height": 4},
+      {"seed": 3, "pieces": 300, "lines": 118, "score": 8480, "holes": 0, "max_height": 4}
+    ],
+    "local_el_tetris_rows": [
+      {"seed": 1, "pieces": 300, "lines": 118, "score": 4980, "holes": 1, "max_height": 3},
+      {"seed": 2, "pieces": 300, "lines": 117, "score": 4740, "holes": 2, "max_height": 5},
+      {"seed": 3, "pieces": 300, "lines": 115, "score": 4820, "holes": 5, "max_height": 6}
+    ],
+    "comparison": "Keyword 97-118 is inside the cited 73-118 range. El-Tetris 115-118 is one line below the cited 116-118 range and otherwise overlaps. This is close enough to trust the engine port."
+  },
+  "runs": [
+    {
+      "model": "qwen3.8-27b", "seed": 1, "shuffled": false, "pieces": 67, "lines": 17, "score": 920, "holes": 7, "max_height": 20, "duration_s": 394.705, "topped_out": true,
+      "latency_ms": {"median": 5536, "min": 3359, "max": 8462}, "mean_confidence": 0.659,
+      "holes_buried": 8, "avoidable_holes_buried": 2, "bad_turns": 1, "ignored_clean_turns": 0,
+      "per_voice": {"sealed": {"holes": 6, "avoidable": 0, "lines": 10, "missed_lines": 10, "flat_dist_turns": 0}, "clears": {"holes": 136, "avoidable": 130, "lines": 20, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 8, "avoidable": 2, "lines": 18, "missed_lines": 2, "flat_dist_turns": 0}, "low": {"holes": 43, "avoidable": 37, "lines": 18, "missed_lines": 2, "flat_dist_turns": 0}, "flat": {"holes": 135, "avoidable": 129, "lines": 12, "missed_lines": 8, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.8-27b", "seed": 1, "shuffled": true, "pieces": 20, "lines": 0, "score": 0, "holes": 60, "max_height": 20, "duration_s": 139.661, "topped_out": true,
+      "latency_ms": {"median": 7683, "min": 4713, "max": 8383}, "mean_confidence": 0.647,
+      "holes_buried": 60, "avoidable_holes_buried": 58, "bad_turns": 14, "ignored_clean_turns": 13,
+      "per_voice": {"sealed": {"holes": 60, "avoidable": 58, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 93, "avoidable": 91, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 79, "avoidable": 77, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 88, "avoidable": 86, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 70, "avoidable": 68, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.8-27b", "seed": 2, "shuffled": false, "pieces": 300, "lines": 112, "score": 7580, "holes": 4, "max_height": 12, "duration_s": 1702.442, "topped_out": false,
+      "latency_ms": {"median": 5503, "min": 3361, "max": 7966}, "mean_confidence": 0.714,
+      "holes_buried": 6, "avoidable_holes_buried": 0, "bad_turns": 0, "ignored_clean_turns": 0,
+      "per_voice": {"sealed": {"holes": 6, "avoidable": 0, "lines": 106, "missed_lines": 49, "flat_dist_turns": 0}, "clears": {"holes": 270, "avoidable": 264, "lines": 153, "missed_lines": 2, "flat_dist_turns": 0}, "unburied": {"holes": 7, "avoidable": 1, "lines": 119, "missed_lines": 36, "flat_dist_turns": 0}, "low": {"holes": 138, "avoidable": 132, "lines": 141, "missed_lines": 14, "flat_dist_turns": 0}, "flat": {"holes": 346, "avoidable": 340, "lines": 109, "missed_lines": 46, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.8-27b", "seed": 2, "shuffled": true, "pieces": 24, "lines": 0, "score": 0, "holes": 54, "max_height": 20, "duration_s": 166.087, "topped_out": true,
+      "latency_ms": {"median": 7314, "min": 4683, "max": 8154}, "mean_confidence": 0.641,
+      "holes_buried": 54, "avoidable_holes_buried": 53, "bad_turns": 18, "ignored_clean_turns": 18,
+      "per_voice": {"sealed": {"holes": 52, "avoidable": 51, "lines": 0, "missed_lines": 2, "flat_dist_turns": 0}, "clears": {"holes": 77, "avoidable": 76, "lines": 0, "missed_lines": 2, "flat_dist_turns": 0}, "unburied": {"holes": 63, "avoidable": 62, "lines": 0, "missed_lines": 2, "flat_dist_turns": 0}, "low": {"holes": 82, "avoidable": 81, "lines": 0, "missed_lines": 2, "flat_dist_turns": 0}, "flat": {"holes": 96, "avoidable": 95, "lines": 0, "missed_lines": 2, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.8-27b", "seed": 3, "shuffled": false, "pieces": 300, "lines": 116, "score": 9100, "holes": 0, "max_height": 6, "duration_s": 1620.024, "topped_out": false,
+      "latency_ms": {"median": 5482, "min": 3282, "max": 7132}, "mean_confidence": 0.726,
+      "holes_buried": 3, "avoidable_holes_buried": 0, "bad_turns": 0, "ignored_clean_turns": 0,
+      "per_voice": {"sealed": {"holes": 3, "avoidable": 0, "lines": 110, "missed_lines": 56, "flat_dist_turns": 0}, "clears": {"holes": 217, "avoidable": 214, "lines": 164, "missed_lines": 2, "flat_dist_turns": 0}, "unburied": {"holes": 3, "avoidable": 0, "lines": 125, "missed_lines": 41, "flat_dist_turns": 0}, "low": {"holes": 69, "avoidable": 66, "lines": 144, "missed_lines": 22, "flat_dist_turns": 0}, "flat": {"holes": 327, "avoidable": 324, "lines": 117, "missed_lines": 49, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.8-27b", "seed": 3, "shuffled": true, "pieces": 21, "lines": 0, "score": 0, "holes": 65, "max_height": 20, "duration_s": 152.381, "topped_out": true,
+      "latency_ms": {"median": 7622, "min": 4732, "max": 8470}, "mean_confidence": 0.593,
+      "holes_buried": 66, "avoidable_holes_buried": 65, "bad_turns": 16, "ignored_clean_turns": 15,
+      "per_voice": {"sealed": {"holes": 66, "avoidable": 65, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 94, "avoidable": 93, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 59, "avoidable": 58, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 68, "avoidable": 67, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 55, "avoidable": 54, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.5-9b", "seed": 1, "shuffled": false, "pieces": 28, "lines": 1, "score": 40, "holes": 31, "max_height": 20, "duration_s": 102.751, "topped_out": true,
+      "latency_ms": {"median": 3966, "min": 2569, "max": 4272}, "mean_confidence": 0.241,
+      "holes_buried": 31, "avoidable_holes_buried": 29, "bad_turns": 13, "ignored_clean_turns": 12,
+      "per_voice": {"sealed": {"holes": 19, "avoidable": 17, "lines": 1, "missed_lines": 1, "flat_dist_turns": 0}, "clears": {"holes": 57, "avoidable": 55, "lines": 2, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 43, "avoidable": 41, "lines": 1, "missed_lines": 1, "flat_dist_turns": 0}, "low": {"holes": 56, "avoidable": 54, "lines": 0, "missed_lines": 2, "flat_dist_turns": 0}, "flat": {"holes": 43, "avoidable": 41, "lines": 0, "missed_lines": 2, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.5-9b", "seed": 1, "shuffled": true, "pieces": 22, "lines": 0, "score": 0, "holes": 67, "max_height": 19, "duration_s": 90.411, "topped_out": true,
+      "latency_ms": {"median": 4300, "min": 2659, "max": 5042}, "mean_confidence": 0.246,
+      "holes_buried": 67, "avoidable_holes_buried": 65, "bad_turns": 15, "ignored_clean_turns": 15,
+      "per_voice": {"sealed": {"holes": 60, "avoidable": 58, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 60, "avoidable": 58, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 61, "avoidable": 59, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 64, "avoidable": 62, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 35, "avoidable": 33, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.5-9b", "seed": 2, "shuffled": false, "pieces": 51, "lines": 6, "score": 240, "holes": 40, "max_height": 20, "duration_s": 185.055, "topped_out": true,
+      "latency_ms": {"median": 3861, "min": 1961, "max": 4604}, "mean_confidence": 0.261,
+      "holes_buried": 51, "avoidable_holes_buried": 48, "bad_turns": 21, "ignored_clean_turns": 19,
+      "per_voice": {"sealed": {"holes": 30, "avoidable": 27, "lines": 4, "missed_lines": 2, "flat_dist_turns": 0}, "clears": {"holes": 90, "avoidable": 87, "lines": 6, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 78, "avoidable": 75, "lines": 3, "missed_lines": 3, "flat_dist_turns": 0}, "low": {"holes": 91, "avoidable": 88, "lines": 1, "missed_lines": 5, "flat_dist_turns": 0}, "flat": {"holes": 73, "avoidable": 70, "lines": 4, "missed_lines": 2, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.5-9b", "seed": 2, "shuffled": true, "pieces": 23, "lines": 0, "score": 0, "holes": 65, "max_height": 19, "duration_s": 87.884, "topped_out": true,
+      "latency_ms": {"median": 4043, "min": 2661, "max": 4807}, "mean_confidence": 0.277,
+      "holes_buried": 65, "avoidable_holes_buried": 65, "bad_turns": 17, "ignored_clean_turns": 17,
+      "per_voice": {"sealed": {"holes": 52, "avoidable": 52, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 54, "avoidable": 54, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 96, "avoidable": 96, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 89, "avoidable": 89, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 93, "avoidable": 93, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.5-9b", "seed": 3, "shuffled": false, "pieces": 38, "lines": 2, "score": 80, "holes": 20, "max_height": 20, "duration_s": 135.758, "topped_out": true,
+      "latency_ms": {"median": 3802, "min": 1917, "max": 4446}, "mean_confidence": 0.266,
+      "holes_buried": 30, "avoidable_holes_buried": 30, "bad_turns": 13, "ignored_clean_turns": 13,
+      "per_voice": {"sealed": {"holes": 21, "avoidable": 21, "lines": 2, "missed_lines": 5, "flat_dist_turns": 0}, "clears": {"holes": 71, "avoidable": 71, "lines": 6, "missed_lines": 1, "flat_dist_turns": 0}, "unburied": {"holes": 45, "avoidable": 45, "lines": 1, "missed_lines": 6, "flat_dist_turns": 0}, "low": {"holes": 84, "avoidable": 84, "lines": 0, "missed_lines": 7, "flat_dist_turns": 0}, "flat": {"holes": 73, "avoidable": 73, "lines": 1, "missed_lines": 6, "flat_dist_turns": 0}}
+    },
+    {
+      "model": "qwen3.5-9b", "seed": 3, "shuffled": true, "pieces": 17, "lines": 0, "score": 0, "holes": 56, "max_height": 20, "duration_s": 69.129, "topped_out": true,
+      "latency_ms": {"median": 4240, "min": 2680, "max": 4804}, "mean_confidence": 0.275,
+      "holes_buried": 60, "avoidable_holes_buried": 60, "bad_turns": 10, "ignored_clean_turns": 10,
+      "per_voice": {"sealed": {"holes": 83, "avoidable": 83, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 50, "avoidable": 50, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 65, "avoidable": 65, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 42, "avoidable": 42, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 78, "avoidable": 78, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}
+    }
+  ],
+  "comparison_table": [
+    {"player": "random", "source": "cited published upstream", "pieces_by_seed": null, "lines_by_seed": [0, 0, 0], "range": "0"},
+    {"player": "Jev shuffled", "source": "cited published upstream", "pieces_by_seed": null, "lines_by_seed": [0, 0, 0], "range": "0"},
+    {"player": "cloud Jev", "source": "cited published upstream; paid API not called here", "pieces_by_seed": null, "lines_by_seed": [23, 115, 23], "range": "23-115"},
+    {"player": "keyword table", "source": "cited published upstream", "pieces_by_seed": null, "lines_by_seed": [118, 73, 118], "range": "73-118"},
+    {"player": "El-Tetris", "source": "cited published upstream", "pieces_by_seed": null, "lines_by_seed": [118, 118, 116], "range": "116-118"},
+    {"player": "keyword table", "source": "locally measured seeds 1,2,3", "pieces_by_seed": [275, 300, 300], "lines_by_seed": [97, 118, 118], "range": "97-118"},
+    {"player": "El-Tetris", "source": "locally measured seeds 1,2,3", "pieces_by_seed": [300, 300, 300], "lines_by_seed": [118, 117, 115], "range": "115-118"},
+    {"player": "Qwen3.8-27B corrected local readout", "source": "locally measured seeds 1,2,3", "pieces_by_seed": [67, 300, 300], "lines_by_seed": [17, 112, 116], "range": "17-116"},
+    {"player": "Qwen3.8-27B corrected shuffled", "source": "locally measured seeds 1,2,3", "pieces_by_seed": [20, 24, 21], "lines_by_seed": [0, 0, 0], "range": "0"},
+    {"player": "Qwen3.5-9B corrected local readout", "source": "locally measured seeds 1,2,3", "pieces_by_seed": [28, 51, 38], "lines_by_seed": [1, 6, 2], "range": "1-6"},
+    {"player": "Qwen3.5-9B corrected shuffled", "source": "locally measured seeds 1,2,3", "pieces_by_seed": [22, 23, 17], "lines_by_seed": [0, 0, 0], "range": "0"}
+  ],
+  "comparison_interpretation": {
+    "qwen3.8_27b": "The corrected 27B arm cleared 17, 112, and 116 lines, versus 0, 0, and 0 for its shuffled controls. It reached the 300-piece cap on seeds 2 and 3. Its 17-116 range overlaps the cited cloud Jev range of 23-115 and reaches the lower edge of the cited El-Tetris range on one seed. On the same local seeds it still trails the keyword table by 80, 6, and 2 lines, and trails El-Tetris by 101 and 5 lines before exceeding it by 1 line on seed 3. This is not a uniform capability gap.",
+    "qwen3.5_9b": "The corrected 9B arm cleared 1, 6, and 2 lines, versus 0, 0, and 0 for its shuffled controls. Its 1-6 range remains below the cited cloud Jev range of 23-115 and far below both heuristic baseline ranges. Within this interface and sample, the 9B result looks like a real model or readout capability gap.",
+    "design_issue": "The corrected ranker is a strong heuristic candidate prefilter. Experiment 10005 and this matrix show that it materially changes outcomes. The shuffled controls show that model ordering still matters after prefiltering, but the result must not be described as an unrestricted model-only Tetris capability measurement or a direct reproduction of cloud Jev. No further implementation bug was found."
+  },
+  "sample_size_note": "Three deterministic Tetris seeds per model and condition support a descriptive comparison. They do not estimate a population mean, a broad model ranking, or a statistically powered capability ratio.",
+  "surprising_result_acknowledgment": "Qwen3.8-27B reached 300 pieces on two corrected seeds after the first-pass runs topped out at 22-38 pieces. The complete three-seed matrix and shuffled controls replicate the direction, but the gain is tied to the heuristic-ranked candidate policy and is not a model-only result.",
+  "plain_language_verdict": "The corrected 27B readout is clearly better than its shuffled controls. It completed two games and nearly reached the cited heuristic line counts on those seeds, but it failed early on seed 1. The 9B readout improved only slightly over shuffle and remained far below the cited cloud and heuristic results. The old raw-order result must not be cited. The remaining design limit is the strong heuristic prefilter, not a newly found ranking defect.",
+  "claim_limits": [
+    "Three seeds support this descriptive comparison only. They do not support a population ratio or a broad model-ranking claim.",
+    "The cited cloud, random, keyword, and El-Tetris numbers come from upstream docs/findings.md at the cited commit. No paid cloud API was called.",
+    "The local and cited studies use different seed identifiers. Compare ranges rather than paired deltas for cited results.",
+    "The corrected overflow policy uses strong Tetris heuristic fields before the model sees the bounded option set. This is a design limitation and a substantive difference from published cloud Jev.",
+    "The model cannot distinguish placements after the first item in the quality-ranked tail.",
+    "The 27B result is heterogeneous: seed 1 remained below the cited cloud range, while seeds 2 and 3 reached the piece cap.",
+    "The clean real-versus-shuffle separation supports ordering signal after prefiltering. It does not isolate how much performance comes from the prefilter and how much comes from model logits."
+  ],
+  "flagged_adversarial": false,
+  "adversarial_verification": {
+    "tool": "scripts/adversarial_verify.py",
+    "result": "clean",
+    "flags": []
+  },
+  "arc_relevance": null
+}

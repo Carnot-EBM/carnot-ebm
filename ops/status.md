@@ -2,6 +2,61 @@
 
 **Last Updated:** 2026-09-21
 
+## 2026-09-22 — Jev Tetris local readout comparison complete
+REQ-JEV-TETRIS-001 is implemented. Six upstream engine, description, baseline,
+and harness files are vendored byte for byte at commit
+`9869b602965cf002afff766013f8c068846d36aa`. The replacement client permits
+loopback only. The server reuses the JevBench llama.cpp logit reader and skips
+the two ambient outputs that do not affect play.
+Experiment 10004 ran all real and shuffled seeds 1, 2, and 3 for Qwen3.8-27B
+Q4_K_M and Qwen3.5-9B Q4_K_M on GPU 1. The 27B real arm cleared 0, 4, and 0
+lines. The 9B real arm cleared 0, 0, and 3. Both were near their shuffle
+controls and far below the reproduced keyword and El-Tetris baselines. This is
+a negative result for the declared prompt and top-15-plus-tail policy. It makes
+no ARC claim.
+Focused tests pass 6 of 6. Ruff, Ruff format, and mypy are clean on the new
+Python files. `ops/changelog.md` remains unchanged by explicit instruction.
+## 2026-09-22 — Jev Tetris overflow correction complete
+Experiment 10005 corrects the quality-independent overflow prefix from
+Experiment 10004. On 600 heuristic turns, placement counts were 9 minimum, 17
+median, 34 p90, and 35 maximum. A total of 514 turns, or 85.67%, exceeded 16
+placements.
+The server now ranks exact engine `evaluate()` fields before the 15 named
+slots and one delegate slot. The Qwen3.8-27B seed-1 rerun survived 67 pieces,
+cleared 17 lines, scored 920, and ended with 7 holes. The original row survived
+28 pieces, cleared no lines, scored 0, and ended with 5 holes. The correction
+materially changed this one-seed result, but the player still topped out before
+300 pieces. The first-pass numbers are not clean evidence about the readout.
+Focused tests pass 6 of 6 with pinned `PYTHONPATH` and `--no-cov`. Ruff check,
+Ruff format, mypy, and the Node syntax check pass.
+## 2026-09-22 — Corrected Jev Tetris terminal comparison complete
+Experiment 10006 completed all twelve corrected games on physical GPU 1. Both
+model loads had verified CUDA offload and no allocation on GPU 0. Qwen3.8-27B
+survived 67, 300, and 300 pieces on real seeds 1, 2, and 3. It cleared 17, 112,
+and 116 lines. Its shuffled controls survived 20, 24, and 21 pieces and cleared
+no lines.
+Qwen3.5-9B survived 28, 51, and 38 pieces. It cleared 1, 6, and 2 lines. Its
+shuffled controls survived 22, 23, and 17 pieces and cleared no lines. The 27B
+range overlaps the cited cloud Jev range of 23-115 lines. Its two completed
+seeds approach the keyword and El-Tetris results. The 9B arm remains below all
+three cited non-random ranges.
+Experiment 10006 supersedes Experiment 10004 as the terminal comparison.
+Experiment 10004 remains unchanged except for an additive corrigendum. The
+corrigendum identifies raw BFS-order truncation and points readers to
+Experiment 10006. The remaining design limit is the strong heuristic candidate
+prefilter. No further ranking or implementation bug was found.
+The terminal artifact is
+`results/experiment_10006_jev_tetris_semif_comparison_corrected.json`.
+Adversarial verification scanned it with zero flags. Final focused and
+repository checks are recorded during task closeout. `ops/changelog.md` was
+not edited by this task, as instructed.
+Closeout checks passed for JSON syntax, artifact checksum, 6 focused tests,
+Ruff check, Ruff format, mypy, both Node syntax checks, and adversarial
+verification. The full live matrix is the applicable end-to-end check for this
+capability. Repository-wide spec coverage still reports the existing 1,168
+untraced tests. Reconciliation also reports that debt and the existing stale
+architecture date. `git diff --check` passes.
+
 ## 2026-09-22 — V658 staged for the next milestone
 
 The two V658 authorities specify fourteen tasks, exp7516–exp7529, across

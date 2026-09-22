@@ -1,0 +1,154 @@
+{
+  "schema": "carnot.jev_tetris_semif_comparison.v1",
+  "experiment_id": 10004,
+  "corrigendum": {
+    "date": "2026-09-22",
+    "issue": "The overflow policy truncated placements by raw BFS engine order instead of ranking them by quality before applying the 16-label limit.",
+    "material_effect": "Experiment 10005 found that the corrected policy changed Qwen3.8-27B seed 1 from 28 pieces and 0 lines to 67 pieces and 17 lines.",
+    "terminal_comparison": "results/experiment_10006_jev_tetris_semif_comparison_corrected.json",
+    "citation_instruction": "Preserve this artifact as the historical pre-fix record. Do not cite it as the terminal SemIf-versus-Tetris comparison. Cite experiment 10006 instead."
+  },
+  "created_at": "2026-09-22T11:23:28Z",
+  "honest_verdict": "complete: both_local_readouts_clear_0_to_4_lines_and_underperform_the_cited_cloud_and_local_heuristic_ranges",
+  "inference_substrate": "live_llm_embedding_extraction",
+  "inference_substrate_justification": "This is the closest declared substrate. The process loads real local GGUF weights and performs one prompt forward pass to read final-position option-token logits. It does not run an autoregressive decoding loop. The declaration name says embedding extraction, but its no-generation single-forward-pass meaning is closer than live_llm_inference.",
+  "duration_s": 1993,
+  "duration_measurement": "Sum of the two local server log spans: 1256 seconds for Qwen3.8-27B and 737 seconds for Qwen3.5-9B. This includes model hash/load time, all twelve games, and short inter-run gaps.",
+  "random_seed": {
+    "tetris_seeds": [1, 2, 3],
+    "shuffle_rng_seed": "same integer as each Tetris seed, as implemented by unchanged upstream play.js",
+    "readout_rng_seed": null,
+    "readout_determinism": "greedy probability readout; no sampling"
+  },
+  "reproducibility_checksum": "sha256:0c8b137a51028b42f4e8b1bd60ac857b5b9fe756689007d682836d355e93c217",
+  "reproducibility_checksum_scope": "Canonical sorted JSON over model_specs, random_seed, runs, placement_overflow_policy, methodology_differences, and source",
+  "source": {
+    "repository": "https://github.com/thelau/jev-tetris",
+    "commit": "9869b602965cf002afff766013f8c068846d36aa",
+    "license": "MIT",
+    "vendored_files_unmodified": [
+      "src/tetris.js",
+      "src/describe.js",
+      "src/heuristic.js",
+      "src/words.js",
+      "spike/play.js",
+      "LICENSE"
+    ],
+    "audit_tier": "evaluation",
+    "audit_result": "The six executed upstream files contain no subprocess, file-write, package, or network path. The original cloud client was not vendored. A local src/jev.js compatibility shim re-exports the loopback-only client because unchanged play.js has a static import."
+  },
+  "preconditions_checked": [
+    {"resource": "node", "available": true, "detail": "v26.9.0; required >=22"},
+    {"resource": "unsloth/Qwen3.8-27B-GGUF", "available": true, "detail": "Qwen3.8-27B-Q4_K_M.gguf cached"},
+    {"resource": "unsloth/Qwen3.5-9B-GGUF", "available": true, "detail": "Qwen3.5-9B-Q4_K_M.gguf cached"},
+    {"resource": "CUDA_VISIBLE_DEVICES", "available": true, "detail": "already set to 1"},
+    {"resource": "GPU index 1 exclusivity", "available": true, "detail": "4 MiB total and 0 MiB from other compute PIDs before each model server"},
+    {"resource": "llama.cpp CUDA offload", "available": true, "detail": "llama_supports_gpu_offload returned true; each server PID gained more than 100 MiB on physical GPU 1 after load and held 0 MiB on GPU 0"}
+  ],
+  "model_specs": [
+    {
+      "arm": "qwen3.8-27b",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_bytes": 17106775008,
+      "sha256": "7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "n_ctx": 32768,
+      "n_gpu_layers_requested": -1,
+      "physical_gpu_index": 1,
+      "gpu_offload_confirmed": true
+    },
+    {
+      "arm": "qwen3.5-9b",
+      "hf_id": "unsloth/Qwen3.5-9B-GGUF",
+      "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "size_bytes": 5680522464,
+      "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+      "n_ctx": 32768,
+      "n_gpu_layers_requested": -1,
+      "physical_gpu_index": 1,
+      "gpu_offload_confirmed": true
+    }
+  ],
+  "placement_overflow_policy": {
+    "label_budget": 16,
+    "labels": "single-token leading-space capital letters, selected from A through Z; Qwen used the first 16 usable labels",
+    "at_most_16": "Name every placement in the stable order emitted by upstream enumeratePlacements.",
+    "over_16": "Name the first 15 placements in upstream stable order. Label 16 is delegate_to_incumbent_tail. If it wins, choose the first remaining placement in that order. Assign its probability to that placement and zero to later tail placements.",
+    "incumbent": "The upstream stable placement order, not either heuristic baseline.",
+    "limitation": "The model cannot distinguish later tail placements. The policy avoids silent truncation but may omit a strong move outside the named prefix."
+  },
+  "local_readout_server_design": {
+    "transport": "HTTP POST to 127.0.0.1:8940/ask; environment overrides are rejected unless the host is loopback",
+    "credentials": "No API key is read or sent.",
+    "scoring": "The server reuses scripts/jevbench_readout_eval.py LlamaCppLogitScorer. It evaluates the prompt once, reads scores[len(prompt_tokens)-1] for the declared option token IDs, and applies a softmax.",
+    "choice_response": "Each game-relevant answer contains choice, probabilities, and confidence.",
+    "ambient_questions": "danger score and doomed noul are skipped because upstream play reads them only for debug output and they do not affect the selected placement.",
+    "voice_execution": "Five VOICES prompts are evaluated sequentially per piece. This is not the single server-side batched call the cloud API may use."
+  },
+  "methodology_differences": [
+    "The local arms use open Qwen GGUFs and next-token logits. Published Jev uses the typesafe.ai cloud service.",
+    "The local server makes five sequential forward passes per piece in composite mode. The cloud service may batch them.",
+    "The local readout caps named options at 15 plus one incumbent-tail delegate. Published Jev receives every placement ID.",
+    "The local server omits the two non-game ambient outputs.",
+    "Local measurements use Tetris seeds 1, 2, and 3. The cited upstream writeup reports its own three-seed study, so the cloud range is not a paired local reproduction.",
+    "play_local.js differs from play.js only in the client import and the local-semif dispatch condition. Scoring and engine logic are unchanged."
+  ],
+  "sanity_check": {
+    "trustworthy_engine_port": true,
+    "initial_packaging_issue": "The first launch failed before play because unchanged play.js statically imports src/jev.js. A loopback-only re-export was added. No engine or scoring file changed.",
+    "local_keyword_rows": [
+      {"seed": 1, "pieces": 275, "lines": 97, "score": 6000, "holes": 6, "max_height": 19},
+      {"seed": 2, "pieces": 300, "lines": 118, "score": 7220, "holes": 0, "max_height": 4},
+      {"seed": 3, "pieces": 300, "lines": 118, "score": 8480, "holes": 0, "max_height": 4}
+    ],
+    "local_el_tetris_rows": [
+      {"seed": 1, "pieces": 300, "lines": 118, "score": 4980, "holes": 1, "max_height": 3},
+      {"seed": 2, "pieces": 300, "lines": 117, "score": 4740, "holes": 2, "max_height": 5},
+      {"seed": 3, "pieces": 300, "lines": 115, "score": 4820, "holes": 5, "max_height": 6}
+    ],
+    "comparison": "Keyword 97-118 is inside the cited 73-118 range. El-Tetris 115-118 is one line below the cited 116-118 range and otherwise overlaps. This is close enough to trust the engine port."
+  },
+  "runs": [
+    {"model": "qwen3.8-27b", "seed": 1, "shuffled": false, "pieces": 28, "lines": 0, "score": 0, "holes": 5, "max_height": 20, "duration_s": 182, "latency_ms": {"median": 6899, "min": 4101, "max": 8167}, "mean_confidence": 0.557, "per_voice": {"sealed": {"holes": 6, "avoidable": 3, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}, "clears": {"holes": 72, "avoidable": 69, "lines": 1, "missed_lines": 2, "flat_dist_turns": 0}, "unburied": {"holes": 17, "avoidable": 14, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}, "low": {"holes": 58, "avoidable": 55, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}, "flat": {"holes": 115, "avoidable": 112, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}}},
+    {"model": "qwen3.8-27b", "seed": 1, "shuffled": true, "pieces": 24, "lines": 0, "score": 0, "holes": 73, "max_height": 20, "duration_s": 173, "latency_ms": {"median": 7656, "min": 4857, "max": 8245}, "mean_confidence": 0.551, "per_voice": {"sealed": {"holes": 74, "avoidable": 74, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 78, "avoidable": 78, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 95, "avoidable": 95, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 79, "avoidable": 79, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 60, "avoidable": 60, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}},
+    {"model": "qwen3.8-27b", "seed": 2, "shuffled": false, "pieces": 38, "lines": 4, "score": 160, "holes": 7, "max_height": 20, "duration_s": 239, "latency_ms": {"median": 6577, "min": 3899, "max": 7847}, "mean_confidence": 0.592, "per_voice": {"sealed": {"holes": 9, "avoidable": 5, "lines": 3, "missed_lines": 15, "flat_dist_turns": 0}, "clears": {"holes": 46, "avoidable": 42, "lines": 7, "missed_lines": 11, "flat_dist_turns": 0}, "unburied": {"holes": 11, "avoidable": 7, "lines": 4, "missed_lines": 14, "flat_dist_turns": 0}, "low": {"holes": 38, "avoidable": 34, "lines": 5, "missed_lines": 13, "flat_dist_turns": 0}, "flat": {"holes": 89, "avoidable": 85, "lines": 4, "missed_lines": 14, "flat_dist_turns": 0}}},
+    {"model": "qwen3.8-27b", "seed": 2, "shuffled": true, "pieces": 28, "lines": 1, "score": 40, "holes": 74, "max_height": 19, "duration_s": 199, "latency_ms": {"median": 7485, "min": 4907, "max": 8467}, "mean_confidence": 0.561, "per_voice": {"sealed": {"holes": 107, "avoidable": 107, "lines": 1, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 61, "avoidable": 61, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "unburied": {"holes": 69, "avoidable": 69, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "low": {"holes": 76, "avoidable": 76, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "flat": {"holes": 105, "avoidable": 105, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}}},
+    {"model": "qwen3.8-27b", "seed": 3, "shuffled": false, "pieces": 22, "lines": 0, "score": 0, "holes": 6, "max_height": 20, "duration_s": 144, "latency_ms": {"median": 6281, "min": 4120, "max": 8486}, "mean_confidence": 0.547, "per_voice": {"sealed": {"holes": 6, "avoidable": 2, "lines": 0, "missed_lines": 4, "flat_dist_turns": 0}, "clears": {"holes": 107, "avoidable": 103, "lines": 0, "missed_lines": 4, "flat_dist_turns": 0}, "unburied": {"holes": 10, "avoidable": 6, "lines": 0, "missed_lines": 4, "flat_dist_turns": 0}, "low": {"holes": 53, "avoidable": 49, "lines": 0, "missed_lines": 4, "flat_dist_turns": 0}, "flat": {"holes": 68, "avoidable": 64, "lines": 0, "missed_lines": 4, "flat_dist_turns": 0}}},
+    {"model": "qwen3.8-27b", "seed": 3, "shuffled": true, "pieces": 27, "lines": 0, "score": 0, "holes": 57, "max_height": 20, "duration_s": 187, "latency_ms": {"median": 7303, "min": 3749, "max": 8558}, "mean_confidence": 0.559, "per_voice": {"sealed": {"holes": 57, "avoidable": 56, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "clears": {"holes": 56, "avoidable": 55, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "unburied": {"holes": 54, "avoidable": 53, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "low": {"holes": 51, "avoidable": 50, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "flat": {"holes": 58, "avoidable": 57, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}}},
+    {"model": "qwen3.5-9b", "seed": 1, "shuffled": false, "pieces": 23, "lines": 0, "score": 0, "holes": 34, "max_height": 20, "duration_s": 90, "latency_ms": {"median": 4056, "min": 2425, "max": 4652}, "mean_confidence": 0.219, "per_voice": {"sealed": {"holes": 32, "avoidable": 31, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "clears": {"holes": 107, "avoidable": 106, "lines": 1, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 59, "avoidable": 58, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "low": {"holes": 96, "avoidable": 95, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}, "flat": {"holes": 93, "avoidable": 92, "lines": 0, "missed_lines": 1, "flat_dist_turns": 0}}},
+    {"model": "qwen3.5-9b", "seed": 1, "shuffled": true, "pieces": 23, "lines": 0, "score": 0, "holes": 62, "max_height": 20, "duration_s": 92, "latency_ms": {"median": 4217, "min": 2771, "max": 4827}, "mean_confidence": 0.230, "per_voice": {"sealed": {"holes": 62, "avoidable": 59, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 66, "avoidable": 63, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 65, "avoidable": 62, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 59, "avoidable": 56, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 76, "avoidable": 73, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}},
+    {"model": "qwen3.5-9b", "seed": 2, "shuffled": false, "pieces": 29, "lines": 0, "score": 0, "holes": 74, "max_height": 20, "duration_s": 105, "latency_ms": {"median": 3790, "min": 1040, "max": 4434}, "mean_confidence": 0.245, "per_voice": {"sealed": {"holes": 28, "avoidable": 28, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}, "clears": {"holes": 117, "avoidable": 117, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}, "unburied": {"holes": 68, "avoidable": 68, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}, "low": {"holes": 144, "avoidable": 144, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}, "flat": {"holes": 141, "avoidable": 141, "lines": 0, "missed_lines": 3, "flat_dist_turns": 0}}},
+    {"model": "qwen3.5-9b", "seed": 2, "shuffled": true, "pieces": 21, "lines": 0, "score": 0, "holes": 64, "max_height": 20, "duration_s": 87, "latency_ms": {"median": 4528, "min": 2786, "max": 4955}, "mean_confidence": 0.279, "per_voice": {"sealed": {"holes": 71, "avoidable": 70, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 50, "avoidable": 49, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 75, "avoidable": 74, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 64, "avoidable": 63, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 64, "avoidable": 63, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}},
+    {"model": "qwen3.5-9b", "seed": 3, "shuffled": false, "pieces": 28, "lines": 3, "score": 140, "holes": 18, "max_height": 20, "duration_s": 104, "latency_ms": {"median": 3958, "min": 2182, "max": 4830}, "mean_confidence": 0.228, "per_voice": {"sealed": {"holes": 17, "avoidable": 16, "lines": 3, "missed_lines": 1, "flat_dist_turns": 0}, "clears": {"holes": 179, "avoidable": 178, "lines": 3, "missed_lines": 1, "flat_dist_turns": 0}, "unburied": {"holes": 106, "avoidable": 105, "lines": 3, "missed_lines": 1, "flat_dist_turns": 0}, "low": {"holes": 172, "avoidable": 171, "lines": 1, "missed_lines": 3, "flat_dist_turns": 0}, "flat": {"holes": 133, "avoidable": 132, "lines": 0, "missed_lines": 4, "flat_dist_turns": 0}}},
+    {"model": "qwen3.5-9b", "seed": 3, "shuffled": true, "pieces": 27, "lines": 0, "score": 0, "holes": 61, "max_height": 20, "duration_s": 105, "latency_ms": {"median": 4227, "min": 2707, "max": 4442}, "mean_confidence": 0.263, "per_voice": {"sealed": {"holes": 61, "avoidable": 60, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "clears": {"holes": 48, "avoidable": 47, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "unburied": {"holes": 62, "avoidable": 61, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "low": {"holes": 77, "avoidable": 76, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}, "flat": {"holes": 71, "avoidable": 70, "lines": 0, "missed_lines": 0, "flat_dist_turns": 0}}}
+  ],
+  "comparison_table": [
+    {"player": "random", "source": "cited published upstream", "lines_by_seed": [0, 0, 0], "range": "0"},
+    {"player": "Jev shuffled", "source": "cited published upstream", "lines_by_seed": [0, 0, 0], "range": "0"},
+    {"player": "cloud Jev", "source": "cited published upstream; paid API not called here", "lines_by_seed": [23, 115, 23], "range": "23-115"},
+    {"player": "keyword table", "source": "cited published upstream", "lines_by_seed": [118, 73, 118], "range": "73-118"},
+    {"player": "El-Tetris", "source": "cited published upstream", "lines_by_seed": [118, 118, 116], "range": "116-118"},
+    {"player": "keyword table", "source": "locally measured seeds 1,2,3", "lines_by_seed": [97, 118, 118], "range": "97-118"},
+    {"player": "El-Tetris", "source": "locally measured seeds 1,2,3", "lines_by_seed": [118, 117, 115], "range": "115-118"},
+    {"player": "Qwen3.8-27B local readout", "source": "locally measured seeds 1,2,3", "lines_by_seed": [0, 4, 0], "range": "0-4"},
+    {"player": "Qwen3.8-27B shuffled", "source": "locally measured seeds 1,2,3", "lines_by_seed": [0, 1, 0], "range": "0-1"},
+    {"player": "Qwen3.5-9B local readout", "source": "locally measured seeds 1,2,3", "lines_by_seed": [0, 0, 3], "range": "0-3"},
+    {"player": "Qwen3.5-9B shuffled", "source": "locally measured seeds 1,2,3", "lines_by_seed": [0, 0, 0], "range": "0"}
+  ],
+  "claim_limits": [
+    "Three seeds support this descriptive comparison only. They do not support a population ratio or a broad model-ranking claim.",
+    "The cited cloud, random, keyword, and El-Tetris numbers come from upstream docs/findings.md at the cited commit. No paid cloud API was called.",
+    "The local and cited studies use different seed identifiers. Compare ranges, not paired seed deltas.",
+    "The overflow policy is a material local limitation. This result tests the declared SemIf-style interface plus that policy, not an unlimited-option readout.",
+    "The close real-versus-shuffle outcomes mean these three runs do not establish that either local ordering carries reliable play."
+  ],
+  "flagged_adversarial": false,
+  "adversarial_verification": {
+    "tool": "scripts/adversarial_verify.py",
+    "result": "clean",
+    "flags": []
+  },
+  "arc_relevance": null
+}

@@ -20315,3 +20315,12 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   roadmap activation, external publication or push occurred.
 - 2026-09-22: Bind fourteen tasks and qualify the V657 scientific limits (⚠️ Research Finding) — honest_verdict=complete_null_v658_contract_methods_ingested; results/experiment_7516_v658_contract_methods.json
 - 2026-09-22: Seal fresh source interventions and role-separated decision evidence (⚠️ Blocked) — honest_verdict=complete_blocked_fresh_source_inventory; results/experiment_7517_v658_source_protocol.json
+
+## 2026-09-22 — Jev Tetris local SemIf readout comparison (REQ-JEV-TETRIS-001)
+
+- Instruction: fork github.com/thelau/jev-tetris (MIT, commit 9869b60) and substitute a local Qwen readout for the cloud Jev API, comparing against the repo's own published keyword-table and El-Tetris baselines.
+- Vendored six upstream files byte-identical; wrote a loopback-only local readout server reusing scripts/jevbench_readout_eval.py's LlamaCppLogitScorer.
+- First pass (experiment 10004) truncated overflow placements by raw BFS engine order, not quality. Both model arms scored near their shuffle controls (0-4 lines). Flagged as suspicious per Adversarial Artifact Verification discipline before accepting it.
+- Root cause confirmed (experiment 10005): 85.67% of Tetris turns offer more than 16 placements, so the truncation bit almost every turn. Fixed to rank by the engine's own evaluate() score before capping. One-seed recheck: 28 to 67 pieces survived, 0 to 17 lines cleared.
+- Terminal corrected comparison (experiment 10006, commit range TBD): Qwen3.8-27B cleared 17/112/116 lines across seeds 1-3, reaching the 300-piece cap twice and overlapping the cited cloud Jev range (23-115). Qwen3.5-9B cleared 1/6/2 lines, staying below all cited non-random baselines.
+- Experiment 10004 kept unchanged with an additive corrigendum pointing to 10006, per never-prune.

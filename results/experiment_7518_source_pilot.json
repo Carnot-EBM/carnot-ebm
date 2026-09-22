@@ -1,0 +1,51 @@
+{
+  "experiment": 7518,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-22",
+  "started_at": "2026-09-22T13:47:52.078898+00:00",
+  "finished_at": "2026-09-22T13:47:52.078898+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure Qwen source-intervention feasibility before capture",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7517-source-protocol",
+  "failed_field": "source_protocol_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7517_v658_source_protocol.json",
+  "failed_evidence_sha256": "sha256:076f4b02d71d1009489125f2c4f0ff3893c8315e41108725adb2aab3b515a1b8",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7517-source-protocol",
+    "failed_field": "source_protocol_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7517_v658_source_protocol.json",
+    "failed_evidence_sha256": "sha256:076f4b02d71d1009489125f2c4f0ff3893c8315e41108725adb2aab3b515a1b8"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7517-source-protocol.source_protocol_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7517-source-protocol",
+      "artifact_field": "source_protocol_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7517_v658_source_protocol.json",
+      "artifact_sha256": "sha256:076f4b02d71d1009489125f2c4f0ff3893c8315e41108725adb2aab3b515a1b8"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

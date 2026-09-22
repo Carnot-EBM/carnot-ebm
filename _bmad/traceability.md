@@ -1,6 +1,19 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-21
+## 2026-09-22 — REQ-JEV-TETRIS-001 local option-logit comparison
+REQ-JEV-TETRIS-001 and its four scenarios map to
+`scripts/experiments/jev_tetris_semif/readout_server.py`, the loopback Node
+client and harness under its vendored directory, and
+`tests/python/test_jev_tetris_local_readout.py`. Six mocked unit tests cover
+the prompt, labels, overflow delegate, response map, and errors. Experiment
+10004 contains twelve live GPU runs across two cached Qwen GGUFs.
+The 2026-09-22 overflow correction changes SCENARIO-JEV-TETRIS-001-B from
+engine-order truncation to an explicit `evaluate()` tie-break before the cap.
+The regression fixture places the best evaluation at raw-order `p19` and
+confirms that it remains named. Experiment 10005 records a 600-turn placement
+count measurement and the one-seed Qwen3.8-27B correction check.
+
 **Operational Note:** 2026-09-21 REQ-VERIFY-7505 maps the bounded V657
 energy fit to `python/carnot/experiment_7505_v657_energy_fit.py`, its thin
 entrypoint, and `tests/python/test_experiment_7505_v657_energy_fit.py`.
