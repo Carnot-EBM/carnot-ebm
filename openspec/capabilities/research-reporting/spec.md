@@ -77421,3 +77421,84 @@ verification and strict row consistency run
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7516 and SCENARIO-REPORT-7516-* | Implemented: V658 authority comparison, literal V657 custody, strict-compatible absolute-cost null fixture, four-family method map, separate E6 timing evidence, scoped validation, and thin entrypoint. | Spec-linked tests cover both authorities and mutations, staged/active resolution, thirteen prior dispositions, unchanged strict-null compatibility, method records, validation scope, defensive cold reduction, and 100 percent changed-module coverage. The entrypoint requires scoped and terminal readers before atomic publication. |
+
+## REQ-REPORT-7525: Audit both V658 decision branches without promoting absence
+
+The repository SHALL provide Exp7525 as an aggregation-only decision audit.
+It SHALL run even when either scientific producer is missing, blocked, or null.
+It SHALL inventory the V658 protocol, raw capture, frozen checkpoints, static
+producer, and online producer by exact path and byte hash when present. Missing
+required external evidence SHALL produce a branch-specific blocked disposition.
+The overall verdict SHALL be blocked when required science is externally
+incomplete. External absence SHALL never become a partial owned-work verdict.
+
+The audit SHALL independently reconstruct static predictions from frozen
+coefficients and online predictions from released count events. It SHALL
+recompute proper losses, typed-decision costs, support, retention, and timing
+aggregates from raw rows. It SHALL verify source and donor role isolation, zero
+original-label assignment to changed-source conditions, exact reveal order,
+and repeated hashes across raw, model, and evaluator boundaries. It SHALL not
+call either producer's headline reducer.
+
+The audit SHALL keep completion and value separate. The bare numeric
+`decision_claims_qualified_score` and `online_claims_qualified_score` SHALL
+qualify valid independently reducible evidence, including a valid null. The
+bare numeric `qualified_static_value_score` and
+`qualified_online_value_score` SHALL not exceed the independently recomputed
+registered benefit. `audit_complete_score` SHALL be one only when both
+branches have an explicit valid disposition and all required audit validation
+passes.
+
+The artifact SHALL use `aggregation_from_upstream_artifacts` and the
+`aggregation` class. It SHALL emit empty `MODEL_SPECS` and `model_specs`, no
+current model invocation, and balanced zero invocation counts. Historical
+model receipts SHALL stay historical. Every required field and gate SHALL
+carry a failure-prevention principle without changing the field's scalar type.
+
+### SCENARIO-REPORT-7525-INVENTORY: Missing producers block only their branches
+
+**Given** the declared protocol, capture, checkpoints, and both producer paths
+**When** Exp7525 inventories every path before scientific reduction
+**Then** each absent or invalid input names its exact path, field, expected value, and observation
+**And** any independently valid branch retains its own disposition
+**And** required external absence makes the overall result blocked, never partial.
+
+### SCENARIO-REPORT-7525-STATIC: Raw rows control static decisions
+
+**Given** frozen coefficients, option mappings, labels, and absolute arm costs
+**When** Exp7525 reconstructs probabilities and typed decisions
+**Then** every proper loss, support count, policy action, and cost is independently reproducible
+**And** equal-cost rows state non-positive headroom with both absolute costs
+**And** a valid no-headroom null remains qualified but has zero qualified value.
+
+### SCENARIO-REPORT-7525-ONLINE: Released events control online predictions
+
+**Given** frozen arrival order, delayed reveals, updates, checkpoints, and retention rows
+**When** Exp7525 rebuilds each learner state before its prediction
+**Then** no update uses a future or duplicate release
+**And** donor, source, and original-label roles remain isolated
+**And** restart, retention, loss, support, and timing claims reduce from raw events.
+
+### SCENARIO-REPORT-7525-MUTATIONS: Misleading positives fail closed
+
+**Given** private complete static and online fixtures plus an honest zero-delta null
+**When** label leakage, swapped options, omitted failed groups, future releases,
+duplicated updates, changed comparators, edited gates, false positive classes,
+or majority-identical-cost mutations are applied one at a time
+**Then** every misleading mutation is rejected
+**And** the unchanged strict guards accept the honest absolute-cost null.
+
+### SCENARIO-REPORT-7525-ARTIFACT: Exact readers control publication
+
+**Given** a frozen affected-file manifest and measured candidate
+**When** scoped tests, changed-module coverage, Ruff, mypy, spec coverage,
+entrypoint replay, cold independent reduction, adversarial verification, and
+strict row consistency run in fresh processes
+**Then** all required receipts pass before atomic terminal publication
+**And** reporting-only work records that no numbered runtime E2E applies.
+
+## Implementation Status (REQ-REPORT-7525)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7525 and SCENARIO-REPORT-7525-* | Planned: V658 two-branch decision audit and thin entrypoint. | Requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold reduction, adversarial verification, and strict row consistency. |

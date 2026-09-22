@@ -1,0 +1,1154 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "required_audit_validation",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Favorable science cannot excuse a failed scoped or cold validation check."
+    },
+    {
+      "category": "validity",
+      "check": "private_mutation_guards",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Each named misleading mutation must fail before the audit can qualify claims."
+    },
+    {
+      "branch": "shared",
+      "category": "availability",
+      "check": "input:contract",
+      "exists": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7516_v658_contract_methods.json",
+      "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+      "required_field": "contract_ready_score"
+    },
+    {
+      "branch": "shared",
+      "category": "availability",
+      "check": "input:source_protocol",
+      "exists": true,
+      "expected": 1,
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "results/experiment_7517_v658_source_protocol.json",
+      "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+      "required_field": "source_protocol_ready_score"
+    },
+    {
+      "branch": "shared",
+      "category": "availability",
+      "check": "input:raw_capture",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "path": "results/experiment_7520_v658_source_eval_capture.json",
+      "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+      "required_field": "eval_capture_ready_score"
+    },
+    {
+      "branch": "static",
+      "category": "availability",
+      "check": "input:static_checkpoint",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "path": "results/experiment_7521_v658_consistency_energy.json",
+      "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+      "required_field": "energy_fit_ready_score"
+    },
+    {
+      "branch": "static",
+      "category": "availability",
+      "check": "input:static_producer",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "path": "results/experiment_7522_v658_source_evaluation.json",
+      "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+      "required_field": "static_evaluation_complete_score"
+    },
+    {
+      "branch": "online",
+      "category": "availability",
+      "check": "input:online_checkpoint",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "path": "results/experiment_7523_v658_count_memory.json",
+      "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+      "required_field": "count_memory_ready_score"
+    },
+    {
+      "branch": "online",
+      "category": "availability",
+      "check": "input:online_producer",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "path": "results/experiment_7524_v658_count_online.json",
+      "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+      "required_field": "online_evaluation_complete_score"
+    },
+    {
+      "category": "readiness",
+      "check": "static_claim_qualification",
+      "expected": 1,
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "principle": "A valid static null remains qualified even when registered benefit is absent."
+    },
+    {
+      "category": "readiness",
+      "check": "online_claim_qualification",
+      "expected": 1,
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "principle": "Valid event custody qualifies an online null without promoting its value."
+    },
+    {
+      "category": "benefit",
+      "check": "static_registered_benefit",
+      "expected": 1,
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "principle": "Static value requires the registered support, effect, and uncertainty gates."
+    },
+    {
+      "category": "benefit",
+      "check": "online_registered_benefit",
+      "expected": 1,
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "principle": "Online value requires causal contrasts, chronology, restart, and retention gates."
+    }
+  ],
+  "audit_complete_score": 1,
+  "branch_reductions": {
+    "online": {
+      "branch": "online",
+      "claims_qualified_score": 0,
+      "errors": [],
+      "gate_check_summary": {
+        "all_passed": false,
+        "branch": "online",
+        "failed_count": 4,
+        "failures": [
+          {
+            "branch": "online",
+            "check": "online_input:source_protocol",
+            "exists": true,
+            "expected": 1,
+            "observed": 0,
+            "passed": false,
+            "path": "results/experiment_7517_v658_source_protocol.json",
+            "required_field": "source_protocol_ready_score"
+          },
+          {
+            "branch": "online",
+            "check": "online_input:raw_capture",
+            "exists": false,
+            "expected": 1,
+            "observed": null,
+            "passed": false,
+            "path": "results/experiment_7520_v658_source_eval_capture.json",
+            "required_field": "eval_capture_ready_score"
+          },
+          {
+            "branch": "online",
+            "check": "online_input:online_checkpoint",
+            "exists": false,
+            "expected": 1,
+            "observed": null,
+            "passed": false,
+            "path": "results/experiment_7523_v658_count_memory.json",
+            "required_field": "count_memory_ready_score"
+          },
+          {
+            "branch": "online",
+            "check": "online_input:online_producer",
+            "exists": false,
+            "expected": 1,
+            "observed": null,
+            "passed": false,
+            "path": "results/experiment_7524_v658_count_online.json",
+            "required_field": "online_evaluation_complete_score"
+          }
+        ],
+        "first_failure": {
+          "branch": "online",
+          "check": "online_input:source_protocol",
+          "exists": true,
+          "expected": 1,
+          "observed": 0,
+          "passed": false,
+          "path": "results/experiment_7517_v658_source_protocol.json",
+          "required_field": "source_protocol_ready_score"
+        }
+      },
+      "honest_verdict": "complete_blocked_online_required_input",
+      "rows": [],
+      "support": null,
+      "value_score": 0,
+      "verdict_class": "blocked"
+    },
+    "static": {
+      "branch": "static",
+      "claims_qualified_score": 0,
+      "errors": [],
+      "gate_check_summary": {
+        "all_passed": false,
+        "branch": "static",
+        "failed_count": 4,
+        "failures": [
+          {
+            "branch": "static",
+            "check": "static_input:source_protocol",
+            "exists": true,
+            "expected": 1,
+            "observed": 0,
+            "passed": false,
+            "path": "results/experiment_7517_v658_source_protocol.json",
+            "required_field": "source_protocol_ready_score"
+          },
+          {
+            "branch": "static",
+            "check": "static_input:raw_capture",
+            "exists": false,
+            "expected": 1,
+            "observed": null,
+            "passed": false,
+            "path": "results/experiment_7520_v658_source_eval_capture.json",
+            "required_field": "eval_capture_ready_score"
+          },
+          {
+            "branch": "static",
+            "check": "static_input:static_checkpoint",
+            "exists": false,
+            "expected": 1,
+            "observed": null,
+            "passed": false,
+            "path": "results/experiment_7521_v658_consistency_energy.json",
+            "required_field": "energy_fit_ready_score"
+          },
+          {
+            "branch": "static",
+            "check": "static_input:static_producer",
+            "exists": false,
+            "expected": 1,
+            "observed": null,
+            "passed": false,
+            "path": "results/experiment_7522_v658_source_evaluation.json",
+            "required_field": "static_evaluation_complete_score"
+          }
+        ],
+        "first_failure": {
+          "branch": "static",
+          "check": "static_input:source_protocol",
+          "exists": true,
+          "expected": 1,
+          "observed": 0,
+          "passed": false,
+          "path": "results/experiment_7517_v658_source_protocol.json",
+          "required_field": "source_protocol_ready_score"
+        }
+      },
+      "honest_verdict": "complete_blocked_static_required_input",
+      "rows": [],
+      "support": null,
+      "value_score": 0,
+      "verdict_class": "blocked"
+    }
+  },
+  "capability_e2e": {
+    "cold_replay_passed": true,
+    "declared_entrypoint_executed": true,
+    "numbered_runtime_e2e": "not_applicable_reporting_only"
+  },
+  "current_invocation_events": [],
+  "decision_claims_qualified_score": 0,
+  "duration_s": 9.755745449,
+  "ended_at_utc": "2026-09-22T14:22:28.655894+00:00",
+  "ended_monotonic_ns": 88965867737535,
+  "execution_venue": "host",
+  "experiment": "exp7525-decision-audit",
+  "experiment_id": "exp7525-decision-audit",
+  "field_principles": {
+    "MODEL_SPECS": "Aggregation performs no current model load, so the list stays empty.",
+    "acceptance_gate_results": "Validity, support, and benefit checks retain expected and observed operands.",
+    "audit_complete_score": "One means both branches have explicit dispositions under valid audit guards.",
+    "branch_reductions": "Retain this supporting evidence in its ordinary JSON type.",
+    "capability_e2e": "Retain this supporting evidence in its ordinary JSON type.",
+    "current_invocation_events": "Retain this supporting evidence in its ordinary JSON type.",
+    "decision_claims_qualified_score": "One includes independently reducible static null evidence.",
+    "duration_s": "Measured elapsed work must never be padded to pass a floor.",
+    "ended_at_utc": "Retain this supporting evidence in its ordinary JSON type.",
+    "ended_monotonic_ns": "Retain this supporting evidence in its ordinary JSON type.",
+    "execution_venue": "Retain this supporting evidence in its ordinary JSON type.",
+    "experiment": "Retain this supporting evidence in its ordinary JSON type.",
+    "experiment_id": "Retain this supporting evidence in its ordinary JSON type.",
+    "field_principles": "Every emitted field states the failure that it prevents.",
+    "flagged_adversarial": "Actual findings remain visible and cannot be cleared to open a gate.",
+    "gate_check_summary": "Every block names the exact path, field, expected value, and observation.",
+    "generator_weights_changed": "Retain this supporting evidence in its ordinary JSON type.",
+    "historical_model_provenance": "Retain this supporting evidence in its ordinary JSON type.",
+    "honest_verdict": "A complete prefix preserves literal null, blocked, and invalid outcomes.",
+    "inference_substrate": "Aggregation is exactly aggregation_from_upstream_artifacts.",
+    "inference_substrate_class": "The aggregation class prevents an incorrect model duration floor.",
+    "invocation_counts": "Balanced zero counters prove no current loads or generations occurred.",
+    "milestone": "Retain this supporting evidence in its ordinary JSON type.",
+    "model_invoked": "False distinguishes current aggregation from historical model work.",
+    "model_specs": "The lower-case model list mirrors the empty current model declaration.",
+    "mutation_results": "Accepted nulls and rejected false positives prevent audit self-certification.",
+    "online_claims_qualified_score": "One includes valid event custody for an online null.",
+    "phase_spans": "Real phase timing exposes waiting, validation, and publication boundaries.",
+    "preconditions_checked": "Exact resource observations and hashes prevent invented readiness.",
+    "process_identity": "Retain this supporting evidence in its ordinary JSON type.",
+    "production_defaults_changed": "Retain this supporting evidence in its ordinary JSON type.",
+    "publication_performed": "Retain this supporting evidence in its ordinary JSON type.",
+    "publication_state": "Retain this supporting evidence in its ordinary JSON type.",
+    "push_performed": "Retain this supporting evidence in its ordinary JSON type.",
+    "qualified_online_value_score": "Online value cannot exceed independently recomputed causal benefit.",
+    "qualified_static_value_score": "Static value cannot exceed independently recomputed benefit.",
+    "random_seed": "Frozen selection, fitting, arrival, and bootstrap seeds prevent outcome tuning.",
+    "repository_health": "Retain this supporting evidence in its ordinary JSON type.",
+    "reproducibility_checksum": "The checksum binds code settings, roles, source hashes, and rows.",
+    "research_conductor_modified": "Retain this supporting evidence in its ordinary JSON type.",
+    "rows": "Both branch dispositions remain visible; missing evidence is not a numeric zero.",
+    "run_date": "Use the fixed run date with actual UTC and monotonic process boundaries.",
+    "sample_size_budget": "Planned, attempted, completed, failed, censored, and unstarted units stay distinct.",
+    "schema": "Version, experiment identity, and milestone bind the terminal reader contract.",
+    "source_artifact_hashes": "Exact byte hashes detect drift across raw, model, and evaluator inputs.",
+    "started_at_utc": "Retain this supporting evidence in its ordinary JSON type.",
+    "started_monotonic_ns": "Retain this supporting evidence in its ordinary JSON type.",
+    "status": "Retain this supporting evidence in its ordinary JSON type.",
+    "submission_performed": "Retain this supporting evidence in its ordinary JSON type.",
+    "title": "Retain this supporting evidence in its ordinary JSON type.",
+    "validation_manifest": "Retain this supporting evidence in its ordinary JSON type.",
+    "validation_receipts": "Exact scoped commands and exits control terminal publication.",
+    "verdict_class": "The closed enum prevents external absence from becoming partial owned work.",
+    "verifier_is_oracle": "Human labels are evidence but are not formal proof."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": false,
+    "failed_count": 10,
+    "failures": [
+      {
+        "branch": "shared",
+        "category": "availability",
+        "check": "input:source_protocol",
+        "exists": true,
+        "expected": 1,
+        "observed": 0,
+        "op": "==",
+        "passed": false,
+        "path": "results/experiment_7517_v658_source_protocol.json",
+        "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+        "required_field": "source_protocol_ready_score"
+      },
+      {
+        "branch": "shared",
+        "category": "availability",
+        "check": "input:raw_capture",
+        "exists": false,
+        "expected": 1,
+        "observed": null,
+        "op": "==",
+        "passed": false,
+        "path": "results/experiment_7520_v658_source_eval_capture.json",
+        "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+        "required_field": "eval_capture_ready_score"
+      },
+      {
+        "branch": "static",
+        "category": "availability",
+        "check": "input:static_checkpoint",
+        "exists": false,
+        "expected": 1,
+        "observed": null,
+        "op": "==",
+        "passed": false,
+        "path": "results/experiment_7521_v658_consistency_energy.json",
+        "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+        "required_field": "energy_fit_ready_score"
+      },
+      {
+        "branch": "static",
+        "category": "availability",
+        "check": "input:static_producer",
+        "exists": false,
+        "expected": 1,
+        "observed": null,
+        "op": "==",
+        "passed": false,
+        "path": "results/experiment_7522_v658_source_evaluation.json",
+        "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+        "required_field": "static_evaluation_complete_score"
+      },
+      {
+        "branch": "online",
+        "category": "availability",
+        "check": "input:online_checkpoint",
+        "exists": false,
+        "expected": 1,
+        "observed": null,
+        "op": "==",
+        "passed": false,
+        "path": "results/experiment_7523_v658_count_memory.json",
+        "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+        "required_field": "count_memory_ready_score"
+      },
+      {
+        "branch": "online",
+        "category": "availability",
+        "check": "input:online_producer",
+        "exists": false,
+        "expected": 1,
+        "observed": null,
+        "op": "==",
+        "passed": false,
+        "path": "results/experiment_7524_v658_count_online.json",
+        "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+        "required_field": "online_evaluation_complete_score"
+      },
+      {
+        "category": "readiness",
+        "check": "static_claim_qualification",
+        "expected": 1,
+        "observed": 0,
+        "op": "==",
+        "passed": false,
+        "principle": "A valid static null remains qualified even when registered benefit is absent."
+      },
+      {
+        "category": "readiness",
+        "check": "online_claim_qualification",
+        "expected": 1,
+        "observed": 0,
+        "op": "==",
+        "passed": false,
+        "principle": "Valid event custody qualifies an online null without promoting its value."
+      },
+      {
+        "category": "benefit",
+        "check": "static_registered_benefit",
+        "expected": 1,
+        "observed": 0,
+        "op": "==",
+        "passed": false,
+        "principle": "Static value requires the registered support, effect, and uncertainty gates."
+      },
+      {
+        "category": "benefit",
+        "check": "online_registered_benefit",
+        "expected": 1,
+        "observed": 0,
+        "op": "==",
+        "passed": false,
+        "principle": "Online value requires causal contrasts, chronology, restart, and retention gates."
+      }
+    ],
+    "first_failure": {
+      "branch": "shared",
+      "category": "availability",
+      "check": "input:source_protocol",
+      "exists": true,
+      "expected": 1,
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "results/experiment_7517_v658_source_protocol.json",
+      "principle": "Required upstream science must exist and declare numeric readiness before reduction.",
+      "required_field": "source_protocol_ready_score"
+    }
+  },
+  "generator_weights_changed": false,
+  "historical_model_provenance": {
+    "absorbed_into_current_invocation_counts": false,
+    "classification": "historical_only"
+  },
+  "honest_verdict": "complete_blocked_required_science_incomplete",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.658",
+  "model_invoked": false,
+  "model_specs": [],
+  "mutation_results": [
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "private_label_visible_before_reveal:s0"
+      ],
+      "mutation": "label_leakage",
+      "rejected": true
+    },
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "option_mapping_mismatch:g0"
+      ],
+      "mutation": "swapped_option_mapping",
+      "rejected": true
+    },
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "planned_group_missing:g_failed"
+      ],
+      "mutation": "omitted_failed_group",
+      "rejected": true
+    },
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "update_before_release:u0",
+        "online_probability_mismatch:s2:global",
+        "online_probability_mismatch:s2:local",
+        "online_probability_mismatch:s2:shuffled",
+        "online_probability_mismatch:s3:global",
+        "online_probability_mismatch:s3:local",
+        "online_probability_mismatch:s3:shuffled",
+        "online_stored_probability_mismatch:s2:global",
+        "online_brier_mismatch:s2:global",
+        "online_log_loss_mismatch:s2:global",
+        "online_stored_probability_mismatch:s2:local",
+        "online_brier_mismatch:s2:local",
+        "online_log_loss_mismatch:s2:local",
+        "online_stored_probability_mismatch:s2:shuffled",
+        "online_brier_mismatch:s2:shuffled",
+        "online_log_loss_mismatch:s2:shuffled",
+        "online_stored_probability_mismatch:s3:global",
+        "online_brier_mismatch:s3:global",
+        "online_log_loss_mismatch:s3:global",
+        "online_stored_probability_mismatch:s3:local",
+        "online_brier_mismatch:s3:local",
+        "online_log_loss_mismatch:s3:local",
+        "online_stored_probability_mismatch:s3:shuffled",
+        "online_brier_mismatch:s3:shuffled",
+        "online_log_loss_mismatch:s3:shuffled"
+      ],
+      "mutation": "future_release",
+      "rejected": true
+    },
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "duplicate_update:u0",
+        "online_probability_mismatch:s2:global",
+        "online_probability_mismatch:s2:local",
+        "online_probability_mismatch:s2:shuffled",
+        "online_probability_mismatch:s3:global",
+        "online_probability_mismatch:s3:local",
+        "online_probability_mismatch:s3:shuffled",
+        "online_stored_probability_mismatch:s2:global",
+        "online_brier_mismatch:s2:global",
+        "online_log_loss_mismatch:s2:global",
+        "online_stored_probability_mismatch:s2:local",
+        "online_brier_mismatch:s2:local",
+        "online_log_loss_mismatch:s2:local",
+        "online_stored_probability_mismatch:s2:shuffled",
+        "online_brier_mismatch:s2:shuffled",
+        "online_log_loss_mismatch:s2:shuffled",
+        "online_stored_probability_mismatch:s3:global",
+        "online_brier_mismatch:s3:global",
+        "online_log_loss_mismatch:s3:global",
+        "online_stored_probability_mismatch:s3:local",
+        "online_brier_mismatch:s3:local",
+        "online_log_loss_mismatch:s3:local",
+        "online_stored_probability_mismatch:s3:shuffled",
+        "online_brier_mismatch:s3:shuffled",
+        "online_log_loss_mismatch:s3:shuffled"
+      ],
+      "mutation": "duplicated_update",
+      "rejected": true
+    },
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "registered_comparator_changed"
+      ],
+      "mutation": "changed_comparator",
+      "rejected": true
+    },
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "registered_gates_changed"
+      ],
+      "mutation": "edited_gate",
+      "rejected": true
+    },
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "static_false_positive_claim"
+      ],
+      "mutation": "false_positive_class",
+      "rejected": true
+    },
+    {
+      "corrupted_payload_retained": false,
+      "errors": [
+        "positive_claim_without_headroom:g0"
+      ],
+      "mutation": "majority_identical_cost",
+      "rejected": true
+    }
+  ],
+  "online_claims_qualified_score": 0,
+  "phase_spans": [
+    {
+      "completed_units": 7,
+      "duration_s": 0.002325478009879589,
+      "end_s": 0.002344603999517858,
+      "phase": "preconditions",
+      "start_s": 1.9125989638268948e-05
+    },
+    {
+      "completed_units": 11,
+      "duration_s": 0.0015131419932004064,
+      "end_s": 0.0038586479931836948,
+      "phase": "scientific_reduction",
+      "start_s": 0.0023455059999832883
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 8.252080999009195,
+      "end_s": 8.256038152001565,
+      "phase": "affected_validation",
+      "start_s": 0.003957152992370538
+    },
+    {
+      "completed_units": 4,
+      "duration_s": 1.4959247619990492,
+      "end_s": 9.755736872990383,
+      "phase": "terminal_validation",
+      "start_s": 8.259812110991334
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "branch": "shared",
+      "exists": true,
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "path": "results/experiment_7516_v658_contract_methods.json",
+      "required_field": "contract_ready_score",
+      "role": "contract",
+      "sha256": "sha256:fdc5f7f65c2e87220e3cafe7157c666c530de28698790021fcd351b3bb5af43a"
+    },
+    {
+      "branch": "shared",
+      "exists": true,
+      "expected": 1,
+      "observed": 0,
+      "passed": false,
+      "path": "results/experiment_7517_v658_source_protocol.json",
+      "required_field": "source_protocol_ready_score",
+      "role": "source_protocol",
+      "sha256": "sha256:076f4b02d71d1009489125f2c4f0ff3893c8315e41108725adb2aab3b515a1b8"
+    },
+    {
+      "branch": "shared",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "passed": false,
+      "path": "results/experiment_7520_v658_source_eval_capture.json",
+      "required_field": "eval_capture_ready_score",
+      "role": "raw_capture",
+      "sha256": null
+    },
+    {
+      "branch": "static",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "passed": false,
+      "path": "results/experiment_7521_v658_consistency_energy.json",
+      "required_field": "energy_fit_ready_score",
+      "role": "static_checkpoint",
+      "sha256": null
+    },
+    {
+      "branch": "static",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "passed": false,
+      "path": "results/experiment_7522_v658_source_evaluation.json",
+      "required_field": "static_evaluation_complete_score",
+      "role": "static_producer",
+      "sha256": null
+    },
+    {
+      "branch": "online",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "passed": false,
+      "path": "results/experiment_7523_v658_count_memory.json",
+      "required_field": "count_memory_ready_score",
+      "role": "online_checkpoint",
+      "sha256": null
+    },
+    {
+      "branch": "online",
+      "exists": false,
+      "expected": 1,
+      "observed": null,
+      "passed": false,
+      "path": "results/experiment_7524_v658_count_online.json",
+      "required_field": "online_evaluation_complete_score",
+      "role": "online_producer",
+      "sha256": null
+    }
+  ],
+  "process_identity": {
+    "hostname": "icbfl1",
+    "pid": 730316,
+    "python": "3.12.13",
+    "source_revision": "cecc17be2bf2d9688eff2db33ba8cd0b63059d80"
+  },
+  "production_defaults_changed": false,
+  "publication_performed": false,
+  "publication_state": "terminal",
+  "push_performed": false,
+  "qualified_online_value_score": 0,
+  "qualified_static_value_score": 0,
+  "random_seed": {
+    "arrival": 658024,
+    "fitting": 658021,
+    "online_bootstrap": 658025,
+    "selection": 658021,
+    "static_bootstrap": 658022
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "status": "not_gated_by_unscoped_suite",
+    "unrelated_failures": []
+  },
+  "reproducibility_checksum": "sha256:fc6601982f0edbbb9bcd10bcbaceaf485c4fc35427234b15bcb1ee92f2e098af",
+  "research_conductor_modified": false,
+  "rows": [
+    {
+      "branch": "static",
+      "claims_qualified_score": 0,
+      "disposition": "blocked",
+      "failed_input_paths": [
+        "results/experiment_7517_v658_source_protocol.json",
+        "results/experiment_7520_v658_source_eval_capture.json",
+        "results/experiment_7521_v658_consistency_energy.json",
+        "results/experiment_7522_v658_source_evaluation.json"
+      ],
+      "honest_verdict": "complete_blocked_static_required_input",
+      "support": null,
+      "value_score": 0
+    },
+    {
+      "branch": "online",
+      "claims_qualified_score": 0,
+      "disposition": "blocked",
+      "failed_input_paths": [
+        "results/experiment_7517_v658_source_protocol.json",
+        "results/experiment_7520_v658_source_eval_capture.json",
+        "results/experiment_7523_v658_count_memory.json",
+        "results/experiment_7524_v658_count_online.json"
+      ],
+      "honest_verdict": "complete_blocked_online_required_input",
+      "support": null,
+      "value_score": 0
+    }
+  ],
+  "run_date": "20260922",
+  "sample_size_budget": {
+    "online": {
+      "attempted": null,
+      "censored": null,
+      "completed": null,
+      "excluded": null,
+      "failed": null,
+      "planned": 120,
+      "unstarted": null
+    },
+    "static": {
+      "attempted": null,
+      "censored": null,
+      "completed": null,
+      "excluded": null,
+      "failed": null,
+      "planned": 120,
+      "unstarted": null
+    }
+  },
+  "schema": "carnot.exp7525.v658.decision_audit.v1",
+  "source_artifact_hashes": {
+    "results/experiment_7516_v658_contract_methods.json": "sha256:fdc5f7f65c2e87220e3cafe7157c666c530de28698790021fcd351b3bb5af43a",
+    "results/experiment_7517_v658_source_protocol.json": "sha256:076f4b02d71d1009489125f2c4f0ff3893c8315e41108725adb2aab3b515a1b8"
+  },
+  "started_at_utc": "2026-09-22T14:22:18.900156+00:00",
+  "started_monotonic_ns": 88956111992086,
+  "status": "complete_blocked_required_science_incomplete",
+  "submission_performed": false,
+  "title": "Independent V658 source-decision and feedback-information audit",
+  "validation_manifest": {
+    "changed_modules": [
+      "python/carnot/experiment_7525_v658_decision_audit.py"
+    ],
+    "experiment_id": "exp7525-decision-audit",
+    "static_paths": [
+      "scripts/experiments/experiment_7525_v658_decision_audit.py"
+    ],
+    "test_paths": [
+      "tests/python/test_experiment_7525_v658_decision_audit.py"
+    ]
+  },
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7525_v658_decision_audit",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7525_v658_decision_audit"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5249525410035858,
+      "ended_at_utc": "2026-09-22T14:22:19.431655+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:72bd6fdc1f19dbc3580c2a17de795d7ae27820e9d9d2209d1550f47f211f2f51",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7525_v658_decision_audit\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7525_v658_decision_audit.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7525_v658_decision_audit": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7525_v658_decision_audit.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T14:22:18.906425+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7525-validation-nmb_u8xe/basetemp/focused tests/python/test_experiment_7525_v658_decision_audit.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7525-validation-nmb_u8xe/basetemp/focused",
+        "tests/python/test_experiment_7525_v658_decision_audit.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 2.7526184729940724,
+      "ended_at_utc": "2026-09-22T14:22:22.184555+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:8c776bb4fa98b32be608b2afe1d90a7255c18c27e43bd48fbb222c8001fe5d78",
+      "name": "focused_pytest",
+      "output_tail": "...................                                                      [100%]\n19 passed in 0.87s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-22T14:22:19.431690+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7525-validation-nmb_u8xe/coverage/.coverage '--include=*/experiment_7525_v658_decision_audit.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7525-validation-nmb_u8xe/basetemp/coverage tests/python/test_experiment_7525_v658_decision_audit.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7525-validation-nmb_u8xe/coverage/.coverage",
+        "--include=*/experiment_7525_v658_decision_audit.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7525-validation-nmb_u8xe/basetemp/coverage",
+        "tests/python/test_experiment_7525_v658_decision_audit.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.694711805001134,
+      "ended_at_utc": "2026-09-22T14:22:26.879668+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:180dcea2574abad897f76627646b40b29c8d1301d070045a4009b9af634bae90",
+      "name": "changed_module_coverage",
+      "output_tail": "...................                                                      [100%]\n19 passed in 1.66s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-22T14:22:22.184587+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7525_v658_decision_audit.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7525_v658_decision_audit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7525-validation-nmb_u8xe/coverage/.coverage"
+      },
+      "duration_s": 0.07500651301234029,
+      "ended_at_utc": "2026-09-22T14:22:26.955250+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:ef0378a30564061e36d418a3b77abd94d8185d18e72b561647e6008039550ce5",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                   Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------\npython/carnot/experiment_7525_v658_decision_audit.py     487      0   100%\n------------------------------------------------------------------------------------\nTOTAL                                                    487      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T14:22:26.879725+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7525_v658_decision_audit.py scripts/experiments/experiment_7525_v658_decision_audit.py tests/python/test_experiment_7525_v658_decision_audit.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7525_v658_decision_audit.py",
+        "scripts/experiments/experiment_7525_v658_decision_audit.py",
+        "tests/python/test_experiment_7525_v658_decision_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01131512300344184,
+      "ended_at_utc": "2026-09-22T14:22:26.966955+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-22T14:22:26.955307+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7525_v658_decision_audit.py scripts/experiments/experiment_7525_v658_decision_audit.py tests/python/test_experiment_7525_v658_decision_audit.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7525_v658_decision_audit.py",
+        "scripts/experiments/experiment_7525_v658_decision_audit.py",
+        "tests/python/test_experiment_7525_v658_decision_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.010324502000003122,
+      "ended_at_utc": "2026-09-22T14:22:26.977542+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-22T14:22:26.966984+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7525_v658_decision_audit.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7525_v658_decision_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.14539735700236633,
+      "ended_at_utc": "2026-09-22T14:22:27.123196+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T14:22:26.977573+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7525_v658_decision_audit.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7525_v658_decision_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.03242169800796546,
+      "ended_at_utc": "2026-09-22T14:22:27.156090+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-22T14:22:27.123224+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7525_v658_decision_audit.py --date 20260922 --validate-candidate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7525_v658_decision_audit/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7525_v658_decision_audit.py",
+        "--date",
+        "20260922",
+        "--validate-candidate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7525_v658_decision_audit/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.4773130389949074,
+      "ended_at_utc": "2026-09-22T14:22:27.637809+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "capability_e2e",
+      "started_at_utc": "2026-09-22T14:22:27.160028+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys;from carnot.experiment_7525_v658_decision_audit import independent_replay;e=independent_replay(pathlib.Path(sys.argv[1]));print(e,flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7525_v658_decision_audit/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import pathlib,sys;from carnot.experiment_7525_v658_decision_audit import independent_replay;e=independent_replay(pathlib.Path(sys.argv[1]));print(e,flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7525_v658_decision_audit/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.4457136670098407,
+      "ended_at_utc": "2026-09-22T14:22:28.083926+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/terminal/01_independent_reduction/00_independent_reduction.log",
+      "log_sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "name": "independent_reduction",
+      "output_tail": "[]\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-22T14:22:27.637861+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7525_v658_decision_audit/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7525_v658_decision_audit/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.5382743920054054,
+      "ended_at_utc": "2026-09-22T14:22:28.622592+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-22T14:22:28.083955+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7525_v658_decision_audit/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7525_v658_decision_audit/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.03272955599823035,
+      "ended_at_utc": "2026-09-22T14:22:28.655821+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7525_v658_decision_audit/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-22T14:22:28.622645+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
