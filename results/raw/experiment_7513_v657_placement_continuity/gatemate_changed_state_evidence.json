@@ -1,0 +1,156 @@
+{
+  "accepted_receipt_count": 0,
+  "approved_local_sources_only": true,
+  "authorized_scope": "approved local operator sources only",
+  "candidate_rows": [
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 3,
+      "excerpt": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY) **Origin:** 2026-05-24 operator confirmed the GateMate A1-EVB-2M is reattached after a power-cycle replug. exp2957 (`.278) had emitted `blocked_board_not_detected` because the",
+      "material_physical_fields": [
+        "board",
+        "dirtyjtag",
+        "power"
+      ],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY)"
+      },
+      "receipt_date": "20260630",
+      "reject_reason": "stale_or_not_newer_than_exp6525",
+      "row_id": "receipt-003",
+      "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY)",
+      "source_path": "ops/known-issues.md",
+      "source_sha256": "sha256:236f519ad9fa9efb462e8961315dc12b2a70d7825ca64a9d317b24fc27a943eb",
+      "target_ok": true,
+      "text_sha256": "sha256:bc68fc20b72ce2195060366c96062b66872d571cfae27b83f3e49b2ec8db804e",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 9,
+      "excerpt": "## 2026-08-11 operator physical action: ALL FPGA hardware power-cycled \u2014 GateMate changed-state gate should now unblock **Operator directive (2026-08-11T12:58:49Z UTC):** \"I have just power cycled all of the FPGA hardware.\" This is the physical state change `REQ-HW-6121` / `experiment_6121_gatemate_changed_ state_gate_v530.py` has been blocked waiting on since `.530` (2026-08-04): \"operator must change physical state and record a dated receipt.\" **Dated physical receipt (structured, for the next",
+      "material_physical_fields": [
+        "board",
+        "dirtyjtag",
+        "power"
+      ],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "board": "Cologne Chip GateMate A1-EVB-2M",
+        "changes": [
+          {
+            "description": "operator power-cycled all attached FPGA boards, including GateMate",
+            "field": "power"
+          }
+        ],
+        "exists": true,
+        "power": "power-cycled 2026-08-11 per operator directive (was: cached physical power unresolved; raw all-ones TDO suggested open or unpowered target)",
+        "receipt_date": "20260811",
+        "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+        "usb_dirtyjtag": "1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)",
+        "verified_read_only": "lsusb (2026-08-11T12:58:49Z): 1209:c0ca present, bus 3 device 11, path 2.3 -- no JTAG command run, no detect attempted; that single non-destructive detect is reserved for the gated script per the operator_action_packet's do_not_do list"
+      },
+      "receipt_date": "20260811",
+      "reject_reason": "stale_or_not_newer_than_exp6525",
+      "row_id": "receipt-009",
+      "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+      "source_path": "ops/known-issues.md",
+      "source_sha256": "sha256:236f519ad9fa9efb462e8961315dc12b2a70d7825ca64a9d317b24fc27a943eb",
+      "target_ok": true,
+      "text_sha256": "sha256:e6a2ed275f1d60984640d0b760b52a5d5a2080f55285c9e929856640164c3d73",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 11,
+      "excerpt": "#### What I measured, and what I deliberately did NOT do Observable state, checked directly just now: - DirtyJTAG bridge enumerated: `1209:c0ca (bus 3, device 6) path: 2.3` - `openFPGALoader` present at `/opt/oss-cad-suite/bin/openFPGALoader` - `openFPGALoader -c dirtyJtag --detect` returns exit 0 and the expected IDCODE: `idcode 0x20000001, manufacturer colognechip, family GateMate Series, model GM1Ax` **So the board is connected, powered, and its JTAG path is live.** Nothing is broken. **I did",
+      "material_physical_fields": [
+        "board",
+        "cable",
+        "dirtyjtag",
+        "port",
+        "power"
+      ],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "#### What I measured, and what I deliberately did NOT do"
+      },
+      "receipt_date": null,
+      "reject_reason": "undated",
+      "row_id": "receipt-011",
+      "source": "#### What I measured, and what I deliberately did NOT do",
+      "source_path": "ops/known-issues.md",
+      "source_sha256": "sha256:236f519ad9fa9efb462e8961315dc12b2a70d7825ca64a9d317b24fc27a943eb",
+      "target_ok": true,
+      "text_sha256": "sha256:1cef0872345139a4c97e028f97a804262b385b4638828ec37bff9ff6c83f209f",
+      "usb_only_evidence": false,
+      "valid": false
+    },
+    {
+      "action": "detect",
+      "bitstream_path": null,
+      "candidate_index": 12,
+      "excerpt": "#### The exact shape the check accepts Scanned files include `ops/known-issues.md`, `ops/hardware-bringup-prep.md`, `ops/operator-followup.md`, `ops/status.md`. The exemplar in `experiment_6559_gatemate_changed_state_continuity.py:DEFAULT_VALID_TEST_RECEIPT`: ``` receipt_date: YYYYMMDD, must be AFTER 20260823 operator_authored: true board: the GateMate A1-EVB-2M usb_dirtyjtag: \"1209:c0ca DirtyJTAG\" power: what the power state now is changes: [{field: ..., description: ...}] action: e.g. \"detect\"",
+      "material_physical_fields": [
+        "board",
+        "dirtyjtag",
+        "power"
+      ],
+      "operator_authored": true,
+      "path": "ops/known-issues.md",
+      "raw_receipt": {
+        "source": "#### The exact shape the check accepts"
+      },
+      "receipt_date": "20260823",
+      "reject_reason": "stale_or_not_newer_than_exp6525",
+      "row_id": "receipt-012",
+      "source": "#### The exact shape the check accepts",
+      "source_path": "ops/known-issues.md",
+      "source_sha256": "sha256:236f519ad9fa9efb462e8961315dc12b2a70d7825ca64a9d317b24fc27a943eb",
+      "target_ok": true,
+      "text_sha256": "sha256:f0fe16c23f70d777f5a1439a9c38f8493050afcb53b9641a7d817d36ec3a9ab9",
+      "usb_only_evidence": false,
+      "valid": false
+    }
+  ],
+  "cutoff_date": "20260823",
+  "cutoff_experiment": "Exp6559",
+  "eligibility_contract": {
+    "changed_field_any_of": [
+      "cable",
+      "port",
+      "power",
+      "board",
+      "jtag",
+      "dirtyjtag"
+    ],
+    "operator_authored": true,
+    "provenance": [
+      "ops/known-issues.md",
+      "research-hardware-wishlist.md",
+      "ops/hardware-bringup-prep.md",
+      "ops/operator-followup.md"
+    ],
+    "receipt_date": ">20260823"
+  },
+  "explicit_absence": true,
+  "external_commands_issued": [],
+  "external_messages_issued": [],
+  "hardware_operations_issued": [],
+  "installation_operations_issued": [],
+  "procurement_operations_issued": [],
+  "reader": "carnot.experiment_7367_v646_board_disposition.search_changed_state_receipt",
+  "run_date": "20260921",
+  "schema": "carnot.exp7473.gatemate_changed_state_evidence.v1",
+  "search_scope": "operator-authored GateMate cable, port, board, power, or DirtyJTAG changes",
+  "selected_row_id": null
+}

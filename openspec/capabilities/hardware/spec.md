@@ -2134,3 +2134,150 @@ software and TSU access prerequisites, treats papers and SDKs as context only,
 and makes no hardware speed, purchase, or vendor-contact claim.
 
 **Implementation status:** Planned (Exp 7473)
+
+---
+
+### REQ-HW-7513
+
+**Title:** Exp7513 MUST separate numeric placement readiness from historical board continuity
+
+**Description:**
+Experiment 7513 SHALL produce
+`results/experiment_7513_v657_placement_continuity.json` for run date
+20260922 and milestone 2026.09.657. It SHALL load no language model. It
+SHALL set `MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, and
+all current invocation counters to zero. It SHALL set
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`inference_substrate_class=no_model_load`. Cached Qwen evidence SHALL remain
+historical. Current work SHALL be limited to host CPU numeric and protocol
+measurements.
+
+The experiment SHALL authenticate Exp7505 and Exp7506 before the numeric
+branch runs. Each source MUST be present, valid under its own cold reader,
+unflagged, and ready. The experiment SHALL use only Exp7505 training and
+calibration feature rows. It SHALL not open held-out labels. It SHALL compare
+the frozen `window_gibbs` head in float32, signed int16, and signed int8
+arithmetic. Integer rows SHALL include quantized basis storage, coefficient
+storage, accumulator width, conversion cost, overflow count, absolute
+probability error, and action parity for all nine frozen `window_gibbs`
+policies.
+
+The numeric placement gate SHALL require zero overflow, maximum absolute
+probability error at most 0.01, and zero decision disagreements across all
+calibration rows and all nine policies for both integer formats. The host
+benchmark SHALL use warmup and at least 30 independent timed batches. It
+SHALL report allocation, quantization, kernel, dequantization, and policy
+decision time separately. It SHALL finish CPU measurement within 300 seconds.
+The result SHALL label these numbers as host emulation. It SHALL not claim
+FPGA performance.
+
+The experiment SHALL inventory prediction, sparse Brier update, guard,
+serialization, durable acknowledgement, bytes, state, transfers, and unknown
+costs. It SHALL not derive whole-service speedup before Exp7514 measures the
+complete denominator. Any kernel ceiling SHALL be hypothetical. Transfer
+costs SHALL remain unknown. The exact binary conditional SHALL require no TSU
+sampling. Current TSU access SHALL remain unverified.
+
+The board branch SHALL run even when the numeric branch is blocked. It SHALL
+preserve the authenticated venue-specific history from Exp7473 and Exp7314.
+KV260 SHALL retain only graduated FPGA-fabric evidence. PolarFire SHALL retain
+only graduated board-CPU evidence. GateMate SHALL retain its physical blocker
+unless an approved local receipt parser finds a newer operator-authored
+physical-state change. Current reachability SHALL be `unknown_not_probed`
+unless an owned bounded probe actually ran. This experiment SHALL issue no
+SSH, flash, detect, toolchain, driver, reflash, or board command.
+
+The artifact SHALL emit independent bare
+`board_continuity_complete_score` and `numeric_placement_ready_score` values.
+It SHALL preserve prior evidence hashes and state whether the GateMate blocker
+changed. It SHALL publish atomically only after scoped validation, fresh-
+process cold replay, independent row reduction, adversarial verification, and
+strict verdict-row consistency checks pass.
+
+Required artifact fields:
+
+- `schema`
+- `run_date`
+- `preconditions_checked`
+- `MODEL_SPECS`
+- `model_specs`
+- `model_invoked`
+- `invocation_counts`
+- `inference_substrate`
+- `inference_substrate_class`
+- `execution_venue`
+- `duration_s`
+- `phase_spans`
+- `random_seed`
+- `reproducibility_checksum`
+- `source_artifact_hashes`
+- `rows`
+- `sample_size_budget`
+- `acceptance_gate_results`
+- `gate_check_summary`
+- `honest_verdict`
+- `verdict_class`
+- `verifier_is_oracle`
+- `flagged_adversarial`
+- `validation_receipts`
+- `field_principles`
+- `board_continuity_complete_score`
+- `numeric_placement_ready_score`
+- `board_rows`
+- `quantization_rows`
+- `operation_inventory`
+
+**Acceptance criteria:**
+- The declared entrypoint writes the terminal JSON for 20260922.
+- The board score is independent of numeric input availability.
+- The numeric score is one only when both integer formats pass every frozen
+  calibration-row threshold across all nine policies.
+- Every numeric row records probability error, action disagreement, overflow,
+  and parameter footprint.
+- At least 30 independent CPU batches report separate allocation,
+  quantization, kernel, dequantization, and policy costs.
+- No whole-service or FPGA speedup is derived.
+- Fresh-process validation and independent reduction reproduce both scores.
+
+**Implementation status:** Implemented (Exp 7513)
+
+---
+
+### SCENARIO-HW-7513-NUMERIC-READY
+
+**Scenario:** Exp7513 accepts a finite integer placement only after frozen parity.
+
+**Given:** Exp7505 and Exp7506 are valid, unflagged, and ready,
+**When:** Exp7513 evaluates int16 and int8 on training and calibration rows,
+**Then:** readiness requires zero overflow, probability error at most 0.01, and
+zero calibration action disagreements for all nine policies.
+
+**Implementation status:** Implemented (Exp 7513)
+
+---
+
+### SCENARIO-HW-7513-NUMERIC-BLOCKED
+
+**Scenario:** Exp7513 preserves board continuity when a numeric input is unavailable.
+
+**Given:** Exp7505 or Exp7506 is missing, invalid, flagged, or not ready,
+**When:** Exp7513 runs the mixed accounting task,
+**Then:** it emits the exact numeric blocker, skips dependent numeric work,
+still reduces all three board rows, and keeps the two completion scores
+independent.
+
+**Implementation status:** Implemented (Exp 7513)
+
+---
+
+### SCENARIO-HW-7513-BOARD-CONTINUITY
+
+**Scenario:** Exp7513 retains graduated board history without a new hardware claim.
+
+**Given:** Exp7473 and Exp7314 authenticate,
+**When:** Exp7513 builds its board ledger,
+**Then:** KV260 retains FPGA-fabric scope, PolarFire retains board-CPU scope,
+GateMate retains or truthfully updates its physical blocker, current
+reachability stays unknown without a probe, and no hardware command runs.
+
+**Implementation status:** Implemented (Exp 7513)
