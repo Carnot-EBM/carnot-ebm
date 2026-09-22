@@ -807,6 +807,117 @@ SHALL not lower an otherwise valid qualification score.
 Implementation status: specified 2026-09-22. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7512: Audit enlarged ARC opportunity evidence without intervention
+
+Experiment 7512 SHALL use run date `20260922` and milestone `2026.09.657`.
+It SHALL aggregate the qualified Experiment 7485 Panel A and Experiment 7511
+Panel B evidence. It SHALL not load a model, generate text, run a game episode,
+inspect game source, change a supervisor, submit a score, or claim a new solve.
+It SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`,
+zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`, and
+`inference_substrate_class=aggregation`.
+
+The audit SHALL authenticate each panel separately before using an episode.
+It SHALL preserve the original model file and quantization, native runtime,
+policy and observer source identities, fixed budgets, frozen game schedules,
+interval protocol, producer flags, and exact artifact hashes. It SHALL read the
+solve registry before describing inherited progress. Historical live attempts
+SHALL retain `solve_provenance=live_agent_self_discovery`, while the current
+audit SHALL record zero new attempted solves and zero new solve credit.
+
+The reducer SHALL independently read the hash-bound interval and callback
+events for all qualified episodes. It SHALL reduce unique games and episodes,
+exclusive request and decision spans, load boundaries, token counts, failures,
+and progress censoring. Native-forward, sampling, parsing, planner,
+environment, and update time SHALL remain unknown when no exclusive timer
+exists. A coarse callback or action-loop boundary SHALL not become an
+exclusive stage timer.
+
+Pooling SHALL require at least 30 qualified episodes across 10 unique games,
+the common interval protocol, compatible model, quantization, native runtime,
+policy, observer, fixed limits, and the two frozen disjoint schedules. Seeds
+SHALL not multiply game support. Different identity values SHALL retain
+separate descriptive panels. A cost share or Amdahl bound SHALL be present only
+when the measured denominator is mutually exclusive and complete. Unknown
+stages SHALL set `arc_cost_claim_ready_score=0`; they SHALL not become zero.
+
+Every supervisor gate evaluation SHALL retain its decision identity, selected
+arm, candidate eligibility values, firing, application, interval, and observed
+episode outcome. Candidate presence SHALL not become eligibility. The audit
+SHALL separate explicit true, explicit false, and unknown eligibility from
+recorded firing and applied redirection. A shadow firing with no applied action
+SHALL not become an unhelpful causal choice.
+
+If no explicitly eligible and outcome-bearing opportunity exists, the artifact
+SHALL keep an empty intervention ledger, a null efficacy estimate, and a
+zero-opportunity diagnosis. It SHALL retire supervisor efficacy tuning until a
+live reachable mechanism exposes meaningful choices and their outcomes. An
+all-zero progress panel SHALL not establish transfer or a broad generalization
+claim.
+
+`arc_opportunity_audit_complete_score` SHALL equal one when both panel
+dispositions, every available event row, source custody, independent replay,
+and all required readers are complete. `arc_cost_claim_ready_score` SHALL equal
+one only when source compatibility, episode and game support, the common
+protocol, and the complete exclusive denominator all pass. Both SHALL be bare
+numeric values and SHALL remain independent of scientific benefit.
+
+The producer SHALL freeze an affected-file manifest. It SHALL use the
+Experiment 7358 and Experiment 7303 helpers for worktree imports, focused
+pytest without repository addopts or coverage, separate 100 percent
+changed-module coverage with a private coverage file, scoped Ruff, changed
+module mypy, and exact-test spec coverage. Reporting-only work requires the
+declared entrypoint and a fresh-process cold replay, with no numbered runtime
+E2E. It SHALL run independent reduction, the unchanged adversarial verifier,
+and strict verdict-row consistency against the exact candidate before atomic
+terminal publication.
+
+### SCENARIO-ARC-WMTE-7512-PANEL-AUTHENTICATION
+
+- **GIVEN** qualified Panel A and recovered qualified Panel B artifacts
+- **WHEN** their original flags, hashes, identities, budgets, and schedules are checked
+- **THEN** each panel receives a separate qualification disposition
+- **AND** an absent or invalid qualification blocks its cost claim without rerunning games.
+
+### SCENARIO-ARC-WMTE-7512-RAW-REDUCTION
+
+- **GIVEN** hash-bound interval, callback, invocation, and action boundaries
+- **WHEN** all 36 frozen episodes are independently reduced
+- **THEN** unique games, episodes, exclusive spans, tokens, and censoring reproduce
+- **AND** every uninstrumented stage remains unknown rather than zero.
+
+### SCENARIO-ARC-WMTE-7512-POOLING-AND-DENOMINATOR
+
+- **GIVEN** at least 30 episodes across at least 10 games
+- **WHEN** cross-panel cost readiness is evaluated
+- **THEN** every source identity and protocol comparison is explicit
+- **AND** a missing exclusive stage timer suppresses cost shares and Amdahl bounds.
+
+### SCENARIO-ARC-WMTE-7512-SUPERVISOR-CHOICES
+
+- **GIVEN** supervisor evaluations with null eligibility and recorded shadow firings
+- **WHEN** eligibility, firing, application, and outcome are reduced separately
+- **THEN** no authenticated eligible opportunity or causal efficacy is invented
+- **AND** tuning stays retired until a live reachable mechanism exposes choices.
+
+### SCENARIO-ARC-WMTE-7512-NO-TRANSFER
+
+- **GIVEN** two six-game panels whose episodes make no reproduced progress
+- **WHEN** within-game and held-out-panel patterns are compared
+- **THEN** seeds remain repeated observations within games
+- **AND** the all-zero progress evidence cannot establish broad transfer.
+
+### SCENARIO-ARC-WMTE-7512-TERMINAL
+
+- **GIVEN** exact source hashes, per-unit rows, scoped checks, and terminal readers
+- **WHEN** a fresh process replays the measured candidate
+- **THEN** accounting completion stays separate from cost readiness and efficacy
+- **AND** the terminal artifact records no new model call, solve, policy, or submission.
+
+Implementation status: specified 2026-09-22. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7500: Audit cross-game ARC intervention opportunity without intervention
 
 Experiment 7500 SHALL use run date `20260921` and milestone `2026.09.656`.
