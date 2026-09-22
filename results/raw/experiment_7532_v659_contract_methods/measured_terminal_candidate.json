@@ -1,0 +1,4621 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "check": "exact_v659_contract",
+      "condition": "tasks.count_order_and_public_fields == expected",
+      "expected": {
+        "count": 14,
+        "ids": [
+          "exp7532-contract-methods",
+          "exp7533-tool-protocol",
+          "exp7534-count-memory",
+          "exp7535-native-pilot",
+          "exp7536-fit-capture",
+          "exp7537-eval-capture",
+          "exp7538-energy-fit",
+          "exp7539-static-evaluation",
+          "exp7540-online-learning",
+          "exp7541-decision-audit",
+          "exp7542-arc-harness-parity",
+          "exp7543-arc-induction",
+          "exp7544-service-boundary",
+          "exp7545-capstone"
+        ]
+      },
+      "field_path": "tasks.count_order_and_public_fields",
+      "gate_type": "readiness",
+      "observed": {
+        "errors": [
+          "markdown_task_table_missing",
+          "markdown_task_count",
+          "yaml_task_count",
+          "markdown_task_order",
+          "yaml_task_order",
+          "row_mismatch"
+        ],
+        "markdown_count": 0,
+        "yaml_count": 8
+      },
+      "op": "==",
+      "passed": false,
+      "principle": "Both complete authorities are required before contract readiness.",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md + research-roadmap.yaml"
+    },
+    {
+      "check": "v658_custody",
+      "condition": "task_dispositions == expected",
+      "expected": 14,
+      "field_path": "task_dispositions",
+      "gate_type": "validity",
+      "observed": 14,
+      "op": "==",
+      "passed": true,
+      "principle": "Historical verdicts and absent producers cannot be rehabilitated.",
+      "upstream": "results/experiment_7529_v658_capstone.json"
+    },
+    {
+      "check": "b2_corrections",
+      "condition": "false_negative_risk + further_correction_2026_09_22 == expected",
+      "expected": 2,
+      "field_path": "false_negative_risk + further_correction_2026_09_22",
+      "gate_type": "validity",
+      "observed": 2,
+      "op": "==",
+      "passed": true,
+      "principle": "Appended corrections remain visible and cannot open a gate.",
+      "upstream": "results/experiment_7531_b2_induction_gate_measurement.json"
+    },
+    {
+      "check": "affected_validation",
+      "condition": "affected_validation == expected",
+      "expected": true,
+      "field_path": "affected_validation",
+      "gate_type": "validity",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Scoped checks prevent unrelated repository state from laundering changed code.",
+      "upstream": "current_exp7532_reduction"
+    },
+    {
+      "check": "repository_guards",
+      "condition": "repository_guards == expected",
+      "expected": true,
+      "field_path": "repository_guards",
+      "gate_type": "validity",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "principle": "Unchanged policy guards retain their original rules.",
+      "upstream": "current_exp7532_reduction"
+    },
+    {
+      "check": "terminal_readers",
+      "condition": "terminal_readers == expected",
+      "expected": true,
+      "field_path": "terminal_readers",
+      "gate_type": "validity",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Fresh readers prevent the producer from serving as its own oracle.",
+      "upstream": "current_exp7532_reduction"
+    },
+    {
+      "check": "method_rows_source_grounded",
+      "condition": "method_rows_source_grounded == expected",
+      "expected": 4,
+      "field_path": "method_rows_source_grounded",
+      "gate_type": "support",
+      "observed": 4,
+      "op": "==",
+      "passed": true,
+      "principle": "External method results cannot become local measurements.",
+      "upstream": "current_exp7532_reduction"
+    },
+    {
+      "check": "scientific_benefit_not_claimed",
+      "condition": "scientific_benefit_not_claimed == expected",
+      "expected": false,
+      "field_path": "scientific_benefit_not_claimed",
+      "gate_type": "benefit",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "principle": "An advisory contract cannot become a scientific benefit claim.",
+      "upstream": "current_exp7532_reduction"
+    }
+  ],
+  "advisory_only": true,
+  "b2_corrections": [
+    {
+      "arm": "historical_correction",
+      "authenticated": true,
+      "flagged": true,
+      "induced_plan_required_for_progress": false,
+      "measurement_scope": "feasibility_only",
+      "principle": "A saturated proxy cannot establish induction reliability or no headroom.",
+      "progress_attempt_count": 60,
+      "progress_proxy_saturated": true,
+      "source_field": "false_negative_risk",
+      "source_path": "results/experiment_7531_b2_induction_gate_measurement.json",
+      "source_sha256": "sha256:d98ba01c839605cd1188a0176d1ac846d4091d9237b69e3c483e6fc89e831173",
+      "total_attempt_count": 60,
+      "unit_id": "exp7531-progress-proxy-correction"
+    },
+    {
+      "arm": "historical_correction",
+      "attempts_at_harness_token_cap": 60,
+      "authenticated": true,
+      "flagged": true,
+      "harness_max_new_tokens": 256,
+      "historical_e6_mean_completion_tokens_per_episode": 11950,
+      "measurement_scope": "feasibility_only",
+      "principle": "An inherited harness cap cannot be attributed to shipped production settings.",
+      "shipped_production_setting_claimed": false,
+      "source_field": "further_correction_2026_09_22",
+      "source_path": "results/experiment_7531_b2_induction_gate_measurement.json",
+      "source_sha256": "sha256:d98ba01c839605cd1188a0176d1ac846d4091d9237b69e3c483e6fc89e831173",
+      "total_attempt_count": 60,
+      "unit_id": "exp7531-token-cap-correction"
+    }
+  ],
+  "capability_e2e": {
+    "declared_entrypoint": "scripts/experiments/experiment_7532_v659_contract_methods.py",
+    "fresh_process_cold_replay": false,
+    "numbered_runtime_e2e_applicable": false
+  },
+  "clock_identity": {
+    "monotonic": "time.monotonic_ns",
+    "utc": "datetime.now(UTC)"
+  },
+  "contract_comparison": {
+    "contract_rows": [
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7532-contract-methods",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 1,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7532-contract-methods",
+        "yaml": {
+          "deliverable": "results/experiment_7532_v659_contract_methods.json",
+          "gates": [],
+          "id": "exp7532-contract-methods",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind fourteen tasks and ingest source-grounding methods"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7533-tool-protocol",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 2,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7533-tool-protocol",
+        "yaml": {
+          "deliverable": "results/experiment_7533_v659_tool_protocol.json",
+          "gates": [],
+          "id": "exp7533-tool-protocol",
+          "order": 2,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Seal an available tool-grounding corpus and independent roles"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7534-count-memory",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 3,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7534-count-memory",
+        "yaml": {
+          "deliverable": "results/experiment_7534_v659_count_memory.json",
+          "gates": [],
+          "id": "exp7534-count-memory",
+          "order": 3,
+          "phase": 1,
+          "substrate": "no_model_load",
+          "title": "Build an independent conjugate energy memory for delayed feedback"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7535-native-pilot",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 4,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7533-tool-protocol"
+          }
+        ],
+        "unit_id": "exp7535-native-pilot",
+        "yaml": {
+          "deliverable": "results/experiment_7535_v659_native_pilot.json",
+          "gates": [
+            {
+              "artifact_field": "tool_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7533-tool-protocol",
+              "value": 1
+            }
+          ],
+          "id": "exp7535-native-pilot",
+          "order": 4,
+          "phase": 1,
+          "substrate": "model_load_no_generation",
+          "title": "Qualify source-intervention transport and bounded capture cost"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7536-fit-capture",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 5,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7533-tool-protocol"
+          },
+          {
+            "artifact_field": "native_tool_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7535-native-pilot"
+          },
+          {
+            "artifact_field": "fit_capture_feasible_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7535-native-pilot"
+          }
+        ],
+        "unit_id": "exp7536-fit-capture",
+        "yaml": {
+          "deliverable": "results/experiment_7536_v659_fit_capture.json",
+          "gates": [
+            {
+              "artifact_field": "tool_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7533-tool-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "native_tool_ready_score",
+              "op": "==",
+              "upstream": "exp7535-native-pilot",
+              "value": 1
+            },
+            {
+              "artifact_field": "fit_capture_feasible_score",
+              "op": "==",
+              "upstream": "exp7535-native-pilot",
+              "value": 1
+            }
+          ],
+          "id": "exp7536-fit-capture",
+          "order": 5,
+          "phase": 2,
+          "substrate": "model_load_no_generation",
+          "title": "Capture fitting evidence from whole tool-source interventions"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7537-eval-capture",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 6,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7533-tool-protocol"
+          },
+          {
+            "artifact_field": "native_tool_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7535-native-pilot"
+          },
+          {
+            "artifact_field": "eval_capture_feasible_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7535-native-pilot"
+          }
+        ],
+        "unit_id": "exp7537-eval-capture",
+        "yaml": {
+          "deliverable": "results/experiment_7537_v659_eval_capture.json",
+          "gates": [
+            {
+              "artifact_field": "tool_protocol_ready_score",
+              "op": "==",
+              "upstream": "exp7533-tool-protocol",
+              "value": 1
+            },
+            {
+              "artifact_field": "native_tool_ready_score",
+              "op": "==",
+              "upstream": "exp7535-native-pilot",
+              "value": 1
+            },
+            {
+              "artifact_field": "eval_capture_feasible_score",
+              "op": "==",
+              "upstream": "exp7535-native-pilot",
+              "value": 1
+            }
+          ],
+          "id": "exp7537-eval-capture",
+          "order": 6,
+          "phase": 2,
+          "substrate": "model_load_no_generation",
+          "title": "Capture sealed test and online tool-grounding evidence"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7538-energy-fit",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 7,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [
+          {
+            "artifact_field": "fit_capture_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7536-fit-capture"
+          }
+        ],
+        "unit_id": "exp7538-energy-fit",
+        "yaml": {
+          "deliverable": "results/experiment_7538_v659_energy_fit.json",
+          "gates": [
+            {
+              "artifact_field": "fit_capture_ready_score",
+              "op": "==",
+              "upstream": "exp7536-fit-capture",
+              "value": 1
+            }
+          ],
+          "id": "exp7538-energy-fit",
+          "order": 7,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Fit calibrated energy decisions with matched source controls"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": true,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7539-static-evaluation",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates"
+        ],
+        "markdown": null,
+        "order": 8,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [
+          {
+            "artifact_field": "eval_capture_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7537-eval-capture"
+          },
+          {
+            "artifact_field": "energy_fit_ready_score",
+            "declared_verbatim": true,
+            "passed": true,
+            "principle": "A gate cannot consume an undeclared or later field.",
+            "producer_precedes_consumer": true,
+            "upstream": "exp7538-energy-fit"
+          }
+        ],
+        "unit_id": "exp7539-static-evaluation",
+        "yaml": {
+          "deliverable": "results/experiment_7539_v659_static_evaluation.json",
+          "gates": [
+            {
+              "artifact_field": "eval_capture_ready_score",
+              "op": "==",
+              "upstream": "exp7537-eval-capture",
+              "value": 1
+            },
+            {
+              "artifact_field": "energy_fit_ready_score",
+              "op": "==",
+              "upstream": "exp7538-energy-fit",
+              "value": 1
+            }
+          ],
+          "id": "exp7539-static-evaluation",
+          "order": 8,
+          "phase": 2,
+          "substrate": "no_model_load",
+          "title": "Measure held-out tool-grounding probability and decision value"
+        }
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": false,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7540-online-learning",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates",
+          "producer_fields"
+        ],
+        "markdown": null,
+        "order": 9,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7540-online-learning",
+        "yaml": null
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": false,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7541-decision-audit",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates",
+          "producer_fields"
+        ],
+        "markdown": null,
+        "order": 10,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7541-decision-audit",
+        "yaml": null
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": false,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7542-arc-harness-parity",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates",
+          "producer_fields"
+        ],
+        "markdown": null,
+        "order": 11,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7542-arc-harness-parity",
+        "yaml": null
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": false,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7543-arc-induction",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates",
+          "producer_fields"
+        ],
+        "markdown": null,
+        "order": 12,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7543-arc-induction",
+        "yaml": null
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": false,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7544-service-boundary",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates",
+          "producer_fields"
+        ],
+        "markdown": null,
+        "order": 13,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7544-service-boundary",
+        "yaml": null
+      },
+      {
+        "arm": "markdown_vs_yaml",
+        "checks": {
+          "deliverable": false,
+          "gates": false,
+          "id": false,
+          "order": false,
+          "phase": false,
+          "producer_fields": false,
+          "substrate": false,
+          "title": false
+        },
+        "expected_task_id": "exp7545-capstone",
+        "failures": [
+          "order",
+          "id",
+          "title",
+          "deliverable",
+          "phase",
+          "substrate",
+          "gates",
+          "producer_fields"
+        ],
+        "markdown": null,
+        "order": 14,
+        "passed": false,
+        "principle": "Exact paired fields prevent a readable but different task.",
+        "producer_declarations": [],
+        "unit_id": "exp7545-capstone",
+        "yaml": null
+      }
+    ],
+    "errors": [
+      "markdown_task_table_missing",
+      "markdown_task_count",
+      "yaml_task_count",
+      "markdown_task_order",
+      "yaml_task_order",
+      "row_mismatch"
+    ],
+    "markdown_milestone": "2026.09.659",
+    "markdown_task_rows": [],
+    "passed": false,
+    "yaml_milestone": "2026.09.659",
+    "yaml_task_rows": [
+      {
+        "deliverable": "results/experiment_7532_v659_contract_methods.json",
+        "gates": [],
+        "id": "exp7532-contract-methods",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind fourteen tasks and ingest source-grounding methods"
+      },
+      {
+        "deliverable": "results/experiment_7533_v659_tool_protocol.json",
+        "gates": [],
+        "id": "exp7533-tool-protocol",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal an available tool-grounding corpus and independent roles"
+      },
+      {
+        "deliverable": "results/experiment_7534_v659_count_memory.json",
+        "gates": [],
+        "id": "exp7534-count-memory",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Build an independent conjugate energy memory for delayed feedback"
+      },
+      {
+        "deliverable": "results/experiment_7535_v659_native_pilot.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          }
+        ],
+        "id": "exp7535-native-pilot",
+        "order": 4,
+        "phase": 1,
+        "substrate": "model_load_no_generation",
+        "title": "Qualify source-intervention transport and bounded capture cost"
+      },
+      {
+        "deliverable": "results/experiment_7536_v659_fit_capture.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "native_tool_ready_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          },
+          {
+            "artifact_field": "fit_capture_feasible_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          }
+        ],
+        "id": "exp7536-fit-capture",
+        "order": 5,
+        "phase": 2,
+        "substrate": "model_load_no_generation",
+        "title": "Capture fitting evidence from whole tool-source interventions"
+      },
+      {
+        "deliverable": "results/experiment_7537_v659_eval_capture.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "native_tool_ready_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          },
+          {
+            "artifact_field": "eval_capture_feasible_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          }
+        ],
+        "id": "exp7537-eval-capture",
+        "order": 6,
+        "phase": 2,
+        "substrate": "model_load_no_generation",
+        "title": "Capture sealed test and online tool-grounding evidence"
+      },
+      {
+        "deliverable": "results/experiment_7538_v659_energy_fit.json",
+        "gates": [
+          {
+            "artifact_field": "fit_capture_ready_score",
+            "op": "==",
+            "upstream": "exp7536-fit-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7538-energy-fit",
+        "order": 7,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Fit calibrated energy decisions with matched source controls"
+      },
+      {
+        "deliverable": "results/experiment_7539_v659_static_evaluation.json",
+        "gates": [
+          {
+            "artifact_field": "eval_capture_ready_score",
+            "op": "==",
+            "upstream": "exp7537-eval-capture",
+            "value": 1
+          },
+          {
+            "artifact_field": "energy_fit_ready_score",
+            "op": "==",
+            "upstream": "exp7538-energy-fit",
+            "value": 1
+          }
+        ],
+        "id": "exp7539-static-evaluation",
+        "order": 8,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure held-out tool-grounding probability and decision value"
+      }
+    ]
+  },
+  "contract_mutation_rows": [
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "count",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:count"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "order",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:order"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "id",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:id"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "title",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:title"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "path",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:path"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "gate_field",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:gate_field"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "milestone",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:milestone"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "substrate",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:substrate"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "count",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:count"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "order",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:order"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "id",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:id"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "title",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:title"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "path",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:path"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "gate_field",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:gate_field"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "milestone",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:milestone"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "substrate",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:substrate"
+    }
+  ],
+  "contract_ready_score": 0,
+  "current_invocation_events": [],
+  "device_identity": {
+    "cuda_used": false,
+    "machine": "x86_64",
+    "node": "icbfl1",
+    "processor": ""
+  },
+  "duration_components_s": {
+    "authoring": 0.0,
+    "computation": 0.0,
+    "historical": 0.0,
+    "total_current": 33.095771487,
+    "validation": 2074.538378354031
+  },
+  "duration_s": 33.095771487,
+  "ended_at_utc": "2026-09-22T20:56:38.029860+00:00",
+  "ended_monotonic_ns": 112615241704644,
+  "execution_venue": "host",
+  "experiment": 7532,
+  "experiment_id": "exp7532-contract-methods",
+  "external_contact_performed": false,
+  "field_principles": {
+    "MODEL_SPECS": "An empty list states that this aggregation loaded no model.",
+    "acceptance_gate_results": "Each gate retains operands, outcome, and prevented failure.",
+    "advisory_only": "The advisory_only field preserves exact scope and meaning.",
+    "b2_corrections": "The b2_corrections field preserves exact scope and meaning.",
+    "capability_e2e": "The capability_e2e field preserves exact scope and meaning.",
+    "clock_identity": "The clock_identity field preserves exact scope and meaning.",
+    "contract_comparison": "The contract_comparison field preserves exact scope and meaning.",
+    "contract_mutation_rows": "The contract_mutation_rows field preserves exact scope and meaning.",
+    "contract_ready_score": "Bare readiness requires both complete authorities and all checks.",
+    "current_invocation_events": "The current_invocation_events field preserves exact scope and meaning.",
+    "device_identity": "The device_identity field preserves exact scope and meaning.",
+    "duration_components_s": "The duration_components_s field preserves exact scope and meaning.",
+    "duration_s": "Monotonic current work remains separate from historical duration.",
+    "ended_at_utc": "The ended_at_utc field preserves exact scope and meaning.",
+    "ended_monotonic_ns": "The ended_monotonic_ns field preserves exact scope and meaning.",
+    "execution_venue": "Host reduction stays distinct from CUDA and board evidence.",
+    "experiment": "The experiment field preserves exact scope and meaning.",
+    "experiment_id": "The experiment_id field preserves exact scope and meaning.",
+    "external_contact_performed": "The external_contact_performed field preserves exact scope and meaning.",
+    "field_principles": "Every emitted field states the failure it prevents.",
+    "flagged_adversarial": "Historical corrections remain visible without inventing a finding.",
+    "gate_check_summary": "Blocked work names exact upstream fields and observations.",
+    "generator_weights_changed": "The generator_weights_changed field preserves exact scope and meaning.",
+    "global_science_gate": "The global_science_gate field preserves exact scope and meaning.",
+    "honest_verdict": "A complete terminal prefix prevents retry-state ambiguity.",
+    "inference_substrate": "Canonical aggregation spelling prevents substrate ambiguity.",
+    "inference_substrate_class": "The aggregation class prevents a false runtime floor.",
+    "invocation_counts": "The invocation_counts field preserves exact scope and meaning.",
+    "method_ingestion_complete_score": "Bare method completion is independent of benefit.",
+    "method_rows": "The method_rows field preserves exact scope and meaning.",
+    "milestone": "The milestone field preserves exact scope and meaning.",
+    "model_invoked": "Current calls stay separate from historical model evidence.",
+    "model_specs": "The lowercase mirror prevents a reader from inferring a model.",
+    "operator_queue": "The operator_queue field preserves exact scope and meaning.",
+    "phase": "The phase field preserves exact scope and meaning.",
+    "phase_spans": "The phase_spans field preserves exact scope and meaning.",
+    "preconditions_checked": "Exact resources and hashes prevent invented readiness.",
+    "prior_dispositions": "Blocked, null and absent V658 evidence remains literal.",
+    "process_identity": "The process_identity field preserves exact scope and meaning.",
+    "production_defaults_changed": "The production_defaults_changed field preserves exact scope and meaning.",
+    "publication_performed": "The publication_performed field preserves exact scope and meaning.",
+    "push_performed": "The push_performed field preserves exact scope and meaning.",
+    "random_seed": "Frozen bookkeeping seeds cannot multiply scientific support.",
+    "repository_health": "The repository_health field preserves exact scope and meaning.",
+    "reproducibility_checksum": "The checksum binds code, inputs, roles, rows, and receipts.",
+    "research_conductor_modified": "The research_conductor_modified field preserves exact scope and meaning.",
+    "roadmap_activation_performed": "The roadmap_activation_performed field preserves exact scope and meaning.",
+    "roadmap_archive_performed": "The roadmap_archive_performed field preserves exact scope and meaning.",
+    "roadmap_resolution_candidates": "The roadmap_resolution_candidates field preserves exact scope and meaning.",
+    "rows": "Every task, disposition, correction and method remains reducible.",
+    "run_date": "The run_date field preserves exact scope and meaning.",
+    "sample_size_budget": "Planned, attempted, complete, failed, censored and unstarted stay distinct.",
+    "schema": "Identity, milestone, version and run date bind the terminal contract.",
+    "selected_authority_state": "The selected_authority_state field preserves exact scope and meaning.",
+    "selected_roadmap_path": "The selected_roadmap_path field preserves exact scope and meaning.",
+    "source_artifact_hashes": "The source_artifact_hashes field preserves exact scope and meaning.",
+    "started_at_utc": "The started_at_utc field preserves exact scope and meaning.",
+    "started_monotonic_ns": "The started_monotonic_ns field preserves exact scope and meaning.",
+    "status": "The status field preserves exact scope and meaning.",
+    "submission_performed": "The submission_performed field preserves exact scope and meaning.",
+    "task_contract_rows": "Exactly fourteen expected identities expose absent authority rows.",
+    "title": "The title field preserves exact scope and meaning.",
+    "validation_manifest": "The validation_manifest field preserves exact scope and meaning.",
+    "validation_receipts": "Commands, exits, log hashes and cold replay remain auditable.",
+    "verdict_class": "The closed class separates blocked from partial work.",
+    "verifier_is_oracle": "No oracle fixture supports a positive advisory claim."
+  },
+  "flagged_adversarial": true,
+  "gate_check_summary": {
+    "failed_checks": [
+      {
+        "check": "exact_v659_contract",
+        "expected": {
+          "count": 14,
+          "ids": [
+            "exp7532-contract-methods",
+            "exp7533-tool-protocol",
+            "exp7534-count-memory",
+            "exp7535-native-pilot",
+            "exp7536-fit-capture",
+            "exp7537-eval-capture",
+            "exp7538-energy-fit",
+            "exp7539-static-evaluation",
+            "exp7540-online-learning",
+            "exp7541-decision-audit",
+            "exp7542-arc-harness-parity",
+            "exp7543-arc-induction",
+            "exp7544-service-boundary",
+            "exp7545-capstone"
+          ]
+        },
+        "field_path": "tasks.count_order_and_public_fields",
+        "observed": {
+          "errors": [
+            "markdown_task_table_missing",
+            "markdown_task_count",
+            "yaml_task_count",
+            "markdown_task_order",
+            "yaml_task_order",
+            "row_mismatch"
+          ],
+          "markdown_count": 0,
+          "yaml_count": 8
+        },
+        "op": "==",
+        "principle": "Both complete authorities are required before contract readiness.",
+        "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md + research-roadmap.yaml"
+      },
+      {
+        "check": "repository_guards",
+        "expected": true,
+        "field_path": "repository_guards",
+        "observed": false,
+        "op": "==",
+        "principle": "Unchanged policy guards retain their original rules.",
+        "upstream": "current_exp7532_reduction"
+      }
+    ],
+    "failed_count": 2,
+    "passed": false
+  },
+  "generator_weights_changed": false,
+  "global_science_gate": false,
+  "honest_verdict": "complete_blocked_incomplete_v659_authorities",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_cancelled": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "forward_calls_in_flight": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "method_ingestion_complete_score": 1,
+  "method_rows": [
+    {
+      "access_failure": null,
+      "access_status": "accessed_20260922",
+      "adaptation": "Seal tool-output source groups and keep injected edits distinct from natural errors.",
+      "arm": "method_ingestion",
+      "counterexample": "Injected unsupported spans do not establish organic hallucination or code correctness.",
+      "external_claim_is_carnot_measurement": false,
+      "method_family": "tool_grounding",
+      "primary_url": "https://arxiv.org/html/2607.00895v1",
+      "principle": "A primary method can define a control without becoming local evidence.",
+      "source_revision": "arXiv:2607.00895v1 (2026-07-01)",
+      "source_section": "Sections 3, 4.1, 4.3 and 4.4",
+      "task_mapping": [
+        "exp7533-tool-protocol",
+        "exp7539-static-evaluation"
+      ],
+      "unit_id": "tool_grounding"
+    },
+    {
+      "access_failure": null,
+      "access_status": "accessed_20260922",
+      "adaptation": "Measure old-domain Brier and typed-action coverage at each legal update checkpoint.",
+      "arm": "method_ingestion",
+      "counterexample": "Sequential classification results do not guarantee delayed Carnot streams.",
+      "external_claim_is_carnot_measurement": false,
+      "method_family": "continual_calibration",
+      "primary_url": "https://arxiv.org/html/2604.23987v1",
+      "principle": "A primary method can define a control without becoming local evidence.",
+      "source_revision": "arXiv:2604.23987v1 (2026-04-30)",
+      "source_section": "Sections 3-5, calibration and retention evaluation",
+      "task_mapping": [
+        "exp7540-online-learning",
+        "exp7541-decision-audit"
+      ],
+      "unit_id": "continual_calibration"
+    },
+    {
+      "access_failure": null,
+      "access_status": "accessed_20260922",
+      "adaptation": "Compare causal bin-count updates with frozen, global and legal shuffled controls.",
+      "arm": "method_ingestion",
+      "counterexample": "A conjugate count memory is not the paper's Blackwell algorithm.",
+      "external_claim_is_carnot_measurement": false,
+      "method_family": "online_recalibration",
+      "primary_url": "https://arxiv.org/html/2607.19689v1",
+      "principle": "A primary method can define a control without becoming local evidence.",
+      "source_revision": "arXiv:2607.19689v1 (2026-07-22)",
+      "source_section": "Sections 2, 4 and 7.2, proper-loss comparisons",
+      "task_mapping": [
+        "exp7534-count-memory",
+        "exp7540-online-learning"
+      ],
+      "unit_id": "online_recalibration"
+    },
+    {
+      "access_failure": null,
+      "access_status": "accessed_20260922",
+      "adaptation": "Regularize semantic option order while keeping source interventions as separate features.",
+      "arm": "method_ingestion",
+      "counterexample": "Replacing evidence is not label-preserving after semantic remapping.",
+      "external_claim_is_carnot_measurement": false,
+      "method_family": "consistency",
+      "primary_url": "https://arxiv.org/html/2606.08158",
+      "principle": "A primary method can define a control without becoming local evidence.",
+      "source_revision": "arXiv:2606.08158v1 (2026-06-06)",
+      "source_section": "Section 2.1, constrained consistency objective",
+      "task_mapping": [
+        "exp7538-energy-fit",
+        "exp7539-static-evaluation"
+      ],
+      "unit_id": "consistency"
+    }
+  ],
+  "milestone": "2026.09.659",
+  "model_invoked": false,
+  "model_specs": [],
+  "operator_queue": {
+    "arm": "repository_state",
+    "authenticated": true,
+    "b2_status": "feasibility_only_corrected",
+    "e0_status": "operator_blocked",
+    "e6_status": "resolved",
+    "principle": "Operator-only and resolved work cannot be silently reclassified.",
+    "source_path": "ops/known-issues.md",
+    "source_sha256": "sha256:953030000b75e1014dde77cf78260d1df72fd181c194e2b86abfe808f5be44da",
+    "unit_id": "operator_queue"
+  },
+  "phase": 1,
+  "phase_spans": [
+    {
+      "checkpoint": "inputs_and_authority_shortfall_observed",
+      "completed_units": 34,
+      "duration_s": 0.06958584900712594,
+      "end_s": 0.06961941201006994,
+      "heartbeat_count": 0,
+      "phase": "preconditions",
+      "principle": "A measured span exposes unfinished work and prevents duration padding.",
+      "start_s": 3.3563002943992615e-05
+    },
+    {
+      "checkpoint": "no_current_llm_work",
+      "completed_units": 0,
+      "duration_s": 3.887995262630284e-06,
+      "end_s": 0.0696606200071983,
+      "heartbeat_count": 0,
+      "phase": "model_load",
+      "principle": "A measured span exposes unfinished work and prevents duration padding.",
+      "start_s": 0.06965673201193567
+    },
+    {
+      "checkpoint": "no_current_llm_work",
+      "completed_units": 0,
+      "duration_s": 1.97399640455842e-06,
+      "end_s": 0.06966486800229177,
+      "heartbeat_count": 0,
+      "phase": "generation",
+      "principle": "A measured span exposes unfinished work and prevents duration padding.",
+      "start_s": 0.06966289400588721
+    },
+    {
+      "checkpoint": "authority_and_prior_custody_reduced",
+      "completed_units": 46,
+      "duration_s": 3.074994310736656e-06,
+      "end_s": 0.06967009700019844,
+      "heartbeat_count": 0,
+      "phase": "contract",
+      "principle": "A measured span exposes unfinished work and prevents duration padding.",
+      "start_s": 0.0696670220058877
+    },
+    {
+      "checkpoint": "method_note_and_study_marker",
+      "completed_units": 4,
+      "duration_s": 0.0004808730009244755,
+      "end_s": 0.07015331501315814,
+      "heartbeat_count": 0,
+      "phase": "method_ingestion",
+      "principle": "A measured span exposes unfinished work and prevents duration padding.",
+      "start_s": 0.06967244201223366
+    },
+    {
+      "checkpoint": "scoped_repository_and_full_suite_checks",
+      "completed_units": 16,
+      "duration_s": 33.023961701997905,
+      "end_s": 33.0957311210077,
+      "heartbeat_count": 0,
+      "phase": "validation",
+      "principle": "A measured span exposes unfinished work and prevents duration padding.",
+      "start_s": 0.07176941900979728
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "source_bytes:python/carnot/experiment_7516_v658_contract_methods.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "python/carnot/experiment_7516_v658_contract_methods.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:2b023f7073de188b97677fbc9c9995c29bda76fcc6c28f060af5c9b8c6053c1b",
+      "upstream": "python/carnot/experiment_7516_v658_contract_methods.py"
+    },
+    {
+      "check": "source_bytes:research-references.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "research-references.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:4e83df435f0e0f11e91171626b314f0b939e5d350597e07134af8e445ee038e3",
+      "upstream": "research-references.md"
+    },
+    {
+      "check": "source_bytes:research-studying.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "research-studying.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:80912c598890930caca7a59c935abe73f45eba3c73b4f3144948685c8e2050b2",
+      "upstream": "research-studying.md"
+    },
+    {
+      "check": "source_bytes:ops/known-issues.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "ops/known-issues.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:953030000b75e1014dde77cf78260d1df72fd181c194e2b86abfe808f5be44da",
+      "upstream": "ops/known-issues.md"
+    },
+    {
+      "check": "source_bytes:scripts/roadmap_schema.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "scripts/roadmap_schema.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+      "upstream": "scripts/roadmap_schema.py"
+    },
+    {
+      "check": "source_bytes:scripts/validate_prior_failures.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "scripts/validate_prior_failures.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+      "upstream": "scripts/validate_prior_failures.py"
+    },
+    {
+      "check": "source_bytes:scripts/audit_roadmap_gates.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "scripts/audit_roadmap_gates.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
+      "upstream": "scripts/audit_roadmap_gates.py"
+    },
+    {
+      "check": "source_bytes:scripts/exclusion_manifest_lint.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "scripts/exclusion_manifest_lint.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+      "upstream": "scripts/exclusion_manifest_lint.py"
+    },
+    {
+      "check": "source_bytes:scripts/arc_levelup_guarantee_lint.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "scripts/arc_levelup_guarantee_lint.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:1d18d6520331e8d55fd16ddeffd557f646de129b58e68f7da251cdd08f1be3d0",
+      "upstream": "scripts/arc_levelup_guarantee_lint.py"
+    },
+    {
+      "check": "source_bytes:scripts/harness_consumer_checks.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "scripts/harness_consumer_checks.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:dcdb1b6e5c1fa7e61729e7f9e0115e1d6580abffd4876b77a90e1037b4a207c5",
+      "upstream": "scripts/harness_consumer_checks.py"
+    },
+    {
+      "check": "source_bytes:scripts/overdue_priority_lint.py",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "scripts/overdue_priority_lint.py",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:54cd20c79e3ac3e93f2424d280814105f0776213b5b32625511f86ce0e5fb897",
+      "upstream": "scripts/overdue_priority_lint.py"
+    },
+    {
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:ee11fa21e51fd3293bc184f5b2a662a2bdd284db7929f31c617cd574d5bed84f",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:541a493c50df11c3fefd106547ec955d9b8186b03c3d98be25e3780888bf5e40",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "source_bytes:results/experiment_7529_v658_capstone.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "results/experiment_7529_v658_capstone.json",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:8c5040619cdba10cd62e170c6493d55c77764662642be0a1701a84ed5372d5e4",
+      "upstream": "results/experiment_7529_v658_capstone.json"
+    },
+    {
+      "check": "source_bytes:results/experiment_7531_b2_induction_gate_measurement.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "results/experiment_7531_b2_induction_gate_measurement.json",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "sha256": "sha256:d98ba01c839605cd1188a0176d1ac846d4091d9237b69e3c483e6fc89e831173",
+      "upstream": "results/experiment_7531_b2_induction_gate_measurement.json"
+    },
+    {
+      "check": "driving_requirement",
+      "expected": "REQ-REPORT-7532",
+      "field": "REQ-*",
+      "observed": "REQ-REPORT-7532",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "roadmap_identity",
+      "expected": "2026.09.659",
+      "field": "milestone",
+      "observed": "2026.09.659",
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "research-roadmap.yaml",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "paired_authority_task_count",
+      "expected": 14,
+      "field": "exact_ordered_task_count",
+      "observed": {
+        "markdown": 0,
+        "yaml": 8
+      },
+      "ownership": "read_only_input",
+      "passed": false,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md + research-roadmap.yaml",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md + research-roadmap.yaml"
+    },
+    {
+      "check": "v658_disposition_custody",
+      "expected": 14,
+      "field": "authenticated_count",
+      "observed": 14,
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "results/experiment_7529_v658_capstone.json",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "results/experiment_7529_v658_capstone.json"
+    },
+    {
+      "check": "v658_absent_producers",
+      "expected": 7,
+      "field": "absent_producer_count",
+      "observed": 7,
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "results/experiment_7529_v658_capstone.json",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "results/experiment_7529_v658_capstone.json"
+    },
+    {
+      "check": "v658_exposure_union",
+      "expected": [
+        2487,
+        2487,
+        0
+      ],
+      "field": "candidate_and_exposed_groups",
+      "observed": [
+        2487,
+        2487,
+        0
+      ],
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "results/experiment_7517_v658_source_protocol.json",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "results/experiment_7517_v658_source_protocol.json"
+    },
+    {
+      "check": "b2_corrections",
+      "expected": 2,
+      "field": "authenticated_count",
+      "observed": 2,
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "results/experiment_7531_b2_induction_gate_measurement.json",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "results/experiment_7531_b2_induction_gate_measurement.json"
+    },
+    {
+      "check": "operator_queue",
+      "expected": [
+        "operator_blocked",
+        "resolved",
+        "feasibility_only_corrected"
+      ],
+      "field": "e0_e6_b2",
+      "observed": [
+        "operator_blocked",
+        "resolved",
+        "feasibility_only_corrected"
+      ],
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "ops/known-issues.md",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "ops/known-issues.md"
+    },
+    {
+      "check": "host_identity",
+      "expected": true,
+      "field": "machine_nonempty",
+      "observed": true,
+      "ownership": "read_only_input",
+      "passed": true,
+      "path": "/proc/cpuinfo",
+      "principle": "An exact prerequisite prevents reduction over missing or different bytes.",
+      "upstream": "/proc/cpuinfo"
+    }
+  ],
+  "prior_dispositions": [
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7516_v658_contract_methods.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 1,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_v658_contract_methods_ingested",
+      "original_verdict_class": "null",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:fdc5f7f65c2e87220e3cafe7157c666c530de28698790021fcd351b3bb5af43a",
+      "task_id": "exp7516-contract-methods",
+      "unit_id": "exp7516-contract-methods"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "candidate_official_training_groups": 2487,
+      "expected_path": "results/experiment_7517_v658_source_protocol.json",
+      "expected_producer_present": true,
+      "exposed_candidate_groups": 2487,
+      "fresh_eligible_groups": 0,
+      "missing_is_zero_metric": false,
+      "order": 2,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_fresh_source_inventory",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:076f4b02d71d1009489125f2c4f0ff3893c8315e41108725adb2aab3b515a1b8",
+      "task_id": "exp7517-source-protocol",
+      "unit_id": "exp7517-source-protocol"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7518_v658_source_pilot.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 3,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7518-source-pilot",
+      "unit_id": "exp7518-source-pilot"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7519_v658_source_fit_capture.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 4,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7519-source-fit-capture",
+      "unit_id": "exp7519-source-fit-capture"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7520_v658_source_eval_capture.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 5,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7520-source-eval-capture",
+      "unit_id": "exp7520-source-eval-capture"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7521_v658_consistency_energy.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 6,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7521-consistency-energy",
+      "unit_id": "exp7521-consistency-energy"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7522_v658_source_evaluation.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 7,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7522-source-evaluation",
+      "unit_id": "exp7522-source-evaluation"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7523_v658_count_memory.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 8,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7523-count-memory",
+      "unit_id": "exp7523-count-memory"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7524_v658_count_online.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 9,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7524-count-online",
+      "unit_id": "exp7524-count-online"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7525_v658_decision_audit.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 10,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_required_science_incomplete",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:5c0ab05c6bbda5e4944dce72c707aee9c250c4d7e21cd903979247763e683dcf",
+      "task_id": "exp7525-decision-audit",
+      "unit_id": "exp7525-decision-audit"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7526_v658_arc_eligibility.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 11,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_eligibility_observed_without_applied_effect_support",
+      "original_verdict_class": "null",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:11fc1b88349a7a939316029bbd60b2379c802c8910a6e3b6d5ed10184fba1a73",
+      "task_id": "exp7526-arc-eligibility",
+      "unit_id": "exp7526-arc-eligibility"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7527_v658_arc_opportunities.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 12,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_owned_gpu",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:5586dccb09ee159e3ef8b61b028b88f188149e969a37611656a5cf1698dc3736",
+      "task_id": "exp7527-arc-opportunities",
+      "unit_id": "exp7527-arc-opportunities"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7528_v658_service_boundary.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 13,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_missing_count_memory_prototype",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:9d117c0575272f426079a9ab2e830fd82350559164ee4f0c3035951976710738",
+      "task_id": "exp7528-service-boundary",
+      "unit_id": "exp7528-service-boundary"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7529_v658_capstone.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 14,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_required_v658_science_absent_or_externally_gated",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:8c5040619cdba10cd62e170c6493d55c77764662642be0a1701a84ed5372d5e4",
+      "task_id": "exp7529-capstone",
+      "unit_id": "exp7529-capstone"
+    }
+  ],
+  "process_identity": {
+    "owner": "current_process",
+    "pid": 992014
+  },
+  "production_defaults_changed": false,
+  "publication_performed": false,
+  "push_performed": false,
+  "random_seed": {
+    "arrival": null,
+    "bootstrap": null,
+    "contract_mutations": 753265901,
+    "explanation": "This deterministic aggregation makes no stochastic estimate.",
+    "fitting": null,
+    "sampling": null
+  },
+  "repository_health": {
+    "affects_required_scoped_validation": false,
+    "baseline_receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "tests/python",
+          "-q"
+        ],
+        "command_category": "diagnostic_repository_health",
+        "command_environment": {},
+        "duration_s": 2041.520539856996,
+        "ended_at_utc": "2026-09-22T20:54:05.777264+00:00",
+        "exit_code": -15,
+        "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/07_full_python_suite/00_full_python_suite.log",
+        "log_sha256": "sha256:3b9552dc6c057cb74ec45e32a3a765eea63f4573b7e48019d8312c1077536ce0",
+        "name": "full_python_suite",
+        "output_tail": "......................................... [ 40%]\n........................................................................ [ 40%]\n........................................................................ [ 40%]\n........................................................................ [ 40%]\n.................................................s..............F....... [ 40%]\n..F...........................FFFF...................................... [ 40%]\n...........FFF.........................................F....FF.......... [ 40%]\n..........................................sssssssssssF..FF.............. [ 40%]\n......F.F............................................................... [ 40%]\n............F.....................................F..................... [ 41%]\n.................................F...................................... [ 41%]\n........................................................FFFFF.........F. [ 41%]\n........................................................................ [ 41%]\n......................F................................................. [ 41%]\n.................F................F..................................... [ 41%]\n........................................................................ [ 41%]\n.................................................F.F...F................ [ 41%]\n........................................................................ [ 41%]\n........................................................................ [ 42%]\n....F...F.........................................F..................... [ 42%]\n........................................................................ [ 42%]\n............F....F...................................................... [ 42%]\n......................................................................F. [ 42%]\n...................................F....F............................... [ 42%]\n........................................................................ [ 42%]\n.......................FF.FF............F............................... [ 42%]\n..........................FFFF.............F.....F...................... [ 42%]\n..F..F..............................F................................... [ 42%]\n........................................................................ [ 43%]\n......F................................................................. [ 43%]\n........................F..................F..................F......... [ 43%]\n.............................................................FF......... [ 43%]\n.F.....................FFF.............................................. [ 43%]\n...................................................../home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139815832943792, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140625910484912, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140569422194752, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+        "passed": false,
+        "required": false,
+        "scope": "repository_health",
+        "started_at_utc": "2026-09-22T20:20:04.256234+00:00",
+        "timed_out": true
+      }
+    ],
+    "failed_baseline_checks": [
+      "full_python_suite"
+    ]
+  },
+  "reproducibility_checksum": "sha256:37387db94963c2c9003d0ed1c42622792ce4c4ffe3145f3845d6c1ba1c636580",
+  "research_conductor_modified": false,
+  "roadmap_activation_performed": false,
+  "roadmap_archive_performed": false,
+  "roadmap_resolution_candidates": [
+    {
+      "exists": false,
+      "expected": "2026.09.659",
+      "matches_milestone": false,
+      "observed": null,
+      "path": "research-roadmap-next.yaml",
+      "principle": "Milestone matching prevents stale authority selection."
+    },
+    {
+      "exists": true,
+      "expected": "2026.09.659",
+      "matches_milestone": true,
+      "observed": "2026.09.659",
+      "path": "research-roadmap.yaml",
+      "principle": "Milestone matching prevents stale authority selection."
+    }
+  ],
+  "rows": [
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7532-contract-methods",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 1,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7532-contract-methods",
+      "yaml": {
+        "deliverable": "results/experiment_7532_v659_contract_methods.json",
+        "gates": [],
+        "id": "exp7532-contract-methods",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind fourteen tasks and ingest source-grounding methods"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7533-tool-protocol",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 2,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7533-tool-protocol",
+      "yaml": {
+        "deliverable": "results/experiment_7533_v659_tool_protocol.json",
+        "gates": [],
+        "id": "exp7533-tool-protocol",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal an available tool-grounding corpus and independent roles"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7534-count-memory",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 3,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7534-count-memory",
+      "yaml": {
+        "deliverable": "results/experiment_7534_v659_count_memory.json",
+        "gates": [],
+        "id": "exp7534-count-memory",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Build an independent conjugate energy memory for delayed feedback"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7535-native-pilot",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 4,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "tool_protocol_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7533-tool-protocol"
+        }
+      ],
+      "unit_id": "exp7535-native-pilot",
+      "yaml": {
+        "deliverable": "results/experiment_7535_v659_native_pilot.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          }
+        ],
+        "id": "exp7535-native-pilot",
+        "order": 4,
+        "phase": 1,
+        "substrate": "model_load_no_generation",
+        "title": "Qualify source-intervention transport and bounded capture cost"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7536-fit-capture",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 5,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "tool_protocol_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7533-tool-protocol"
+        },
+        {
+          "artifact_field": "native_tool_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7535-native-pilot"
+        },
+        {
+          "artifact_field": "fit_capture_feasible_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7535-native-pilot"
+        }
+      ],
+      "unit_id": "exp7536-fit-capture",
+      "yaml": {
+        "deliverable": "results/experiment_7536_v659_fit_capture.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "native_tool_ready_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          },
+          {
+            "artifact_field": "fit_capture_feasible_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          }
+        ],
+        "id": "exp7536-fit-capture",
+        "order": 5,
+        "phase": 2,
+        "substrate": "model_load_no_generation",
+        "title": "Capture fitting evidence from whole tool-source interventions"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7537-eval-capture",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 6,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "tool_protocol_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7533-tool-protocol"
+        },
+        {
+          "artifact_field": "native_tool_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7535-native-pilot"
+        },
+        {
+          "artifact_field": "eval_capture_feasible_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7535-native-pilot"
+        }
+      ],
+      "unit_id": "exp7537-eval-capture",
+      "yaml": {
+        "deliverable": "results/experiment_7537_v659_eval_capture.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "native_tool_ready_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          },
+          {
+            "artifact_field": "eval_capture_feasible_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          }
+        ],
+        "id": "exp7537-eval-capture",
+        "order": 6,
+        "phase": 2,
+        "substrate": "model_load_no_generation",
+        "title": "Capture sealed test and online tool-grounding evidence"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7538-energy-fit",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 7,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "fit_capture_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7536-fit-capture"
+        }
+      ],
+      "unit_id": "exp7538-energy-fit",
+      "yaml": {
+        "deliverable": "results/experiment_7538_v659_energy_fit.json",
+        "gates": [
+          {
+            "artifact_field": "fit_capture_ready_score",
+            "op": "==",
+            "upstream": "exp7536-fit-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7538-energy-fit",
+        "order": 7,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Fit calibrated energy decisions with matched source controls"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7539-static-evaluation",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 8,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "eval_capture_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7537-eval-capture"
+        },
+        {
+          "artifact_field": "energy_fit_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7538-energy-fit"
+        }
+      ],
+      "unit_id": "exp7539-static-evaluation",
+      "yaml": {
+        "deliverable": "results/experiment_7539_v659_static_evaluation.json",
+        "gates": [
+          {
+            "artifact_field": "eval_capture_ready_score",
+            "op": "==",
+            "upstream": "exp7537-eval-capture",
+            "value": 1
+          },
+          {
+            "artifact_field": "energy_fit_ready_score",
+            "op": "==",
+            "upstream": "exp7538-energy-fit",
+            "value": 1
+          }
+        ],
+        "id": "exp7539-static-evaluation",
+        "order": 8,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure held-out tool-grounding probability and decision value"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7540-online-learning",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 9,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7540-online-learning",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7541-decision-audit",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 10,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7541-decision-audit",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7542-arc-harness-parity",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 11,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7542-arc-harness-parity",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7543-arc-induction",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 12,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7543-arc-induction",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7544-service-boundary",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 13,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7544-service-boundary",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7545-capstone",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 14,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7545-capstone",
+      "yaml": null
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "count",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:count"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "order",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:order"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "id",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:id"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "title",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:title"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "path",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:path"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "gate_field",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:gate_field"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "milestone",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:milestone"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "markdown",
+      "baseline_valid": false,
+      "mutation": "substrate",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "markdown:substrate"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "count",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:count"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "order",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:order"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "id",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:id"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "title",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:title"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "path",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:path"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "gate_field",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:gate_field"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "milestone",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:milestone"
+    },
+    {
+      "arm": "contract_mutation",
+      "authority": "yaml",
+      "baseline_valid": false,
+      "mutation": "substrate",
+      "principle": "Mutation controls cannot pass when the unmodified contract is absent.",
+      "qualified": false,
+      "reason": "baseline_authorities_incomplete",
+      "rejected": false,
+      "unit_id": "yaml:substrate"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7516_v658_contract_methods.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 1,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_v658_contract_methods_ingested",
+      "original_verdict_class": "null",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:fdc5f7f65c2e87220e3cafe7157c666c530de28698790021fcd351b3bb5af43a",
+      "task_id": "exp7516-contract-methods",
+      "unit_id": "exp7516-contract-methods"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "candidate_official_training_groups": 2487,
+      "expected_path": "results/experiment_7517_v658_source_protocol.json",
+      "expected_producer_present": true,
+      "exposed_candidate_groups": 2487,
+      "fresh_eligible_groups": 0,
+      "missing_is_zero_metric": false,
+      "order": 2,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_fresh_source_inventory",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:076f4b02d71d1009489125f2c4f0ff3893c8315e41108725adb2aab3b515a1b8",
+      "task_id": "exp7517-source-protocol",
+      "unit_id": "exp7517-source-protocol"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7518_v658_source_pilot.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 3,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7518-source-pilot",
+      "unit_id": "exp7518-source-pilot"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7519_v658_source_fit_capture.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 4,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7519-source-fit-capture",
+      "unit_id": "exp7519-source-fit-capture"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7520_v658_source_eval_capture.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 5,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7520-source-eval-capture",
+      "unit_id": "exp7520-source-eval-capture"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7521_v658_consistency_energy.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 6,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7521-consistency-energy",
+      "unit_id": "exp7521-consistency-energy"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7522_v658_source_evaluation.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 7,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7522-source-evaluation",
+      "unit_id": "exp7522-source-evaluation"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7523_v658_count_memory.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 8,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7523-count-memory",
+      "unit_id": "exp7523-count-memory"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7524_v658_count_online.json",
+      "expected_producer_present": false,
+      "missing_is_zero_metric": false,
+      "order": 9,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete_blocked_missing_declared_producer_evidence",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": false,
+      "source_sha256": null,
+      "task_id": "exp7524-count-online",
+      "unit_id": "exp7524-count-online"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7525_v658_decision_audit.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 10,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_required_science_incomplete",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:5c0ab05c6bbda5e4944dce72c707aee9c250c4d7e21cd903979247763e683dcf",
+      "task_id": "exp7525-decision-audit",
+      "unit_id": "exp7525-decision-audit"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7526_v658_arc_eligibility.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 11,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_eligibility_observed_without_applied_effect_support",
+      "original_verdict_class": "null",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:11fc1b88349a7a939316029bbd60b2379c802c8910a6e3b6d5ed10184fba1a73",
+      "task_id": "exp7526-arc-eligibility",
+      "unit_id": "exp7526-arc-eligibility"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7527_v658_arc_opportunities.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 12,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_owned_gpu",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:5586dccb09ee159e3ef8b61b028b88f188149e969a37611656a5cf1698dc3736",
+      "task_id": "exp7527-arc-opportunities",
+      "unit_id": "exp7527-arc-opportunities"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7528_v658_service_boundary.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 13,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_missing_count_memory_prototype",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:9d117c0575272f426079a9ab2e830fd82350559164ee4f0c3035951976710738",
+      "task_id": "exp7528-service-boundary",
+      "unit_id": "exp7528-service-boundary"
+    },
+    {
+      "arm": "v658_custody",
+      "authenticated": true,
+      "expected_path": "results/experiment_7529_v658_capstone.json",
+      "expected_producer_present": true,
+      "missing_is_zero_metric": false,
+      "order": 14,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_blocked_required_v658_science_absent_or_externally_gated",
+      "original_verdict_class": "blocked",
+      "principle": "Literal prior dispositions keep absence distinct from measured zero.",
+      "producer_present": true,
+      "source_sha256": "sha256:8c5040619cdba10cd62e170c6493d55c77764662642be0a1701a84ed5372d5e4",
+      "task_id": "exp7529-capstone",
+      "unit_id": "exp7529-capstone"
+    },
+    {
+      "arm": "historical_correction",
+      "authenticated": true,
+      "flagged": true,
+      "induced_plan_required_for_progress": false,
+      "measurement_scope": "feasibility_only",
+      "principle": "A saturated proxy cannot establish induction reliability or no headroom.",
+      "progress_attempt_count": 60,
+      "progress_proxy_saturated": true,
+      "source_field": "false_negative_risk",
+      "source_path": "results/experiment_7531_b2_induction_gate_measurement.json",
+      "source_sha256": "sha256:d98ba01c839605cd1188a0176d1ac846d4091d9237b69e3c483e6fc89e831173",
+      "total_attempt_count": 60,
+      "unit_id": "exp7531-progress-proxy-correction"
+    },
+    {
+      "arm": "historical_correction",
+      "attempts_at_harness_token_cap": 60,
+      "authenticated": true,
+      "flagged": true,
+      "harness_max_new_tokens": 256,
+      "historical_e6_mean_completion_tokens_per_episode": 11950,
+      "measurement_scope": "feasibility_only",
+      "principle": "An inherited harness cap cannot be attributed to shipped production settings.",
+      "shipped_production_setting_claimed": false,
+      "source_field": "further_correction_2026_09_22",
+      "source_path": "results/experiment_7531_b2_induction_gate_measurement.json",
+      "source_sha256": "sha256:d98ba01c839605cd1188a0176d1ac846d4091d9237b69e3c483e6fc89e831173",
+      "total_attempt_count": 60,
+      "unit_id": "exp7531-token-cap-correction"
+    },
+    {
+      "access_failure": null,
+      "access_status": "accessed_20260922",
+      "adaptation": "Seal tool-output source groups and keep injected edits distinct from natural errors.",
+      "arm": "method_ingestion",
+      "counterexample": "Injected unsupported spans do not establish organic hallucination or code correctness.",
+      "external_claim_is_carnot_measurement": false,
+      "method_family": "tool_grounding",
+      "primary_url": "https://arxiv.org/html/2607.00895v1",
+      "principle": "A primary method can define a control without becoming local evidence.",
+      "source_revision": "arXiv:2607.00895v1 (2026-07-01)",
+      "source_section": "Sections 3, 4.1, 4.3 and 4.4",
+      "task_mapping": [
+        "exp7533-tool-protocol",
+        "exp7539-static-evaluation"
+      ],
+      "unit_id": "tool_grounding"
+    },
+    {
+      "access_failure": null,
+      "access_status": "accessed_20260922",
+      "adaptation": "Measure old-domain Brier and typed-action coverage at each legal update checkpoint.",
+      "arm": "method_ingestion",
+      "counterexample": "Sequential classification results do not guarantee delayed Carnot streams.",
+      "external_claim_is_carnot_measurement": false,
+      "method_family": "continual_calibration",
+      "primary_url": "https://arxiv.org/html/2604.23987v1",
+      "principle": "A primary method can define a control without becoming local evidence.",
+      "source_revision": "arXiv:2604.23987v1 (2026-04-30)",
+      "source_section": "Sections 3-5, calibration and retention evaluation",
+      "task_mapping": [
+        "exp7540-online-learning",
+        "exp7541-decision-audit"
+      ],
+      "unit_id": "continual_calibration"
+    },
+    {
+      "access_failure": null,
+      "access_status": "accessed_20260922",
+      "adaptation": "Compare causal bin-count updates with frozen, global and legal shuffled controls.",
+      "arm": "method_ingestion",
+      "counterexample": "A conjugate count memory is not the paper's Blackwell algorithm.",
+      "external_claim_is_carnot_measurement": false,
+      "method_family": "online_recalibration",
+      "primary_url": "https://arxiv.org/html/2607.19689v1",
+      "principle": "A primary method can define a control without becoming local evidence.",
+      "source_revision": "arXiv:2607.19689v1 (2026-07-22)",
+      "source_section": "Sections 2, 4 and 7.2, proper-loss comparisons",
+      "task_mapping": [
+        "exp7534-count-memory",
+        "exp7540-online-learning"
+      ],
+      "unit_id": "online_recalibration"
+    },
+    {
+      "access_failure": null,
+      "access_status": "accessed_20260922",
+      "adaptation": "Regularize semantic option order while keeping source interventions as separate features.",
+      "arm": "method_ingestion",
+      "counterexample": "Replacing evidence is not label-preserving after semantic remapping.",
+      "external_claim_is_carnot_measurement": false,
+      "method_family": "consistency",
+      "primary_url": "https://arxiv.org/html/2606.08158",
+      "principle": "A primary method can define a control without becoming local evidence.",
+      "source_revision": "arXiv:2606.08158v1 (2026-06-06)",
+      "source_section": "Section 2.1, constrained consistency objective",
+      "task_mapping": [
+        "exp7538-energy-fit",
+        "exp7539-static-evaluation"
+      ],
+      "unit_id": "consistency"
+    },
+    {
+      "arm": "repository_state",
+      "authenticated": true,
+      "b2_status": "feasibility_only_corrected",
+      "e0_status": "operator_blocked",
+      "e6_status": "resolved",
+      "principle": "Operator-only and resolved work cannot be silently reclassified.",
+      "source_path": "ops/known-issues.md",
+      "source_sha256": "sha256:953030000b75e1014dde77cf78260d1df72fd181c194e2b86abfe808f5be44da",
+      "unit_id": "operator_queue"
+    }
+  ],
+  "run_date": "20260922",
+  "sample_size_budget": {
+    "attempted": 51,
+    "censored": 0,
+    "complete": 51,
+    "completed": 51,
+    "counting_rule": "Six missing task declarations remain unstarted, not zero-valued rows.",
+    "excluded": 0,
+    "failed": 0,
+    "independent_unit": "contract_disposition_correction_method_or_queue_row",
+    "planned": 51,
+    "unstarted": 6
+  },
+  "schema": "carnot.exp7532.v659.contract_methods.v1",
+  "selected_authority_state": "active",
+  "selected_roadmap_path": "research-roadmap.yaml",
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "CLAUDE.md",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+    },
+    "CODEX.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "CODEX.md",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+    },
+    "docs/research-notes/v659-method-map.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "docs/research-notes/v659-method-map.md",
+      "sha256": "sha256:1e71cb471e2c500a666a001597cb2229a2c726cc5086b94639e5cfaf842ce5a9"
+    },
+    "historical:exp7516-contract-methods": {
+      "counted_as_current_invocation": false,
+      "evidence_type": "historical_terminal_bytes",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7516_v658_contract_methods.json",
+      "sha256": "sha256:fdc5f7f65c2e87220e3cafe7157c666c530de28698790021fcd351b3bb5af43a"
+    },
+    "historical:exp7517-source-protocol": {
+      "counted_as_current_invocation": false,
+      "evidence_type": "historical_terminal_bytes",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7517_v658_source_protocol.json",
+      "sha256": "sha256:076f4b02d71d1009489125f2c4f0ff3893c8315e41108725adb2aab3b515a1b8"
+    },
+    "historical:exp7525-decision-audit": {
+      "counted_as_current_invocation": false,
+      "evidence_type": "historical_terminal_bytes",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7525_v658_decision_audit.json",
+      "sha256": "sha256:5c0ab05c6bbda5e4944dce72c707aee9c250c4d7e21cd903979247763e683dcf"
+    },
+    "historical:exp7526-arc-eligibility": {
+      "counted_as_current_invocation": false,
+      "evidence_type": "historical_terminal_bytes",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7526_v658_arc_eligibility.json",
+      "sha256": "sha256:11fc1b88349a7a939316029bbd60b2379c802c8910a6e3b6d5ed10184fba1a73"
+    },
+    "historical:exp7527-arc-opportunities": {
+      "counted_as_current_invocation": false,
+      "evidence_type": "historical_terminal_bytes",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7527_v658_arc_opportunities.json",
+      "sha256": "sha256:5586dccb09ee159e3ef8b61b028b88f188149e969a37611656a5cf1698dc3736"
+    },
+    "historical:exp7528-service-boundary": {
+      "counted_as_current_invocation": false,
+      "evidence_type": "historical_terminal_bytes",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7528_v658_service_boundary.json",
+      "sha256": "sha256:9d117c0575272f426079a9ab2e830fd82350559164ee4f0c3035951976710738"
+    },
+    "historical:exp7529-capstone": {
+      "counted_as_current_invocation": false,
+      "evidence_type": "historical_terminal_bytes",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_7529_v658_capstone.json",
+      "sha256": "sha256:8c5040619cdba10cd62e170c6493d55c77764662642be0a1701a84ed5372d5e4"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:541a493c50df11c3fefd106547ec955d9b8186b03c3d98be25e3780888bf5e40"
+    },
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:ee11fa21e51fd3293bc184f5b2a662a2bdd284db7929f31c617cd574d5bed84f"
+    },
+    "ops/e2e-test-plan.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "ops/e2e-test-plan.md",
+      "sha256": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65"
+    },
+    "ops/known-issues.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:953030000b75e1014dde77cf78260d1df72fd181c194e2b86abfe808f5be44da"
+    },
+    "python/carnot/experiment_7358_v646_validation_contract.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    "python/carnot/experiment_7516_v658_contract_methods.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "python/carnot/experiment_7516_v658_contract_methods.py",
+      "sha256": "sha256:2b023f7073de188b97677fbc9c9995c29bda76fcc6c28f060af5c9b8c6053c1b"
+    },
+    "python/carnot/experiment_7532_v659_contract_methods.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "python/carnot/experiment_7532_v659_contract_methods.py",
+      "sha256": "sha256:19cc43c7856984abaafcf439f81a5dbcb343e0a0a788bc0c5b6f0997a5851dbd"
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    "research-program.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "research-references.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "research-references.md",
+      "sha256": "sha256:4e83df435f0e0f11e91171626b314f0b939e5d350597e07134af8e445ee038e3"
+    },
+    "research-roadmap.yaml": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:9bc32870619c001936f9d34c413b6fa6329ab075892e72bd1a64a6277fd58f10"
+    },
+    "research-studying.md": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "research-studying.md",
+      "sha256": "sha256:80912c598890930caca7a59c935abe73f45eba3c73b4f3144948685c8e2050b2"
+    },
+    "results/experiment_7529_v658_capstone.json": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "results/experiment_7529_v658_capstone.json",
+      "sha256": "sha256:8c5040619cdba10cd62e170c6493d55c77764662642be0a1701a84ed5372d5e4"
+    },
+    "results/experiment_7531_b2_induction_gate_measurement.json": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "results/experiment_7531_b2_induction_gate_measurement.json",
+      "sha256": "sha256:d98ba01c839605cd1188a0176d1ac846d4091d9237b69e3c483e6fc89e831173"
+    },
+    "scripts/arc_levelup_guarantee_lint.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/arc_levelup_guarantee_lint.py",
+      "sha256": "sha256:1d18d6520331e8d55fd16ddeffd557f646de129b58e68f7da251cdd08f1be3d0"
+    },
+    "scripts/audit_roadmap_gates.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/audit_roadmap_gates.py",
+      "sha256": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013"
+    },
+    "scripts/exclusion_manifest_lint.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/exclusion_manifest_lint.py",
+      "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+    },
+    "scripts/experiment_template.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    "scripts/experiments/experiment_7532_v659_contract_methods.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/experiments/experiment_7532_v659_contract_methods.py",
+      "sha256": "sha256:b0b4171bde3c6c4c0d96557fd807d3e52e0c20647f9299e0bd8b77b20be3d4c0"
+    },
+    "scripts/harness_consumer_checks.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/harness_consumer_checks.py",
+      "sha256": "sha256:dcdb1b6e5c1fa7e61729e7f9e0115e1d6580abffd4876b77a90e1037b4a207c5"
+    },
+    "scripts/overdue_priority_lint.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/overdue_priority_lint.py",
+      "sha256": "sha256:54cd20c79e3ac3e93f2424d280814105f0776213b5b32625511f86ce0e5fb897"
+    },
+    "scripts/roadmap_schema.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/roadmap_schema.py",
+      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+    },
+    "scripts/validate_prior_failures.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "scripts/validate_prior_failures.py",
+      "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+    },
+    "tests/python/test_experiment_7532_v659_contract_methods.py": {
+      "evidence_type": "current_protocol_or_input_bytes",
+      "path": "tests/python/test_experiment_7532_v659_contract_methods.py",
+      "sha256": "sha256:630e1f19c70c2d496695324baa7f4a234b6639be2f679966198c5d2766c8c94d"
+    }
+  },
+  "started_at_utc": "2026-09-22T20:56:04.934097+00:00",
+  "started_monotonic_ns": 112582145933157,
+  "status": "complete_blocked_incomplete_v659_authorities",
+  "submission_performed": false,
+  "task_contract_rows": [
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7532-contract-methods",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 1,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7532-contract-methods",
+      "yaml": {
+        "deliverable": "results/experiment_7532_v659_contract_methods.json",
+        "gates": [],
+        "id": "exp7532-contract-methods",
+        "order": 1,
+        "phase": 1,
+        "substrate": "aggregation",
+        "title": "Bind fourteen tasks and ingest source-grounding methods"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7533-tool-protocol",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 2,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7533-tool-protocol",
+      "yaml": {
+        "deliverable": "results/experiment_7533_v659_tool_protocol.json",
+        "gates": [],
+        "id": "exp7533-tool-protocol",
+        "order": 2,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Seal an available tool-grounding corpus and independent roles"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7534-count-memory",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 3,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7534-count-memory",
+      "yaml": {
+        "deliverable": "results/experiment_7534_v659_count_memory.json",
+        "gates": [],
+        "id": "exp7534-count-memory",
+        "order": 3,
+        "phase": 1,
+        "substrate": "no_model_load",
+        "title": "Build an independent conjugate energy memory for delayed feedback"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7535-native-pilot",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 4,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "tool_protocol_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7533-tool-protocol"
+        }
+      ],
+      "unit_id": "exp7535-native-pilot",
+      "yaml": {
+        "deliverable": "results/experiment_7535_v659_native_pilot.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          }
+        ],
+        "id": "exp7535-native-pilot",
+        "order": 4,
+        "phase": 1,
+        "substrate": "model_load_no_generation",
+        "title": "Qualify source-intervention transport and bounded capture cost"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7536-fit-capture",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 5,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "tool_protocol_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7533-tool-protocol"
+        },
+        {
+          "artifact_field": "native_tool_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7535-native-pilot"
+        },
+        {
+          "artifact_field": "fit_capture_feasible_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7535-native-pilot"
+        }
+      ],
+      "unit_id": "exp7536-fit-capture",
+      "yaml": {
+        "deliverable": "results/experiment_7536_v659_fit_capture.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "native_tool_ready_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          },
+          {
+            "artifact_field": "fit_capture_feasible_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          }
+        ],
+        "id": "exp7536-fit-capture",
+        "order": 5,
+        "phase": 2,
+        "substrate": "model_load_no_generation",
+        "title": "Capture fitting evidence from whole tool-source interventions"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7537-eval-capture",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 6,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "tool_protocol_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7533-tool-protocol"
+        },
+        {
+          "artifact_field": "native_tool_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7535-native-pilot"
+        },
+        {
+          "artifact_field": "eval_capture_feasible_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7535-native-pilot"
+        }
+      ],
+      "unit_id": "exp7537-eval-capture",
+      "yaml": {
+        "deliverable": "results/experiment_7537_v659_eval_capture.json",
+        "gates": [
+          {
+            "artifact_field": "tool_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7533-tool-protocol",
+            "value": 1
+          },
+          {
+            "artifact_field": "native_tool_ready_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          },
+          {
+            "artifact_field": "eval_capture_feasible_score",
+            "op": "==",
+            "upstream": "exp7535-native-pilot",
+            "value": 1
+          }
+        ],
+        "id": "exp7537-eval-capture",
+        "order": 6,
+        "phase": 2,
+        "substrate": "model_load_no_generation",
+        "title": "Capture sealed test and online tool-grounding evidence"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7538-energy-fit",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 7,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "fit_capture_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7536-fit-capture"
+        }
+      ],
+      "unit_id": "exp7538-energy-fit",
+      "yaml": {
+        "deliverable": "results/experiment_7538_v659_energy_fit.json",
+        "gates": [
+          {
+            "artifact_field": "fit_capture_ready_score",
+            "op": "==",
+            "upstream": "exp7536-fit-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7538-energy-fit",
+        "order": 7,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Fit calibrated energy decisions with matched source controls"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": true,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7539-static-evaluation",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": null,
+      "order": 8,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [
+        {
+          "artifact_field": "eval_capture_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7537-eval-capture"
+        },
+        {
+          "artifact_field": "energy_fit_ready_score",
+          "declared_verbatim": true,
+          "passed": true,
+          "principle": "A gate cannot consume an undeclared or later field.",
+          "producer_precedes_consumer": true,
+          "upstream": "exp7538-energy-fit"
+        }
+      ],
+      "unit_id": "exp7539-static-evaluation",
+      "yaml": {
+        "deliverable": "results/experiment_7539_v659_static_evaluation.json",
+        "gates": [
+          {
+            "artifact_field": "eval_capture_ready_score",
+            "op": "==",
+            "upstream": "exp7537-eval-capture",
+            "value": 1
+          },
+          {
+            "artifact_field": "energy_fit_ready_score",
+            "op": "==",
+            "upstream": "exp7538-energy-fit",
+            "value": 1
+          }
+        ],
+        "id": "exp7539-static-evaluation",
+        "order": 8,
+        "phase": 2,
+        "substrate": "no_model_load",
+        "title": "Measure held-out tool-grounding probability and decision value"
+      }
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7540-online-learning",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 9,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7540-online-learning",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7541-decision-audit",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 10,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7541-decision-audit",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7542-arc-harness-parity",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 11,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7542-arc-harness-parity",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7543-arc-induction",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 12,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7543-arc-induction",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7544-service-boundary",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 13,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7544-service-boundary",
+      "yaml": null
+    },
+    {
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": false,
+        "phase": false,
+        "producer_fields": false,
+        "substrate": false,
+        "title": false
+      },
+      "expected_task_id": "exp7545-capstone",
+      "failures": [
+        "order",
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates",
+        "producer_fields"
+      ],
+      "markdown": null,
+      "order": 14,
+      "passed": false,
+      "principle": "Exact paired fields prevent a readable but different task.",
+      "producer_declarations": [],
+      "unit_id": "exp7545-capstone",
+      "yaml": null
+    }
+  ],
+  "title": "Bind fourteen tasks and ingest source-grounding methods",
+  "validation_manifest": {
+    "changed_modules": [
+      "python/carnot/experiment_7532_v659_contract_methods.py"
+    ],
+    "documentation_paths": [
+      "docs/research-notes/v659-method-map.md",
+      "research-studying.md",
+      "openspec/capabilities/research-reporting/spec.md"
+    ],
+    "experiment_id": "exp7532-contract-methods",
+    "full_python_suite_run_once": true,
+    "numbered_runtime_e2e_applicable": false,
+    "static_paths": [
+      "scripts/experiments/experiment_7532_v659_contract_methods.py"
+    ],
+    "test_paths": [
+      "tests/python/test_experiment_7532_v659_contract_methods.py"
+    ]
+  },
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7532_v659_contract_methods",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7532_v659_contract_methods"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5727474550076295,
+      "ended_at_utc": "2026-09-22T20:56:05.579608+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:f1b27fa890cfa21ece5c77f580f79eddb57937e5e2086228986a8e05b677029c",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7532_v659_contract_methods\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7532_v659_contract_methods.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7532_v659_contract_methods": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7532_v659_contract_methods.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T20:56:05.006568+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7532-validation-2_qlpd6l/basetemp/focused tests/python/test_experiment_7532_v659_contract_methods.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7532-validation-2_qlpd6l/basetemp/focused",
+        "tests/python/test_experiment_7532_v659_contract_methods.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.4632732160098385,
+      "ended_at_utc": "2026-09-22T20:56:10.043177+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:44ce0ebeeedafd61e596be4f729c086c4eab170a6a54db26b62ac1dc13142ba3",
+      "name": "focused_pytest",
+      "output_tail": "..........                                                               [100%]\n10 passed in 2.17s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-22T20:56:05.579644+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7532-validation-2_qlpd6l/coverage/.coverage '--include=*/experiment_7532_v659_contract_methods.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7532-validation-2_qlpd6l/basetemp/coverage tests/python/test_experiment_7532_v659_contract_methods.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7532-validation-2_qlpd6l/coverage/.coverage",
+        "--include=*/experiment_7532_v659_contract_methods.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7532-validation-2_qlpd6l/basetemp/coverage",
+        "tests/python/test_experiment_7532_v659_contract_methods.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 8.490134477004176,
+      "ended_at_utc": "2026-09-22T20:56:18.533596+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:f5b12274c3de06ffc426329c7a5ae34f377892afe085b8f5c2b3ab8890c3abe5",
+      "name": "changed_module_coverage",
+      "output_tail": "..........                                                               [100%]\n10 passed in 4.83s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-22T20:56:10.043211+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7532_v659_contract_methods.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7532_v659_contract_methods.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7532-validation-2_qlpd6l/coverage/.coverage"
+      },
+      "duration_s": 0.0862518999929307,
+      "ended_at_utc": "2026-09-22T20:56:18.620157+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:9c63481e172ec9606eea1228a177cc05480585bf32c82e9560a4816b7c86b2cf",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7532_v659_contract_methods.py     430      0   100%\n--------------------------------------------------------------------------------------\nTOTAL                                                      430      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T20:56:18.533630+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7532_v659_contract_methods.py scripts/experiments/experiment_7532_v659_contract_methods.py tests/python/test_experiment_7532_v659_contract_methods.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7532_v659_contract_methods.py",
+        "scripts/experiments/experiment_7532_v659_contract_methods.py",
+        "tests/python/test_experiment_7532_v659_contract_methods.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.014944649010431021,
+      "ended_at_utc": "2026-09-22T20:56:18.635611+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-22T20:56:18.620232+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7532_v659_contract_methods.py scripts/experiments/experiment_7532_v659_contract_methods.py tests/python/test_experiment_7532_v659_contract_methods.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7532_v659_contract_methods.py",
+        "scripts/experiments/experiment_7532_v659_contract_methods.py",
+        "tests/python/test_experiment_7532_v659_contract_methods.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.008592333004344255,
+      "ended_at_utc": "2026-09-22T20:56:18.644535+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-22T20:56:18.635655+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7532_v659_contract_methods.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7532_v659_contract_methods.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.16822750099527184,
+      "ended_at_utc": "2026-09-22T20:56:18.813183+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-22T20:56:18.644565+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7532_v659_contract_methods.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7532_v659_contract_methods.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01971362199401483,
+      "ended_at_utc": "2026-09-22T20:56:18.833296+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-22T20:56:18.813243+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys,yaml;from scripts.roadmap_schema import Roadmap;p=pathlib.Path(sys.argv[1]);Roadmap.model_validate(yaml.safe_load(p.read_text()));print('\"'\"'roadmap schema clean'\"'\"',flush=True)' /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import pathlib,sys,yaml;from scripts.roadmap_schema import Roadmap;p=pathlib.Path(sys.argv[1]);Roadmap.model_validate(yaml.safe_load(p.read_text()));print('roadmap schema clean',flush=True)",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.11719214099866804,
+      "ended_at_utc": "2026-09-22T20:56:18.950936+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/00_roadmap_schema/00_roadmap_schema.log",
+      "log_sha256": "sha256:0d0cbcfe37cd9c83a8d92ec59e4fb950a6c17ccc28ae8f919f42799ee07081c5",
+      "name": "roadmap_schema",
+      "output_tail": "roadmap schema clean\n",
+      "passed": true,
+      "required": true,
+      "scope": "selected_roadmap",
+      "started_at_utc": "2026-09-22T20:56:18.833409+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/validate_prior_failures.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.108555563012487,
+      "ended_at_utc": "2026-09-22T20:56:23.059915+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/01_prior_failure/00_prior_failure.log",
+      "log_sha256": "sha256:cf8e6aa1ba9a3ad1d096c2fccbbd388f26f60a1e7d817497db0ce62acc6743bd",
+      "name": "prior_failure",
+      "output_tail": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n",
+      "passed": true,
+      "required": true,
+      "scope": "selected_roadmap",
+      "started_at_utc": "2026-09-22T20:56:18.950988+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/audit_roadmap_gates.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.036917422999977,
+      "ended_at_utc": "2026-09-22T20:56:27.097109+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/02_roadmap_gate_audit/00_roadmap_gate_audit.log",
+      "log_sha256": "sha256:05d6c3e4c42a86582eceee0512fa033adb6960042ca46e560de0269d340d5219",
+      "name": "roadmap_gate_audit",
+      "output_tail": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 10,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 8,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 8,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}\n",
+      "passed": true,
+      "required": true,
+      "scope": "selected_roadmap",
+      "started_at_utc": "2026-09-22T20:56:23.059944+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/exclusion_manifest_lint.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 10.287954472005367,
+      "ended_at_utc": "2026-09-22T20:56:37.385359+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/03_exclusion_manifest/00_exclusion_manifest.log",
+      "log_sha256": "sha256:38161f53f4ec65fa5a57d4136137fe719ab9671585482697011818e0d5830617",
+      "name": "exclusion_manifest",
+      "output_tail": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n",
+      "passed": true,
+      "required": true,
+      "scope": "selected_roadmap",
+      "started_at_utc": "2026-09-22T20:56:27.097148+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_levelup_guarantee_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/arc_levelup_guarantee_lint.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.24147280100442003,
+      "ended_at_utc": "2026-09-22T20:56:37.627108+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/04_arc_floor/00_arc_floor.log",
+      "log_sha256": "sha256:4dcaf583fb0be4a45539469ffd8cf00332b3bc6f1218ff97a3fda202065643dd",
+      "name": "arc_floor",
+      "output_tail": "RETIRED: all 25 public survey games show full_game_clear: true in ops/arc_solve_registry.yaml (183/183 known levels). The level-up-attempt requirement is moot -- there is no remaining unsolved public level to attempt. Per the 2026-07-17 operator directive, roadmaps are no longer required to propose public-game solve tasks. Passing without checking task content.\nOK (soft): 2 generalization-testing-floor task(s) detected this roadmap.\n",
+      "passed": true,
+      "required": true,
+      "scope": "selected_roadmap",
+      "started_at_utc": "2026-09-22T20:56:37.385389+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/harness_consumer_checks.py prompt-paths /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/harness_consumer_checks.py",
+        "prompt-paths",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.06212426000274718,
+      "ended_at_utc": "2026-09-22T20:56:37.689524+00:00",
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/05_harness_fit/00_harness_fit.log",
+      "log_sha256": "sha256:75b20cbd84d29b451bb364b8942d56066cc303056100529fd29b0a7f7f2f6668",
+      "name": "harness_fit",
+      "output_tail": "    INVENTED PATH  python/carnot/learning/online_learner.py  (parent directory does not exist)\n    INVENTED PATH  python/carnot/models/gibbs.py  (parent directory does not exist)\n    INVENTED PATH  research-roadmap-next.yaml  (parent directory does not exist)\n  invented paths: 3\n",
+      "passed": false,
+      "required": true,
+      "scope": "selected_roadmap",
+      "started_at_utc": "2026-09-22T20:56:37.627137+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys;import scripts.overdue_priority_lint as lint;lint.ROADMAP_NEXT=pathlib.Path(sys.argv[1]);sys.argv=sys.argv[:1];raise SystemExit(lint.main())' /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import pathlib,sys;import scripts.overdue_priority_lint as lint;lint.ROADMAP_NEXT=pathlib.Path(sys.argv[1]);sys.argv=sys.argv[:1];raise SystemExit(lint.main())",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.339736683992669,
+      "ended_at_utc": "2026-09-22T20:56:38.029681+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/06_overdue_priority/00_overdue_priority.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "overdue_priority",
+      "output_tail": "",
+      "passed": true,
+      "required": true,
+      "scope": "selected_roadmap",
+      "started_at_utc": "2026-09-22T20:56:37.689556+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "command_category": "diagnostic_repository_health",
+      "command_environment": {},
+      "duration_s": 2041.520539856996,
+      "ended_at_utc": "2026-09-22T20:54:05.777264+00:00",
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_7532_v659_contract_methods/validation/repository/07_full_python_suite/00_full_python_suite.log",
+      "log_sha256": "sha256:3b9552dc6c057cb74ec45e32a3a765eea63f4573b7e48019d8312c1077536ce0",
+      "name": "full_python_suite",
+      "output_tail": "......................................... [ 40%]\n........................................................................ [ 40%]\n........................................................................ [ 40%]\n........................................................................ [ 40%]\n.................................................s..............F....... [ 40%]\n..F...........................FFFF...................................... [ 40%]\n...........FFF.........................................F....FF.......... [ 40%]\n..........................................sssssssssssF..FF.............. [ 40%]\n......F.F............................................................... [ 40%]\n............F.....................................F..................... [ 41%]\n.................................F...................................... [ 41%]\n........................................................FFFFF.........F. [ 41%]\n........................................................................ [ 41%]\n......................F................................................. [ 41%]\n.................F................F..................................... [ 41%]\n........................................................................ [ 41%]\n.................................................F.F...F................ [ 41%]\n........................................................................ [ 41%]\n........................................................................ [ 42%]\n....F...F.........................................F..................... [ 42%]\n........................................................................ [ 42%]\n............F....F...................................................... [ 42%]\n......................................................................F. [ 42%]\n...................................F....F............................... [ 42%]\n........................................................................ [ 42%]\n.......................FF.FF............F............................... [ 42%]\n..........................FFFF.............F.....F...................... [ 42%]\n..F..F..............................F................................... [ 42%]\n........................................................................ [ 43%]\n......F................................................................. [ 43%]\n........................F..................F..................F......... [ 43%]\n.............................................................FF......... [ 43%]\n.F.....................FFF.............................................. [ 43%]\n...................................................../home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139815832943792, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140625910484912, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140569422194752, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "passed": false,
+      "required": false,
+      "scope": "repository_health",
+      "started_at_utc": "2026-09-22T20:20:04.256234+00:00",
+      "timed_out": true
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

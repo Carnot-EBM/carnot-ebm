@@ -77538,3 +77538,87 @@ claimed from document validation.
 ### Implementation Status (REQ-REPORT-V659-PLAN)
 
 Planned package; validation and final reconciliation are pending.
+
+## REQ-REPORT-7532: Bind V659 and preserve corrected V658 evidence
+
+The repository SHALL provide Exp7532 as an aggregation-only advisory report.
+It SHALL resolve milestone `2026.09.659` from the staged roadmap before
+activation or the active roadmap afterward. It SHALL compare exactly fourteen
+ordered tasks, exp7532 through exp7545, against the independent Markdown
+design. The comparison SHALL include each exact ID, title, phase, deliverable,
+substrate class and structured gate. Private count, order, ID, title, path,
+gate-field, milestone and substrate mutations SHALL fail for each authority.
+Exp7532 SHALL NOT activate, archive or alter a roadmap. It SHALL NOT serve as a
+global science gate.
+
+The report SHALL preserve all fourteen literal V658 dispositions from the
+Exp7529 capstone. It SHALL retain the seven absent producer artifacts from
+Exp7518 through Exp7524 and the Exp7517 finding that 2,487 of 2,487 candidate
+source groups were exposed. Missing evidence SHALL remain absent rather than
+becoming a zero metric. Historical artifacts SHALL remain byte-hash bound.
+
+The report SHALL preserve both appended Exp7531 corrections. It SHALL record
+that the progress proxy was saturated and could change without an induced
+plan. It SHALL also record that all 60 attempts reached the inherited
+256-token harness cap. The report SHALL distinguish that cap from shipped
+production settings and E6's unconstrained historical workload. Exp7531 SHALL
+remain feasibility evidence. Neither correction SHALL open a scientific gate.
+
+The report SHALL ingest three to five primary methods from the dated V659
+review. Each method row SHALL name its source URL, source section, exact bounded
+adaptation, counterexample and destination task. Access failures SHALL remain
+visible. External findings SHALL NOT become Carnot measurements. The report
+SHALL write `docs/research-notes/v659-method-map.md` and an idempotent ingestion
+marker in `research-studying.md`.
+
+The report SHALL retain unchanged schema, prior-failure, exclusion, gate,
+ARC-floor, harness-fit and overdue-priority check receipts. It SHALL preserve
+E0 as operator-blocked and E6 as resolved. Required scoped checks, changed
+module coverage, static checks, the declared entrypoint replay, a fresh-process
+reducer, adversarial verification and strict row consistency SHALL control
+atomic publication. Reporting-only work has no numbered runtime E2E.
+
+The artifact SHALL use `aggregation_from_upstream_artifacts` and the
+`aggregation` class. It SHALL emit empty `MODEL_SPECS` and `model_specs`, false
+`model_invoked`, and balanced zero current invocation counts. The bare numeric
+`contract_ready_score` and `method_ingestion_complete_score` SHALL remain
+independent of scientific benefit. Every required field and gate SHALL state
+the reporting failure it prevents.
+
+### SCENARIO-REPORT-7532-CONTRACT: Both V659 authorities fail closed
+
+**Given** a milestone-matching YAML and the independent fourteen-row design
+**When** Exp7532 compares exact public fields and private authority mutations
+**Then** the ordered exp7532 through exp7545 rows agree
+**And** count, order, title, path, field, milestone and substrate drift fails
+**And** neither authority is changed or activated.
+
+### SCENARIO-REPORT-7532-CUSTODY: V658 and B2 limits stay literal
+
+**Given** the V658 capstone and corrected Exp7531 terminal bytes
+**When** Exp7532 reduces prior dispositions
+**Then** fourteen verdicts, seven absent producers and 2,487 exposed groups remain visible
+**And** progress-proxy saturation and 60 capped attempts remain separate corrections
+**And** the harness cap is not attributed to shipped production settings.
+
+### SCENARIO-REPORT-7532-METHODS: Primary methods remain bounded
+
+**Given** four primary method sections from the dated V659 review
+**When** Exp7532 writes the method map and studying marker
+**Then** each adaptation, counterexample, destination and access result is explicit
+**And** no external result becomes a local result or model invocation.
+
+### SCENARIO-REPORT-7532-VALIDATION: Exact readers control publication
+
+**Given** a frozen affected-file manifest and measured terminal candidate
+**When** scoped checks, 100 percent changed-module coverage, static checks,
+entrypoint replay, cold reduction and both strict guards run
+**Then** every required receipt passes before atomic publication
+**And** the full Python suite runs once without becoming a model-load gate
+**And** no numbered runtime E2E is claimed for reporting-only work.
+
+## Implementation Status (REQ-REPORT-7532)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7532 and SCENARIO-REPORT-7532-* | Planned: V659 authority contract, V658 and B2 custody, bounded method ingestion, and thin entrypoint. | Planned spec-linked tests, 100 percent changed-module coverage, scoped checks, cold replay, independent reduction, and strict terminal readers. |

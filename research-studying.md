@@ -6076,3 +6076,11 @@ Consistency, probability calibration, online proper loss, and thermodynamic
 co-design map to separate V658 tasks. External results remain source context.
 Exact sections, counterexamples, and destinations are in
 `docs/research-notes/v658-method-map.md`.
+
+<!-- EXP7532-V659-METHOD-INGESTION -->
+## 2026-09-22 Exp7532 — V659 methods — INGESTED
+
+Tool grounding, continual calibration, online recalibration, and consistency
+map to separate V659 tasks. External results remain source context.
+Exact sections, counterexamples, and destinations are in
+`docs/research-notes/v659-method-map.md`.
