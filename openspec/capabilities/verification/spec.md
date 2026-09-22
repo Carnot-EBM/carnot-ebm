@@ -44804,3 +44804,96 @@ applies to this CPU-only fit boundary.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-7505 and SCENARIO-VERIFY-7505-* | Implemented: authenticated Exp7504 fit reader, bounded binary energy heads, matched controls, immutable policies and sidecars, independent reduction, and thin entrypoint. | Implemented: spec-linked tests cover energy normalization, bounded fitting, controls, policies, access separation, readiness, malformed inputs, source drift, cold replay, and changed-module coverage. |
+
+### REQ-VERIFY-7507: V657 Static Evaluation SHALL Test Frozen Heads Without Held-Out Tuning
+
+Exp7507 SHALL authenticate the terminal Exp7504 evidence interface and terminal
+Exp7505 frozen fit before measurement. It SHALL use the Exp7504 `predict`
+reader to emit label-free predictions for all 116 test source groups, write and
+hash those bytes, and only then use the Exp7504 `evaluate` reader to open test
+labels. It SHALL verify that the Exp7505 bundle, policies, and every fitting
+artifact were frozen without test-label access. Unknown or prior exposure SHALL
+make metrics exploratory and SHALL close confirmatory benefit gates.
+
+The evaluator SHALL score every complete Exp7505 candidate at the
+calibration-selected regularization for its arm, retaining all five fit seeds
+without selecting a favorable seed. It SHALL also score the frozen temperature,
+raw whole-expectation, and raw maximum-window controls. Raw rows SHALL retain
+source hash, group, arm, fit seed, probability, label, Brier loss, log loss,
+decision, and each of the nine registered false-accept and escalation cost
+cells. Repeated-seed losses SHALL be averaged inside a source before paired
+inference. Sources, not seeds or windows, SHALL define sample size.
+
+Probability support SHALL require at least 100 test groups and at least 20 per
+class. Window-Gibbs probability benefit SHALL require mean Brier delta at most
+-0.01 against both identical-ten-feature logistic and whole-only Gibbs, with
+each 2,000-draw paired-source bootstrap Holm-adjusted upper 95 percent bound
+below zero. The bootstrap seed SHALL be 657007. Window-Gibbs log-loss delta
+against the calibration-selected best simple baseline SHALL be at most 0.01.
+Temperature and unchanged raw-score controls SHALL remain descriptive.
+
+Selective-decision benefit SHALL evaluate the nine Exp7505 cost cells. Each
+cell SHALL compare window Gibbs with the same-cost calibration-selected simple
+policy, require at least 0.20 non-escalated coverage, and require a negative
+Holm-adjusted upper 95 percent paired-source cost-delta bound over the family of
+nine cells. It SHALL report risk, coverage, and coverage-matched sensitivity;
+escalation SHALL never count as verification accuracy.
+
+`static_evaluation_complete_score` SHALL report only valid complete held-out
+reduction. `static_probability_value_score` and
+`selective_decision_value_score` SHALL independently report the two benefit
+claims. A valid failure of benefit SHALL be a complete terminal null with
+readiness one. The artifact SHALL declare `no_model_load`, empty `MODEL_SPECS`
+and `model_specs`, zero current model calls, historical Qwen provenance, CPU
+numerical work, immutable evaluator settings, raw sidecars, exclusions and
+censoring, exact validation receipts, and principle-annotated fields.
+
+The terminal artifact SHALL publish atomically at
+`results/experiment_7507_v657_static_evaluation.json` only after scoped pytest,
+separate 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, scoped specification coverage, declared-entrypoint replay,
+fresh-process independent reduction, adversarial verification, and strict
+verdict-row consistency pass. No numbered runtime E2E applies to this
+reporting-only CPU evaluation.
+
+#### SCENARIO-VERIFY-7507-ACCESS: Predictions Exist Before Test Labels Open
+
+**Given** authenticated label-free test features and frozen Exp7505 bytes
+**When** Exp7507 evaluates the held-out test role
+**Then** it writes predictions for exactly 116 source groups before requesting labels
+**And** the evaluate reader authenticates that exact prediction byte hash before label access.
+
+#### SCENARIO-VERIFY-7507-PROBABILITY: Paired Source Inference Uses Frozen Seeds
+
+**Given** five frozen candidates at each calibration-selected arm regularization
+**When** Exp7507 reduces Brier and log loss on test groups
+**Then** it averages seed losses within each source and applies the registered 2,000-draw paired bootstrap
+**And** neither seeds nor windows increase the independent sample size.
+
+#### SCENARIO-VERIFY-7507-POLICY: Nine Frozen Cost Cells Stay Distinct
+
+**Given** the Exp7505 cost grid and frozen decision rule
+**When** window and calibration-selected simple probabilities are evaluated
+**Then** every source and cell retains action, escalation, cost, risk, and coverage operands
+**And** all nine Holm-adjusted comparisons must pass for selective-decision value.
+
+#### SCENARIO-VERIFY-7507-NULL: Completion Is Independent Of Benefit
+
+**Given** authentic inputs, adequate support, complete rows, and passing validation
+**When** either registered benefit threshold fails
+**Then** static evaluation completion remains one and the failed value score is zero
+**And** the honest verdict is a complete null rather than blocked or partial.
+
+#### SCENARIO-VERIFY-7507-BLOCKED: External Absence Names The Exact Failure
+
+**Given** a missing, changed, flagged, or nonterminal Exp7504 or Exp7505 input
+**When** Exp7507 checks preconditions
+**Then** it publishes a schema-complete `complete_blocked_*` result without opening labels
+**And** the gate summary names the upstream path, field, expected value, and observed value.
+
+#### SCENARIO-VERIFY-7507-E2E: One Command Publishes A Cold-Valid Evaluation
+
+**Given** a frozen affected-file manifest and no current model calls
+**When** the declared unbuffered Exp7507 entrypoint and fresh-process replay run
+**Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
+**And** only the validated terminal JSON publishes at the deliverable path.
