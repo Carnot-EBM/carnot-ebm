@@ -20299,3 +20299,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-22: Measure causal delayed-feedback learning and held-out retention (⚠️ Research Finding) — honest_verdict=complete_null_causal_online_measurement_valid_benefit_gate_failed; results/experiment_7509_v657_causal_online.json
 - 2026-09-22: Independently audit feedback causality and restart retention (⚠️ Research Finding) — honest_verdict=complete_null_v657_causal_audit_benefit_gate_failed; results/experiment_7510_v657_causal_audit.json
 - 2026-09-22: Qualify completed live ARC panel B from immutable raw evidence (⚠️ Research Finding) — honest_verdict=complete_null_arc_panel_b_evidence_recovered; results/experiment_7511_v657_arc_evidence_recovery.json
+- 2026-09-22: Reduce cross-game live-agent cost and supervisor opportunities (⚠️ Research Finding) — honest_verdict=complete_null_zero_eligible_supervisor_opportunity; results/experiment_7512_v657_arc_opportunity.json
