@@ -18442,3 +18442,6 @@ code |
 | 2026-09-22 22:15 UTC | Build an independent conjugate energy memory for d | OK | 102 passed, 1 warning in 10.93s |
 | 2026-09-22 23:03 UTC | Qualify source-intervention transport and bounded  | OK | 111 passed, 1 warning in 8.72s |
 | 2026-09-22 23:05 UTC | Capture fitting evidence from whole tool-source in | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7535-native-pilot.native_tool_ready_score (actual=0 == expected=1) |
+| 2026-09-22 23:07 UTC | Capture sealed test and online tool-grounding evid | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7535-native-pilot.native_tool_ready_score (actual=0 == expected=1) |
+| 2026-09-22 23:09 UTC | Fit calibrated energy decisions with matched sourc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7536-fit-capture) |
+| 2026-09-22 23:09 UTC | Measure held-out tool-grounding probability and de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7537-eval-capture, exp7538-energy-fit) |
