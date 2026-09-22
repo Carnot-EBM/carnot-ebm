@@ -20325,3 +20325,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - Terminal corrected comparison (experiment 10006, commit range TBD): Qwen3.8-27B cleared 17/112/116 lines across seeds 1-3, reaching the 300-piece cap twice and overlapping the cited cloud Jev range (23-115). Qwen3.5-9B cleared 1/6/2 lines, staying below all cited non-random baselines.
 - Experiment 10004 kept unchanged with an additive corrigendum pointing to 10006, per never-prune.
 - 2026-09-22: Independently audit source decisions and feedback information (⚠️ Blocked) — honest_verdict=complete_blocked_required_science_incomplete; results/experiment_7525_v658_decision_audit.json
+- 2026-09-22: Bind supervisor eligibility to the live action boundary (⚠️ Research Finding) — honest_verdict=complete_null_eligibility_observed_without_applied_effect_support; results/experiment_7526_v658_arc_eligibility.json
