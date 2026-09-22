@@ -45035,3 +45035,121 @@ applies because this is CPU-only protocol/reporting work.
 **When** the declared unbuffered entrypoint and fresh-process replay run
 **Then** scoped validation, independent reduction, adversarial verification, and strict row lint pass
 **And** only the validated terminal JSON occupies the deliverable path.
+
+### REQ-VERIFY-7533: V659 Tool Protocol SHALL Freeze A Label-Blind Grounding Cohort
+
+Exp7533 SHALL authenticate all three official train shards and the official
+test shard of `KRLabsOrg/lettucedetect-code-hallucination` at revision
+`866a7c5392c3cf87e4fbc2b3808815d524f54331`. It SHALL retain CC-BY-4.0
+attribution and use only `dataset=lettucedetect-tool-output`. Downloaded code
+SHALL NOT execute. A missing or changed release, shard, tokenizer, or upstream
+exposure artifact SHALL produce a schema-complete `complete_blocked_*` result.
+
+The protocol builder SHALL group rows by connected components of public
+`metadata.instance_id`, normalized context hash, and normalized answer hash.
+Every component SHALL stay in one role. Components crossing official splits,
+matching earlier exact or normalized source exposure, or lacking a two-member
+tool-type donor stratum SHALL be excluded before selection. One response per
+component SHALL be chosen by `SHA256(seed=659033, context, question, answer)`.
+Labels, annotation spans, outcome metadata, injector identity, corpus IDs, and
+generator identities SHALL NOT enter selection, allocation, or predictor
+features. Enumeration, selection, prediction, and label access SHALL remain
+distinct receipt events and SHALL preserve the V658 exhausted-inventory result.
+
+Every proposed original, absent, and mismatched prompt in both option orders
+SHALL be tokenized in full with the pinned Qwen3.8-27B GGUF vocabulary at
+`n_ctx=4096`. The absent condition SHALL use `[NO SOURCE EVIDENCE PROVIDED]`.
+No input SHALL be truncated or partially extracted. Donors SHALL be distinct
+components from the same final role and tool type, selected by nearest frozen
+token-length bin and deterministic hash tie breaks. Token fit and donor
+eligibility SHALL be checked before role selection.
+
+The official-train schedule SHALL contain exactly 400 groups allocated as 160
+fit, 40 tune, 40 policy, and 160 online. The official-test schedule SHALL
+contain exactly 80 groups. Hash allocation SHALL occur before labels are
+opened. Capacity failure SHALL report exact counts and SHALL NOT reduce the
+sample, import exposed data, or substitute another corpus. The fitting schedule
+SHALL contain exactly 240 fit/tune/policy groups. The evaluation schedule SHALL
+contain exactly 240 official-test/online groups.
+
+Predictor, fit-label, tune-label, policy-label, test-label, and online-release
+shards SHALL be sealed separately. Capture SHALL not open fit, tune, or policy
+labels. Test labels SHALL open only after prediction bytes freeze. Online labels
+SHALL release only after the registered delay. A valid external annotation span
+SHALL define the evaluator-only binary target `contains_unsupported=1`; no valid
+span SHALL define zero. Invalid spans SHALL fail closed. The provenance SHALL be
+`injected_tool_errors`; it SHALL NOT be described as natural factuality, span
+localization, or code-execution correctness.
+
+The future predictor SHALL use only clipped [-12,12] semantic unsupported
+logits from original, absent, and mismatched readings. Both option orders SHALL
+map to the same semantic probability. Labels SHALL apply only to the original
+source sample. Outcome fields, IDs, generator fields, and length covariates
+SHALL be absent from predictor features. The fixed action costs SHALL be
+`accept=5*p`, `reject=1-p`, and `escalate=0.2`, with escalation winning ties.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, `inference_substrate_class=no_model_load`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`. It SHALL
+record the vocab-only GGUF tokenizer identity separately and zero current model
+loads, forwards, generations, failures, and cancellations. It SHALL contain a
+bare `tool_protocol_ready_score` of one only after the roster, prompt fit,
+sealed readers, strict guards, scoped validation, and cold replay pass.
+
+The terminal artifact SHALL publish atomically at
+`results/experiment_7533_v659_tool_protocol.json`. Hash-bound raw sidecars SHALL
+remain below 20 MiB. The affected manifest SHALL name only the Exp7533 test,
+module, and thin entrypoint. Required checks SHALL include scoped pytest,
+separate 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, scoped specification coverage, declared-entrypoint replay,
+independent reduction, adversarial verification, and strict row consistency.
+No numbered runtime E2E applies to this CPU-only protocol work.
+
+#### SCENARIO-VERIFY-7533-COMPONENTS: Duplicates And Splits Stay Sealed
+
+**Given** pinned public tool rows with transitive instance, context, or answer duplicates
+**When** label-blind components are built
+**Then** each component has one official split and one selected response
+**And** cross-split and previously exposed source components are excluded exactly.
+
+#### SCENARIO-VERIFY-7533-ROLES: Exact Hash Roles Freeze Before Labels
+
+**Given** adequate eligible train and test components
+**When** seed 659033 allocates roles
+**Then** train roles are exactly 160 fit, 40 tune, 40 policy, and 160 online
+**And** the official-test role is exactly 80 with disjoint component hashes.
+
+#### SCENARIO-VERIFY-7533-PROMPTS: Full GGUF-Fit Interventions Have Safe Donors
+
+**Given** selected groups and the pinned vocab-only GGUF tokenizer
+**When** six intervention prompts per group are frozen
+**Then** every prompt fits 4096 tokens without truncation
+**And** each donor is a distinct same-role same-tool-type component.
+
+#### SCENARIO-VERIFY-7533-READERS: Labels Follow Freeze And Delay Boundaries
+
+**Given** physically separate predictor and label shards
+**When** capture, fit, policy, evaluate, or online readers run
+**Then** capture sees no labels and held-out labels require their registered freeze or delay
+**And** missing rows, metadata leakage, overlap, or invalid spans fail closed.
+
+#### SCENARIO-VERIFY-7533-READOUT: Orders Preserve Semantic Unsupported Probability
+
+**Given** six finite native option-logit rows for one group
+**When** display labels are remapped and clipped
+**Then** both orders yield the registered original/absent/mismatched feature vector
+**And** outcomes, identities, generators, and lengths cannot enter that vector.
+
+#### SCENARIO-VERIFY-7533-GUARDS: Null And Missing Shapes Stay Strict
+
+**Given** correct-null, identical-arm, and missing-data fixtures
+**When** the unchanged strict reducer qualifies them
+**Then** complete valid no-benefit evidence remains an honest null with absolute metrics
+**And** missing or malformed rows remain disqualified rather than becoming zero.
+
+#### SCENARIO-VERIFY-7533-E2E: One Command Publishes A Cold-Valid Protocol
+
+**Given** an authenticated release and a frozen affected-file manifest
+**When** the declared unbuffered entrypoint and fresh-process replay run
+**Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
+**And** only the exact validated terminal JSON publishes at the deliverable path.
