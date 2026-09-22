@@ -77502,3 +77502,39 @@ strict row consistency run in fresh processes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7525 and SCENARIO-REPORT-7525-* | Planned: V658 two-branch decision audit and thin entrypoint. | Requires spec-linked tests, 100 percent changed-module coverage, scoped checks, entrypoint replay, cold reduction, adversarial verification, and strict row consistency. |
+
+## REQ-REPORT-V659-PLAN: Bind the next research design to executable tasks
+
+The V659 planning package SHALL stage milestone `2026.09.659` in
+`research-roadmap-next.yaml` and its matching
+`openspec/change-proposals/research-roadmap-vNEXT.md`. It SHALL contain exactly
+14 ordered tasks, exp7532 through exp7545. Exp7530 and Exp7531 are already
+allocated to outer-loop B2 telemetry and measurement and SHALL NOT be reused.
+The V658 design SHALL be preserved byte for byte before replacing vNEXT.
+
+The package SHALL retain V658's blocked source inventory and missing science,
+plus the appended Exp7531 token-cap and progress-proxy corrections. It SHALL
+record literature before design, qualify a different source inventory, train
+small calibrated energy decisions, and include continuous learning, live ARC
+method work and hardware continuity. It SHALL preserve literal prior failures
+and use same-roadmap producer fields for every structured gate.
+
+Every prompt SHALL contain numbered progress and bounded-writing steps,
+explicit substrate and model contracts, per-unit comparative rows, closed
+verdict classes, source custody, scoped validation, E2E and terminal checks.
+Planning SHALL NOT execute the proposed experiments, alter active roadmap or
+conductor code, activate a milestone, push, or publish externally.
+
+### SCENARIO-REPORT-V659-PLAN: Both authorities describe the same work
+
+Given the staged V659 pair, validation SHALL compare milestone, count, order,
+IDs, exact titles, phases, deliverables, substrate classes and gates. Private
+count/order/title/field/path/milestone/substrate mutations SHALL fail. Schema,
+prior-failure, exclusion, gate, ARC-floor and applicable planning checks SHALL
+run without changing their rules. Planning verification uses existing reader
+unit tests and the staged pair as the end-to-end contract; no runtime E2E is
+claimed from document validation.
+
+### Implementation Status (REQ-REPORT-V659-PLAN)
+
+Planned package; validation and final reconciliation are pending.

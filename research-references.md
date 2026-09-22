@@ -46251,3 +46251,113 @@ are rechecked leads, not discoveries claimed as new.
 
 No model run, hardware operation, purchase, external contact or publication
 occurred during this review.
+
+## 2026-09-22: V659 planning review, recorded before experiment design
+
+This review checked primary pages and release metadata on 2026-09-22. Paper
+results and vendor estimates below are external evidence, not Carnot results.
+Earlier entries are retained. Rechecked ideas are not counted as new discoveries.
+
+### Findings that can change the next experiments
+
+- **A different grounding corpus is available.** [Beyond Document Grounding,
+  arXiv:2607.00895](https://arxiv.org/html/2607.00895v1), July 2026, sections
+  3–5, releases code, tool-output and structured-document examples with injected
+  unsupported spans. Source grouping and the difference between synthetic edits
+  and naturally occurring mistakes matter. The code test received author
+  arbitration; that does not establish equivalent review for the tool subset.
+  The [author repository](https://github.com/KRLabsOrg/LettuceDetect) links
+  [the dataset](https://huggingface.co/datasets/KRLabsOrg/lettucedetect-code-hallucination).
+  Its public API returned revision `866a7c5392c3cf87e4fbc2b3808815d524f54331`,
+  CC-BY-4.0 metadata, and 66,368/2,816/5,101 train/validation/test rows.
+  Predictor columns are available separately from labels and metadata.
+  A tool-output source-dependence test is plausible; availability after local
+  deduplication and the complete-prompt length cap must be checked before launch.
+  Do not import RAGTruth/PsiloQA rows from the separate prose release or treat
+  injected-error detection as proof of natural factuality or code correctness.
+- **Independent labels have a cost and a noise model.** [Rethinking Evaluation,
+  arXiv:2605.11330](https://arxiv.org/html/2605.11330v1), May 2026, sections
+  2–5, distinguishes organic answers, verified evaluation labels and noisy
+  training labels. [Trivia+ release](https://github.com/amazon-science/hallucination-benchmark-trivialplus)
+  is accessible, but its long contexts and CC-BY-NC-ND release make it a
+  deferred research comparator, not an automatic replacement for a short-context
+  local workload. Keep label provenance and acquisition cost explicit.
+- **Calibration retention needs its own measurement.** [Continual Calibration,
+  arXiv:2604.23987](https://arxiv.org/html/2604.23987v1), April 2026, studies
+  uncertainty after sequential training and task-specific calibration replay.
+  Its classification/exchangeability assumptions do not establish guarantees
+  for delayed Carnot streams. Measure old-domain Brier and decision coverage
+  after each update, not only final accuracy or parameter changes.
+- **Online recalibration is a useful target, not a borrowed guarantee.**
+  [Optimal Recalibration of an Online Predictor, arXiv:2607.19689](https://arxiv.org/html/2607.19689v1),
+  July 2026, motivates excess proper loss against the original forecast.
+  A conjugate bin-count energy memory is a practical alternative to investigate;
+  it is not the paper's Blackwell construction. Use legal delayed labels,
+  matched global-count and shuffled-feedback controls, and immutable predictions.
+- **Source and option interventions need different semantics.** Rechecked
+  [CCHD, arXiv:2606.08158](https://arxiv.org/abs/2606.08158) and
+  [distributional EBMs, arXiv:2605.18871](https://arxiv.org/abs/2605.18871).
+  Option reordering can preserve a label after semantic remapping; replacing
+  the evidence cannot. Separate consistency training from source-sensitivity
+  features. Any small energy head needs an equal-information linear control.
+
+### Eight-topic scan and explicit deferrals
+
+| Topic | Primary material checked | Research consequence |
+|---|---|---|
+| EBM verification and reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605); [Cross-Block Conditioning, 2609.14934](https://arxiv.org/abs/2609.14934), September 2026 | Conditional energy is useful; no native foundation-model training is justified by the current data bottleneck. |
+| Neural constraint satisfaction | [PAL, 2503.19466](https://arxiv.org/abs/2503.19466); [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461); [Solver-Hard Is Not Model-Hard, 2607.17047](https://arxiv.org/abs/2607.17047) | Formal feasibility depends on the encoded constraint and input representation. Do not use solver hardness or low learned energy as a factuality certificate. |
+| Ising in ML | [Learning-to-sample phase transition, 2605.24752](https://arxiv.org/abs/2605.24752); [Ising-assisted equilibrium propagation, 2606.09112](https://arxiv.org/abs/2606.09112) | Separate parameter learning from sampling difficulty. Exact normalization suffices for a binary head; defer another sampler sweep. |
+| Hallucination mitigation | Grounding corpus and Trivia+ above | Check source dependence and annotation provenance before claiming a verifier gain. |
+| KAN | [KAC, 2503.21076](https://arxiv.org/html/2503.21076v1); [KAN calibration, 2503.01195](https://arxiv.org/abs/2503.01195) | KAC uses RBF classifier structure. It does not prove spline retention or calibration for Carnot. Keep capacity-matched controls. |
+| Energy-guided/constrained generation | [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731); [Thinking Before Constraining, 2601.07525](https://arxiv.org/abs/2601.07525) | The former is visual; the latter separates reasoning from structured output. Neither reopens Carnot's unchanged generated-span extractor. |
+| Hardware sampling | [FPGA decomposition, 2602.15985](https://arxiv.org/html/2602.15985v1); [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Charge orchestration, transfers and durability. Z1T's projected system energy is dominated by FPGA work; vendor estimates are not measured local TSU performance. |
+| Continual/online learning | Online recalibration and Continual Calibration above; [TOOD, 2607.29592](https://arxiv.org/abs/2607.29592) | Measure retention of uncertainty separately. Image-classifier findings remain motivation, not a transfer result. |
+
+### Secondary-source receipts
+
+- **OpenReview:** searched ICLR 2026 energy models and found
+  [NRGPT](https://openreview.net/pdf/6feb228b3e35f6b1a41057403fa2aed7deebda65.pdf)
+  and [energy-based nonconformity scores](https://openreview.net/pdf?id=zCwTMRtASZ).
+  The latter's forum returned a browser challenge. Indexed PDFs are discovery
+  evidence; no unseen review, decision or theorem is attributed to Carnot.
+- **Semantic Scholar:** Graph API citation requests for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=40)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=40)
+  returned HTTP 200, respectively 36 and 8 records, with no next page. This
+  exhausts these API responses, not all scholarly citations. Followed Cross-Block
+  Conditioning, Solver-Hard Is Not Model-Hard and distributional EBMs to arXiv.
+- **Hugging Face Papers:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  Followed the grounding paper to author code and the revision-pinned dataset.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending. No new
+  dependency was chosen from those lists. LettuceDetect was found through its
+  paper, not asserted to hold a trending rank.
+- **Extropic:** checked [writing](https://extropic.ai/writing), which returned
+  navigation, and the readable Z1T article. No local TSU access was established.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  describes an EBM constraint layer. The returned page supplies no reproducible
+  training recipe, local checkpoint or evidence of Carnot parity.
+
+This was a read-only source review. It made no model call, board operation,
+purchase, vendor contact or publication.
+
+### V659 planning feasibility follow-up (metadata and public text only)
+
+The pinned release's first train shard and test shard were downloaded to
+`/tmp`, without decoding annotation columns or displaying sample text. The
+check projected tool source IDs from metadata; outcome metadata did not enter
+selection or any metric. It measured inventory, not detection quality:
+
+| Split checked | Tool rows | Unique context hashes | Unique instance IDs | IDs with a complete example <=4,000 characters |
+|---|---:|---:|---:|---:|
+| First train shard | 10,508 | 8,103 | 4,126 | 1,899 |
+| Test | 617 | 519 | 308 | 88 |
+
+Train/test instance-ID overlap was zero. Train shard SHA256:
+`a96134e12a283527daf507aa8635d30e0d53bb4b4fc1435e1513435c989fd534`.
+Test shard SHA256:
+`b0c28111ce1dfe21a3d8082438b561c7001cd8e5406cf5c1c3b48aa156524572`.
+Connected-component deduplication, prior local exposure and exact GGUF prompt
+length remain execution-time gates. Character counts are not token counts.
+No labels, prediction performance or class balance informed this check.

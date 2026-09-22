@@ -16,22 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (95 modul
 
 ## Hostile LLM review
 
-### TL;DR Verdict
-**NO_NEW_SOLVES** — 0 solve artifacts submitted in the last 7 days. Mechanical reachability check passed (95 modules in live closure reachable from entrypoints, 0 orphans via [`scripts/arc_orphan_solver_lint.py`](file:///scripts/arc_orphan_solver_lint.py)), but autonomous live self-discovery output is currently zero.
+**TL;DR: NO RECENT SOLVES TO CREDIT.** Reachability passes, but it proves plumbing—not autonomous hidden-game discovery.
 
----
+Per-artifact review: none; `RECENT ARC SOLVE ARTIFACTS = 0`.
 
-### Per-Artifact Review
-*No artifacts submitted in the evaluation window (`[]`, count: 0).*
-
-- **Verdict**: `N/A`
-- **Evidence**: Trailing 7-day artifact registry is completely empty.
-- **Recommended Action**: Require that any forthcoming solve submission bundles complete raw interaction logs from [`scripts/arc_loop_solve.py`](file:///scripts/arc_loop_solve.py) or [`python/carnot/agentic/arc_competition_agent.py`](file:///python/carnot/agentic/arc_competition_agent.py) showing the step-by-step hypothesis generation, attempts, and failures prior to the solve.
-
----
-
-### Pattern Watch
-1. **The "Offline Incubation" Trap**: A 7-day dry spell with zero registered live solves is a prime indicator that work may be shifting into the outer loop. Watch for developers manually inspecting game source, writing offline ground-truth search harnesses, or reverse-engineering game mechanics by hand with plans to drop a batch of "solved" games in a single commit.
-2. **Closure Bloat (95 Live Modules)**: While [`scripts/arc_orphan_solver_lint.py`](file:///scripts/arc_orphan_solver_lint.py) confirmed all 95 solver modules are reachable from the live entrypoints, a 95-module closure creates ample surface area to smuggle in per-game shortcuts, precomputed tables, or game-specific state machines under the guise of general modules. Reachability alone does NOT guarantee self-discovery.
-3. **Mandatory Standard for Incoming Solves**: Any solve artifact submitted without an uncurated, end-to-end runtime trace of the agent discovering the transition model and solution via its own action-observation loop will be aggressively flagged as `OUTER_LOOP_RE` or `UNCLEAR`.
+**Pattern watch:** No evidence of outer-loop solving in this window, but also no evidence that the live agent independently advanced. Do not treat the 95-module live closure as a capability or solve result. Require future artifacts to record the live entrypoint, agent attempts, runtime observations, discovered model/strategy, and successful trajectory.
 
