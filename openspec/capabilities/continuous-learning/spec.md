@@ -18461,3 +18461,133 @@ causal permutation, and restart parity pass. Fixture gain MAY support only
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7506 and SCENARIO-CL-7506-* | Implemented: reusable smooth bounded learner and causal fixture machine with a thin Exp7506 entrypoint. | `tests/python/test_experiment_7506_v657_causal_prototype.py` covers gradients, controls, withholding, permutation, lifecycle, restart, reduction, and readers. The scoped runner enforces 100 percent changed-module coverage and terminal checks. |
+
+## REQ-CL-7509: V657 Causal Online Adaptation Measurement
+
+Exp7509 SHALL measure whether already revealed audited feedback improves later
+predictions on all 159 sealed online source groups. It SHALL authenticate the
+Exp7504 role-separated features, Exp7505 frozen temperature baseline, and
+Exp7506 qualified causal event machine before opening online labels. Missing,
+changed, ineligible, or adversarial prerequisites SHALL produce a row-free
+`complete_blocked_*` artifact with the exact failed check in
+`gate_check_summary`.
+
+The replay SHALL use schedule seeds 656201 through 656205. Each schedule SHALL
+order source-family blocks and members from label-free identity fields. An
+audit mask with probability 0.25 SHALL depend only on the schedule seed and
+group identity. Source groups SHALL arrive in blocks of eight. Selected labels
+SHALL become eligible at block end plus delay eight for the primary analysis,
+or delay zero for a named sensitivity. Predictions SHALL be durable before
+feedback release or updates. Labels that remain unreleased after the final
+arrival SHALL be censored and counted by reveal batch.
+
+The seven frozen arms SHALL be the frozen base, intercept Brier, affine Brier,
+local Brier, same-release-batch shuffled local Brier, matched local log loss,
+and zero-step local Brier. Every adaptive arm SHALL use the Exp7506 selected
+learning rate, residual bound, local capacity, audit opportunities, and
+release schedule. The shuffled arm SHALL permute labels only inside the batch
+that is currently released. It SHALL not move a label across reveal batches to
+create a nontrivial permutation.
+
+Every prediction row SHALL retain source, arm, delay, schedule seed,
+probability, label, Brier loss, log loss, prediction time, and state hash.
+Every update row SHALL retain the source-label origin, availability time,
+update time, parameter hash, and permutation identity. The reducer SHALL
+average schedule-seed losses within each source before uncertainty analysis.
+Primary support SHALL require at least 120 sources, at least 20 delivered
+audited labels, and at least 12 labels in nontrivially permutable release
+batches for every schedule seed. Weak support SHALL close only the benefit
+claim.
+
+The primary delay-eight gate SHALL require the local Brier mean loss delta to
+be at most -0.01 against frozen. Its paired moving-block bootstrap upper 95
+percent bound SHALL be below zero against frozen, intercept Brier, affine
+Brier, same-batch shuffled local Brier, and matched local log loss. The reducer
+SHALL use 2,000 replicates, block length 16, seed 657009, and Holm correction
+over all five contrasts. Block lengths 8 and 32 and delay zero SHALL be named
+sensitivities only. Drift strata SHALL keep the frozen source-family order.
+
+After all online updates and checkpoint hashes freeze, final heads SHALL score
+the 116 sealed static-test groups. Static labels SHALL never select settings,
+rollback, or updates. The retention upper 95 percent paired Brier delta against
+frozen SHALL be at most 0.01. The uninterrupted and checkpoint/restart replays
+SHALL match every prediction, update hash, pending queue, and final state.
+Chronology violations SHALL equal zero.
+
+`causal_evaluation_complete_score` SHALL be one for complete valid prequential
+and retention evidence, independent of benefit. `causal_information_value_score`
+SHALL be one only when the aligned local arm beats its legal shuffled control
+with full support. `online_benefit_score` SHALL be one only when the full
+primary, retention, chronology, restart, and validation gates pass. A valid
+failed benefit gate SHALL produce `verdict_class=null`. Oracle-defined fixtures
+SHALL remain circular, and unknown exposure SHALL remain exploratory.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current model calls,
+`inference_substrate_class=no_model_load`, and host CPU execution. Cached Qwen
+evidence SHALL be historical. Current small-head training SHALL have a separate
+receipt. Numeric replay SHALL stop before 1,200 seconds and checkpoint each
+release block.
+
+The affected validation plan SHALL use the Exp7358 manifest and Exp7303 scoped
+runner. It SHALL run focused serial pytest with cleared addopts and no coverage,
+separate 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, and exact-test specification coverage. It SHALL not run an
+unscoped Python suite. The declared entrypoint, fresh-process cold replay,
+independent reduction, adversarial verifier, and strict row-consistency reader
+SHALL inspect the exact candidate before atomic terminal publication.
+
+### SCENARIO-CL-7509-CAUSAL: Only Revealed Feedback Changes Later Predictions
+
+- GIVEN a sealed prediction and a label-independent audit decision
+- WHEN one release block becomes available
+- THEN only labels from that release block can update learner state
+- AND every later prediction identifies the state created from prior releases.
+
+### SCENARIO-CL-7509-SHUFFLE: The Negative Control Preserves Reveal Batches
+
+- GIVEN a singleton, identical-label, mixed, or censored release batch
+- WHEN the shuffled arm receives its matched update opportunity
+- THEN origins stay inside that batch and release time stays unchanged
+- AND a degenerate batch remains a named no-op instead of borrowing another label.
+
+### SCENARIO-CL-7509-SUPPORT: Weak Support Does Not Erase Measurement
+
+- GIVEN a complete valid replay with insufficient audited or permutable labels
+- WHEN the independent reducer applies the frozen support gate
+- THEN `causal_evaluation_complete_score` can remain one
+- AND both causal information and online benefit scores remain zero.
+
+### SCENARIO-CL-7509-PRIMARY: Seed Averaging Precedes Registered Inference
+
+- GIVEN five matched schedule replays at delay eight
+- WHEN primary deltas and moving-block intervals are computed
+- THEN seed losses are averaged within source before resampling
+- AND all five Holm-adjusted contrasts must pass without help from sensitivities.
+
+### SCENARIO-CL-7509-RETENTION: Static Labels Measure But Never Control State
+
+- GIVEN final online heads and 116 sealed static-test groups
+- WHEN retention is scored after final checkpoint hashes freeze
+- THEN test labels cause no update, rollback, selection, or setting change
+- AND retention failure remains visible even when online loss improves.
+
+### SCENARIO-CL-7509-RESTART: Full Durable State Replays Exactly
+
+- GIVEN identical schedules for uninterrupted and restarted execution
+- WHEN a checkpoint is restored after a release block
+- THEN every probability, update hash, pending queue, and final state matches
+- AND any mismatch disqualifies the candidate.
+
+### SCENARIO-CL-7509-ARTIFACT: Fresh Readers Control Atomic Publication
+
+- GIVEN raw per-unit rows, update rows, retention rows, hashes, and receipts
+- WHEN fresh readers change evidence, gates, scores, or validation scope
+- THEN terminal validation fails closed
+- AND only the exact valid candidate is published atomically.
+
+## Implementation Status (REQ-CL-7509)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7509 and SCENARIO-CL-7509-* | Implemented: reusable seven-arm causal replay, retention scoring, block-local shuffled control, moving-block reducer, durable restart comparison, and thin entrypoint. | `tests/python/test_experiment_7509_v657_causal_online.py` covers the frozen protocol, label-free scheduling, causal release, support separation, retention, restart, row reduction, exact preconditions, mutations, and reader modes. The entrypoint enforces scoped validation and terminal readers before publication. |
