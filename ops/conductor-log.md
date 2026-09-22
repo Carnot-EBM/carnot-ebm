@@ -18422,3 +18422,10 @@ code |
 | 2026-09-22 12:15 UTC | Milestone 2026.09.658 activated | OK | 14 tasks queued |
 | 2026-09-22 13:02 UTC | Bind fourteen tasks and qualify the V657 scientifi | OK | 90 passed, 1 warning in 15.09s |
 | 2026-09-22 13:47 UTC | Seal fresh source interventions and role-separated | OK | Deliverable already exists in repo |
+| 2026-09-22 13:49 UTC | Measure Qwen source-intervention feasibility befor | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7517-source-protocol.source_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-22 13:51 UTC | Capture Qwen intervention evidence for fitting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7518-source-pilot, exp7518-source-pilot) |
+| 2026-09-22 13:51 UTC | Capture Qwen intervention evidence for sealed eval | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7518-source-pilot, exp7518-source-pilot) |
+| 2026-09-22 13:51 UTC | Fit a source-dependent energy head with option-ord | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7519-source-fit-capture) |
+| 2026-09-22 13:51 UTC | Measure fresh probability and typed-decision benef | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7520-source-eval-capture, exp7521-consistency-energy) |
+| 2026-09-22 13:51 UTC | Prototype a conjugate energy memory for delayed fe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7521-consistency-energy) |
+| 2026-09-22 13:51 UTC | Measure continuous count learning and retained pre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7520-source-eval-capture, exp7521-consistency-energy, exp7523-count-memory) |
