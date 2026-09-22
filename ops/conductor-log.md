@@ -18431,3 +18431,4 @@ code |
 | 2026-09-22 13:51 UTC | Measure continuous count learning and retained pre | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7520-source-eval-capture, exp7521-consistency-energy, exp7523-count-memory) |
 | 2026-09-22 14:25 UTC | Independently audit source decisions and feedback  | OK | 100 passed, 1 warning in 7.84s |
 | 2026-09-22 15:11 UTC | Bind supervisor eligibility to the live action bou | OK | 120 passed, 1 warning in 12.92s |
+| 2026-09-22 16:34 UTC | Measure supervisor opportunities on adapter-withhe | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: est_verdict": |

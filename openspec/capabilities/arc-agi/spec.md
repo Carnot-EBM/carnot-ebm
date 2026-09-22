@@ -3365,3 +3365,98 @@ work.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7526 and SCENARIO-ARC-7526-* | `python/carnot/experiment_7526_v658_arc_eligibility.py`, `python/carnot/agentic/arc_trajectory_supervisor.py`, and `python/carnot/agentic/arc_competition_agent.py` | `tests/python/test_experiment_7526_v658_arc_eligibility.py` |
+
+## REQ-ARC-7527: The live opportunity panel SHALL keep generation, eligibility, and application distinct
+
+Exp7527 SHALL authenticate the complete Exp7526 receipt before it reads that
+same-milestone result as an input. It SHALL preserve Exp7526's six games, two
+episode seeds, action cap, episode wall cap, collection cap, supervisor window,
+arm order, and shadow supervision mode. It SHALL use the scored
+`make_carnot_agent` and `E3AgentPolicy` route with all per-game adapters, stored
+engines, banked trajectories, banked solutions, cross-game state, game source,
+and offline ground-truth search disabled.
+
+The measurement SHALL load `unsloth/Qwen3.8-27B-GGUF` through one owned native
+CUDA server. The runtime receipt SHALL bind the resolved model path, exact byte
+hash, quantization, server command, owned process, CUDA device, and observed
+offload. Interactive induction SHALL declare
+`inference_substrate_class=model_full_generation` and
+`inference_substrate=live_llm_inference` only when a current generation was
+attempted. A load without generation or a bounded canary SHALL declare the
+actual lower class and SHALL make no completed live-panel claim. Durations
+SHALL be measured and SHALL not be padded to a class floor.
+
+Each scheduled episode SHALL preserve raw action labels, frame hashes, model
+request and response hashes, prompt and completion tokens, exclusive phase
+durations, supervisor-window exposure, arm predicates, selected arms, applied
+arms, errors, and the censored outcome horizon. The runner SHALL checkpoint
+each completed disposition. It SHALL retain failed, timed-out, and unstarted
+units. It SHALL stop collection by 3000 seconds so validation time remains.
+Only the owned process group may be terminated.
+
+The terminal artifact SHALL include the common identity, timing, prerequisite,
+model, invocation, source-hash, row, sample-budget, gate, validation, principle,
+and verdict fields. It SHALL also include `arc_measurement_complete_score`,
+`opportunity_support_score`, `per_game_results`,
+`supervisor_opportunity_rows`, `solve_provenance`, and `registry_precheck`.
+Both scores SHALL be bare numeric 0 or 1. Readiness SHALL not depend on a
+favorable effect.
+
+Opportunity support requires at least ten complete episodes, all six games,
+and authenticated eligibility at at least 90 percent of observed supervisor
+window boundaries. Zero eligible opportunities is a valid null when these
+support checks pass. The task SHALL compare natural game and interface strata
+descriptively. It SHALL not interpret shadow selection as treatment, infer arm
+efficacy from selected-versus-unselected correlation, refine an arm, or award
+new-level credit. A future causal trial requires at least twelve actual eligible
+choices across three games and at least two selectable arms under one reachable
+application mode.
+
+Missing unchanged prerequisites SHALL produce a schema-complete
+`complete_blocked_*` verdict with `verdict_class=blocked`. Its gate summary
+SHALL name the exact path or field, expected value, and observed value. Failed
+required validation SHALL be `disqualified`. `partial` is only for unfinished
+owned work. Atomic publication SHALL occur only after scoped validation, the
+declared entrypoint replay, independent reduction, adversarial verification,
+and strict verdict-row consistency pass on the exact candidate.
+
+### SCENARIO-ARC-7527-PRECONDITIONS: Same-milestone evidence is authenticated before use
+
+**Given** the named sources, Exp7526 receipt, registry, model cache, native server, and CUDA inventory
+**When** Exp7527 starts the measurement
+**Then** every exact byte and required Exp7526 field is checked before dependent work
+**And** unchanged absence closes as blocked with the failed path and values.
+
+### SCENARIO-ARC-7527-LIVE: The scored path uses owned full generation
+
+**Given** the frozen 6-by-2 panel and an admitted CUDA device
+**When** the live child loads the pinned generator and runs an episode
+**Then** it uses `make_carnot_agent` with `E3AgentPolicy` and withheld stored knowledge
+**And** current loads, generations, hashes, tokens, offload, and exclusive timings reconcile.
+
+### SCENARIO-ARC-7527-OPPORTUNITY: Eligibility is not application or efficacy
+
+**Given** complete live-boundary supervisor observations in shadow mode
+**When** the opportunity rows are reduced
+**Then** eligible, selected, and applied remain separate facts
+**And** no arm effect, refinement, randomized-treatment claim, or new-level credit is emitted.
+
+### SCENARIO-ARC-7527-SUPPORT: A valid zero-opportunity panel remains auditable
+
+**Given** at least ten complete episodes across all six games
+**When** at least 90 percent of observed window boundaries have explicit eligibility
+**Then** `opportunity_support_score` is 1 even when the eligible count is zero
+**And** the honest verdict remains null unless a separately authorized causal gate exists.
+
+### SCENARIO-ARC-7527-TERMINAL: Independent readers control publication
+
+**Given** the exact measured candidate and frozen affected-file manifest
+**When** scoped checks and terminal readers run in fresh processes
+**Then** failed required validation disqualifies the result
+**And** only a validated checksum-bound candidate is atomically published.
+
+## Implementation Status (REQ-ARC-7527)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7527 and SCENARIO-ARC-7527-* | `python/carnot/experiment_7527_v658_arc_opportunities.py` | `tests/python/test_experiment_7527_v658_arc_opportunities.py` |
