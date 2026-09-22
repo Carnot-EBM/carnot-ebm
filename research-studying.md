@@ -6068,3 +6068,11 @@ shuffled information, KAN retention, and whole-service hardware accounting
 map to V657. Paper results are not local Carnot results. Exact sections,
 counterexamples, and task mappings are in
 `docs/research-notes/v657-method-map.md`.
+
+<!-- EXP7516-V658-METHOD-INGESTION -->
+## 2026-09-22 Exp7516 — V658 methods — INGESTED
+
+Consistency, probability calibration, online proper loss, and thermodynamic
+co-design map to separate V658 tasks. External results remain source context.
+Exact sections, counterexamples, and destinations are in
+`docs/research-notes/v658-method-map.md`.

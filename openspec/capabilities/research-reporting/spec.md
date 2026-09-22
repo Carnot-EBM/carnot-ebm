@@ -77338,3 +77338,86 @@ priority and harness checks run
 **Then** exactly fourteen rows agree and every gate resolves to its producer
 **And** model work names `unsloth/Qwen3.8-27B-GGUF`
 **And** no proposed measurement or implementation is recorded as completed.
+
+## REQ-REPORT-7516: Bind V658 without rehabilitating V657 evidence
+
+The repository SHALL provide Exp7516 as an aggregation-only advisory report.
+It SHALL resolve the milestone `2026.09.658` authority from the staged roadmap
+before activation or the active roadmap afterward. It SHALL compare exactly
+fourteen ordered tasks with the independent Markdown design. The comparison
+SHALL include each ID, exact title, phase, deliverable, substrate class and
+structured gate. Private count, order, ID, title, path, gate-field and
+milestone mutations SHALL fail for each authority.
+
+The report SHALL inventory all thirteen V657 artifacts by exact path and byte
+hash. Exp7508 and Exp7515 SHALL retain their literal disqualified verdicts and
+adversarial flags. Exp7508 SHALL retain the strict-reader exit and all eight
+`NO_HEADROOM_MAJORITY` findings despite its zero blocking findings. Exp7509
+and Exp7510 SHALL retain their independently qualified null dispositions.
+Historical model receipts SHALL remain historical and SHALL not count as
+current model calls.
+
+The report SHALL qualify an honest-null row shape without changing the strict
+reader. Each valid-null fixture SHALL provide absolute costs for both arms,
+`no_headroom=true`, `positive_claim=false` and a non-empty
+`headroom_explanation` when equal row costs establish no headroom. Signed cost
+differences SHALL not substitute for absolute arm costs. Fixture qualification
+SHALL occur before later V658 measurements use this row contract.
+
+The report SHALL ingest three to five primary methods from the dated V658
+review. It SHALL keep consistency, probability calibration, online proper loss
+and thermodynamic co-design as separate method rows. Each row SHALL name the
+primary URL and method section, exact bounded adaptation, counterexample and
+destination task. Source access failures SHALL stay visible and SHALL not
+promote paper results into Carnot measurements.
+
+The report SHALL record the exact open overdue priorities. It SHALL retain the
+Exp7491/Exp7492 E6 exclusive timed profile as evidence separate from V657
+coarse timers. It SHALL use `aggregation_from_upstream_artifacts`, the
+`aggregation` class, empty `MODEL_SPECS` and `model_specs`, no current model
+invocation and balanced zero call counts. `contract_ready_score` and
+`method_ingestion_complete_score` SHALL be bare zero or one and independent of
+scientific benefit.
+
+### SCENARIO-REPORT-7516-CONTRACT: Both V658 authorities fail closed
+
+**Given** the fourteen-row design table and milestone-matching YAML
+**When** Exp7516 parses both and applies private authority mutations
+**Then** all ordered IDs and exact public fields agree
+**And** every named mutation fails without changing either authority.
+
+### SCENARIO-REPORT-7516-CUSTODY: V657 limits remain literal
+
+**Given** thirteen terminal V657 artifacts and the Exp7508 strict-reader log
+**When** Exp7516 reduces prior dispositions
+**Then** static and capstone disqualification remain separate from valid nulls
+**And** eight strict advisories and zero blocking findings remain visible.
+
+### SCENARIO-REPORT-7516-NULL-SHAPE: Absolute costs explain no headroom
+
+**Given** equal-cost valid-null rows for two decision arms
+**When** the unchanged strict reader checks the private fixture
+**Then** each row reports both absolute costs and factual null context
+**And** the reader exits zero without weakening or editing the guard.
+
+### SCENARIO-REPORT-7516-METHODS: Four method families stay separate
+
+**Given** bounded primary method sections from the 2026-09-22 review
+**When** Exp7516 writes the V658 method map and studying marker
+**Then** each adaptation, counterexample and destination stays explicit
+**And** external findings remain source context rather than local results.
+
+### SCENARIO-REPORT-7516-VALIDATION: Exact readers control publication
+
+**Given** a frozen affected-file manifest and private temporary roots
+**When** scoped tests, changed-module coverage, Ruff, mypy, spec coverage,
+unchanged roadmap guards, entrypoint replay, cold reduction, adversarial
+verification and strict row consistency run
+**Then** every required receipt passes before atomic terminal publication
+**And** the full Python suite runs once while numbered runtime E2E stays inapplicable.
+
+## Implementation Status (REQ-REPORT-7516)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7516 and SCENARIO-REPORT-7516-* | Implemented: V658 authority comparison, literal V657 custody, strict-compatible absolute-cost null fixture, four-family method map, separate E6 timing evidence, scoped validation, and thin entrypoint. | Spec-linked tests cover both authorities and mutations, staged/active resolution, thirteen prior dispositions, unchanged strict-null compatibility, method records, validation scope, defensive cold reduction, and 100 percent changed-module coverage. The entrypoint requires scoped and terminal readers before atomic publication. |
