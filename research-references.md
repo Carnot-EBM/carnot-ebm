@@ -46171,3 +46171,83 @@ The sweep covered all eight research topics and all six secondary channels.
 The operator's State of Thought note remains reference-only. This sweep does
 not promote it into a task. No model, board, external service account, purchase,
 contact or publication was used to conduct this literature review.
+## 2026-09-22: V658 planning literature review, recorded before design
+
+Primary pages below were checked on 2026-09-22. Results reported by authors
+are external evidence. They are not Carnot measurements. Existing references
+are rechecked leads, not discoveries claimed as new.
+
+### Promising methods
+
+- [Constrained Paraphrase Consistency for LLM Hallucination Detection,
+  2606.08158](https://arxiv.org/abs/2606.08158), June 2026, adds consistency
+  and label-preservation constraints to detector training. A bounded Carnot
+  adaptation can constrain two semantically mapped option orders of the
+  same source/response pair. It must retain an unconstrained head and a
+  same-information linear control. Changing or removing the source is NOT
+  label-preserving; those interventions can supply diagnostic features only.
+  This does not reproduce the paper's paraphrase training or its backbones.
+- [Calibration-Aware Uncertainty Cascades, 2609.11446](https://arxiv.org/html/2609.11446v1),
+  September 10, 2026, separates probability calibration from deployment
+  policy selection. Read the method and evaluation split descriptions.
+  Use a separately frozen probability head and accept/reject/escalate cost
+  policy. Report proper losses and coverage/risk separately. Carnot's
+  single-generator experiment does not reproduce heterogeneous model fusion,
+  and marginal calibration does not guarantee every selected subgroup's risk.
+- [Optimal Recalibration of an Online Predictor,
+  2607.19689](https://arxiv.org/html/2607.19689v1), July 22, 2026, studies
+  calibration together with excess proper loss against input forecasts.
+  This motivates a continuous-learning comparison against a frozen forecast,
+  a global prevalence update, and a feedback-alignment control. A small
+  count-based conditional energy memory is a separate practical adaptation,
+  not the paper's Blackwell algorithm; delayed partial labels do not inherit
+  its theorem. Primary text corrects an aggregator's different identifier.
+- [PostHoc FREE Calibrating on Kolmogorov Arnold Networks,
+  2503.01195](https://arxiv.org/abs/2503.01195), March 2025, reports that spline
+  networks can be miscalibrated and proposes a training-temperature loss.
+  Retain as a warning and future comparator. Local support alone establishes
+  neither calibration nor retention. Do not reopen the unchanged anchored
+  spline learner after its measured null.
+
+### Eight-topic scan and deferred directions
+
+| Topic | Primary source checked | Consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), [ARM–EBM](https://arxiv.org/abs/2512.15605), and [Cross-Block Conditioning in Deep Boltzmann Machines](https://arxiv.org/abs/2609.14934), September 2026 | Conditional energy is an architectural lead, not a factuality certificate. Exact binary normalization is sufficient for the proposed small head. Defer deep-model training. |
+| Neural constraint satisfaction | [Large Neighborhood Search meets Iterative Neural Constraint Heuristics](https://arxiv.org/abs/2603.20801), March 2026 | Separates proposal and repair operators. No new solver sweep until extraction or a measured search bottleneck justifies it. |
+| Ising applications | [Scaling Up Thermodynamic AI Models](https://arxiv.org/abs/2607.00170), June 2026 | Training and sampling costs must be evaluated together. Image classification evidence is not reasoning evidence. |
+| Hallucination mitigation | [Consistency constraints](https://arxiv.org/abs/2606.08158) and the existing [OpenHalDet](https://arxiv.org/abs/2606.06959) lead | Compare equal detector access; separate source dependence, discrimination and calibration. |
+| KAN | [KAN calibration](https://arxiv.org/abs/2503.01195) and existing spline-locality references | Keep proper-loss and matched-capacity controls; no assumption that a spline is calibrated. |
+| Energy-guided/constrained generation | [Faithful Evidence Extraction](https://arxiv.org/abs/2609.10046), September 9, and [Structural Failures versus Semantic Gap](https://arxiv.org/abs/2609.23742), September 22, 2026 | Extractive/structural constraints do not establish semantic support. Defer another generated-span loop. |
+| Hardware sampling | [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Sparse probabilistic/digital partition and released training recipe are useful context. Vendor energy estimates are not local device measurements. |
+| Continual learning | [Online recalibration](https://arxiv.org/html/2607.19689v1) | Measure excess Brier loss and feedback causality, with immutable prediction snapshots and legal delayed releases. |
+
+### Secondary-channel access receipts
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and verification work.
+  Direct [EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) and
+  [Ising submission PDF](https://openreview.net/pdf?id=XthfAAfnVd) returned
+  browser challenges. The [ICLR proceedings record](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html)
+  and arXiv supplied accessible primary evidence. No unseen review is cited.
+- **Semantic Scholar:** both citation API requests returned HTTP 200.
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=20)
+  returned 20 records with another page;
+  [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=20)
+  returned eight without another page. Followed Cross-Block Conditioning and
+  [False First Steps](https://arxiv.org/abs/2602.02991) to arXiv. This is a
+  partial citation walk, not a complete citation census.
+- **Hugging Face Papers:** checked the [verification discovery page](https://huggingface.co/papers?q=verification).
+  Method claims use the primary papers rather than feed summaries.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending pages.
+  No relevant new dependency was selected. No author repository is claimed
+  to have a trending rank without evidence.
+- **Extropic:** the [writing index](https://extropic.ai/writing) returned
+  navigation only; Z1T supplied readable architecture and co-design text.
+  No authenticated local TSU access was established.
+- **Logical Intelligence:** checked the [Kona architecture page](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  It remains product-level context; this review found no usable local
+  checkpoint or reproducible training recipe on that page.
+
+No model run, hardware operation, purchase, external contact or publication
+occurred during this review.

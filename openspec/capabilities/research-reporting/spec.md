@@ -77312,3 +77312,29 @@ scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7515 and SCENARIO-REPORT-7515-* | Implemented: V657 capstone reducer, retrospective, bounded retirement rows, read-only publication gates, and thin entrypoint. | Spec-linked tests cover paired authorities, producer custody, receipt variants, claim boundaries, terminal precedence, retirement, retrospective content, protected mutations, scoped validation, and 100 percent changed-module coverage. The entrypoint requires all affected and terminal readers before publication. |
+## REQ-REPORT-V658-PLAN: Paired V658 planning authorities
+
+Milestone `2026.09.658` SHALL have exactly fourteen ordered tasks,
+`exp7516-contract-methods` through `exp7529-capstone`, in
+`research-roadmap-next.yaml` and the task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md`. IDs, titles, phases,
+deliverable paths, substrate classes and structured gate fields SHALL agree.
+Every gate SHALL name an earlier producer and a declared numeric artifact
+field. Every scope continuation SHALL name its prior verdict, changed cause
+and `retire_if_same_verdict: true`.
+
+The plan SHALL include a trained calibrated energy decision policy,
+continuous delayed-feedback learning, live ARC generalization work and dated
+hardware dispositions. Every prompt SHALL require numbered progress/heartbeat
+and bounded-file-authoring steps, real substrate declarations, per-unit rows,
+closed verdict classes, gate diagnostics, scoped validation and applicable E2E.
+Planning SHALL preserve the active roadmap and research conductor.
+
+### SCENARIO-REPORT-V658-PLAN: Validate without activating
+
+**Given** both V658 authorities and the preserved V657 document
+**When** schema, independent contract, gate, prior-failure, exclusion, ARC,
+priority and harness checks run
+**Then** exactly fourteen rows agree and every gate resolves to its producer
+**And** model work names `unsloth/Qwen3.8-27B-GGUF`
+**And** no proposed measurement or implementation is recorded as completed.

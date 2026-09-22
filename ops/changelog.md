@@ -20304,3 +20304,12 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-22: Measure native Qwen readout through durable feedback acknowledgement (⚠️ Research Finding) — honest_verdict=complete_null_controlled_service_trace_ready_no_efficacy_or_sla_claim; results/experiment_7514_v657_service_trace.json
 - 2026-09-22: Reconcile thirteen dispositions and retire unchanged mechanisms (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_v657_evidence; results/experiment_7515_v657_capstone.json
 - 2026-09-22: Added the milestone 2026.09.657 operational retrospective. All 13 completed experiments were compute-bound and occupied 12.3 minutes. Measure native Qwen readout through durable feedback acknowledgement was the longest task at 3.67 minutes, followed by Reduce cross-game live-agent cost and supervisor opportunities at 3.29 minutes; no data available this milestone identifies internal phase costs. The locked compute-task GPU-idle field is false. The end-state monitor snapshot does not record active task windows, so GPU efficiency cannot be confirmed. No supplied record identifies a task with two or more models or a missed DualGPURunner dispatch. Recommended tooling adds phase timing, task-scoped accelerator telemetry, and runner-selection receipts. Estimated savings are 0% because no measured counterfactual is available. Artifact: results/operational_retro_2026_09_657.json.
+## 2026-09-22 — V658 research plan
+
+- Staged matching fourteen-task V658 design and conductor YAML, exp7516–exp7529.
+- Recorded the eight-topic literature review and six secondary-source access
+  receipts before designing experiments.
+- Planned fresh source-intervention energy decisions, causal count learning,
+  live ARC eligibility evidence and exact service/board accounting.
+- Preserved the V657 design and its null/disqualified findings. No experiment,
+  roadmap activation, external publication or push occurred.

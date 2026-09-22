@@ -3041,3 +3041,20 @@ and scoped existing guard tests. Future Exp7503 owns executable V657 mutation
 tests. Literature provenance was appended to `research-references.md` before
 design. Active `research-roadmap.yaml` and `scripts/research_conductor.py` are
 protected and unchanged.
+## 2026-09-22 — V658 plan staged, not activated
+
+REQ-REPORT-V658-PLAN maps to `research-roadmap-next.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md`: fourteen tasks,
+exp7516–exp7529, four phases. Source-dependent calibrated decisions map to
+FR-12 and verification/KAN; delayed count learning maps to FR-11 and
+continuous-learning; live supervisor eligibility maps to arc-agi; exact
+service accounting and dated board continuity map to hardware. These are
+planned experiments, not completed implementations or benefit claims.
+
+The V657 design is preserved in
+`openspec/change-proposals/research-roadmap-v657-preserved-20260922.md`.
+Planning checks cover schema, independent Markdown/YAML agreement, declared
+producer gates, prior failures, exclusions, ARC coverage, priorities and
+harness boundaries. Existing focused guard tests provide regression checks.
+No numbered runtime E2E applies to these planning-only edits. Active roadmap
+and conductor hashes remain protected.

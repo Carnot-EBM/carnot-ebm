@@ -188,3 +188,4 @@ of truth, not this line.)
 | 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_arc_registry_level | SILENT_NON_FIRING | OPEN | |
 | 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_is_arc_artifact | SILENT_NON_FIRING | OPEN | |
 | 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_arc_live_claim_text | SILENT_NON_FIRING | OPEN | |
+| 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_has_offline_auroc_metric | SILENT_NON_FIRING | OPEN | |

@@ -11,10 +11,14 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 4 |
-| NO_CLAIM | 4 |
+| CLAIM_SUPPORTED | 6 |
+| SKIPPED_ALREADY_FLAGGED | 2 |
 
-## experiment_7490_v656_historical_audit.json
+## experiment_7508_v657_static_audit.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_7509_v657_causal_online.json
 
 **CLAIM_SUPPORTED**
 
@@ -22,79 +26,32 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Historical probability calibration shows null benefit over simple baselines, and the historical pre-replay shuffled negative control is chronologically invalid due to leakage from future events.
+The causal online adaptation experiment is a valid measurement that failed its pre-registered support and benefit gates, establishing an honest complete null result without demonstrated causal benefit over controls.
 
 ## WHAT WOULD REFUTE IT
-The claim would be refuted if:
-1. The candidate probability method (`gibbs`) demonstrated statistically significant improvement over simple calibration baselines (`temperature` and `logistic`) on proper scoring rules (substantially lower Brier loss and log loss with significant p-values, resulting in `probability_benefit_passed` being true and `historical_probability_benefit` passing as `positive`), or
-2. The historical shuffled negative control showed zero lookahead leakage into future timestamps (`future_origin_assignment_count` of 0, `from_future_event` false across all rows, and `shuffled_negative_control_chronology` passing with observed value 0).
+The headline null claim would be refuted by either:
+1. Observed data demonstrating causal benefit: all five primary contrasts beating controls with Holm-adjusted p < 0.05 and upper 95% confidence bound < 0, a local Brier effect size <= -0.01, and primary support meeting the >= 12 permutable labels threshold across all seeds.
+2. Observed data indicating an invalid run rather than a valid null: failed restart parity, non-zero chronology violations, or missing execution units.
 
 ## WAS THAT CHECKED
-Yes. Probability quality was checked against competitive baselines across 74 evaluated groups with 10,000 bootstrap draws in `historical_probability_summary` and `historical_probability_rows`. Control chronology was checked by tracking timestamps across all 764 label assignments in `feedback_chronology_rows` and summarized in `feedback_chronology_summary`.
+Yes. Primary support, effect size thresholds, multi-arm Holm contrasts against serious rival controls (including affine and intercept baselines), and measurement validity/restart parity were all explicitly computed and checked under `acceptance_gate_results`, `gate_check_summary`, `measurement_reduction`, and `restart_parity_rows`.
 
 ## EVIDENCE
-- `"honest_verdict": "complete_null_historical_probability_limit_and_invalid_shuffled_control"`
-- `"verdict_class": "null"`
-- `"check": "historical_probability_benefit"`
-- `"expected": "positive"`
-- `"observed": "null"`
-- `"passed": false`
-- `"check": "shuffled_negative_control_chronology"`
-- `"expected": 0`
-- `"observed": 376`
-- `"probability_benefit_passed": false`
-- `"gibbs"`
-- `"brier": 0.5783718222014341`
-- `"log_loss": 2.524944140767486`
-- `"temperature"`
-- `"brier": 0.3179760819813062`
-- `"log_loss": 0.90299758804979`
-- `"logistic"`
-- `"brier": 0.4853637188480826`
-- `"log_loss": 1.5621939806892695`
-- `"one_sided_p": 1.0`
-- `"future_origin_assignment_count": 376`
-- `"assignment_count": 764`
-- `"from_future_event": true`
-- `"valid": false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7491_v656_window_protocol.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Because this artifact is a protocol-sealing and readiness receipt that explicitly disclaims measuring any empirical benefit or comparative performance, there is no comparative claim to refute. If evaluated purely as a structural readiness receipt, it would be refuted by failing acceptance gates (`acceptance_gate_results`), failed import or test suites (`validation_receipts`), unsealed or leaking role splits (`role_manifest`), or token budget violations.
-
-## WAS THAT CHECKED
-No comparative or model benefit hypothesis was checked, as no live model inferences were attempted (`forward_calls_attempted` is 0). Structural integrity, deterministic token accounting, preconditions, and test receipts were checked and passed.
-
-## EVIDENCE
-- `honest_verdict`: `complete_null_structural_window_protocol_ready`
+- `honest_verdict`: `complete_null_causal_online_measurement_valid_benefit_gate_failed`
 - `verdict_class`: `null`
-- `window_protocol_ready_score`: `1`
-- `field_principles`: `The bare score means complete sealed roles and lossless label-blind prompts, not benefit.`
-- `small_ebm_training`: `Protocol sealing performs no model or EBM fit.`
-- `random_seed`: `No stochastic fit or benefit estimate occurs.`
-- `e2e_scope`: `Pure reporting changed no shared runtime, binding, ARC, telemetry, or Rust path.`
-- `inference_substrate_class`: `no_model_load`
-- `model_invoked`: `false`
-- `forward_calls_attempted`: `0`
-- `disposition`: `planned_unstarted`
-- `unstarted_forwards`: `4128`
+- `causal_information_value_score`: `0`
+- `online_benefit_score`: `0`
+- `failed_checks`: `primary_support`, `local_brier_effect_size`, `five_holm_primary_contrasts`
+- `local_brier_effect_size`: `observed` `-0.0022371781201150523`
+- `affine_brier`: `holm_adjusted_p` `0.5847076461769115`, `upper95_delta` `0.0002389333129294682`, `holm_passed` `false`
+- `local_log_loss`: `mean_delta` `0.0021875455431429837`, `holm_adjusted_p` `1.0`, `holm_passed` `false`
+- `valid_complete_measurement`: `passed` `true`, `observed` `1`
+- `restart_parity`: `passed` `true`, `observed` `1`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7492_v656_window_pilot.json
+## experiment_7510_v657_causal_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -102,188 +59,196 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Native window transport and capture budget forecasts are ready and feasible within time caps, supporting a complete null with no predictive benefit claimed.
+Causal online adaptation fails the audit benefit gate, yielding no qualified online benefit over baseline comparators.
+
+## WHAT WOULD REFUTE IT
+The claim of a failed benefit gate would be refuted if the causal online model demonstrated statistically significant superiority under Holm adjustment against all primary comparators (specifically non-trivial rivals `affine_brier` and `local_log_loss`), satisfied all audit label delivery thresholds (`support_passed`), and achieved a non-zero `qualified_online_benefit_score`.
+
+## WAS THAT CHECKED
+Yes; checked in `gate_check_summary.failed_checks`, `independent_reduction.primary_contrasts` across five comparator arms, and `independent_reduction.support_rows`.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_v657_causal_audit_benefit_gate_failed`
+- `verdict_class`: `null`
+- `all_benefit_passed`: `false`
+- `check`: `primary_support`, `observed`: `false`
+- `check`: `five_primary_contrasts`, `observed`: `false`
+- `primary_passed`: `false`
+- `support_passed`: `false`
+- `comparator`: `affine_brier`, `holm_passed`: `false`
+- `comparator`: `local_log_loss`, `holm_passed`: `false`
+- `producer_online_benefit_score`: `0`
+- `qualified_online_benefit_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7511_v657_arc_evidence_recovery.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The historical ARC Panel B evaluation evidence is an authenticated, fully qualified complete null result with zero progress achieved across all 18 scheduled episodes.
+
+## WHAT WOULD REFUTE IT
+The headline claim would be refuted if:
+1. Any episode row demonstrated positive task advancement or progress (e.g., `progressed` is true, `peak_level` > 0, `new_level_credit` > 0, or `scientific_benefit_score` > 0).
+2. Validity or qualification preconditions failed (e.g., `required_validity_and_readiness_passed` is false, `arc_panel_b_qualified_score` is 0, source hashes mismatched, interval timing failed reconciliation, or schedule rows were missing).
+3. Any unit was censored or aborted due to an execution fault or crash rather than exhausting the full action cap without progress.
+
+## WAS THAT CHECKED
+Yes. All 18 scheduled episodes across 6 game clusters were checked in `per_episode_results` and `sample_size_budget`. Each unit was verified to have completed its 180-action cap without progress (`censor_reason`: "no_progress_within_action_cap", `progressed`: false). The acceptance gate `reproduced_progress_support` explicitly tested for progress (`expected`: 1, `observed`: 0), and all integrity/readiness preconditions passed (`required_validity_and_readiness_passed`: true, `bounds_valid`: true, `reconciles_within_timestamp_resolution`: true).
+
+## EVIDENCE
+- `"honest_verdict": "complete_null_arc_panel_b_evidence_recovered"`
+- `"arc_panel_b_qualified_score": 1`
+- `"scientific_benefit_score": 0`
+- `"solve_claim_made": false`
+- `"required_validity_and_readiness_passed": true`
+- `"check": "reproduced_progress_support"`
+- `"field": "progressed"`
+- `"expected": 1`
+- `"observed": 0`
+- `"passed": false`
+- `"principle": "Complete zero progress remains a valid null and not a benefit claim."`
+- `"planned_independent_units": 18`
+- `"attempted_independent_units": 18`
+- `"completed_independent_units": 18`
+- `"censored_independent_units": 18`
+- `"failed_independent_units": 0`
+- `"action_count": 180`
+- `"action_limit": 180`
+- `"progressed": false`
+- `"censor_reason": "no_progress_within_action_cap"`
+- `"new_level_credit": 0`
+- `"terminal_level": 0`
+- `"bounds_valid": true`
+- `"reconciles_within_timestamp_resolution": true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7512_v657_arc_opportunity.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The artifact claims a complete null result (`complete_null_zero_eligible_supervisor_opportunity`), establishing that zero authenticated eligible supervisor firing opportunities occurred across 36 audited ARC episodes, requiring supervisor efficacy tuning to be retired until live reachable choices exist.
+
+## WHAT WOULD REFUTE IT
+Any audited episode row or supervisor opportunity row exhibiting `eligible_firing_opportunity_count > 0`, `eligible_firing_opportunity: true`, or any applied supervisor redirection producing valid level progression or positive causal outcome would refute the null claim.
+
+## WAS THAT CHECKED
+Yes. It was checked across all 36 completed episodes (12 unique games) in `panel_results` and `rows`, across 6,480 gate evaluations summarized in `supervisor_disposition`, and in `gate_check_summary.failed_checks` under check `eligible_supervisor_opportunity_present` (which observed `0`).
+
+## EVIDENCE
+- `honest_verdict`: `"complete_null_zero_eligible_supervisor_opportunity"`
+- `status`: `"complete_null_zero_eligible_supervisor_opportunity"`
+- `eligible_firing_opportunity_count`: `0`
+- `applied_redirection_count`: `0`
+- `gate_evaluation_count`: `6480`
+- `diagnosis`: `"zero_authenticated_eligible_opportunities_with_shadow_firings"`
+- `supervisor_efficacy_tuning`: `"retired_until_live_reachable_choices"`
+- `efficacy_estimate`: `null`
+- `broad_generalization_supported`: `false`
+- `progressed_game_count`: `0`
+- `check`: `"eligible_supervisor_opportunity_present"`
+- `all_passed`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7513_v657_placement_continuity.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Integer quantization achieves deterministic numeric placement parity with float32 across training and calibration rows with zero policy disagreements, while whole-service speedup remains unmeasured.
+
+## WHAT WOULD REFUTE IT
+The headline claim would be refuted by any policy action disagreement between integer and float32 arithmetic (`action_disagreement_count > 0`), any probability discrepancy exceeding the threshold (`max_abs_probability_error > 0.01`), any accumulator overflow (`overflow_count > 0`), or an unverified assertion of whole-service speedup despite lacking measured execution timing for the end-to-end pipeline.
+
+## WAS THAT CHECKED
+Yes. Deterministic numeric equivalence was tested across 472 groups (covering int16 and int8 formats evaluated against 9 decision policies, totaling 4,248 comparisons) in `quantization_rows` and `independent_reduction.numeric`. Refutation was genuinely possible if integer rounding shifted probabilities across policy thresholds (maximum observed error was ~0.00295 against a 0.01 limit). Accumulator overflow was audited per row. Furthermore, whole-service speedup was evaluated via acceptance gate `whole_service_denominator_measured`, failed as unmeasured, and was honestly reported as an unmeasured null rather than claimed.
+
+## EVIDENCE
+- `honest_verdict`: `"complete_null_numeric_placement_ready_whole_service_speedup_unmeasured"`
+- `numeric_placement_ready_score`: `1`
+- `action_disagreement_count`: `0`
+- `max_abs_probability_error`: `0.002948939800262451`
+- `probability_error_limit`: `0.01`
+- `overflow_count`: `0`
+- `observed_row_count`: `472`
+- `planned_row_count`: `472`
+- `check`: `"whole_service_denominator_measured"`
+- `observed`: `false`
+- `passed`: `false`
+- `failed_count`: `1`
+- `whole_service_speedup`: `null`
+- `fpga_performance_measured`: `false`
+- `methodology_note`: `"Zero action disagreement is deterministic numeric parity on training and calibration rows. It is not held-out predictive benefit or FPGA performance."`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7514_v657_service_trace.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The numeric update kernel contributes an insignificant fraction of end-to-end execution time (~0.0053%, yielding an ideal Amdahl speedup ceiling of 1.00005x) and introduces a median paired overhead of 450.4 µs, supporting a valid null service-level speedup result with no predictive efficacy or production SLA claimed.
 
 ## WHAT WOULD REFUTE IT
 The claim would be refuted if:
-1. Any forward pass in native window transport failed, generated non-finite logits, failed KV state resets, or had invalid token mappings, resulting in `failed_forwards` > 0 or `transport_reduction.passed` evaluating to false.
-2. Empirical runtime forecasts exceeded the 3300.0s hard cap (`forecast_s` > `hard_cap_s`), setting `feasible` to false in `fit_capture` or `evaluation_capture`.
-3. Predictive benefit was claimed without held-out generalization evidence (`predictive_benefit_claimed` being true), failing the `predictive_benefit_not_claimed` acceptance gate.
-4. Execution was incomplete or aborted (`terminal_status` != "complete" or `pilot_complete_score` < 1).
+1. `measured_update_kernel_share` was substantial enough to enable meaningful end-to-end service speedup, or `ideal_infinite_speed_update_kernel_ceiling` meaningfully exceeded 1.0.
+2. Timing coverage failed (`interval_coverage_passed` was false or any row showed `unaccounted_ns` > 0), indicating unmeasured or double-counted execution time.
+3. Durable parity failed (`durable_parity_passed` was false or `fsync_completed` was false), showing that the `update` and `no_update` control arms bypassed identical persistence boundaries.
+4. Predictive efficacy, 100x speedup, or production SLAs were claimed (`ebm_efficacy_claimed`, `measured_100x_claimed`, or `production_sla_claimed` observed as true).
+5. Paired sample support fell below required thresholds (`paired_support_passed` was false or `paired_request_count` < 20).
 
 ## WAS THAT CHECKED
-Yes. Native transport execution was checked across 58 live forward calls with zero failures in `transport_reduction`, budget feasibility was checked against the 3300.0s hard cap using empirical p90 token prefill rates in `capture_budget_forecasts`, and the absence of predictive benefit claims along with validity and readiness requirements was checked and verified in `acceptance_gate_results`.
+Yes.
+- Kernel duration share and speedup ceilings were directly computed from measured stage timestamps in `amdahl_bounds` and `service_reduction`.
+- Exclusive timing coverage was verified for each request in `request_rows` (each reporting `unaccounted_ns` of 0) and verified by gate check `interval_coverage`.
+- Durable fsync completion and acknowledgement parity across both arms were verified in `request_rows` and by gate check `durable_parity`.
+- Disclaiming of predictive efficacy from timing was verified by gate check `efficacy_not_inferred_from_timing` as well as explicit boundary flags.
+- Support requirements were evaluated and satisfied across 24 matched request pairs (48 requests total) with zero failed or censored rows in `sample_size_budget`.
 
 ## EVIDENCE
-`"honest_verdict": "complete_null_window_native_transport_and_capture_forecasts_ready"`
-`"verdict_class": "null"`
-`"predictive_benefit_claimed": false`
-`"window_native_ready_score": 1`
-`"pilot_complete_score": 1`
-`"terminal_status": "complete"`
-`"verifier_is_oracle": false`
-`"transport_reduction"`:
-`"passed": true`
-`"complete_forwards": 58`
-`"failed_forwards": 0`
-`"finite_logits_valid": true`
-`"fresh_kv_valid": true`
-`"capture_budget_forecasts"`:
-`"capture": "fit_capture"`
-`"feasible": true`
-`"forecast_s": 2350.4010691859157`
-`"hard_cap_s": 3300.0`
-`"capture": "evaluation_capture"`
-`"feasible": true`
-`"forecast_s": 2745.3543594869366`
-`"hard_cap_s": 3300.0`
-`"acceptance_gate_results"`:
-`"check": "authenticated_identity_and_accounting"`, `"passed": true`
-`"check": "native_window_transport"`, `"passed": true`
-`"check": "required_validation"`, `"passed": true`
-`"check": "capture_forecasts_fit"`, `"passed": true`
-`"check": "capture_forecasts_evaluation"`, `"passed": true`
-`"check": "predictive_benefit_not_claimed"`, `"passed": true`
+`"honest_verdict"`: `"complete_null_controlled_service_trace_ready_no_efficacy_or_sla_claim"`
+`"verdict_class"`: `"null"`
+`"ebm_efficacy_claimed"`: `false`
+`"measured_100x_claimed"`: `false`
+`"production_sla_claimed"`: `false`
+`"measured_update_kernel_share"`: `5.2558091618348854e-05`
+`"ideal_infinite_speed_update_kernel_ceiling"`: `1.0000525608541164`
+`"durable_parity_passed"`: `true`
+`"interval_coverage_passed"`: `true`
+`"paired_support_passed"`: `true`
+`"paired_request_count"`: `24`
+`"unaccounted_ns"`: `0`
+`"fsync_completed"`: `true`
+`"check"`: `"efficacy_not_inferred_from_timing"`
+`"observed"`: `false`
+`"passed"`: `true`
+`"median"`: `450435.5`
+`"p95"`: `1146742.5499999998`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7493_v656_window_fit_capture.json
+## experiment_7515_v657_capstone.json
 
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Because the artifact asserts no comparative or predictive claim, there is no empirical efficacy claim to refute. If a claim of predictive benefit or downstream window-fit efficacy were asserted, it would be refuted by showing that the captured window-fit representations fail to outperform a standard baseline (such as unwindowed full-prompt scoring or a trivial heuristic) on held-out tasks.
-
-## WAS THAT CHECKED
-No. Predictive benefit was explicitly not tested or measured, and no comparative evaluation against any baseline was performed.
-
-## EVIDENCE
-`predictive_benefit_claimed`
-`false`
-`honest_verdict`
-`complete_null_window_fit_capture_ready_predictive_benefit_not_tested`
-`verdict_class`
-`null`
-`check`
-`predictive_benefit_not_measured`
-`principle`
-`A favorable seed, fixture or low-support result cannot replace held-out value; this check prevents capture data from becoming a benefit claim.`
-`deterministic_null_seed_reason`
-`Capture performs no fit, interval, or outcome-guided retry.`
-`inference_substrate_class`
-`model_load_no_generation`
-`validation_receipts`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7494_v656_window_eval_capture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no predictive-benefit or comparative headline to falsify; this artifact only asserts capture completeness and readiness. That operational assertion would be refuted by incomplete or invalid eligible calls, insufficient role support, or failed capture validation.
-
-## WAS THAT CHECKED
-Yes. Capture completeness, eligible-call validity, role support, per-group status, and required validation were checked; predictive benefit and serious comparator performance were not checked because no such claim was made.
-
-## EVIDENCE
-`"honest_verdict": "complete_null_window_evaluation_capture_ready_predictive_benefit_not_tested"`, `"predictive_benefit_claimed": false`, `"verdict_class": "null"`, `"capture_complete_score": 1`, `"role_support_score": 1`, `"all_eligible_calls_valid": true`, `"failed": 0`, `"censored": 0`, `"terminal_status": "complete"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7498_v656_independent_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No observation can refute an unmade comparative benefit claim. If the blocked-status finding is treated as the headline, it would be refuted by valid scientific outputs from producers 7495–7497, including populated probability, utility, and learning results.
-
-## WAS THAT CHECKED
-Yes, for the blocked-status finding: `claim_dispositions`, `gate_check_summary`, and the three independent result arrays check those inputs and record them as absent. No comparative benefit was tested.
-
-## EVIDENCE
-`honest_verdict`: `complete_blocked_missing_v656_scientific_inputs`; `verdict_class`: `blocked`; `benefit_state`: `not_claimed`; `availability`: `absent`; `all_benefit_passed`: `false`; `all_readiness_passed`: `false`; `independent_learning_rows`: `[]`; `independent_probability_rows`: `[]`; `independent_utility_rows`: `[]`; `model_invoked`: `false`; `inference_substrate`: `aggregation_from_upstream_artifacts`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7500_v656_arc_opportunity_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The completed audit found no authenticated eligible supervisor opportunity in the available valid Panel A rows and appropriately blocked any pooled benefit or acceleration claim because Panel B and adequate compatible support were unavailable.
-
-## WHAT WOULD REFUTE IT
-A valid included row with nonzero eligible supervisor service or a triggered opportunity would refute the observed-null finding; a present, identity-compatible Panel B yielding sufficient pooled support and an estimable intervention benefit would refute the stated reasons for blocking broader claims.
-
-## WAS THAT CHECKED
-Yes for the observed-null finding: 18 valid completed Panel A episodes were reduced using explicit eligibility and trigger fields, and none showed eligible service or a triggered opportunity. The broader conclusion was deliberately not tested to completion because Panel B was missing, pooling was disallowed, and no intervention occurred; the artifact reports those limitations rather than converting them into a general null.
-
-## EVIDENCE
-`honest_verdict` = `complete_blocked_panel_b_blocked_missing_opportunity_audit`; `verdict_class` = `blocked`; `panel_results.A.state` = `valid`; `complete_independent_units` = `18`; `excluded_independent_units` = `0`; `eligible_service_upper_ns` = `0`; `triggered_opportunity_count` = `0`; `panel_results.B.state` = `blocked_missing`; `source_artifact_missing`; `pooling_allowed` = `false`; `valid_episode_count` = `18`; `episode_support_floor` = `30`; `identities_compatible` = `false`; `efficacy_estimate` = `null`; `observational_benefit_inference_allowed` = `false`; `hardware_acceleration_claim` = `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7502_v656_capstone.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Progression on the v656 milestone is blocked because required evidence is absent or externally gated.
-
-## WHAT WOULD REFUTE IT
-Observing that the required upstream producer artifacts exist on disk, that upstream audit tasks resolve to non-blocked terminal dispositions, and that all acceptance benefit gates evaluate to passing or positive.
-
-## WAS THAT CHECKED
-Yes, in `gate_check_summary` and `acceptance_gate_results`, which explicitly verified upstream artifact existence, terminal verdict classes, and benefit criteria, recording 7 failed producer checks and 4 failed benefit gates.
-
-## EVIDENCE
-- `"honest_verdict": "complete_blocked_required_v656_evidence_absent_or_externally_gated"`
-- `"verdict_class": "blocked"`
-- `"status": "complete_blocked_required_v656_evidence_absent_or_externally_gated"`
-- `"failed_count": 7`
-- `"results/experiment_7495_v656_window_calibration.json"`
-- `"results/experiment_7496_v656_causal_update_fixture.json"`
-- `"results/experiment_7497_v656_causal_online_learning.json"`
-- `"results/experiment_7498_v656_independent_audit.json"`
-- `"results/experiment_7499_v656_arc_panel_b.json"`
-- `"results/experiment_7500_v656_arc_opportunity_audit.json"`
-- `"results/experiment_7501_v656_service_placement.json"`
-- `"current_probability_support_effect_and_multiplicity"`
-- `"causal_feedback_benefit_and_retention"`
-- `"arc_cross_game_support"`
-- `"durable_service_measurement"`
-- `"blocked_missing"`
-- `"verifier_is_oracle": false`
-
-## RECOMMENDATION
-KEEP
+**SKIPPED_ALREADY_FLAGGED**

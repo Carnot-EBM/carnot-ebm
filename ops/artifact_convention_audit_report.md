@@ -9,10 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| CANNOT_DETERMINE | 1 |
+| CHECKABLE | 5 |
+| AGGREGATE_ONLY | 3 |
 
-## experiment_7490_v656_historical_audit.json
+## experiment_7508_v657_static_audit.json
 
 **CHECKABLE**
 
@@ -20,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-No claim; the artifact records an honest null historical audit where benefit gates failed and chronological leakage was detected in the negative control.
+The static audit completed but was disqualified because required current validation failed and the scientific benefit claims were not qualified.
 
 ## WHAT IS MISSING
 nothing
@@ -28,7 +28,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7491_v656_window_protocol.json
+## experiment_7509_v657_causal_online.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The causal measurement was valid, but the online-benefit gate failed because support, effect-size, and all-five-contrast requirements were not met.
+
+## WHAT IS MISSING
+Per-unit comparative metric rows—such as the actual `"per_source_results"` or seed-level arm deltas underlying `"measurement_reduction.primary_contrasts"`; only aggregate `"mean_delta"`, `"upper95_delta"`, p-values, and `"source_count"` are shown. The blocker itself is diagnosed in `"gate_check_summary"`.
+
+## THE CHECK A READER CANNOT DO
+Did the reported pooled Brier-score difference occur broadly across sources and schedule seeds, or was it driven by a small number of outliers or degenerate units?
+
+## experiment_7510_v657_causal_audit.json
 
 **CHECKABLE**
 
@@ -36,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The experiment yielded an honest null verdict (`complete_null_v657_causal_audit_benefit_gate_failed`) because online causal adaptation failed the primary support and primary contrast benefit gates.
 
 ## WHAT IS MISSING
 nothing
@@ -44,23 +60,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7492_v656_window_pilot.json
+## experiment_7511_v657_arc_evidence_recovery.json
 
-**CANNOT_DETERMINE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CANNOT_DETERMINE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The listed acceptance gates passed, capture was forecast feasible, and `"predictive_benefit_claimed"` was false.
+Panel B qualified on validity and readiness, but showed no scientific benefit because 0 of 18 episodes progressed.
 
 ## WHAT IS MISSING
-The artifact is truncated inside `"current_invocation_events"` and omits the remainder, including the referenced `"honest_verdict"` and potentially additional per-unit evidence or blocker diagnostics; `"acceptance_gate_results"` and `"capture_budget_forecasts"` are present.
+The actual `"per_episode_results"` and `"per_game_results"` rows containing each unit’s `"progressed"` value are missing; only aggregate gate observations and unrelated per-unit `"exclusive_cost_rows"` are present.
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted remainder contain the complete per-unit measurements needed to verify the gate results rather than trust their aggregate summaries?
+Did every scheduled episode genuinely record zero progress, or was the aggregate produced from degenerate, censored, or no-headroom units?
 
-## experiment_7493_v656_window_fit_capture.json
+## experiment_7512_v657_arc_opportunity.json
 
 **CHECKABLE**
 
@@ -68,7 +84,7 @@ Does the omitted remainder contain the complete per-unit measurements needed to 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The completed audit found zero eligible supervisor opportunities, no game-level progress, and insufficient denominator coverage for a numeric cost claim.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +92,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7494_v656_window_eval_capture.json
+## experiment_7513_v657_placement_continuity.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+Integer placement is numerically ready because int8/int16 match float32 policy actions across 472 rows, with zero overflow and probability error below 0.01, while whole-service speedup remains unmeasured.
+
+## WHAT IS MISSING
+The actual per-unit `"quantization_rows"` containing each group’s arithmetic format, probability error, action comparisons, and overflow result; only aggregate fields such as `"action_disagreement_count"`, `"max_abs_probability_error"`, and `"overflow_count"` plus an `"evidence_sidecars"` path and hash are present. The GateMate block is diagnosed by `"gate_check_summary"` and `"accepted_receipt_count": 0`.
+
+## THE CHECK A READER CANNOT DO
+Were parity and acceptable error broad across all 472 units, or were some units degenerate, pinned, or hiding materially worse errors beneath the reported maximum and zero aggregate disagreement?
+
+## experiment_7514_v657_service_trace.json
 
 **CHECKABLE**
 
@@ -84,15 +116,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The controlled service trace is complete and gate-ready, while making no efficacy, measured-100×, or SLA claim.
 
 ## WHAT IS MISSING
-nothing
+nothing; `acceptance_gate_results` records each check’s `expected`, `observed`, and `passed` values, `gate_check_summary` records no failures, and `native_call_rows` provides per-unit arm-level measurements.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7498_v656_independent_audit.json
+## experiment_7515_v657_capstone.json
 
 **CHECKABLE**
 
@@ -100,42 +132,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment failed multiple acceptance gates across readiness and benefit categories because upstream calibration and causal learning artifacts were absent.
+The V657 capstone is complete but disqualified because Exp7508 failed the required strict row-consistency validation and the qualified benefit gates were not met.
 
 ## WHAT IS MISSING
 nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7500_v656_arc_opportunity_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The opportunity audit is blocked because Panel B source artifacts are missing and pooling support gates failed (18 valid episodes observed versus 30 required).
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7502_v656_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capstone completed but is blocked because required V656 evidence is missing or upstream tasks are externally gated.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary.failed_checks`, `acceptance_gate_results`, and `preconditions_checked` record the failed checks, paths, expected values, and observed values.
 
 ## THE CHECK A READER CANNOT DO
 none

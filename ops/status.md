@@ -2,6 +2,21 @@
 
 **Last Updated:** 2026-09-21
 
+## 2026-09-22 — V658 staged for the next milestone
+
+The two V658 authorities specify fourteen tasks, exp7516–exp7529, across
+four phases. The plan tests source-dependent Qwen readouts and small calibrated
+energy heads on fresh groups, a count-based delayed learner with a declared
+full-audit budget, live supervisor eligibility, and exact memory-service cost.
+The mandated generator remains `unsloth/Qwen3.8-27B-GGUF`.
+
+V657's static evaluation remains exploratory; its strict static-audit failure
+and capstone disqualification are preserved. Its independently audited online
+null motivates a changed learner and feedback design. Its service trace does
+not justify an update-kernel hardware speed claim. Literature findings were
+recorded before design. No V658 experiment has run or been activated; the
+active roadmap and research conductor are unchanged.
+
 ## 2026-09-21 — Experiment 7505 V657 energy fit is frozen and ready
 
 REQ-VERIFY-7505 authenticates the Exp7504 role-separated evidence interface
