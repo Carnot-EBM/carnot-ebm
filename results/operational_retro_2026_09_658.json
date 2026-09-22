@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.658",
+  "generated_at": "2026-09-22T18:12:09Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 6.0,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure supervisor opportunities on adapter-withheld live games",
+      "duration_minutes": 2.98,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind supervisor eligibility to the live action boundary",
+      "duration_minutes": 0.97,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and qualify the V657 scientific limits",
+      "duration_minutes": 0.89,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Seal fresh source interventions and role-separated decision evidence",
+      "duration_minutes": 0.44,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and close unchanged mechanisms",
+      "duration_minutes": 0.35,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.658 completed 7 experiments, all compute-bound, in 6.0 wall-time minutes. The longest task was 'Measure supervisor opportunities on adapter-withheld live games' at 2.98 minutes, followed by 'Bind supervisor eligibility to the live action boundary' at 0.97 minutes and 'Bind fourteen tasks and qualify the V657 scientific limits' at 0.89 minutes. Sub-phase timing was not recorded within these runs to separate model inference duration from evaluation scaffolding or artifact serialization overhead.",
+  "bottlenecks_identified": [
+    "'Measure supervisor opportunities on adapter-withheld live games' accounted for 2.98 out of 6.0 total wall-time minutes (nearly 50% of milestone time), but lacks granular sub-phase timing to isolate inference execution from game state evaluation or file serialization.",
+    "'Bind supervisor eligibility to the live action boundary' (0.97 minutes) and 'Bind fourteen tasks and qualify the V657 scientific limits' (0.89 minutes) consumed an additional 1.86 minutes combined without recorded intra-task phase durations.",
+    "The remaining compute-bound tasks completed rapidly (led by fresh source intervention sealing at 0.44 minutes and reconciliation at 0.35 minutes), with timestamps reconstructed from disk mtimes rather than continuous stage logs.",
+    "The GPU monitor report provides an isolated post-run snapshot (PID 772157 on GPU 0 with 18054MB allocated at 0% utilization) after milestone completion, leaving GPU utilization across active compute execution windows unmeasured.",
+    "Task launch records did not log model concurrency or runner dispatch details, although all completed tasks were single-model runs where DualGPURunner multi-model dispatch is not applicable."
+  ],
+  "improvements_suggested": [
+    "Instrument granular sub-phase timers and stage heartbeats inside live supervisor opportunity and eligibility measurement scripts to isolate model inference latency from evaluation scaffolding and artifact serialization.",
+    "Deploy continuous, task-aligned accelerator telemetry during compute-bound executions to sample live GPU utilization and VRAM occupancy across active compute windows.",
+    "Record model concurrency and runner dispatch details in experiment task receipts to audit DualGPURunner eligibility whenever two or more models run concurrently.",
+    "Implement runtime milestone-scoped execution logging to avoid reliance on post-hoc disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration timers and per-stage progress logging inside the supervisor opportunity measurement pipeline.",
+    "Deploy continuous accelerator telemetry during compute-bound task execution to record live GPU utilization and VRAM occupancy across active execution windows.",
+    "Emit explicit model concurrency and runner dispatch metadata in experiment receipts to audit DualGPURunner engagement on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone completed 7 compute-bound tasks in 6.0 wall-time minutes, with execution led by supervisor opportunity measurement at 2.98 minutes and eligibility binding at 0.97 minutes. The post-run GPU snapshot cannot evaluate active-window compute efficiency, and because only single-model tasks were executed, no DualGPURunner multi-model dispatch opportunity was missed. Granular sub-phase timing instrumentation in future milestones is needed to isolate inference latency and identify actionable optimization targets."
+}
