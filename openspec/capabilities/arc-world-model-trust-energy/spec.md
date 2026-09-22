@@ -702,6 +702,111 @@ required readers pass.
 Implementation status: specified 2026-09-21. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7511: Recover Panel B evidence without new inference
+
+Experiment 7511 SHALL use run date `20260922` and milestone `2026.09.657`.
+It SHALL qualify the immutable Experiment 7499 Panel B capture. It SHALL not
+load a model, generate text, run a game episode, inspect game source, claim a
+solve, or submit a score. It SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`, and
+`inference_substrate_class=aggregation`.
+
+The recovery SHALL hash every original Experiment 7499 raw, session,
+checkpoint, and validation file before reduction. It SHALL not write those
+files. It SHALL preserve the raw candidate as a non-authoritative input. It
+SHALL write a new terminal artifact and any current logs only under Experiment
+7511 paths.
+
+The reducer SHALL authenticate the frozen eighteen-row schedule. It SHALL use
+games `tu93`, `g50t`, `tn36`, `vc33`, `re86`, and `dc22`. It SHALL use seeds
+`65501`, `65502`, and `65503`. Each row SHALL retain 180 actions, two requests,
+256 new tokens per request, a 240-second episode cap, and the shared
+3,600-second panel cap.
+
+The reducer SHALL reconcile the historical parent, child, server, lease, GPU,
+model, quantization, tokenizer, source, invocation, and terminal receipts. It
+SHALL independently recompute episode, action, generation, failure,
+cancellation, timing, and censoring totals from immutable rows. Nested spans
+SHALL use qualified exclusive interval reduction. The raw candidate SHALL not
+establish a terminal fact by itself.
+
+The reducer SHALL verify that per-game adapters, stored engines, banked
+trajectories, cross-game state, injected recipes, source reading, external
+search, and outer-loop reverse engineering stayed disabled. It SHALL read the
+current solve registry before it describes inherited progress. Historical live
+attempts SHALL retain `solve_provenance=live_agent_self_discovery`. Explicit
+development proxies or outer-loop evidence SHALL remain excluded from live
+credit and SHALL be flagged.
+
+The recovery SHALL authenticate all twelve saved validation receipts. It SHALL
+verify their exact commands, exit codes, log hashes, source hashes, age, and
+scope. It SHALL not relabel them as current checks. Replay-critical historical
+source drift SHALL disqualify qualification. Missing external proof SHALL
+block qualification. Invalid proof SHALL disqualify qualification.
+
+The producer SHALL freeze an affected-file manifest. It SHALL run scoped
+pytest without repository addopts or coverage, separate 100 percent
+changed-module coverage with a private coverage file, scoped Ruff check and
+format, changed-module mypy, and scoped spec coverage. It SHALL use the
+Experiment 7358 and Experiment 7303 helpers. Reporting-only recovery requires
+the declared entrypoint and a fresh-process cold replay. It does not require a
+numbered runtime E2E.
+
+The exact measured candidate SHALL pass fresh independent reduction,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency before
+atomic terminal publication. The artifact SHALL include all required reporting
+fields, `historical_model_specs`, `raw_validation_dispositions`,
+`per_game_results`, `per_episode_results`, and
+`arc_panel_b_qualified_score`. The score SHALL be one only when immutable
+historical evidence and every current required check qualify. Benefit failure
+SHALL not lower an otherwise valid qualification score.
+
+### SCENARIO-ARC-WMTE-7511-CUSTODY
+
+- **GIVEN** immutable raw, session, checkpoint, and validation files
+- **WHEN** Experiment 7511 authenticates Panel B custody
+- **THEN** every original file has an exact byte hash and unchanged disposition
+- **AND** no Experiment 7499 byte is overwritten.
+
+### SCENARIO-ARC-WMTE-7511-SCHEDULE
+
+- **GIVEN** the frozen six-game and three-seed schedule
+- **WHEN** raw episodes are joined to scheduled units
+- **THEN** exactly eighteen unique rows retain every fixed limit
+- **AND** missing, failed, censored, or repeated rows fail qualification.
+
+### SCENARIO-ARC-WMTE-7511-REDUCTION
+
+- **GIVEN** immutable episode, action, invocation, and interval rows
+- **WHEN** a current process independently reduces them
+- **THEN** counts, bounds, failures, cancellations, and custody reproduce
+- **AND** the raw candidate remains a comparison input rather than authority.
+
+### SCENARIO-ARC-WMTE-7511-HISTORICAL-RECEIPTS
+
+- **GIVEN** twelve old scoped and capability receipts
+- **WHEN** commands, logs, exits, hashes, scope, and source identity are checked
+- **THEN** each receipt keeps a historical-only disposition
+- **AND** missing proof blocks while invalid proof disqualifies.
+
+### SCENARIO-ARC-WMTE-7511-CURRENT-VALIDATION
+
+- **GIVEN** the frozen affected-file manifest and current recovery module
+- **WHEN** scoped checks and fresh terminal readers execute
+- **THEN** current receipts point to this worktree and pass with exact logs
+- **AND** no old validation is reported as newly run.
+
+### SCENARIO-ARC-WMTE-7511-NONCLAIM
+
+- **GIVEN** authenticated historical live model and game work
+- **WHEN** Experiment 7511 publishes its CPU aggregation
+- **THEN** current model calls and current episodes remain zero
+- **AND** it makes no new solve, source-inspection, generation, or submission claim.
+
+Implementation status: specified 2026-09-22. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7500: Audit cross-game ARC intervention opportunity without intervention
 
 Experiment 7500 SHALL use run date `20260921` and milestone `2026.09.656`.
