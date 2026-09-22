@@ -18413,3 +18413,4 @@ code |
 | 2026-09-22 05:58 UTC | Independently audit probability and decision claim | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 96 passed, 1 warning in 15.24s |
 | 2026-09-22 06:36 UTC | Measure causal delayed-feedback learning and held- | OK | 99 passed, 1 warning in 11.19s |
 | 2026-09-22 07:12 UTC | Independently audit feedback causality and restart | OK | 106 passed, 1 warning in 9.03s |
+| 2026-09-22 07:50 UTC | Qualify completed live ARC panel B from immutable  | OK | 98 passed, 1 warning in 28.40s |
