@@ -20313,3 +20313,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   live ARC eligibility evidence and exact service/board accounting.
 - Preserved the V657 design and its null/disqualified findings. No experiment,
   roadmap activation, external publication or push occurred.
+- 2026-09-22: Bind fourteen tasks and qualify the V657 scientific limits (⚠️ Research Finding) — honest_verdict=complete_null_v658_contract_methods_ingested; results/experiment_7516_v658_contract_methods.json
