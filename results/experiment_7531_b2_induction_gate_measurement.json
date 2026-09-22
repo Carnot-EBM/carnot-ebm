@@ -6725,7 +6725,7 @@
   },
   "read_game_source": false,
   "remote_submission": false,
-  "reproducibility_checksum": "sha256:572a69dc4f126daf27930e6ec83f6518466971209c0673934a088d072623a21a",
+  "reproducibility_checksum": "sha256:50b81c5c18098ed83501154bcfeb3a0249849a88010c94340b3ad7780830e5f5",
   "run_date": "20260922",
   "sample_floor": {
     "met": false,
@@ -6743,5 +6743,12 @@
     "what_this_does_not_show": "This does NOT show B2 has no headroom. It shows the current progress_within_window proxy (any frame change in a 32-action window, regardless of whether the induced plan itself was executed) cannot tell a successful induction attempt from a failed one, because ongoing exploration keeps moving frames independently of induction's outcome.",
     "separate_and_more_urgent_finding": "51 of 60 fired induction attempts (85%) produced no plan (planned=False, reason='stall' in 51 cases) and verifier_result was 'not_observed' for all 60. That is an induction-reliability signal independent of the gating question this task was built to answer, and it may be the more important result from this run.",
     "next_step_before_retrying_the_positive_control": "Redefine the progress signal to require that the SPECIFIC plan/action sequence produced by THIS induction attempt was the one executed and led to progress, not just that any frame change occurred afterward. Only then does the oracle headroom check mean anything."
+  },
+  "further_correction_2026_09_22": {
+    "flagged": true,
+    "supersedes_note": "This corrects the false_negative_risk note above, which attributed the 85% no-plan rate to a possible induction-reliability signal independent of gating. That attribution was also wrong, or at least premature.",
+    "finding": "All 60 of 60 attempts show completion_tokens == 256 exactly, with variable wall time (46-240s). This is a hard generation cap, not natural completion. It traces to MAX_NEW_TOKENS = 256 in experiment_7471_v654_arc_seam_observation.py, reused by this harness's policy construction. E6 (experiment 7492) measured real unconstrained induction at ~11,950 completion tokens/episode on average. A 256-token cap cannot contain a complete Python world-model program; it truncates every attempt before a plan can be produced.",
+    "consequence": "The 85% no-plan rate does not measure induction reliability. It measures this run's token budget, inherited from a different experiment (7471) whose own purpose was timing/seam observation, not real induction. Both the sample-floor shortfall (60 attempts) and the degenerate positive control may be downstream of the same root cause: a corpus where induction was structurally prevented from succeeding.",
+    "corrected_next_step": "Before redefining the progress signal (the prior next-step note), raise the induction completion-token budget to a realistic value (2048-4096, matching the scored kernel's own induction budget, or E6's measured real median) and re-run. Redefining the progress signal on a token-starved corpus would not produce a meaningful result either."
   }
 }

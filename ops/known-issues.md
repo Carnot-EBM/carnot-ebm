@@ -27399,3 +27399,16 @@ change (Section 12.1's E5 gate: operator-only, unstarted).
 **Deliverable:** `results/experiment_<next>_b2_induction_gate_telemetry.json` (stage 1,
 CPU-only build+tests) and `results/experiment_<next+1>_b2_induction_gate_measurement.json`
 (stage 2, GPU 1).
+
+**FURTHER CORRECTION, 2026-09-22 (same day, before the prior correction's next step was acted
+on).** All 60 fired attempts show `completion_tokens == 256` exactly, with variable wall time
+(46-240s) -- a hard generation cap being hit every time, not natural completion. It traces to
+`MAX_NEW_TOKENS = 256` in `experiment_7471_v654_arc_seam_observation.py`, reused by this
+harness. E6 measured real unconstrained induction at ~11,950 completion tokens/episode on
+average; 256 tokens cannot contain a complete Python world-model program. The 85% no-plan rate
+therefore does NOT measure induction reliability -- it measures this run's inherited token
+budget. Redefining the progress signal (the prior correction's stated next step) on a
+token-starved corpus would not produce a meaningful result either. Corrected next step: raise
+the induction completion-token budget to a realistic value (2048-4096) and re-run BEFORE
+touching the progress-signal definition. Both artifacts carry this correction in a
+`further_correction_2026_09_22` field.
