@@ -18433,3 +18433,4 @@ code |
 | 2026-09-22 15:11 UTC | Bind supervisor eligibility to the live action bou | OK | 120 passed, 1 warning in 12.92s |
 | 2026-09-22 16:34 UTC | Measure supervisor opportunities on adapter-withhe | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: est_verdict": |
 | 2026-09-22 16:55 UTC | Measure supervisor opportunities on adapter-withhe | OK | 122 passed, 1 warning in 8.75s |
+| 2026-09-22 17:20 UTC | Measure count-memory service cost and preserve boa | OK | 94 passed, 1 warning in 11.24s |
