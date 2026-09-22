@@ -77125,3 +77125,99 @@ multiplicity, or claim scope are changed one at a time
 **When** fresh processes replay, independently reduce, and run both strict guards
 **Then** identity, source, receipt, row, gate, principle, or checksum drift fails
 **And** only the validated terminal JSON publishes at the declared result path.
+
+## REQ-REPORT-7510: Independently audit V657 feedback causality and retention
+
+The repository SHALL provide Exp7510 as an aggregation-only audit. It SHALL
+inventory Exp7506 and Exp7509 on every run. Missing producer evidence SHALL
+remain blocked. Invalid present evidence SHALL be disqualified. The audit SHALL
+not import or call the Exp7509 headline reducer.
+
+The audit SHALL authenticate the original feature, prediction, feedback, and
+checkpoint bytes before metric reduction. It SHALL rebuild one event graph for
+each schedule seed and delay. Every graph SHALL require prediction before
+reveal, reveal before update, same-release-batch shuffle origins, immutable
+prediction hashes, evaluation-only retention labels, and reconciled released,
+withheld, censored, and updated counts. Restart evidence SHALL cover prediction
+rows, update hashes, pending queues, model state, and either persisted or
+stateless seed-derived random state.
+
+The independent reducer SHALL average schedule seeds inside each source before
+inference. It SHALL recompute the five delay-eight primary contrasts, one Holm
+family, moving-block bootstrap sensitivities at lengths 8 and 32, the delay-zero
+sensitivity, and final static retention. It SHALL use 2,000 draws, primary block
+length 16, and seed 657009. Repeated schedule seeds SHALL not increase source
+support. Zero-step agreement SHALL not establish causal benefit.
+
+Private mutations SHALL reject a future label, a cross-batch permutation, a
+retroactive prediction change, a lost pending update, favorable seed filtering,
+and retention-driven rollback. The corrupted fixtures SHALL not enter the
+terminal artifact.
+
+`causal_audit_complete_score` SHALL be a bare zero or one for complete audit
+accounting. It MAY equal one when external evidence is blocked or present
+evidence is disqualified. `causal_claims_qualified_score` SHALL equal one only
+when every present causal and retention row, restart check, mutation, and
+required validation qualifies. `qualified_online_benefit_score` SHALL not
+exceed either the independently reproduced frozen gates or the producer score.
+Weak permutation support SHALL produce a valid null, not invalid evidence.
+
+The task SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, no current model
+invocation, balanced zero invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and host execution. The affected-file
+manifest SHALL freeze one test, one changed module, and one thin entrypoint.
+Validation SHALL use the Exp7358 and Exp7303 helpers for focused pytest,
+100 percent changed-module coverage, scoped Ruff, changed-module mypy, and
+scoped specification coverage. The declared entrypoint, fresh-process replay,
+independent reduction, adversarial verifier, and strict row consistency SHALL
+pass before atomic publication. No numbered runtime end-to-end scenario applies.
+
+### SCENARIO-REPORT-7510-INVENTORY: External absence and invalid evidence remain distinct
+
+**Given** present, absent, blocked, or disqualified Exp7506 and Exp7509 evidence
+**When** the audit inventories exact terminal bytes and required receipts
+**Then** missing evidence produces a complete blocked ledger with the exact path
+**And** invalid present evidence produces a disqualified ledger, never partial.
+
+### SCENARIO-REPORT-7510-DAG: Every state change follows available feedback
+
+**Given** predictions, reveal batches, updates, retention rows, and checkpoints
+**When** the audit rebuilds each seed-and-delay event graph
+**Then** every prediction precedes reveal and every reveal precedes update
+**And** shuffle origins remain in one release batch with no prediction rewrite.
+
+### SCENARIO-REPORT-7510-REDUCTION: Sources own the registered inference
+
+**Given** five repeated schedules for each source
+**When** losses, bootstrap intervals, Holm correction, sensitivities, and retention are reduced
+**Then** seeds are averaged within source before resampling
+**And** support and all frozen thresholds remain unchanged.
+
+### SCENARIO-REPORT-7510-RESTART: Complete causal state survives restart
+
+**Given** uninterrupted and restarted checkpoint histories
+**When** the audit compares each durable boundary and reconstructs the terminal tail
+**Then** predictions, updates, pending queues, model hashes, and random state agree
+**And** a missing pending update or changed state fails closed.
+
+### SCENARIO-REPORT-7510-MUTATIONS: Six private corruptions fail closed
+
+**Given** a valid compact causal ledger
+**When** future access, cross-batch origin, retroactive prediction, pending loss,
+seed filtering, or retention rollback is introduced separately
+**Then** every corruption produces its named audit error
+**And** no corrupted row enters the terminal result.
+
+### SCENARIO-REPORT-7510-E2E: Exact readers control atomic publication
+
+**Given** authenticated sources, compact audit rows, hash-bound sidecars, and a frozen manifest
+**When** fresh processes replay, reduce, adversarially verify, and strictly lint the candidate
+**Then** source, row, score, gate, principle, receipt, or checksum drift fails
+**And** only the exact validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7510)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7510 and SCENARIO-REPORT-7510-* | Implemented: independent V657 causal and retention audit, hash-bound compact sidecars, and thin entrypoint. | Spec-linked tests cover inventory, source and prediction identity, event graphs, restart state, seed-averaged reduction, six private mutations, and terminal readers. The entrypoint enforces 100 percent changed-module coverage and all required terminal checks before publication. |
