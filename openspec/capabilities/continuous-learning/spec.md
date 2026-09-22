@@ -18591,3 +18591,73 @@ SHALL inspect the exact candidate before atomic terminal publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7509 and SCENARIO-CL-7509-* | Implemented: reusable seven-arm causal replay, retention scoring, block-local shuffled control, moving-block reducer, durable restart comparison, and thin entrypoint. | `tests/python/test_experiment_7509_v657_causal_online.py` covers the frozen protocol, label-free scheduling, causal release, support separation, retention, restart, row reduction, exact preconditions, mutations, and reader modes. The entrypoint enforces scoped validation and terminal readers before publication. |
+
+## REQ-CL-7514: V657 Controlled Durable Service Trace
+
+Exp7514 SHALL measure one owned request path with the cached
+`unsloth/Qwen3.8-27B-GGUF` model and zero generated tokens. It SHALL use only
+24 frozen training-role groups from the 176 qualified Exp7504 groups. It SHALL
+make no more than 192 native option-forward calls. Each group SHALL use the
+pilot-qualified context and both semantic option orders. A prompt that needs
+an unqualified truncation SHALL be excluded.
+
+The trace SHALL separate queue, text preparation, tokenization, native
+prefill, option extraction, feature conversion, prediction, supplied replayed
+label receipt, numeric update, guard, serialization, fsync, and durable
+acknowledgement intervals. Human feedback acquisition time SHALL remain
+unknown and outside the measured boundary. Cold model load and shared native
+readout SHALL be reported separately.
+
+Update and no-update arms SHALL use the same captured native inputs, request
+order, replayed labels, serialization, fsync, and acknowledgement semantics.
+Arm order SHALL alternate. At least 20 completed requests per arm are required
+for median and p95 paired overhead. Less support SHALL keep descriptive rows
+but close the durable service claim.
+
+`service_trace_complete_score` SHALL equal one only when current model
+identity, owned CUDA offload, option readout, exclusive intervals, durable
+parity, scoped validation, cold replay, independent reduction, adversarial
+verification, and strict row consistency pass. It SHALL not depend on update
+benefit. `durable_service_claim_ready_score` SHALL additionally require the
+registered paired support and complete machine-service accounting.
+
+An Amdahl ceiling MAY use the measured update-kernel share. The Exp7513
+numeric substitution bound MAY be reported only when Exp7513 is authenticated
+and every unchanged measured stage remains in the denominator. No production
+SLA, measured 100x claim, human acquisition latency, FPGA transfer latency, or
+EBM efficacy claim follows from this timing experiment.
+
+### SCENARIO-CL-7514-TRACE: Exclusive Intervals Cover Durable Acknowledgement
+
+- GIVEN one captured native readout and one supplied replayed training label
+- WHEN both numeric arms process the matched request in alternating order
+- THEN every exclusive stage is timed once and reconciles to its arm total
+- AND acknowledgement occurs only after serialization and fsync complete.
+
+### SCENARIO-CL-7514-BOUNDARY: Shared Readout Is Not Double Counted
+
+- GIVEN both arms reuse the same current native option logits
+- WHEN paired overhead and the complete service denominator are reduced
+- THEN shared readout cost is reported separately from numeric arm cost
+- AND neither arm claims a second model call or live human-label acquisition.
+
+### SCENARIO-CL-7514-GATES: Completion Is Independent Of Benefit
+
+- GIVEN at least 20 complete durable requests per arm and valid current receipts
+- WHEN the update path is slower, equal, or faster than the no-update path
+- THEN both readiness scores can remain one
+- AND no efficacy, production SLA, or measured hardware speedup is claimed.
+
+### SCENARIO-CL-7514-BLOCKED: Exact Missing Preconditions Fail Closed
+
+- GIVEN a missing or changed model, upstream artifact, GPU lease, tokenizer,
+  native runtime, CUDA offload receipt, or required validation receipt
+- WHEN Exp7514 reaches that prerequisite
+- THEN it emits `complete_blocked_*`, `verdict_class=blocked`, and the exact
+  expected and observed operand without inventing dependent measurements.
+
+## Implementation Status (REQ-CL-7514)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7514 and SCENARIO-CL-7514-* | Implemented: reusable controlled service reducer, owned native trace producer, durable paired arms, and thin entrypoint. | `tests/python/test_experiment_7514_v657_service_trace.py` passes 19 focused tests with 100 percent changed-module coverage. The declared entrypoint, cold replay, independent reduction, adversarial verifier, and strict row consistency checks pass. |
