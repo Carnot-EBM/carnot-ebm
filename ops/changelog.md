@@ -20314,3 +20314,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - Preserved the V657 design and its null/disqualified findings. No experiment,
   roadmap activation, external publication or push occurred.
 - 2026-09-22: Bind fourteen tasks and qualify the V657 scientific limits (⚠️ Research Finding) — honest_verdict=complete_null_v658_contract_methods_ingested; results/experiment_7516_v658_contract_methods.json
+- 2026-09-22: Seal fresh source interventions and role-separated decision evidence (⚠️ Blocked) — honest_verdict=complete_blocked_fresh_source_inventory; results/experiment_7517_v658_source_protocol.json
