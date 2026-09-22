@@ -205,9 +205,19 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--recent", type=int, default=12)
     ap.add_argument("--agent-type", default="codex")
-    ap.add_argument("--model-name", default="gpt-5.5")
+    ap.add_argument(
+        "--model-name",
+        default=None,
+        help="defaults to a model matching --agent-type (gpt-5.5 for codex, "
+        "gemini-3.8-flash-high for agy) when not given",
+    )
     ap.add_argument("--dry-run", action="store_true", help="list targets; make no LLM call")
     args = ap.parse_args(argv)
+    if args.model_name is None:
+        # ops/known-issues.md 2026-09-20: a bare `--agent-type agy` with no --model-name
+        # silently sent the codex-shaped "gpt-5.5" default to agy, which does not
+        # recognize it. Pick a per-agent-type default instead of one fixed value.
+        args.model_name = "gemini-3.8-flash-high" if args.agent_type == "agy" else "gpt-5.5"
 
     targets = _artifacts(args.recent)
     if args.dry_run:

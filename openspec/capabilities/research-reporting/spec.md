@@ -77221,3 +77221,94 @@ seed filtering, or retention rollback is introduced separately
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7510 and SCENARIO-REPORT-7510-* | Implemented: independent V657 causal and retention audit, hash-bound compact sidecars, and thin entrypoint. | Spec-linked tests cover inventory, source and prediction identity, event graphs, restart state, seed-averaged reduction, six private mutations, and terminal readers. The entrypoint enforces 100 percent changed-module coverage and all required terminal checks before publication. |
+
+## REQ-REPORT-7515: Close V657 with thirteen authenticated dispositions
+
+The repository SHALL provide Exp7515 as an aggregation-only capstone. It SHALL
+compare the independent V657 Markdown and YAML authorities, then inventory the
+twelve preceding producers in conductor order. Each source row SHALL retain the
+exact artifact hash, literal verdict, verdict class, adversarial flag, required
+validation receipts, ready or value fields, raw-row references, and acceptance
+gate operands. The thirteenth row SHALL describe the validated current capstone
+without reading its own terminal path.
+
+The capstone SHALL keep native evidence quality, probability value, selective
+decision value, causal information, retention, ARC reachability and opportunity,
+host quantization, historical board continuity, and current machine-service
+timing as separate claim-ledger rows. It SHALL propagate the independent Exp7508
+and Exp7510 audit limits. Cached arithmetic and historical model receipts SHALL
+not count as current model calls. An unqualified recovered ARC candidate SHALL
+not become a live benchmark result.
+
+`capstone_complete_score` SHALL equal one after all thirteen dispositions and
+current required validation are complete. Missing or externally gated required
+evidence SHALL produce `verdict_class=blocked` with a `complete_` verdict and
+exact failed operands. Invalid present evidence SHALL be disqualified. A valid
+scientific null SHALL remain terminal. `partial` SHALL apply only to repairable
+unfinished Exp7515 work.
+
+Every task SHALL retain its four-field prior-failure declaration. A repeated
+scientific disposition SHALL trigger only the declared bounded mechanism's
+retirement and SHALL name a changed reopening condition. Publication gates G1
+through G4 SHALL be evaluated read-only. The capstone SHALL perform no roadmap
+activation, publication, submission, external contact, model-weight change, or
+production-default change.
+
+The task SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, no current model
+invocation, balanced zero invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and host execution. The affected-file
+manifest SHALL freeze one test, one changed module, and one thin entrypoint.
+Focused pytest, 100 percent changed-module coverage, scoped Ruff, changed-module
+mypy, scoped specification coverage, the declared entrypoint, fresh-process
+replay, independent reduction, adversarial verification, and strict row
+consistency SHALL pass before atomic publication. No numbered runtime end-to-end
+scenario applies.
+
+### SCENARIO-REPORT-7515-CONTRACT: Both V657 authorities control task identity
+
+**Given** the exact thirteen-row Markdown table and milestone YAML
+**When** Exp7515 compares order, IDs, titles, phases, paths, substrates, and gates
+**Then** any private authority drift fails closed
+**And** no self-dependent scientific gate is introduced.
+
+### SCENARIO-REPORT-7515-INVENTORY: Producer evidence retains its original limits
+
+**Given** twelve producer artifacts with raw rows, flags, receipts, and scores
+**When** the capstone builds its ordered dispositions
+**Then** exact ready and value fields remain distinct from benefit
+**And** blocked, disqualified, null, and positive source states are not rewritten.
+
+### SCENARIO-REPORT-7515-CLAIMS: Independent research boundaries stay separate
+
+**Given** static, causal, ARC, placement, board, and service evidence
+**When** the claim ledger is reduced
+**Then** Exp7508 and Exp7510 control their audited claims
+**And** cached, historical, hypothetical, and current measurements remain labeled.
+
+### SCENARIO-REPORT-7515-COMPLETION: Complete accounting is not publication permission
+
+**Given** all thirteen honest dispositions and passing current validation
+**When** one or more required scientific branches are blocked or null
+**Then** `capstone_complete_score` is one and the aggregate class stays honest
+**And** actual read-only G1 through G4 outcomes do not perform publication.
+
+### SCENARIO-REPORT-7515-RETIREMENT: Only repeated bounded mechanisms retire
+
+**Given** each task's prior verdict, changed mechanism, and repeat rule
+**When** the current scientific disposition is compared with the prior one
+**Then** all four fields remain mechanically inspectable
+**And** reopening requires new evidence or a named method change.
+
+### SCENARIO-REPORT-7515-E2E: Exact readers control atomic publication
+
+**Given** the frozen affected manifest and measured terminal candidate
+**When** fresh processes replay, independently reduce, and run both strict guards
+**Then** source, row, claim, gate, receipt, principle, or checksum drift fails
+**And** only the exact validated terminal JSON publishes at the declared path.
+
+## Implementation Status (REQ-REPORT-7515)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7515 and SCENARIO-REPORT-7515-* | Implemented: V657 capstone reducer, retrospective, bounded retirement rows, read-only publication gates, and thin entrypoint. | Spec-linked tests cover paired authorities, producer custody, receipt variants, claim boundaries, terminal precedence, retirement, retrospective content, protected mutations, scoped validation, and 100 percent changed-module coverage. The entrypoint requires all affected and terminal readers before publication. |

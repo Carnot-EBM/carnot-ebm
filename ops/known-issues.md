@@ -9889,7 +9889,7 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
-### NEW 2026-09-20: SEMIF OPTION-READOUT FOLLOW-UP E0 -- CAN THE SCORED PATH RETURN OPTION LOGPROBS, AND DO TWO RUNTIMES AGREE
+### BLOCKED 2026-09-22 (operator-only step pending): SEMIF OPTION-READOUT FOLLOW-UP E0 -- CAN THE SCORED PATH RETURN OPTION LOGPROBS, AND DO TWO RUNTIMES AGREE
 
 **Context.** An outer-loop review of Benchmark Heaven's JevBench and the open SemIf
 reproduction found a possible fit with the calibrated-decision floor and the ARC live agent.
@@ -9917,7 +9917,19 @@ pinned. Every later experiment depends on this.
 
 deliverable: "results/experiment_<next>_semif_e0_logprob_parity.json"
 
-### NEW 2026-09-20: SEMIF FOLLOW-UP E6 -- WHAT SHARE OF THE ARC LIVE LOOP IS DECISION POINTS
+**Status 2026-09-22.** The prep work is done and not neglected: an off-by-default probe is
+built into the scored kernel (REQ-INFRA-7090, commit `8d4fa2d0bd`), gated on
+`RUN_LOGPROB_PROBE = False`, and a standalone private Kaggle kernel (REQ-INFRA-7089,
+commit `5147f85a4f`) already ran and found a private/non-competition kernel is assigned
+2x Tesla T4, not Blackwell, so it could not measure anything on the real scored substrate
+(`ops/changelog.md` 2026-09-21). The remaining step -- re-versioning the `carnot-agent-code`
+dataset, flipping the constant, and submitting -- is operator-only per "Operator-Only
+External Publication" and the plan's own E5 gate (section 12.1). Renamed from NEW to
+BLOCKED so this genuinely operator-gated wait does not read as an unpicked-up priority;
+this is not a resolution and the lint's pending-count no longer applies to a header this
+autonomous loop cannot act on further without that operator step.
+
+### RESOLVED 2026-09-21: SEMIF FOLLOW-UP E6 -- WHAT SHARE OF THE ARC LIVE LOOP IS DECISION POINTS
 
 **Why this comes first.** Any speedup from a typed-decision engine is bounded by the share of
 time and tokens the live loop spends at decision points. The plan's rough estimate of a 49%
@@ -9942,7 +9954,14 @@ decides. `retire_if_same_verdict: true`.
 
 deliverable: "results/experiment_<next>_semif_e6_decision_cost_profile.json"
 
-### NEW 2026-09-20: CLAUDE QUOTA-CONSERVE DIRECTIVE — AUTORESEARCH FABLE FALLBACK DISABLED, GEMINI CLI CONFIRMED EXTERNALLY BROKEN
+**Resolved by:** experiments 7490 (coverage-only first pass) and 7491/7492 (the real
+36-episode timed run). Induction/generation is 96.5532% of wall time and 100% of generated
+tokens; candidate selection is 0.2759%; planner 3.1194%; environment 0.0505%; supervisor
+0.0003%; verifier 0% observed. All 36 episodes stayed at level 0. Go/stop call: STOP the
+B1/E8/E9 candidate-selector ladder (wrong seam, bounded near its current 0.28% share even
+at zero overhead); GO on B2 (induction timing gate), queued separately below.
+
+### RESOLVED 2026-09-22: CLAUDE QUOTA-CONSERVE DIRECTIVE — AUTORESEARCH FABLE FALLBACK DISABLED, GEMINI CLI CONFIRMED EXTERNALLY BROKEN
 
 **What happened.** The operator directed a reduction in Claude usage across every
 automated worker while Claude quota is constrained, and asked that codex and
@@ -10035,6 +10054,17 @@ it via `input=`.
 explicit `--model-name` will pass that codex-shaped default to `agy`, which
 does not recognize it. Needs `--model-name gemini-3.1-pro-high` (or similar)
 explicitly until/unless that default is reconsidered.
+
+**RESOLVED 2026-09-22.** `artifact_convention_audit.py` and `experiment_claim_audit.py`
+now default `--model-name` to `None` and pick `gemini-3.8-flash-high` for `--agent-type
+agy`, `gpt-5.5` otherwise, only when the caller does not pass `--model-name` explicitly.
+The live conductor path is unaffected -- it already passes `--model-name AGENT_MODEL_AUDIT`
+explicitly on every call (`scripts/research_conductor.py:6690-6735`) -- this only fixes the
+manual/interactive footgun. Verified: both scripts' existing dry-run smoke passes with and
+without `--agent-type agy`, mypy clean, and `test_experiment_claim_audit.py` (16 tests)
+still green. This closes the entry's last open item; the rest of it (agy replacing
+gemini-cli, the PATH fix, the fallback reordering, the stderr-visibility fix) was already
+implemented earlier this session and verified live.
 
 **FOLLOW-UP, 2026-09-20 (later, operator: "make agy the fallback"): agy now fills the
 fallback slot.** The first round after the conductor restart produced zero iterations:
@@ -27318,3 +27348,54 @@ sizing problem, not this one.
 2. Conductor rule: when the only child of codex is the idle code-mode host and an API connection is open,
    count the silence against a longer limit, still bounded by the wall-clock cap.
 3. Split large tasks (panel B) into build-and-test and live-run tasks.
+
+### NEW 2026-09-22: SEMIF FOLLOW-UP B2 -- BUILD AND MEASURE THE INDUCTION-TIMING GATE
+
+**Origin.** E6 (experiments 7490/7492) measured the real live-loop cost split on 36 real
+episodes: induction/generation is 96.5532% of wall time, 100% of generated tokens
+(430,188 tokens, ~11,950/episode), and all 36 episodes stayed at level 0 -- so some real
+share of that generation was wasted retries, not necessary cost. The candidate-action
+selector (B1/E8/E9) targets a seam that measured at 0.2759% of wall time. Plan section 4
+B2 ("Induction timing gate") targets the actual 96.55% seam. Operator directive
+2026-09-22: scope B2 as the next task.
+
+**The task (plan section 4, B2).** `_should_enter_induction`
+(`python/carnot/agentic/arc_competition_agent.py:6134`) is a plain rule (no LLM call) that
+decides `continue_explore` / `induce_now` / `reinduce_now` / `delegate_to_current_gate`.
+REQ-ARC-WMTE-7465 telemetry already wraps it (`capture_induction_decision` ->
+`record_induction_decision`) and records `stalled`, `won`, the decision, and wall time --
+but NOT the attempt's outcome (tokens generated, verifier accept/reject/escalate, whether
+progress followed). Building a gate needs both halves joined per attempt.
+
+**Stage 1 (build, off by default, live-path-reachable per the ARC Live-Path Reachability
+Discipline -- extend `arc_decision_telemetry.py` / `E3AgentPolicy` directly, not a side
+module).** Extend the induction-decision telemetry to also record, for every attempt that
+actually fires: tokens generated (prompt and completion), wall time, the verifier's
+accept/reject/escalate result, and whether progress (frame change or level-up) followed
+within a bounded window. Keep the existing on/off parity contract (actions, calls,
+provenance, environment, random state unchanged with the recorder off).
+
+**Stage 2 (measure, GPU 1, live E3 path, adapter-free, `solve_provenance:
+live_agent_self_discovery`).** Run enough episodes to count real gate opportunities and
+real induction attempts. Per the plan's own sample-size rule: report a numeric gate-quality
+result only with at least 1,000 gate opportunities AND at least 100 actual induction
+attempts; below 100 attempts, report feasibility only (how many opportunities and attempts
+a given episode budget actually yields) -- an honest partial result, not a forced gate fit.
+
+**Positive control (from the plan).** An analysis-only oracle that sees the attempt's final
+`planned`, verifier, and later-progress fields must be able to save tokens without losing
+progress, on the same data. This is the headroom check -- if even the oracle can't separate
+useful from useless attempts in this corpus, the gate idea has no headroom here (same
+class of check that grounded the earlier ARC null results on self-consistency headroom).
+
+**Kill criterion (from the plan).** Drop B2 if useful and useless inductions are not
+separable out of game (leave-one-game-out), or if missing one useful induction removes a
+level gain with no compensating benefit elsewhere.
+
+**Explicitly not this task:** B1/E8 candidate-action selector (wrong seam, see E6); the
+Frozen Needle action-call gate (E7, a different mechanism); any scored-path or submission
+change (Section 12.1's E5 gate: operator-only, unstarted).
+
+**Deliverable:** `results/experiment_<next>_b2_induction_gate_telemetry.json` (stage 1,
+CPU-only build+tests) and `results/experiment_<next+1>_b2_induction_gate_measurement.json`
+(stage 2, GPU 1).
