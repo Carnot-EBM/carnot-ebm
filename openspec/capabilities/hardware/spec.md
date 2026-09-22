@@ -2243,6 +2243,108 @@ Required artifact fields:
 
 ---
 
+### REQ-HW-7528
+
+**Title:** Exp7528 MUST measure only the count-memory service boundary and preserve board scope
+
+**Description:**
+Experiment 7528 SHALL produce
+`results/experiment_7528_v658_service_boundary.json` for run date 20260922
+and milestone 2026.09.658. The current run SHALL use host CPU work with
+`MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, and zero model
+invocations. It SHALL issue no hardware command.
+
+The service branch SHALL require the completed Exp7523 count-memory producer.
+When that producer is absent or invalid, the branch SHALL use
+`complete_blocked_missing_count_memory_prototype`. Its gate summary SHALL name
+the exact producer path, required field, expected value, and observed value.
+The missing branch SHALL not block the independent board audit.
+
+When Exp7523 is valid, the experiment SHALL benchmark only its fixed eight-bin
+state and matched frozen predictor. It SHALL use 30 independent batches of 256
+queued fixture events and 30 batch-one acknowledgements. Each row SHALL record
+lookup, increment, allocation, serialization, fsync, and acknowledgement time.
+A fresh process SHALL reproduce the exact prediction after restart.
+
+The artifact SHALL keep the Exp7514 update-only ceiling as historical context.
+It SHALL not use the Exp7513 81-parameter head as the count-memory denominator.
+Any cross-run composition SHALL be a hypothetical bound. It SHALL list native
+call count, context, durability, and synchronization mismatches. The 100x target
+SHALL remain unmet without an equal-semantics whole-service measurement.
+
+The board ledger SHALL keep three independent rows. KV260 SHALL retain only its
+historical FPGA-fabric scope and `ssh kria` future access. PolarFire SHALL retain
+only its historical hash-matched CPU-dispatch scope. GateMate SHALL require a
+new dated operator cable, power, board, JTAG, or DirtyJTAG receipt. Without such
+a receipt, GateMate SHALL use `blocked_unchanged_physical_prerequisite` and the
+current task SHALL issue zero physical commands.
+
+The terminal artifact SHALL publish only after scoped tests, changed-module
+coverage, Ruff, mypy, scoped spec coverage, cold replay, independent reduction,
+adversarial verification, and strict row consistency pass.
+
+Required artifact fields include all common experiment identity, provenance,
+model, timing, row, gate, verdict, validation, and field-principle fields. They
+also include `service_cost_complete_score`,
+`board_continuity_complete_score`, `operation_identity`, `board_rows`, and
+`whole_service_speedup`.
+
+Required field principles:
+
+- `service_cost_complete_score`: principle "A bare 0 or 1 requires exact-operation timing and restart evidence."
+- `board_continuity_complete_score`: principle "A bare 0 or 1 requires three dated dispositions without a current probe."
+- `operation_identity`: principle "Bin count, arithmetic, persistence, and acknowledgement semantics bind the measured operation."
+- `board_rows`: principle "KV260 fabric, PolarFire CPU, and GateMate physical evidence remain separate."
+- `whole_service_speedup`: principle "Null prevents a mismatched kernel or historical trace from becoming service speedup."
+
+**Implementation status:** Implemented (Exp 7528)
+
+---
+
+### SCENARIO-HW-7528-MISSING-PROTOTYPE
+
+**Scenario:** Exp7528 blocks only service measurement when Exp7523 did not run.
+
+**Given:** The Exp7523 module or terminal artifact is absent or its
+`count_memory_ready_score` is not one,
+**When:** Exp7528 authenticates inputs,
+**Then:** service timing has zero attempted units, its exact failed path and
+field appear in `gate_check_summary`, `service_cost_complete_score=0`, and the
+three-row board audit still completes.
+
+**Implementation status:** Implemented (Exp 7528)
+
+---
+
+### SCENARIO-HW-7528-BOARD-SCOPES
+
+**Scenario:** Exp7528 preserves graduated board scopes without current access.
+
+**Given:** Historical KV260 and PolarFire evidence authenticates and no newer
+GateMate physical-change receipt exists,
+**When:** Exp7528 reduces the board rows,
+**Then:** KV260 retains FPGA-fabric scope, PolarFire retains board-CPU scope,
+GateMate is `blocked_unchanged_physical_prerequisite`, and all current hardware
+operation counts are zero.
+
+**Implementation status:** Implemented (Exp 7528)
+
+---
+
+### SCENARIO-HW-7528-NO-SUBSTITUTION
+
+**Scenario:** Exp7528 does not turn historical component timing into speedup.
+
+**Given:** Exp7514 contains a 33-parameter update-only ceiling and Exp7513 times
+an 81-parameter head,
+**When:** Exp7528 records historical context,
+**Then:** the composition is labeled hypothetical, all semantic mismatch checks
+remain explicit, `whole_service_speedup=null`, and the 100x target is unmet.
+
+**Implementation status:** Implemented (Exp 7528)
+
+---
+
 ### SCENARIO-HW-7513-NUMERIC-READY
 
 **Scenario:** Exp7513 accepts a finite integer placement only after frozen parity.
