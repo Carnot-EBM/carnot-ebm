@@ -2998,3 +2998,22 @@ REQ-INFRA-7090 maps to
 `tests/python/test_arc_vllm_logprob_probe.py`. The module reuses the running
 loopback server. It does not control the server lifecycle. The kernel switch
 is false by default. The probe has bounded HTTP calls and blocked verdicts.
+
+## 2026-09-21 — V657 next-milestone plan (not activated)
+
+REQ-REPORT-V657-PLAN maps to
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`: exactly thirteen tasks, exp7503–exp7515, four
+phases. Static calibration/decisions map to verification and Gibbs/KAN training;
+causal feedback and retention map to continuous-learning; qualified historical
+live ARC evidence maps to arc-agi; host placement and durable machine-service
+accounting map to hardware. These are planned experiments, not implementation
+or efficacy claims. The original V656 design is preserved in
+`openspec/change-proposals/research-roadmap-v656-preserved-20260921.md`.
+
+Planning verification uses independent Markdown/YAML contract parsers, producer
+gate declarations, schema/prior-failure/exclusion/harness/ARC/priority linters
+and scoped existing guard tests. Future Exp7503 owns executable V657 mutation
+tests. Literature provenance was appended to `research-references.md` before
+design. Active `research-roadmap.yaml` and `scripts/research_conductor.py` are
+protected and unchanged.

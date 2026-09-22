@@ -16,9 +16,31 @@ OK: all solver-like ARC modules are reachable from the live agent path (95 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — zero recent solve artifacts means no self-discovery advance is demonstrated; reachability alone proves no live capability.**
+### TL;DR Verdict
+**NO PROGRESS / ZERO ARTIFACTS** — Reachability lint passes (95 modules in live closure, 0 orphans), but **0 solve artifacts were recorded in the last 7 days**. No live self-discovery has been demonstrated.
 
-Per-artifact: none in the last 7 days.
+---
 
-Pattern watch: The 95-module live closure passes the off-path check, but this is only wiring evidence. Do not claim progress until artifacts capture the live entrypoint, autonomous attempts/runtime reverse-engineering, and a previously unsolved hidden-game result.
+### Per-Artifact Reviews
+
+*No artifacts present in the evaluation window (`[]`).*
+
+* **Verdict**: `N/A`
+* **Evidence**: Input queue is empty (`RECENT ARC SOLVE ARTIFACTS (last 7d): 0`).
+* **Recommended Action**: Run the live entrypoints ([`scripts/arc_loop_solve.py`](file:///workspace/scripts/arc_loop_solve.py) / [`python/carnot/agentic/arc_competition_agent.py`](file:///workspace/python/carnot/agentic/arc_competition_agent.py)) against target tasks. Solves must produce raw attempt logs, state transitions, and hypothesis-revision traces to qualify for review.
+
+---
+
+### Pattern Watch (Drift Towards Outer-Loop Solving)
+
+When artifacts do land, watch aggressively for these four failure modes:
+
+1. **Cold-Start Omniscience (Zero-Attempt Solves)**:
+   Any artifact where an agent solves a hidden or complex mechanic on Attempt 1 without prior exploration or negative feedback is an immediate red flag for leaked ground truth, offline human inspection, or hardcoded game dynamics. Real runtime RE leaves a trail of failed probes and hypothesis tests.
+2. **Per-Game Shims & Disguised Adapters**:
+   95 modules in the live closure is a large surface area. Verify that modules reachable from the live entrypoints are generic runtime mechanisms (e.g., DSL induction, dynamic transition-table learning, online goal deduction) rather than bespoke game-specific heuristics keyed off game IDs or narrow visual signatures.
+3. **Offline BFS Trajectory Replay**:
+   Watch for PRs or artifacts that run an offline simulator/oracle search to compute an action sequence, then wrap the agent around it as a "playback" loop. The search, backtracking, and state estimation *must* execute within the live agent's runtime step budget.
+4. **Cosmetic Reachability**:
+   Passing `scripts/arc_orphan_solver_lint.py` only proves import reachability, not execution integrity. Ensure live entrypoints actually invoke the discovery mechanisms during execution rather than routing around them via convenience flags or fallback solver paths.
 

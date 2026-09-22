@@ -76956,3 +76956,39 @@ publication. No numbered runtime end-to-end scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7502 and SCENARIO-REPORT-7502-* | Implemented: V656 raw-evidence capstone reducer, retrospective, permanent retirement rows, and thin entrypoint. | Spec-linked tests cover contract order, evidence states, claim separation, retirement, completion, mutations, and scoped validation. The entrypoint records 100 percent changed-module coverage and all required terminal readers before publication. |
+
+## REQ-REPORT-V657-PLAN: Paired next-milestone planning authorities
+
+**Status: planned, not implemented research.** The 2026.09.657 design in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and execution plan in
+`research-roadmap-next.yaml` SHALL describe exactly thirteen tasks, exp7503
+through exp7515, in the same order with identical titles, phases, deliverables,
+substrate classes and structured gate clauses. The preserved V656 design
+remains historical evidence. Planning does not activate either roadmap.
+
+V657 SHALL separate static probability from selective utility, qualify delayed
+feedback before causal claims, retain absent evidence as blocked, and recover
+ARC raw episodes only after custody and independent validation. A historical
+live run is not a current model invocation. The only proposed fresh LLM task,
+Exp7514, uses the mandated Qwen3.8-27B GGUF for native option forwards with
+`model_load_no_generation`. All same-scope retries retain four-field prior
+failure declarations, and all comparative tasks retain per-unit rows.
+
+### SCENARIO-REPORT-V657-PLAN-CONTRACT: Independent authority comparison
+
+**Given** the planned Markdown and YAML authorities
+**When** their existing independent contract parsers compare all thirteen rows
+**Then** count, order, identity, exact title, phase, path, substrate or gate drift fails
+**And** each consumed gate field is declared by an earlier producer in this plan.
+
+### SCENARIO-REPORT-V657-PLAN-BOUNDARY: Planning remains distinct from execution
+
+**Given** the documented V656 terminal and raw-only dispositions
+**When** V657 is proposed and validated
+**Then** no new research result, hardware graduation, activation or publication is claimed
+**And** the active roadmap and research conductor remain unchanged.
+
+Implementation status: planning documents only. Existing schema, gate, exclusion
+and ARC-floor tests exercise the unchanged planning guards. Exp7503 is assigned
+the executable V657 contract and mutation tests; remaining tasks must add their
+own relevant REQ/SCENARIO and tests before implementation.

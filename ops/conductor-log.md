@@ -18379,3 +18379,27 @@ code |
 | 2026-09-21 23:09 UTC | Conductor re-exec: fresh committed source | OK | 575c17974d28 -> 3e409d258f1a; argv preserved |
 | 2026-09-21 23:09 UTC | Measure durable feedback service and retain honest | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7496-causal-update-fixture, exp7496-causal-update-fixture, exp7496-causal-update-fixture) |
 | 2026-09-21 23:46 UTC | Reconcile all fourteen V656 dispositions and retir | OK | 95 passed, 1 warning in 10.01s |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/test_suite_mutation_check.py age-week 4: OPEN 28 days: SILENT_NON_FIRING |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/operator_curated_docs_lint.py age-week 4: OPEN 28 days: SILENT_NON_FIRIN |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | commit 288ea485f9 (REQ-ARC-WMTE-6710) age-week 4: OPEN 28 days: PREVALENCE_FIGUR |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6587_v573_constraint_first_method_contract.json age-week 4: OPEN 28 d |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/operator_curated_doc_guard.py age-week 4: OPEN 28 days: SILENT_NON_FIRIN |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/child_results_guard.py age-week 4: OPEN 28 days: SILENT_NON_FIRING on sc |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/artifact_freshness_lint.py age-week 4: OPEN 28 days: SILENT_NON_FIRING o |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/arc_artifact_lint.py age-week 4: OPEN 28 days: SILENT_NON_FIRING on scri |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | operator_curated_doc_guard.py age-week 4: OPEN 28 days: SILENT_NON_FIRING on ope |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | child_results_guard.py age-week 4: OPEN 28 days: SILENT_NON_FIRING on child_resu |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | artifact_freshness_lint.py age-week 4: OPEN 28 days: SILENT_NON_FIRING on artifa |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_artifact_lint.py age-week 4: OPEN 28 days: SILENT_NON_FIRING on arc_artifact |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | determination_preservation_lint.py age-week 4: OPEN 28 days: SILENT_NON_FIRING o |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6596_convergeflow_feasible_token_canary.json age-week 4: OPEN 28 days |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6854_risk_sensitive_abstention_memory_controller.json age-week 3: OPE |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7130_v626_verifier_committed_routing.json age-week 2: OPEN 14 days: C |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7324_v643_addition_learning.json age-week 1: OPEN 7 days: CLAIM_OVERS |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7325_v643_addition_audit.json age-week 1: OPEN 7 days: CLAIM_OVERSTAT |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7468_v654_residual_learner.json age-week 0: OPEN 1 days: CLAIM_OVERST |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_marker_present age-week 0: OPEN 1 days: REAL_BUG on |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7482_v655_importance_anchor.json age-week 0: OPEN 1 days: CLAIM_OVERS |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_has_paired_significance age-week 0: OPEN 1 da |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_circular_moat_overclaim age-week 0: OPEN 1 days: SI |
+| 2026-09-22 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_verdict_class_consistency age-week 0: OPEN 1 days:  |

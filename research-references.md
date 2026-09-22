@@ -46087,3 +46087,87 @@ first note came from a summary of the HTML page; these points correct or add to 
 - **Net for Carnot:** the white-box control idea stays a loose analogy for the
   induction-timing gate. The trajectory-only judge is the more concrete lead. Neither
   is a task yet.
+
+## 2026-09-21: V657 planning literature sweep, before experiment design
+
+This review follows the terminal V656 records. It distinguishes new leads from
+rechecked references. Paper results are author reports, not Carnot measurements.
+The sweep covered all eight research topics and all six secondary channels.
+
+### New leads to test or retain
+
+| Primary source | Method and useful question | Boundary and disposition |
+|---|---|---|
+| [LLM-as-a-Verifier, 2607.05391](https://arxiv.org/abs/2607.05391), July 2026; [author repository](https://github.com/llm-as-a-verifier/llm-as-a-verifier) | Uses the expectation over scoring-token probabilities instead of a discrete generated judgment. The existing binary Qwen option readouts permit a matched raw-expectation control without more generation. | Adopt the control and test calibration separately from ranking. This is a binary adaptation, not reproduction of the paper's multi-criterion system or proof that logits are calibrated. |
+| [OpenHalDet, 2606.06959](https://arxiv.org/abs/2606.06959), June 2026; [author repository](https://github.com/Nellie179/Hallucination-Detection) | Standardizes prompts, generation settings, labels, detector access and metrics across hallucination evaluations. | Adopt an explicit access/settings ledger when comparing native scores with learned heads. Do not add a broad benchmark or dependency before the existing captured evidence is evaluated. |
+| [Out-of-distribution Neural Inference in Dynamical Ising Models, 2607.03039](https://arxiv.org/abs/2607.03039), July 2026 | Reports architecture-dependent density priors that can resemble transfer under topology and temperature shifts. | Retain as a warning about prevalence shortcuts. Use an intercept-only learner, source-family slices and label-alignment controls; no new Ising training claim follows. |
+
+### Rechecked research and practical consequences
+
+- **EBM verification and reasoning:** [EBT, 2507.02092](https://arxiv.org/abs/2507.02092)
+  learns input/candidate compatibility. [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4)
+  gives a function-space correspondence and distillation analysis. Neither
+  establishes that a source-conditioned option probability is factual truth.
+  Train a small conditional energy head and measure held-out proper losses.
+- **Constraint satisfaction:** [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461)
+  handles linear equalities and inequalities; [PAL, 2503.19466](https://arxiv.org/abs/2503.19466)
+  uses tractable constrained densities. Both need correctly specified constraints.
+  Defer new solver integrations while source-label calibration is unmeasured.
+- **Causal controls:** [Retrieval-Warmed Energy-Based Reasoning, 2606.26476](https://arxiv.org/abs/2606.26476)
+  separates aligned information from constant, random, shuffled and oracle controls.
+  Adapt its diagnostic logic to delayed feedback: permute only labels that are
+  already available in the same release batch. This is an experimental-control
+  analogy, not a delayed-learning theorem from the paper.
+- **KAN and continual learning:** [Catastrophic Forgetting in KANs, 2511.12828](https://arxiv.org/abs/2511.12828)
+  relates retention to support overlap and dimension. [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306)
+  motivates per-knot anchoring, but Carnot already measured an anchor null.
+  Keep that mechanism closed; test the unmeasured Brier component with a matched
+  log-loss control and a separate retention set.
+- **Memory:** [Memoir, 2607.20792](https://arxiv.org/abs/2607.20792)
+  reports a learning-speed penalty from coupled memory rewriting in its bounded
+  recall setting. Keep prediction snapshots immutable and update only after
+  feedback release; do not infer that more memory writes improve reasoning.
+- **Constrained generation:** [Thinking Before Constraining, 2601.07525](https://arxiv.org/abs/2601.07525)
+  separates free reasoning from structured output. [Finite-automaton diffusion
+  decoding, 2607.07026](https://arxiv.org/abs/2607.07026) concerns diffusion models.
+  These do not reopen failed generated-span extraction or authorize a different
+  headline generator. Format validity remains separate from semantic correctness.
+- **Ising sampling and hardware:** [Learning-to-sample phase transition,
+  2605.24752](https://arxiv.org/abs/2605.24752) separates parameter learning from
+  sampling difficulty. [FPGA decomposition co-design, 2602.15985](https://arxiv.org/abs/2602.15985)
+  makes preprocessing and communication part of the system. Prefer exact
+  normalization for the small decision head and include data movement in any
+  future placement claim; no new sampler sweep is warranted.
+
+### Secondary-source access record
+
+- **OpenReview:** searched ICLR 2026 EBM submissions and located the
+  [EBT conference PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg).
+  Two other direct PDF opens returned browser challenges. Search snippets are
+  discovery only; no unseen reviews or acceptance decisions are used.
+- **Semantic Scholar:** both Graph API citation requests returned HTTP 200:
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=30)
+  returned 30 records with another page; [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=30)
+  returned eight with no next page. Followed Memoir, [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047)
+  and [distributional EBMs](https://arxiv.org/abs/2605.18871) to primary sources.
+  This is a partial citation walk. The retired external-text reranking branch stays closed.
+- **Hugging Face Papers:** checked the [verification discovery page](https://huggingface.co/papers?q=verification)
+  and followed LLM-as-a-Verifier to its paper and author code. The older Factored
+  Verification paper is from 2023; its recent listing does not make it new work.
+- **GitHub trending:** checked [weekly Python](https://github.com/trending/python?since=weekly)
+  and [weekly Rust](https://github.com/trending/rust?since=weekly). No relevant new
+  dependency was selected from the returned lists. Author repositories above
+  were discovered through papers; no trending rank is asserted for them.
+- **Extropic:** the [writing index](https://extropic.ai/writing) exposed no article
+  text in the returned page. The [hardware page](https://extropic.ai/hardware)
+  lists Z1 Stick and Card early access in 2027. The [software page](https://extropic.ai/software)
+  describes TORX and THRML. These are vendor statements; local TSU access,
+  throughput and energy use remain unmeasured.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  describes a constraint-enforcement layer beneath language interfaces. The
+  returned page supplies no reproducible training recipe or benchmark artifact.
+  Keep it as architectural context, not evidence of Carnot parity.
+
+The operator's State of Thought note remains reference-only. This sweep does
+not promote it into a task. No model, board, external service account, purchase,
+contact or publication was used to conduct this literature review.

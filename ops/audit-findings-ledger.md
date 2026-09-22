@@ -183,3 +183,8 @@ of truth, not this line.)
 | 2026-09-21 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_has_paired_significance | SILENT_NON_FIRING | OPEN | |
 | 2026-09-21 | qa_layer_authenticity_audit | adversarial_verify.py::check_circular_moat_overclaim | SILENT_NON_FIRING | OPEN | |
 | 2026-09-21 | qa_layer_authenticity_audit | adversarial_verify.py::check_verdict_class_consistency | SILENT_NON_FIRING | OPEN | |
+| 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_arc_claimed_level | SILENT_NON_FIRING | OPEN | |
+| 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_is_arc_solve_claim | SILENT_NON_FIRING | OPEN | |
+| 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_arc_registry_level | SILENT_NON_FIRING | OPEN | |
+| 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_is_arc_artifact | SILENT_NON_FIRING | OPEN | |
+| 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_arc_live_claim_text | SILENT_NON_FIRING | OPEN | |

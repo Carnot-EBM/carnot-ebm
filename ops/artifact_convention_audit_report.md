@@ -10,9 +10,25 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 7 |
-| AGGREGATE_ONLY | 1 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_7480_v655_source_eval_capture.json
+## experiment_7490_v656_historical_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+No claim; the artifact records an honest null historical audit where benefit gates failed and chronological leakage was detected in the negative control.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7491_v656_window_protocol.json
 
 **CHECKABLE**
 
@@ -28,71 +44,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7481_v655_typed_calibration.json
+## experiment_7492_v656_window_pilot.json
 
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The candidate met the decision-benefit gate but failed the probability-benefit gate, leaving `"deployment_certificate_valid": false`.
-
-## WHAT IS MISSING
-Per-group evaluation rows containing each of the 74 groups’ candidate and comparator costs; `"decision_cost_grid.cells[].comparison"` provides only aggregate `"delta"`, `"ci95"`, `"group_count"`, and p-values, while `"rows"` is mentioned only in `"field_principles"` and no actual per-unit rows are present.
-
-## THE CHECK A READER CANNOT DO
-Was the reported decision-cost benefit broad across the 74 groups, or driven by a few outliers or degenerate groups?
-
-## experiment_7482_v655_importance_anchor.json
-
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-CHECKABLE
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The importance anchor arm passes the scientific fixture benefit gate by improving adaptation loss by ~0.150 (above the 0.005 threshold) while maintaining a retention drift ratio of ~0.736 relative to the unanchored arm (below the 0.80 maximum threshold) across all three evaluation seeds.
+The listed acceptance gates passed, capture was forecast feasible, and `"predictive_benefit_claimed"` was false.
 
 ## WHAT IS MISSING
-nothing
+The artifact is truncated inside `"current_invocation_events"` and omits the remainder, including the referenced `"honest_verdict"` and potentially additional per-unit evidence or blocker diagnostics; `"acceptance_gate_results"` and `"capture_budget_forecasts"` are present.
 
 ## THE CHECK A READER CANNOT DO
-none
+Does the omitted remainder contain the complete per-unit measurements needed to verify the gate results rather than trust their aggregate summaries?
 
-## experiment_7483_v655_continuous_learning.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment completed validly but found no registered importance-anchor benefit because the Holm-adjusted comparisons against the unanchored residual failed at delays 0 and 8.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7484_v655_decision_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The independent audit completed with a null result because `static_and_online_benefit` was not demonstrated.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7485_v655_arc_cost_panel_a.json
+## experiment_7493_v656_window_fit_capture.json
 
 **CHECKABLE**
 
@@ -108,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7487_v655_learning_placement.json
+## experiment_7494_v656_window_eval_capture.json
 
 **CHECKABLE**
 
@@ -116,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment completed placement and fixed-point replay validation, but did not establish the 100× end-to-end service target because the service denominator was incomplete.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -124,7 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7488_v655_capstone.json
+## experiment_7498_v656_independent_audit.json
 
 **CHECKABLE**
 
@@ -132,10 +100,42 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The capstone is disqualified because required evidence failed validation, panel B is missing, and the ARC evidence is a sample-limited null without established intervention benefit.
+The experiment failed multiple acceptance gates across readiness and benefit categories because upstream calibration and causal learning artifacts were absent.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary.failed_checks"` records each failed check with `"field"`, `"expected"`, `"observed"`, `"path"`, and `"upstream"`, while `"arc_combined_reduction.episode_rows"` provides per-game/per-seed rows.
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7500_v656_arc_opportunity_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The opportunity audit is blocked because Panel B source artifacts are missing and pooling support gates failed (18 valid episodes observed versus 30 required).
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7502_v656_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The capstone completed but is blocked because required V656 evidence is missing or upstream tasks are externally gated.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary.failed_checks`, `acceptance_gate_results`, and `preconditions_checked` record the failed checks, paths, expected values, and observed values.
 
 ## THE CHECK A READER CANNOT DO
 none

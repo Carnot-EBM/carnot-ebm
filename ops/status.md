@@ -2,6 +2,24 @@
 
 **Last Updated:** 2026-09-21
 
+## 2026-09-21 — V657 planned, awaiting activation
+
+The next plan contains thirteen tasks (exp7503–exp7515) across four phases:
+small energy calibration, causal delayed-feedback learning, qualification of
+saved live ARC evidence, and durable machine-service/placement accounting.
+Both authorities are current: `research-roadmap-next.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md`. V656's design is preserved.
+
+V656 has nine terminal producer artifacts and five absent terminal paths.
+Exp7499 nevertheless saved eighteen completed raw episodes; V657 first
+qualifies their custody rather than claiming a new live run. Only Exp7514
+proposes fresh Qwen3.8-27B native option forwards, with no generation.
+No proposed efficacy, device speedup or game solve has been executed.
+
+The circuit-breaker priority heading now matches its already-addressed
+Exp7435 disposition. No runtime guard or override was changed. The active
+roadmap and research conductor remain unchanged; this plan is not activated.
+
 ## 2026-09-21 — Experiment 7490 E6 cost profile is coverage only
 
 REQ-ARC-WMTE-7490 reduces existing ARC provenance, interval, and backend-usage

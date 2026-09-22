@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-09-21 — Plan milestone 2026.09.657 (REQ-REPORT-V657-PLAN)
+
+- Added the thirteen-task next roadmap and matching four-phase design;
+  preserved the previous V656 design byte-for-byte.
+- Added the dated literature sweep before designing matched score controls,
+  causal feedback, retained learning and complete machine-service accounting.
+- Split failed monolithic authoring tasks and require bounded file writes,
+  flushed progress and operation/loop heartbeats in every experiment prompt.
+- Scheduled CPU qualification of eighteen saved ARC episodes and one bounded
+  native Qwen service trace; no new experiment was executed or activated.
+- Reconciled planning-only specs/traceability/status and corrected the stale
+  circuit-breaker NEW heading using the existing verified Exp7435 result.
+  Active roadmap and research conductor are unchanged; no push or publication.
+
 ## 2026-09-20 — Exp7451 closed-gate receipt repair (REQ-VERIFY-7451)
 
 - Added the missing constructed-delta reporting boundary and integrated it

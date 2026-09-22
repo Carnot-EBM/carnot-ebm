@@ -10085,7 +10085,7 @@ the dormant path) · CLAUDE.md "Codex-Default for Experiments v2" (the
 standing routing default this directive extends to the last Claude
 touchpoint).
 
-### NEW 2026-09-19: AUTORESEARCH CIRCUIT BREAKER SELF-LOCKS ON A CUMULATIVE, NEVER-RESET COUNTER — HAPPENED TWICE IN ONE DAY
+### ADDRESSED 2026-09-19 (Exp7435; was NEW 2026-09-19): AUTORESEARCH CIRCUIT BREAKER SELF-LOCKS ON A CUMULATIVE, NEVER-RESET COUNTER — HAPPENED TWICE IN ONE DAY
 
 **What happened.** `AutoresearchConfig.max_consecutive_failures=10` counts the
 trailing streak of `rejected` outcomes in the PERSISTED, ALL-TIME experiment log
@@ -10120,6 +10120,13 @@ history, or (c) both. This is a `python/carnot/autoresearch/experiment_log.py` +
 `scripts/autoresearch_conductor_round.py` code change, out of scope for an
 outer-loop hot-fix — queued here as a hard pickup, same "convert the lesson into
 a check that fires" principle as the GitHub pack-size entry below.
+
+**Planning reconciliation 2026-09-21:** Header now agrees with the existing
+addressed disposition below and `results/experiment_7435_v652_round_breaker.json`
+(`complete_breaker_recovery_verified`, class `null`, unflagged). The stale NEW
+heading caused the overdue-priority parser to attach the much older resolved
+retro-timing deliverable to this issue. No guard, historical record, runtime
+code or priority override changed.
 
 **ADDRESSED 2026-09-19 (Exp7435, milestone 2026.09.652 phase 1).** The three
 shared loop entrypoints now save their log position at invocation start. Every
