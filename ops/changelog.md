@@ -20326,3 +20326,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - Experiment 10004 kept unchanged with an additive corrigendum pointing to 10006, per never-prune.
 - 2026-09-22: Independently audit source decisions and feedback information (⚠️ Blocked) — honest_verdict=complete_blocked_required_science_incomplete; results/experiment_7525_v658_decision_audit.json
 - 2026-09-22: Bind supervisor eligibility to the live action boundary (⚠️ Research Finding) — honest_verdict=complete_null_eligibility_observed_without_applied_effect_support; results/experiment_7526_v658_arc_eligibility.json
+- 2026-09-22: Measure supervisor opportunities on adapter-withheld live games (⚠️ Blocked) — honest_verdict=complete_blocked_owned_gpu; results/experiment_7527_v658_arc_opportunities.json
