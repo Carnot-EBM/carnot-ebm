@@ -44696,3 +44696,111 @@ No numbered runtime E2E applies to this reporting-only data boundary.
 **When** the declared unbuffered Exp7504 entrypoint runs and a fresh process replays it
 **Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
 **And** only the final validated JSON publishes atomically at the terminal path.
+
+### REQ-VERIFY-7505: V657 Energy Fit SHALL Freeze Bounded Heads And Matched Controls
+
+Exp7505 SHALL authenticate the terminal Exp7504 evidence interface and its
+hash-bound feature, normalization, and exposure sidecars before fitting. It
+SHALL consume labels only for the 176 training and 60 calibration-tuning
+groups through the Exp7504 `fit` reader. Test and online labels SHALL remain
+closed, and the artifact SHALL make no held-out predictive-benefit claim.
+
+The experiment SHALL fit the exactly normalized binary conditional energy
+`E(0,x)=0`, `E(1,x)=-g_theta(x)`, with
+`p(unsupported|x)=sigmoid(g_theta(x))`. It SHALL train a window Gibbs head, a
+whole-only Gibbs head, and an identical-ten-feature logistic control using
+binary log loss. The window head SHALL reuse bounded local cubic spline terms
+and SHALL have no more than 256 trainable parameters. Qwen weights SHALL stay
+frozen; current work is CPU-only small-head training with no model load,
+forward call, or generation.
+
+Each trainable arm SHALL use seeds 656101 through 656105, the equal
+regularization grid 0, 0.001, and 0.01, and no more than 200 optimizer steps
+per candidate. Regularization, a temperature-calibrated whole-score baseline,
+and the best unchanged simple baseline SHALL be selected using
+calibration-tuning Brier score only. The experiment SHALL retain every
+candidate score and failure, optimization curves, fit time, parameter counts,
+transform identity, and checkpoint hashes. Total optimizer work SHALL stop at
+900 seconds; an owned timeout is incomplete work and SHALL NOT be reported as
+a scientific null.
+
+Before later evaluation, Exp7505 SHALL freeze direct minimum-expected-cost
+actions for false-reject cost 1, false-accept costs 1, 5, and 20, and
+escalation costs 0.1, 0.5, and 1. It SHALL freeze deterministic tie-breaking
+in the order accept, escalate, reject. It SHALL validate finite energies,
+exact two-state normalization, stable optimization, a constant-feature
+control, and a same-budget label-shuffle control using only training and
+calibration-tuning rows.
+
+`energy_fit_ready_score` SHALL equal one only when every fitted arm, control,
+checkpoint, and frozen policy is complete and valid. `baseline_ready_score`
+SHALL independently report readiness of the frozen temperature baseline.
+Fixture-only behavior is circular evidence at most; neither readiness field
+SHALL imply held-out efficacy.
+
+The terminal artifact SHALL publish atomically at
+`results/experiment_7505_v657_energy_fit.json`. Immutable checkpoints,
+calibration rows, and the fit receipt SHALL be hash-bound under
+`results/raw/experiment_7505_v657_energy_fit/`. A missing external input SHALL
+produce a schema-complete blocked artifact naming its exact failed check,
+field, expected value, observed value, and path. Required validation SHALL
+include scoped pytest, separate 100 percent changed-module coverage, scoped
+Ruff check and format, changed-module mypy, scoped specification coverage,
+declared-entrypoint cold replay, independent reduction, adversarial
+verification, and strict verdict-row consistency. No numbered runtime E2E
+applies to this CPU-only fit boundary.
+
+#### SCENARIO-VERIFY-7505-ENERGY: The Two-State Energy Is Exact And Finite
+
+**Given** a finite vector of head logits
+**When** Exp7505 evaluates both binary states
+**Then** state-zero energy is exactly zero, state-one energy is the negative logit, and the two probabilities normalize to one
+**And** a nonfinite logit fails before a score or readiness claim is emitted.
+
+#### SCENARIO-VERIFY-7505-BUDGET: All Trainable Arms Receive Equal Bounded Search
+
+**Given** authenticated training and calibration-tuning feature rows
+**When** Exp7505 fits the three registered trainable arms
+**Then** each arm receives the same five seeds, three regularization settings, and optimizer-step ceiling
+**And** every candidate, including any failed candidate, remains visible in the fit receipt.
+
+#### SCENARIO-VERIFY-7505-CONTROLS: Training Controls Cannot Borrow Held-Out Evidence
+
+**Given** the bounded fitted heads and their matched budgets
+**When** Exp7505 evaluates the constant-feature and label-shuffle controls
+**Then** both controls use only training and calibration-tuning rows and record finite stable optimization
+**And** control completion is not reported as predictive benefit.
+
+#### SCENARIO-VERIFY-7505-POLICY: Calibration Freezes Direct Expected-Cost Actions
+
+**Given** calibrated window and temperature probabilities
+**When** Exp7505 applies all nine registered cost cells
+**Then** it freezes the minimum-expected-cost action for each probability before evaluation
+**And** exact ties use the registered accept, escalate, reject order.
+
+#### SCENARIO-VERIFY-7505-READINESS: Fit Completion Is Separate From Efficacy
+
+**Given** valid heads, controls, normalization checks, checkpoints, and policies
+**When** Exp7505 reduces its terminal readiness fields
+**Then** energy and baseline readiness reflect only their own completed artifacts
+**And** `predictive_benefit_measured` remains false with a circular fixture verdict at most.
+
+#### SCENARIO-VERIFY-7505-ACCESS: Held-Out Labels Stay Closed During Fit
+
+**Given** the terminal Exp7504 artifact and its authenticated sidecars
+**When** Exp7505 opens the Exp7504 fit reader
+**Then** it receives exactly 176 training and 60 calibration-tuning rows
+**And** its access receipt records no test or online label access.
+
+#### SCENARIO-VERIFY-7505-E2E: One Command Publishes A Cold-Valid Frozen Fit
+
+**Given** a frozen affected-file manifest and no current model calls
+**When** the declared unbuffered Exp7505 entrypoint runs and a fresh process replays its candidate
+**Then** scoped checks, 100 percent changed-module coverage, independent reduction, adversarial verification, and strict row lint pass
+**And** exact source or serialized-byte drift fails before atomic terminal publication.
+
+## Implementation Status (REQ-VERIFY-7505)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-7505 and SCENARIO-VERIFY-7505-* | Implemented: authenticated Exp7504 fit reader, bounded binary energy heads, matched controls, immutable policies and sidecars, independent reduction, and thin entrypoint. | Implemented: spec-linked tests cover energy normalization, bounded fitting, controls, policies, access separation, readiness, malformed inputs, source drift, cold replay, and changed-module coverage. |

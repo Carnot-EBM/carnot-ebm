@@ -99,6 +99,117 @@ tests can write only below `tmp_path`.
 Implementation status: implemented 2026-09-21 by the Experiment 7490 reducer,
 focused tests, and terminal coverage artifact named above.
 
+## E6 timed live-loop profile and re-reduction — 2026-09-21
+**Status:** Implemented. Experiment 7491 completed all 36 frozen units on
+physical GPU 1 with real 18,030 MiB server offload, zero recorder errors, and
+full span/token reconciliation. Experiment 7492 combined them with the 26
+compatible earlier episodes; every publication gate passed and numeric shares
+were published. The blocked first attempt remains preserved with its corrected
+precondition-ordering note.
+### REQ-ARC-WMTE-7491: Record exclusive live E3 seam time without changing behavior
+Experiment 7491 SHALL import the Experiment 7471 observer and use the same
+`make_carnot_agent` E3 policy path, owned native CUDA llama.cpp server, current
+Qwen3.8-27B GGUF, action cap, request cap, token cap, and per-episode timeout.
+It SHALL not edit the Experiment 7471 module. It SHALL not use a per-game
+adapter, game source, registry knowledge in the policy, a stored engine, a
+banked trajectory, or a saved solution.
+The timing observer SHALL default off. An enabled observer SHALL record one
+episode parent and nested spans for action decision, candidate selection,
+induction and generation, world-model verification, supervisor, planner, and
+environment step. Every span SHALL record `episode_id`, `decision_id`,
+`parent_decision_id`, start and end monotonic nanoseconds, `exclusive_ns`, a
+`concurrent` flag, and a terminal disposition. Backend prompt, completion, and
+total token use SHALL join to generation spans by request ID. Recorder errors
+SHALL be caught and counted. Timing SHALL not change an action, model call,
+environment call, random draw, or existing provenance value.
+Each parent SHALL reconcile to its descendants and an explicit gap. Complete
+exclusive time SHALL never exceed the parent interval. Incomplete work SHALL
+remain visible and SHALL not become zero. Tests SHALL compare enabled and
+disabled runs and SHALL write only below `tmp_path`.
+The frozen game source SHALL be the 25 public registry games. The nine frozen
+E4 games SHALL be excluded. The remaining games SHALL be ranked by ascending
+`sha256("carnot-e6-timed-2026-09-21:" + game_id)`. The first 12 SHALL be used.
+The exact panel is `sb26`, `vc33`, `su15`, `g50t`, `m0r0`, `dc22`, `wa30`,
+`ka59`, `bp35`, `sp80`, `ft09`, and `ar25`. Each game SHALL use seeds
+`7491001`, `7491002`, and `7491003`. The frozen panel file SHALL exist before
+any live run. Every one of the 36 scheduled units SHALL remain present if it
+completes, fails, is censored, is unavailable, or is unstarted.
+Before any in-process CUDA or llama.cpp initialization, Experiment 7491 SHALL
+use only `nvidia-smi` to verify that physical GPU index 1 has no compute process
+other than the run's own PID and uses less than 500 MiB total. Only after that
+admission reading passes SHALL it run the model-cache, embedded-tokenizer, and
+native-runtime preflight checks. It SHALL then take a second `nvidia-smi`
+reading: CUDA memory held by the same run PID SHALL be identified explicitly
+and excluded from the residual-idle calculation, while any foreign compute PID
+or at least 500 MiB residual use SHALL fail closed. Both raw readings and the
+derived used, owned, and residual memory SHALL remain in
+`preconditions_checked`. It SHALL set `CUDA_VISIBLE_DEVICES=1` and SHALL never
+select GPU 0. After load it SHALL record the owned server process memory and
+require a real near-18-GB offload receipt before episodes continue. Any failed
+precondition SHALL write a terminal `blocked_*` artifact and stop.
+The run SHALL print and flush at each phase boundary, each episode boundary,
+and at least every 60 seconds. Its total live budget SHALL be three hours. A
+started failed or censored unit SHALL be recorded and SHALL not be dropped.
+The terminal artifact SHALL be
+`results/experiment_7491_e6_timed_live_profile.json`. It SHALL declare the
+same inference substrate as Experiment 7471, authenticated model specs, fixed
+seeds, measured duration, a checksum, all preconditions, per-episode rows,
+cited artifacts with SHA-256, and an `honest_verdict` with a terminal prefix.
+It SHALL declare `solve_provenance=live_agent_self_discovery` and SHALL make no
+hidden-game efficacy claim.
+#### SCENARIO-ARC-WMTE-7491-PARITY
+- **GIVEN** one deterministic E3-shaped policy and environment
+- **WHEN** the same episode runs with the observer off and on
+- **THEN** actions, model calls, environment calls, provenance, and random state match
+- **AND** only the enabled run writes timing rows below `tmp_path`.
+#### SCENARIO-ARC-WMTE-7491-RECONCILIATION
+- **GIVEN** nested completed spans and explicit idle gaps
+- **WHEN** exclusive intervals are reduced
+- **THEN** descendant exclusive time plus the root gap equals parent time
+- **AND** every interval stays inside its parent.
+#### SCENARIO-ARC-WMTE-7491-PRECONDITIONS
+- **GIVEN** a missing model, busy GPU 1, wrong selected GPU, or absent real offload
+- **WHEN** the run reaches that boundary
+- **THEN** it writes the exact failed check in a `blocked_*` terminal artifact
+- **AND** it does not run a later episode.
+- **AND** a 664 MiB post-preflight reading with 256 MiB owned by the run PID is
+  accepted when no foreign compute PID exists and residual use is below 500 MiB
+- **AND** a 664 MiB reading with a foreign PID holding 600 MiB is rejected.
+#### SCENARIO-ARC-WMTE-7491-PANEL
+- **GIVEN** the public registry game IDs and frozen E4 roster
+- **WHEN** the dated hash rule is applied
+- **THEN** the exact 12-game, three-seed, 36-unit schedule is recovered
+- **AND** no observed outcome can replace a game or seed.
+### REQ-ARC-WMTE-7492: Re-reduce timed and compatible E6 evidence
+Experiment 7492 SHALL import the Experiment 7490 reducer. It SHALL read the
+Experiment 7491 terminal rows and the 26 compatible complete current-model
+episodes used by Experiment 7490. It SHALL keep cohort identity visible and
+SHALL not invent missing old seam time. It SHALL cite every imported artifact
+and raw shard with its SHA-256.
+The reducer SHALL run the Experiment 7490 positive control. It SHALL publish
+numeric wall shares, token shares, clustered intervals, and Amdahl ceilings
+only when there are at least 30 complete current-model episodes across at
+least 10 games, timing reconciliation passes, token joins pass, and required
+seams are separate. If total replaceable decision work is below five percent,
+it SHALL stop speed claims. A failed gate SHALL leave shares null and explain
+the exact reason.
+The terminal artifact SHALL be
+`results/experiment_7492_e6_timed_cost_profile.json`. It SHALL declare
+`inference_substrate=aggregation_from_upstream_artifacts`, measured duration,
+fixed reducer seed, checksum, gate results, missing verifier gaps, and a
+terminal `honest_verdict`. Its writer SHALL accept an explicit output path so
+tests write only below `tmp_path`.
+#### SCENARIO-ARC-WMTE-7492-GATES
+- **GIVEN** timed rows plus the 26 compatible earlier rows
+- **WHEN** support, positive-control, reconciliation, separation, and kill gates run
+- **THEN** numeric shares appear only if every publication gate passes
+- **AND** a sub-five-percent replaceable share stops the speed claim.
+#### SCENARIO-ARC-WMTE-7492-TERMINAL
+- **GIVEN** immutable 7490 and 7491 evidence and an explicit output path
+- **WHEN** the CPU reducer runs
+- **THEN** it writes one checksum-bound aggregation artifact at that path
+- **AND** it makes no model, game, GPU, network, submission, or hidden-efficacy claim.
+
 ## ARC decision shadow telemetry — 2026-09-20
 
 **Status:** Implemented. This instrument records existing decisions. It does not

@@ -187,3 +187,15 @@ existing provenance, fake model calls, environment calls, and random state
 must match. The enabled run must write bounded JSONL to `tmp_path`.
 
 This check uses no real game, model, network, or GPU.
+
+### E2E-012: E6 exclusive timing parity and reduction gates (CPU)
+Spec refs: REQ-ARC-WMTE-7491 and REQ-ARC-WMTE-7492.
+Run `tests/python/test_experiment_7491_e6_timed_live_profile.py`,
+`tests/python/test_experiment_7492_e6_timed_cost_profile.py`, and
+`tests/python/test_arc_decision_telemetry.py` with the worktree `PYTHONPATH`,
+`--no-cov`, `-n 0`, and a private `--basetemp`. The enabled and disabled
+paths must preserve actions, calls, provenance, environment work, and random
+state. Nested exclusive spans must reconcile. Token use must join by request
+ID. Failed gates must suppress every numeric share.
+This check uses no real game, model, network, or GPU. The live GPU run is a
+separate Stage 2 operation.

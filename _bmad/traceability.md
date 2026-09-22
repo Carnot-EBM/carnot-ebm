@@ -1,6 +1,30 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-21
+**Operational Note:** 2026-09-21 REQ-VERIFY-7505 maps the bounded V657
+energy fit to `python/carnot/experiment_7505_v657_energy_fit.py`, its thin
+entrypoint, and `tests/python/test_experiment_7505_v657_energy_fit.py`.
+Exp7505 authenticated Exp7504, consumed only 176 training and 60
+calibration-tuning labels, completed 45 equal-budget candidates plus two
+training controls, and froze 360 calibration-policy rows without opening
+held-out labels. Both readiness scores are one; predictive benefit remains
+unmeasured and the honest verdict is null. The focused suite passed 12/12
+with 434/434 statements and 110/110 branches covered, followed by cold replay,
+independent reduction, adversarial verification, and strict row consistency.
+
+**Operational Note:** 2026-09-21 REQ-ARC-WMTE-7491 and REQ-ARC-WMTE-7492 map
+the E6 exclusive timer and re-reducer to
+`python/carnot/experiment_7491_e6_timed_live_profile.py`,
+`scripts/experiments/experiment_7492_e6_timed_cost_profile.py`, E2E-012, and
+their focused tests. The observer imports Experiment 7471 and stays off by
+default. The frozen 12-game panel completed 36/36 units on physical GPU 1 with
+18,030 MiB owned server offload and zero recorder errors. The corrected idle
+gate records a pre-initialization reading and an own-PID-aware post-preflight
+reading. Experiment 7492 reduced those 36 fully timed episodes plus 26 earlier
+compatible episodes; all gates passed, numeric shares were published, and both
+terminal artifacts passed adversarial verification. No hidden-game efficacy
+claim was made.
+
 **Operational Note:** 2026-09-21 REQ-ARC-WMTE-7490 maps the CPU-only E6
 reducer in
 `scripts/experiments/experiment_7490_e6_live_loop_cost_profile.py` to

@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-09-21 — Exp7505 bounded V657 energy fit (REQ-VERIFY-7505)
+
+- Added the missing executable OpenSpec contract for the role-separated
+  binary energy fit, matched controls, frozen expected-cost policies, and
+  held-out-label boundary.
+- Kept the Exp7504 precondition fail-closed and repaired the optimizer loop so
+  its final loss is recorded after a normal bounded loop exit.
+- Regenerated 45 trainable candidates, two controls, and 360 calibration rows;
+  both readiness scores are one while held-out predictive benefit remains
+  explicitly unmeasured with a null verdict.
+- Verified 12/12 focused tests, 434/434 statements and 110/110 branches,
+  scoped Ruff/format/mypy/spec coverage, declared-entrypoint cold replay,
+  independent reduction, adversarial verification, and strict row consistency.
+  No test was skipped, weakened, deleted, or reverted, and
+  `scripts/research_conductor.py` was not modified.
+
 ## 2026-09-21 — Plan milestone 2026.09.657 (REQ-REPORT-V657-PLAN)
 
 - Added the thirteen-task next roadmap and matching four-phase design;

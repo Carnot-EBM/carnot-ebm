@@ -2,6 +2,36 @@
 
 **Last Updated:** 2026-09-21
 
+## 2026-09-21 — Experiment 7505 V657 energy fit is frozen and ready
+
+REQ-VERIFY-7505 authenticates the Exp7504 role-separated evidence interface
+and fits three equal-budget binary heads plus matched constant-feature and
+label-shuffle controls on CPU. The run consumed 176 training and 60
+calibration-tuning labels, completed all 47 registered candidate/control
+units, and froze 360 per-group calibration-policy rows. No model was loaded
+and no test or online label was opened. `energy_fit_ready_score=1` and
+`baseline_ready_score=1`; `predictive_benefit_measured=false`, so the honest
+verdict is a complete null pending held-out evaluation. All 13 required
+validation receipts passed, including 12 focused tests, 100 percent
+changed-module coverage, cold replay, independent reduction, adversarial
+verification, and strict row consistency.
+
+## 2026-09-21 — Experiments 7491/7492 E6 timed profile complete
+REQ-ARC-WMTE-7491 adds default-off exclusive timers around the existing E3
+path. It imports Experiment 7471. It does not edit that module. The frozen
+panel is `sb26`, `vc33`, `su15`, `g50t`, `m0r0`, `dc22`, `wa30`, `ka59`,
+`bp35`, `sp80`, `ft09`, and `ar25`. Each game has seeds 7491001, 7491002,
+and 7491003. The first Stage 2 attempt is preserved as blocked because its idle
+check ran after its own CUDA initialization. The corrected check admits GPU 1
+before initialization and discounts only the same run PID afterward. The real
+run completed 36/36 units in 6413.980 seconds, with 18,030 MiB owned server
+offload and zero recorder errors. REQ-ARC-WMTE-7492 reduced those rows plus 26
+earlier compatible episodes. All gates passed; induction/generation accounts
+for 96.5532% of timed wall work, planner 3.1194%, candidate selection 0.2759%,
+environment 0.0505%, supervisor 0.0003%, and observed verifier work 0%. The
+conditional all-replaceable Amdahl ceiling is 1952.361x. Both artifacts pass
+adversarial verification. No hidden-game efficacy claim or submission exists.
+
 ## 2026-09-21 — V657 planned, awaiting activation
 
 The next plan contains thirteen tasks (exp7503–exp7515) across four phases:

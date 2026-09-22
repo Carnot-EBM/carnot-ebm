@@ -354,6 +354,16 @@ line-length = 100
 # freshness index -- keeps being linted, as it should be.
 extend-exclude = [
     "results/**/world_model.py",
+    # Same FILE-name-is-the-invariant reasoning as world_model.py above (see the long
+    # comment preceding this list): per-attempt snapshots of the agent factory, policy,
+    # and scorer modules, copied into evidence-staging together for provenance of what
+    # actually ran. Formatting them would edit the measurement record. Found blocking a
+    # commit 2026-09-21 when a new experiment's raw evidence directory carried the first
+    # copy of each pre-commit ever linted; 563 older copies of each already exist under
+    # results/raw/** untouched.
+    "results/**/agent_factory.py",
+    "results/**/live_policy.py",
+    "results/**/scorer.py",
     "results/**/e3",
     "results/arc_e3",
     "results/arc_e3_origin_fixtures",
