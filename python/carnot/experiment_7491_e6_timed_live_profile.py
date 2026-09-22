@@ -29,6 +29,9 @@ from carnot import experiment_7471_v654_arc_seam_observation as exp7471
 from carnot.agentic.arc_decision_telemetry import (
     NOOP_RECORDER,
     NoOpDecisionTelemetryRecorder,
+    TELEMETRY_EPISODE_ENV,
+    TELEMETRY_PATH_ENV,
+    load_telemetry,
 )
 from carnot.agentic.arc_inference_boundary import InvocationBoundaryLedger
 from carnot.agentic.arc_request_budget import attach_request_budget
@@ -277,12 +280,17 @@ def reconcile_spans(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
 
 
 class _TimingRecorder(NoOpDecisionTelemetryRecorder):
-    """Use existing policy timing seams and return every original value."""
+    """Compose E6 timing with an optional decision recorder without double calls."""
 
     enabled = True
 
-    def __init__(self, observer: E6TimedObserver) -> None:
+    def __init__(
+        self,
+        observer: E6TimedObserver,
+        delegate: Any = NOOP_RECORDER,
+    ) -> None:
         self.observer = observer
+        self.delegate = delegate
         # NoOpDecisionTelemetryRecorder.error_count is a plain writable class attribute,
         # not a property, so a real property here would be an incompatible override
         # (mypy: "Cannot override writeable attribute with read-only property"). Track
@@ -292,12 +300,53 @@ class _TimingRecorder(NoOpDecisionTelemetryRecorder):
 
     def count_error(self) -> None:
         self.observer.count_error()
-        self.error_count = self.observer.error_count
-        self.observer.count_error()
+        self.error_count = self.observer.error_count + int(
+            getattr(self.delegate, "error_count", 0) or 0
+        )
+
+    def begin_policy_step(self, policy: Any, latest: Any) -> None:
+        self.delegate.begin_policy_step(policy, latest)
+
+    def record_event(self, seam: str, payload: Mapping[str, Any], wall_time_s: float) -> None:
+        self.delegate.record_event(seam, payload, wall_time_s)
+
+    def record_candidate_action(
+        self,
+        options: Sequence[Mapping[str, Any]],
+        *,
+        ranking_changed: bool,
+        wall_time_s: float,
+        state: Mapping[str, Any] | None = None,
+        state_summary: str = "",
+    ) -> None:
+        self.delegate.record_candidate_action(
+            options,
+            ranking_changed=ranking_changed,
+            wall_time_s=wall_time_s,
+            state=state,
+            state_summary=state_summary,
+        )
+
+    def record_induction_decision(
+        self,
+        policy: Any,
+        *,
+        stalled: bool,
+        won: bool,
+        decision: tuple[bool, str | None],
+        wall_time_s: float,
+    ) -> None:
+        self.delegate.record_induction_decision(
+            policy,
+            stalled=stalled,
+            won=won,
+            decision=decision,
+            wall_time_s=wall_time_s,
+        )
 
     def time_supervisor_selection(self, supervisor: Any, snapshot: Any) -> Any:
         with self.observer.span("supervisor"):
-            return supervisor.observe(snapshot)
+            return self.delegate.time_supervisor_selection(supervisor, snapshot)
 
     def time_world_model_selection(
         self,
@@ -308,9 +357,14 @@ class _TimingRecorder(NoOpDecisionTelemetryRecorder):
         acceptance_threshold: float | None = None,
         **kwargs: Any,
     ) -> Any:
-        del acceptance_threshold
         with self.observer.span("world_model_verification", verifier_kind="candidate_selector"):
-            return selector(transitions, candidates, **kwargs)
+            return self.delegate.time_world_model_selection(
+                selector,
+                transitions,
+                candidates,
+                acceptance_threshold=acceptance_threshold,
+                **kwargs,
+            )
 
     def time_world_model_verification(
         self,
@@ -320,13 +374,34 @@ class _TimingRecorder(NoOpDecisionTelemetryRecorder):
         candidates: Sequence[Any] = (),
         candidate_source: str = "loaded_engine",
     ) -> Any:
-        del candidates
         with self.observer.span(
             "world_model_verification",
             verifier_kind=type(verifier).__name__,
             candidate_source=candidate_source,
         ):
-            return verifier.score(engine)
+            return self.delegate.time_world_model_verification(
+                verifier,
+                engine,
+                candidates=candidates,
+                candidate_source=candidate_source,
+            )
+
+    def complete_induction(
+        self,
+        policy: Any,
+        attempt: Mapping[str, Any],
+        wall_time_s: float,
+    ) -> None:
+        self.delegate.complete_induction(policy, attempt, wall_time_s)
+
+    def observe_induction_progress(self, policy: Any, latest: Any) -> None:
+        self.delegate.observe_induction_progress(policy, latest)
+
+    def finish_episode(self, *, level_end: int | None, actions_used: int | None = None) -> None:
+        self.delegate.finish_episode(level_end=level_end, actions_used=actions_used)
+        self.error_count = self.observer.error_count + int(
+            getattr(self.delegate, "error_count", 0) or 0
+        )
 
 
 class E6TimedObserver(exp7471.E3SeamObserver):
@@ -562,7 +637,10 @@ class E6TimedObserver(exp7471.E3SeamObserver):
         self._install_candidates(policy)
         self._install_induction(policy)
         self._install_planner(policy)
-        policy._decision_telemetry = _TimingRecorder(self)
+        policy._decision_telemetry = _TimingRecorder(
+            self,
+            getattr(policy, "_decision_telemetry", NOOP_RECORDER),
+        )
         return policy
 
     def _compute_exclusive(self) -> None:
@@ -1115,10 +1193,16 @@ def _run_policy_episode(  # pragma: no cover - live model and public simulator.
             self.game_id = game_id
 
     originals = exp7471._disable_cross_game_loaders()
+    previous_telemetry_episode = os.environ.get(TELEMETRY_EPISODE_ENV)
+    os.environ[TELEMETRY_EPISODE_ENV] = episode_id
     try:
         agent_type = make_carnot_agent(LocalAgentBase, cascade=True, proposer=proposer)
         agent = agent_type(game_id=game)
     finally:
+        if previous_telemetry_episode is None:
+            os.environ.pop(TELEMETRY_EPISODE_ENV, None)
+        else:
+            os.environ[TELEMETRY_EPISODE_ENV] = previous_telemetry_episode
         exp7471._restore_cross_game_loaders(originals)
     policy = agent._policy
     observer = E6TimedObserver(episode_id, span_path, enabled=True)
@@ -1209,6 +1293,10 @@ def _run_policy_episode(  # pragma: no cover - live model and public simulator.
     )
     budget_receipt = budget.receipt()
     usage_rows = add_request_spans(observer, budget_receipt, transport_rows)
+    policy.finish_decision_telemetry(
+        level_end=terminal_level if start_level is not None else None,
+        actions_used=len(action_rows),
+    )
     observer.finish(disposition)
     spans = read_span_rows(span_path)
     for index, row in enumerate(action_rows):
@@ -1247,7 +1335,10 @@ def _run_policy_episode(  # pragma: no cover - live model and public simulator.
         "new_level_credit": 0,
         "span_path": str(span_path),
         "span_reconciliation": reconcile_spans(spans),
-        "recorder_error_count": observer.error_count,
+        "recorder_error_count": int(
+            getattr(policy._decision_telemetry, "error_count", observer.error_count) or 0
+        ),
+        "decision_telemetry_path": os.environ.get(TELEMETRY_PATH_ENV),
         "error": error,
     }
     row["normalized_cost"] = normalize_episode_cost(row, spans)
@@ -1432,6 +1523,32 @@ def run_live_session(args: argparse.Namespace) -> int:  # pragma: no cover - own
                 duration_s=row["elapsed_s"],
                 completed_units=len(rows),
             )
+            minimum_opportunities = int(
+                os.environ.get("CARNOT_B2_MIN_GATE_OPPORTUNITIES", "0") or 0
+            )
+            minimum_attempts = int(os.environ.get("CARNOT_B2_MIN_INDUCTION_ATTEMPTS", "0") or 0)
+            telemetry_path = os.environ.get(TELEMETRY_PATH_ENV)
+            if minimum_opportunities and minimum_attempts and telemetry_path:
+                telemetry_rows = load_telemetry(telemetry_path)
+                opportunity_count = sum(
+                    row.get("record_type") == "decision"
+                    and row.get("seam") == "induction_timing"
+                    and row.get("gate_decision") is not None
+                    for row in telemetry_rows
+                )
+                attempt_count = sum(
+                    row.get("record_type") == "induction_attempt" for row in telemetry_rows
+                )
+                progress(
+                    started,
+                    "sample_floor",
+                    "observed",
+                    gate_opportunities=opportunity_count,
+                    induction_attempts=attempt_count,
+                )
+                if opportunity_count >= minimum_opportunities and attempt_count >= minimum_attempts:
+                    rows.extend(_unstarted_row(item, "unstarted") for item in schedule[index + 1 :])
+                    break
         session["model_invoked"] = bool(
             InvocationBoundaryLedger(REPO_ROOT / BOUNDARY_PATH).read_events()
         )

@@ -36,6 +36,7 @@ from carnot.experiment_7468_v654_residual_learner import (
     COEFFICIENTS_PER_INPUT,
     FEATURE_COUNT,
     GRADIENT_NORM_CAP,
+    GUARD_TOLERANCE,
     KNOT_VECTOR_SIZE,
     LocalResidualHead,
     _clip_probability,
@@ -227,6 +228,7 @@ class ImportanceAnchorHead(LocalResidualHead):
         learning_rate: float,
         residual_bound: float = 2.0,
         replay_rows: Sequence[Mapping[str, Any]] = (),
+        guard_tolerance: float = GUARD_TOLERANCE,
     ) -> None:
         if anchor_mode not in {"none", "uniform", "importance"}:
             raise ValueError("anchor_mode_invalid")
@@ -237,12 +239,16 @@ class ImportanceAnchorHead(LocalResidualHead):
             raise ValueError("anchor_scalar_range_invalid")
         # Exp7468 requires a positive rate. A tiny constructor value lets this
         # subclass retain its validation while exposing an explicit zero-rate control.
+        # guard_tolerance was silently defaulted from the base class before this fix;
+        # it is now an explicit, backward-compatible parameter (see mypy override note
+        # on from_training below).
         super().__init__(
             knots,
             coefficients,
             bias,
             learning_rate=max(float(learning_rate), np.finfo(np.float64).tiny),
             residual_bound=residual_bound,
+            guard_tolerance=guard_tolerance,
         )
         self.learning_rate = float(learning_rate)
         self.anchor_mode = anchor_mode
@@ -260,9 +266,16 @@ class ImportanceAnchorHead(LocalResidualHead):
         training_features: Any,
         *,
         seed: int,
-        anchor_mode: str,
-        anchor_lambda: float,
-        learning_rate: float,
+        # Defaults added so this override stays callable with every argument the base
+        # LocalResidualHead.from_training accepts (mypy: "Signature of from_training
+        # incompatible with supertype"). "none"/0.0/0.0 is an anchor-disabled head,
+        # the closest behavioral match to the plain base class. Every existing caller
+        # already passes these three explicitly, so this is not a behavior change.
+        anchor_mode: str = "none",
+        anchor_lambda: float = 0.0,
+        learning_rate: float = 0.0,
+        guard_rows: Sequence[Mapping[str, Any]] = (),
+        guard_tolerance: float = GUARD_TOLERANCE,
     ) -> ImportanceAnchorHead:
         """Initialize the same 32-coefficient head for every comparison arm."""
 
@@ -276,6 +289,10 @@ class ImportanceAnchorHead(LocalResidualHead):
             anchor_mode=anchor_mode,
             anchor_lambda=anchor_lambda,
             learning_rate=learning_rate,
+            # guard_rows is the base class's name for what this subclass calls
+            # replay_rows -- both are validated by the same _validate_guard_row.
+            replay_rows=guard_rows,
+            guard_tolerance=guard_tolerance,
         )
 
     @property

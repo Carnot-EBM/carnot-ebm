@@ -420,3 +420,159 @@ def test_module_is_in_live_entrypoint_import_closure() -> None:
     assert telemetry.__name__ in {
         module.__name__ for module in vars(agent).values() if hasattr(module, "__name__")
     }
+
+
+def _fire_induction(recorder: telemetry.DecisionTelemetryRecorder) -> SimpleNamespace:
+    policy = SimpleNamespace(
+        explorer=SimpleNamespace(explored_out=True),
+        transitions=[],
+        induction_attempts=[],
+        induced=False,
+        _current_goal_level=1,
+        _induction_attempt_count=0,
+        _transitions_at_last_induction_attempt=0,
+        proposer=SimpleNamespace(last_generated_tokens=17, last_prompt_tokens=31),
+    )
+    recorder.record_induction_decision(
+        policy,
+        stalled=True,
+        won=False,
+        decision=(True, "stall"),
+        wall_time_s=0.001,
+    )
+    return policy
+
+
+def _selection(name: str, accuracy: float) -> SimpleNamespace:
+    candidate = SimpleNamespace(name=name)
+    score = SimpleNamespace(
+        candidate=candidate,
+        change_gate={"legacy_accuracy": accuracy},
+        heldout_accuracy=accuracy,
+        trust_energy=0.2,
+        baseline_clears=True,
+        heldout_best=True,
+        nondegenerate=True,
+        trust_pass=accuracy >= 0.5,
+        binary_gate_pass=accuracy >= 0.5,
+    )
+    return SimpleNamespace(rows=[score], selected=candidate, selected_score=score)
+
+
+def test_fired_attempt_joins_tokens_verifier_and_frame_progress(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-7530-ATTEMPT-OUTCOME joins one complete attempt row."""
+
+    path = tmp_path / "attempt.jsonl"
+    recorder = telemetry.DecisionTelemetryRecorder("xx11", path=path)
+    recorder.begin_step(level_before=0, phase="explore")
+    policy = _fire_induction(recorder)
+
+    outcomes = iter((_selection("first", 0.2), _selection("second", 0.8)))
+    for _ in range(2):
+        recorder.time_world_model_selection(
+            lambda _transitions, _candidates: next(outcomes),
+            [],
+            [],
+            acceptance_threshold=0.5,
+        )
+    recorder.complete_induction(
+        policy,
+        {"reason": "stall", "planned": True, "transition_count": 4},
+        0.5,
+    )
+    policy.transitions.append(
+        SimpleNamespace(
+            grid=np.zeros((2, 2), dtype=int),
+            next_grid=np.ones((2, 2), dtype=int),
+            level_before=0,
+            level_after=0,
+        )
+    )
+    recorder.begin_policy_step(policy, SimpleNamespace(levels_completed=0))
+    recorder.observe_induction_progress(policy, SimpleNamespace(levels_completed=0))
+    recorder.finish_episode(level_end=0, actions_used=1)
+
+    rows = _jsonl(path)
+    opportunity = next(
+        row
+        for row in rows
+        if row.get("seam") == "induction_timing" and row.get("gate_decision") == "induce_now"
+    )
+    outcome = next(row for row in rows if row.get("record_type") == "induction_attempt")
+    gates = [row for row in rows if row.get("seam") == "world_model_hypothesis_gate"]
+
+    assert opportunity["attempt_id"] == outcome["attempt_id"]
+    assert {row["attempt_id"] for row in gates} == {outcome["attempt_id"]}
+    assert outcome["prompt_tokens"] == 31
+    assert outcome["completion_tokens"] == 17
+    assert outcome["induction_wall_time_s"] == 0.5
+    assert outcome["planned"] is True
+    assert outcome["verifier_results"] == ["escalate", "accept"]
+    assert outcome["verifier_result"] == "accept"
+    assert outcome["frame_change_progress"] is True
+    assert outcome["level_up_progress"] is False
+    assert outcome["progress_within_window"] is True
+    assert outcome["progress_window_actions"] == telemetry.INDUCTION_PROGRESS_WINDOW_ACTIONS
+    assert outcome["progress_actions_observed"] == 1
+    assert outcome["progress_window_censored"] is False
+
+
+def test_attempt_without_progress_closes_at_fixed_action_window(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7530 fixes non-progress attribution at 32 actions."""
+
+    path = tmp_path / "window.jsonl"
+    recorder = telemetry.DecisionTelemetryRecorder("xx11", path=path)
+    recorder.begin_step(level_before=0, phase="explore")
+    policy = _fire_induction(recorder)
+    recorder.complete_induction(policy, {"reason": "stall", "planned": False}, 0.25)
+
+    latest = SimpleNamespace(levels_completed=0)
+    for _ in range(telemetry.INDUCTION_PROGRESS_WINDOW_ACTIONS):
+        recorder.begin_policy_step(policy, latest)
+        recorder.observe_induction_progress(policy, latest)
+    recorder.finish_episode(level_end=0)
+
+    outcome = next(row for row in _jsonl(path) if row.get("record_type") == "induction_attempt")
+    assert outcome["progress_actions_observed"] == 32
+    assert outcome["frame_change_progress"] is False
+    assert outcome["level_up_progress"] is False
+    assert outcome["progress_within_window"] is False
+    assert outcome["progress_window_censored"] is False
+    assert outcome["verifier_result"] == "not_observed"
+
+
+def test_episode_end_censors_an_unfinished_progress_window(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-7530-ATTEMPT-OUTCOME keeps censored fired attempts."""
+
+    path = tmp_path / "censored.jsonl"
+    recorder = telemetry.DecisionTelemetryRecorder("xx11", path=path)
+    recorder.begin_step(level_before=0, phase="explore")
+    policy = _fire_induction(recorder)
+    recorder.complete_induction(policy, {"reason": "stall", "planned": False}, 0.25)
+    latest = SimpleNamespace(levels_completed=0)
+    for _ in range(3):
+        recorder.begin_policy_step(policy, latest)
+        recorder.observe_induction_progress(policy, latest)
+    recorder.finish_episode(level_end=0, actions_used=3)
+
+    outcome = next(row for row in _jsonl(path) if row.get("record_type") == "induction_attempt")
+    assert outcome["progress_actions_observed"] == 3
+    assert outcome["progress_within_window"] is False
+    assert outcome["progress_window_censored"] is True
+
+
+def test_extended_noop_hook_is_byte_inert() -> None:
+    """SCENARIO-ARC-WMTE-7530-PARITY keeps the disabled hook byte-inert."""
+
+    policy = SimpleNamespace(
+        transitions=[{"sentinel": "unchanged"}],
+        marker={"nested": [1, 2, 3]},
+    )
+    before = json.dumps(policy.__dict__, sort_keys=True)
+    telemetry.NOOP_RECORDER.observe_induction_progress(
+        policy,
+        SimpleNamespace(levels_completed=9),
+    )
+    after = json.dumps(policy.__dict__, sort_keys=True)
+
+    assert before == after

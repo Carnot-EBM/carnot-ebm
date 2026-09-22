@@ -5296,7 +5296,11 @@ class E3AgentPolicy:
 
         self.short = str(game_id).split("-", 1)[0]
         self._decision_telemetry = arc_decision_telemetry.maybe_make_recorder(
-            str(game_id), episode_id=str(game_id)
+            str(game_id),
+            episode_id=os.environ.get(
+                arc_decision_telemetry.TELEMETRY_EPISODE_ENV,
+                str(game_id),
+            ),
         )
         # REQ-ARC-WMTE-7024: preserve the caller's durable ledger object. The
         # explicit Boolean overrides the exact `=1` environment opt-in.
@@ -7394,6 +7398,12 @@ class E3AgentPolicy:
     def _next_move_routed(self, frames, latest):
         from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
 
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
+
         # PROVENANCE LABELS. `self._prov_top = "<constant>"` at each of this function's six
         # return sites; `arc_action_provenance.TOP_BRANCHES` is the closed vocabulary. Same
         # reasoning as the explorer's labels: an exit site is a fact this function knows and
@@ -7512,6 +7522,10 @@ class E3AgentPolicy:
                 self._prev = None
             except Exception:
                 pass
+        # REQ-ARC-WMTE-7530: observation only. The default recorder inherits a
+        # no-op hook. The enabled recorder reads transitions and the level that
+        # the live policy already observed; it makes no call and changes no gate.
+        decision_telemetry.observe_induction_progress(self, latest)
         # REQ-ARC-WMTE-6600/6660: trajectory supervisor (shadow by default). Runs after the
         # level boundary is observed so the snapshot's level is fresh, and before
         # phase dispatch so a redirect takes effect on this very action.

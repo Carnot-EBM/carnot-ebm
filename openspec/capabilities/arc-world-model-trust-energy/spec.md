@@ -35046,3 +35046,86 @@ download a model, change production defaults, or claim ARC benefit.
 
 Implementation status: specified 2026-09-20. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## B2 induction-timing gate telemetry — 2026-09-22
+**Status:** Implemented and measured. Stage 1 adds default-off live-path
+telemetry. Stage 2 reached 20,045 opportunities but only 60 fired attempts in
+the three-hour budget, so it reports feasibility only. It does not change the
+induction rule or authorize a scored-path gate.
+### REQ-ARC-WMTE-7530: Join fired induction attempts to verifier and bounded progress outcomes
+The live `E3AgentPolicy` decision recorder SHALL assign one stable attempt ID
+when `_should_enter_induction` returns `induce_now`, `reinduce_now`, or
+`delegate_to_current_gate`. It SHALL preserve the existing opportunity row and
+join the fired attempt to its completion and later outcome. It SHALL not change
+`_should_enter_induction` logic, add a model or environment call, consume a
+random number, or change existing actions, calls, provenance, environment work,
+or random state. The recorder and all new hooks SHALL remain off by default.
+Each fired attempt SHALL record prompt tokens, completion tokens, induction wall
+time, whether a plan was produced, and the verifier result `accept`, `reject`,
+`escalate`, or `not_observed`. It SHALL record whether a frame change or level-up
+follows within the next 32 policy actions. The 32-action window is fixed before
+measurement: it covers short induced plans and their immediate fallback while
+bounding attribution so unrelated late exploration is not credited to the
+attempt. Episode end SHALL censor an unfinished window instead of dropping the
+attempt. Every closure SHALL report actions observed, frame-change progress,
+level-up progress, any-progress, window size, and censoring.
+Experiment 7530 SHALL write a CPU-only build artifact describing the schema and
+parity proof. Experiment 7531 SHALL reuse the dated E6 12-game panel, current
+Qwen3.8-27B GGUF, physical GPU 1, corrected pre-initialization idle check, real
+near-18-GB offload proof, the live E3 path, and
+`solve_provenance=live_agent_self_discovery`. It SHALL use no per-game adapter,
+game source, stored engine, banked trajectory, or saved solution. It SHALL run
+for at most three hours or until it has at least 1,000 opportunities and 100
+fired attempts. Failed and censored episodes SHALL remain present.
+The measurement SHALL make a numeric gate-quality claim only if both sample
+floors are met. Below 100 fired attempts it SHALL report feasibility only. On
+the same rows, an analysis-only oracle SHALL test whether final plan, verifier,
+and later-progress labels could suppress at least one useless attempt and save
+completion tokens without removing any progress-producing attempt. This oracle
+is a headroom control, not a deployable gate. The artifacts SHALL cite the E6
+artifacts and frozen panel by SHA-256, declare measured duration, random seed,
+reproducibility checksum, inference substrate, preconditions, and a terminal
+`honest_verdict`.
+#### SCENARIO-ARC-WMTE-7530-PARITY
+- **GIVEN** the real E3 policy and a deterministic scripted environment
+- **WHEN** the same episode runs with extended telemetry off and on
+- **THEN** actions, calls, provenance, environment work, and random state match byte-for-byte
+- **AND** only the enabled run writes attempt outcome rows below `tmp_path`.
+#### SCENARIO-ARC-WMTE-7530-ATTEMPT-OUTCOME
+- **GIVEN** a fired induction with token counters and a verifier result
+- **WHEN** its 32-action follow-up window closes or the episode ends
+- **THEN** one attempt ID joins the opportunity, completion, verifier, and progress fields
+- **AND** prompt tokens, completion tokens, wall time, verifier result, plan state, progress labels, and censoring are explicit.
+#### SCENARIO-ARC-WMTE-7530-FEASIBILITY
+- **GIVEN** the frozen E6 panel and a three-hour live budget
+- **WHEN** fewer than 1,000 opportunities or 100 fired attempts are observed
+- **THEN** Experiment 7531 reports counts and feasibility only
+- **AND** it makes no numeric gate-quality or ship-readiness claim.
+#### SCENARIO-ARC-WMTE-7530-POSITIVE-CONTROL
+- **GIVEN** the same completed attempt rows used for measurement
+- **WHEN** an analysis-only oracle sees final plan, verifier, and later-progress fields
+- **THEN** it reports whether tokens can be saved without losing observed progress
+- **AND** absence of such headroom is recorded as the B2 kill criterion, not hidden.
+#### Measurement reconciliation
+Experiment 7530 records the default-off schema and parity proof. Its focused
+suite passed 36 tests, and Ruff, Ruff format, mypy, scoped spec coverage, and
+the paired mutation guard passed. Experiment 7531 completed 56 live episodes
+in 10,566.096 seconds on physical GPU 1 with 18,030 MiB owned offload. It
+observed 20,045 opportunities and 60 fired attempts. The opportunity floor
+passed. The attempt floor did not. Every attempt had progress inside the
+32-action window. The analysis-only oracle therefore kept all 60 attempts,
+saved zero completion tokens, and found no headroom. The result is feasibility
+only. It makes no numeric gate-quality or ship-readiness claim. Both artifacts
+pass adversarial verification.
+
+#### Correction, same day — the "no headroom" finding is not yet trustworthy
+
+The paragraph above reports the oracle found no headroom. All 60 fired attempts show
+`progress_within_window: True` while `planned: True` for 0 of 60 — a signal that never
+varies cannot separate a useful attempt from a useless one, so this is a saturated-proxy
+result, not evidence the underlying question has no headroom. See CLAUDE.md's False-Negative
+Trap discipline and `ops/known-issues.md` 2026-09-22 for the full correction. The more
+informative number from this run: 51 of 60 fired attempts (85%) produced no plan at all.
+Redefining the progress signal to require that THIS attempt's own plan was executed, not just
+that any frame change occurred afterward, is the needed next step before re-running the
+oracle check.

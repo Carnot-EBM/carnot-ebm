@@ -1,6 +1,22 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-21
+**Last Updated:** 2026-09-22
+
+## 2026-09-22 — B2 induction-timing telemetry measured feasibility only
+REQ-ARC-WMTE-7530 joins every fired live induction attempt to prompt and
+completion tokens, induction wall time, plan state, verifier outcome, and
+frame-change or level-up progress within 32 policy actions. The observer stays
+off by default. It does not change `_should_enter_induction` logic. The focused
+CPU suite passed 36 tests. Ruff, Ruff format, mypy, scoped spec coverage, and
+the paired test-mutation guard passed.
+Experiment 7531 then ran the frozen E6 12-game panel on physical GPU 1 with
+Qwen3.8-27B Q4_K_M and 18,030 MiB verified owned offload. It completed 56 live
+episodes in 10,566.096 seconds. It observed 20,045 gate opportunities and 60
+fired attempts. The 1,000-opportunity floor passed, but the 100-attempt floor
+did not. The result is feasibility only and makes no numeric gate-quality or
+ship-readiness claim. Every fired attempt had progress within the fixed window,
+so the analysis-only oracle suppressed no attempt and saved no tokens. This
+corpus shows no B2 headroom. Both artifacts pass adversarial verification.
 
 ## 2026-09-22 — Jev Tetris local readout comparison complete
 REQ-JEV-TETRIS-001 is implemented. Six upstream engine, description, baseline,

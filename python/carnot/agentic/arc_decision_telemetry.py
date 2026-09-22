@@ -27,6 +27,7 @@ from typing import Any, TypeVar
 
 TELEMETRY_ENV_FLAG = "CARNOT_ARC_DECISION_TELEMETRY"
 TELEMETRY_PATH_ENV = "CARNOT_ARC_DECISION_TELEMETRY_PATH"
+TELEMETRY_EPISODE_ENV = "CARNOT_ARC_DECISION_TELEMETRY_EPISODE_ID"
 DEFAULT_OUTPUT_DIR_ENVS = (
     "CARNOT_ARC_ACTION_PROVENANCE_DIR",
     "CARNOT_ARC_LIVENESS_DIR",
@@ -38,6 +39,7 @@ MAX_RECORD_BYTES = 16 * 1024
 MAX_RECORDS_PER_EPISODE = 4096
 MAX_TOTAL_BYTES_PER_RUN = 32 * 1024 * 1024
 FLUSH_EVERY_RECORDS = 64
+INDUCTION_PROGRESS_WINDOW_ACTIONS = 32
 FORBIDDEN_KEYS = frozenset(
     {
         "game_source",
@@ -213,6 +215,9 @@ class NoOpDecisionTelemetryRecorder:
     ) -> None:
         return None
 
+    def observe_induction_progress(self, policy: Any, latest: Any) -> None:
+        return None
+
     def finish_episode(self, *, level_end: int | None, actions_used: int | None = None) -> None:
         return None
 
@@ -256,6 +261,9 @@ class DecisionTelemetryRecorder:
         self._episode_finished = False
         self._truncated = False
         self._pending_world_gates: list[dict[str, Any]] = []
+        self._next_induction_attempt = 0
+        self._armed_induction_attempt_ids: list[str] = []
+        self._pending_induction_outcomes: dict[str, dict[str, Any]] = {}
         try:
             if not self.path.parent.exists():
                 self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -491,6 +499,10 @@ class DecisionTelemetryRecorder:
     ) -> None:
         try:
             should_induce, reason = decision
+            attempt_id = None
+            if should_induce:
+                attempt_id = self._allocate_induction_attempt_id()
+                self._armed_induction_attempt_ids.append(attempt_id)
             explorer = getattr(policy, "explorer", None)
             transitions = len(getattr(policy, "transitions", ()) or ())
             last_attempts = getattr(policy, "induction_attempts", ()) or ()
@@ -513,6 +525,14 @@ class DecisionTelemetryRecorder:
                 action = "reinduce"
             else:
                 action = "induce"
+            if should_induce and reason == "renewed_stall_reinduction":
+                gate_decision = "reinduce_now"
+            elif should_induce:
+                gate_decision = "induce_now"
+            elif bool(getattr(policy, "induced", False)):
+                gate_decision = "delegate_to_current_gate"
+            else:
+                gate_decision = "continue_explore"
             new_transitions = transitions - int(
                 getattr(policy, "_transitions_at_last_induction_attempt", 0)
             )
@@ -532,6 +552,9 @@ class DecisionTelemetryRecorder:
                 "induction_timing",
                 {
                     "decision": action,
+                    "gate_decision": gate_decision,
+                    "attempt_id": attempt_id,
+                    "attempt_fired": bool(should_induce),
                     "reason": reason,
                     "state": state,
                     "state_summary": (
@@ -543,6 +566,10 @@ class DecisionTelemetryRecorder:
             )
         except Exception:
             self._error_count += 1
+
+    def _allocate_induction_attempt_id(self) -> str:
+        self._next_induction_attempt += 1
+        return f"{self.episode_id}:induction:{self._next_induction_attempt}"
 
     def time_supervisor_selection(self, supervisor: Any, snapshot: Any) -> Any:
         span = _SupervisorSelectionSpan(self, snapshot, supervisor)
@@ -695,39 +722,148 @@ class DecisionTelemetryRecorder:
         self, policy: Any, attempt: Mapping[str, Any], wall_time_s: float
     ) -> None:
         try:
+            attempt_id = (
+                self._armed_induction_attempt_ids.pop(0)
+                if self._armed_induction_attempt_ids
+                else self._allocate_induction_attempt_id()
+            )
             proposer = getattr(policy, "proposer", None)
             generated = getattr(proposer, "last_generated_tokens", None)
             prompt = getattr(proposer, "last_prompt_tokens", None)
-            self.record_event(
-                "induction_timing",
-                {
-                    "decision": "induction_call",
-                    "reason": attempt.get("reason"),
-                    "generated_tokens": generated
-                    if isinstance(generated, int) and generated >= 0
-                    else None,
-                    "prompt_tokens": prompt if isinstance(prompt, int) and prompt >= 0 else None,
-                    "seconds": round(max(0.0, float(wall_time_s)), 9),
-                    "transition_count": attempt.get("transition_count"),
-                },
-                wall_time_s,
-            )
             pending = list(self._pending_world_gates)
             self._pending_world_gates.clear()
+            verifier_results: list[str] = []
             for index, gate in enumerate(pending):
                 payload = dict(gate)
                 gate_wall = float(payload.pop("wall_time_s", 0.0) or 0.0)
+                outcome = self._gate_outcome(
+                    gate,
+                    attempt,
+                    has_later_gate=index + 1 < len(pending),
+                )
+                verifier_results.append(outcome)
                 payload.update(
                     {
-                        "outcome": self._gate_outcome(
-                            gate,
-                            attempt,
-                            has_later_gate=index + 1 < len(pending),
-                        ),
+                        "attempt_id": attempt_id,
+                        "outcome": outcome,
                         "plan_found": bool(attempt.get("planned")) and index + 1 == len(pending),
                     }
                 )
                 self.record_event("world_model_hypothesis_gate", payload, gate_wall)
+            transitions = list(getattr(policy, "transitions", ()) or ())
+            self._pending_induction_outcomes[attempt_id] = {
+                "attempt_id": attempt_id,
+                "decision": "induction_call",
+                "reason": attempt.get("reason"),
+                "completion_tokens": (
+                    generated if isinstance(generated, int) and generated >= 0 else None
+                ),
+                # Preserve the established field while adding the plan's precise name.
+                "generated_tokens": (
+                    generated if isinstance(generated, int) and generated >= 0 else None
+                ),
+                "prompt_tokens": prompt if isinstance(prompt, int) and prompt >= 0 else None,
+                "induction_wall_time_s": round(max(0.0, float(wall_time_s)), 9),
+                "seconds": round(max(0.0, float(wall_time_s)), 9),
+                "transition_count": attempt.get("transition_count"),
+                "planned": bool(attempt.get("planned")),
+                "skipped": attempt.get("skipped"),
+                "verifier_result": verifier_results[-1] if verifier_results else "not_observed",
+                "verifier_results": verifier_results,
+                "progress_window_actions": INDUCTION_PROGRESS_WINDOW_ACTIONS,
+                "progress_actions_observed": 0,
+                "frame_change_progress": False,
+                "level_up_progress": False,
+                "progress_within_window": False,
+                "progress_window_censored": False,
+                "_completion_step": max(0, self._current_step),
+                "_transition_start": len(transitions),
+                "_level_at_completion": self._level_before,
+                "_wall_time_s": wall_time_s,
+            }
+        except Exception:
+            self._error_count += 1
+
+    @staticmethod
+    def _transition_changed(transition: Any) -> bool:
+        try:
+            import numpy as np
+
+            before = np.asarray(getattr(transition, "grid"))
+            after = np.asarray(getattr(transition, "next_grid"))
+            return before.shape != after.shape or not bool(np.array_equal(before, after))
+        except Exception:
+            try:
+                return repr(getattr(transition, "grid", None)) != repr(
+                    getattr(transition, "next_grid", None)
+                )
+            except Exception:
+                return False
+
+    @staticmethod
+    def _latest_level(latest: Any) -> int | None:
+        try:
+            value = getattr(latest, "levels_completed", None)
+            if value is None:
+                value = getattr(latest, "level", None)
+            return None if value is None else int(value)
+        except Exception:
+            return None
+
+    def _emit_induction_outcome(self, attempt_id: str, *, censored: bool) -> None:
+        outcome = self._pending_induction_outcomes.pop(attempt_id, None)
+        if outcome is None:
+            return
+        wall_time_s = float(outcome.pop("_wall_time_s", 0.0) or 0.0)
+        outcome.pop("_completion_step", None)
+        outcome.pop("_transition_start", None)
+        outcome.pop("_level_at_completion", None)
+        outcome["progress_window_censored"] = bool(censored)
+        row = self._common(
+            record_type="induction_attempt",
+            seam="induction_timing",
+            wall_time_s=wall_time_s,
+        )
+        row.update(outcome)
+        self._append(row)
+
+    def observe_induction_progress(self, policy: Any, latest: Any) -> None:
+        """Close fired attempts on progress or after the fixed action horizon."""
+
+        try:
+            if not self._pending_induction_outcomes or self._episode_finished:
+                return
+            transitions = list(getattr(policy, "transitions", ()) or ())
+            latest_level = self._latest_level(latest)
+            for attempt_id, outcome in list(self._pending_induction_outcomes.items()):
+                completion_step = int(outcome.get("_completion_step", self._current_step))
+                actions_observed = min(
+                    INDUCTION_PROGRESS_WINDOW_ACTIONS,
+                    max(0, self._current_step - completion_step),
+                )
+                start = max(0, int(outcome.get("_transition_start", len(transitions))))
+                later_transitions = transitions[start:]
+                frame_change = bool(outcome.get("frame_change_progress")) or any(
+                    self._transition_changed(transition) for transition in later_transitions
+                )
+                level_up = bool(outcome.get("level_up_progress")) or any(
+                    int(getattr(transition, "level_after", 0) or 0)
+                    > int(getattr(transition, "level_before", 0) or 0)
+                    for transition in later_transitions
+                )
+                baseline_level = outcome.get("_level_at_completion")
+                if latest_level is not None and baseline_level is not None:
+                    level_up = level_up or latest_level > int(baseline_level)
+                outcome["progress_actions_observed"] = actions_observed
+                outcome["frame_change_progress"] = frame_change
+                outcome["level_up_progress"] = level_up
+                outcome["progress_within_window"] = frame_change or level_up
+                if (
+                    frame_change
+                    or level_up
+                    or actions_observed >= INDUCTION_PROGRESS_WINDOW_ACTIONS
+                ):
+                    self._emit_induction_outcome(attempt_id, censored=False)
         except Exception:
             self._error_count += 1
 
@@ -735,6 +871,26 @@ class DecisionTelemetryRecorder:
         try:
             if self._episode_finished:
                 return
+            for attempt_id, outcome in list(self._pending_induction_outcomes.items()):
+                completion_step = int(outcome.get("_completion_step", self._current_step))
+                actions_observed = min(
+                    INDUCTION_PROGRESS_WINDOW_ACTIONS,
+                    max(0, self._current_step - completion_step),
+                )
+                outcome["progress_actions_observed"] = actions_observed
+                baseline_level = outcome.get("_level_at_completion")
+                if level_end is not None and baseline_level is not None:
+                    level_up = int(level_end) > int(baseline_level)
+                    outcome["level_up_progress"] = bool(
+                        outcome.get("level_up_progress") or level_up
+                    )
+                    outcome["progress_within_window"] = bool(
+                        outcome.get("frame_change_progress") or outcome.get("level_up_progress")
+                    )
+                censored = actions_observed < INDUCTION_PROGRESS_WINDOW_ACTIONS and not bool(
+                    outcome.get("progress_within_window")
+                )
+                self._emit_induction_outcome(attempt_id, censored=censored)
             if not self._episode_started and not self._truncated:
                 self.begin_step(level_before=level_end, phase="end")
             if not self._truncated:

@@ -1,0 +1,122 @@
+{
+  "MODEL_SPECS": [],
+  "attempt_schema": [
+    "attempt_id",
+    "prompt_tokens",
+    "completion_tokens",
+    "induction_wall_time_s",
+    "planned",
+    "skipped",
+    "verifier_result",
+    "verifier_results",
+    "progress_window_actions",
+    "progress_actions_observed",
+    "frame_change_progress",
+    "level_up_progress",
+    "progress_within_window",
+    "progress_window_censored"
+  ],
+  "built": {
+    "completion_hook": "complete_induction",
+    "default_off": true,
+    "evaluation": "scripts/experiments/semif_arc_readout_eval.py",
+    "induction_logic_changed": false,
+    "live_entrypoint": "make_carnot_agent -> E3AgentPolicy",
+    "opportunity_hook": "capture_induction_decision -> record_induction_decision",
+    "progress_hook": "observe_induction_progress"
+  },
+  "cited_artifacts": [
+    {
+      "path": "results/experiment_7490_e6_live_loop_cost_profile.json",
+      "sha256": "sha256:a05f71909a8cca097a8eb293c9a5d62cf46ad37ae62dd5e0deb9b3c9db74549f"
+    },
+    {
+      "path": "results/experiment_7491_e6_timed_live_profile.json",
+      "sha256": "sha256:57b37fe509beaf100e8be4a1eeb86e1bac666fb2b989c57ef8870a454344f3b7"
+    },
+    {
+      "path": "results/experiment_7492_e6_timed_cost_profile.json",
+      "sha256": "sha256:dd46afadadfca86e714e5ee2bb72302bd780864f8c36ba6309039868e6dea953"
+    },
+    {
+      "path": "docs/research-notes/semif-e6-timed-frozen-game-panel-2026-09-21.json",
+      "sha256": "sha256:e81ccef1fd0e924ac5c8a79bfdbd259d1639ae1279d4c01fdda6ee764eca156f"
+    }
+  ],
+  "duration_s": 8.0,
+  "experiment_id": 7530,
+  "experiment_name": "exp7530-b2-induction-gate-telemetry",
+  "flagged_adversarial": false,
+  "gate_ready_to_ship": false,
+  "honest_verdict": "complete_b2_induction_attempt_outcome_telemetry_built_default_off_and_parity_proven",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "model_invoked": false,
+  "model_specs": [],
+  "parity_proof": {
+    "noop_byte_test": "tests/python/test_arc_decision_telemetry.py::test_extended_noop_hook_is_byte_inert",
+    "preserved": [
+      "actions",
+      "existing_provenance",
+      "model_calls",
+      "environment_calls",
+      "random_state"
+    ],
+    "result": "passed",
+    "test": "tests/python/test_arc_decision_telemetry.py::test_telemetry_on_off_preserves_actions_provenance_calls_and_rng"
+  },
+  "progress_window": {
+    "actions": 32,
+    "closes_early_on_progress": true,
+    "episode_end_censors_unfinished": true,
+    "justification": "Thirty-two policy actions cover short induced plans and immediate fallback while bounding attribution so unrelated late exploration is not credited."
+  },
+  "random_seed": 734,
+  "remote_submission": false,
+  "reproducibility_checksum": "sha256:36498166eb4557bd0bff315f6521b61e7ed6c9296cd162fe5726c3a200381e90",
+  "requirement": "REQ-ARC-WMTE-7530",
+  "run_date": "20260922",
+  "schema": "carnot.arc.b2_induction_gate_telemetry.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "source_hashes": {
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:b4cb22798ef8d95cf03a44b2ba70a9a11874c0302d57880b3c0ff29b9507c46d",
+    "python/carnot/agentic/arc_decision_telemetry.py": "sha256:e26294b1b83627ef95221780bd6ffde97734ee12c481ecb4f15158163ca7e1f6",
+    "python/carnot/experiment_7491_e6_timed_live_profile.py": "sha256:9ade78f3f6d04cb567235c94c5ed4ac6ff1db6a19c180151271b0ee071a26b52",
+    "scripts/experiments/semif_arc_readout_eval.py": "sha256:7dd11f8ab9ab570269f9975cd23a1c4a040590ad7819c70a2b48379b6adab666",
+    "tests/python/test_arc_decision_telemetry.py": "sha256:cd855a41b541d8588f458124cc3b8706ae1b6f9bace0dba70f2af42e29f37bf5"
+  },
+  "status": "complete_stage1_build_and_test",
+  "submission_kernel_changed": false,
+  "validation": [
+    {
+      "command": "pytest focused B2 plus E2E-011/E2E-012 --no-cov -n 0",
+      "duration_s": 6.79,
+      "result": "36 passed"
+    },
+    {
+      "command": "ruff check changed Python files",
+      "result": "passed"
+    },
+    {
+      "command": "ruff format --check changed Python files",
+      "result": "passed"
+    },
+    {
+      "command": "mypy changed implementation and scripts",
+      "result": "passed; 6 source files"
+    },
+    {
+      "command": "check_spec_coverage.py scoped to touched tests",
+      "result": "passed"
+    },
+    {
+      "command": "check_spec_coverage.py repository-wide",
+      "result": "failed on 1168 pre-existing unscoped tests",
+      "task_regression": false
+    },
+    {
+      "command": "test_suite_mutation_check paired snapshot/check",
+      "result": "passed; no tracked files modified"
+    }
+  ]
+}

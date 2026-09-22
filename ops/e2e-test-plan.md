@@ -199,3 +199,19 @@ state. Nested exclusive spans must reconcile. Token use must join by request
 ID. Failed gates must suppress every numeric share.
 This check uses no real game, model, network, or GPU. The live GPU run is a
 separate Stage 2 operation.
+
+### E2E-013: B2 induction-attempt outcome telemetry (CPU)
+Spec ref: REQ-ARC-WMTE-7530.
+Run `tests/python/test_arc_decision_telemetry.py`,
+`tests/python/test_experiment_7491_e6_timed_live_profile.py`,
+`tests/python/test_experiment_7531_b2_induction_gate_measurement.py`, and
+`tests/python/test_semif_arc_readout_eval.py` with the worktree `PYTHONPATH`,
+`--no-cov`, `-n 0`, and a private `--basetemp`. The off and on paths must
+preserve actions, calls, provenance, environment work, and random state. Fired
+attempt IDs must join token, timing, verifier, and bounded-progress fields.
+Episode-end censoring and the 32-action closure must retain every attempt. The
+reducer must suppress numeric gate claims below either sample floor and must
+report a no-headroom oracle result honestly.
+This CPU check uses scripted inputs. Experiment 7531 is the separate live GPU
+check. It completed 56 episodes and retained the 88 budget-excluded schedule
+rows as unstarted rather than dropping them.

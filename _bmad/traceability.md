@@ -1,6 +1,18 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-21
+**Last Updated:** 2026-09-22
+**Operational Note:** 2026-09-22 REQ-ARC-WMTE-7530 maps the default-off B2
+attempt-outcome observer to
+`python/carnot/agentic/arc_decision_telemetry.py`, its live E3 hook in
+`python/carnot/agentic/arc_competition_agent.py`, the Experiment 7531 harness
+and reducer, E2E-013, and their focused tests. Experiment 7530 records the
+schema and byte-for-byte on/off parity proof. Experiment 7531 completed 56
+adapter-free episodes on the frozen E6 panel with physical GPU 1 offload. It
+observed 20,045 opportunities and 60 fired attempts. The attempt floor was not
+met, so the terminal result is feasibility only. All 60 attempts had bounded
+later progress. The oracle saved zero tokens and found no headroom. Both
+artifacts pass adversarial verification. No gate was shipped.
+
 ## 2026-09-22 — REQ-JEV-TETRIS-001 local option-logit comparison
 REQ-JEV-TETRIS-001 and its four scenarios map to
 `scripts/experiments/jev_tetris_semif/readout_server.py`, the loopback Node
