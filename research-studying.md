@@ -6059,3 +6059,12 @@ support and dominant producer timings in
 `docs/research-notes/v656-retrospective.md`. Importance anchoring, compact
 generated spans, four-expert reweighting, and generic external-text reranking
 remain closed until their stated method changes occur.
+
+<!-- EXP7503-V657-METHOD-INGESTION -->
+## 2026-09-22 Exp7503 — V657 methods — INGESTED
+
+Binary scoring-token expectation, equal detector access, legal aligned-versus-
+shuffled information, KAN retention, and whole-service hardware accounting
+map to V657. Paper results are not local Carnot results. Exact sections,
+counterexamples, and task mappings are in
+`docs/research-notes/v657-method-map.md`.

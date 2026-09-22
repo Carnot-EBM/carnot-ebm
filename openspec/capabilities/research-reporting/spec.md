@@ -76992,3 +76992,62 @@ Implementation status: planning documents only. Existing schema, gate, exclusion
 and ARC-floor tests exercise the unchanged planning guards. Exp7503 is assigned
 the executable V657 contract and mutation tests; remaining tasks must add their
 own relevant REQ/SCENARIO and tests before implementation.
+
+## REQ-REPORT-7503: Authenticate the V657 contract, methods, and V656 custody
+
+The repository SHALL provide Exp7503 as an aggregation-only advisory report.
+It SHALL resolve the V657 roadmap by milestone, compare the independent Markdown
+and YAML authorities, and retain exactly thirteen ordered task identities. The
+comparison SHALL include each exact title, phase, deliverable, substrate class,
+and structured gate. Private mutations of count, order, identifier, title, path,
+gate field, and milestone SHALL fail for each authority.
+
+The report SHALL authenticate the fourteen V656 dispositions without creating
+scientific verdicts for missing producers. Exp7495 and Exp7496 SHALL retain the
+conductor status `FAIL`. Exp7497 and Exp7501 SHALL retain the conductor status
+`GATE_BLOCK`. Exp7499 SHALL remain raw-only. Its session, checkpoint, and
+candidate SHALL have separate exact-byte hashes. Raw episode completion or a
+conductor marker SHALL NOT establish terminal scientific validation.
+
+The report SHALL ingest three to five primary methods. Each method row SHALL
+name a source section, bounded adaptation, counterexample, and V657 task. It
+SHALL set `method_ingestion_complete_score` independently from
+`contract_ready_score`. External paper findings SHALL NOT become local results.
+The report SHALL use `aggregation_from_upstream_artifacts`, no current model
+calls, empty `MODEL_SPECS` and `model_specs`, and the `aggregation` class.
+
+### SCENARIO-REPORT-7503-CONTRACT: Paired authorities reject private drift
+
+**Given** the V657 design table and the milestone-matching roadmap YAML
+**When** Exp7503 parses both authorities and applies private mutations
+**Then** all thirteen rows match in order and all fourteen mutations fail
+**And** the source authorities remain unchanged.
+
+### SCENARIO-REPORT-7503-CUSTODY: Historical completion does not imply validation
+
+**Given** nine V656 terminal producers, five absent producer paths, and Exp7499 raw files
+**When** Exp7503 reduces their custody
+**Then** terminal, conductor-only, absent, and raw-only states remain distinct
+**And** no missing conductor attempt receives an invented `honest_verdict`.
+
+### SCENARIO-REPORT-7503-METHODS: Source methods remain bounded adaptations
+
+**Given** the dated V657 reference sweep and bounded primary-source access
+**When** Exp7503 writes the method map and studying marker
+**Then** each row records its source section, adaptation, counterexample, and task
+**And** a source access failure limits only that row.
+
+### SCENARIO-REPORT-7503-VALIDATION: Exact scoped checks control publication
+
+**Given** a frozen affected-file manifest and private temporary roots
+**When** scoped tests, changed-module coverage, Ruff, mypy, spec coverage,
+unchanged roadmap guards, entrypoint replay, cold reduction, adversarial
+verification, and strict row consistency run
+**Then** every required receipt passes before atomic terminal publication
+**And** no unscoped Python suite or numbered runtime E2E is reported.
+
+## Implementation Status (REQ-REPORT-7503)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7503 and SCENARIO-REPORT-7503-* | Implemented: V657 authority comparison, V656 custody reducer, bounded method map, scoped validation, and thin entrypoint. | Spec-linked tests cover contract drift, milestone resolution, conductor and raw custody, methods, validation scope, reduction, defensive readers, and changed-module coverage. |
