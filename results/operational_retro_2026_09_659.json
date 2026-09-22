@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.659",
+  "generated_at": "2026-09-22T23:14:35Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 41.3,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Bind fourteen tasks and ingest source-grounding methods",
+      "duration_minutes": 34.6,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify source-intervention transport and bounded capture cost",
+      "duration_minutes": 5.47,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Seal an available tool-grounding corpus and independent roles",
+      "duration_minutes": 1.05,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Build an independent conjugate energy memory for delayed feedback",
+      "duration_minutes": 0.21,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.659 completed 4 experiments, all compute-bound, in 41.3 wall-time minutes. The dominant task was 'Bind fourteen tasks and ingest source-grounding methods' at 34.6 minutes, followed by 'Qualify source-intervention transport and bounded capture cost' at 5.47 minutes, with the remaining two tasks taking 1.05 minutes and 0.21 minutes. Sub-phase timing was not recorded within these runs to separate model inference execution from evaluation scaffolding or artifact serialization overhead.",
+  "bottlenecks_identified": [
+    "'Bind fourteen tasks and ingest source-grounding methods' accounted for 34.6 out of 41.3 total wall-time minutes (approx. 84% of milestone execution time), but lacks granular sub-phase instrumentation to isolate model execution from evaluation scaffolding or artifact serialization.",
+    "'Qualify source-intervention transport and bounded capture cost' consumed 5.47 minutes without recorded internal stage durations, leaving the distribution between model inference, transport validation, and file I/O unmeasured.",
+    "The remaining two compute-bound tasks completed rapidly (tool-grounding corpus sealing at 1.05 minutes and conjugate energy memory building at 0.21 minutes), with timestamps reconstructed from disk mtimes rather than continuous runtime stage logs.",
+    "The GPU monitor report provides an isolated snapshot (GPU 0 at 0% utilization with 18064MB allocated, GPU 1 at 97% utilization with 18866MB allocated) at milestone end, leaving GPU utilization and active memory bandwidth across individual compute task execution windows unmeasured.",
+    "Task launch records did not log model concurrency or runner dispatch receipts, though all completed tasks were single-model executions where DualGPURunner multi-model dispatch is not applicable."
+  ],
+  "improvements_suggested": [
+    "Instrument granular sub-phase duration timers and monotonic stage logging inside task binding and source-intervention transport workflows to isolate model inference latency from evaluation scaffolding and disk serialization.",
+    "Deploy continuous, task-aligned accelerator telemetry during compute-bound executions to sample live GPU utilization and VRAM occupancy across active compute windows rather than relying on point-in-time monitor snapshots.",
+    "Implement batched inference across evaluation loops (e.g. batching 8-16 questions per forward pass as suggested in monitor telemetry) to improve throughput on single-process model workloads.",
+    "Emit explicit model concurrency and runner dispatch metadata in experiment task receipts to audit DualGPURunner eligibility whenever two or more models run concurrently.",
+    "Implement runtime milestone-scoped execution logging to avoid reliance on post-hoc disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration timers and per-stage progress logging inside the task binding and source-intervention transport pipelines.",
+    "Deploy continuous accelerator telemetry during compute-bound task execution to record live GPU utilization and VRAM occupancy across active execution windows.",
+    "Implement batched inference (batching 8-16 questions per forward pass) for single-process evaluation workflows to increase GPU throughput."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone completed 4 compute-bound tasks in 41.3 wall-time minutes, heavily concentrated in task binding and source-grounding ingestion (34.6 minutes) and source-intervention qualification (5.47 minutes). The end-state GPU monitor report confirms active compute on GPU 1 (97% utilization) but cannot evaluate active-window efficiency across individual task spans, and because only single-model tasks ran, no DualGPURunner opportunity was missed. Sub-phase timing and continuous execution telemetry are necessary next steps to identify actionable latency optimizations."
+}
