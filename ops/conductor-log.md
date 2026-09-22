@@ -18411,3 +18411,4 @@ code |
 | 2026-09-22 04:16 UTC | Qualify a bounded local Brier update and chronolog | OK | 113 passed, 4 warnings in 9.91s |
 | 2026-09-22 05:02 UTC | Measure held-out probability and selective-decisio | OK | 95 passed, 1 warning in 8.97s |
 | 2026-09-22 05:58 UTC | Independently audit probability and decision claim | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 96 passed, 1 warning in 15.24s |
+| 2026-09-22 06:36 UTC | Measure causal delayed-feedback learning and held- | OK | 99 passed, 1 warning in 11.19s |
