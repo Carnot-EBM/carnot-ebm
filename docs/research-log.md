@@ -6906,3 +6906,10 @@ The critical path for milestone .250:
 - theme: lossless native Qwen evidence capture dominated milestone wall time across an all-compute execution lacking sub-task telemetry
 - key result: honest operational negative — native Qwen evidence captures consumed 65.46 of 69.2 total minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.657
+
+- exp_range: no data available this milestone
+- theme: native Qwen readout and ARC cost reduction accounted for most milestone wall time across an all-compute execution lacking sub-task telemetry
+- key result: honest operational negative — native Qwen readout and ARC cost reduction consumed 6.96 of 12.3 total minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
+- acceptance: no data available this milestone

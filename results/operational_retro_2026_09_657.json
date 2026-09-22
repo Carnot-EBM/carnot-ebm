@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.657",
+  "generated_at": "2026-09-22T10:36:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 12.3,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 13,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure native Qwen readout through durable feedback acknowledgement",
+      "duration_minutes": 3.67,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reduce cross-game live-agent cost and supervisor opportunities",
+      "duration_minutes": 3.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify completed live ARC panel B from immutable raw evidence",
+      "duration_minutes": 1.41,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and ingest methods against terminal V656 evidence",
+      "duration_minutes": 0.65,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently audit probability and decision claims without changing thresholds",
+      "duration_minutes": 0.57,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.657 completed 13 experiments, all compute-bound, in 12.3 wall-time minutes. The two longest tasks were 'Measure native Qwen readout through durable feedback acknowledgement' at 3.67 minutes and 'Reduce cross-game live-agent cost and supervisor opportunities' at 3.29 minutes, together accounting for 6.96 minutes. Sub-phase timing was not recorded within these runs to separate inference duration from setup or file serialization overhead.",
+  "bottlenecks_identified": [
+    "'Measure native Qwen readout through durable feedback acknowledgement' (3.67 minutes) and 'Reduce cross-game live-agent cost and supervisor opportunities' (3.29 minutes) accounted for 6.96 out of 12.3 total wall-time minutes (over 56% of milestone time), but lack granular sub-phase timing to isolate model execution from evaluation scaffolding or file I/O.",
+    "The remaining 11 compute-bound tasks completed rapidly in approximately 5.34 minutes combined (led by ARC panel B qualification at 1.41 minutes, V656 contract binding at 0.65 minutes, and static audit at 0.57 minutes), with timestamps reconstructed from disk mtime rather than continuous stage logs.",
+    "The GPU monitor report provides an end-of-run snapshot (0% utilization, 4MB allocated across both RTX 3090 GPUs) after milestone completion, leaving GPU utilization and memory bandwidth across active compute execution spans unmeasured.",
+    "Task launch records did not log model concurrency or runner dispatch details, although all completed tasks were single-model runs where DualGPURunner multi-model dispatch is not applicable."
+  ],
+  "improvements_suggested": [
+    "Instrument granular sub-phase timers and monotonic stage logging inside native Qwen readout and ARC reduction tasks to isolate inference latency from pipeline setup and artifact serialization.",
+    "Deploy continuous, task-aligned accelerator telemetry during compute-bound executions to sample live GPU utilization and VRAM allocation across active compute windows.",
+    "Record model concurrency and runner dispatch details in task receipts to audit DualGPURunner eligibility whenever two or more models run concurrently.",
+    "Implement runtime milestone-scoped execution logging to avoid reliance on disk-mtime post-hoc reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration timers and per-stage progress logging inside the native Qwen readout and ARC cost reduction pipelines.",
+    "Deploy continuous accelerator telemetry during compute-bound task execution to record live GPU utilization and VRAM occupancy across active execution windows.",
+    "Emit explicit model concurrency and runner dispatch metadata in experiment receipts to audit DualGPURunner engagement on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone completed 13 compute-bound tasks in 12.3 wall-time minutes, with execution concentrated in native Qwen readout (3.67 minutes) and ARC cost reduction (3.29 minutes). The post-run GPU snapshot cannot evaluate active-window compute efficiency, and because only single-model tasks were executed, no DualGPURunner dispatch opportunity was missed. Granular sub-phase timing instrumentation in future milestones is needed to identify concrete optimization targets."
+}
