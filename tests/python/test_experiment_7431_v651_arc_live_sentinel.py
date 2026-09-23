@@ -564,6 +564,23 @@ def test_transport_capture_records_response_error_and_token_guard(tmp_path: Path
     assert urllib.request.urlopen is original
 
 
+def test_transport_capture_allows_explicit_b2_induction_budget(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-10008-INDUCTION-BUDGET admits the corrected B2 request."""
+
+    events = tmp_path / "b2-transport.jsonl"
+    capture = mod.DurableRequestCapture(tmp_path, events, max_new_tokens=4096)
+    capture.begin_episode("game:seed")
+    capture.original = lambda *_args, **_kwargs: io.BytesIO(b'{"content":"ok"}')
+    request = urllib.request.Request(
+        "http://127.0.0.1:8000/v1/chat/completions",
+        data=json.dumps({"max_tokens": 4096}).encode(),
+    )
+
+    assert capture._open(request).read() == b'{"content":"ok"}'
+    row = next(row for row in mod._read_jsonl(events) if row["event"] == "server_request")
+    assert row["requested_max_tokens"] == 4096
+
+
 def test_runtime_helpers_preserve_withholding_and_event_reduction(tmp_path: Path) -> None:
     """REQ-ARC-WMTE-7431 preserves adapter withholding and event identities."""
 

@@ -35129,3 +35129,87 @@ informative number from this run: 51 of 60 fired attempts (85%) produced no plan
 Redefining the progress signal to require that THIS attempt's own plan was executed, not just
 that any frame change occurred afterward, is the needed next step before re-running the
 oracle check.
+
+#### Further correction, same day — the induction corpus was hard-capped
+The correction above is itself incomplete. All 60 fired attempts have exactly
+`completion_tokens: 256`, although their wall times vary. Experiment 7531
+inherited `MAX_NEW_TOKENS = 256` from Experiment 7471's seam-timing harness.
+That budget cannot contain a complete Python world-model program. The reported
+85% no-plan rate therefore measures the inherited cap, not induction
+reliability. The next measurement SHALL restore a 4096-token induction budget
+before changing the progress-label definition. Experiment 7471's source
+constant remains unchanged because its historical purpose is seam timing.
+### REQ-ARC-WMTE-10008: Corrected B2 induction-budget measurement
+Experiment 10008 SHALL rerun Experiment 7531 on the same frozen 12-game panel,
+with the same seeds, three-hour wall-time-or-sample-floor stop, live E3 policy,
+adapter-free and game-source-free constraints, and
+`solve_provenance=live_agent_self_discovery`. The B2 harness SHALL pass
+`max_tokens=4096` explicitly at the E6 live-child proposer-construction seam.
+That proposer is reserved for E3 world-model induction and reinduction in this
+harness. Any non-induction generation path SHALL retain its existing budget.
+The source constant in Experiment 7471 SHALL NOT change.
+The B2 child SHALL also pass 4096 to the durable request-capture admission
+guard. The guard's default SHALL remain 256 for every historical caller. This
+second constructor parameter is required because the first corrected run
+proved that changing the proposer alone is insufficient: the capture rejected
+every request before transport with `requested token budget exceeded:
+4096>256`, leaving all completion-token fields null.
+The valid terminal artifact SHALL be
+`results/experiment_10008_b2_induction_gate_measurement_v2.json`. Experiment
+10007 preserves the first rerun, which was invalid because the inherited
+capture guard rejected every request before transport. Experiment 10008 SHALL name
+`results/experiment_7531_b2_induction_gate_measurement.json` in `supersedes`
+and state the token-cap correction in `superseded_reason`. Experiment 7531
+SHALL remain in place and receive only an additive corrigendum pointing to the
+new artifact. The new artifact SHALL report the histogram, minimum, maximum,
+mean, median, unique count, and uniformity of durable response-receipt
+completion-token counts. It SHALL separately disclose attempt rows whose
+reported usage lacks a distinct completed response, because exhausted-request
+reinductions can retain the prior proposer usage in policy telemetry.
+If every attempt terminates at one token count, it SHALL flag a possible second
+cap rather than treating the run as corrected. The unchanged sample-floor and
+analysis-only positive-control rules in REQ-ARC-WMTE-7530 still govern all
+claims.
+#### SCENARIO-ARC-WMTE-10008-INDUCTION-BUDGET
+- **GIVEN** the B2 child starts from E6's historical 256-token default
+- **WHEN** it constructs the proposer used by an E3 induction call
+- **THEN** the mocked construction receives `max_tokens=4096`
+- **AND** the durable capture admits a mocked 4096-token induction request
+- **AND** Experiment 7471's source constant remains 256.
+#### SCENARIO-ARC-WMTE-10008-TOKEN-DISTRIBUTION
+- **GIVEN** completed fired-attempt telemetry from the corrected live run
+- **WHEN** the terminal reducer builds Experiment 10008
+- **THEN** it records the durable-response completion-token distribution and uniformity
+- **AND** it discloses attempt rows without a distinct completed response
+- **AND** a uniform distribution is disclosed as a possible remaining cap.
+#### SCENARIO-ARC-WMTE-10008-SUPERSESSION
+- **GIVEN** Experiment 7531 is the immutable historical capped run
+- **WHEN** Experiment 10008 becomes terminal
+- **THEN** the new artifact names 7531 as superseded with the token-cap reason
+- **AND** 7531 gains only a forward-pointing additive corrigendum.
+Implementation status: implemented and measured 2026-09-22. The first
+corrected-run attempt exposed the independent capture guard before transport;
+its evidence is preserved as Experiment 10007 with a forward corrigendum.
+Experiment 10008 completed the corrected live run with 11,813 admitted gate
+opportunities and 35 fired attempts, so the opportunity floor passed and the
+attempt floor failed. All 33 durable completed responses used exactly 4,096
+completion tokens; two request-budget-exhausted `sp80` reinduction rows carried
+prior usage without a distinct response and are disclosed separately. The
+uniform durable distribution flags 4,096 as still binding. All 35 attempts
+were unplanned, had no observed verifier result, and had later progress, so the
+oracle suppressed none; that no-headroom result remains non-diagnostic because
+the progress proxy is saturated. The result is feasibility only and ships no
+gate.
+
+#### Root cause found, same day — hidden reasoning, not a token ceiling
+
+A raw durable response from Experiment 10008 shows `finish_reason: "length"`, empty
+`content`, and a multi-thousand-word `reasoning_content` block: the model spent its whole
+4,096-token budget on hidden chain-of-thought and never emitted output. Qwen3's hybrid-thinking
+mode consumes more budget at a higher cap, not less, so raising the token limit again would
+likely reproduce the same uniform-at-cap result. The live agent already carries a fix for this
+exact failure mode (`ARC_LIVE_GENERATOR_NO_THINK_PREFIX` in
+`python/carnot/agentic/arc_executable_world_model.py`, validated 2026-08-03 at 10 of 10 real
+reasoning cases suppressed), which `experiment_7471_v654_arc_seam_observation.py` -- reused by
+this B2 harness -- never inherited. The corrected next step is to apply that same prefix to
+B2's induction calls before touching the token budget again.

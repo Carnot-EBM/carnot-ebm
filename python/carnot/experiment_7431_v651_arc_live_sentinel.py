@@ -1277,9 +1277,20 @@ class DurableEpisodeRequestBudget(EpisodeRequestBudget):
 class DurableRequestCapture:
     """Persist request and response bytes around the real server call."""
 
-    def __init__(self, root: Path, event_path: Path) -> None:
+    def __init__(
+        self,
+        root: Path,
+        event_path: Path,
+        *,
+        max_new_tokens: int = MAX_NEW_TOKENS,
+    ) -> None:
+        if not isinstance(max_new_tokens, int) or isinstance(max_new_tokens, bool):
+            raise ValueError("max_new_tokens must be an integer")
+        if max_new_tokens <= 0:
+            raise ValueError("max_new_tokens must be positive")
         self.root = root
         self.event_path = event_path
+        self.max_new_tokens = max_new_tokens
         self.original: Any = None
         self.episode_id = "bootstrap"
         self.indices: Counter[str] = Counter()
@@ -1308,8 +1319,10 @@ class DurableRequestCapture:
         except json.JSONDecodeError:
             payload = {}
         requested = int(payload.get("max_tokens") or payload.get("n_predict") or 0)
-        if requested > MAX_NEW_TOKENS:
-            raise RuntimeError(f"requested token budget exceeded: {requested}>{MAX_NEW_TOKENS}")
+        if requested > self.max_new_tokens:
+            raise RuntimeError(
+                f"requested token budget exceeded: {requested}>{self.max_new_tokens}"
+            )
         directory = self.root / self.episode_id.replace(":", "__") / "requests"
         directory.mkdir(parents=True, exist_ok=True)
         request_path = directory / f"{call_index:02d}_request.json"

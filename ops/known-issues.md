@@ -27412,3 +27412,59 @@ token-starved corpus would not produce a meaningful result either. Corrected nex
 the induction completion-token budget to a realistic value (2048-4096) and re-run BEFORE
 touching the progress-signal definition. Both artifacts carry this correction in a
 `further_correction_2026_09_22` field.
+
+**CORRECTION, 2026-09-22 (same day).** Experiment 7531's initial "no headroom"
+interpretation is not trustworthy. All 60 fired attempts had
+`progress_within_window == true` while 0/60 had `planned == true`; a signal
+that never varies cannot distinguish a useful induction from a useless one.
+The oracle's zero-suppression result is therefore a mechanical consequence of
+a saturated any-frame-change proxy, not evidence that B2 has no underlying
+headroom. The then-apparent 51/60 no-plan result also required investigation
+before being called an induction-reliability finding.
+**STATUS UPDATE, 2026-09-22.** The corrected-budget work is complete as
+Experiment 10008. The narrow override is two keyword-only constructor
+parameters: the B2 caller passes 4,096 to E6's induction-only proposer and to
+that run's durable request-capture guard. Both defaults remain 256 for
+historical callers, and Experiment 7471 is untouched. Experiment 10007
+preserves a failed first rerun that exposed the independent capture guard: the
+proposer requested 4,096, but capture rejected every request as `4096>256`
+before transport. Its additive corrigendum points to Experiment 10008.
+Experiment 10008 used the same frozen panel and live self-discovery contract.
+It measured 11,813 admitted gate opportunities and 35 attempts in the
+three-hour overall window. Only the opportunity floor passed, so this is again
+feasibility only. All 33 durable completed responses contain exactly 4,096
+completion tokens: histogram `{4096: 33}`, minimum/maximum/mean/median 4,096,
+one unique value, uniform true. Two second-induction rows for `sp80` retained
+the prior call's usage after the two-request episode budget was exhausted;
+they are disclosed separately rather than counted as completed responses.
+The uniform 4,096 result means the new budget is still binding and a further
+truncation/stop issue remains. No attempt produced a plan, no verifier result
+was observed, and later progress was true for 35/35, so the oracle again
+reports zero measured headroom on a saturated, non-diagnostic proxy. Do not
+fit or ship a B2 gate from this corpus. Experiment 7531 remains preserved with
+an additive corrigendum pointing to
+`results/experiment_10008_b2_induction_gate_measurement_v2.json`.
+
+**ROOT CAUSE FOUND, 2026-09-22 (same day, after Experiment 10008).** Read one of 10008's raw
+durable response files directly
+(`results/raw/experiment_10008_b2_induction_gate_measurement_v2/sb26__seed-7491001/requests/00_response.json`):
+`"finish_reason": "length"`, `"content": ""`, and a multi-thousand-word `reasoning_content`
+block analyzing the game's grid layout. The model spent its entire 4,096-token budget on hidden
+chain-of-thought reasoning and never emitted any actual output. This is Qwen3's hybrid-thinking
+mode, and it explains why raising the budget from 256 to 4,096 did not help: a thinking model
+does not produce less reasoning at a higher cap, it produces more, and can still exhaust any
+fixed budget before emitting code.
+
+The live ARC agent already found and fixed this exact failure mode. `arc_executable_world_model.py`
+carries a `no_think_prefix` mechanism (`ARC_LIVE_GENERATOR_NO_THINK_PREFIX`, the `/no_think`
+Qwen3 control token) specifically to "suppress hybrid-thinking CoT so the model emits code
+directly," with a code comment citing a real measured finding: real reasoning fired 10 of 10
+times without the prefix and 0 of 10 times with it (2026-08-03). `experiment_7471_v654_arc_seam_observation.py`,
+which the B2 harness reuses, has no reference to `no_think`, `enable_thinking`, or any reasoning
+suppression at all -- it never inherited this fix.
+
+**Corrected next step (supersedes both prior "raise the token budget" corrections above).**
+Apply the same `no_think_prefix` the live path already uses and already validated, to B2's
+induction calls, before touching the token budget again. Raising the budget further without
+suppressing hybrid-thinking mode would very likely reproduce the same uniform-at-cap result at
+whatever the new ceiling is.

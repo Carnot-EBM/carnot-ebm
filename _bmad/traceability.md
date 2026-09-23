@@ -1,6 +1,28 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-22
+**Operational Note:** 2026-09-22 REQ-ARC-WMTE-10008 maps the corrected B2
+induction budget to the keyword-only live-session parameter in
+`python/carnot/experiment_7491_e6_timed_live_profile.py`, the per-instance
+durable-capture limit in
+`python/carnot/experiment_7431_v651_arc_live_sentinel.py`, the Experiment 7531
+harness/reducer, E2E-013, and focused mocked tests. Historical defaults and
+Experiment 7471 remain at 256. Experiment 10007 preserves the failed first
+rerun, where the independent capture guard rejected 4,096-token requests
+before transport. Experiment 10008 is terminal: physical GPU 1 offload was
+18,030 MiB, 11,813 gate opportunities and 35 attempts were measured, and the
+attempt floor failed, leaving a feasibility-only result. The authoritative
+durable-response distribution is `{4096: 33}` and uniform; two `sp80`
+request-budget-exhausted reinduction rows retained earlier usage and are
+disclosed separately. The oracle found zero measured headroom, but all 35
+progress labels were true while no plan or verifier result was observed, so
+the proxy remains saturated and non-diagnostic. Experiment 10008 supersedes
+7531, passes adversarial verification, and ships no gate. The earlier 7530/7531
+note below is retained as historical context and is corrected by this note.
+The focused changed-file suite passes 36/36 and E2E-013 plus the changed capture suite pass
+54/54. Ruff, format, mypy, scoped spec coverage, artifact checksum, adversarial
+verification, and diff checks pass. Repository-wide spec coverage retains the
+existing 1,168-test backlog; the changed B2 tests are traced.
 **Operational Note:** 2026-09-22 REQ-ARC-WMTE-7530 maps the default-off B2
 attempt-outcome observer to
 `python/carnot/agentic/arc_decision_telemetry.py`, its live E3 hook in

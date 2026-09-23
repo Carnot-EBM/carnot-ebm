@@ -1391,10 +1391,45 @@ def _configure_live_driver() -> None:
         setattr(exp7471, name, value)
 
 
-def run_live_session(args: argparse.Namespace) -> int:  # pragma: no cover - owned child.
+def _construct_induction_proposer(
+    args: argparse.Namespace,
+    *,
+    max_tokens: int,
+    proposer_type: Any,
+) -> Any:
+    """Construct the E3 induction proposer at a mockable budget seam."""
+
+    proposer = proposer_type(
+        repo_substr="Qwen3.8-27B",
+        model_path=exp7471.live_support._absolute_model_path(args.model_path),
+        port=int(args.port),
+        mtp=False,
+        kv_quant="q8_0",
+        use_chat_template=True,
+        n_gpu_layers=999,
+        n_ctx=49_152,
+        max_tokens=max_tokens,
+        timeout=int(EPISODE_LIMIT_S),
+        tries=1,
+    )
+    proposer.model_repository = MODEL_ID
+    proposer.model_revision = str(args.model_revision)
+    proposer.requested_model_filename = MODEL_FILENAME
+    proposer.requested_model_path = exp7471.live_support._absolute_model_path(args.model_path)
+    return proposer
+
+
+def run_live_session(
+    args: argparse.Namespace,
+    *,
+    induction_max_tokens: int | None = None,
+) -> int:  # pragma: no cover - owned child.
     """Load one owned server and run all frozen episodes on GPU 1."""
 
     started = time.monotonic()
+    effective_induction_max_tokens = (
+        MAX_NEW_TOKENS if induction_max_tokens is None else int(induction_max_tokens)
+    )
     deadline_ns = int(
         os.environ.get(
             "CARNOT_E6_DEADLINE_MONOTONIC_NS",
@@ -1406,7 +1441,11 @@ def run_live_session(args: argparse.Namespace) -> int:  # pragma: no cover - own
     event_path = raw_dir / RUNTIME_EVENT_PATH.name
     action_path = raw_dir / ACTION_PATH.name
     schedule = load_json(Path(args.schedule_path)).get("rows") or []
-    capture = exp7471.live_support.DurableRequestCapture(raw_dir, event_path)
+    capture = exp7471.live_support.DurableRequestCapture(
+        raw_dir,
+        event_path,
+        max_new_tokens=effective_induction_max_tokens,
+    )
     proposer: Any = None
     rows: list[JsonDict] = []
     session: JsonDict = {
@@ -1426,23 +1465,11 @@ def run_live_session(args: argparse.Namespace) -> int:  # pragma: no cover - own
         from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
         progress(started, "model_load", "before", model_path=args.model_path)
-        proposer = LocalGGUFProposer(
-            repo_substr="Qwen3.8-27B",
-            model_path=exp7471.live_support._absolute_model_path(args.model_path),
-            port=int(args.port),
-            mtp=False,
-            kv_quant="q8_0",
-            use_chat_template=True,
-            n_gpu_layers=999,
-            n_ctx=49_152,
-            max_tokens=MAX_NEW_TOKENS,
-            timeout=int(EPISODE_LIMIT_S),
-            tries=1,
+        proposer = _construct_induction_proposer(
+            args,
+            max_tokens=effective_induction_max_tokens,
+            proposer_type=LocalGGUFProposer,
         )
-        proposer.model_repository = MODEL_ID
-        proposer.model_revision = str(args.model_revision)
-        proposer.requested_model_filename = MODEL_FILENAME
-        proposer.requested_model_path = exp7471.live_support._absolute_model_path(args.model_path)
         if not proposer._ensure_server():
             raise RuntimeError("owned native CUDA llama-server failed to start")
         server_pid = getattr(proposer._proc, "pid", None)
@@ -1466,7 +1493,7 @@ def run_live_session(args: argparse.Namespace) -> int:  # pragma: no cover - own
             "embedded_tokenizer": True,
             "use_chat_template": True,
             "mtp": False,
-            "max_new_tokens": MAX_NEW_TOKENS,
+            "max_new_tokens": effective_induction_max_tokens,
             "request_limit_per_episode": REQUEST_LIMIT,
         }
         session["model_loaded"] = True

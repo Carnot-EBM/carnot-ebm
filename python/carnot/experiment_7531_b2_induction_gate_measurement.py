@@ -1,18 +1,21 @@
-"""Run B2 induction-timing telemetry on the frozen E6 panel.
+"""Run corrected B2 induction-timing telemetry on the frozen E6 panel.
 
 The live child reuses Experiment 7491's qualified E3 path and composes its
-exclusive timer with REQ-ARC-WMTE-7530 telemetry. No gate changes behavior.
+exclusive timer with REQ-ARC-WMTE-7530 telemetry. REQ-ARC-WMTE-10008 raises
+only this harness's induction completion budget. No gate changes behavior.
 """
 
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from copy import deepcopy
 from datetime import UTC, datetime
 import importlib.util
 import os
 from pathlib import Path
+import statistics
 import time
 from types import ModuleType
 from typing import Any
@@ -43,11 +46,18 @@ evaluator = _load_evaluator()
 JsonDict = dict[str, Any]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RUN_DATE = "20260922"
-EXPERIMENT_ID = 7531
-EXPERIMENT_NAME = "exp7531-b2-induction-gate-measurement"
-TASK_ID = "experiment_7531_b2_induction_gate_measurement"
-SCHEMA = "carnot.arc.b2_induction_gate_measurement.v1"
+EXPERIMENT_ID = 10008
+EXPERIMENT_NAME = "exp10008-b2-induction-gate-measurement-v2"
+TASK_ID = "experiment_10008_b2_induction_gate_measurement_v2"
+SCHEMA = "carnot.arc.b2_induction_gate_measurement.v2"
 TOTAL_LIVE_LIMIT_S = 3 * 60 * 60.0
+INDUCTION_MAX_TOKENS = 4096
+SUPERSEDES_PATH = Path("results/experiment_7531_b2_induction_gate_measurement.json")
+SUPERSEDED_REASON = (
+    "Experiment 7531 inherited MAX_NEW_TOKENS = 256 from Experiment 7471's "
+    "seam-timing harness. All 60 fired attempts hit that cap, and 256 tokens "
+    "cannot contain a complete Python world-model program."
+)
 
 PANEL_GAMES = e6.PANEL_GAMES
 EPISODE_SEEDS = (
@@ -66,15 +76,15 @@ EPISODE_SEEDS = (
 SPEC_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
 FROZEN_PANEL_PATH = e6.FROZEN_PANEL_PATH
 STAGE1_PATH = Path("results/experiment_7530_b2_induction_gate_telemetry.json")
-RESULT_PATH = Path("results/experiment_7531_b2_induction_gate_measurement.json")
-RAW_DIR = Path("results/raw/experiment_7531_b2_induction_gate_measurement")
+RESULT_PATH = Path("results/experiment_10008_b2_induction_gate_measurement_v2.json")
+RAW_DIR = Path("results/raw/experiment_10008_b2_induction_gate_measurement_v2")
 SCHEDULE_PATH = RAW_DIR / "frozen_schedule.json"
 SESSION_PATH = RAW_DIR / "live_session.json"
 BOUNDARY_PATH = RAW_DIR / "current_invocation_events.jsonl"
 RUNTIME_EVENT_PATH = RAW_DIR / "runtime_events.jsonl"
 ACTION_PATH = RAW_DIR / "live_action_rows.jsonl"
 TELEMETRY_PATH = RAW_DIR / "induction_gate_telemetry.jsonl"
-CHECKPOINT_PATH = Path("results/checkpoints/experiment_7531_b2_induction_gate_measurement.json")
+CHECKPOINT_PATH = Path("results/checkpoints/experiment_10008_b2_induction_gate_measurement_v2.json")
 MODULE_PATH = Path("python/carnot/experiment_7531_b2_induction_gate_measurement.py")
 WRAPPER_PATH = Path("scripts/experiments/experiment_7531_b2_induction_gate_measurement.py")
 TEST_PATH = Path("tests/python/test_experiment_7531_b2_induction_gate_measurement.py")
@@ -92,7 +102,7 @@ def utc_now() -> str:
 def progress(started: float, step: str, event: str, **details: Any) -> None:
     suffix = " ".join(f"{key}={value}" for key, value in sorted(details.items()))
     print(
-        f"[exp7531] step={step} event={event} elapsed_s={time.monotonic() - started:.3f}"
+        f"[exp10008] step={step} event={event} elapsed_s={time.monotonic() - started:.3f}"
         + (f" {suffix}" if suffix else ""),
         flush=True,
     )
@@ -116,7 +126,7 @@ def build_schedule(frozen: Mapping[str, Any]) -> list[JsonDict]:
                     "action_limit": e6.ACTION_LIMIT,
                     "episode_limit_s": e6.EPISODE_LIMIT_S,
                     "request_limit": e6.REQUEST_LIMIT,
-                    "max_new_tokens_per_call": e6.MAX_NEW_TOKENS,
+                    "max_new_tokens_per_call": INDUCTION_MAX_TOKENS,
                     "adapter_disabled": True,
                     "game_source_read": False,
                     "stored_engines_disabled": True,
@@ -132,6 +142,120 @@ def _cite(path: Path, role: str) -> JsonDict:
         "sha256": e6.sha256_file(REPO_ROOT / path),
         "bytes": (REPO_ROOT / path).stat().st_size,
         "role": role,
+    }
+
+
+def completion_token_distribution(attempts: Sequence[Mapping[str, Any]]) -> JsonDict:
+    """Summarize completion lengths and expose a possible remaining hard cap."""
+
+    values = sorted(
+        int(row["completion_tokens"])
+        for row in attempts
+        if isinstance(row.get("completion_tokens"), int)
+        and not isinstance(row.get("completion_tokens"), bool)
+        and int(row["completion_tokens"]) >= 0
+    )
+    histogram = Counter(values)
+    uniform = bool(values) and len(histogram) == 1
+    return {
+        "count": len(values),
+        "histogram": {str(key): histogram[key] for key in sorted(histogram)},
+        "minimum": min(values) if values else None,
+        "maximum": max(values) if values else None,
+        "mean": statistics.fmean(values) if values else None,
+        "median": statistics.median(values) if values else None,
+        "unique_count": len(histogram),
+        "uniform": uniform,
+        "possible_remaining_hard_cap": uniform and len(values) > 1,
+    }
+
+
+def durable_completion_token_evidence(
+    attempts: Sequence[Mapping[str, Any]], raw_dir: Path
+) -> JsonDict:
+    """Use transport response receipts instead of possibly stale policy fields."""
+
+    response_tokens: list[int] = []
+    response_counts: Counter[str] = Counter()
+    for response_path in sorted(raw_dir.glob("*/requests/*_response.json")):
+        response = e6.load_json(response_path)
+        usage = response.get("usage")
+        completion = usage.get("completion_tokens") if isinstance(usage, Mapping) else None
+        if not isinstance(completion, int) or isinstance(completion, bool):
+            continue
+        response_tokens.append(completion)
+        response_counts[response_path.parents[1].name.replace("__", ":")] += 1
+
+    attempts_by_episode: dict[str, list[Mapping[str, Any]]] = {}
+    for row in attempts:
+        attempts_by_episode.setdefault(str(row.get("episode_id")), []).append(row)
+    rows_without_distinct_response: list[str] = []
+    for episode_id, episode_attempts in attempts_by_episode.items():
+        completed = response_counts[episode_id]
+        rows_without_distinct_response.extend(
+            str(row.get("attempt_id")) for row in episode_attempts[completed:]
+        )
+
+    reported = completion_token_distribution(attempts)
+    durable = completion_token_distribution(
+        [{"completion_tokens": value} for value in response_tokens]
+    )
+    return {
+        "authoritative_source": "durable request response usage receipts",
+        "distribution": durable,
+        "completed_response_count": len(response_tokens),
+        "attempt_row_count": len(attempts),
+        "attempt_rows_with_reported_completion_tokens": reported["count"],
+        "rows_without_distinct_completed_response": rows_without_distinct_response,
+        "per_attempt_reported_distribution": reported,
+        "warning": (
+            "Rows without a distinct completed response can retain the prior proposer "
+            "usage after request-budget exhaustion; they are excluded from the published "
+            "completion-token distribution."
+            if rows_without_distinct_response
+            else None
+        ),
+    }
+
+
+def induction_model_spec(model_spec: Mapping[str, Any]) -> JsonDict:
+    """Return the live B2 model receipt with its explicit induction budget."""
+
+    corrected = deepcopy(dict(model_spec))
+    decoding = corrected.get("decoding")
+    if isinstance(decoding, Mapping):
+        corrected["decoding"] = {**decoding, "max_new_tokens": INDUCTION_MAX_TOKENS}
+    runtime = corrected.get("runtime_settings")
+    if isinstance(runtime, Mapping):
+        corrected["runtime_settings"] = {
+            **runtime,
+            "max_new_tokens_per_call": INDUCTION_MAX_TOKENS,
+        }
+    return corrected
+
+
+def positive_control_diagnostic(attempts: Sequence[Mapping[str, Any]]) -> JsonDict:
+    """Expose whether the analysis-only oracle inputs carry useful variation."""
+
+    attempt_count = len(attempts)
+    planned = sum(row.get("planned") is True for row in attempts)
+    verifier_observed = sum(
+        row.get("verifier_result") not in (None, "not_observed") for row in attempts
+    )
+    progress = sum(row.get("progress_within_window") is True for row in attempts)
+    saturated = attempt_count > 0 and progress == attempt_count
+    return {
+        "attempt_count": attempt_count,
+        "planned_true_count": planned,
+        "verifier_observed_count": verifier_observed,
+        "progress_within_window_true_count": progress,
+        "progress_signal_saturated": saturated,
+        "interpretation": (
+            "The progress proxy is saturated and cannot establish that B2 has no "
+            "positive-control headroom."
+            if saturated
+            else "The oracle inputs contain variation; interpret headroom descriptively."
+        ),
     }
 
 
@@ -262,6 +386,8 @@ def blocked_artifact(
         "schema": SCHEMA,
         "experiment_id": EXPERIMENT_ID,
         "experiment_name": EXPERIMENT_NAME,
+        "supersedes": SUPERSEDES_PATH.as_posix(),
+        "superseded_reason": SUPERSEDED_REASON,
         "run_date": RUN_DATE,
         "status": "blocked_precondition",
         "honest_verdict": f"blocked_{failed_check.get('check', 'precondition')}",
@@ -294,6 +420,13 @@ def blocked_artifact(
         "publication_mode": "blocked",
         "positive_control": {"analysis_only": True, "headroom_exists": None},
         "positive_control_headroom_exists": None,
+        "completion_tokens_distribution": completion_token_distribution([]),
+        "induction_token_budget": {
+            "max_tokens": INDUCTION_MAX_TOKENS,
+            "override_method": ("keyword-only proposer and durable-capture constructor parameters"),
+            "scope": "B2 E3 world-model induction and reinduction proposer only",
+            "experiment_7471_source_constant_changed": False,
+        },
         "per_attempt_rows": [],
         "numeric_gate_quality_claim": False,
         "gate_ready_to_ship": False,
@@ -322,10 +455,13 @@ def terminal_metadata(
     boundary_events: Sequence[Mapping[str, Any]],
 ) -> JsonDict:
     invocation = exp7471._invocation_reduction(boundary_events, child_terminal=True)
+    corrected_model_spec = induction_model_spec(model_spec)
     return {
         "schema": SCHEMA,
         "experiment_id": EXPERIMENT_ID,
         "experiment_name": EXPERIMENT_NAME,
+        "supersedes": SUPERSEDES_PATH.as_posix(),
+        "superseded_reason": SUPERSEDED_REASON,
         "run_date": RUN_DATE,
         "started_at_utc": started_at,
         "ended_at_utc": utc_now(),
@@ -336,8 +472,8 @@ def terminal_metadata(
         "execution_venue_details": deepcopy(dict(session.get("runtime_receipt") or {})),
         "model_invoked": invocation["model_invoked"],
         "invocation_counts": invocation["invocation_counts"],
-        "MODEL_SPECS": [deepcopy(dict(model_spec))],
-        "model_specs": [deepcopy(dict(model_spec))],
+        "MODEL_SPECS": [deepcopy(corrected_model_spec)],
+        "model_specs": [deepcopy(corrected_model_spec)],
         "random_seed": {"episodes": list(EPISODE_SEEDS), "ordering": 7_531},
         "duration_s": max(0.000001, float(duration_s)),
         "preconditions_checked": deepcopy(list(checks)),
@@ -352,6 +488,12 @@ def terminal_metadata(
         "remote_submission": False,
         "submission_kernel_changed": False,
         "flagged_adversarial": False,
+        "induction_token_budget": {
+            "max_tokens": INDUCTION_MAX_TOKENS,
+            "override_method": ("keyword-only proposer and durable-capture constructor parameters"),
+            "scope": "B2 E3 world-model induction and reinduction proposer only",
+            "experiment_7471_source_constant_changed": False,
+        },
     }
 
 
@@ -501,6 +643,25 @@ def run_experiment() -> JsonDict:  # pragma: no cover - host GPU orchestration.
     )
     telemetry_rows = load_telemetry(REPO_ROOT / TELEMETRY_PATH)
     artifact = evaluator.build_measurement(telemetry_rows, metadata=metadata)
+    completion_evidence = durable_completion_token_evidence(
+        artifact["per_attempt_rows"], REPO_ROOT / RAW_DIR
+    )
+    artifact["completion_token_attribution"] = completion_evidence
+    artifact["completion_tokens_distribution"] = completion_evidence["distribution"]
+    artifact["positive_control_diagnostic"] = positive_control_diagnostic(
+        artifact["per_attempt_rows"]
+    )
+    artifact["possible_second_completion_cap"] = artifact["completion_tokens_distribution"][
+        "possible_remaining_hard_cap"
+    ]
+    artifact["completion_cap_interpretation"] = (
+        "Every observed completion has the same length. The 256-token admission bug is "
+        "fixed, but the 4096-token budget is still binding; a further truncation or stop "
+        "condition remains unresolved."
+        if artifact["possible_second_completion_cap"]
+        else "Observed completion lengths vary; no uniform completion cap is visible."
+    )
+    artifact["reproducibility_checksum"] = evaluator.canonical_hash(artifact)
     e6.write_json(REPO_ROOT / RESULT_PATH, artifact)
     progress(
         started,
@@ -521,10 +682,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return e6.parse_args(argv)
 
 
+def run_live_session(args: argparse.Namespace) -> int:
+    """Run only B2 induction generation with the corrected completion budget."""
+
+    return e6.run_live_session(args, induction_max_tokens=INDUCTION_MAX_TOKENS)
+
+
 def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - thin CLI.
     args = parse_args(argv)
     if args.role == "live-session":
-        return e6.run_live_session(args)
+        return run_live_session(args)
     artifact = run_experiment()
     return 0 if str(artifact.get("honest_verdict", "")).startswith(("complete_", "blocked_")) else 1
 

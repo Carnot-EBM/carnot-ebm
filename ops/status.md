@@ -2,6 +2,39 @@
 
 **Last Updated:** 2026-09-22
 
+## 2026-09-22 — Corrected B2 induction-budget measurement remains capped
+REQ-ARC-WMTE-10008 passes 4,096 explicitly to both the B2 induction proposer
+and its durable request-capture admission guard. Both are keyword-only
+constructor seams; historical callers retain 256 and Experiment 7471 is
+unchanged. The failed first rerun is preserved as Experiment 10007: its
+proposer requested 4,096, but the inherited 256-token capture guard rejected
+every request before transport. Experiment 10008 is the valid corrected run
+and supersedes Experiment 7531, whose capped historical artifact now has only
+an additive forward corrigendum.
+The same frozen 12-game panel ran for the three-hour overall budget on physical
+GPU 1 with 18,030 MiB verified owned offload, no adapters, no game-source
+reads, and `solve_provenance=live_agent_self_discovery`. The terminal reducer
+records 11,813 gate opportunities and 35 fired attempts. The 1,000-opportunity
+floor passed; the 100-attempt floor did not, so the result remains feasibility
+only and makes no numeric gate-quality claim. All 33 durable completed response
+receipts report exactly 4,096 completion tokens (min=max=mean=median=4,096;
+one unique value). Two `sp80` second-induction rows retained prior usage after
+request-budget exhaustion and are disclosed but excluded from that transport-
+backed histogram. The uniform result means 4,096 is still binding; the run did
+not produce variable-length plans.
+The analysis-only oracle kept all 35 attempts: planned was false for 35/35,
+the verifier was not observed for 35/35, and later progress was true for 35/35.
+Measured token savings and headroom are zero, but the progress label is again
+saturated, so this does not establish that B2 has no headroom. No gate was
+shipped. Experiment 10008 passes adversarial verification with zero flags.
+This section supersedes the interpretation in the historical 7531 status note
+below; that note is retained rather than rewritten.
+Focused changed-file tests pass 36/36 and the applicable E2E-013 set passes 54/54 with
+pinned `PYTHONPATH` and `--no-cov`. Ruff check, Ruff format, mypy, scoped spec
+coverage, artifact checksum, JSON parsing, and `git diff --check` pass. The
+repository-wide spec audit retains the existing 1,168-test traceability debt;
+neither changed B2 test is in that list. `ops/changelog.md` was not edited.
+
 ## 2026-09-22 — B2 induction-timing telemetry measured feasibility only
 REQ-ARC-WMTE-7530 joins every fired live induction attempt to prompt and
 completion tokens, induction wall time, plan state, verifier outcome, and
