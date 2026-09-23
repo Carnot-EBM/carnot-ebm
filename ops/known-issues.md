@@ -41,6 +41,21 @@ a Kaggle-side check before they ship.
 must carry `repetition_penalty`. That check is cheap and belongs with the fix. Defect 2 needs a
 real vLLM response to test, so it stays prose until the fix lands.
 
+**EVIDENCE UPDATE, 2026-09-23 22:40 UTC (outer loop; append-only).** Defect 2 is no longer
+"size unknown". The outer loop confirmed in source that the scored vLLM launch
+(`arc_executable_world_model.py`, the `vllm.entrypoints.openai.api_server` argv near line 7251)
+passes no `--reasoning-parser`, and that vLLM's default is `reasoning_parser: str = ""`
+(`.venv-vllm-trial/.../vllm/config/reasoning.py:22`). With no parser, the think text stays in
+`content`, and live extraction reads `content` (`extraction_text = final`). In the Experiment
+10010 pilot, 2 of 2 finished think-ON responses (su15, sp80) carry a python fence inside their
+reasoning, because the model restates the prompt's "return one python block" instruction. Scored
+the vLLM way, both engines fail: su15 extracts `...` (raises on 8 of 8 rows, fidelity 0.0), and
+sp80 extracts a prose fragment (syntax error, fidelity 0.0). Scored the llama.cpp way, the same
+responses give 0.071 and 0.958. So on the scored path, think-ON induction may be yielding unusable
+engines in most calls. Two fixes, both cheap: launch vLLM with `--reasoning-parser qwen3`, and
+strip everything up to the last `</think>` before `_extract_python` so extraction does not depend
+on a server flag. Neither is done; both need a Kaggle-side check.
+
 ### NEW 2026-09-02: a document/YAML task-count divergence cost 3 of 4 tasks in milestone 602
 
 **What happened.** `experiment_6874_v602_evidence_substrate_manifest_contract` is CLEAN (not
