@@ -6101,3 +6101,10 @@ Proper-loss recalibration, scoring-rule limits, textual source changes,
 and full-service hardware costs map to separate V661 tests. External
 results remain context. Access failures and retired mechanisms remain
 explicit in `docs/research-notes/v661-method-map.md`.
+
+<!-- EXP7573-V662-METHOD-INGESTION -->
+## 2026-09-23 Exp7573 — V662 methods — INGESTED
+
+Proper-loss, local KAN, structured-decoding, and full-service cost methods map
+to V662 tests. Delayed-feedback theorems, FPGA speed, and semantic success
+remain explicit deferrals. Access failures remain in the V662 method map.

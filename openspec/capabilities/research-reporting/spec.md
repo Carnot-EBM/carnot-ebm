@@ -78383,3 +78383,91 @@ publication gates, scoped validation, cold replay, strict terminal readers,
 and atomic publication. Spec-linked tests cover authority, absence, flags,
 terminal precedence, branch isolation, source hashes, mutation rejection, and
 100 percent changed-module coverage.
+
+## REQ-REPORT-7573: Bind V662 contract and method limits after activation
+
+Exp7573 SHALL select a staged roadmap only when that file exists and declares
+milestone `2026.09.662`. Otherwise, it SHALL select the matching active
+roadmap. A consumed staging filename SHALL NOT count as an input failure. The
+report SHALL compare exactly fourteen ordered tasks, Exp7573 through Exp7586,
+between the selected YAML and the V662 design table. It SHALL compare each full
+ID, title, phase, deliverable, substrate class, and complete conjunctive gate
+list. Private count, order, path, and gate mutations SHALL fail without changing
+either authority. Activation-state controls SHALL cover staged and active
+selection.
+
+The report SHALL authenticate all thirteen V661 dispositions without rewriting
+their producer bytes. Exp7561 SHALL retain its strict row-lint failure. Exp7567
+SHALL retain its descriptive source null. Exp7568 SHALL remain a pre-gate
+absence. Exp7570 SHALL retain its flagged pre-inference failure. Exp7571 SHALL
+remain board-only. The report SHALL record that the completed archive ends at
+V660 during planning. It SHALL not invent V661 archive history.
+
+The report SHALL map three to five primary V662 method sections to applicable
+tests or explicit deferrals. It SHALL cover proper-loss recalibration, local
+KAN learning, structured-decoding semantics, and FPGA-ASIC full-service cost
+accounting. It SHALL preserve Semantic Scholar errors and OpenReview challenge
+receipts. External findings SHALL remain method context, not Carnot results.
+
+The report SHALL perform aggregation only. It SHALL declare `MODEL_SPECS=[]`
+and `model_specs=[]`, no current model invocation, and zero current load,
+forward, generation, and token counts. Actual and planned substrate class SHALL
+remain separate. It SHALL emit one comparison row per authority task and field
+with raw operands, direction, seed, censoring, and provenance. It SHALL keep
+validity, readiness, and scientific benefit gates separate. A valid advisory
+contract SHALL use a complete terminal verdict without claiming benefit.
+
+The implementation SHALL freeze an affected-file manifest. It SHALL prove
+imports resolve below this worktree and create every private pytest base
+directory before its subprocess. It SHALL run scoped pytest without ambient
+addopts or coverage, separate 100 percent changed-module coverage with a
+command-local coverage file, scoped Ruff check and format, changed-module mypy,
+and scoped specification coverage. It SHALL run the unchanged roadmap schema,
+prior-failure, exclusion, gate, harness-fit, ARC-floor, overdue-priority, and
+publication G1-G4 checks against the selected authority.
+
+The declared entrypoint and a fresh process SHALL replay the capability. The
+fresh process SHALL exercise predict, release, update, persist, and reload as
+an advisory lifecycle control. An independent reduction,
+`scripts/adversarial_verify.py`, and strict
+`scripts/verdict_row_consistency_lint.py` SHALL accept the exact candidate
+before atomic publication. This read-only reporting work has no numbered
+runtime E2E. The active roadmap SHALL remain unchanged.
+
+### SCENARIO-REPORT-7573-AUTHORITY: Both activation states fail closed
+
+**Given** either a matching staged V662 roadmap or its matching active successor
+**When** Exp7573 resolves authority and compares it with the V662 design table
+**Then** all fourteen ordered task rows and conjunctive gates agree
+**And** private count, order, path, and gate mutations are rejected
+**And** consumed staging bytes are not required after activation.
+
+### SCENARIO-REPORT-7573-CUSTODY: V661 dispositions stay literal
+
+**Given** twelve V661 producer artifacts and one pre-gate disposition
+**When** Exp7573 authenticates all thirteen rows
+**Then** the descriptive null, strict failure, pre-gate absence, flagged failure,
+and board-only result keep their original meanings
+**And** the archive lag remains explicit instead of becoming invented history.
+
+### SCENARIO-REPORT-7573-METHODS: Four method families keep claim limits
+
+**Given** the dated V662 primary review and secondary access failures
+**When** Exp7573 writes the method map and studying marker
+**Then** each method names an applicable test or explicit deferral
+**And** Semantic Scholar errors and OpenReview challenges stay visible
+**And** no external efficiency or accuracy claim becomes local evidence.
+
+### SCENARIO-REPORT-7573-VALIDATION: Exact readers control publication
+
+**Given** a frozen affected-file manifest and terminal candidate
+**When** scoped checks, authority guards, lifecycle replay, independent
+reduction, adversarial verification, and strict row consistency run
+**Then** every required receipt passes before atomic publication
+**And** worktree imports and 100 percent changed-module coverage are proved
+**And** advisory readiness does not gate science or establish benefit.
+
+### Implementation Status (REQ-REPORT-7573)
+
+Planned. Exp7573 implementation and validation evidence will complete this
+status after the requirement-linked tests pass.
