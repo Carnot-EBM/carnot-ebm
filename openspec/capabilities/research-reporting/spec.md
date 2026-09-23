@@ -78122,3 +78122,97 @@ atomic advisory publication. Spec-linked tests cover activation states,
 contract drift, producer absence, source hashes, method limits, blocked input,
 artifact mutations, and command scope. The changed module has 100 percent line
 coverage.
+
+## REQ-REPORT-7569: Audit V661 source decisions and feedback causality
+
+Exp7569 SHALL run as an unconditional aggregation-only audit. It SHALL inventory
+the six roadmap deliverables from Exp7563 through Exp7568 in roadmap order.
+Present producer bytes SHALL retain their exact verdicts, classes, flags,
+readiness scores, and hashes. An absent producer deliverable SHALL resolve only
+to an authentic conductor pre-gate diagnostic. That diagnostic SHALL retain its
+original path, upstream, field, operator, expected value, observed value, and
+literal verdict. Missing external evidence SHALL produce a terminal blocked
+overall class. It SHALL not erase a completed independent branch.
+
+The source branch SHALL authenticate the Exp7565 feature and label sidecars,
+the Exp7566 frozen heads, and the Exp7567 frozen report and rows. It SHALL
+recompute all six arm probabilities from raw features and coefficients. It
+SHALL average the two semantic option orders. It SHALL recompute Brier score,
+log loss, typed actions, realized costs, the strongest tuning comparator, and
+the three registered source-component bootstrap intervals. Probability values
+SHALL use absolute tolerance `1e-8`. Metrics SHALL use absolute tolerance
+`1e-10`. Source components, not arms or option orders, SHALL own inference.
+
+The learning branch SHALL independently reconstruct predict, release, update,
+persist, reload, restart, shuffle, tail, retention, primal-constraint, and
+optimizer-residual evidence when Exp7568 exists. It SHALL not import a producer
+summary or reduction function. When Exp7568 did not run because an external
+pre-gate failed, the audit SHALL retain the exact block and SHALL not invent an
+online state, measurement, or zero effect.
+
+Private mutations SHALL reject a deleted source row, duplicate component,
+wrong option orientation, future-origin feedback, unchanged shuffle, altered
+checkpoint, missing tail, and favorable aggregate that contradicts its rows.
+No corrupted fixture SHALL enter the public result. A valid scientific null MAY
+qualify its branch. Qualification SHALL never promote a producer benefit gate.
+
+`source_claims_qualified_score` and `learning_claims_qualified_score` SHALL be
+bare zero or one. Source qualification SHALL require raw reconstruction and no
+critical flag. Learning qualification SHALL require complete causal replay,
+restart, retention, and numerical checks. `qualified_source_benefit_score` and
+`qualified_learning_benefit_score` SHALL also be bare zero or one. Each benefit
+score SHALL not exceed its matching producer benefit score.
+
+The task SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, no current model
+invocation, zero typed load, forward, and generation counts,
+`inference_substrate_class=aggregation`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and host execution.
+The affected manifest SHALL freeze one test, one changed module, and one thin
+entrypoint. Validation SHALL run focused pytest, 100 percent changed-module
+coverage, scoped Ruff, changed-module mypy, scoped specification coverage, the
+declared entrypoint, cold replay, independent reduction, adversarial
+verification, and strict row consistency before atomic publication. No numbered
+runtime E2E applies to this read-only report.
+
+### SCENARIO-REPORT-7569-INVENTORY: Producer absence keeps exact gate custody
+
+**Given** five present roadmap deliverables and one absent Exp7568 deliverable
+**When** Exp7569 inventories producer and conductor evidence
+**Then** all six ordered dispositions retain their original paths and verdicts
+**And** the Exp7568 block names the exact Exp7561 field and values
+**And** no missing measurement becomes a null or zero effect.
+
+### SCENARIO-REPORT-7569-SOURCE: Raw features control static claims
+
+**Given** sealed test features, frozen coefficients, labels, and source rows
+**When** the independent source reducer rebuilds probabilities and intervals
+**Then** exact counts, actions, hashes, losses, and comparator choice agree
+**And** the source null remains qualified without becoming a benefit.
+
+### SCENARIO-REPORT-7569-LEARNING: External pre-gate failure stays blocked
+
+**Given** an absent Exp7568 producer and its authentic conductor diagnostic
+**When** the learning branch is reduced
+**Then** the branch remains blocked with qualification and benefit scores zero
+**And** a completed source branch remains present and independently qualified.
+
+### SCENARIO-REPORT-7569-MUTATIONS: Eight private corruptions fail closed
+
+**Given** valid compact static and causal fixtures
+**When** each registered source, orientation, chronology, shuffle, restart,
+tail, or aggregate corruption is applied separately
+**Then** every corruption fails its named check
+**And** no corrupted row is retained in the terminal artifact.
+
+### SCENARIO-REPORT-7569-E2E: Exact readers control atomic publication
+
+**Given** a frozen affected manifest and measured terminal candidate
+**When** scoped checks, coverage, entrypoint replay, independent reduction, and
+both strict terminal guards run
+**Then** every required receipt passes before atomic publication
+**And** imports resolve below this worktree
+**And** the result reports zero current model calls.
+
+### Implementation Status (REQ-REPORT-7569)
+
+Planned. Implementation and validation evidence will be recorded by Exp7569.
