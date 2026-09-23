@@ -178,7 +178,7 @@
       "principle": "Do not turn probabilistic energy into source truth."
     }
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "game_source_read": false,
   "gate_check_summary": {
     "all_passed": false,
@@ -1077,5 +1077,23 @@
     }
   ],
   "verdict_class": "disqualified",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial_provenance": {
+    "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-23T17:38:31Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=41.73100653398433 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "inference_substrate_class=blocked_no_run says nothing ran, but honest_verdict='complete_disqualified_required_validation_failure' is not a blocked_* verdict. A blocked class must pair with a blocked verdict."
+    }
+  ]
 }

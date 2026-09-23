@@ -18498,3 +18498,4 @@ code |
 | 2026-09-23 16:13 UTC | Measure held-out source decisions with frozen cali | OK | 103 passed, 1 warning in 10.59s |
 | 2026-09-23 16:15 UTC | Measure fresh delayed recalibration and retained t | GATE_BLOCK | gate-unsat(final): 2 of 11 gate(s) failed; first failure: exp7561-recalibration-prototype.recalibration_ready_score (actual=0 == expected=1) |
 | 2026-09-23 16:56 UTC | Independently audit fresh source decisions and fee | OK | 97 passed, 1 warning in 8.19s |
+| 2026-09-23 17:38 UTC | Measure plan execution and supervisor outcomes on  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 90 passed, 1 warning in 8.88s |
