@@ -2,6 +2,48 @@
 
 **Last Updated:** 2026-09-23
 
+## 2026-09-23 — Experiment 10010 GPU run in progress; scoring leak fixed; rescore required
+- The GPU run started 21:30 UTC on GPU 1 from worktree `.claude/worktrees/wf_166c6939-336-1`
+  (commit 756529e3b5). su15 finished: one call, 75,503 tokens, natural stop at 2,363 s, primary
+  change fidelity 0.071 (codeonly baseline on su15: 0.58). The other 9 windows are running.
+- That commit's scorer leaked answers: the held-out rows are consecutive, and one child process held
+  all of them, so an engine could read the next row's input (its own answer) from memory. A probe
+  engine scored 0.866 against the honest 0.128. Fixed on branch `exp10010-isolation-fix`
+  (2b1742353a, merged here): one new process per row that holds only that row. An independent
+  attacker tried 12 channels; every non-modelling engine scored 0.0. Honest scores are unchanged
+  to 1e-9.
+- **No Experiment 10010 number may be cited until the finished shard is rescored on CPU with this
+  code.** The shard stores each engine's source, so no GPU is needed.
+- The review also found a live-path defect (see `ops/known-issues.md` 2026-09-23): the scored vLLM
+  path silently drops the repetition penalty. Confirmed in source by the outer loop. Not fixed.
+
+## 2026-09-23 — Experiment 10010 harness: review fixes applied; the GPU pilot is still not run
+An adversarial review found that the scorer could be fooled (an engine could read held-out answers
+from memory; an always-equal array compared as correct) and that the 4,800 s timeout was not the
+pre-registered 2,400 s. Both are fixed, with 20+ other findings; see the changelog entry.
+Next: the GPU run. Start command and janitor warning:
+`epics/stories/arc-b2-think-on-induction-pilot.md`, Stage 2. About 4.3 h if every window
+succeeds on its first try; each extra try adds up to 40 minutes (2,400 s).
+Open questions for the operator:
+- The pilot measures llama.cpp Q4_K_M, not the scored vLLM NVFP4 path. It also keeps a repetition
+  penalty that vLLM silently drops (`ops/known-issues.md`, 2026-09-23). Is that acceptable for
+  the pilot, or should it run with the penalty off (`CARNOT_ARC_INDUCE_REPEAT_PENALTY=1.0`,
+  which would need an allowlist change)?
+- Should the engine-only and goal-only fallback of `induce()` be replayed? Still not replayed.
+
+## 2026-09-23 — Experiment 10010 harness built and dry-run verified; the GPU pilot is not run
+The think-ON pilot harness (REQ-ARC-WMTE-10010) is ready. Dry run on the recorded evidence:
+10/10 prompts byte-equal, controls pass (identity 0.0, expert 1.0, baseline 0.12754).
+Next: the GPU run on GPU 1 only. At the median think-ON length (about 62,500 tokens at 40.8
+tokens/s) that is about 4.3 hours if every window succeeds on its first try; each retry adds up
+to 45 minutes:
+`python scripts/experiments/experiment_10010_b2_think_on_pilot.py` (resumable).
+Known limits, recorded in the artifact:
+- The local 131,072-token pool limits each completion to 108,720 tokens. Kaggle does not limit it.
+- The engine-only and goal-only fallback calls of `induce()` are not replayed.
+- The GPU is pinned by UUID in `CUDA_VISIBLE_DEVICES`. This is untested on hardware; the
+  residency gate stops the run if the model lands anywhere but GPU 1.
+
 ## 2026-09-23 — B2 positive control: only 3 of 12 windows can be passed by a correct engine
 A 25-agent positive control checked, per window, whether an engine that sees only the grid can
 pass the live 1.0 held-out gate. Result:

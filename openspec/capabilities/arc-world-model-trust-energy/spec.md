@@ -35647,3 +35647,228 @@ classifier-quality number or a general efficacy claim.
 
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## B2 think-ON induction pilot harness — 2026-09-23
+
+### REQ-ARC-WMTE-10010: Replay live think-ON induction on the pre-registered B2 windows
+
+Experiment 10010 SHALL build a harness for the pilot pre-registered in
+`docs/research-notes/b2-positive-control-2026-09-23.md`, section
+"Pre-registered design for the pending think-ON pilot". The harness SHALL follow
+that design exactly. It SHALL NOT change the windows, masks, row exclusions,
+metrics, controls, or baseline.
+
+Windows. The harness SHALL use exactly ten windows: su15, sp80, ft09, g50t,
+m0r0, dc22, wa30, ka59, sb26, and ar25. It SHALL load each window from the
+positive-control report's `window_file` and `split`. It SHALL cross-check the
+parsed split against `_split_prefix_heldout` and `_proposal_prefix`. It SHALL
+record a sha256 per window file.
+
+Preconditions. The harness SHALL check the cached GGUF, the llama-server binary,
+GPU 1 by UUID with less than 500 MiB used, no other process on GPU 1, the
+positive-control evidence files, and live-default induction environment flags.
+The check SHALL run before any generation. A failed check SHALL write
+`honest_verdict: blocked_<resource>` and SHALL exit without generating.
+
+Prompt fidelity. The harness SHALL build the think-ON prompt with the live
+builder (`LocalGGUFProposer.induce`, captured before any network call) on the
+visible rows. It SHALL compare that prompt with the recorded first-call
+`00_request.json` prompt after the codeonly directive prefix and the one
+pre-opened fence are removed. A mismatch SHALL stop that window with a recorded
+reason. The harness SHALL also assert that no held-out row's next grid or
+transition line appears in the prompt.
+
+Generation (real run only). The harness SHALL call the live
+`LocalGGUFProposer.generate` with think mode as `induce_think_on()` resolves,
+tries 3, max tokens 131072, required `("engine", "is_level_complete")`, and the
+visible rows as the dry-run defect-gate transitions. ~~The per-call wall timeout
+SHALL be 4800 s.~~ (Struck 2026-09-23: the pre-registration fixes 2,400 s. See the
+amendment below.) The server SHALL run on GPU 1 only, with residency proven on
+GPU 1's UUID, liveness proven by a real `/completion`, and teardown by PID. The
+proposer SHALL NOT launch its own server. Sampling seeds SHALL be pinned per
+window and recorded. Per-call tokens, finish reason, wall time, and censoring
+SHALL be recorded.
+
+Scoring. The harness SHALL compute the pre-registered metrics in its own wrapper,
+not from `WorldModelVerifier` graded fields. The primary metric is masked
+symmetric-union change fidelity over held-out changing rows, with a raised row
+scored 0. The guard metric is the no-op hallucination rate, with a raised no-op
+row counted as hallucinated. Secondary metrics are masked exact held-out accuracy
+and the live unmasked exact 1.0 pass, marked meaningful only on su15, sp80, and
+ft09. The wrapper SHALL load a fresh engine module for every row.
+
+Controls. Before any model output is scored, the wrapper SHALL score the
+identity engine (0.0 primary on every window), the expert engine (1.0 primary on
+every window), and the recorded codeonly first shots (mean within 0.01 of the
+0.13 baseline). A failed control SHALL stop the run with a blocked verdict.
+
+Run mechanics. The harness SHALL write one JSONL shard row per finished window
+and SHALL skip finished windows on restart. It SHALL print and flush a progress
+line at every phase boundary, before and after every model call, and at least
+every 60 s during generation. `--dry-run` SHALL run every step except the GPU
+checks and generation, and SHALL score the recorded codeonly first shots as
+stand-in model output.
+
+Artifact. The artifact SHALL carry a terminal-prefixed `honest_verdict`,
+`inference_substrate`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `duration_s`,
+`solve_provenance: development_proxy`, `verifier_is_oracle: false`, the gate
+flags in effect, per-window rows, controls, a comparison to the 0.13 baseline, a
+`false_negative_risk` block, and the sample-size caveat. Tests SHALL write only
+under `tmp_path`.
+
+#### SCENARIO-ARC-WMTE-10010-FIDELITY
+
+- **GIVEN** a recorded codeonly first-call prompt and the same visible rows
+- **WHEN** the live builder renders the think-ON prompt
+- **THEN** it equals the recorded prompt minus the directive and one fence
+- **AND** a changed row stops that window with a recorded mismatch.
+
+#### SCENARIO-ARC-WMTE-10010-LEAK
+
+- **GIVEN** a window with eight held-out rows
+- **WHEN** the leak check reads the built prompt
+- **THEN** no held-out next grid or unexplained held-out transition line appears
+- **AND** a prompt built from all rows fails the check.
+
+#### SCENARIO-ARC-WMTE-10010-SCORING
+
+- **GIVEN** a window, its masks, and its row exclusions
+- **WHEN** the wrapper scores an engine
+- **THEN** identity scores 0.0, a correct engine scores 1.0, and a raised
+  changing row scores 0
+- **AND** a stateful engine gains nothing from the row order.
+
+#### SCENARIO-ARC-WMTE-10010-CONTROLS
+
+- **GIVEN** the identity, expert, and recorded codeonly controls
+- **WHEN** any control misses its pre-registered value
+- **THEN** the run stops with a blocked verdict before any model output
+- **AND** no pilot score is reported.
+
+#### SCENARIO-ARC-WMTE-10010-PRECONDITIONS
+
+- **GIVEN** a missing GGUF, binary, GPU, idle GPU, or evidence file
+- **WHEN** the harness starts
+- **THEN** it writes `blocked_<resource>` and starts no server
+- **AND** `preconditions_checked` names each resource and result.
+
+#### SCENARIO-ARC-WMTE-10010-RESUME
+
+- **GIVEN** a shard with finished windows
+- **WHEN** the harness restarts
+- **THEN** it skips the finished windows
+- **AND** the artifact still reports all ten windows.
+
+Implementation status: harness built and dry-run verified 2026-09-23. The GPU
+pilot run is not started.
+
+#### AMENDMENT 2026-09-23 (adversarial review fixes; append-only)
+
+An adversarial review found two blockers and several majors in the first build.
+The changes below correct the harness. They do not change the pre-registered
+windows, masks, exclusions, metrics, controls, or baseline.
+
+Budget. The per-call timeout SHALL be 2,400 s, the pre-registered live budget.
+The first build used 4,800 s and called it pre-registered; that was wrong, and
+the artifact records the correction. The artifact SHALL also report a live-ladder
+rescore. At each measured scored-card rate (52.2 tok/s llama.cpp k=1, 40.0 tok/s
+vLLM k=8), a window SHALL score 0 if any call hit the local token cap or ran past
+2,400 s times that rate. The as-run primary stays the pre-registered result.
+
+Scoring isolation. Each engine SHALL run in a child process that receives only
+the held-out inputs (grid, action, and a copy of data), never an answer. The
+child SHALL fork once per row, reseed `random` and numpy, run in an empty
+temporary directory, and install an audit hook. The hook SHALL refuse reads
+outside the Python install, all write opens, and process, socket, and ctypes
+use. Only integer grids SHALL be compared; an object or structured array SHALL
+score the row 0. A comparison that raises SHALL score the row 0.
+
+Controls. The expert SHALL also have a no-op hallucination rate of 0 and a
+masked exact accuracy of 1.0. Identity SHALL have a no-op hallucination rate
+of 0. Each window's codeonly mean SHALL match the evidence file within 0.0005.
+
+Environment. The check SHALL compare only the kernel's llama.cpp-shaped induce
+settings and SHALL declare `backend_parity: false`: the scored path runs vLLM
+with NVFP4 weights, which this card cannot run. A real run SHALL refuse any
+`CARNOT_ARC_*` flag outside the kernel's own set (fail closed).
+
+Run integrity. A transport failure, or a timeout followed by an unhealthy
+server, SHALL NOT be stored as a finished window; it SHALL give a `partial_`
+verdict, and a restart SHALL retry the window. A prompt-fidelity stop SHALL NOT
+be stored in the shard, and SHALL give a `blocked_` verdict for the run. The
+shard SHALL be read before the GPU checks, and a run with no pending window
+SHALL skip them. A `blocked_` rerun SHALL NOT overwrite an artifact that holds
+rows. A resumed row SHALL be rescored by the current code and refused if its
+window hash changed. The substrate class SHALL be declared from the rows. The
+real run SHALL refuse to start under a process name the host janitor kills,
+SHALL tear the server down on SIGTERM or SIGHUP, and SHALL give the server a
+parent-death signal and a PID file.
+
+#### SCENARIO-ARC-WMTE-10010-ISOLATION
+
+- **GIVEN** an engine that walks the call stack, scans the heap, reads the
+  window file, or returns an always-equal object array
+- **WHEN** the wrapper scores it
+- **THEN** it scores 0, because no answer is in its process and only integer
+  grids are compared
+- **AND** a stateful engine (module or builtins state) scores 0 under the fork
+  per row, but 0.5 in one shared interpreter.
+
+#### SCENARIO-ARC-WMTE-10010-LADDER
+
+- **GIVEN** per-call token counts and stop types
+- **WHEN** the live-ladder rescore runs at a scored-card rate
+- **THEN** a local cap hit or a draw longer than 2,400 s times that rate scores 0
+- **AND** the ladder never raises a window's score.
+
+#### SCENARIO-ARC-WMTE-10010-INFRA
+
+- **GIVEN** a server that resets the connection on the last window
+- **WHEN** the run ends
+- **THEN** the verdict is `partial_` and the window is not in the shard
+- **AND** a restart generates and scores that window.
+
+Implementation status (amendment): implemented and tested 2026-09-23. The GPU
+pilot run is still not started.
+
+#### AMENDMENT 2 2026-09-23 (scoring isolation leak; append-only)
+
+A final check found that the first amendment's isolation still leaked answers.
+The child process got the inputs of ALL held-out rows in one job. Each forked row
+inherited that job. The held-out rows are consecutive transitions, so row k+1's
+input grid is row k's answer. An engine that walked the call stack to the next
+row scored a mean primary of 0.866 on the ten real windows. A heap-scanning engine
+scored 0.752. The honest codeonly baseline is 0.128. The first amendment's
+sentence "Each engine SHALL run in a child process that receives only the held-out
+inputs" is superseded by the rule below. The windows, masks, exclusions, metrics,
+controls, and baseline do not change.
+
+Row isolation. Each held-out row SHALL run in its own new interpreter, started by
+exec, not fork, so it inherits no parent frame or heap. That process SHALL receive
+the engine source and exactly one row's grid, action, and a copy of data. It SHALL
+refuse a job with any other key. No other row, and no answer, SHALL exist in it.
+The per-row seed stays `SEED_BASE` plus the row's position. The audit hook, the
+integer-grid check, the per-call timer, the memory limit, and a parent-side kill
+deadline and output-size cap all stay.
+
+Provenance. Each scored row SHALL record `scored_by_engine_child_sha256` next to
+`scored_by_module_sha256`, so a change to the child alone shows per row.
+
+Equivalence. On honest engines (identity, experts, and the 30 recorded codeonly
+first shots) the new scoring gave the same value for all 2,321 compared score
+values (50 engine scorings, per-row entries included), within 1e-9, as the
+fork-based scoring.
+
+#### SCENARIO-ARC-WMTE-10010-ROW-ISOLATION
+
+- **GIVEN** engines that take the next row's grid from the stack, from the heap,
+  or by their row position
+- **WHEN** the wrapper scores them on a synthetic window and on the ten real windows
+- **THEN** each scores no better than identity, which is 0.0
+- **AND** a census engine finds exactly one row in its process, and an honest
+  engine scores the same as in one shared process.
+
+Implementation status (amendment 2): implemented and tested 2026-09-23 on branch
+`exp10010-isolation-fix`. A shard from a run on the earlier code can be rescored
+on CPU with the fixed code, because each shard row stores its engine source.

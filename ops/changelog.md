@@ -1,5 +1,60 @@
 # Carnot — Changelog
 
+## 2026-09-23 — Experiment 10010 scoring isolation fix merged (agent-initiated during the pilot)
+
+- The final check of the pilot harness found a scoring leak: one child process held all held-out
+  rows, and consecutive rows chain (row k+1's input is row k's answer). A stack-walking probe
+  scored 0.866 against the honest 0.128.
+- Workflow `wf_2303876f-513`: a fixer scored each row in a new process (exec, not fork; closed
+  descriptors; minimal environment; one row per job; the child refuses multi-row jobs), added the
+  three oracles and a census engine as regression tests, and proved them RED against the old code.
+  An independent attacker tried 12 channels (frames, gc, parent memory, descriptors, environment,
+  disk, imports, RNG state); all scored 0.0. Controls unchanged; honest scores equal to 1e-9.
+- Merged the harness (REQ-ARC-WMTE-10010) and the fix into main from branch
+  `exp10010-isolation-fix` by patch. The GPU run keeps using its own worktree and the old scorer;
+  its shard must be rescored with this code before any number is cited.
+- Outer loop confirmed the reviewer's live-path finding in source: calls send `repeat_penalty`, and
+  vLLM reads only `repetition_penalty` and ignores unknown fields. Not fixed.
+
+## 2026-09-23 — Experiment 10010 harness: adversarial review fixes (outer-loop workflow task)
+
+- An independent review of the harness found 2 blockers, 9 majors, and 12 minors. All are
+  fixed or recorded; none changes the pre-registered windows, masks, metrics, or baseline.
+- Blockers: engines ran in the scorer's own process and could read held-out answers from the
+  stack or heap, and an always-equal object array compared as correct. Both scored 1.0 on all
+  ten windows. Engines now run in `python/carnot/experiment_10010_engine_child.py`, a child
+  process that gets only held-out inputs, forks per row, and refuses reads outside the Python
+  install. Only integer grids are compared.
+- The per-call timeout is now the pre-registered 2,400 s. The first build used 4,800 s and
+  called it pre-registered; it was not, and the artifact records the correction. A live-ladder
+  rescore shows what the scored path's timeout would do at 52.2 and 40.0 tok/s.
+- The environment check declares `backend_parity: false` (the scored path is vLLM with NVFP4)
+  and a real run refuses unlisted `CARNOT_ARC_*` flags. Seven deviations were added to the
+  artifact, including two live-path defects now in `ops/known-issues.md`.
+- Run integrity: server failures are retried instead of scored 0; stopped windows block the run;
+  a blocked rerun cannot overwrite a finished artifact; resumed rows are rescored; the substrate
+  class comes from the rows; SIGTERM tears the server down; the server gets a parent-death signal
+  and a PID file; `python3` and `pytest` process names are refused (the host janitor kills them).
+- Tests: 86 pass (was 47). 28 mutations of the new guards each turned a test red. Dry run on the
+  real evidence: 10/10 prompts byte-equal, controls pass, baseline 0.12754, stand-in mean 0.087,
+  unchanged by the isolation. No GPU run.
+
+## 2026-09-23 — Experiment 10010 harness: B2 think-ON induction pilot (outer-loop workflow task)
+
+- Added `python/carnot/experiment_10010_b2_think_on_pilot.py`, the entry script
+  `scripts/experiments/experiment_10010_b2_think_on_pilot.py`, 47 tests in
+  `tests/python/test_experiment_10010_b2_think_on_pilot.py`, and REQ-ARC-WMTE-10010 in
+  `openspec/capabilities/arc-world-model-trust-energy/spec.md`.
+- The harness follows the pre-registration in `docs/research-notes/b2-positive-control-2026-09-23.md`.
+  It captures the live `induce()` call before any request, checks the prompt byte-for-byte against
+  the recorded first call, checks for held-out leaks, and scores in its own wrapper (raised row =
+  0, fresh engine module per row). Controls run before any model output and fail closed.
+- Dry run on the real evidence: 10/10 prompts byte-equal, identity 0.0 and expert 1.0 on all ten
+  windows, codeonly baseline reproduced at 0.12754 (pre-registered 0.13).
+- Six mutation checks (raised-row drop, leak lines ignored, baseline and expert controls forced
+  to pass, engine cached across rows, GPU memory check removed) each turned a test red.
+- No GPU run. No server started. The pilot itself is not run.
+
 ## 2026-09-23 — B2 positive control (operator request: option 1, "positive control")
 
 - Ran workflow `wf_1b23ef1e-379`: for each of the 12 B2 windows, a control agent wrote a grid-only

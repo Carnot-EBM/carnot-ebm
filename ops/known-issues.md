@@ -4,6 +4,43 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-23: the scored vLLM path drops the induce repetition penalty and can read draft code from the reasoning
+
+**Found by** the adversarial review of the Experiment 10010 harness (REQ-ARC-WMTE-10010). This is
+a live-path defect. The harness only records it as a deviation; it does not fix the live path.
+
+**Defect 1: the repetition penalty never reaches vLLM.** Every think-ON induce call goes through
+`LocalGGUFProposer._chat_complete_request`
+(`python/carnot/agentic/arc_executable_world_model.py`, about line 6801). It sends
+`repeat_penalty` (1.1) and `repeat_last_n` (256). Those are llama.cpp field names. vLLM reads
+only `repetition_penalty`, and its request model accepts unknown fields, so it drops both with
+no error and uses 1.0. Checked in the trial venv, vLLM 0.29.0:
+
+- `vllm/entrypoints/serve/engine/protocol.py:24` sets `model_config = ConfigDict(extra="allow")`.
+- `vllm/entrypoints/openai/chat_completion/protocol.py:268` declares `repetition_penalty`.
+- The same file's defaults include `"repetition_penalty": 1.0` and `"min_p": 0.0`.
+
+The Kaggle kernel attaches the NVFP4 safetensors dataset, so the scored run uses vLLM
+(`scripts/kaggle/submission_kernel/main.py:297`). The penalty was wired because repetition loops
+were the dominant induce failure (REQ-ARC-FCP-5699-41: `missing_return` 13 to 2, cap hits 20/36
+to 2/36). The scored agent therefore runs without the fix that was measured to matter.
+`min_p` also differs: 0.05 on llama-server (its default) and 0.0 on vLLM.
+
+**Defect 2: no reasoning parser on the vLLM server.** The vLLM launch argv has no
+`--reasoning-parser` (vLLM default `""`). So `content` holds the reasoning, then `</think>`,
+then the answer. `_extract_python` takes the FIRST python block, which can be a draft the model
+wrote while thinking. llama-server splits the reasoning out, so local runs never see this. Size
+unknown: 0 of 19 local Qwen3.8 reasoning traces in experiment 7234 held a python fence.
+
+**Fix (not done here).** Send `repetition_penalty` (and `min_p` if wanted) when
+`_vllm_backend_active()`, in both `_chat_complete_request` and `_vllm_raw_completion`. Launch
+vLLM with `--reasoning-parser qwen3` and confirm the answer channel on a real response. Both need
+a Kaggle-side check before they ship.
+
+**Check or prose.** A unit test can pin defect 1: with the vLLM backend active, the chat payload
+must carry `repetition_penalty`. That check is cheap and belongs with the fix. Defect 2 needs a
+real vLLM response to test, so it stays prose until the fix lands.
+
 ### NEW 2026-09-02: a document/YAML task-count divergence cost 3 of 4 tasks in milestone 602
 
 **What happened.** `experiment_6874_v602_evidence_substrate_manifest_contract` is CLEAN (not

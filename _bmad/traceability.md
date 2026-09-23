@@ -1,6 +1,15 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-22
+**Last Updated:** 2026-09-23
+**Operational Note:** 2026-09-23 (review fixes) REQ-ARC-WMTE-10010 now also maps to
+`python/carnot/experiment_10010_engine_child.py` (isolated engine scoring). 86 tests; new
+scenarios ISOLATION, LADDER, and INFRA. Status: built, review fixes applied, GPU run not started.
+
+**Operational Note:** 2026-09-23 REQ-ARC-WMTE-10010 maps the B2 think-ON induction
+pilot harness to `python/carnot/experiment_10010_b2_think_on_pilot.py`, the entry
+script `scripts/experiments/experiment_10010_b2_think_on_pilot.py`, and 47 mocked
+tests in `tests/python/test_experiment_10010_b2_think_on_pilot.py`. Status: built
+and dry-run verified on the recorded evidence. The GPU pilot run is not started.
 **Operational Note:** 2026-09-22 REQ-ARC-WMTE-10008 maps the corrected B2
 induction budget to the keyword-only live-session parameter in
 `python/carnot/experiment_7491_e6_timed_live_profile.py`, the per-instance
