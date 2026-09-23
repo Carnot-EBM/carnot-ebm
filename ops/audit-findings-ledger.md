@@ -191,3 +191,6 @@ of truth, not this line.)
 | 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_has_offline_auroc_metric | SILENT_NON_FIRING | OPEN | |
 | 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key | SILENT_NON_FIRING | OPEN | |
 | 2026-09-22 | qa_layer_authenticity_audit | adversarial_verify.py::_goal_energy_claim_text | SILENT_NON_FIRING | OPEN | |
+| 2026-09-23 | experiment_claim_audit | experiment_7534_v659_count_memory.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_goal_energy_generation_win | SILENT_NON_FIRING | OPEN | |
+| 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_text | SILENT_NON_FIRING | OPEN | |

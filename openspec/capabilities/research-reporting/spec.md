@@ -77622,3 +77622,42 @@ entrypoint replay, cold reduction and both strict guards run
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7532 and SCENARIO-REPORT-7532-* | Planned: V659 authority contract, V658 and B2 custody, bounded method ingestion, and thin entrypoint. | Planned spec-linked tests, 100 percent changed-module coverage, scoped checks, cold replay, independent reduction, and strict terminal readers. |
+
+## REQ-REPORT-V660-PLAN: Complete and resource-aware next research contract
+
+The planning package SHALL stage `2026.09.660` in
+`research-roadmap-next.yaml` and replace
+`openspec/change-proposals/research-roadmap-vNEXT.md` with a matching design.
+Both authorities SHALL describe exactly fourteen tasks, exp7546 through
+exp7559, with identical ordered IDs, titles, phases, deliverables, substrate
+classes and structured gates. V659's incomplete design SHALL remain available
+byte for byte in `research-roadmap-v659-preserved-20260922.md`. IDs 7540–7545
+remain reserved historical promises, not completed or newly assigned tasks.
+
+The design SHALL preserve V659's eight actual task dispositions, the invalid
+contract artifact, the qualified tool protocol and count prototype, and the
+GPU admission block. It SHALL include an independent CPU continuous-learning
+branch, a calibrated energy decision experiment, conditional Qwen3.8-27B
+source collection, ARC generalization evidence and board continuity. New
+literature SHALL be recorded before experiment design. Cached, constructed,
+current model and external in-flight evidence SHALL remain distinct.
+
+Every prompt SHALL require bounded file writes, flushed phase/operation
+progress and loop heartbeats, correct inference substrate, principle-annotated
+artifact fields, scoped validation and applicable E2E checks. Gates SHALL
+refer to prior tasks in this roadmap and exact declared artifact fields.
+External absence SHALL be blocked, not retryable partial. The planning work
+SHALL NOT activate the roadmap, alter the active YAML or conductor, or push.
+
+### SCENARIO-REPORT-V660-PLAN: Reject incomplete authorities before activation
+
+Given the staged pair, compare all fourteen public task rows and validate the
+schema, prior failures, exclusions, gates, ARC floor, harness fit and overdue
+priorities. A private copy with a missing/reordered task, changed title/path,
+wrong substrate or misspelled gate field SHALL fail the comparison. Planning
+validation SHALL record real outcomes without running proposed experiments.
+
+### Implementation Status (REQ-REPORT-V660-PLAN)
+
+Planning package authored; validation receipt and final status are appended
+by this planning task. No new experimental implementation is claimed.

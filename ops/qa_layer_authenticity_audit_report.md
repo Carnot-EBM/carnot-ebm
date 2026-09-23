@@ -21,16 +21,20 @@ Scanned 4 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): 
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key` — results/experiment_4633_integration_gate.json`: `"live_solve_rate_delta_vs_bare": 0.0`. This real field is a solve-rate delta against a bare control, but the function returns false.
-- `adversarial_verify.py::_goal_energy_claim_text` — honest_verdict = {"principle": "Terminal verdict; blocked or null outcomes must be explicit.", "value": "success: goal_energy_live_generation_first_win_up_4"}
+- `adversarial_verify.py::_claims_goal_energy_generation_win` — json { "game": "ar25", "headline": "energy-driven generation win: graded goal-energy raised live first-win", "honest_verdict": { "principle": "Terminal verdict; blocked or null outcomes must be explicit.", "value": "success: goal_energy_live_generation_first_win_up_4" }, "solve_rate_delta": 0.08 } ``` The bare verdict is warned, but this valid principle-annotated form is silently missed because wr
+- `adversarial_verify.py::_claim_text` — json { "game": "lp85", "summary": { "principle": "Concise tags describing the live claim.", "value": ["value", "routing", "live", "first_win"] }, "first_win_rate_delta": 0.2 } ``` After wrapper normalization, the helper produces `['value', 'routing', 'live', 'first_win']`. The punctuation prevents the real value-routing context recognizer from seeing `value routing`; therefore the positive live de
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_goal_energy_claim_text` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_goal_energy_generation_win` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claim_text` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key
+## adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence
+
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
+
+## adversarial_verify.py::_claims_goal_energy_generation_win
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -38,69 +42,48 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-The name `_is_intrinsic_reward_downstream_delta_key` claims to recognize keys denoting intrinsic-reward downstream deltas.
+The docstring claims: `True when an ARC headline claims goal-energy drove live generation.`
 
 ## FINDINGS
-1. L5134-L5351 — The hardcoded concept list contains only `"solve_rate_delta"`, `"state_coverage_delta"`, and `"first_win_rate_delta"`. `kl == wanted or kl.endswith(f"_{wanted}")` silently rejects real comparison-qualified variants such as live_solve_rate_delta_vs_bare because the recognized token is not terminal.
-2. L5350 — The suffix boundary prevents a pure inside-word collision, but permits arbitrary semantic prefixes. Forecast, threshold, or negated fields ending in a listed token are falsely classified as measured downstream evidence.
-3. The implementation is simultaneously narrower and broader than its name: it misses genuine delta naming variants while accepting non-measurement fields based solely on their suffix.
-4. No dictionary-field read occurs here. `kl = str(key).lower()` coerces non-string inputs, but artifact object keys are strings; this function alone does not demonstrate a principle-wrapper extraction bug.
-5. The entire recognizer is untested. Mutation-testing the dedicated 10-test suite with each list member removed—and then with the entire whitelist empty—left all 10 tests green. The named downstream-metric fixture exits through claim rejection before this helper affects the result.
-6. There are no numeric thresholds, free-text negation scans, absolute paths, writes, tracked-state side effects, duration measurements, or pre-work metrics in this function. Its unrecognized default is false, which the caller treats as missing evidence rather than permission to skip, so class F’s unsafe pass-through shape is absent.
+1. No direct field read occurs in this body; `text = _goal_energy_claim_text(d)` delegates extraction. That helper stringifies selected fields instead of unwrapping principle-annotated values, while the evidence helper expects bare numbers and booleans; wrapped values, lists, and None therefore contaminate text or silently fail evidence checks.
+
+2. Every marker check uses unbounded `marker in text`. `_GOAL_ENERGY_CONTEXT_MARKERS`, `_GOAL_ENERGY_GENERATION_MARKERS`, and `_GOAL_ENERGY_WIN_MARKERS` consequently match substrings inside unrelated longer words; the concrete false positive below triggers three such collisions.
+
+3. `_GOAL_ENERGY_DIAGNOSTIC_OR_NULL_MARKERS` is a context-blind global veto. A null, blocked, unchanged, or regressed token in wrapper metadata or an unrelated clause forces `return False`, even when another clause explicitly reports the goal-energy win.
+
+4. Positive matching is also context-blind: a win token attributed to the baseline can satisfy `_GOAL_ENERGY_WIN_MARKERS`. The code never establishes that goal energy—not the baseline, control, or another metric—is the grammatical subject of the win.
+
+5. There is no numeric threshold in this body. The delegated evidence check uses strict positivity, so equality correctly does not count as a win; no off-by-one defect was found there.
+
+6. The implementation does not match the docstring. It is narrower because `return _has_positive_goal_energy_baseline_win_evidence(d)` requires evidence despite claiming merely to recognize a headline; broader because extraction scans several fields; and different because its generation vocabulary permits live, search, or rate terminology without independently requiring both live execution and generation.
+
+7. The hardcoded concepts are incomplete: `_GOAL_ENERGY_CONTEXT_MARKERS` omits project vocabulary such as energy_as_fitness and energy_fitness; `_GOAL_ENERGY_GENERATION_MARKERS` omits rollout, proposal, and sampling terminology; `_GOAL_ENERGY_WIN_MARKERS` omits outperformed, increased, and gain; `_GOAL_ENERGY_DIAGNOSTIC_OR_NULL_MARKERS` omits failed, worse, and did_not_win. The delegated claim-field list also omits interpretation, while the evidence vocabulary omits real shapes such as winner-generated counts and nested or wrapped metrics.
+
+8. The entire `if any(marker in text for marker in _GOAL_ENERGY_DIAGNOSTIC_OR_NULL_MARKERS):` branch is deletable with the dedicated suite still green: all 11 tests passed after replacing that tuple with an empty tuple. The named diagnostic fixture is double-covered by the final evidence gate because it contains no positive baseline evidence.
+
+9. The recognizer defaults unsafe. Any unknown spelling reaches `return False`; the caller then emits no warning, making an unrecognized claim indistinguishable from a genuine clean artifact.
+
+10. `_is_arc_artifact(d)` introduces another boundary defect transitively: its classifier accepts any bare string game and performs an unbounded ARC substring search, so non-ARC text containing words such as research can enter this ARC-only recognizer.
+
+11. No hardcoded absolute write target, tracked-state mutation, or prematurely evaluated measurement exists in this function. Its dedicated tests write temporary artifacts through a temporary directory and do not overwrite the committed fixture.
 
 ## COUNTEREXAMPLE
 ```json
 {
   "game": "ar25",
-  "headline": "curiosity exploration win from learning-progress bonus",
-  "honest_verdict": "success: dense_curiosity_exploration_win_intrinsic_reward_up",
-  "intrinsic_bonus_delta": 0.37,
-  "expected_solve_rate_delta": 0.10
+  "headline": "Degraded goal metrics in the research window; baseline wins.",
+  "honest_verdict": "complete: measurement recorded",
+  "solve_rate_delta": 0.08
 }
 ```
-False negative: the expected delta is a forecast, not a measurement, but the key matches and suppresses the overclaim warning.
+
+This is falsely classified as a goal-energy generation win: “graded goal” matches inside “degraded goal,” “search” matches inside “research,” and “win” matches inside “window”; “wins” additionally refers to the baseline, not goal energy. With no ablation field, the caller emits a spurious warning.
 
 ## MISSED INPUT
-`results/experiment_4633_integration_gate.json`: `"live_solve_rate_delta_vs_bare": 0.0`. This real field is a solve-rate delta against a bare control, but the function returns false.
-
-## RECOMMENDATION
-WIDEN_PATTERN_TO_CONCEPT
-
-## RATIONALE
-`kl.endswith(f"_{wanted}")` substitutes spelling for evidence semantics. `_INTRINSIC_REWARD_DOWNSTREAM_DELTA_KEYS` omits real corpus vocabulary while accepting forecast or threshold fields that merely share a suffix. The dedicated regression suite does not exercise the recognizer at all, so this failure is silent.
-
-
-## adversarial_verify.py::_has_measured_intrinsic_reward_downstream_delta
-
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## adversarial_verify.py::_has_rising_intrinsic_reward_magnitude
-
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## adversarial_verify.py::_goal_energy_claim_text
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The name `_goal_energy_claim_text` claims to extract normalized goal-energy claim text from an artifact.
-
-## FINDINGS
-1. `str(d.get(key, ""))` does not unwrap principle-annotated fields. It serializes wrapped dicts and lists as Python representations and converts None to the text “none,” mixing metadata with the actual value.
-2. This causes a confirmed silent non-firing: words such as “blocked” or “null” in a wrapper’s principle contaminate the extracted claim text and can suppress an otherwise positive goal-energy claim.
-3. There are no boundary-sensitive matching operations or numeric thresholds in this function itself. Its loss of value-versus-metadata provenance, however, makes downstream substring matching context-blind.
-4. The implementation is both broader and narrower than `_goal_energy_claim_text` claims: it includes every serialized token inside selected containers, while `_GOAL_ENERGY_CLAIM_TEXT_KEYS` excludes real claim-bearing corpus fields such as interpretation.
-5. The hardcoded key list represents fields that may carry headline claims, but the regression suite does not independently enforce any member. Independently deleting honest_verdict, headline, headline_outcome, title, claim, summary, goal_energy_source, or chosen_submitted_config left all 11 goal-energy hardening tests green; the first two are double-covered by each other, and the remaining six are not exercised.
-6. The function has no absolute path, write side effect, permissive recognizer default, or prematurely evaluated measurement. Classes D–G do not apply to this function.
-
-## COUNTEREXAMPLE
-False negative:
 ```json
 {
   "game": "ar25",
+  "headline": "energy-driven generation win: graded goal-energy raised live first-win",
   "honest_verdict": {
     "principle": "Terminal verdict; blocked or null outcomes must be explicit.",
     "value": "success: goal_energy_live_generation_first_win_up_4"
@@ -108,14 +91,72 @@ False negative:
   "solve_rate_delta": 0.08
 }
 ```
-With no ablation evidence, the bare verdict is flagged, but this wrapped form is not because metadata contributes “blocked” and “null” to the claim text.
 
-## MISSED INPUT
-`honest_verdict = {"principle": "Terminal verdict; blocked or null outcomes must be explicit.", "value": "success: goal_energy_live_generation_first_win_up_4"}`
+The bare verdict is warned, but this valid principle-annotated form is silently missed because wrapper metadata contributes the diagnostic veto tokens.
 
 ## RECOMMENDATION
-ADD_FIELD_UNWRAP
+NEEDS_REDESIGN
 
 ## RATIONALE
-`str(d.get(key, ""))` treats metadata and evidence as indistinguishable claim text. Unwrap annotated values explicitly, reject or deliberately normalize unsupported shapes, and add isolated tests for every key in `_GOAL_ENERGY_CLAIM_TEXT_KEYS`.
+`marker in text` is simultaneously porous to accidental substrings and blind to attribution, while delegated field handling lets wrapper metadata suppress genuine claims. Because every failed recognizer branch becomes `return False` and the caller treats that as clean, structured field normalization and relation-aware matching are required rather than another token patch.
+
+
+## adversarial_verify.py::_has_uniform_energy_ablation_evidence
+
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
+
+## adversarial_verify.py::_claim_text
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_claim_text` claims to convert selected artifact fields into normalized lowercase claim text.
+
+## FINDINGS
+1. **Silent non-firing:** `return " ".join(str(d.get(key, "")) for key in keys).lower()` serializes lists with Python punctuation instead of joining their semantic contents. Tokens split across list elements cease to be contiguous, so downstream recognizers silently miss them, as demonstrated in MISSED INPUT.
+2. **Unsafe field extraction:** `str(d.get(key, ""))` does not unwrap principle/value dictionaries, flatten lists, or treat None as absence. It searches dictionary metadata and representation syntax as though they were claims; correctness therefore depends on an unstated normalization precondition, and list values remain broken even after scalar-wrapper unwrapping.
+3. **Boundary corruption:** There is no direct substring matcher in this function, but `" ".join` erases field boundaries. The last word of one field and first word of the next can synthesize a phrase that appeared in neither field, producing the false positive in COUNTEREXAMPLE.
+4. **Negation blindness:** The function produces one undifferentiated text bag. It cannot distinguish an asserted mechanism from prose saying that mechanism was not enabled, avoided, blocked, or merely discussed.
+5. **Silent missing-field default:** `d.get(key, "")` makes a missing requested field indistinguishable from an explicitly empty field. No diagnostic tells callers that claim extraction was incomplete.
+6. **Contract mismatch:** `_claim_text` has no docstring. Its implementation is broader than semantic claim extraction because it includes container metadata and representation syntax, while simultaneously narrower because structured text is not normalized into searchable text.
+7. **Thresholds:** No numeric threshold or off-by-one comparison exists here.
+8. **Pattern-list audit:** This helper contains no hardcoded marker list, prefix, or regex alternation. `keys` is caller-supplied, so omissions from caller field lists cannot be determined from this function.
+9. **Mutation coverage:** There are no individual matcher branches to delete. No direct unit test covering dictionary, list, or None behavior for `_claim_text` was found; naming a supposedly deletable rule without mutation testing would be fabrication.
+10. **Paths and side effects:** The function computes no path, performs no write, and mutates no tracked state.
+11. **Default recognizer behavior:** There is no recognizer chain or terminal no-check return, but the `""` default has the same silent-pass direction for absent fields: downstream callers cannot distinguish missing evidence from a genuine no-match.
+12. **Measurement timing:** The function computes no duration, counter, or other measurement.
+
+## COUNTEREXAMPLE
+```json
+{
+  "game": "lp85",
+  "claim": "This control measured predictive value",
+  "summary": "routing was explicitly not enabled for the live baseline."
+}
+```
+
+Joining the fields invents the contiguous phrase `value routing` across the field boundary and retains `live`. The real value-routing caller consequently emits `value-routing-cost-control-omitted`, falsely treating an explicitly disabled mechanism as an asserted live claim.
+
+## MISSED INPUT
+```json
+{
+  "game": "lp85",
+  "summary": {
+    "principle": "Concise tags describing the live claim.",
+    "value": ["value", "routing", "live", "first_win"]
+  },
+  "first_win_rate_delta": 0.2
+}
+```
+
+After wrapper normalization, the helper produces `['value', 'routing', 'live', 'first_win']`. The punctuation prevents the real value-routing context recognizer from seeing `value routing`; therefore the positive live delta receives no feature-cost or timeout-control flag. This silent non-firing was reproduced through `verify_artifact`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+`str(d.get(key, ""))` is representation serialization, not claim extraction. Normalize supported containers into semantic leaves, preserve field boundaries, exclude annotation metadata, and make missing or unsupported shapes explicit instead of silently returning searchable-looking garbage.
 

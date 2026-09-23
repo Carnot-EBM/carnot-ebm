@@ -12,102 +12,6 @@ evidence the reviewer could not have read -- do NOT act on them.
 | CHECKABLE | 7 |
 | CANNOT_DETERMINE | 1 |
 
-## experiment_7518_source_pilot.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked at the pre-gate layer because the upstream check on `exp7517-source-protocol.source_protocol_ready_score == 1` failed with an observed value of 0.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7525_v658_decision_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The decision audit is blocked from evaluating claims because required upstream science inputs are missing or incomplete.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7526_v658_arc_eligibility.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact reports an honest null where eligibility was observed in shadow mode without applied effect support, failing benefit gates due to zero applied mutations.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7527_v658_arc_opportunities.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The run was blocked before model execution because the `owned_gpu` precondition check failed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7528_v658_service_boundary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The run is blocked at the service boundary due to a missing count-memory module prototype (`python/carnot/experiment_7523_v658_count_memory.py`), with no comparative performance claims made.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7530_b2_induction_gate_telemetry.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
 ## experiment_7529_v658_capstone.json
 
 **CHECKABLE**
@@ -116,7 +20,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked because required upstream v658 science was absent or externally gated (`honest_verdict`: "complete_blocked_required_v658_science_absent_or_externally_gated"), making no comparative claim.
+The capstone experiment is blocked because required upstream V658 science is absent or externally gated.
 
 ## WHAT IS MISSING
 nothing
@@ -132,10 +36,106 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no claim is visible in the truncated artifact
+no claim is visible in the provided, truncated artifact
 
 ## WHAT IS MISSING
-The artifact ends mid-`episode_rows` object, so any final headline/verdict, gate result, and diagnostic fields are missing; visible fields include `"selection_role"`, `"episode_rows"`, `"disposition"`, and `"error"`.
+The complete artifact, including any top-level verdict/headline and `"gate_check_summary"`; the text ends mid-entry inside `"episode_rows"`, which records execution data but no visible claim.
 
 ## THE CHECK A READER CANNOT DO
-Did the complete artifact ultimately claim that a comparative gate passed or that execution was blocked, and what evidence or diagnostic supported that verdict?
+Did the experiment ultimately claim that a comparative gate was met, fail it with a recorded diagnostic, or remain blocked?
+
+## experiment_7532_v659_contract_methods.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task is blocked from contract readiness because the v659 roadmap authorities are incomplete, repository guards failed, and terminal readers failed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7533_v659_tool_protocol.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7534_v659_count_memory.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7535_v659_native_pilot.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked prior to model execution because the `owned_gpu_available` external precondition check failed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7536_fit_capture.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked at conductor pre-gate because upstream dependency exp7535-native-pilot failed two required gates (`native_tool_ready_score` and `fit_capture_feasible_score` both observed as 0 instead of expected 1).
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7537_eval_capture.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the conductor pre-gate because upstream checks in exp7535-native-pilot failed on native_tool_ready_score and eval_capture_feasible_score (observed 0, expected 1).
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none

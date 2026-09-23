@@ -46361,3 +46361,77 @@ Test shard SHA256:
 Connected-component deduplication, prior local exposure and exact GGUF prompt
 length remain execution-time gates. Character counts are not token counts.
 No labels, prediction performance or class balance informed this check.
+
+## 2026-09-22 — V660 planning source review (before experiment design)
+
+This review separates new leads from previously logged methods. Search results
+were checked against the primary pages below. The adaptations are research
+hypotheses, not results. V659's GPU block does not falsify its readout method.
+
+### Promising additions
+
+- **SAFE: contrastive grounding probes**, September 15, 2026,
+  [arXiv 2609.16646](https://arxiv.org/abs/2609.16646),
+  [method text](https://arxiv.org/html/2609.16646v1).
+  The authors compare visual and vision-ablated generation paths to diagnose
+  reliance on language priors. Carnot can test the analogous difference between
+  original, absent and mismatched textual tool evidence using its sealed option
+  readouts. This is a cross-domain hypothesis; the visual results do not prove
+  textual factuality. Keep an original-only control and do not label an absent
+  or mismatched source automatically false. Prioritize a source-dependence
+  ablation in the small calibrated energy head, not a multimodal product.
+- **Verification of the Implicit World Model in a Generative Model via
+  Adversarial Sequences**, February 5, 2026,
+  [arXiv 2602.05903](https://arxiv.org/abs/2602.05903).
+  The authors use valid chess sequences that expose invalid next predictions;
+  extracted board-state probes need not causally determine the prediction.
+  For Carnot, distinguish an induced model's prediction and executed plan from
+  incidental frame movement in ARC telemetry. Test joins and outcomes using
+  runtime-observed sequences; do not import chess results as ARC evidence or
+  read hidden game source. The arXiv page reports ICLR 2026 acceptance.
+
+### Rechecked methods and topic coverage
+
+| Requested topic | Primary source | Decision and limit |
+|---|---|---|
+| EBM reasoning / verification | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4), revised May 25, 2026 | Keep conditional energy normalization explicit. Neither result certifies the truth of arbitrary claims. No generator training is proposed. |
+| Neural constraint satisfaction | [PAL, 2503.19466](https://arxiv.org/abs/2503.19466); [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461) | Exact support and numerical feasibility are distinct from an extracted specification being correct. Retain certified arithmetic tests; defer another solver architecture. |
+| Ising applications in ML | [Ising dynamics / equilibrium propagation, 2606.09112](https://arxiv.org/abs/2606.09112) | Learning dynamics can change convergence. A binary count head has an exact partition function and does not need another MCMC sweep. |
+| Hallucination mitigation | [Beyond Document Grounding, 2607.00895](https://arxiv.org/html/2607.00895v1); SAFE above | Reuse the qualified tool-output release and preserve its injected-error label provenance. Source intervention is an ablation, not a new oracle. |
+| Kolmogorov–Arnold Networks | [KAC, 2503.21076](https://arxiv.org/abs/2503.21076) | KAC uses RBF structure. A compact local-basis head must still beat logistic and unconstrained capacity controls; stability is not presumed. |
+| Energy-guided / constrained generation | [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731); [Thinking Before Constraining, 2601.07525](https://arxiv.org/abs/2601.07525) | Recheck generation limits and reasoning/output boundaries before a live induction claim. No revival of lossy generated-span extraction. |
+| FPGA / thermodynamic sampling | [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985); [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Z1T estimates exclude dense vocabulary readout and data movement in reported ratios. Time serialization, persistence and readout at the whole-service boundary. No local TSU measurement is available. |
+| Continual / online learning | [Optimal Recalibration, 2607.19689](https://arxiv.org/html/2607.19689v1); [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987) | Measure proper-loss improvement and retained decision coverage after delayed updates. A conjugate count learner does not inherit either paper's theorem. |
+
+[Variable Granularity Search, 2505.11730v2](https://arxiv.org/abs/2505.11730v2)
+was rediscovered through Hugging Face and is already logged here. It supports
+measuring verification frequency and complete costs, not copying a published
+speedup into Carnot's ARC loop.
+
+### Secondary-source access record
+
+- **OpenReview:** searched 2026 EBM/reasoning submissions. The indexed
+  [On the Emergence of Reasoning PDF](https://openreview.net/pdf?id=bYkfHTcR1v)
+  describes decision-token energy diagnostics. Direct retrieval returned a
+  browser challenge. Treat it as a lead, not a read and validated method.
+- **Semantic Scholar:** requested citation lists for EBT and ARM–EBM through
+  the Graph API using `ARXIV:2507.02092` and `ARXIV:2512.15605`, with title,
+  year and external IDs. Both requests returned HTTP 429. Site searches
+  returned no usable citation list. This pass cannot establish new citing
+  papers or exhaustive citation coverage; V659's older receipt stays historical.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification),
+  followed [world-model verification](https://huggingface.co/papers/2602.05903)
+  and [verification granularity](https://huggingface.co/papers/2505.11730)
+  to their arXiv sources. Community summaries are discovery aids only.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. No relevant
+  new EBM/constraint/KAN dependency was selected from the returned lists.
+- **Extropic:** checked [writing](https://extropic.ai/writing) and the readable
+  Z1T article. Vendor projections remain separate from measured local results.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  It describes a constraint-enforcement layer but supplies no reproducible
+  training recipe or Carnot-compatible checkpoint on that page.
+
+This review made no model call, hardware modification, vendor contact,
+publication or purchase. Promising method leads above were recorded before
+the V660 task design.
