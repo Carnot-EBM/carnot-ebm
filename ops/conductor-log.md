@@ -18476,3 +18476,8 @@ code |
 | 2026-09-23 02:49 UTC | Qualify bounded source collection and observe chan | OK | 161 passed, 1 warning in 9.05s |
 | 2026-09-23 03:32 UTC | Measure delayed count learning and retained calibr | OK | 98 passed, 1 warning in 9.22s |
 | 2026-09-23 04:21 UTC | Independently test feedback causality and count-le | OK | 98 passed, 1 warning in 36.37s |
+| 2026-09-23 04:23 UTC | Measure source-intervention feasibility after veri | GATE_BLOCK | gate-unsat(final): 2 of 4 gate(s) failed; first failure: exp7548-capture-runner.gpu_capacity_observed_score (actual=0 == expected=1) |
+| 2026-09-23 04:25 UTC | Capture complete tool-source fitting and calibrati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7551-native-pilot, exp7551-native-pilot, exp7551-native-pilot, exp7551-native-pilot) |
+| 2026-09-23 04:25 UTC | Capture sealed tool-source test evidence | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7551-native-pilot, exp7551-native-pilot, exp7551-native-pilot, exp7551-native-pilot) |
+| 2026-09-23 04:25 UTC | Fit a contrastive source energy head with matched | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7552-fit-capture, exp7552-fit-capture, exp7552-fit-capture) |
+| 2026-09-23 04:25 UTC | Measure and independently challenge source-grounde | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7553-test-capture, exp7554-energy-fit, exp7554-energy-fit, exp7553-test-capture, exp7553-test-capture, exp7554-energy-fit, exp7554-energy-fit) |
