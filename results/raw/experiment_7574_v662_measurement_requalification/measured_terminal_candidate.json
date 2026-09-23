@@ -1,0 +1,1342 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "preconditions",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "A failed gate cannot be hidden by another branch."
+    },
+    {
+      "category": "validity",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "A failed gate cannot be hidden by another branch."
+    },
+    {
+      "category": "validity",
+      "check": "terminal_readers",
+      "expected": true,
+      "observed": false,
+      "op": "eq",
+      "passed": false,
+      "principle": "A failed gate cannot be hidden by another branch."
+    },
+    {
+      "category": "readiness",
+      "check": "numerical_and_lifecycle",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "A failed gate cannot be hidden by another branch."
+    },
+    {
+      "category": "readiness",
+      "check": "registered_compute",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "A failed gate cannot be hidden by another branch."
+    },
+    {
+      "category": "readiness",
+      "check": "arc_runner",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "A failed gate cannot be hidden by another branch."
+    },
+    {
+      "category": "benefit",
+      "check": "empirical_predictive_benefit",
+      "expected": "measured_untouched_labels",
+      "observed": "analytical_fixtures_only",
+      "op": "eq",
+      "passed": false,
+      "principle": "A failed gate cannot be hidden by another branch."
+    }
+  ],
+  "alternate_cwd_e3_smoke": {
+    "induction_disabled": true,
+    "model_calls": 0,
+    "real_policy_path": "scripts/arc_loop_solve.py --mechanism e3",
+    "solve_credit": 0
+  },
+  "arc_custody": {
+    "absolute_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+    "artifact_sha256": "sha256:8dd3ab0acab63a63a64c54fd02ed2acfe31b40576b7d77f099498e8a11135b98",
+    "checks": [
+      {
+        "check": "exp7562_artifact_exists",
+        "expected": "readable_file",
+        "field": "path",
+        "observed": "readable_file",
+        "op": "eq",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+        "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+      },
+      {
+        "check": "exp7562_artifact_hash",
+        "expected": "sha256:8dd3ab0acab63a63a64c54fd02ed2acfe31b40576b7d77f099498e8a11135b98",
+        "field": "sha256",
+        "observed": "sha256:8dd3ab0acab63a63a64c54fd02ed2acfe31b40576b7d77f099498e8a11135b98",
+        "op": "eq",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+        "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+      },
+      {
+        "check": "exp7562_experiment_id",
+        "expected": "exp7562-arc-plan-lineage",
+        "field": "experiment_id",
+        "observed": "exp7562-arc-plan-lineage",
+        "op": "eq",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+        "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+      },
+      {
+        "check": "exp7562_plan_lineage_ready_score",
+        "expected": 1,
+        "field": "plan_lineage_ready_score",
+        "observed": 1,
+        "op": "eq",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+        "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+      },
+      {
+        "check": "exp7562_flagged_adversarial",
+        "expected": false,
+        "field": "flagged_adversarial",
+        "observed": false,
+        "op": "eq",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+        "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+      }
+    ],
+    "experiment_id": "exp7562-arc-plan-lineage",
+    "passed": true
+  },
+  "arc_runner_ready_score": 1,
+  "benchmark_receipt": {
+    "benchmark_scope": "constrained_predict_release_update_fixture_replay",
+    "bootstrap_replicates_completed": 1000,
+    "bootstrap_replicates_planned": 1000,
+    "censored": 0,
+    "compute_budget_s": 2400.0,
+    "events_completed": 800000,
+    "failed": 0,
+    "fits_2400_seconds_with_reserve": true,
+    "mean_prequential_brier": 0.5343062396146203,
+    "measured_duration_s": 55.68649457098218,
+    "order_replays_completed": 5000,
+    "projected_duration_s": 55.68649457098218,
+    "unstarted": 0,
+    "validation_reserve_s": 300.0
+  },
+  "duration_s": 123.30118409800343,
+  "empirical_benefit_score": 0,
+  "execution_venue": "host",
+  "experiment_id": "exp7574-v662-measurement-requalification",
+  "field_principles": {
+    "MODEL_SPECS": "No current LLM task means an empty model list.",
+    "acceptance_gate_results": "Separate validity, readiness, and benefit checks.",
+    "alternate_cwd_e3_smoke": "Bind alternate_cwd_e3_smoke so an independent reader can detect drift.",
+    "arc_custody": "Bind arc_custody so an independent reader can detect drift.",
+    "arc_runner_ready_score": "Require custody, alternate CWD, and private directories.",
+    "benchmark_receipt": "Bind benchmark_receipt so an independent reader can detect drift.",
+    "duration_s": "Measure current monotonic work without inherited time or sleeps.",
+    "empirical_benefit_score": "Bind empirical_benefit_score so an independent reader can detect drift.",
+    "execution_venue": "Bind execution_venue so an independent reader can detect drift.",
+    "experiment_id": "Bind experiment_id so an independent reader can detect drift.",
+    "field_principles": "Carry one-line interpretation rules with emitted fields.",
+    "fixture_contrasts": "Keep baseline loss, candidate loss, and signed improvement.",
+    "flagged_adversarial": "Persist the exact terminal verification outcome.",
+    "gate_check_summary": "Name exact failed operands for every blocked verdict.",
+    "historical_model_identity": "Bind historical_model_identity so an independent reader can detect drift.",
+    "honest_verdict": "Use a complete terminal prefix; completion does not establish benefit.",
+    "independent_solver_error": "Measure solver agreement without claiming efficacy.",
+    "inference_substrate": "Bind inference_substrate so an independent reader can detect drift.",
+    "inference_substrate_class": "Record the actual substrate separately from the plan.",
+    "invocation_counts": "Count current calls and tokens independently from history.",
+    "learning_compute_feasible_score": "Require all 5,000 replays within 2,400 seconds.",
+    "lifecycle_qualification": "Bind lifecycle_qualification so an independent reader can detect drift.",
+    "milestone": "Bind milestone so an independent reader can detect drift.",
+    "model_invoked": "Bind model_invoked so an independent reader can detect drift.",
+    "model_specs": "Bind model_specs so an independent reader can detect drift.",
+    "numerical_qualification": "Bind numerical_qualification so an independent reader can detect drift.",
+    "phase_spans": "Bind phase_spans so an independent reader can detect drift.",
+    "planned_inference_substrate_class": "Bind planned_inference_substrate_class so an independent reader can detect drift.",
+    "positive_claim": "Bind positive_claim so an independent reader can detect drift.",
+    "preconditions_checked": "Bind preconditions_checked so an independent reader can detect drift.",
+    "private_directory_control": "Bind private_directory_control so an independent reader can detect drift.",
+    "random_seed": "Bind every fixture, order, and benchmark draw to frozen seeds.",
+    "raw_prediction_rows": "Bind raw_prediction_rows so an independent reader can detect drift.",
+    "recalibration_ready_score": "Require numerical, lifecycle, and exact row readers.",
+    "reproducibility_checksum": "Bind reproducibility_checksum so an independent reader can detect drift.",
+    "retired_literal_prior_verdict": "Bind retired_literal_prior_verdict so an independent reader can detect drift.",
+    "rows": "Keep one arm row per unit with raw numerator and denominator.",
+    "run_date": "Bind run_date so an independent reader can detect drift.",
+    "sample_size_budget": "Bind sample_size_budget so an independent reader can detect drift.",
+    "schema": "Bind schema so an independent reader can detect drift.",
+    "source_artifact_hashes": "Bind each conclusion to exact source bytes.",
+    "status": "Bind status so an independent reader can detect drift.",
+    "strict_failure_control": "Bind strict_failure_control so an independent reader can detect drift.",
+    "validation_receipts": "Bind each check to command, worktree, exit, and log hash.",
+    "verdict_class": "Use exactly one closed scientific disposition class.",
+    "verifier_is_oracle": "Label-accessing controls cannot support an oracle-distinct claim."
+  },
+  "fixture_contrasts": [
+    {
+      "baseline_loss": 0.634765625,
+      "baseline_numerator": 101.5625,
+      "candidate_loss": 0.525321745561991,
+      "candidate_numerator": 84.05147928991855,
+      "censored": false,
+      "denominator": 160,
+      "fixture": "calibration_shift",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "seed": 7574001,
+      "signed_improvement": 0.10944387943800904
+    },
+    {
+      "baseline_loss": 0.1875,
+      "baseline_numerator": 30.0,
+      "candidate_loss": 0.14750000000580982,
+      "candidate_numerator": 23.600000000929573,
+      "censored": false,
+      "denominator": 160,
+      "fixture": "no_shift",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "seed": 7574002,
+      "signed_improvement": 0.03999999999419018
+    },
+    {
+      "baseline_loss": 0.11000000000000043,
+      "baseline_numerator": 17.60000000000007,
+      "candidate_loss": 0.09510204156292842,
+      "candidate_numerator": 15.216326650068547,
+      "censored": false,
+      "denominator": 160,
+      "fixture": "recurrence",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "seed": 7574003,
+      "signed_improvement": 0.014897958437072006
+    }
+  ],
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      "terminal_readers",
+      "empirical_predictive_benefit"
+    ],
+    "failed_count": 2,
+    "first_failure": {
+      "category": "validity",
+      "check": "terminal_readers",
+      "expected": true,
+      "observed": false,
+      "op": "eq",
+      "passed": false,
+      "principle": "A failed gate cannot be hidden by another branch."
+    },
+    "passed": false
+  },
+  "historical_model_identity": {
+    "counted_as_current": false,
+    "exp7561": "no_model_load",
+    "exp7570": "historical_planned_Qwen3.8-27B-GGUF_but_no_current_calls"
+  },
+  "honest_verdict": "partial_terminal_readers_pending",
+  "independent_solver_error": 2.0670309908155104e-09,
+  "inference_substrate": "independent_structural_control_row_and_solver_receipt_replay_no_llm",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "completion_tokens": 0,
+    "forward_calls_attempted": 0,
+    "forward_calls_cancelled": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "forward_calls_in_flight": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "prompt_tokens": 0,
+    "total_tokens": 0
+  },
+  "learning_compute_feasible_score": 1,
+  "lifecycle_qualification": {
+    "duplicate_feedback_rejection_count": 3,
+    "future_label_rejection_count": 3,
+    "monotonicity_violation_count": 0,
+    "movement_violation_count": 0,
+    "normalization_failure_count": 0,
+    "parameter_change_count": 3,
+    "passed": true,
+    "restart_mismatch_count": 0
+  },
+  "milestone": "2026.09.662",
+  "model_invoked": false,
+  "model_specs": [],
+  "numerical_qualification": {
+    "constraint_failure_count": 0,
+    "convergence_failure_count": 0,
+    "dense_scalar_case_count": 101,
+    "independent_solver": "COBYQA",
+    "independent_solver_error": 2.0670309908155104e-09,
+    "maximum_objective_delta": 2.0670309908155104e-09,
+    "passed": true,
+    "primary_solver": "SLSQP",
+    "solver_pair_count": 5,
+    "solver_parity_failure_count": 0,
+    "solver_rows": [
+      {
+        "case": 0,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 31,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": 0.0,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 0.0,
+        "objective_delta": 0.0,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 1,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": 0.0,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      },
+      {
+        "case": 1,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 31,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": -5.999999999999998,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 2.7755575615628914e-17,
+        "objective_delta": 1.7763568394002505e-15,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 2,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": -6.0,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      },
+      {
+        "case": 2,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 31,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": 26.0,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 2.3604542495206614e-14,
+        "objective_delta": 0.0,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 2,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": 26.0,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      },
+      {
+        "case": 3,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 38,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": -32.0,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 0.0,
+        "objective_delta": 0.0,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 1,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": -32.0,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      },
+      {
+        "case": 4,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 56,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": -7.304698837510056,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 1.0967776847947697e-05,
+        "objective_delta": 2.0670309908155104e-09,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 9,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": -7.304698835443025,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      }
+    ]
+  },
+  "phase_spans": [
+    {
+      "completed_units": 32,
+      "duration_s": 0.004646094981580973,
+      "end_s": 0.004666444001486525,
+      "phase": "preconditions",
+      "start_s": 2.0349019905552268e-05
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.0038619200058747083,
+      "end_s": 0.008554713014746085,
+      "phase": "manifest",
+      "start_s": 0.0046927930088713765
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 6.392999785020947e-05,
+      "end_s": 0.008710195019375533,
+      "phase": "private_parent_control",
+      "start_s": 0.008646265021525323
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.02797421399736777,
+      "end_s": 0.036692224006401375,
+      "phase": "strict_failure_control",
+      "start_s": 0.008718010009033605
+    },
+    {
+      "completed_units": 106,
+      "duration_s": 0.23902216699207202,
+      "end_s": 0.27573399801622145,
+      "phase": "numerical_qualification",
+      "start_s": 0.03671183102414943
+    },
+    {
+      "completed_units": 3,
+      "duration_s": 0.5064557599835098,
+      "end_s": 0.7822313159995247,
+      "phase": "fixture_requalification",
+      "start_s": 0.2757755560160149
+    },
+    {
+      "completed_units": 5000,
+      "duration_s": 55.686860860994784,
+      "end_s": 56.469358578004176,
+      "phase": "registered_benchmark",
+      "start_s": 0.7824977170093916
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 16.082093306002207,
+      "end_s": 72.55146736302413,
+      "phase": "affected_validation",
+      "start_s": 56.46937405702192
+    },
+    {
+      "completed_units": 6,
+      "duration_s": 50.746928608976305,
+      "end_s": 123.2984956500004,
+      "phase": "arc_capability_e2e",
+      "start_s": 72.5515670410241
+    }
+  ],
+  "planned_inference_substrate_class": "no_model_load",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "check": "absolute_repository_root",
+      "expected": "/home/ianblenke/github.com/ianblenke/carnot",
+      "field": "root",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "upstream": "--root"
+    },
+    {
+      "check": "required_input:AGENTS.md",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "required_input:CODEX.md",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "required_input:CLAUDE.md",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "required_input:research-program.md",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "required_input:ops/exclusion_manifest.yaml",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "required_input:ops/e2e-test-plan.md",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "required_input:scripts/experiment_template.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "required_input:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "required_input:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7358_v646_validation_contract.py",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7561_v661_recalibration_prototype.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7561_v661_recalibration_prototype.py",
+      "upstream": "python/carnot/experiment_7561_v661_recalibration_prototype.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7570_v661_arc_live_lineage.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7570_v661_arc_live_lineage.py",
+      "upstream": "python/carnot/experiment_7570_v661_arc_live_lineage.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7562_v661_arc_plan_lineage.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7562_v661_arc_plan_lineage.py",
+      "upstream": "python/carnot/experiment_7562_v661_arc_plan_lineage.py"
+    },
+    {
+      "check": "required_input:scripts/verdict_row_consistency_lint.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "check": "required_input:openspec/capabilities/continuous-learning/spec.md",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/continuous-learning/spec.md",
+      "upstream": "openspec/capabilities/continuous-learning/spec.md"
+    },
+    {
+      "check": "required_input:openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "required_input:results/experiment_7561_v661_recalibration_prototype.json",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7561_v661_recalibration_prototype.json",
+      "upstream": "results/experiment_7561_v661_recalibration_prototype.json"
+    },
+    {
+      "check": "required_input:results/experiment_7570_v661_arc_live_lineage.json",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7570_v661_arc_live_lineage.json",
+      "upstream": "results/experiment_7570_v661_arc_live_lineage.json"
+    },
+    {
+      "check": "required_input:results/experiment_7562_v661_arc_plan_lineage.json",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+      "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7574_v662_measurement_requalification.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7574_v662_measurement_requalification.py",
+      "upstream": "python/carnot/experiment_7574_v662_measurement_requalification.py"
+    },
+    {
+      "check": "required_input:scripts/experiments/experiment_7574_v662_measurement_requalification.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7574_v662_measurement_requalification.py",
+      "upstream": "scripts/experiments/experiment_7574_v662_measurement_requalification.py"
+    },
+    {
+      "check": "required_input:tests/python/test_experiment_7574_v662_measurement_requalification.py",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7574_v662_measurement_requalification.py",
+      "upstream": "tests/python/test_experiment_7574_v662_measurement_requalification.py"
+    },
+    {
+      "check": "historical_bytes_unchanged:experiment_7561_v661_recalibration_prototype.json",
+      "expected": "sha256:52ccfe42f6e8398f066dc13b7d72ac4254f8dd776e76f19abc262ffea0c6d23e",
+      "field": "sha256",
+      "observed": "sha256:52ccfe42f6e8398f066dc13b7d72ac4254f8dd776e76f19abc262ffea0c6d23e",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7561_v661_recalibration_prototype.json",
+      "upstream": "results/experiment_7561_v661_recalibration_prototype.json"
+    },
+    {
+      "check": "historical_bytes_unchanged:experiment_7570_v661_arc_live_lineage.json",
+      "expected": "sha256:36608c8d7421db623345d0e5af29c6c466340f627d2843635ca9cd25d8ce921d",
+      "field": "sha256",
+      "observed": "sha256:36608c8d7421db623345d0e5af29c6c466340f627d2843635ca9cd25d8ce921d",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7570_v661_arc_live_lineage.json",
+      "upstream": "results/experiment_7570_v661_arc_live_lineage.json"
+    },
+    {
+      "check": "exp7562_artifact_exists",
+      "expected": "readable_file",
+      "field": "path",
+      "observed": "readable_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+      "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+    },
+    {
+      "check": "exp7562_artifact_hash",
+      "expected": "sha256:8dd3ab0acab63a63a64c54fd02ed2acfe31b40576b7d77f099498e8a11135b98",
+      "field": "sha256",
+      "observed": "sha256:8dd3ab0acab63a63a64c54fd02ed2acfe31b40576b7d77f099498e8a11135b98",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+      "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+    },
+    {
+      "check": "exp7562_experiment_id",
+      "expected": "exp7562-arc-plan-lineage",
+      "field": "experiment_id",
+      "observed": "exp7562-arc-plan-lineage",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+      "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+    },
+    {
+      "check": "exp7562_plan_lineage_ready_score",
+      "expected": 1,
+      "field": "plan_lineage_ready_score",
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+      "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+    },
+    {
+      "check": "exp7562_flagged_adversarial",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7562_v661_arc_plan_lineage.json",
+      "upstream": "results/experiment_7562_v661_arc_plan_lineage.json"
+    },
+    {
+      "check": "requirement_present:REQ-CL-7574",
+      "expected": true,
+      "field": "REQ-CL-7574",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/continuous-learning/spec.md",
+      "upstream": "openspec/capabilities/continuous-learning/spec.md"
+    },
+    {
+      "check": "requirement_present:REQ-ARC-WMTE-7574",
+      "expected": true,
+      "field": "REQ-ARC-WMTE-7574",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    }
+  ],
+  "private_directory_control": {
+    "failure_reproduced": true,
+    "missing_target": "/tmp/carnot-exp7574-validation-iqrz719j/control/missing/pytest/focused",
+    "observed_exception": "FileNotFoundError",
+    "passed": true,
+    "repair": "create_direct_parent_before_subprocess",
+    "repair_passed": true
+  },
+  "random_seed": {
+    "benchmark_seed": 7561011,
+    "fixture_seeds": [
+      7574001,
+      7574002,
+      7574003
+    ],
+    "ordering_seeds": [
+      7568001,
+      7568002,
+      7568003,
+      7568004,
+      7568005
+    ]
+  },
+  "raw_prediction_rows": {
+    "bytes": 186833,
+    "path": "results/raw/experiment_7574_v662_measurement_requalification/fixture_prediction_label_rows.json",
+    "scope": "current_work",
+    "sha256": "sha256:53c78f3e8e2259cec1f434fe2e1340bd5cc72f6f7d51b5a6d2ece5dfc4fc3a07"
+  },
+  "recalibration_ready_score": 1,
+  "reproducibility_checksum": "sha256:62370299a4dfea4fccd1bc4c8f3e11f945f9f7846d0b41ca9b0097c75d0d55fe",
+  "retired_literal_prior_verdict": {
+    "literal": "complete_circular_positive_fixture_qualification",
+    "replacement": "partial_terminal_readers_pending",
+    "scientific_hypothesis_retired": false,
+    "scope": "Exp7561 published signed-row representation only"
+  },
+  "rows": [
+    {
+      "arm": "raw_baseline",
+      "censored": false,
+      "comparator_arm": "raw_baseline",
+      "comparison_unit": "calibration_shift",
+      "fixture": "calibration_shift",
+      "mean_brier": 0.634765625,
+      "metric": "brier_loss",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "raw_denominator": 160,
+      "raw_squared_error_numerator": 101.5625,
+      "seed": 7574001
+    },
+    {
+      "arm": "constrained_candidate",
+      "censored": false,
+      "comparator_arm": "raw_baseline",
+      "comparison_unit": "calibration_shift",
+      "fixture": "calibration_shift",
+      "mean_brier": 0.525321745561991,
+      "metric": "brier_loss",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "raw_denominator": 160,
+      "raw_squared_error_numerator": 84.05147928991855,
+      "seed": 7574001,
+      "signed_improvement_delta": 0.10944387943800904
+    },
+    {
+      "arm": "raw_baseline",
+      "censored": false,
+      "comparator_arm": "raw_baseline",
+      "comparison_unit": "no_shift",
+      "fixture": "no_shift",
+      "mean_brier": 0.1875,
+      "metric": "brier_loss",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "raw_denominator": 160,
+      "raw_squared_error_numerator": 30.0,
+      "seed": 7574002
+    },
+    {
+      "arm": "constrained_candidate",
+      "censored": false,
+      "comparator_arm": "raw_baseline",
+      "comparison_unit": "no_shift",
+      "fixture": "no_shift",
+      "mean_brier": 0.14750000000580982,
+      "metric": "brier_loss",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "raw_denominator": 160,
+      "raw_squared_error_numerator": 23.600000000929573,
+      "seed": 7574002,
+      "signed_improvement_delta": 0.03999999999419018
+    },
+    {
+      "arm": "raw_baseline",
+      "censored": false,
+      "comparator_arm": "raw_baseline",
+      "comparison_unit": "recurrence",
+      "fixture": "recurrence",
+      "mean_brier": 0.11000000000000043,
+      "metric": "brier_loss",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "raw_denominator": 160,
+      "raw_squared_error_numerator": 17.60000000000007,
+      "seed": 7574003
+    },
+    {
+      "arm": "constrained_candidate",
+      "censored": false,
+      "comparator_arm": "raw_baseline",
+      "comparison_unit": "recurrence",
+      "fixture": "recurrence",
+      "mean_brier": 0.09510204156292842,
+      "metric": "brier_loss",
+      "metric_direction": "higher_signed_improvement_is_better",
+      "provenance": "exp7561_fixture_recomputed_from_prediction_label_rows",
+      "raw_denominator": 160,
+      "raw_squared_error_numerator": 15.216326650068547,
+      "seed": 7574003,
+      "signed_improvement_delta": 0.014897958437072006
+    }
+  ],
+  "run_date": "20260923",
+  "sample_size_budget": {
+    "benchmark_replays": {
+      "attempted": 5000,
+      "completed": 5000,
+      "planned": 5000,
+      "unstarted": 0
+    },
+    "fixture_units": {
+      "attempted": 3,
+      "completed": 3,
+      "planned": 3,
+      "unstarted": 0
+    }
+  },
+  "schema": "carnot.exp7574.v662.measurement_requalification.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+    "CODEX.md": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:39278383ed7aebbe1b99fa53ed358fe3cfd82859f64076d6d428c3fcd5ec8a4e",
+    "openspec/capabilities/continuous-learning/spec.md": "sha256:713e8ccf4bdec12e0b04739715c75a94ccf2f2cefec90f668e8df70f529c53d1",
+    "ops/e2e-test-plan.md": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+    "ops/exclusion_manifest.yaml": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7561_v661_recalibration_prototype.py": "sha256:2b72556bdb4533f0e692595ec402a549377069d5776084051e83863cfa5b06bf",
+    "python/carnot/experiment_7562_v661_arc_plan_lineage.py": "sha256:20fea83c87a6ff339e7e6ef2814a89eb509658126bad822cce002f8f07f2d7ce",
+    "python/carnot/experiment_7570_v661_arc_live_lineage.py": "sha256:5b29854bd073f064c51d4741340560a07679340fec449f12120055f5904c1168",
+    "python/carnot/experiment_7574_v662_measurement_requalification.py": "sha256:dc85860c52f4ab1908edc8b1f277f48ffa5e8033f33c4bd659ebd8d71ddb655b",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7561_v661_recalibration_prototype.json": "sha256:52ccfe42f6e8398f066dc13b7d72ac4254f8dd776e76f19abc262ffea0c6d23e",
+    "results/experiment_7562_v661_arc_plan_lineage.json": "sha256:8dd3ab0acab63a63a64c54fd02ed2acfe31b40576b7d77f099498e8a11135b98",
+    "results/experiment_7570_v661_arc_live_lineage.json": "sha256:36608c8d7421db623345d0e5af29c6c466340f627d2843635ca9cd25d8ce921d",
+    "results/raw/experiment_7574_v662_measurement_requalification/affected_validation_manifest.json": "sha256:4b68a611e9d541cf14dd52e4c82c1687dbd88940420ca07da61599d7d33b549d",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7574_v662_measurement_requalification.py": "sha256:89c511661a3b5b600d5e01b1ec46d1a901755281830e2e4c4a0df6f9c9f01dc1",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7574_v662_measurement_requalification.py": "sha256:8c529381a17e596d9e63dc70b710fb5138c60d464d9e204015844949da3146d7"
+  },
+  "status": "partial_terminal_readers_pending",
+  "strict_failure_control": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7574-validation-iqrz719j/strict/exp7561_positive_verdict_bad_sign_rows.json",
+    "diagnostic_sha256": "sha256:193abd89f3a16730b3f523136c4ef522332d50672867e21f039218e5f3f9e3dd",
+    "exit_code": 1,
+    "failure_reproduced": true,
+    "output": "\n  exp7561_positive_verdict_bad_sign_rows.json\n    [warn ] WINS_NOT_EXCEEDING_LOSSES: verdict claims a positive outcome but `brier_delta` shows 0 win(s) against 3 loss(es) across rows\n\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  0 blocking, 1 advisory. These say the ROWS do not support the headline -- read the rows before citing the verdict, and correct the artifact rather than the reader.\n",
+    "source_path": "results/experiment_7561_v661_recalibration_prototype.json",
+    "source_sha256": "sha256:52ccfe42f6e8398f066dc13b7d72ac4254f8dd776e76f19abc262ffea0c6d23e"
+  },
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7574_v662_measurement_requalification",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7574_v662_measurement_requalification"
+      ],
+      "duration_s": 0.6870277379930485,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/affected/worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:7133d5294377a9e8ebf5e3a6ef45db78079dfc7f2429edd7b6e0cdff54d149d0",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7574_v662_measurement_requalification\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7574_v662_measurement_requalification.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7574_v662_measurement_requalification": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7574_v662_measurement_requalification.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7574-validation-iqrz719j/affected/pytest/focused tests/python/test_experiment_7574_v662_measurement_requalification.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7574-validation-iqrz719j/affected/pytest/focused",
+        "tests/python/test_experiment_7574_v662_measurement_requalification.py",
+        "-q"
+      ],
+      "duration_s": 5.258953439973993,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/affected/focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:1ddde72b840a42069726149d875cb8734d2168b532238b8706c5c03ed0f82cb9",
+      "name": "focused_pytest",
+      "output_tail": ".................                                                        [100%]\n17 passed in 3.01s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/usr/bin/env COVERAGE_FILE=/tmp/carnot-exp7574-validation-iqrz719j/affected/coverage/.coverage.exp7574 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run '--include=*/experiment_7574_v662_measurement_requalification.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7574-validation-iqrz719j/affected/pytest/coverage tests/python/test_experiment_7574_v662_measurement_requalification.py -q",
+      "command_argv": [
+        "/usr/bin/env",
+        "COVERAGE_FILE=/tmp/carnot-exp7574-validation-iqrz719j/affected/coverage/.coverage.exp7574",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--include=*/experiment_7574_v662_measurement_requalification.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7574-validation-iqrz719j/affected/pytest/coverage",
+        "tests/python/test_experiment_7574_v662_measurement_requalification.py",
+        "-q"
+      ],
+      "duration_s": 9.856480586022371,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/affected/changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:7be346b39389d4f4dfacd0e4cd4640d2b345a2c45e60053dbd6919ca670f3c69",
+      "name": "changed_module_coverage",
+      "output_tail": ".................                                                        [100%]\n17 passed in 6.27s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/usr/bin/env COVERAGE_FILE=/tmp/carnot-exp7574-validation-iqrz719j/affected/coverage/.coverage.exp7574 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report '--include=*/experiment_7574_v662_measurement_requalification.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/usr/bin/env",
+        "COVERAGE_FILE=/tmp/carnot-exp7574-validation-iqrz719j/affected/coverage/.coverage.exp7574",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7574_v662_measurement_requalification.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.08005801800754853,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/affected/changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:65ec2dcdfa70626dd30934b28343fe289ccd8725da93e730b8c19320f7490ae6",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                                Stmts   Miss  Cover   Missing\n-------------------------------------------------------------------------------------------------\npython/carnot/experiment_7574_v662_measurement_requalification.py     450      0   100%\n-------------------------------------------------------------------------------------------------\nTOTAL                                                                 450      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7574_v662_measurement_requalification.py scripts/experiments/experiment_7574_v662_measurement_requalification.py tests/python/test_experiment_7574_v662_measurement_requalification.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7574_v662_measurement_requalification.py",
+        "scripts/experiments/experiment_7574_v662_measurement_requalification.py",
+        "tests/python/test_experiment_7574_v662_measurement_requalification.py"
+      ],
+      "duration_s": 0.011254267999902368,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/affected/ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7574_v662_measurement_requalification.py scripts/experiments/experiment_7574_v662_measurement_requalification.py tests/python/test_experiment_7574_v662_measurement_requalification.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7574_v662_measurement_requalification.py",
+        "scripts/experiments/experiment_7574_v662_measurement_requalification.py",
+        "tests/python/test_experiment_7574_v662_measurement_requalification.py"
+      ],
+      "duration_s": 0.01038985000923276,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/affected/ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7574_v662_measurement_requalification.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7574_v662_measurement_requalification.py"
+      ],
+      "duration_s": 0.15949372499017045,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/affected/changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7574_v662_measurement_requalification.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7574_v662_measurement_requalification.py"
+      ],
+      "duration_s": 0.015554019017145038,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/affected/scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_009 tests/python/test_arc_induction_state_persistence.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_009",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-q"
+      ],
+      "duration_s": 12.35245397000108,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/arc-e2e/e2e_009/00_e2e_009.log",
+      "log_sha256": "sha256:c3f6d463ea583a04727154d98f915c5d4702daf320bdd787697e6120056c7f99",
+      "name": "e2e_009",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.91s\n",
+      "passed": true,
+      "scope": "E2E-009 CPU contract",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_010 tests/python/test_arc_tool_grammar_transport.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_010",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "-q"
+      ],
+      "duration_s": 10.938536670000758,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/arc-e2e/e2e_010/00_e2e_010.log",
+      "log_sha256": "sha256:5cb6a0e1380f369beee1415c7a3776a5199fb5fc38e90b62b47330141d3cff19",
+      "name": "e2e_010",
+      "output_tail": "..................................................                       [100%]\n50 passed in 7.40s\n",
+      "passed": true,
+      "scope": "E2E-010 CPU contract",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_011 tests/python/test_arc_decision_telemetry.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_011",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "duration_s": 6.657285599008901,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/arc-e2e/e2e_011/00_e2e_011.log",
+      "log_sha256": "sha256:69041d64df4e7c29e3921ec200083f1982f71d4014320f9ec25dc8836fa14ddc",
+      "name": "e2e_011",
+      "output_tail": "...............                                                          [100%]\n15 passed in 3.85s\n",
+      "passed": true,
+      "scope": "E2E-011 CPU contract",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_012 tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7492_e6_timed_cost_profile.py tests/python/test_arc_decision_telemetry.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_012",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7492_e6_timed_cost_profile.py",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "duration_s": 8.73546446999535,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/arc-e2e/e2e_012/00_e2e_012.log",
+      "log_sha256": "sha256:85d3cdc089ff4c408b4c67664799c7a4729ed28b05c09a00ea15578844b79532",
+      "name": "e2e_012",
+      "output_tail": "..............................                                           [100%]\n30 passed in 5.92s\n",
+      "passed": true,
+      "scope": "E2E-012 CPU contract",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_013 tests/python/test_arc_decision_telemetry.py tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7531_b2_induction_gate_measurement.py tests/python/test_semif_arc_readout_eval.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/e2e_013",
+        "tests/python/test_arc_decision_telemetry.py",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7531_b2_induction_gate_measurement.py",
+        "tests/python/test_semif_arc_readout_eval.py",
+        "-q"
+      ],
+      "duration_s": 8.836831079010153,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/arc-e2e/e2e_013/00_e2e_013.log",
+      "log_sha256": "sha256:cc571214112c9ef93bab8b81b9c97132ff53285bd843c3a34a839e346c592805",
+      "name": "e2e_013",
+      "output_tail": "........................................                                 [100%]\n40 passed in 5.99s\n",
+      "passed": true,
+      "scope": "E2E-013 CPU contract",
+      "timed_out": false
+    },
+    {
+      "command": "/usr/bin/env -C /tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/alternate-cwd CARNOT_ARC_DISABLE_INDUCTION=1 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/alternate-cwd-e3-smoke.json",
+      "command_argv": [
+        "/usr/bin/env",
+        "-C",
+        "/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/alternate-cwd",
+        "CARNOT_ARC_DISABLE_INDUCTION=1",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/alternate-cwd-e3-smoke.json"
+      ],
+      "duration_s": 3.2241207429906353,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7574_v662_measurement_requalification/validation/arc-e2e/alternate_cwd_e3_smoke/00_alternate_cwd_e3_smoke.log",
+      "log_sha256": "sha256:b51e029c349c742480d4816aa42a2634a3b94f209d637dd4a6200da92110e12f",
+      "name": "alternate_cwd_e3_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-23 17:28:47 | INFO | Created new scorecard: 755a995c-b9f8-4957-ad1b-c83d264e36ba\n2026-09-23 17:28:47 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-23 17:28:47 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/carnot-exp7574-validation-iqrz719j/arc-e2e/alternate-cwd-e3-smoke.json\n",
+      "passed": true,
+      "scope": "private LLM-off real E3AgentPolicy episode from alternate cwd",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "partial",
+  "verifier_is_oracle": true
+}

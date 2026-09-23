@@ -19095,3 +19095,52 @@ numbered runtime E2E from `ops/e2e-test-plan.md` applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7561 and SCENARIO-CL-7561-* | Implemented: constrained sufficient-statistic map, delayed fixture lifecycle, frozen future protocol, complete replay benchmark, terminal artifact producer, and thin entrypoint. | `tests/python/test_experiment_7561_v661_recalibration_prototype.py` covers numerical parity, lifecycle, restart, benchmark accounting, fail-closed artifacts, and fresh readers with 100 percent changed-module coverage. The declared entrypoint runs the capability E2E and terminal readers. |
+
+## REQ-CL-7574: V662 Measurement Requalification
+
+Experiment 7574 SHALL requalify Experiment 7561 from exact prediction and
+label rows. It SHALL independently compute each baseline Brier loss, candidate
+Brier loss, and signed improvement. Positive signed improvement SHALL mean
+lower candidate loss. Each comparison row SHALL include raw squared-loss
+numerators, denominators, metric direction, seed, censoring, and provenance.
+
+The experiment SHALL reproduce the prior strict row-reader failure without
+changing that reader. It SHALL test improving and worsening contrasts. A
+fixture claim SHALL be `circular_positive` only when its own reduced rows
+support that claim. Numerical readiness SHALL remain separate from benefit.
+
+The nine-knot learner SHALL retain the frozen Experiment 7561 constraints,
+sufficient statistics, two-solver comparison, delayed update lifecycle,
+duplicate rejection, durable reload, and full 5,000-replay benchmark. The
+benchmark SHALL retain 800,000 events and a 2,400-second ceiling.
+
+The task SHALL use no model. It SHALL declare `MODEL_SPECS=[]`, zero current
+load, forward, generation, and token counts, and
+`inference_substrate_class=no_model_load`. Missing external input SHALL produce
+a complete blocked artifact. Its gate summary SHALL state the upstream, path,
+field, operator, expected value, and observed value.
+
+### SCENARIO-CL-7574-ROWS: Raw Rows Determine Each Contrast
+
+- GIVEN exact prediction and label rows for one fixture and arm
+- WHEN an independent reducer computes Brier loss
+- THEN its raw numerator and denominator reproduce the reported mean
+- AND positive and negative signed improvements keep the declared direction.
+
+### SCENARIO-CL-7574-LIFECYCLE: The Frozen Learner Is Requalified
+
+- GIVEN the Experiment 7561 solver and delayed event machine
+- WHEN all analytical fixtures replay through persist and reload
+- THEN numerical parity, movement, order, and exactly-once update checks pass
+- AND the full registered replay count remains unchanged.
+
+### SCENARIO-CL-7574-TERMINAL: Readers Agree Before Publication
+
+- GIVEN a hash-bound terminal candidate and scoped validation receipts
+- WHEN cold replay, independent reduction, adversarial verification, and the
+  strict row reader inspect the same bytes
+- THEN all readers agree before atomic publication
+- AND readiness does not imply empirical predictive benefit.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.

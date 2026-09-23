@@ -35306,6 +35306,50 @@ and keep the retired budget-raise lever closed.
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## V662 ARC measurement-runner requalification — 2026-09-23
+
+### REQ-ARC-WMTE-7574: Requalify custody and private execution paths
+
+Experiment 7574 SHALL bind the absolute repository root and the explicit
+Experiment 7562 artifact path and SHA-256 before ARC checks start. It SHALL
+verify the upstream experiment identity. A missing or changed path SHALL block
+the dependent ARC branch without masking an independent numerical result.
+
+Every pytest base-temp parent SHALL exist before its subprocess starts. The
+experiment SHALL reproduce the Experiment 7570 parent-directory failure in an
+isolated check. It SHALL run a real, induction-disabled `E3AgentPolicy` episode
+from a directory outside the repository. The smoke check SHALL use no model,
+network, game source, stored engine, or offline search evidence.
+
+The ARC readiness score SHALL be one only when upstream custody, worktree
+import provenance, private-directory execution, the alternate-directory smoke,
+and applicable E2E-009 through E2E-013 checks pass. The score SHALL not claim
+live inference, plan quality, predictive benefit, or a solve.
+
+### SCENARIO-ARC-WMTE-7574-CUSTODY: Exact Upstream Bytes Are Required
+
+- GIVEN the absolute worktree and the registered Experiment 7562 path and hash
+- WHEN custody is checked before measurement
+- THEN the path, hash, experiment ID, readiness, and adversarial flag must match
+- AND a missing path produces a complete blocked no-run artifact.
+
+### SCENARIO-ARC-WMTE-7574-PRIVATE: Each Child Gets An Existing Parent
+
+- GIVEN isolated focused, coverage, and E2E base-temp paths
+- WHEN each subprocess is about to start
+- THEN its direct parent already exists
+- AND the former missing-parent failure remains reproducible as a control.
+
+### SCENARIO-ARC-WMTE-7574-ALTERNATE-CWD: Root Assumptions Cannot Pass
+
+- GIVEN the real E3 policy with induction disabled
+- WHEN one environment episode starts outside the repository
+- THEN it emits a valid bounded output through the canonical policy path
+- AND zero model calls and zero solve credit are recorded.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V661 ARC plan-lineage observation — 2026-09-23
 
 ### REQ-ARC-WMTE-7562: Join accepted models and plans to live policy outcomes
