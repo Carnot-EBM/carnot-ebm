@@ -18474,3 +18474,4 @@ code |
 | 2026-09-23 01:29 UTC | Bind fourteen complete authorities and ingest the  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 127 passed, 1 warning in 11.72s |
 | 2026-09-23 02:02 UTC | Seal an empirical count-learning stream from quali | OK | 92 passed, 1 warning in 8.66s |
 | 2026-09-23 02:49 UTC | Qualify bounded source collection and observe chan | OK | 161 passed, 1 warning in 9.05s |
+| 2026-09-23 03:32 UTC | Measure delayed count learning and retained calibr | OK | 98 passed, 1 warning in 9.22s |
