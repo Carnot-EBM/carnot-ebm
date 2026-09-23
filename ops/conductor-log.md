@@ -18495,3 +18495,4 @@ code |
 | 2026-09-23 13:39 UTC | Capture complete fitting and policy source interve | OK | 121 passed, 1 warning in 16.92s |
 | 2026-09-23 14:53 UTC | Capture sealed test and fresh online source interv | OK | 122 passed, 1 warning in 34.45s |
 | 2026-09-23 15:28 UTC | Fit contrastive source energies and freeze matched | OK | 95 passed, 1 warning in 8.54s |
+| 2026-09-23 16:13 UTC | Measure held-out source decisions with frozen cali | OK | 103 passed, 1 warning in 10.59s |
