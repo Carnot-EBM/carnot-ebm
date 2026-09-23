@@ -1,0 +1,1328 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "qualified_corrected_custody",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Invalid upstream custody cannot support science."
+    },
+    {
+      "category": "validity",
+      "check": "required_scoped_and_terminal_validation",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Scoped checks and cold replay must pass before readiness."
+    },
+    {
+      "category": "readiness",
+      "check": "arc_analysis_complete",
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "principle": "A valid null stays auditable because readiness is not benefit."
+    },
+    {
+      "category": "support",
+      "check": "opportunity_floor",
+      "expected": 1000,
+      "observed": 11813,
+      "op": ">=",
+      "passed": true,
+      "principle": "Insufficient evidence cannot become a numerical gate claim."
+    },
+    {
+      "category": "support",
+      "check": "attempt_floor",
+      "expected": 100,
+      "observed": 35,
+      "op": ">=",
+      "passed": false,
+      "principle": "Insufficient evidence cannot become a numerical gate claim."
+    },
+    {
+      "category": "support",
+      "check": "both_outcome_classes",
+      "expected": "useful>0 and useless>0",
+      "observed": {
+        "useful": 0,
+        "useless": 0
+      },
+      "op": "both",
+      "passed": false,
+      "principle": "Insufficient evidence cannot become a numerical gate claim."
+    },
+    {
+      "category": "support",
+      "check": "useful_game_floor",
+      "expected": 4,
+      "observed": 0,
+      "op": ">=",
+      "passed": false,
+      "principle": "Insufficient evidence cannot become a numerical gate claim."
+    },
+    {
+      "category": "support",
+      "check": "useless_game_floor",
+      "expected": 4,
+      "observed": 0,
+      "op": ">=",
+      "passed": false,
+      "principle": "Insufficient evidence cannot become a numerical gate claim."
+    },
+    {
+      "category": "benefit",
+      "check": "plan_linked_efficacy_identifiable",
+      "expected": true,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "principle": "Missing causal joins make efficacy unavailable, not false."
+    },
+    {
+      "category": "readiness",
+      "check": "live_intervention_before_shipping",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "principle": "Retrospective selection cannot establish safe deployment."
+    }
+  ],
+  "analysis_only_oracle": {
+    "analysis_only": true,
+    "counterfactual_policy_value": null,
+    "disposition": "unavailable_missing_causal_outcomes",
+    "endpoint_identifiable": false,
+    "observed_useful_attempts_retained": 0,
+    "observed_useless_attempts_suppressed": 0,
+    "optimistic_tokens_avoidable": null
+  },
+  "analysis_sample_size_budget": {
+    "actual_attempts": 35,
+    "attempted": 11813,
+    "censored": 0,
+    "completed": 11813,
+    "excluded": 0,
+    "failed": 0,
+    "planned": 1000,
+    "unstarted": 0
+  },
+  "applicable_numbered_e2e": [],
+  "arc_analysis_complete_score": 1,
+  "code_hashes": {
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:f3bbe85673c2ff7fa041e451fc421cb9cf434798cce2fd1fdf4197024b07aa38",
+    "python/carnot/experiment_7557_v660_arc_generalization.py": "sha256:d6ce06978b6703f96012bbc7edf153807b60ba24279aa02153f6b5e8be5f8bfa",
+    "scripts/experiments/experiment_7557_v660_arc_generalization.py": "sha256:8089f34d79b6f251238c5c0eb5666e87fc9abe52fbce4a02f3ce4fe14cc2ec5a",
+    "tests/python/test_experiment_7557_v660_arc_generalization.py": "sha256:ff152bbbc2d28e555744a92cb03128c63607b5952096a2963748b6f9c6aad720"
+  },
+  "device_compute": {
+    "cuda_used_by_current_work": false,
+    "current_device": "host CPU",
+    "current_work": "authenticated JSON aggregation"
+  },
+  "duration_accounting": {
+    "authoring_included": false,
+    "current_work_s": 10.581553778989473,
+    "historical_gpu_time_included": false,
+    "validation_included": true
+  },
+  "duration_s": 10.581553778989473,
+  "endpoint_identifiability": {
+    "actual_level_progress": {
+      "attempt_count": 35,
+      "available": true,
+      "disposition": "observed_live_level_endpoint",
+      "positive_count": 0
+    },
+    "bounded_frame_change": {
+      "attempt_count": 35,
+      "available": true,
+      "causal_efficacy": false,
+      "disposition": "comparability_only_incidental_movement",
+      "positive_count": 35,
+      "window_actions": 32
+    },
+    "plan_linked_execution": {
+      "available": false,
+      "disposition": "unavailable_missing_causal_joins",
+      "missing_joins": [
+        "accepted_world_model",
+        "executed_plan",
+        "plan_to_action",
+        "attributable_progress"
+      ],
+      "observed": null
+    }
+  },
+  "execution_venue": "host",
+  "experiment_id": "exp7557-arc-generalization",
+  "field_principles": {
+    "MODEL_SPECS": "Prevent historical identity from implying a current load.",
+    "acceptance_gate_results": "Keep evidence validity independent of benefit.",
+    "analysis_only_oracle": "Retain analysis_only_oracle so readers detect omission or drift.",
+    "analysis_sample_size_budget": "Retain analysis_sample_size_budget so readers detect omission or drift.",
+    "applicable_numbered_e2e": "Retain applicable_numbered_e2e so readers detect omission or drift.",
+    "arc_analysis_complete_score": "Record analysis completeness, not benefit.",
+    "code_hashes": "Retain code_hashes so readers detect omission or drift.",
+    "device_compute": "Retain device_compute so readers detect omission or drift.",
+    "duration_accounting": "Retain duration_accounting so readers detect omission or drift.",
+    "duration_s": "Measure current work rather than historical runtime.",
+    "endpoint_identifiability": "Prevent movement from repairing missing joins.",
+    "execution_venue": "Use the legal host enum instead of host_cpu.",
+    "experiment_id": "Bind the exact task ID rather than a nearby ARC report.",
+    "flagged_adversarial": "Preserve upstream determinations.",
+    "game_source_read": "Retain game_source_read so readers detect omission or drift.",
+    "gate_check_summary": "Name exact expected and observed gate failures.",
+    "gate_fit": "Retain gate_fit so readers detect omission or drift.",
+    "gate_ready_to_ship": "Prevent retrospective selection from enabling policy.",
+    "historical_model_calls": "Retain historical_model_calls so readers detect omission or drift.",
+    "honest_verdict": "Use a terminal prefix without promoting feasibility.",
+    "inference_substrate": "Name upstream-artifact aggregation exactly.",
+    "inference_substrate_class": "Apply aggregation without padded duration.",
+    "invocation_counts": "Expose current load, forward, and generation dispositions.",
+    "kernel_submitted": "Retain kernel_submitted so readers detect omission or drift.",
+    "live_policy_path": "Retain live_policy_path so readers detect omission or drift.",
+    "milestone": "Retain milestone so readers detect omission or drift.",
+    "model_invoked": "Separate current work from historical model calls.",
+    "model_specs": "Keep both canonical no-load spellings consistent.",
+    "new_model_calls": "Retain new_model_calls so readers detect omission or drift.",
+    "no_headroom": "Retain no_headroom so readers detect omission or drift.",
+    "no_headroom_annotation": "Retain no_headroom_annotation so readers detect omission or drift.",
+    "numeric_gate_quality_claim": "Suppress fitting below support floors.",
+    "oracle_scope": "Retain oracle_scope so readers detect omission or drift.",
+    "per_game_results": "Retain absolute counts, tokens, costs, and uncertainty.",
+    "phase_spans": "Retain phase_spans so readers detect omission or drift.",
+    "planned_inference_substrate_class": "Retain planned_inference_substrate_class so readers detect omission or drift.",
+    "positive_claim": "Retain positive_claim so readers detect omission or drift.",
+    "preconditions_checked": "Show required input values before analysis.",
+    "process_identity": "Retain process_identity so readers detect omission or drift.",
+    "production_defaults_changed": "Retain production_defaults_changed so readers detect omission or drift.",
+    "publication_mode": "Retain publication_mode so readers detect omission or drift.",
+    "random_seed": "Freeze fitting, controls, and bootstrap before outcomes.",
+    "reproducibility_checksum": "Detect changed code, sources, settings, or rows.",
+    "rows": "Keep every game and arm disposition; missing is not zero.",
+    "run_date": "Retain run_date so readers detect omission or drift.",
+    "sample_size_budget": "Separate completed, censored, and unstarted units.",
+    "schema": "Retain schema so readers detect omission or drift.",
+    "solve_provenance": "Deny a new solve without live self-discovery evidence.",
+    "source_artifact_hashes": "Retain source_artifact_hashes so readers detect omission or drift.",
+    "stagnations_unredirected": "Retain stagnations_unredirected so readers detect omission or drift.",
+    "status": "Retain status so readers detect omission or drift.",
+    "successor_hypothesis": "Retain successor_hypothesis so readers detect omission or drift.",
+    "supervisor_arm_rows": "Keep zero-firing arms and observed help separate.",
+    "support_counts": "Retain support_counts so readers detect omission or drift.",
+    "telemetry_receipt": "Retain telemetry_receipt so readers detect omission or drift.",
+    "validation_receipts": "Store scoped, replay, reduction, and strict-reader results.",
+    "verdict_class": "Use the closed scientific terminal vocabulary.",
+    "verifier_is_oracle": "Prevent optimistic headroom from becoming proof."
+  },
+  "flagged_adversarial": false,
+  "game_source_read": false,
+  "gate_check_summary": {
+    "all_passed": false,
+    "failed_count": 5,
+    "failures": [
+      {
+        "category": "support",
+        "check": "attempt_floor",
+        "expected": 100,
+        "observed": 35,
+        "op": ">=",
+        "passed": false,
+        "principle": "Insufficient evidence cannot become a numerical gate claim."
+      },
+      {
+        "category": "support",
+        "check": "both_outcome_classes",
+        "expected": "useful>0 and useless>0",
+        "observed": {
+          "useful": 0,
+          "useless": 0
+        },
+        "op": "both",
+        "passed": false,
+        "principle": "Insufficient evidence cannot become a numerical gate claim."
+      },
+      {
+        "category": "support",
+        "check": "useful_game_floor",
+        "expected": 4,
+        "observed": 0,
+        "op": ">=",
+        "passed": false,
+        "principle": "Insufficient evidence cannot become a numerical gate claim."
+      },
+      {
+        "category": "support",
+        "check": "useless_game_floor",
+        "expected": 4,
+        "observed": 0,
+        "op": ">=",
+        "passed": false,
+        "principle": "Insufficient evidence cannot become a numerical gate claim."
+      },
+      {
+        "category": "benefit",
+        "check": "plan_linked_efficacy_identifiable",
+        "expected": true,
+        "observed": false,
+        "op": "==",
+        "passed": false,
+        "principle": "Missing causal joins make efficacy unavailable, not false."
+      }
+    ],
+    "first_failure": {
+      "category": "support",
+      "check": "attempt_floor",
+      "expected": 100,
+      "observed": 35,
+      "op": ">=",
+      "passed": false,
+      "principle": "Insufficient evidence cannot become a numerical gate claim."
+    }
+  },
+  "gate_fit": null,
+  "gate_ready_to_ship": false,
+  "historical_model_calls": {
+    "all_calls_terminal": true,
+    "generation_calls_attempted": 66,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 33,
+    "generation_calls_failed": 33,
+    "generation_calls_in_flight": 0,
+    "incomplete_call_ids": [],
+    "model_loads_attempted": 1,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 1,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "owner_pids": [
+      1008021
+    ]
+  },
+  "honest_verdict": "complete_null_feasibility_only_causal_endpoint_unavailable",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_cancelled": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "forward_calls_in_flight": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "kernel_submitted": false,
+  "live_policy_path": {
+    "adapter_disabled": true,
+    "banked_trajectories_disabled": true,
+    "factory": "make_carnot_agent",
+    "game_source_read": false,
+    "policy_class": "E3AgentPolicy",
+    "stored_engines_disabled": true
+  },
+  "milestone": "2026.09.660",
+  "model_invoked": false,
+  "model_specs": [],
+  "new_model_calls": 0,
+  "no_headroom": false,
+  "no_headroom_annotation": "Missing causal outcomes prevent a no-headroom claim.",
+  "numeric_gate_quality_claim": false,
+  "oracle_scope": "optimistic_logged_data_headroom_not_counterfactual_policy_value",
+  "per_game_results": [
+    {
+      "attempts": 2,
+      "completed_responses": 2,
+      "completion_tokens": 8192,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 2,
+      "game": "ar25",
+      "generation_wall_time_s": 658.437,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 12628,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "bp35",
+      "generation_wall_time_s": 969.995,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 31533,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "dc22",
+      "generation_wall_time_s": 958.633,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 18501,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 2,
+      "completed_responses": 2,
+      "completion_tokens": 8192,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 2,
+      "game": "ft09",
+      "generation_wall_time_s": 636.995,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 16376,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "g50t",
+      "generation_wall_time_s": 964.306,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 14733,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "ka59",
+      "generation_wall_time_s": 956.8910000000001,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 12222,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "m0r0",
+      "generation_wall_time_s": 965.863,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 14430,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "sb26",
+      "generation_wall_time_s": 959.355,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 17994,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 4,
+      "completed_responses": 2,
+      "completion_tokens": 8192,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 4,
+      "game": "sp80",
+      "generation_wall_time_s": 825.0440000000001,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 7354,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "su15",
+      "generation_wall_time_s": 956.414,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 13212,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "vc33",
+      "generation_wall_time_s": 719.184,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 15720,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "wa30",
+      "generation_wall_time_s": 957.467,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 12978,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    }
+  ],
+  "phase_spans": [
+    {
+      "duration_s": 0.003812767012277618,
+      "end_s": 0.0038363510102499276,
+      "phase": "preconditions",
+      "start_s": 2.358399797230959e-05
+    },
+    {
+      "duration_s": 0.25908402100321837,
+      "end_s": 0.26294501801021397,
+      "phase": "reduction",
+      "start_s": 0.0038609970069956034
+    },
+    {
+      "duration_s": 8.877839487977326,
+      "end_s": 9.14135461798287,
+      "phase": "validation",
+      "start_s": 0.26351513000554405
+    },
+    {
+      "duration_s": 1.4357317539979704,
+      "end_s": 10.581540974992095,
+      "phase": "terminal_validation",
+      "start_s": 9.145809220994124
+    }
+  ],
+  "planned_inference_substrate_class": "aggregation",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "artifact_field": "path",
+      "check": "corrected_arc_upstream_available",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7556_v660_arc_corrected_custody.json",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "results/experiment_7556_v660_arc_corrected_custody.json"
+    },
+    {
+      "artifact_field": "corrected_arc_ready_score",
+      "check": "corrected_arc_ready",
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7556_v660_arc_corrected_custody.json",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "results/experiment_7556_v660_arc_corrected_custody.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check": "qualified_terminal_verdict",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "observed": "null",
+      "op": "in",
+      "passed": true,
+      "path": "results/experiment_7556_v660_arc_corrected_custody.json",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "results/experiment_7556_v660_arc_corrected_custody.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "upstream_not_flagged",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7556_v660_arc_corrected_custody.json",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "results/experiment_7556_v660_arc_corrected_custody.json"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:AGENTS.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:CODEX.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:CLAUDE.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:research-program.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:ops/exclusion_manifest.yaml",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:ops/e2e-test-plan.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:python/carnot/experiment_7557_v660_arc_generalization.py",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7557_v660_arc_generalization.py",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "python/carnot/experiment_7557_v660_arc_generalization.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:scripts/experiments/experiment_7557_v660_arc_generalization.py",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7557_v660_arc_generalization.py",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "scripts/experiments/experiment_7557_v660_arc_generalization.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:tests/python/test_experiment_7557_v660_arc_generalization.py",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7557_v660_arc_generalization.py",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "tests/python/test_experiment_7557_v660_arc_generalization.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:results/raw/experiment_10008_b2_induction_gate_measurement_v2/induction_gate_telemetry.jsonl",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_10008_b2_induction_gate_measurement_v2/induction_gate_telemetry.jsonl",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "results/raw/experiment_10008_b2_induction_gate_measurement_v2/induction_gate_telemetry.jsonl"
+    },
+    {
+      "artifact_field": "REQ-ARC-WMTE-7557",
+      "check": "requirement_declared",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "principle": "A dependent analysis needs the named upstream value.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    }
+  ],
+  "process_identity": {
+    "pid": 1234361,
+    "worktree_root": "/home/ianblenke/github.com/ianblenke/carnot"
+  },
+  "production_defaults_changed": false,
+  "publication_mode": "none",
+  "random_seed": {
+    "cluster_bootstrap_seed": 7557003,
+    "fitting_seed": 7557001,
+    "matched_rate_control_seed": 7557002,
+    "outcome_observed_before_seed_change": false
+  },
+  "reproducibility_checksum": "sha256:f3e131d6472782be238584e15e81eb84f8d369a004fc7f92501598f9a7d8e360",
+  "rows": [
+    {
+      "attempts": 2,
+      "completed_responses": 2,
+      "completion_tokens": 8192,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 2,
+      "game": "ar25",
+      "generation_wall_time_s": 658.437,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 12628,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "bp35",
+      "generation_wall_time_s": 969.995,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 31533,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "dc22",
+      "generation_wall_time_s": 958.633,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 18501,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 2,
+      "completed_responses": 2,
+      "completion_tokens": 8192,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 2,
+      "game": "ft09",
+      "generation_wall_time_s": 636.995,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 16376,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "g50t",
+      "generation_wall_time_s": 964.306,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 14733,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "ka59",
+      "generation_wall_time_s": 956.8910000000001,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 12222,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "m0r0",
+      "generation_wall_time_s": 965.863,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 14430,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "sb26",
+      "generation_wall_time_s": 959.355,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 17994,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 4,
+      "completed_responses": 2,
+      "completion_tokens": 8192,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 4,
+      "game": "sp80",
+      "generation_wall_time_s": 825.0440000000001,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 7354,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "su15",
+      "generation_wall_time_s": 956.414,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 13212,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "vc33",
+      "generation_wall_time_s": 719.184,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 15720,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "attempts": 3,
+      "completed_responses": 3,
+      "completion_tokens": 12288,
+      "disposition": "complete_observed_feasibility",
+      "frame_change_attempts": 3,
+      "game": "wa30",
+      "generation_wall_time_s": 957.467,
+      "level_gains": 0,
+      "plan_linked_useful_attempts": null,
+      "prompt_tokens": 12978,
+      "row_type": "game",
+      "solve_provenance": "live_agent_self_discovery",
+      "uncertainty_available": false
+    },
+    {
+      "arm": "drop_goal_bias",
+      "disposition": "no_firing_observed",
+      "fired": 0,
+      "games_fired": 0,
+      "help_definition": "later_episode_level_gain",
+      "helped": 0,
+      "row_type": "supervisor_arm"
+    },
+    {
+      "arm": "allow_reinduction",
+      "disposition": "no_firing_observed",
+      "fired": 0,
+      "games_fired": 0,
+      "help_definition": "later_episode_level_gain",
+      "helped": 0,
+      "row_type": "supervisor_arm"
+    },
+    {
+      "arm": "tool_loop_reinduction",
+      "disposition": "no_firing_observed",
+      "fired": 0,
+      "games_fired": 0,
+      "help_definition": "later_episode_level_gain",
+      "helped": 0,
+      "row_type": "supervisor_arm"
+    },
+    {
+      "arm": "force_exploration_diversity",
+      "disposition": "observed",
+      "fired": 33,
+      "games_fired": 12,
+      "help_definition": "later_episode_level_gain",
+      "helped": 0,
+      "row_type": "supervisor_arm"
+    }
+  ],
+  "run_date": "20260923",
+  "sample_size_budget": {
+    "attempted": 33,
+    "censored": 0,
+    "completed": 33,
+    "excluded": 0,
+    "failed": 0,
+    "planned": 144,
+    "unstarted": 111
+  },
+  "schema": "carnot.exp7557.v660.arc_generalization.v1",
+  "solve_provenance": {
+    "credited_level_count": 0,
+    "new_level_solve_claimed": false,
+    "required": "live_agent_self_discovery"
+  },
+  "source_artifact_hashes": {
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "results/experiment_10008_b2_induction_gate_measurement_v2.json": "sha256:5db843257438e18aacfbe766a5f504d404a4e5a6618d55ef877efec0227956e7",
+    "results/experiment_7531_b2_induction_gate_measurement.json": "sha256:dec9846037968da745bfaaa18de32a4fdf2c6f8cc554df12d87f3a1196890e28",
+    "results/experiment_7556_v660_arc_corrected_custody.json": "sha256:8521920754c8be72dd966fd8419e4cb8eaa42584e51a080080e49eabb821d424",
+    "results/raw/experiment_10008_b2_induction_gate_measurement_v2/current_invocation_events.jsonl": "sha256:2e8d60913ffd2945f167ddcf9dc4d395afac6784f1ffb964ebb78e024210f67f",
+    "results/raw/experiment_10008_b2_induction_gate_measurement_v2/frozen_schedule.json": "sha256:4ed9c5c2d8deeaa1cb7d2ac856a305051398d6e23be7d4f18f68b24dd5cadf55",
+    "results/raw/experiment_10008_b2_induction_gate_measurement_v2/induction_gate_telemetry.jsonl": "sha256:042a54e40bf255389ef09015131196e09d355ced5ddf62dbcdb67683515447a9",
+    "results/raw/experiment_10008_b2_induction_gate_measurement_v2/live_action_rows.jsonl": "sha256:f8dd4a7c81d2dea4cd07b6599b0c93e83c5a9f9e1d2f64de1359c77ab30f524e",
+    "results/raw/experiment_10008_b2_induction_gate_measurement_v2/live_session.json": "sha256:5d8fd4d037f815e5d6b1d5d6b290a97e988d14585a1665e8f53d434e1416ac1c",
+    "results/raw/experiment_10008_b2_induction_gate_measurement_v2/runtime_events.jsonl": "sha256:5028cb6e19071e0db3078fb58f99bef9206df4ccaf850ce8a05cf5ead91e1add"
+  },
+  "stagnations_unredirected": 0,
+  "status": "complete_null_feasibility_only_causal_endpoint_unavailable",
+  "successor_hypothesis": null,
+  "supervisor_arm_rows": [
+    {
+      "arm": "drop_goal_bias",
+      "disposition": "no_firing_observed",
+      "fired": 0,
+      "games_fired": 0,
+      "help_definition": "later_episode_level_gain",
+      "helped": 0,
+      "row_type": "supervisor_arm"
+    },
+    {
+      "arm": "allow_reinduction",
+      "disposition": "no_firing_observed",
+      "fired": 0,
+      "games_fired": 0,
+      "help_definition": "later_episode_level_gain",
+      "helped": 0,
+      "row_type": "supervisor_arm"
+    },
+    {
+      "arm": "tool_loop_reinduction",
+      "disposition": "no_firing_observed",
+      "fired": 0,
+      "games_fired": 0,
+      "help_definition": "later_episode_level_gain",
+      "helped": 0,
+      "row_type": "supervisor_arm"
+    },
+    {
+      "arm": "force_exploration_diversity",
+      "disposition": "observed",
+      "fired": 33,
+      "games_fired": 12,
+      "help_definition": "later_episode_level_gain",
+      "helped": 0,
+      "row_type": "supervisor_arm"
+    }
+  ],
+  "support_counts": {
+    "attempts": 35,
+    "opportunities": 11813,
+    "useful_attempts": 0,
+    "useful_games": 0,
+    "useless_attempts": 0,
+    "useless_games": 0
+  },
+  "telemetry_receipt": {
+    "gate_opportunity_count": 11813,
+    "path": "results/raw/experiment_10008_b2_induction_gate_measurement_v2/induction_gate_telemetry.jsonl",
+    "row_count": 14259,
+    "sha256": "sha256:042a54e40bf255389ef09015131196e09d355ced5ddf62dbcdb67683515447a9"
+  },
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7557_v660_arc_generalization",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7557_v660_arc_generalization"
+      ],
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557"
+      },
+      "duration_s": 0.4538903520151507,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/affected/00_worktree_imports.log",
+      "log_sha256": "sha256:3403eed656ea27f8900f28880446434f7d8c23fa9bf0a78140954ddae0076575",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7557_v660_arc_generalization\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7557_v660_arc_generalization.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7557_v660_arc_generalization": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7557_v660_arc_generalization.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7557-validation-ydx4sm96/pytest/focused tests/python/test_experiment_7557_v660_arc_generalization.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7557-validation-ydx4sm96/pytest/focused",
+        "tests/python/test_experiment_7557_v660_arc_generalization.py",
+        "-q"
+      ],
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557"
+      },
+      "duration_s": 3.0940586919896305,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/affected/01_focused_pytest.log",
+      "log_sha256": "sha256:754d4859309500fb16911f5c9ff088ba6a91da6b4493009cadd84dd4cf18fde2",
+      "name": "focused_pytest",
+      "output_tail": "...........                                                              [100%]\n11 passed in 1.04s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557 '--include=*/experiment_7557_v660_arc_generalization.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7557-validation-ydx4sm96/pytest/coverage tests/python/test_experiment_7557_v660_arc_generalization.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557",
+        "--include=*/experiment_7557_v660_arc_generalization.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7557-validation-ydx4sm96/pytest/coverage",
+        "tests/python/test_experiment_7557_v660_arc_generalization.py",
+        "-q"
+      ],
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557"
+      },
+      "duration_s": 5.071467005996965,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/affected/02_changed_module_coverage.log",
+      "log_sha256": "sha256:a4102f6c0cb9b51ab428695f16a44cbeb18878a3a4ee0d239625dd3e408d6dd1",
+      "name": "changed_module_coverage",
+      "output_tail": "...........                                                              [100%]\n11 passed in 1.84s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557 '--include=*/experiment_7557_v660_arc_generalization.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557",
+        "--include=*/experiment_7557_v660_arc_generalization.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557"
+      },
+      "duration_s": 0.07011898601194844,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/affected/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:fdda609eff77e65ddb7ef57b03e80c990ffc8ca225157530fe59230a0d027a59",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                       Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------------\npython/carnot/experiment_7557_v660_arc_generalization.py     312      0   100%\n----------------------------------------------------------------------------------------\nTOTAL                                                        312      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7557_v660_arc_generalization.py scripts/experiments/experiment_7557_v660_arc_generalization.py tests/python/test_experiment_7557_v660_arc_generalization.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7557_v660_arc_generalization.py",
+        "scripts/experiments/experiment_7557_v660_arc_generalization.py",
+        "tests/python/test_experiment_7557_v660_arc_generalization.py"
+      ],
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557"
+      },
+      "duration_s": 0.013992202002555132,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/affected/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7557_v660_arc_generalization.py scripts/experiments/experiment_7557_v660_arc_generalization.py tests/python/test_experiment_7557_v660_arc_generalization.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7557_v660_arc_generalization.py",
+        "scripts/experiments/experiment_7557_v660_arc_generalization.py",
+        "tests/python/test_experiment_7557_v660_arc_generalization.py"
+      ],
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557"
+      },
+      "duration_s": 0.010977124009514228,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/affected/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7557_v660_arc_generalization.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7557_v660_arc_generalization.py"
+      ],
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557"
+      },
+      "duration_s": 0.14464216900523752,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/affected/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7557_v660_arc_generalization.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7557_v660_arc_generalization.py"
+      ],
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7557-validation-ydx4sm96/.coverage.exp7557"
+      },
+      "duration_s": 0.017115591996116564,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/affected/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7557_v660_arc_generalization.py --date 20260923 --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7557_v660_arc_generalization/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7557_v660_arc_generalization.py",
+        "--date",
+        "20260923",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7557_v660_arc_generalization/terminal_candidate.json"
+      ],
+      "duration_s": 0.41362248099176213,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/terminal/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:93ff2b90c3e31563c7bbcc655d7598aec86327de9d576dd257416c5fb9a62a7d",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"arc_analysis_complete_score\": 0, \"attempts\": 35, \"causal_endpoint_available\": false, \"gate_ready_to_ship\": false, \"numeric_gate_quality_claim\": false, \"opportunities\": 11813, \"required_validation_passed\": false, \"row_count\": 16, \"verdict_class\": null}\n",
+      "passed": true,
+      "scope": "terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7557_v660_arc_generalization.py --date 20260923 --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7557_v660_arc_generalization/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7557_v660_arc_generalization.py",
+        "--date",
+        "20260923",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7557_v660_arc_generalization/terminal_candidate.json"
+      ],
+      "duration_s": 0.4147711589757819,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/terminal/01_independent_reduction.log",
+      "log_sha256": "sha256:93ff2b90c3e31563c7bbcc655d7598aec86327de9d576dd257416c5fb9a62a7d",
+      "name": "independent_reduction",
+      "output_tail": "{\"arc_analysis_complete_score\": 0, \"attempts\": 35, \"causal_endpoint_available\": false, \"gate_ready_to_ship\": false, \"numeric_gate_quality_claim\": false, \"opportunities\": 11813, \"required_validation_passed\": false, \"row_count\": 16, \"verdict_class\": null}\n",
+      "passed": true,
+      "scope": "terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7557_v660_arc_generalization/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7557_v660_arc_generalization/terminal_candidate.json"
+      ],
+      "duration_s": 0.5805647860106546,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/terminal/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7557_v660_arc_generalization/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7557_v660_arc_generalization/terminal_candidate.json"
+      ],
+      "duration_s": 0.025905365007929504,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7557_v660_arc_generalization/validation/terminal/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "terminal_candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}
