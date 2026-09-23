@@ -18770,3 +18770,105 @@ and observed value.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7534 and SCENARIO-CL-7534-* | Implemented: frozen-bin count-memory API, causal durable event machine, seven analytical controls, restart qualification, terminal artifact producer, and thin entrypoint. | `tests/python/test_experiment_7534_v659_count_memory.py` covers arithmetic, chronology, permutation, exactly-once restart, controls, fail-closed readers, and blocked evidence. Focused tests and 100 percent changed-module coverage pass; the declared entrypoint runs the remaining scoped and terminal checks before publication. |
+
+## REQ-CL-7547: V660 Authenticated Count-Learning Stream
+
+Exp7547 SHALL seal one empirical CPU-only stream from the authenticated Exp7504
+feature sidecar, the original predictor and evaluator role stores, the Exp7510
+custody result, and the qualified Exp7534 `CountArm`. It SHALL consume
+`raw_whole_expectation` directly as the probability that `y=1` means
+`contains_unsupported`. It SHALL not load Exp7505 settings, apply its
+temperature, rerun capture, or invoke a model.
+
+The stream SHALL preserve 176 training-role forecasts, 159 online groups, and
+116 retention groups. Training labels SHALL remain unread. The eight equal
+probability bins SHALL use the arithmetic mean of training-role forecasts in
+each bin. An empty bin SHALL use its midpoint. The global mean SHALL use all
+176 training forecasts. Forecasts SHALL be clipped only by the qualified
+Exp7534 bound of `1e-4`.
+
+Five label-blind online orders SHALL use seeds 7549001 through 7549005. The
+schedule SHALL freeze event identities, original role membership, normalized
+source hashes, source families, block size eight, feedback delay eight, prior
+mass eight, clipping, and bin means before online labels are read. Every order
+SHALL contain each online group exactly once. The final short block and the
+end-of-stream censored updates SHALL be explicit.
+
+The registered arms SHALL be frozen, global-count, local-count, and
+release-block shuffled-local. Each event SHALL be predicted before any feedback
+available at that event is released. Full-audit labels SHALL be released only
+at their registered release time. Each legal release SHALL update, persist,
+and durably acknowledge the three mutable arms. The shuffled arm SHALL consume
+the same released label multiset and update count as the matched arms, with
+origins confined to that release block. A cold reload SHALL preserve every
+count, processed event ID, sealed prediction, release receipt, journal entry,
+and next prediction.
+
+Source bytes, feature bytes, original roles, normalized-source identities,
+label orientation, and qualified count implementation SHALL be authenticated.
+A source-hash, role, orientation, or label-identity mismatch SHALL close
+`cached_stream_ready_score`. Private mutation fixtures SHALL prove each
+boundary fails closed. These checks establish interface readiness only. Prior
+label exposure SHALL be recorded as exploratory and SHALL keep
+`positive_claim=false`.
+
+The terminal artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero typed current invocation counts,
+`inference_substrate_class=no_model_load`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and legal host CPU
+execution. `cached_stream_ready_score` SHALL be a bare numeric zero or one and
+SHALL remain independent of empirical benefit. Missing external inputs SHALL
+produce `complete_blocked_*`, `verdict_class=blocked`, and an exact failed
+upstream path or field with expected and observed operands.
+
+The affected validation SHALL freeze an Exp7358 `AffectedManifest` and use the
+Exp7303 scoped runner for serial focused pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+and exact-test specification coverage. The declared entrypoint, fresh-process
+cold replay, independent reduction, adversarial verifier, and strict row
+consistency reader SHALL inspect the exact terminal candidate before atomic
+publication. This read-only cached-data task has no applicable numbered runtime
+E2E. Its capability E2E SHALL exercise predict, release, update, persist, and
+reload on real cached rows.
+
+### SCENARIO-CL-7547-CUSTODY: Raw Forecasts Keep Their Semantic Orientation
+
+- GIVEN authenticated feature, predictor, and evaluator rows
+- WHEN the stream joins a group across the three stores
+- THEN source hash, response hash, role, and group identity match exactly
+- AND `raw_whole_expectation` and `y=1` both mean `contains_unsupported`.
+
+### SCENARIO-CL-7547-PROTOCOL: Labels Cannot Select The Frozen Stream
+
+- GIVEN all public role rows and five registered seeds
+- WHEN bin means and online orders are frozen
+- THEN no label is read until the protocol hash exists
+- AND each order contains all 159 online identities exactly once.
+
+### SCENARIO-CL-7547-CHRONOLOGY: Prediction Precedes Legal Feedback
+
+- GIVEN a full-audit order with eight-event delay and release blocks
+- WHEN events reach their registered release times
+- THEN each prediction is sealed before release, update, persist, and acknowledgment
+- AND the short final block and unreleased tail remain explicit censored rows.
+
+### SCENARIO-CL-7547-RESTART: Qualified Counts Survive Cold Reload
+
+- GIVEN real cached forecasts and labels from one legal release block
+- WHEN the four arms persist and reload
+- THEN the next probabilities and complete durable state match uninterrupted replay
+- AND shuffled label origins never leave the released block.
+
+### SCENARIO-CL-7547-MUTATION: Interface Drift Closes Readiness
+
+- GIVEN private copies with one source hash, role, orientation, or label identity changed
+- WHEN custody and independent reduction run
+- THEN each mutation is rejected without changing historical evidence
+- AND `cached_stream_ready_score` remains zero for invalid evidence.
+
+### SCENARIO-CL-7547-ARTIFACT: Readiness Does Not Claim Benefit
+
+- GIVEN complete custody, lifecycle, validation, and fresh-reader evidence
+- WHEN the terminal artifact is reduced
+- THEN `cached_stream_ready_score` can equal one with `verdict_class=null`
+- AND prior exposure, `positive_claim=false`, and unmeasured benefit stay explicit.
