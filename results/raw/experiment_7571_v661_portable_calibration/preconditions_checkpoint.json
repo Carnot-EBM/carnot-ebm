@@ -1,0 +1,142 @@
+{
+  "blocker": {
+    "check": "exp7561_recalibration_ready_score",
+    "expected": 1,
+    "field": "recalibration_ready_score",
+    "observed": 0,
+    "op": "eq",
+    "path": "results/experiment_7561_v661_recalibration_prototype.json",
+    "upstream": "Exp7561"
+  },
+  "prototype_solver_and_fixture_state": {
+    "allowed_verdict_class": false,
+    "fixture_lifecycle_passed": true,
+    "flagged_adversarial": false,
+    "independent_solver": "COBYQA",
+    "numerical_qualification_passed": true,
+    "primary_solver": "SLSQP",
+    "protocol_path": "results/raw/experiment_7561_v661_recalibration_prototype/frozen_learning_protocol.json",
+    "state_schema_path": "results/raw/experiment_7561_v661_recalibration_prototype/numerical_state_schema.json",
+    "verdict_class": "disqualified"
+  },
+  "resource_observations": {
+    "cargo_path": "/usr/bin/cargo",
+    "logical_cpu_count": 24,
+    "machine": "x86_64",
+    "platform": "Linux-7.2.6-1-cachyos-x86_64-with-glibc2.44",
+    "rust_measurement_started": false,
+    "tmp_free_bytes": 63388463104
+  },
+  "rows": [
+    {
+      "check": "source_readable:results/experiment_7561_v661_recalibration_prototype.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7561_v661_recalibration_prototype.json",
+      "upstream": "results/experiment_7561_v661_recalibration_prototype.json"
+    },
+    {
+      "check": "source_readable:results/experiment_7558_v660_service_boundary.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7558_v660_service_boundary.json",
+      "upstream": "results/experiment_7558_v660_service_boundary.json"
+    },
+    {
+      "check": "source_readable:results/raw/experiment_7561_v661_recalibration_prototype/frozen_learning_protocol.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "results/raw/experiment_7561_v661_recalibration_prototype/frozen_learning_protocol.json",
+      "upstream": "results/raw/experiment_7561_v661_recalibration_prototype/frozen_learning_protocol.json"
+    },
+    {
+      "check": "source_readable:results/raw/experiment_7561_v661_recalibration_prototype/numerical_state_schema.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "results/raw/experiment_7561_v661_recalibration_prototype/numerical_state_schema.json",
+      "upstream": "results/raw/experiment_7561_v661_recalibration_prototype/numerical_state_schema.json"
+    },
+    {
+      "check": "source_readable:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "source_readable:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_readable:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "source_readable:research-hardware-wishlist.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "research-hardware-wishlist.md",
+      "upstream": "research-hardware-wishlist.md"
+    },
+    {
+      "check": "exp7561_recalibration_ready_score",
+      "expected": 1,
+      "field": "recalibration_ready_score",
+      "observed": 0,
+      "op": "eq",
+      "passed": false,
+      "path": "results/experiment_7561_v661_recalibration_prototype.json",
+      "upstream": "Exp7561"
+    },
+    {
+      "check": "driving_requirement",
+      "expected": "REQ-REPORT-7571",
+      "field": "REQ-*",
+      "observed": "REQ-REPORT-7571",
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "scratch_capacity",
+      "expected": true,
+      "field": "free_bytes_at_least_16MiB",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "/tmp",
+      "upstream": "/tmp"
+    }
+  ]
+}

@@ -78216,3 +78216,79 @@ both strict terminal guards run
 ### Implementation Status (REQ-REPORT-7569)
 
 Planned. Implementation and validation evidence will be recorded by Exp7569.
+
+## REQ-REPORT-7571: Preserve portable-calibration readiness and board continuity
+
+Exp7571 SHALL check the exact Exp7561 terminal artifact before it starts any
+kernel or service measurement. The producer SHALL have
+`recalibration_ready_score=1`, an allowed terminal class, and no adversarial
+flag. If any check fails, Exp7571 SHALL publish a complete blocked result. The
+block SHALL name the upstream experiment, path, field, expected value, and
+observed value. It SHALL not compile a new kernel or invent parity, timing, or
+service rows.
+
+The blocked branch SHALL retain three board rows. The KV260 row SHALL preserve
+the graduated fabric transcript, `ssh kria` as the only future access method,
+and `k_max<=5`. The PolarFire row SHALL preserve historical CPU dispatch and
+SHALL not call it FPGA sampling. The GateMate row SHALL search the registered
+operator-authored cable, port, and power receipt sources. Without a qualifying
+receipt newer than the recorded boundary, it SHALL preserve the physical
+blocker and issue no probe, remote, flash, or power command.
+
+The result SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, no current model
+invocation, zero typed load, forward, and generation counts,
+`inference_substrate_class=no_model_load`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and host execution.
+`portable_kernel_ready_score`, `service_measurement_complete_score`, and
+`board_continuity_complete_score` SHALL be bare zero or one. The first two
+scores SHALL remain zero in the blocked branch. Board continuity MAY be one
+when all three rows retain their exact scopes.
+
+The artifact SHALL keep kernel cost, complete-service cost, and hardware
+acceleration claims separate. A blocked branch SHALL report these costs as not
+measured, not as zero. It SHALL preserve the V660 service artifact as
+historical evidence only. Predictive benefit and hardware speed claims SHALL
+remain false.
+
+The affected-file manifest SHALL freeze one test file, one changed module, and
+one thin entrypoint. Validation SHALL run focused pytest, 100 percent
+changed-module coverage, scoped Ruff, changed-module mypy, scoped specification
+coverage, the declared entrypoint, cold replay, independent reduction,
+adversarial verification, and strict row consistency. Publication SHALL be
+atomic and SHALL occur only after all exact readers pass. The blocked branch
+changes no shared Rust binding, so E2E-004 is recorded as not applicable.
+
+### SCENARIO-REPORT-7571-BLOCKED: Invalid prototype stops dependent work
+
+**Given** Exp7561 has a disqualified terminal class or readiness score zero
+**When** Exp7571 checks preconditions
+**Then** its verdict is `complete_blocked_exp7561_recalibration_ready_score`
+**And** its gate summary records the exact failed operand
+**And** parity and service sample counts remain unstarted instead of failed.
+
+### SCENARIO-REPORT-7571-BOARDS: Board scopes survive the learner gate
+
+**Given** the kernel branch is blocked before measurement
+**When** board continuity is reduced from historical records and current receipt search
+**Then** KV260 fabric, PolarFire CPU dispatch, and GateMate physical state remain distinct
+**And** no present reachability or hardware execution is asserted
+**And** the board continuity score is one only when all three rows are complete.
+
+### SCENARIO-REPORT-7571-COSTS: Missing measurement is not zero cost
+
+**Given** no Rust parity or paired service trial starts
+**When** the terminal artifact reports kernel and service costs
+**Then** every measured ratio, replaceable fraction, and Amdahl ceiling is null
+**And** hardware placement remains deferred without a device-speed claim.
+
+### SCENARIO-REPORT-7571-E2E: Exact blocked replay controls publication
+
+**Given** a frozen affected manifest and blocked terminal candidate
+**When** scoped checks, cold replay, independent reduction, and strict readers run
+**Then** every required receipt passes before atomic publication
+**And** imports resolve below this worktree
+**And** the replay confirms predict-release-update-persist-reload was not started.
+
+### Implementation Status (REQ-REPORT-7571)
+
+Planned. Implementation and validation evidence will be recorded by Exp7571.
