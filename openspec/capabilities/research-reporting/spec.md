@@ -77830,3 +77830,86 @@ Implemented: exact authorities, V659 custody, bounded methods, independent
 reduction, and a thin entrypoint. Verification uses linked tests, full
 changed-module coverage, cold replay, and strict readers. The unscoped suite
 and harness path finding remain separate repository-health observations.
+
+## REQ-REPORT-7558: Measure the durable V660 count-service boundary
+
+Exp7558 SHALL use the shipped Exp7534 count event machine without loading a
+model. It SHALL run 30 paired trials for batch-one and batch-256 policies.
+Each trial SHALL use the same 256 deterministic events and a fresh directory
+under `/tmp`. Each row SHALL time prediction, release and update, state
+serialization, file fsync, atomic rename, directory fsync, durable
+acknowledgement, and reload. Batch delay SHALL count in per-event
+acknowledgement latency. The update kernel SHALL remain separate from the full
+service denominator.
+
+The two policies SHALL have equal durability semantics. Each completed row
+SHALL record counts, bytes, acknowledged events, a cold or warm state label,
+the observed host and storage device, and exact reconstruction parity. The
+report SHALL publish medians and paired bootstrap intervals. Its Amdahl bounds
+SHALL use only measured service fractions. It SHALL not import a vendor,
+Extropic, Z1T, or FPGA speedup ratio. It SHALL not claim whole-inference
+acceleration.
+
+Exp7558 SHALL test owned child termination at pre-commit, post-file-fsync, and
+post-rename boundaries. Reconstruction SHALL lose no acknowledged event and
+apply no event twice. The task SHALL signal only children that it started.
+
+The report SHALL read Exp7314, Exp7459, Exp7513, and Exp7528 as byte-bound
+board continuity records. It SHALL retain the KV260 fabric graduation and the
+PolarFire CPU-dispatch-only scope. It SHALL search dated, operator-authored
+GateMate physical-change receipts. Unchanged evidence SHALL create an explicit
+blocked GateMate row with its exact path, field, expected value, and observed
+value. The task SHALL issue no board, SSH, JTAG, or flash command.
+
+The artifact SHALL bind exp7558, milestone `2026.09.660`, and run date
+`20260923`. It SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, false
+`model_invoked`, zero current calls, `no_model_load`,
+`aggregation_from_upstream_artifacts`, and legal venue `host`. Readiness
+scores SHALL be bare numeric zero or one. Positive claim SHALL remain false
+when no measured dominant hardware cost exists. The current path SHALL be
+CPU/Rust batching and persistence. No new hardware purchase is justified
+without a measured dominant cost.
+
+### SCENARIO-REPORT-7558-DURABILITY: Equal semantics expose full service cost
+
+**Given** the shipped count prototype and a frozen 256-event sequence
+**When** 30 paired trials run with batch-one and batch-256 persistence
+**Then** all latency segments, byte counts, acknowledgements, and reload parity are recorded
+**And** batching delay contributes to per-event acknowledgement latency
+**And** measured service fractions alone define each Amdahl bound.
+
+### SCENARIO-REPORT-7558-CRASH: Acknowledged state is exactly once
+
+**Given** an owned child and each registered commit boundary
+**When** the parent terminates that child and reloads the durable state
+**Then** no acknowledged event is missing
+**And** no event update appears twice
+**And** no foreign process receives a signal.
+
+### SCENARIO-REPORT-7558-BOARDS: Historical board scopes stay separate
+
+**Given** the four named board records and dated GateMate receipt search
+**When** Exp7558 reduces board continuity without hardware access
+**Then** KV260 fabric, PolarFire CPU dispatch, and GateMate physical blockers remain distinct
+**And** every unchanged blocker names expected and observed evidence
+**And** no board, SSH, JTAG, or flash operation occurs.
+
+### SCENARIO-REPORT-7558-VALIDATION: Exact readers control publication
+
+**Given** a frozen affected-file manifest and measured terminal candidate
+**When** scoped tests, 100 percent changed-module coverage, Ruff, mypy, spec
+coverage, the declared entrypoint, cold replay, independent reduction,
+adversarial verification, and strict row consistency run
+**Then** all required receipts pass before atomic publication
+**And** the capability E2E exercises predict, release, update, persist, and reload
+**And** no numbered runtime E2E applies because no shared training, binding,
+ARC, transport, or telemetry behavior changes.
+
+## Implementation Status (REQ-REPORT-7558)
+
+Implemented: 30 paired durable service trials, three owned-child crash
+boundaries, four-record board continuity, strict validation, and a thin
+entrypoint. Spec-linked tests cover source custody, equal durability, batch
+delay, restart parity, crash recovery, Amdahl reduction, board scope, blocked
+artifacts, mutations, cold replay, and exact command scope. Changed-module
+coverage is 100 percent. The declared entrypoint passed all terminal readers.
