@@ -1,0 +1,213 @@
+{
+  "checkpoint": {
+    "bytes": 12801,
+    "path": "results/raw/experiment_7576_v662_proper_loss_energy/proper_loss_checkpoint.json",
+    "sha256": "sha256:2cad8e41ab5a19f0e64f9718d0d02cc73ace03f28e5381354a356bbafc5dbd3a"
+  },
+  "feature_schema": {
+    "inputs": [
+      "p_original"
+    ],
+    "online_or_test_labels_used": false,
+    "source": "exp7575_frozen_original_probability",
+    "source_contrasts_used": false
+  },
+  "frozen_before_policy_access": true,
+  "heads": {
+    "proper_loss_monotone": {
+      "constraint_residuals": {
+        "maximum": 0.0,
+        "monotonicity": 0.0,
+        "movement": 0.0,
+        "range": 0.0
+      },
+      "constraints": "range_monotonicity_movement_0.10",
+      "fit_brier": 0.1482162041189666,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:287bf5d4010e74a7c7375dc3289676023f1506d67e119adfb0856eb38bf09f14",
+      "knot_locations": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "name": "proper_loss_monotone",
+      "objective": {
+        "brier_sum": 23.714592659034658,
+        "exact_objective": 23.939759129711046,
+        "identity_penalty": 0.22516647067638718,
+        "label_constant": 85.0,
+        "objective_reconstruction_residual": 1.0658141036401503e-14,
+        "solver_objective_without_label_constant": -61.06024087028894
+      },
+      "parameter_count": 9,
+      "solver_receipt": {
+        "constraint_errors": [],
+        "converged": true,
+        "iteration_cap": 500,
+        "iterations": 9,
+        "message": "Optimization terminated successfully",
+        "method": "SLSQP",
+        "objective": -61.06024087028894,
+        "status": 0,
+        "tolerance": 1e-08
+      },
+      "theta": [
+        6.451491797608136e-15,
+        0.1673189273429342,
+        0.2224561213650643,
+        0.387163848572936,
+        0.5532900200938402,
+        0.7249999999999864,
+        0.8499999999999965,
+        0.9260731487097866,
+        1.0
+      ]
+    },
+    "raw_original": {
+      "converged": true,
+      "fit_brier": 0.16099437646733983,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:3348c9b1e0e73eada519dacd6e6143592f0e8604d8ef890b544fb1071c3ef6d5",
+      "name": "raw_original",
+      "parameter_count": 0
+    },
+    "temperature_original": {
+      "candidate_grid": [
+        {
+          "fit_brier": 0.16368683027063144,
+          "temperature": 0.25
+        },
+        {
+          "fit_brier": 0.1551171322955947,
+          "temperature": 0.5
+        },
+        {
+          "fit_brier": 0.15632506411320019,
+          "temperature": 0.75
+        },
+        {
+          "fit_brier": 0.16099437646733983,
+          "temperature": 1.0
+        },
+        {
+          "fit_brier": 0.17287209649208468,
+          "temperature": 1.5
+        },
+        {
+          "fit_brier": 0.18372642777740916,
+          "temperature": 2.0
+        },
+        {
+          "fit_brier": 0.1995162183208543,
+          "temperature": 3.0
+        },
+        {
+          "fit_brier": 0.21652731479676407,
+          "temperature": 5.0
+        }
+      ],
+      "converged": true,
+      "fit_brier": 0.1551171322955947,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:299f07a11cf7a7d756558a3798bbe504d69f1733f38615793508e23165ff9cf9",
+      "name": "temperature_original",
+      "parameter_count": 1,
+      "selection_role": "fit",
+      "temperature": 0.5
+    },
+    "unconstrained_nine_knot": {
+      "constraint_residuals": {
+        "maximum": 0.0,
+        "range": 0.0
+      },
+      "constraints": "range_only",
+      "fit_brier": 0.1410098426304803,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:cc20264fadbc4d624a0e235dcf1af811faacdd62bd3e9ce4c9bf3fec8b68d616",
+      "knot_locations": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "name": "unconstrained_nine_knot",
+      "objective": {
+        "brier_sum": 22.56157482087685,
+        "exact_objective": 23.31027333665179,
+        "identity_penalty": 0.748698515774941,
+        "label_constant": 85.0,
+        "objective_reconstruction_residual": 0.0,
+        "solver_objective_without_label_constant": -61.68972666334821
+      },
+      "parameter_count": 9,
+      "solver_receipt": {
+        "converged": true,
+        "iteration_cap": 500,
+        "iterations": 12,
+        "message": "Optimization terminated successfully",
+        "method": "SLSQP_range_only",
+        "objective": -61.68972666334821,
+        "range_residual": 0.0,
+        "status": 0,
+        "tolerance": 1e-08
+      },
+      "theta": [
+        3.817717022175419e-16,
+        0.1674275479347569,
+        0.22160542404674938,
+        0.3913434689199818,
+        0.5310097896035387,
+        0.8666238210892402,
+        0.9239043992806304,
+        0.9085773535292819,
+        1.0
+      ]
+    }
+  },
+  "manifest_sha256": "sha256:729df3487ab482c21de5b0361ea57f2a3550e8986016db1e7ef91f8a98a1f4db",
+  "objective": {
+    "identity_penalty_lambda": 8.0,
+    "knot_locations": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "loss": "binary_brier",
+    "movement_bound": 0.1,
+    "solver_tolerance": 1e-08
+  },
+  "qualification_controls": {
+    "bytes": 1744,
+    "path": "results/raw/experiment_7576_v662_proper_loss_energy/qualification_controls.json",
+    "sha256": "sha256:afdeb07545637951e3d2fd60c684246d2d8b9071f207feecdbe8509cc84ebfd5"
+  },
+  "schema": "carnot.exp7576.v662.head_manifest.v1",
+  "strongest_comparator": {
+    "all_tune_brier": {
+      "raw_original": 0.13462130918508425,
+      "temperature_original": 0.11930674576400344,
+      "unconstrained_nine_knot": 0.12120646153956409
+    },
+    "frozen_before_policy_access": true,
+    "name": "temperature_original",
+    "selected_on_role": "tune",
+    "tune_brier": 0.11930674576400344
+  }
+}

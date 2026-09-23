@@ -19145,6 +19145,108 @@ field, operator, expected value, and observed value.
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-CL-7576: V662 Proper-Loss Energy Fit
+
+Experiment 7576 SHALL fit one nine-knot piecewise-linear map from cached
+Experiment 7575 original probabilities. Knot locations SHALL be `u_j=j/8`.
+The candidate SHALL minimize fitting-row Brier loss plus
+`8 * ||theta-u||^2`. It SHALL satisfy probability range, monotonicity, and
+`|theta_j-u_j| <= 0.10`. The identity map SHALL remain an explicit control.
+It SHALL be the fallback only when the registered solver fails. Such a
+fallback SHALL set candidate readiness to zero.
+
+The matched capacity control SHALL use nine knots, the same fitting rows,
+Brier objective, and identity penalty. It SHALL constrain each knot to
+`[0,1]` without monotonicity or movement constraints. Raw and fixed-grid
+temperature controls SHALL use the same fitting identities. Tune rows SHALL
+select only the strongest comparator. Policy rows SHALL test only the frozen
+typed-action contract. Online and test labels SHALL be rejected.
+
+All heads SHALL freeze before policy access. The candidate SHALL produce
+`q=f_theta(p_original)`. Its binary energies SHALL be
+`E(error)=-log(q)` and `E(correct)=-log(1-q)`. Clipping at `1e-6` SHALL occur
+only during logarithm evaluation. The artifact SHALL record the full
+optimizer objective, label-constant term, convergence, constraint residuals,
+and exact fitting Brier. A post-hoc score SHALL not be called a formal
+verifier.
+
+Structural controls SHALL qualify identity reproduction, option-order
+custody, monotonicity, movement bounds, shuffled-label loss, and parameter
+sensitivity. Frozen-head input perturbations SHALL be `0`, `0.01`, and
+`0.05`, clipped to `[0,1]`. They SHALL remain sensitivity diagnostics and
+SHALL not become relabeled empirical rows. Immutable checkpoint and control
+hashes SHALL bind objective settings, feature schema, knots, fitted values,
+comparator choice, and source identities.
+
+Missing external evidence SHALL produce `complete_blocked_*`,
+`verdict_class=blocked`, and a gate summary with check, upstream, path, field,
+operator, expected, and observed values. The task SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `no_model_load=true`, zero current load,
+forward, generation, and token counts, and the historical Qwen identity only
+inside source custody. It SHALL set `fresh_confirmatory_claim_allowed=false`.
+
+Validity, fit readiness, baseline readiness, and benefit SHALL remain
+separate. Fit completion SHALL not establish predictive benefit. The terminal
+artifact SHALL include one row per fitting or tuning unit and arm. Each row
+SHALL carry raw numerator, denominator, direction, seed, censoring, and
+provenance. `proper_loss_fit_ready_score` SHALL be one only when the candidate
+and every registered fitting control converge and freeze. `baseline_ready_score`
+SHALL be one only when raw, temperature, and equal-capacity controls share
+the same fitting identities.
+
+The affected validation SHALL freeze an Exp7358 manifest. It SHALL run
+focused serial pytest, separate 100 percent changed-module coverage, scoped
+Ruff check and format, changed-module mypy, and exact-test specification
+coverage. The declared entrypoint SHALL exercise predict, release, update,
+persist, and reload. Fresh-process cold replay, independent row reduction,
+adversarial verification, and strict row consistency SHALL inspect the exact
+terminal candidate before atomic publication. No numbered runtime E2E applies.
+
+### SCENARIO-CL-7576-FIT: The Candidate Nests The Raw Forecast
+
+- GIVEN 160 authenticated fitting probabilities and separately released labels
+- WHEN the qualified constrained solver fits the registered nine knots
+- THEN it converges with monotone, range, and movement residuals within tolerance
+- AND the exact objective and fitting Brier reproduce from frozen parameters.
+
+### SCENARIO-CL-7576-CONTROLS: Matched Baselines Use The Same Rows
+
+- GIVEN raw, temperature, bounded, and range-only nine-knot heads
+- WHEN all fitting receipts freeze
+- THEN every head names the same fitting source identities
+- AND tune labels choose only the strongest comparator after fitting.
+
+### SCENARIO-CL-7576-ISOLATION: Evaluation Labels Cannot Enter Fitting
+
+- GIVEN the authenticated Experiment 7575 role sidecar
+- WHEN the fit reader opens the registered roles
+- THEN it returns only fit, tune, and policy rows
+- AND any request for online or test labels fails before fitting.
+
+### SCENARIO-CL-7576-ENERGY: Normalization Changes No Forecast
+
+- GIVEN a frozen mapped probability including endpoint cases
+- WHEN correct and error energies are evaluated with log-only clipping
+- THEN normalization recovers the log-safe probability
+- AND probability fitting itself remains unclipped.
+
+### SCENARIO-CL-7576-DIAGNOSTICS: Noise Is Not New Evidence
+
+- GIVEN the frozen candidate and perturbations 0, 0.01, and 0.05
+- WHEN sensitivity, identity, shuffled-label, mapping, and parameter checks run
+- THEN each diagnostic is hash-bound and independently reproducible
+- AND no diagnostic row is presented as a new labeled observation.
+
+### SCENARIO-CL-7576-TERMINAL: Fit Readiness Is Not Benefit
+
+- GIVEN a hash-bound candidate, head manifest, raw rows, and validation receipts
+- WHEN cold replay, independent reduction, adversarial verification, and the strict row reader inspect identical bytes
+- THEN fit and baseline readiness reproduce independently
+- AND the complete verdict remains null until a later frozen evaluation measures benefit.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-CL-7575: V662 Cached Learning Protocol
 
 Experiment 7575 SHALL freeze and evaluate an exploratory cached-learning

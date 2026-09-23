@@ -1,0 +1,425 @@
+{
+  "checkpoint_payload": {
+    "feature_schema": {
+      "inputs": [
+        "p_original"
+      ],
+      "online_or_test_labels_used": false,
+      "source": "exp7575_frozen_original_probability",
+      "source_contrasts_used": false
+    },
+    "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+    "heads": {
+      "proper_loss_monotone": {
+        "constraint_residuals": {
+          "maximum": 0.0,
+          "monotonicity": 0.0,
+          "movement": 0.0,
+          "range": 0.0
+        },
+        "constraints": "range_monotonicity_movement_0.10",
+        "fit_brier": 0.1482162041189666,
+        "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+        "head_sha256": "sha256:287bf5d4010e74a7c7375dc3289676023f1506d67e119adfb0856eb38bf09f14",
+        "knot_locations": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "name": "proper_loss_monotone",
+        "objective": {
+          "brier_sum": 23.714592659034658,
+          "exact_objective": 23.939759129711046,
+          "identity_penalty": 0.22516647067638718,
+          "label_constant": 85.0,
+          "objective_reconstruction_residual": 1.0658141036401503e-14,
+          "solver_objective_without_label_constant": -61.06024087028894
+        },
+        "parameter_count": 9,
+        "solver_receipt": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 9,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": -61.06024087028894,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "theta": [
+          6.451491797608136e-15,
+          0.1673189273429342,
+          0.2224561213650643,
+          0.387163848572936,
+          0.5532900200938402,
+          0.7249999999999864,
+          0.8499999999999965,
+          0.9260731487097866,
+          1.0
+        ]
+      },
+      "raw_original": {
+        "converged": true,
+        "fit_brier": 0.16099437646733983,
+        "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+        "head_sha256": "sha256:3348c9b1e0e73eada519dacd6e6143592f0e8604d8ef890b544fb1071c3ef6d5",
+        "name": "raw_original",
+        "parameter_count": 0
+      },
+      "temperature_original": {
+        "candidate_grid": [
+          {
+            "fit_brier": 0.16368683027063144,
+            "temperature": 0.25
+          },
+          {
+            "fit_brier": 0.1551171322955947,
+            "temperature": 0.5
+          },
+          {
+            "fit_brier": 0.15632506411320019,
+            "temperature": 0.75
+          },
+          {
+            "fit_brier": 0.16099437646733983,
+            "temperature": 1.0
+          },
+          {
+            "fit_brier": 0.17287209649208468,
+            "temperature": 1.5
+          },
+          {
+            "fit_brier": 0.18372642777740916,
+            "temperature": 2.0
+          },
+          {
+            "fit_brier": 0.1995162183208543,
+            "temperature": 3.0
+          },
+          {
+            "fit_brier": 0.21652731479676407,
+            "temperature": 5.0
+          }
+        ],
+        "converged": true,
+        "fit_brier": 0.1551171322955947,
+        "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+        "head_sha256": "sha256:299f07a11cf7a7d756558a3798bbe504d69f1733f38615793508e23165ff9cf9",
+        "name": "temperature_original",
+        "parameter_count": 1,
+        "selection_role": "fit",
+        "temperature": 0.5
+      },
+      "unconstrained_nine_knot": {
+        "constraint_residuals": {
+          "maximum": 0.0,
+          "range": 0.0
+        },
+        "constraints": "range_only",
+        "fit_brier": 0.1410098426304803,
+        "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+        "head_sha256": "sha256:cc20264fadbc4d624a0e235dcf1af811faacdd62bd3e9ce4c9bf3fec8b68d616",
+        "knot_locations": [
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1.0
+        ],
+        "name": "unconstrained_nine_knot",
+        "objective": {
+          "brier_sum": 22.56157482087685,
+          "exact_objective": 23.31027333665179,
+          "identity_penalty": 0.748698515774941,
+          "label_constant": 85.0,
+          "objective_reconstruction_residual": 0.0,
+          "solver_objective_without_label_constant": -61.68972666334821
+        },
+        "parameter_count": 9,
+        "solver_receipt": {
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 12,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP_range_only",
+          "objective": -61.68972666334821,
+          "range_residual": 0.0,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "theta": [
+          3.817717022175419e-16,
+          0.1674275479347569,
+          0.22160542404674938,
+          0.3913434689199818,
+          0.5310097896035387,
+          0.8666238210892402,
+          0.9239043992806304,
+          0.9085773535292819,
+          1.0
+        ]
+      }
+    },
+    "objective": {
+      "identity_penalty_lambda": 8.0,
+      "knot_locations": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "loss": "binary_brier",
+      "movement_bound": 0.1,
+      "solver_tolerance": 1e-08
+    },
+    "schema": "carnot.exp7576.v662.proper_loss_checkpoint.v1",
+    "shuffled_label_control": {
+      "constraints": "range_monotonicity_movement_0.10",
+      "fit_brier": 0.17613542020941697,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:bc6a8e990a046c578cdc2390cd16b5714c5d023231ce1b65a32e67a4cafc1503",
+      "knot_locations": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "label_permutation_sha256": "sha256:4f8e5c13d76d8685ed7f7fd93ef74dc2d1d013278a6fac18c608d73378ca056f",
+      "name": "shuffled_label_control",
+      "objective": {
+        "brier_sum": 43.638279617310786,
+        "exact_objective": 44.04008037434769,
+        "identity_penalty": 0.4018007570369055,
+        "label_constant": 85.0,
+        "objective_reconstruction_residual": 7.105427357601002e-15,
+        "solver_objective_without_label_constant": -40.959919625652304
+      },
+      "parameter_count": 9,
+      "solver_receipt": {
+        "constraint_errors": [],
+        "converged": true,
+        "iteration_cap": 500,
+        "iterations": 11,
+        "message": "Optimization terminated successfully",
+        "method": "SLSQP",
+        "objective": -40.959919625652304,
+        "status": 0,
+        "tolerance": 1e-08
+      },
+      "theta": [
+        0.09999999999993951,
+        0.22499999999968684,
+        0.3499999999998932,
+        0.3769543141310844,
+        0.45079075778674893,
+        0.5401934458514284,
+        0.7253512957318924,
+        0.775,
+        0.999875428202723
+      ]
+    },
+    "strongest_comparator": {
+      "all_tune_brier": {
+        "raw_original": 0.13462130918508425,
+        "temperature_original": 0.11930674576400344,
+        "unconstrained_nine_knot": 0.12120646153956409
+      },
+      "frozen_before_policy_access": true,
+      "name": "temperature_original",
+      "selected_on_role": "tune",
+      "tune_brier": 0.11930674576400344
+    }
+  },
+  "checkpoint_sha256": "sha256:6b15f8bf49d7c8162428ad2441c574846b4b434401553ccfc4585b05872a8bd1",
+  "heads": {
+    "proper_loss_monotone": {
+      "constraint_residuals": {
+        "maximum": 0.0,
+        "monotonicity": 0.0,
+        "movement": 0.0,
+        "range": 0.0
+      },
+      "constraints": "range_monotonicity_movement_0.10",
+      "fit_brier": 0.1482162041189666,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:287bf5d4010e74a7c7375dc3289676023f1506d67e119adfb0856eb38bf09f14",
+      "knot_locations": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "name": "proper_loss_monotone",
+      "objective": {
+        "brier_sum": 23.714592659034658,
+        "exact_objective": 23.939759129711046,
+        "identity_penalty": 0.22516647067638718,
+        "label_constant": 85.0,
+        "objective_reconstruction_residual": 1.0658141036401503e-14,
+        "solver_objective_without_label_constant": -61.06024087028894
+      },
+      "parameter_count": 9,
+      "solver_receipt": {
+        "constraint_errors": [],
+        "converged": true,
+        "iteration_cap": 500,
+        "iterations": 9,
+        "message": "Optimization terminated successfully",
+        "method": "SLSQP",
+        "objective": -61.06024087028894,
+        "status": 0,
+        "tolerance": 1e-08
+      },
+      "theta": [
+        6.451491797608136e-15,
+        0.1673189273429342,
+        0.2224561213650643,
+        0.387163848572936,
+        0.5532900200938402,
+        0.7249999999999864,
+        0.8499999999999965,
+        0.9260731487097866,
+        1.0
+      ]
+    },
+    "raw_original": {
+      "converged": true,
+      "fit_brier": 0.16099437646733983,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:3348c9b1e0e73eada519dacd6e6143592f0e8604d8ef890b544fb1071c3ef6d5",
+      "name": "raw_original",
+      "parameter_count": 0
+    },
+    "temperature_original": {
+      "candidate_grid": [
+        {
+          "fit_brier": 0.16368683027063144,
+          "temperature": 0.25
+        },
+        {
+          "fit_brier": 0.1551171322955947,
+          "temperature": 0.5
+        },
+        {
+          "fit_brier": 0.15632506411320019,
+          "temperature": 0.75
+        },
+        {
+          "fit_brier": 0.16099437646733983,
+          "temperature": 1.0
+        },
+        {
+          "fit_brier": 0.17287209649208468,
+          "temperature": 1.5
+        },
+        {
+          "fit_brier": 0.18372642777740916,
+          "temperature": 2.0
+        },
+        {
+          "fit_brier": 0.1995162183208543,
+          "temperature": 3.0
+        },
+        {
+          "fit_brier": 0.21652731479676407,
+          "temperature": 5.0
+        }
+      ],
+      "converged": true,
+      "fit_brier": 0.1551171322955947,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:299f07a11cf7a7d756558a3798bbe504d69f1733f38615793508e23165ff9cf9",
+      "name": "temperature_original",
+      "parameter_count": 1,
+      "selection_role": "fit",
+      "temperature": 0.5
+    },
+    "unconstrained_nine_knot": {
+      "constraint_residuals": {
+        "maximum": 0.0,
+        "range": 0.0
+      },
+      "constraints": "range_only",
+      "fit_brier": 0.1410098426304803,
+      "fit_source_ids_sha256": "sha256:cdd0e2be377bce56088fdc0dedea126b42dcc2b8141bdb3f6406960759d85453",
+      "head_sha256": "sha256:cc20264fadbc4d624a0e235dcf1af811faacdd62bd3e9ce4c9bf3fec8b68d616",
+      "knot_locations": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "name": "unconstrained_nine_knot",
+      "objective": {
+        "brier_sum": 22.56157482087685,
+        "exact_objective": 23.31027333665179,
+        "identity_penalty": 0.748698515774941,
+        "label_constant": 85.0,
+        "objective_reconstruction_residual": 0.0,
+        "solver_objective_without_label_constant": -61.68972666334821
+      },
+      "parameter_count": 9,
+      "solver_receipt": {
+        "converged": true,
+        "iteration_cap": 500,
+        "iterations": 12,
+        "message": "Optimization terminated successfully",
+        "method": "SLSQP_range_only",
+        "objective": -61.68972666334821,
+        "range_residual": 0.0,
+        "status": 0,
+        "tolerance": 1e-08
+      },
+      "theta": [
+        3.817717022175419e-16,
+        0.1674275479347569,
+        0.22160542404674938,
+        0.3913434689199818,
+        0.5310097896035387,
+        0.8666238210892402,
+        0.9239043992806304,
+        0.9085773535292819,
+        1.0
+      ]
+    }
+  },
+  "lifecycle": [
+    "predict",
+    "release",
+    "update",
+    "persist",
+    "reload"
+  ],
+  "schema": "carnot.exp7576.v662.persisted_checkpoint.v1"
+}
