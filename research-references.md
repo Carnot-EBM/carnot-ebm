@@ -46435,3 +46435,92 @@ speedup into Carnot's ARC loop.
 This review made no model call, hardware modification, vendor contact,
 publication or purchase. Promising method leads above were recorded before
 the V660 task design.
+
+## V661 planning source review — 2026-09-23
+
+This review precedes the V661 design. V660's independent audit qualified a
+count-learning null. The local learner did not beat the global-count control
+and failed retention gates. Source collection did not start. Corrected ARC
+responses still did not establish a plan-to-action outcome. These are the
+questions for this review, rather than reasons to repeat unchanged sweeps.
+
+### Promising methods and their limits
+
+- **Calibeating Made Simple**, Chen, Huang, Jordan and Luo, 2026-03-23,
+  [arXiv:2603.22167v1](https://arxiv.org/html/2603.22167v1).
+  The paper connects online recalibration to regret minimization under proper
+  losses. It distinguishes calibration from forecast informativeness. This
+  motivates direct proper-loss optimization with an explicit original-forecast
+  comparator. A small constrained piecewise-linear calibrator is a Carnot
+  adaptation. It does not inherit the paper's rates under delayed feedback.
+- **Proper Calibeating**, Foster and Hart, 2026-05-26,
+  [arXiv:2605.26703](https://arxiv.org/abs/2605.26703).
+  Calibration and calibeating differ across scoring rules. Measure Brier,
+  log loss and the frozen decision cost separately. One improved score cannot
+  establish useful decisions or preservation of earlier knowledge.
+- **Optimal Recalibration of an Online Predictor**, 2026-07-22,
+  [arXiv:2607.19689](https://arxiv.org/abs/2607.19689).
+  Rechecked the original text. Its comparison to supplied forecasts supports
+  bounded movement from the starting predictor. A deterministic trust bound
+  on prediction movement is not a statistical non-regression guarantee.
+- **Beyond Document Grounding**, 2026-07,
+  [arXiv:2607.00895](https://arxiv.org/abs/2607.00895), and **SAFE contrastive
+  probes**, 2026-09,
+  [arXiv:2609.16646](https://arxiv.org/abs/2609.16646).
+  Retain the already-qualified tool-output corpus and source interventions.
+  SAFE studies visual grounding; transfer to textual source readouts remains
+  a hypothesis. A missing or mismatched source is not a newly certified false
+  answer. Independent corpus labels remain the target.
+- **PostHoc FREE Calibrating on Kolmogorov Arnold Networks**, 2025-03-03,
+  [arXiv:2503.01195](https://arxiv.org/abs/2503.01195), and **Ultrafast On-Chip
+  Online Learning via Spline Locality**, revised 2026-06-19,
+  [arXiv:2602.02056v4](https://arxiv.org/abs/2602.02056v4).
+  Local basis functions offer small update state; they do not ensure calibrated
+  confidence. Keep matched controls and measure the complete persistence path.
+- **An FPGA-ASIC Co-Design Framework for Capacity-Constrained Physics-Based
+  Ising Chips**, revised 2026-09-04,
+  [arXiv:2602.15985v2](https://arxiv.org/abs/2602.15985v2).
+  The revision treats orchestration and memory movement as primary design
+  costs. This supports measuring whole-service costs before a hardware port.
+  Its device results are external measurements, not Carnot acceleration.
+
+### Breadth check and deferred work
+
+| Topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092), [ARM–EBM](https://arxiv.org/abs/2512.15605), [distributional verification](https://arxiv.org/abs/2605.18871) | Energy modeling does not certify correctness. Preserve the retirement of generic external-text reranking. |
+| Neural constraint satisfaction | [HardNet++](https://arxiv.org/abs/2604.19669), [CAffNet](https://arxiv.org/abs/2605.24437) | Supplied constraint feasibility does not prove source fidelity. The retired local repair stack stays closed. |
+| Ising learning | [Equilibrium propagation in oscillator Ising machines](https://arxiv.org/abs/2505.02103) | Physical learning is relevant long term; a binary calibrated head needs exact normalization, not sampling. |
+| Hallucination detection | [HIVE](https://arxiv.org/abs/2604.26139), grounded tool data and SAFE above | Diffusion hidden-state access is a different runtime. Retain the mandated local model and test source interventions first. |
+| Energy-guided generation | [ETS](https://arxiv.org/abs/2601.21484) | Monte Carlo guidance adds cost and needs a useful energy. Defer generation steering until that energy is measured. |
+| Continual learning and KAN | Proper-loss and local-basis papers above | Test a changed learner on untouched source groups. Do not refit the inspected V660 stream for a headline. |
+| Hardware sampling | FPGA–ASIC revision above; [Extropic Z1T](https://extropic.ai/writing/z1t) | Preserve the CPU, FPGA and TSU distinction and full service denominator. |
+
+### Secondary channels and access record
+
+- **OpenReview:** retrieved the [EBT ICLR 2026 paper](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  and [compositional energy reasoning NeurIPS 2025 paper](https://openreview.net/pdf?id=5k0AHYc4MJ).
+  Searched ICML 2026 EBM work as well. These support architecture context,
+  not an unmeasured local improvement.
+- **Semantic Scholar:** searched both seed IDs and attempted Graph API
+  citation lists for `ARXIV:2507.02092` and `ARXIV:2512.15605`.
+  Both direct reads failed. No complete citation census or new citing-paper
+  claim is available from that channel.
+- **Hugging Face:** checked the [verification paper search](https://huggingface.co/papers?q=verification)
+  and [Agentic Code Reasoning](https://huggingface.co/papers/2603.01896).
+  The dated September 23 feed failed to load. Technical claims above use
+  original papers; a feed entry is a discovery lead.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending pages and
+  [EBT author code](https://github.com/alexiglad/EBT). No verified new relevant
+  trending repository displaced the current implementation. A direct THRML
+  repository read failed; no new release claim follows.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  Z1T article. The index exposed little text. The article describes external
+  hardware and training; it does not establish local TSU access.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  The page describes constraint enforcement but supplies no reproducible
+  training recipe or downloadable Carnot-compatible checkpoint.
+
+No external publication, contact, model run or hardware change was performed.
+Previously filed sources are marked as rechecks rather than new discoveries.

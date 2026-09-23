@@ -11,12 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
-| CLAIM_OVERSTATED | 1 |
-| NO_CLAIM | 5 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| CLAIM_SUPPORTED | 5 |
+| NO_CLAIM | 3 |
 
-## experiment_7529_v658_capstone.json
+## experiment_7550_v660_count_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -24,21 +22,31 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The required V658 science is absent or externally gated, despite complete capstone accounting.
+Local count learning fails to demonstrate a qualified benefit over control baselines, failing the exploratory effect gate.
 
 ## WHAT WOULD REFUTE IT
-A valid completed row showing that a required scientific branch ran and produced positive, aggregate-eligible evidence—or that the stated prerequisite was satisfied while the artifact still classified that branch as blocked—would refute the claim.
+The observation that would refute this null claim is `local_count` achieving a statistically significant reduction in Brier score over both `frozen` and `global_count` baselines (Holm-adjusted p < 0.05 and simultaneous upper 95% confidence limit on delta Brier < 0) while keeping retention deterioration within threshold limits, thereby passing the `exploratory_effect` gate.
 
 ## WAS THAT CHECKED
-Yes. The acceptance gates, claim ledger, and ordered task rows separately check source inventory, producer existence, completion, validity, exclusion, and positive-aggregate eligibility. They record failed prerequisites, missing producers, and unstarted/censored tasks rather than contrary completed science.
+Yes; checked in `independent_reduction` across `primary_contrasts`, `retained_absolute_brier`, and `gate_check_summary`.
 
 ## EVIDENCE
-`complete_blocked_required_v658_science_absent_or_externally_gated`; `failed_count`; `11`; `fresh_eligible_groups`; `expected`; `480`; `observed`; `0`; `positive_aggregate_eligible`; `false`; `qualified_value`; `0`; `ready_value`; `0`; `artifact_path`; `null`; `attempted`; `false`; `censored`; `true`; `unstarted`; `true`; `model_invoked`; `false`; `verifier_is_oracle`; `false`; `positive_scientific_claim`; `false`
+- `"positive_claim"`: `false`
+- `"honest_verdict"`: `"complete_null_count_claims_qualified_benefit_gate_failed"`
+- `"verdict_class"`: `"null"`
+- `"failed_checks"`: `["exploratory_effect"]`
+- `"effect_passed"`: `false`
+- `"retention_passed"`: `false`
+- `"arm"`: `"local_count"`, `"mean_brier"`: `0.14997917983634546`
+- `"arm"`: `"global_count"`, `"mean_brier"`: `0.14120923420057496`
+- `"comparator"`: `"global_count"`, `"holm_passed"`: `false`, `"mean_delta"`: `0.008769945635770493`
+- `"comparator"`: `"frozen"`, `"holm_passed"`: `false`, `"mean_delta"`: `-0.007269976501000086`
+- `"no_headroom_annotation"`: `"No no-headroom claim is made. The local arm lost to the global control and exceeded retention limits."`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7531_b2_induction_gate_measurement.json
+## experiment_7551_native_pilot.json
 
 **NO_CLAIM**
 
@@ -49,177 +57,217 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Because the artifact explicitly disclaims any numeric gate quality or game efficacy claims and marks the run as feasibility-only with a failed sample floor, there is no substantive empirical claim asserted to refute. If the run had claimed that the induction gate demonstrated positive headroom or was ready to ship, that claim would be refuted by demonstrating that the positive control was degenerate, that generation was truncated by a token cap, or that frame progress occurred independently of induction plans.
+An observation indicating that all upstream gate criteria were satisfied (e.g., `gpu_capacity_observed_score` evaluating to 1 and `verdict_class` belonging to the expected set) while the run was recorded as blocked, or any substantive empirical outcome regarding source-intervention feasibility despite execution never having occurred.
 
 ## WAS THAT CHECKED
-No. No comparative claim was asserted; the harness recorded feasibility telemetry, noted that the sample floor was not met, and explicitly annotated why the positive control was degenerate rather than claiming positive value or readiness.
+No. The artifact is a pre-execution gate receipt that evaluated upstream dependencies and halted at `conductor_pre_gate` without executing an experiment or testing any empirical claim.
 
 ## EVIDENCE
-- `publication_mode`: `"feasibility_only"`
+`schema`: `blocked_gate_check_v1`
+`status`: `blocked`
+`honest_verdict`: `blocked_gate_check_failed`
+`duration_s`: `0.0`
+`blocked_at_layer`: `conductor_pre_gate`
+`gate_check_summary`: `gate-unsat(final): 2 of 4 gate(s) failed; first failure: exp7548-capture-runner.gpu_capacity_observed_score (actual=0 == expected=1)`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7556_v660_arc_corrected_custody.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Authenticated B2 evidence under the corrected token budget demonstrates no induction efficacy.
+
+## WHAT WOULD REFUTE IT
+Any observed induction attempt yielding an executed plan (`planned` = true), an observed or passing verifier outcome (`verifier_result` != "not_observed"), non-zero level progress attributed to induction (`credited_level_count` > 0 or `level_up_progress` = true), or the acceptance check `induction_efficacy_observed` observing true.
+
+## WAS THAT CHECKED
+Yes; checked across 33 completed induction attempts logged in `induction_attempt_rows` and `per_game_results`, summarized in `join_summary`, and evaluated in `acceptance_gate_results`.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_corrected_b2_authenticated_no_efficacy`
+- `verdict_class`: `null`
+- `positive_claim`: `false`
+- `check`: `induction_efficacy_observed`
+- `expected`: `true`
+- `observed`: `false`
+- `passed`: `false`
+- `planned_count`: `0`
+- `credited_level_count`: `0`
+- `verifier_observed_count`: `0`
+- `planned`: `false`
+- `verifier_result`: `not_observed`
+- `level_up_progress`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_10008_b2_induction_gate_measurement_v2.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No claim is asserted to refute. If the artifact had claimed usable induction output or gate efficacy, that claim would be refuted by observing empty model generations, unobserved verifier outcomes, and unmet sample floors; here, the artifact explicitly disclaims measuring usable induction output or asserting gate quality.
+
+## WAS THAT CHECKED
+No. Refutation was not evaluated because the artifact explicitly disclaims comparative quality and efficacy claims, serving solely as a preserved execution receipt of think-mode token budget exhaustion.
+
+## EVIDENCE
+- `"numeric_gate_quality_claim": false`
+- `"hidden_game_efficacy_claim": false`
+- `"publication_mode": "feasibility_only"`
+- `"honest_verdict": "complete_feasibility_only_sample_floor_not_met"`
+- `"gate_ready_to_ship": false`
+- `"issue": "All 33 durable responses spent the 4,096-token budget in hidden reasoning and emitted empty content, so this artifact does not measure usable induction output."`
+- `"citation_instruction": "Preserve this artifact as the think-mode budget-exhaustion record. Cite Experiment 10009 for the codeonly-suppressed B2 measurement; it is not live-default think-mode parity."`
+- `"met": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_10009_b2_induction_gate_measurement_v3.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Because the artifact asserts no comparative, performance, or gate-quality claim, there is no empirical claim to refute. To refute an empirical claim of gate efficacy or headroom, the artifact's own rows would need to demonstrate that gating suppressed progress-yielding attempts, produced negative headroom relative to an un-gated baseline, or failed to meet pre-specified statistical power floors.
+
+## WAS THAT CHECKED
+No. The artifact explicitly disclaims numeric gate quality, game efficacy, readiness to ship, and live parity, while explicitly recording that the sample floor was not met and the positive-control progress signal was saturated.
+
+## EVIDENCE
 - `numeric_gate_quality_claim`: `false`
 - `hidden_game_efficacy_claim`: `false`
 - `gate_ready_to_ship`: `false`
-- `honest_verdict`: `"complete_feasibility_only_sample_floor_not_met_and_degenerate_positive_control"`
-- `sample_floor`: `met`: `false`
+- `live_default_parity_claim`: `false`
+- `publication_mode`: `feasibility_only`
+- `honest_verdict`: `complete_feasibility_only_sample_floor_not_met`
+- `met`: `false`
 - `positive_control_headroom_exists`: `false`
+- `interpretation`: `The progress proxy is saturated and cannot establish that B2 has no positive-control headroom.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7532_v659_contract_methods.json
+## experiment_7557_v660_arc_generalization.json
 
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7533_v659_tool_protocol.json
-
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+ARC generalization testing demonstrates a complete null result with feasibility only, as causal endpoints and plan-linked level gains were completely unavailable across all attempts.
 
 ## WHAT WOULD REFUTE IT
-The artifact makes no comparative claim. Falsifying an empirical claim about tool-output grounding performance would require observing that candidate intervention outputs fail to outperform a baseline or donor-swapped comparator under the cost policy on evaluation groups.
+Any observation of positive level progress (`level_gains > 0` or `positive_count > 0`), attributable plan-linked useful attempts (`plan_linked_useful_attempts > 0`), supervisor intervention benefit (`helped > 0`), identifiable plan-to-action causal joins (`plan_linked_execution.available = true`), or satisfaction of the gate check (`plan_linked_efficacy_identifiable = true`).
 
 ## WAS THAT CHECKED
-No. The artifact lacks any model inference, generation calls, or comparative evaluation between intervention and control arms; benefit was explicitly unmeasured.
+Yes. Across 35 live agent attempts across multiple games (including `ar25`, `bp35`, and `dc22`) recorded in `rows`, `per_game_results`, `endpoint_identifiability`, `supervisor_arm_rows`, and `gate_check_summary`, level gains and causal attribution were tracked and repeatedly evaluated to 0.
 
 ## EVIDENCE
-`"title"`: `"V659 label-blind tool-output grounding protocol"`
-`"benefit_measured"`: `false`
-`"positive_claim"`: `false`
-`"verdict_class"`: `"null"`
-`"honest_verdict"`: `"complete_null_tool_protocol_ready_benefit_unmeasured"`
-`"honest_no_headroom_annotation"`: `"protocol_only_benefit_unmeasured"`
-`"inference_substrate_class"`: `"no_model_load"`
-`"model_invoked"`: `false`
-`"forward_calls_attempted"`: `0`
-`"generation_calls_attempted"`: `0`
-`"model_loads_attempted"`: `0`
-`"private_llm_off_real_environment_smoke"`: `"not_applicable_reporting_only_protocol"`
-`"tool_protocol_ready_score"`: `1`
-`"validation_receipts"`
+- `honest_verdict`: `complete_null_feasibility_only_causal_endpoint_unavailable`
+- `verdict_class`: `null`
+- `positive_claim`: `false`
+- `numeric_gate_quality_claim`: `false`
+- `gate_ready_to_ship`: `false`
+- `new_level_solve_claimed`: `false`
+- `actual_level_progress`: `positive_count`: `0`
+- `level_gains`: `0`
+- `disposition`: `complete_observed_feasibility`
+- `plan_linked_execution`: `disposition`: `unavailable_missing_causal_joins`
+- `gate_check_summary`: `all_passed`: `false`
+- `failed_count`: `5`
+- `helped`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7534_v659_count_memory.json
+## experiment_7558_v660_service_boundary.json
 
-**CLAIM_OVERSTATED**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-CLAIM_OVERSTATED
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The count memory mechanism is verified and ready for continuous self-learning deployment based on passing analytical acceptance gates and constructed fixture controls.
+Durable service costs are successfully measured, but hardware acceleration benefit remains unmeasured and does not justify new hardware purchases because updates account for a non-dominant fraction of full service time.
 
 ## WHAT WOULD REFUTE IT
-The claim of functional readiness and learning efficacy would be refuted by demonstrating that the count memory update rule fails to outperform static priors (`frozen`) or permuted controls (`permuted_local`) on natural, non-constructed data streams where the evaluation verifier is not the defining oracle. Furthermore, requiring the method to beat trivial or permuted baselines on the fixture streams would directly refute readiness, as the local count memory arm actively loses to or ties them across multiple evaluated streams.
+Observing that `measured_dominant_hardware_cost` evaluated to `true` (such as `measured_update_fraction` accounting for a dominant share of service latency to yield meaningful Amdahl speedup and set `new_hardware_purchase_justified` to `true`), or observing durable service and crash recovery failures (such as `lost_acknowledged_event_count` > 0 or `passed: false` in `crash_rows`).
 
 ## WAS THAT CHECKED
-No. Refutation was not given a genuine chance to occur. Correctness is evaluated entirely against constructed synthetic controls where the verifier is the oracle (`verifier_is_oracle: true`, `oracle_fixture: true`). The readiness score (`count_memory_ready_score: 1`) is true by construction because its gating criteria only check software mechanics (arithmetic, release chronology, and restart durability) while explicitly excluding empirical performance (`constructed evidence never becomes an empirical claim`). Where comparative predictive metrics were scored, the method underperformed the frozen and permuted baselines, but the readiness verdict was shielded from failure.
+Yes. Durability and crash resilience were tested across 60 trials in `service_rows` and 3 crash boundary trials in `crash_rows`. Hardware acceleration headroom was directly tested against measured latency breakdown in `hardware_acceleration_bound` and evaluated via the `measured_dominant_hardware_cost` gate in `acceptance_gate_results`.
 
 ## EVIDENCE
-- `"honest_verdict": "complete_circular_positive_count_memory_qualified"`
-- `"verdict_class": "circular_positive"`
-- `"verifier_is_oracle": true`
-- `"oracle_fixture": true`
-- `"count_memory_ready_score": 1`
-- `"continuous_self_learning_task": true`
-- `"evidence_class": "constructed_control"`
+`"honest_verdict": "complete_null_durable_service_measured_hardware_benefit_unmeasured"`
+`"positive_claim": false`
+`"verdict_class": "null"`
+`"new_hardware_purchase_justified": false`
+`"check": "measured_dominant_hardware_cost"`
+`"expected": true`
+`"observed": false`
+`"passed": false`
+`"measured_update_fraction": 0.05784469960043681`
+`"ideal_update_only_speedup": 1.061396140929107`
+`"service_cost_complete_score": 1`
+`"crash_recovery_complete_score": 1`
+`"lost_acknowledged_event_count": 0`
+`"reconstruction_parity": true`
+`"verifier_is_oracle": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7559_v660_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Milestone v660 required source science is externally blocked by unavailable GPU capacity, while all completed research branches establish null benefit with no positive claim asserted.
+
+## WHAT WOULD REFUTE IT
+The claim would be refuted if the artifact's own data demonstrated that GPU capacity was available (`gpu_capacity_observed_score` equal to 1), that the conductor pre-gates passed, that fresh source capture executed, or that any completed branch demonstrated positive measured benefit (`benefit` > 0 or `hardware_benefit` > 0).
+
+## WAS THAT CHECKED
+Yes. GPU capacity was checked against the process inventory in `gate_check_summary` (observing 0 vs expected 1), resulting in external gate blocks for the native pilot and capture tasks. Furthermore, each completed branch audited its upstream tasks and verified null benefit: count learning and audit verified `benefit` of 0; ARC live agent generalization verified lack of causal efficacy and `benefit` of 0; and CPU service/board continuity verified unmeasured hardware acceleration with `hardware_benefit` of 0.
+
+## EVIDENCE
+- `"honest_verdict": "complete_blocked_required_v660_source_science_externally_gated"`
 - `"positive_claim": false`
-- `"condition": "constructed evidence never becomes an empirical claim"`
-- `"principle": "Oracle fixtures test implementation, not natural-data benefit."`
-- `"principle": "Oracle-defined fixtures cannot support an oracle-distinct benefit claim."`
-- `"count_memory_ready_score": "A bare 0/1 qualifies arithmetic, chronology, and restart only."`
-- `"stream": "conditional_drift_stable_global_prevalence"`
-- `"local": {"mean_brier": 0.35762759924385634, "n_scored": 4}`
-- `"frozen": {"mean_brier": 0.3400000000000001, "n_scored": 4}`
-- `"permuted_local": {"mean_brier": 0.26671029149315884, "n_scored": 4}`
-
-## RECOMMENDATION
-NARROW_CLAIM
-
-## experiment_7535_v659_native_pilot.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-An observation that an admissible single GPU was unallocated and available during the admission window, or any assertion of positive model capability or comparative benefit despite execution being blocked.
-
-## WAS THAT CHECKED
-Yes. The external precondition gate checked `owned_gpu_available` under `acceptance_gate_results` and `gpu_admission_receipt` over 61 observations across 300 seconds, verified both GPUs were occupied, and blocked execution without evaluating model performance.
-
-## EVIDENCE
-`"positive_claim"`: `false`
-`"benefit_measured"`: `false`
-`"model_invoked"`: `false`
-`"execution_device"`: `"none_precondition_blocked"`
-`"honest_verdict"`: `"complete_blocked_owned_gpu_available"`
-`"verdict_class"`: `"blocked"`
-`"rows"`: `[]`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7536_fit_capture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-None. The artifact is a pre-execution gate-check receipt recording that the experiment was blocked prior to running, advancing no empirical or comparative claim.
-
-## WAS THAT CHECKED
-No. Execution was blocked at the pre-gate stage before any intervention or experimental evaluation could take place.
-
-## EVIDENCE
-- `schema`: `"blocked_gate_check_v1"`
-- `status`: `"blocked"`
-- `honest_verdict`: `"blocked_gate_check_failed"`
-- `duration_s`: `0.0`
-- `blocked_at_layer`: `"conductor_pre_gate"`
-- `gate_check_summary`: `"gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7535-native-pilot.native_tool_ready_score (actual=0 == expected=1)"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7537_eval_capture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-None; this artifact is an execution gate receipt documenting failed upstream preconditions, not an experimental run making a comparative or empirical claim.
-
-## WAS THAT CHECKED
-No; the experiment was blocked before execution at the conductor pre-gate stage.
-
-## EVIDENCE
-`"schema": "blocked_gate_check_v1"`
-`"status": "blocked"`
-`"honest_verdict": "blocked_gate_check_failed"`
-`"duration_s": 0.0`
-`"blocked_at_layer": "conductor_pre_gate"`
-`"gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7535-native-pilot.native_tool_ready_score (actual=0 == expected=1)"`
+- `"check": "gpu_capacity_available"`
+- `"field": "gpu_capacity_observed_score"`
+- `"expected": 1`
+- `"observed": 0`
+- `"passed": false`
+- `"conclusion": "Fresh source capture and its independent reduction did not run after the external GPU-capacity gate failed."`
+- `"verdict_class": "blocked"`
+- `"conclusion": "Independent arithmetic qualified the completed count measurement. The registered exploratory benefit failed."`
+- `"benefit": 0`
+- `"conclusion": "Corrected bytes are qualified, but plan-linked efficacy is not identifiable and support floors failed."`
+- `"conclusion": "Durable CPU service and board accounting completed. No measured dominant cost supports hardware benefit."`
+- `"hardware_benefit": 0`
+- `"no_headroom_annotation": "No aggregate no-headroom claim is made. Count retention failed, source science is absent, ARC causal joins are absent, and hardware benefit is unmeasured."`
 
 ## RECOMMENDATION
 KEEP

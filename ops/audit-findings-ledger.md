@@ -194,3 +194,8 @@ of truth, not this line.)
 | 2026-09-23 | experiment_claim_audit | experiment_7534_v659_count_memory.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_goal_energy_generation_win | SILENT_NON_FIRING | OPEN | |
 | 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_text | SILENT_NON_FIRING | OPEN | |
+| 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_field_name_text | SILENT_NON_FIRING | OPEN | |
+| 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_has_marker | SILENT_NON_FIRING | OPEN | |
+| 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_real_field_values | SILENT_NON_FIRING | OPEN | |
+| 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_typed_field_values | SILENT_NON_FIRING | OPEN | |
+| 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_path_has_marker | SILENT_NON_FIRING | OPEN | |

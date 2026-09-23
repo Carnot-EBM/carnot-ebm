@@ -78016,3 +78016,32 @@ Spec-linked tests cover authority drift, present and absent producer custody,
 exact conductor failures, branch isolation, terminal precedence, source hashes,
 continuations, publication conjunction, and protected artifact mutations. The
 changed module has 100 percent line coverage.
+
+## REQ-REPORT-V661-PLAN: Complete next-milestone planning contract
+
+The staged V661 plan SHALL contain thirteen ordered tasks, Exp7560 through
+Exp7572. Its design table and YAML SHALL agree on IDs, titles, phases,
+deliverables, substrate classes and gates. Each upstream gate field SHALL
+appear in its producer's required artifact fields. Planning SHALL preserve
+the V660 design and SHALL NOT activate the plan or edit the active roadmap
+or research conductor.
+
+The plan SHALL retain V660's qualified learning null, blocked source capture,
+and missing ARC plan-to-action endpoint. It SHALL include fresh source
+evaluation, a changed continuous learner, calibrated decisions, live-agent
+generalization and explicit board continuity. Source research SHALL precede
+experiment design. Every prompt SHALL require flushed progress, bounded
+file writes, scoped checks and honest terminal classification.
+
+### SCENARIO-REPORT-V661-PLAN: Both authorities describe the same work
+
+**Given** the thirteen-task YAML and the V661 design
+**When** schema, gate, prior-failure and independent contract checks run
+**Then** every ordered task and producer field agrees
+**And** a private removed row, changed path or misspelled field fails
+**And** planned measurements remain distinct from completed evidence.
+
+### Implementation Status (REQ-REPORT-V661-PLAN)
+
+Planning documents only. Future task implementations require their own
+capability requirements and tests before code changes.
