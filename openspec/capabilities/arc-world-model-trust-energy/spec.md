@@ -35213,3 +35213,13 @@ exact failure mode (`ARC_LIVE_GENERATOR_NO_THINK_PREFIX` in
 reasoning cases suppressed), which `experiment_7471_v654_arc_seam_observation.py` -- reused by
 this B2 harness -- never inherited. The corrected next step is to apply that same prefix to
 B2's induction calls before touching the token budget again.
+
+**Correction, same day.** The live default is NOT suppression. `induce_think_on()` was flipped
+ON 2026-08-08 (exp6199/REQ-ARC-WMTE-6198): the live path lets the model reason before answering,
+per operator directive on measured induction-quality evidence. The mechanism that reliably
+forces bounded code output is a narrower, non-default one: `_L2_CODEONLY_DIRECTIVE` (a
+`/no_think` prefix, strict output-only rules, a pre-opened fence, and a stop-sequence on the
+closing fence), validated 2026-06-25 for exactly B2's observed failure. Applying it to B2
+borrows a validated mechanism for deterministic bounded completion; it does not restore parity
+with the live path's current default, and the resulting B2 measurement should be described as
+codeonly-suppressed induction, not representative think-mode induction.

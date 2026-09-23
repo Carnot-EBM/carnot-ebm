@@ -27468,3 +27468,27 @@ Apply the same `no_think_prefix` the live path already uses and already validate
 induction calls, before touching the token budget again. Raising the budget further without
 suppressing hybrid-thinking mode would very likely reproduce the same uniform-at-cap result at
 whatever the new ceiling is.
+
+**CORRECTION TO THE ROOT-CAUSE NOTE ABOVE, 2026-09-22 (same day, before any fix was applied).**
+The prior note mischaracterized the live agent's current behavior. Re-reading
+`arc_executable_world_model.py` fully: `induce_think_on()` was flipped ON as the live default on
+2026-08-08 (`exp6199`/REQ-ARC-WMTE-6198: think mode engaged real reasoning 10/10 vs 0/10 for
+no_think, and had a consistent induction-quality edge, never losing where the arms differed).
+The live default today is therefore "let the model reason before it answers" -- `no
+directive, no pre-opened fence` -- the OPPOSITE of suppression. `experiment_7471`'s B2 harness
+is not missing a suppression fix the live path already has; the live path does not suppress by
+default either.
+
+The mechanism that DOES reliably force code output within a bounded budget is a DIFFERENT,
+narrower one: `_L2_CODEONLY_DIRECTIVE` (a `/no_think` prefix plus strict output-only rules plus a
+pre-opened code fence plus a stop-sequence on the closing fence), validated 2026-06-25 at ~10s
+to valid code versus 450s-to-truncation unpatched. It is NOT today's live default (think mode
+takes priority over it when both are eligible); it exists as the fallback for exactly B2's
+observed failure (0 code emitted after the full budget).
+
+**Honest framing for B2 going forward.** Applying codeonly suppression to B2 is not "restoring
+live-path parity" -- it is borrowing a different, already-validated mechanism to make induction
+attempts terminate deterministically within a bounded budget, which is what a wall-clock-limited
+measurement harness needs. A B2 result under codeonly suppression measures codeonly-suppressed
+induction, not the live path's current think-mode default. State this limitation plainly in the
+next B2 artifact rather than implying parity with the live agent.
