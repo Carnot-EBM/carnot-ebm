@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-09-23 — B2 v3 induction failure triage (operator request: option 1 of "what next?")
+
+- Ran workflow `wf_e034f9f2-340`: 6 triage agents replayed all 42 Experiment 10009 attempts
+  offline on CPU, 6 independent verifiers re-derived each cause from raw files, 1 agent measured
+  the harness budget, and 1 synthesized. Read-only; no GPU; the repository was unchanged by the run.
+- Outer loop checked the five largest claims in source (harness caps, refinement override, live
+  refinement default, level reader field, timeout exception class). All held.
+- Added `docs/research-notes/b2-induction-failure-triage-2026-09-23.md`.
+- Appended the dated `corrigendum_2026_09_23_failure_triage` field to
+  `results/experiment_10009_b2_induction_gate_measurement_v3.json`. No original field changed.
+- Appended a dated correction to the B2 entry in `ops/known-issues.md`. It retracts the outer
+  loop's own closing finding in five places, including the "single-shot" and "multi-round
+  refinement" framing.
+- No code changed. The ranked fixes (harness budget, refinement override, identity-hash memo,
+  level reader, timeout class, telemetry detail) wait for operator direction.
+
 ## 2026-09-21 — Exp7505 bounded V657 energy fit (REQ-VERIFY-7505)
 
 - Added the missing executable OpenSpec contract for the role-separated

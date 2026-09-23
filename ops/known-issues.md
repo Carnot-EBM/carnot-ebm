@@ -27523,3 +27523,46 @@ to reproduce the live path's real refinement behavior (multiple rounds, countere
 retries) inside a bounded measurement harness, which is new design work, not a quick rerun. Not
 scoped or started; queue it only with explicit direction, since it is a materially bigger task
 than anything run tonight.
+
+**CORRECTION TO THE CLOSING FINDING, 2026-09-23 (append-only; the paragraphs above stay as
+written).** A read-only 14-agent triage of all 42 attempts (workflow `wf_e034f9f2-340`; full
+detail in `docs/research-notes/b2-induction-failure-triage-2026-09-23.md`) showed the closing
+finding was wrong in five places. The outer loop checked the five largest claims in source.
+
+1. **"Not a harness artifact" is wrong.** Every scored attempt (seeds 7491001-7491003, 39 of 42)
+   ended through a harness mechanism: the 240 s episode alarm for 36, and the 4,096-token cap on a
+   think-mode refactor for 3 (vc33). The harness produced every `exception` and `proposer_failed`
+   tag. None of the tags describes model output.
+2. **"Single-shot only" is wrong.** `experiment_7471_v654_arc_seam_observation.py` sets
+   `CARNOT_ARC_MAX_REFINEMENT_ROUNDS=str(REQUEST_LIMIT)`, which is 2. In 30 attempts round 2 was a
+   blind think-mode refactor at 4,096 tokens, and 0 of 30 produced code.
+3. **The "real open question" rested on a misconception.** The live scored path has no
+   multi-round loop by default. `arc_llm_reinduction.py` caps it at 1 round (since 2026-08-17),
+   because extra rounds measured harmful while the refactor prompt hides the engine it fixes
+   (REQ-ARC-WMTE-6091).
+4. **"The remaining 9 had no held-out transitions" is wrong.** All 9 had 25 transitions with a
+   17/8 split. 6 had no acceptable program (1 syntax error, 1 cut at the token cap, 4 missing a
+   required function). 3 were sp80 re-inductions that started after the deadline and sent no
+   request.
+5. **"Too rare" is a harness artifact.** Each call spent about 39.5 s hashing the 17.1 GB model
+   (5 SHA-256 passes), and overrun episodes starved the schedule: 105 of 144 episodes never
+   started.
+
+**What survives.** On merit, 0 of 36 first-shot codeonly responses would have passed, and 30 of
+30 scored engines were rejected at the 1.0 exact held-out threshold. There is no positive control
+for that threshold on these windows, so treat this as FALSE_NEGATIVE_RISK. The effective sample is
+12 evidence windows, not 36: the induction prompts are byte-identical across seeds.
+
+**Record defects found (not yet fixed).** (a) `experiment_7431_v651_arc_live_sentinel.py`
+`_level()` reads a `levels` attribute that `FrameData` does not have; the field is
+`levels_completed`. So level fields read 0. vc33 and sp80 actually reached level 1 in all 3 seeds.
+The unit test fakes `levels` and passes. (b) `EpisodeTimeout` subclasses `Exception`, so the agent
+swallows it: all 39 started episodes read `disposition: complete`, and 18 ran past the cap by up to
+167.8 s. (c) The telemetry row writer drops the exception repr, traceback, proposer note, and
+per-round rows that the agent computes. Earlier records that share (a) or (b) (7431, 7457, 7471,
+7491, 7531, 10008) are not re-audited.
+
+**Status.** B2 stays stopped. A refinement comparison is not measurable in this harness: one median
+think-ON induction needs about 1,600-1,730 s against a 240 s cap. The research note has a
+measurable design (offline replay of the 12 staged windows with the live budget) and ranked fixes.
+None is started; each waits for operator direction.

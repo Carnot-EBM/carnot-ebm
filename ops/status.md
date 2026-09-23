@@ -2,6 +2,21 @@
 
 **Last Updated:** 2026-09-23
 
+## 2026-09-23 — Correction: B2 failures were produced by the harness; the earlier entry below is wrong in five places
+A read-only triage of all 42 Experiment 10009 attempts (14 agents, each finding re-derived by an
+independent verifier; outer loop checked the five largest claims in source) found:
+- Every scored attempt ended through a harness mechanism: the 240 s episode alarm (36 of 39) or a
+  4,096-token cap on a think-mode refactor (3). No failure tag describes model output.
+- B2 was not single-shot. The harness forced 2 refinement rounds against the live default of 1.
+- The live path has no multi-round loop by default, so the "multi-round refinement" follow-up
+  rested on a misconception. A think-ON induction (about 1,600-1,730 s) cannot fit this harness.
+- On merit, 0 of 36 first-shot codeonly responses would have passed. No positive control exists
+  for the 1.0 held-out threshold.
+- Record defects: a harness level reader that always returns 0 (vc33 and sp80 really reached
+  level 1), a swallowed episode timeout, and telemetry that drops the failure text.
+Detail and ranked fixes: `docs/research-notes/b2-induction-failure-triage-2026-09-23.md`. Nothing
+is fixed yet; each fix waits for operator direction.
+
 ## 2026-09-23 — B2 closed for now: a clean induction-quality result, not a harness bug
 Full analysis of Experiment 10009's 42 attempts: the verifier ran on 33 and rejected all
 33, uniform across all 12 panel games. The remaining 9 are benign cold starts or a reused

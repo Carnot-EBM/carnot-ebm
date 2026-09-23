@@ -7041,5 +7041,24 @@
   "status": "complete_b2_measurement",
   "submission_kernel_changed": false,
   "superseded_reason": "Experiment 10008 exhausted all 4,096 completion tokens in hidden reasoning: durable responses had finish_reason=length and empty content. Experiment 10009 borrows the validated non-default codeonly mechanism so bounded attempts emit code.",
-  "supersedes": "results/experiment_10008_b2_induction_gate_measurement_v2.json"
+  "supersedes": "results/experiment_10008_b2_induction_gate_measurement_v2.json",
+  "corrigendum_2026_09_23_failure_triage": {
+    "principle": "Append-only correction. The original fields stay as measured; this field records what a later read-only triage of the raw evidence showed they got wrong.",
+    "source": "docs/research-notes/b2-induction-failure-triage-2026-09-23.md (workflow wf_e034f9f2-340, 14 agents, triage plus independent verification; outer loop checked the five largest claims in source)",
+    "false_negative_risk": true,
+    "false_negative_reason": "Every scored attempt ended through a harness mechanism (240 s episode alarm for 36 of 39, 4,096-token think-mode cap for 3). No repair or re-induction ever got a working turn. There is no positive control for the 1.0 held-out threshold on these windows.",
+    "surviving_merit_claim": "0 of 36 first-shot codeonly responses would have passed; 30 of 30 scored engines were rejected at the 1.0 exact held-out threshold (28 wrong predictions, 2 raised).",
+    "corrections": [
+      "Tags: 17 'exception' tags are EpisodeTimeout raised in pre-dispatch code of a fallback generate() call; 19 'proposer_failed' tags are fallback reservations refused after the alarm; 3 'proposer_failed' tags are vc33 think-mode refactors empty at the 4,096-token cap. No tag describes model output.",
+      "Undisclosed methodology deviation: the harness set CARNOT_ARC_MAX_REFINEMENT_ROUNDS=2 (experiment_7471_v654_arc_seam_observation.py, str(REQUEST_LIMIT)) against the live default of 1. In 30 attempts round 2 was a blind think-mode refactor; 0 of 30 produced code. methodology_scope mentions only codeonly.",
+      "raw_response_evidence.all_content_nonempty=true covers only the 42 codeonly responses. All 17 completed scored-seed refactor responses have empty content with finish_reason length.",
+      "episode_rows peak_level and terminal_level read 0 for vc33 and sp80 in all 3 seeds. Offline replay of the recorded action traces gives levels_completed=1 (vc33 from action 11, sp80 from action 44). Cause: experiment_7431_v651_arc_live_sentinel.py _level() reads 'levels' instead of FrameData.levels_completed.",
+      "disposition 'complete' with error null is wrong for 33 of 36 scored episodes where the 240 s alarm fired and was swallowed (EpisodeTimeout subclasses Exception). 18 ran past the cap, max elapsed 407.8 s.",
+      "induction_attempt_count 42 = 39 on seeds 7491001-7491003 plus 3 on seed 7531001 (execution_order 36-38, same session, run last).",
+      "Effective sample is 12 evidence windows: the first-call induction prompt is byte-identical across the 3 seeds for all 12 games.",
+      "per_attempt completion_tokens is not induction output in 23 of 42 rows (refactor usage or a stale copy). rows_without_distinct_completed_response misses sp80:seed-7491002:induction:2. The 15 'failed' invocations are alarm cancellations.",
+      "Attempt rarity is a harness artifact: about 39.5 s of model-identity hashing per generate() (5 SHA-256 passes over the 17.1 GB GGUF) plus overrun episodes left 105 of 144 scheduled episodes unstarted."
+    ],
+    "not_rechecked": "Earlier records sharing the level reader or the timeout class (7431, 7457, 7471, 7491, 7531, 10008) were not re-audited."
+  }
 }
