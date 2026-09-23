@@ -1,0 +1,1863 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "authenticated_protocol",
+      "condition": "all_preconditions_passed == expected",
+      "expected": true,
+      "field": "all_preconditions_passed",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Invalid or changed upstream evidence cannot support collection.",
+      "upstream": "exp7533-v659-tool-protocol"
+    },
+    {
+      "category": "readiness",
+      "check": "exact_capture_schedule",
+      "condition": "role_counts_and_forward_count == expected",
+      "expected": {
+        "forwards": 1992,
+        "groups": 332
+      },
+      "field": "role_counts_and_forward_count",
+      "observed": {
+        "forwards": 1992,
+        "groups": 332
+      },
+      "op": "==",
+      "passed": true,
+      "principle": "A valid null remains auditable only with every registered group and arm.",
+      "upstream": "capture_schedule"
+    },
+    {
+      "category": "validity",
+      "check": "scripted_transport_qualification",
+      "condition": "qualification_controls.passed == expected",
+      "expected": true,
+      "field": "qualification_controls.passed",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Checkpoint, resume, reset, and mutation failures must pass before model work.",
+      "upstream": "private_scripted_transport"
+    },
+    {
+      "category": "validity",
+      "check": "independent_raw_reduction",
+      "condition": "independent_reduce.passed == expected",
+      "expected": true,
+      "field": "independent_reduce.passed",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Hash-bound rows must reduce independently before readiness can open.",
+      "upstream": "qualification_sidecars"
+    },
+    {
+      "category": "validity",
+      "check": "required_validation",
+      "condition": "all_required_checks_passed == expected",
+      "expected": true,
+      "field": "all_required_checks_passed",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Scoped checks and cold replay must pass before publication.",
+      "upstream": "validation_receipts"
+    },
+    {
+      "category": "external_precondition",
+      "check": "gpu_capacity_available",
+      "condition": "gpu_capacity_observed_score == expected",
+      "expected": 1,
+      "field": "gpu_capacity_observed_score",
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "nvidia-smi_compute_process_inventory",
+      "principle": "A busy device cannot authorize the later native pilot.",
+      "upstream": "read_only_gpu_process_and_lease_snapshot"
+    },
+    {
+      "category": "benefit",
+      "check": "positive_claim",
+      "condition": "positive_claim == expected",
+      "expected": false,
+      "field": "positive_claim",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "principle": "Transport qualification and idle capacity do not measure predictive benefit.",
+      "upstream": "runner_qualification_only"
+    }
+  ],
+  "adversarial_corrections": [],
+  "applicable_numbered_e2e": [],
+  "benefit_measured": false,
+  "capture_runner_ready_score": 1,
+  "capture_schedule": {
+    "bytes": 11631448,
+    "path": "results/raw/experiment_7548_v660_capture_runner/capture_schedule.jsonl",
+    "rows": 1992,
+    "sha256": "sha256:b8d713af4c9e45f3d1ce83f0368c3f3280d4b98274b31baa9ef95a8f5f917e8c"
+  },
+  "capture_schedule_manifest": {
+    "conditions": [
+      "original",
+      "absent",
+      "mismatched"
+    ],
+    "development": {
+      "excluded_exp7533_role_count": 480,
+      "group_count": 12,
+      "labels_read": 0,
+      "panel_sha256": "sha256:96667ff0d8b539779e38bc082d7db761b415c409fab112ca37c21d02089d37e2",
+      "tokenizer": {
+        "model_weights_read": false,
+        "n_ctx": 4096,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "representation": "embedded_gguf",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "vocab_only": true
+      }
+    },
+    "forward_count": 1992,
+    "labels_read": 0,
+    "n_ctx": 4096,
+    "online_groups_excluded": 160,
+    "option_orders": [
+      [
+        "supported",
+        "contains_unsupported"
+      ],
+      [
+        "contains_unsupported",
+        "supported"
+      ]
+    ],
+    "role_counts": {
+      "development": 12,
+      "fit": 160,
+      "policy": 40,
+      "test": 80,
+      "tune": 40
+    },
+    "role_schedule_hashes": {
+      "development": "sha256:6937fc3e6cff8976189cc173d8d3ab95d597f4f78165c6c842b92b627d85d66d",
+      "fit": "sha256:45f262d736c163278280a0ba09afaf5214a5c6859ca758899cb3695349ef1d4e",
+      "policy": "sha256:2ee2a4e91109d174c8a2248ccc4ac9ff73b3cd75d29ba3fdda28d55695777b34",
+      "test": "sha256:eadb42eae8b2db1d9e30bc0459764059fb6d64a11af66e77c9ebc03b568a166d",
+      "tune": "sha256:9fb22ed07cec794f306b5aa95a3805327dd2cfa1397e7c34c66524d7b7b8be0f"
+    },
+    "validation_reserve_s": 900.0
+  },
+  "complete": 1,
+  "duration_breakdown_s": {
+    "authoring": 0.0,
+    "current_cpu_qualification_and_validation": 67.97224795102375,
+    "historical": 0.0
+  },
+  "duration_s": 67.97224795102375,
+  "execution_device": "host_cpu_plus_read_only_cuda_inventory",
+  "execution_venue": "host",
+  "experiment_id": "exp7548-capture-runner",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "An empty list proves this qualification task planned no model load.",
+    "acceptance_gate_results": "Validity, readiness, resource capacity, and benefit remain separate decisions.",
+    "adversarial_corrections": "The adversarial_corrections field preserves one auditable contract operand.",
+    "applicable_numbered_e2e": "The applicable_numbered_e2e field preserves one auditable contract operand.",
+    "benefit_measured": "The benefit_measured field preserves one auditable contract operand.",
+    "capture_runner_ready_score": "Runner readiness depends on code and sealed roles, not current GPU access.",
+    "capture_schedule": "The capture_schedule field preserves one auditable contract operand.",
+    "capture_schedule_manifest": "The capture_schedule_manifest field preserves one auditable contract operand.",
+    "complete": "The complete field preserves one auditable contract operand.",
+    "duration_breakdown_s": "The duration_breakdown_s field preserves one auditable contract operand.",
+    "duration_s": "Measured monotonic duration separates current work from history and authoring.",
+    "execution_device": "The execution_device field preserves one auditable contract operand.",
+    "execution_venue": "The legal host enum prevents the invalid host_cpu venue from recurring.",
+    "experiment_id": "The exact task identity prevents evidence from moving between milestones.",
+    "external_publication_authorized": "The external_publication_authorized field preserves one auditable contract operand.",
+    "field_principles": "Every field states the failure that it prevents.",
+    "flagged_adversarial": "Actual verifier findings cannot be cleared to open a downstream gate.",
+    "gate_check_summary": "A block retains exact upstream, field, expected, and observed operands.",
+    "generator_weights_changed": "The generator_weights_changed field preserves one auditable contract operand.",
+    "gpu_capacity_observed_score": "A dated idle snapshot records capacity but grants no load authority.",
+    "historical_invocation_counts": "The historical_invocation_counts field preserves one auditable contract operand.",
+    "honest_no_headroom_annotation": "The honest_no_headroom_annotation field preserves one auditable contract operand.",
+    "honest_verdict": "A complete terminal prefix distinguishes external blockage from unfinished own work.",
+    "independent_raw_reduction": "The independent_raw_reduction field preserves one auditable contract operand.",
+    "inference_substrate": "Aggregation names the actual use of sealed upstream bytes.",
+    "inference_substrate_class": "The no-load class prevents padding time or applying a model duration floor.",
+    "inference_substrate_details": "The inference_substrate_details field preserves one auditable contract operand.",
+    "invocation_counts": "Typed zero counters expose any accidental load, forward, or generation claim.",
+    "milestone": "The milestone field preserves one auditable contract operand.",
+    "model_invoked": "A false current flag separates scripted transport from real model work.",
+    "model_specs": "An empty resolved list prevents historical Qwen identity from becoming a current invocation.",
+    "phase_spans": "The phase_spans field preserves one auditable contract operand.",
+    "planned_inference_substrate_class": "The planned_inference_substrate_class field preserves one auditable contract operand.",
+    "positive_claim": "The positive_claim field preserves one auditable contract operand.",
+    "preconditions_checked": "Exact input observations prevent a missing resource from becoming fabricated evidence.",
+    "private_llm_off_real_environment_smoke": "The private_llm_off_real_environment_smoke field preserves one auditable contract operand.",
+    "process_identity": "The process_identity field preserves one auditable contract operand.",
+    "production_defaults_changed": "The production_defaults_changed field preserves one auditable contract operand.",
+    "qualification_controls": "The qualification_controls field preserves one auditable contract operand.",
+    "qualification_role_counts": "The qualification_role_counts field preserves one auditable contract operand.",
+    "qualification_rows": "The qualification_rows field preserves one auditable contract operand.",
+    "qualification_schedule": "The qualification_schedule field preserves one auditable contract operand.",
+    "random_seed": "Frozen roster and ordering seeds prevent selection after outcomes.",
+    "ready": "The ready field preserves one auditable contract operand.",
+    "reproducibility_checksum": "One digest binds code, protocol, schedule, raw controls, and observations.",
+    "resource_observations": "UUID, process ancestry, and leases expose every observed conflict.",
+    "role_counts": "The role_counts field preserves one auditable contract operand.",
+    "role_schedule_hashes": "Each arm stays bound to the same complete source groups.",
+    "rows": "Absolute role and resource rows keep missing evidence distinct from zero.",
+    "run_date": "The run_date field preserves one auditable contract operand.",
+    "sample_size_budget": "Planned, complete, failed, censored, and unstarted groups cannot be silently dropped.",
+    "schema": "The schema field preserves one auditable contract operand.",
+    "schema_binding": "The schema_binding field preserves one auditable contract operand.",
+    "source_artifact_hashes": "The source_artifact_hashes field preserves one auditable contract operand.",
+    "source_swap_label_semantics": "The source_swap_label_semantics field preserves one auditable contract operand.",
+    "title": "The title field preserves one auditable contract operand.",
+    "validation_receipts": "Command scopes, exits, hashes, and cold replay make validation auditable.",
+    "validation_reserve_s": "The validation_reserve_s field preserves one auditable contract operand.",
+    "verdict_class": "The closed enum prevents busy hardware from becoming a partial scientific result.",
+    "verifier_is_oracle": "Scripted fixtures cannot establish empirical predictive benefit.",
+    "version": "The version field preserves one auditable contract operand."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      "gpu_capacity_available"
+    ],
+    "failed_count": 1,
+    "first_failure": {
+      "category": "external_precondition",
+      "check": "gpu_capacity_available",
+      "condition": "gpu_capacity_observed_score == expected",
+      "expected": 1,
+      "field": "gpu_capacity_observed_score",
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "nvidia-smi_compute_process_inventory",
+      "principle": "A busy device cannot authorize the later native pilot.",
+      "upstream": "read_only_gpu_process_and_lease_snapshot"
+    },
+    "passed": false
+  },
+  "generator_weights_changed": false,
+  "gpu_capacity_observed_score": 0,
+  "historical_invocation_counts": {
+    "counted_as_current": false,
+    "exp7533": {
+      "forward_calls_attempted": 0,
+      "forward_calls_cancelled": 0,
+      "forward_calls_completed": 0,
+      "forward_calls_failed": 0,
+      "forward_calls_in_flight": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "exp7535_literal_verdict": "complete_blocked_owned_gpu_available"
+  },
+  "honest_no_headroom_annotation": "runner_qualification_only_benefit_unmeasured",
+  "honest_verdict": "complete_blocked_gpu_capacity_unavailable",
+  "independent_raw_reduction": {
+    "capture_schedule_sha256": "sha256:1295b20e240f116f96e309c21d222dbfba9b85024a7aa5b336616a45a2524961",
+    "complete_group_count": 3,
+    "passed": true,
+    "qualification_reduction_sha256": "sha256:53288ea23932c0f5bb7edb8f2d1b9a9bfe09aca61998b0e7a08203b36d2ec8a6",
+    "qualification_row_count": 18,
+    "schedule_count": 1992
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "current_generated_tokens": 0,
+    "current_model_loads": 0,
+    "current_native_forwards": 0,
+    "scripted_fixture_calls_are_current_model_calls": false,
+    "sealed_protocol": "exp7533-v659-tool-protocol",
+    "transport_interface": "experiment_7535_v659_native_pilot.NativeOptionRunner"
+  },
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_cancelled": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "forward_calls_in_flight": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.660",
+  "model_invoked": false,
+  "model_specs": [],
+  "phase_spans": [
+    {
+      "checkpoint": "inputs_authenticated",
+      "completed_units": 30,
+      "end_s": 0.017879288003314286,
+      "ended_at_utc": "2026-09-23T02:44:53.235765Z",
+      "phase": "preconditions",
+      "start_s": 2.1700019715353847e-05
+    },
+    {
+      "checkpoint": "results/raw/experiment_7548_v660_capture_runner/capture_schedule.jsonl",
+      "completed_units": 1,
+      "end_s": 49.33223088399973,
+      "ended_at_utc": "2026-09-23T02:45:42.550117Z",
+      "phase": "schedule",
+      "start_s": 0.017905838001752272
+    },
+    {
+      "checkpoint": "results/raw/experiment_7548_v660_capture_runner/qualification/qualification_rows.jsonl",
+      "completed_units": 1,
+      "end_s": 49.3448996610241,
+      "ended_at_utc": "2026-09-23T02:45:42.562783Z",
+      "phase": "scripted_qualification",
+      "start_s": 49.33225434800261
+    },
+    {
+      "checkpoint": "scoped_commands_complete",
+      "completed_units": 8,
+      "end_s": 63.83026550101931,
+      "ended_at_utc": "2026-09-23T02:45:57.048149Z",
+      "phase": "affected_validation",
+      "start_s": 49.344907195016276
+    },
+    {
+      "checkpoint": "read_only_snapshot",
+      "completed_units": 1,
+      "end_s": 63.919080143008614,
+      "ended_at_utc": "2026-09-23T02:45:57.136963Z",
+      "phase": "resource_observation",
+      "start_s": 63.83027006901102
+    },
+    {
+      "checkpoint": "results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json",
+      "completed_units": 4,
+      "end_s": 67.97206978601753,
+      "ended_at_utc": "2026-09-23T02:46:01.189953Z",
+      "phase": "terminal_validation",
+      "start_s": 64.01059933900251
+    }
+  ],
+  "planned_inference_substrate_class": "no_model_load",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "category": "external_precondition",
+      "check": "required_input:AGENTS.md",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:CLAUDE.md",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:CODEX.md",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:research-program.md",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "research-program.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:ops/exclusion_manifest.yaml",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:ops/e2e-test-plan.md",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:scripts/experiment_template.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:python/carnot/reporting/current_work_receipt.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:python/carnot/experiment_7358_v646_validation_contract.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:python/carnot/experiment_7533_v659_tool_protocol.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7533_v659_tool_protocol.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "python/carnot/experiment_7533_v659_tool_protocol.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:python/carnot/experiment_7535_v659_native_pilot.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7535_v659_native_pilot.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "python/carnot/experiment_7535_v659_native_pilot.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:python/carnot/experiment_7160_v631_qwen38_lease_diagnosis.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7160_v631_qwen38_lease_diagnosis.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "python/carnot/experiment_7160_v631_qwen38_lease_diagnosis.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:python/carnot/gpu_lease_phase_journal.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/gpu_lease_phase_journal.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "python/carnot/gpu_lease_phase_journal.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:results/experiment_7533_v659_tool_protocol.json",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "results/experiment_7533_v659_tool_protocol.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:results/experiment_7535_v659_native_pilot.json",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7535_v659_native_pilot.json",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "results/experiment_7535_v659_native_pilot.json"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:openspec/capabilities/verification/spec.md",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/verification/spec.md",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:python/carnot/experiment_7548_v660_capture_runner.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7548_v660_capture_runner.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "python/carnot/experiment_7548_v660_capture_runner.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:scripts/experiments/experiment_7548_v660_capture_runner.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7548_v660_capture_runner.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "scripts/experiments/experiment_7548_v660_capture_runner.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "required_input:tests/python/test_experiment_7548_v660_capture_runner.py",
+      "condition": "path.bytes == expected",
+      "expected": "readable_nonempty_bytes",
+      "field": "path.bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7548_v660_capture_runner.py",
+      "principle": "A missing named input must block before schedule qualification.",
+      "upstream": "tests/python/test_experiment_7548_v660_capture_runner.py"
+    },
+    {
+      "category": "external_precondition",
+      "check": "driving_requirement",
+      "condition": "REQ-* == expected",
+      "expected": "REQ-VERIFY-7548",
+      "field": "REQ-*",
+      "observed": "REQ-VERIFY-7548",
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/verification/spec.md",
+      "principle": "Implementation without its requirement cannot become accepted evidence.",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "category": "external_precondition",
+      "check": "historical_pilot_disposition",
+      "condition": "honest_verdict == expected",
+      "expected": "complete_blocked_owned_gpu_available",
+      "field": "honest_verdict",
+      "observed": "complete_blocked_owned_gpu_available",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7535_v659_native_pilot.json",
+      "principle": "The changed-capacity observation must retain the literal prior failure.",
+      "upstream": "exp7535-v659-native-pilot"
+    },
+    {
+      "category": "external_precondition",
+      "check": "protocol_terminal_identity",
+      "condition": "terminal_identity_and_readiness == expected",
+      "expected": {
+        "experiment_id": "exp7533-v659-tool-protocol",
+        "flagged_adversarial": false,
+        "tool_protocol_ready_score": 1,
+        "verdict_class": "null"
+      },
+      "field": "terminal_identity_and_readiness",
+      "observed": {
+        "experiment_id": "exp7533-v659-tool-protocol",
+        "flagged_adversarial": false,
+        "tool_protocol_ready_score": 1,
+        "verdict_class": "null"
+      },
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7533_v659_tool_protocol.json",
+      "principle": "Changed or missing sealed protocol evidence cannot authorize collection.",
+      "upstream": "exp7533-v659-tool-protocol"
+    },
+    {
+      "category": "external_precondition",
+      "check": "exact_upstream_roles",
+      "condition": "role_manifest.groups.role_counts == expected",
+      "expected": {
+        "fit": 160,
+        "online": 160,
+        "policy": 40,
+        "test": 80,
+        "tune": 40
+      },
+      "field": "role_manifest.groups.role_counts",
+      "observed": {
+        "fit": 160,
+        "online": 160,
+        "policy": 40,
+        "test": 80,
+        "tune": 40
+      },
+      "op": "==",
+      "passed": true,
+      "principle": "Changed or missing sealed protocol evidence cannot authorize collection.",
+      "upstream": "exp7533-v659-tool-protocol"
+    },
+    {
+      "category": "external_precondition",
+      "check": "sealed_donor_manifest",
+      "condition": "donor_manifest.distinct_same_role_and_unlabelled == expected",
+      "expected": true,
+      "field": "donor_manifest.distinct_same_role_and_unlabelled",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Changed or missing sealed protocol evidence cannot authorize collection.",
+      "upstream": "exp7533-v659-tool-protocol"
+    },
+    {
+      "category": "external_precondition",
+      "check": "embedded_tokenizer_manifest",
+      "condition": "tokenizer_identity == expected",
+      "expected": true,
+      "field": "tokenizer_identity",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "principle": "Changed or missing sealed protocol evidence cannot authorize collection.",
+      "upstream": "exp7533-v659-tool-protocol"
+    },
+    {
+      "category": "external_precondition",
+      "check": "sealed_label_access",
+      "condition": "reader_access_contract.capture == expected",
+      "expected": true,
+      "field": "reader_access_contract.capture",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Changed or missing sealed protocol evidence cannot authorize collection.",
+      "upstream": "exp7533-v659-tool-protocol"
+    },
+    {
+      "category": "external_precondition",
+      "check": "sealed_shard_hashes",
+      "condition": "sealed_shards.path_bytes_sha256 == expected",
+      "expected": [],
+      "field": "sealed_shards.path_bytes_sha256",
+      "observed": [],
+      "op": "==",
+      "passed": true,
+      "principle": "Changed or missing sealed protocol evidence cannot authorize collection.",
+      "upstream": "exp7533-v659-tool-protocol"
+    },
+    {
+      "category": "external_precondition",
+      "check": "qualified_terminal_checks",
+      "condition": "validation_receipts.required_terminal == expected",
+      "expected": [
+        "adversarial_verify",
+        "declared_entrypoint_cold_replay",
+        "independent_reduction",
+        "verdict_row_consistency_strict"
+      ],
+      "field": "validation_receipts.required_terminal",
+      "observed": [
+        "adversarial_verify",
+        "declared_entrypoint_cold_replay",
+        "independent_reduction",
+        "verdict_row_consistency_strict"
+      ],
+      "op": "==",
+      "passed": true,
+      "principle": "Changed or missing sealed protocol evidence cannot authorize collection.",
+      "upstream": "exp7533-v659-tool-protocol"
+    }
+  ],
+  "private_llm_off_real_environment_smoke": "not_applicable_capture_transport_qualification",
+  "process_identity": {
+    "clock": "time.monotonic",
+    "pid": 1118454,
+    "pid_start_ticks": 13350929,
+    "python": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12"
+  },
+  "production_defaults_changed": false,
+  "qualification_controls": {
+    "counted_as_current_model_invocations": false,
+    "first_run": {
+      "completed_group_count": 1,
+      "duration_s": 0.0030285420070867985,
+      "error": "RuntimeError:private scripted interruption",
+      "hard_limit_s": 4200.0,
+      "partial_group_discarded": 1,
+      "planned_group_count": 3,
+      "resumed_group_count": 0,
+      "status": "partial",
+      "validation_reserve_s": 900.0
+    },
+    "mutation_failures": {
+      "donor_component_hash": true,
+      "group_hash": true,
+      "option_order": true,
+      "prompt_token_count": true,
+      "request_id": true
+    },
+    "passed": true,
+    "qualification_role_counts": {
+      "development": 1,
+      "fit": 2
+    },
+    "reduction": {
+      "attempted_forward_count": 18,
+      "benefit_gate_applied": false,
+      "comparative_rows": [
+        {
+          "absolute_condition_probabilities": {
+            "absent": 0.5005150344033928,
+            "mismatched": 0.5005071753828795,
+            "original": 0.5005229721064239
+          },
+          "disposition": "complete_transport_qualification",
+          "group_hash": "sha256:53bd99b058049f4323addff22ca43b057709d329f10ffb64a2037036c53a0817",
+          "original_minus_absent": 7.937703031091203e-06,
+          "original_minus_mismatched": 1.5796723544458935e-05,
+          "positive_claim": false
+        },
+        {
+          "absolute_condition_probabilities": {
+            "absent": 0.5005150344033928,
+            "mismatched": 0.5005071753828795,
+            "original": 0.5005229721064239
+          },
+          "disposition": "complete_transport_qualification",
+          "group_hash": "sha256:613b001056180222f2443dd6963bb583b6770900b2c527310d62aa6e6622f14f",
+          "original_minus_absent": 7.937703031091203e-06,
+          "original_minus_mismatched": 1.5796723544458935e-05,
+          "positive_claim": false
+        },
+        {
+          "absolute_condition_probabilities": {
+            "absent": 0.5004916961744522,
+            "mismatched": 0.5004840772168048,
+            "original": 0.5004993957575443
+          },
+          "disposition": "complete_transport_qualification",
+          "group_hash": "sha256:68f6315c572be29d01bc6d1b9392f8428ab9f75ac7f1be02dc28cf7a09e6fab3",
+          "original_minus_absent": 7.69958309210228e-06,
+          "original_minus_mismatched": 1.5318540739550635e-05,
+          "positive_claim": false
+        }
+      ],
+      "complete_forward_count": 18,
+      "complete_group_count": 3,
+      "failed_checks": [],
+      "generated_token_count": 0,
+      "passed": true,
+      "planned_forward_count": 18,
+      "role_schedule_hashes": {
+        "development": "sha256:85039c6bcaa8dd70644b1c5d26aba331476c87581db9f274ddda1d72a7340105",
+        "fit": "sha256:33ef76e0bb59ab4cc6cb28eb1273513a5d50528e1cd9971c3b3fa4f85a4ea974"
+      }
+    },
+    "resume_parity": true,
+    "scripted_transport_calls": 21,
+    "second_run": {
+      "completed_group_count": 3,
+      "duration_s": 0.0046425299951806664,
+      "error": null,
+      "hard_limit_s": 4200.0,
+      "partial_group_discarded": 0,
+      "planned_group_count": 3,
+      "resumed_group_count": 1,
+      "status": "complete",
+      "validation_reserve_s": 900.0
+    }
+  },
+  "qualification_role_counts": {
+    "development": 1,
+    "fit": 2
+  },
+  "qualification_rows": {
+    "bytes": 27857,
+    "path": "results/raw/experiment_7548_v660_capture_runner/qualification/qualification_rows.jsonl",
+    "rows": 18,
+    "sha256": "sha256:3b863feef2e232518a93f00dc5277b445dc26876378a379969f98687e20f3c76"
+  },
+  "qualification_schedule": {
+    "bytes": 14864,
+    "path": "results/raw/experiment_7548_v660_capture_runner/qualification/qualification_schedule.jsonl",
+    "rows": 18,
+    "sha256": "sha256:085660b2305f0b40b60d01ab2c7dc0a46d88ede7900c8eea4dd19fe661cbadb6"
+  },
+  "random_seed": {
+    "bootstrap": 6600484,
+    "development_selection": 659035,
+    "fitting": 6600483,
+    "ordering": 6600481,
+    "sampling": 6600482,
+    "upstream_role_allocation": 659033
+  },
+  "ready": 0,
+  "reproducibility_checksum": "sha256:e98ed8464e8c7c4044cd75b109eea1732832d69aba64108571ed601834ecbcbf",
+  "resource_observations": {
+    "admission_rule": {
+      "foreign_compute_processes": 0,
+      "residual_used_memory_mb_lt": 500,
+      "source": "experiment_7535_v659_native_pilot._admissible_gpu",
+      "supported_device": "NVIDIA GeForce RTX 3090"
+    },
+    "devices": [
+      {
+        "admissible_under_exp7535_rule": false,
+        "gpu_memory_free_mb": 5310,
+        "gpu_memory_total_mb": 24576,
+        "gpu_memory_used_mb": 18868,
+        "gpu_name": "NVIDIA GeForce RTX 3090",
+        "gpu_utilization_pct": 0,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "process_count": 3,
+        "processes": [
+          {
+            "age_s": 2838.87,
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "49152",
+              "--port",
+              "60953",
+              "--host",
+              "127.0.0.1",
+              "--parallel",
+              "1",
+              "--cache-type-k",
+              "q8_0",
+              "--cache-type-v",
+              "q8_0"
+            ],
+            "command_sha256": "sha256:a60953cbe7b2d3d7e8bd8a2493ff488a4531ef6fc6b88ec205d3ecc6e36ecf4c",
+            "command_text": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf -ngl 999 -c 49152 --port 60953 --host 127.0.0.1 --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0",
+            "gpu_index": 1,
+            "gpu_memory_free_mb": 5310,
+            "gpu_memory_total_mb": 24576,
+            "gpu_memory_used_mb": 18868,
+            "gpu_name": "NVIDIA GeForce RTX 3090",
+            "gpu_process_memory_mb": 18056,
+            "gpu_utilization_pct": 0,
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "matching_lease_id": null,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "nvidia_process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "open_port": 60953,
+            "open_ports": [
+              60953
+            ],
+            "ownership_classification": "pending",
+            "ownership_evidence_errors": [],
+            "pid": 1105116,
+            "ppid": 1105089,
+            "proc_exists": true,
+            "process_ancestry": [
+              {
+                "command_sha256": "sha256:a60953cbe7b2d3d7e8bd8a2493ff488a4531ef6fc6b88ec205d3ecc6e36ecf4c",
+                "pid": 1105116,
+                "ppid": 1105089,
+                "start_time_ticks": 13073547
+              },
+              {
+                "command_sha256": "sha256:e377a889902d7cac50e4f6a1f152b09139ab9446c48de7aab1a8f86b4d3affd2",
+                "pid": 1105089,
+                "ppid": 1104970,
+                "start_time_ticks": 13073523
+              },
+              {
+                "command_sha256": "sha256:83df28d1c8beea7d3969a3f01dd2c9231401e9ddfe3a201fab6b6da0765b5579",
+                "pid": 1104970,
+                "ppid": 1096065,
+                "start_time_ticks": 13072500
+              },
+              {
+                "command_sha256": "sha256:d4623fa6a812518b5eb9191c9eef4c04be348a20eb9bcbeddd6202468efb609f",
+                "pid": 1096065,
+                "ppid": 1096064,
+                "start_time_ticks": 12938148
+              },
+              {
+                "command_sha256": "sha256:3d2475d18b0ae934857bf09181b6aae931901668b1a52b447ede156cca4d4fe4",
+                "pid": 1096064,
+                "ppid": 1096062,
+                "start_time_ticks": 12938148
+              },
+              {
+                "command_sha256": "sha256:3d2475d18b0ae934857bf09181b6aae931901668b1a52b447ede156cca4d4fe4",
+                "pid": 1096062,
+                "ppid": 1,
+                "start_time_ticks": 12938147
+              },
+              {
+                "command_sha256": "sha256:93f96448c7b82b49e6b1b058c69ef15b3ce2fa7fdaa640daa4660e8668eb556b",
+                "pid": 1,
+                "ppid": 0,
+                "start_time_ticks": 22
+              }
+            ],
+            "process_group_id": 1105089,
+            "process_start_utc": "2026-09-23T01:58:38.259003Z",
+            "session_id": 1105089,
+            "start_time_ticks": 13073547
+          },
+          {
+            "age_s": 2839.11,
+            "command": [
+              "/home/ianblenke/trm_venv/bin/python",
+              "-u",
+              "/home/ianblenke/carnot-wt-b2d/scripts/experiments/experiment_7531_b2_induction_gate_measurement.py",
+              "--role",
+              "live-session",
+              "--date",
+              "20260922",
+              "--model-path",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "--model-hash",
+              "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "--model-revision",
+              "fe1e2a23d973adb629709749dc4f6756df66ef10",
+              "--gpu-index",
+              "1",
+              "--port",
+              "60953",
+              "--schedule-path",
+              "/home/ianblenke/carnot-wt-b2d/results/raw/experiment_10009_b2_induction_gate_measurement_v3/frozen_schedule.json",
+              "--raw-dir",
+              "/home/ianblenke/carnot-wt-b2d/results/raw/experiment_10009_b2_induction_gate_measurement_v3",
+              "--checkpoint-path",
+              "/home/ianblenke/carnot-wt-b2d/results/checkpoints/experiment_10009_b2_induction_gate_measurement_v3.json",
+              "--session-path",
+              "/home/ianblenke/carnot-wt-b2d/results/raw/experiment_10009_b2_induction_gate_measurement_v3/live_session.json"
+            ],
+            "command_sha256": "sha256:e377a889902d7cac50e4f6a1f152b09139ab9446c48de7aab1a8f86b4d3affd2",
+            "command_text": "/home/ianblenke/trm_venv/bin/python -u /home/ianblenke/carnot-wt-b2d/scripts/experiments/experiment_7531_b2_induction_gate_measurement.py --role live-session --date 20260922 --model-path /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --model-hash sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169 --model-revision fe1e2a23d973adb629709749dc4f6756df66ef10 --gpu-index 1 --port 60953 --schedule-path /home/ianblenke/carnot-wt-b2d/results/raw/experiment_10009_b2_induction_gate_measurement_v3/frozen_schedule.json --raw-dir /home/ianblenke/carnot-wt-b2d/results/raw/experiment_10009_b2_induction_gate_measurement_v3 --checkpoint-path /home/ianblenke/carnot-wt-b2d/results/checkpoints/experiment_10009_b2_induction_gate_measurement_v3.json --session-path /home/ianblenke/carnot-wt-b2d/results/raw/experiment_10009_b2_induction_gate_measurement_v3/live_session.json",
+            "gpu_index": 1,
+            "gpu_memory_free_mb": 5310,
+            "gpu_memory_total_mb": 24576,
+            "gpu_memory_used_mb": 18868,
+            "gpu_name": "NVIDIA GeForce RTX 3090",
+            "gpu_process_memory_mb": 536,
+            "gpu_utilization_pct": 0,
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "matching_lease_id": null,
+            "model_path": null,
+            "model_sha256": null,
+            "nvidia_process_name": "/home/ianblenke/trm_venv/bin/python",
+            "open_port": null,
+            "open_ports": [],
+            "ownership_classification": "pending",
+            "ownership_evidence_errors": [],
+            "pid": 1105089,
+            "ppid": 1104970,
+            "proc_exists": true,
+            "process_ancestry": [
+              {
+                "command_sha256": "sha256:e377a889902d7cac50e4f6a1f152b09139ab9446c48de7aab1a8f86b4d3affd2",
+                "pid": 1105089,
+                "ppid": 1104970,
+                "start_time_ticks": 13073523
+              },
+              {
+                "command_sha256": "sha256:83df28d1c8beea7d3969a3f01dd2c9231401e9ddfe3a201fab6b6da0765b5579",
+                "pid": 1104970,
+                "ppid": 1096065,
+                "start_time_ticks": 13072500
+              },
+              {
+                "command_sha256": "sha256:d4623fa6a812518b5eb9191c9eef4c04be348a20eb9bcbeddd6202468efb609f",
+                "pid": 1096065,
+                "ppid": 1096064,
+                "start_time_ticks": 12938148
+              },
+              {
+                "command_sha256": "sha256:3d2475d18b0ae934857bf09181b6aae931901668b1a52b447ede156cca4d4fe4",
+                "pid": 1096064,
+                "ppid": 1096062,
+                "start_time_ticks": 12938148
+              },
+              {
+                "command_sha256": "sha256:3d2475d18b0ae934857bf09181b6aae931901668b1a52b447ede156cca4d4fe4",
+                "pid": 1096062,
+                "ppid": 1,
+                "start_time_ticks": 12938147
+              },
+              {
+                "command_sha256": "sha256:93f96448c7b82b49e6b1b058c69ef15b3ce2fa7fdaa640daa4660e8668eb556b",
+                "pid": 1,
+                "ppid": 0,
+                "start_time_ticks": 22
+              }
+            ],
+            "process_group_id": 1105089,
+            "process_start_utc": "2026-09-23T01:58:38.022008Z",
+            "session_id": 1105089,
+            "start_time_ticks": 13073523
+          },
+          {
+            "age_s": 65.04,
+            "command": [
+              ".venv/bin/python",
+              "-u",
+              "scripts/experiments/experiment_7548_v660_capture_runner.py",
+              "--date",
+              "20260923"
+            ],
+            "command_sha256": "sha256:81eba94f896643a5a46658efc79e66aad93564d618b16928ce18ecccee3f5b25",
+            "command_text": ".venv/bin/python -u scripts/experiments/experiment_7548_v660_capture_runner.py --date 20260923",
+            "gpu_index": 1,
+            "gpu_memory_free_mb": 5310,
+            "gpu_memory_total_mb": 24576,
+            "gpu_memory_used_mb": 18868,
+            "gpu_name": "NVIDIA GeForce RTX 3090",
+            "gpu_process_memory_mb": 256,
+            "gpu_utilization_pct": 0,
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "matching_lease_id": null,
+            "model_path": null,
+            "model_sha256": null,
+            "nvidia_process_name": ".venv/bin/python",
+            "open_port": null,
+            "open_ports": [],
+            "ownership_classification": "pending",
+            "ownership_evidence_errors": [],
+            "pid": 1118454,
+            "ppid": 1110541,
+            "proc_exists": true,
+            "process_ancestry": [
+              {
+                "command_sha256": "sha256:81eba94f896643a5a46658efc79e66aad93564d618b16928ce18ecccee3f5b25",
+                "pid": 1118454,
+                "ppid": 1110541,
+                "start_time_ticks": 13350929
+              },
+              {
+                "command_sha256": "sha256:8319512999dad84f3740f274b918b3949443d5efe75ebaf2e7ab53b5381fb8da",
+                "pid": 1110541,
+                "ppid": 1337,
+                "start_time_ticks": 13111167
+              },
+              {
+                "command_sha256": "sha256:3550b3e2618551418fe2eb3790f9197c0a5fe136a829413f0df431fe92662db4",
+                "pid": 1337,
+                "ppid": 1233,
+                "start_time_ticks": 4169
+              },
+              {
+                "command_sha256": "sha256:bb3971343253ce398cd272d8986fd4f05f99e03cf717ff1d31431ceb842e4ad7",
+                "pid": 1233,
+                "ppid": 1,
+                "start_time_ticks": 4153
+              },
+              {
+                "command_sha256": "sha256:93f96448c7b82b49e6b1b058c69ef15b3ce2fa7fdaa640daa4660e8668eb556b",
+                "pid": 1,
+                "ppid": 0,
+                "start_time_ticks": 22
+              }
+            ],
+            "process_group_id": 1118454,
+            "process_start_utc": "2026-09-23T02:44:52.086088Z",
+            "session_id": 1118454,
+            "start_time_ticks": 13350929
+          }
+        ],
+        "supported": true
+      },
+      {
+        "admissible_under_exp7535_rule": false,
+        "gpu_memory_free_mb": 5853,
+        "gpu_memory_total_mb": 24576,
+        "gpu_memory_used_mb": 18325,
+        "gpu_name": "NVIDIA GeForce RTX 3090",
+        "gpu_utilization_pct": 0,
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "process_count": 2,
+        "processes": [
+          {
+            "age_s": 38686.18,
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "49152",
+              "--port",
+              "59703",
+              "--host",
+              "127.0.0.1",
+              "--parallel",
+              "1",
+              "--cache-type-k",
+              "q8_0",
+              "--cache-type-v",
+              "q8_0"
+            ],
+            "command_sha256": "sha256:5a2e2773d46870d55007a78d03c4c02b476db8b58d6b8af3fd8e6e3b22018ba2",
+            "command_text": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf -ngl 999 -c 49152 --port 59703 --host 127.0.0.1 --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0",
+            "gpu_index": 0,
+            "gpu_memory_free_mb": 5853,
+            "gpu_memory_total_mb": 24576,
+            "gpu_memory_used_mb": 18325,
+            "gpu_name": "NVIDIA GeForce RTX 3090",
+            "gpu_process_memory_mb": 18054,
+            "gpu_utilization_pct": 0,
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "matching_lease_id": null,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "nvidia_process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "open_port": 59703,
+            "open_ports": [
+              59703
+            ],
+            "ownership_classification": "pending",
+            "ownership_evidence_errors": [],
+            "pid": 772157,
+            "ppid": 1233,
+            "proc_exists": true,
+            "process_ancestry": [
+              {
+                "command_sha256": "sha256:5a2e2773d46870d55007a78d03c4c02b476db8b58d6b8af3fd8e6e3b22018ba2",
+                "pid": 772157,
+                "ppid": 1233,
+                "start_time_ticks": 9488815
+              },
+              {
+                "command_sha256": "sha256:bb3971343253ce398cd272d8986fd4f05f99e03cf717ff1d31431ceb842e4ad7",
+                "pid": 1233,
+                "ppid": 1,
+                "start_time_ticks": 4153
+              },
+              {
+                "command_sha256": "sha256:93f96448c7b82b49e6b1b058c69ef15b3ce2fa7fdaa640daa4660e8668eb556b",
+                "pid": 1,
+                "ppid": 0,
+                "start_time_ticks": 22
+              }
+            ],
+            "process_group_id": 772131,
+            "process_start_utc": "2026-09-22T16:01:10.942884Z",
+            "session_id": 772131,
+            "start_time_ticks": 9488815
+          },
+          {
+            "age_s": 65.04,
+            "command": [
+              ".venv/bin/python",
+              "-u",
+              "scripts/experiments/experiment_7548_v660_capture_runner.py",
+              "--date",
+              "20260923"
+            ],
+            "command_sha256": "sha256:81eba94f896643a5a46658efc79e66aad93564d618b16928ce18ecccee3f5b25",
+            "command_text": ".venv/bin/python -u scripts/experiments/experiment_7548_v660_capture_runner.py --date 20260923",
+            "gpu_index": 0,
+            "gpu_memory_free_mb": 5853,
+            "gpu_memory_total_mb": 24576,
+            "gpu_memory_used_mb": 18325,
+            "gpu_name": "NVIDIA GeForce RTX 3090",
+            "gpu_process_memory_mb": 256,
+            "gpu_utilization_pct": 0,
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "matching_lease_id": null,
+            "model_path": null,
+            "model_sha256": null,
+            "nvidia_process_name": ".venv/bin/python",
+            "open_port": null,
+            "open_ports": [],
+            "ownership_classification": "pending",
+            "ownership_evidence_errors": [],
+            "pid": 1118454,
+            "ppid": 1110541,
+            "proc_exists": true,
+            "process_ancestry": [
+              {
+                "command_sha256": "sha256:81eba94f896643a5a46658efc79e66aad93564d618b16928ce18ecccee3f5b25",
+                "pid": 1118454,
+                "ppid": 1110541,
+                "start_time_ticks": 13350929
+              },
+              {
+                "command_sha256": "sha256:8319512999dad84f3740f274b918b3949443d5efe75ebaf2e7ab53b5381fb8da",
+                "pid": 1110541,
+                "ppid": 1337,
+                "start_time_ticks": 13111167
+              },
+              {
+                "command_sha256": "sha256:3550b3e2618551418fe2eb3790f9197c0a5fe136a829413f0df431fe92662db4",
+                "pid": 1337,
+                "ppid": 1233,
+                "start_time_ticks": 4169
+              },
+              {
+                "command_sha256": "sha256:bb3971343253ce398cd272d8986fd4f05f99e03cf717ff1d31431ceb842e4ad7",
+                "pid": 1233,
+                "ppid": 1,
+                "start_time_ticks": 4153
+              },
+              {
+                "command_sha256": "sha256:93f96448c7b82b49e6b1b058c69ef15b3ce2fa7fdaa640daa4660e8668eb556b",
+                "pid": 1,
+                "ppid": 0,
+                "start_time_ticks": 22
+              }
+            ],
+            "process_group_id": 1118454,
+            "process_start_utc": "2026-09-23T02:44:52.086088Z",
+            "session_id": 1118454,
+            "start_time_ticks": 13350929
+          }
+        ],
+        "supported": true
+      }
+    ],
+    "foreign_endpoints_adopted": [],
+    "fresh_exclusive_lease_required_downstream": true,
+    "gpu_capacity_observed_score": 0,
+    "idle_supported_gpu_uuids": [],
+    "lease_rows": [
+      {
+        "canonical": true,
+        "checksum_valid": true,
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "error": null,
+        "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "expires_monotonic_ns": 74679536438345,
+        "fresh": false,
+        "lease_id": "lease:28fbeda8714c1d5c22239a5e1fb830445902b747eab250ae92968a00622620b3",
+        "lease_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+        "model_sha256": null,
+        "owner_argv_digest": "sha256:810d3275d4c35330abac7712dab93cbda1b3ab4d69fbdf8ca9ae16cb3cd11de7",
+        "owner_executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+        "owner_live": false,
+        "owner_pid": 487956,
+        "owner_start_ticks": 7257064,
+        "phase": "terminal_complete",
+        "port": null,
+        "readable": true,
+        "released": true,
+        "schema": "carnot.gpu_lease_phase_journal.v1",
+        "signals_sent": [],
+        "task_id": "exp7514-v657-service-trace"
+      }
+    ],
+    "leases_acquired": [],
+    "observation_count": 1,
+    "observed_at_utc": "2026-09-23T02:45:57.136819Z",
+    "query_receipts": [
+      {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,uuid,name,utilization.gpu,memory.total,memory.used,memory.free",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.039592,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 18325, 5853\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 18868, 5310\n"
+      },
+      {
+        "command": [
+          "nvidia-smi",
+          "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.034237,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 772157, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 18054\nGPU-b52387a2-c625-de87-8d34-e6f64e684bab, 1118454, .venv/bin/python, 256\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 1105116, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 18056\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 1105089, /home/ianblenke/trm_venv/bin/python, 536\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 1118454, .venv/bin/python, 256\n"
+      }
+    ],
+    "signals_sent": [],
+    "snapshot_is_lease": false,
+    "wait_limit_s": 0.0,
+    "waited_s": 0.08878486600588076
+  },
+  "role_counts": {
+    "development": 12,
+    "fit": 160,
+    "policy": 40,
+    "test": 80,
+    "tune": 40
+  },
+  "role_schedule_hashes": {
+    "development": "sha256:6937fc3e6cff8976189cc173d8d3ab95d597f4f78165c6c842b92b627d85d66d",
+    "fit": "sha256:45f262d736c163278280a0ba09afaf5214a5c6859ca758899cb3695349ef1d4e",
+    "policy": "sha256:2ee2a4e91109d174c8a2248ccc4ac9ff73b3cd75d29ba3fdda28d55695777b34",
+    "test": "sha256:eadb42eae8b2db1d9e30bc0459764059fb6d64a11af66e77c9ebc03b568a166d",
+    "tune": "sha256:9fb22ed07cec794f306b5aa95a3805327dd2cfa1397e7c34c66524d7b7b8be0f"
+  },
+  "rows": [
+    {
+      "absolute_metrics": {
+        "complete_prompt_forwards": 960,
+        "complete_schedule_groups": 160,
+        "forwards_per_group": 6,
+        "planned_groups": 160
+      },
+      "censored_count": 0,
+      "complete_count": 160,
+      "disposition": "schedule_frozen_no_model_call",
+      "excluded_count": 0,
+      "failed_count": 0,
+      "planned_count": 160,
+      "role": "fit",
+      "unstarted_count": 0
+    },
+    {
+      "absolute_metrics": {
+        "complete_prompt_forwards": 240,
+        "complete_schedule_groups": 40,
+        "forwards_per_group": 6,
+        "planned_groups": 40
+      },
+      "censored_count": 0,
+      "complete_count": 40,
+      "disposition": "schedule_frozen_no_model_call",
+      "excluded_count": 0,
+      "failed_count": 0,
+      "planned_count": 40,
+      "role": "tune",
+      "unstarted_count": 0
+    },
+    {
+      "absolute_metrics": {
+        "complete_prompt_forwards": 240,
+        "complete_schedule_groups": 40,
+        "forwards_per_group": 6,
+        "planned_groups": 40
+      },
+      "censored_count": 0,
+      "complete_count": 40,
+      "disposition": "schedule_frozen_no_model_call",
+      "excluded_count": 0,
+      "failed_count": 0,
+      "planned_count": 40,
+      "role": "policy",
+      "unstarted_count": 0
+    },
+    {
+      "absolute_metrics": {
+        "complete_prompt_forwards": 480,
+        "complete_schedule_groups": 80,
+        "forwards_per_group": 6,
+        "planned_groups": 80
+      },
+      "censored_count": 0,
+      "complete_count": 80,
+      "disposition": "schedule_frozen_no_model_call",
+      "excluded_count": 0,
+      "failed_count": 0,
+      "planned_count": 80,
+      "role": "test",
+      "unstarted_count": 0
+    },
+    {
+      "absolute_metrics": {
+        "complete_prompt_forwards": 72,
+        "complete_schedule_groups": 12,
+        "forwards_per_group": 6,
+        "planned_groups": 12
+      },
+      "censored_count": 0,
+      "complete_count": 12,
+      "disposition": "schedule_frozen_no_model_call",
+      "excluded_count": 0,
+      "failed_count": 0,
+      "planned_count": 12,
+      "role": "development",
+      "unstarted_count": 0
+    },
+    {
+      "absolute_metrics": {
+        "idle_supported_device_count_positive": 0
+      },
+      "censored_count": 0,
+      "complete_count": 1,
+      "disposition": "gpu_busy_observed",
+      "excluded_count": 0,
+      "failed_count": 0,
+      "planned_count": 1,
+      "role": "gpu_capacity_observation",
+      "unstarted_count": 0
+    }
+  ],
+  "run_date": "20260923",
+  "sample_size_budget": {
+    "attempted": 332,
+    "censored": 0,
+    "completed": 332,
+    "current_model_forwards": 0,
+    "excluded": 160,
+    "failed": 0,
+    "planned": 332,
+    "planned_forwards": 1992,
+    "unstarted": 0
+  },
+  "schema": "carnot.exp7548.v660.capture_runner.v1",
+  "schema_binding": {
+    "experiment_id": "exp7548-capture-runner",
+    "milestone": "2026.09.660",
+    "run_date": "20260923",
+    "version": "v660"
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+    "CODEX.md": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+    "openspec/capabilities/verification/spec.md": "sha256:d1bc0c9cbeb7178b4f4fbbc5763d115bd0bee0ddb20a39677d95786e28a75a88",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:45c8c72038c598a924808cee2a7fc9a4448e2f1936cb9ac02318f58c4276276e",
+    "ops/e2e-test-plan.md": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+    "ops/exclusion_manifest.yaml": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+    "python/carnot/experiment_7160_v631_qwen38_lease_diagnosis.py": "sha256:169e653da29b9f5b7e261ae8797cce63d03784028ca25ba7b5b2f1194266d602",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7533_v659_tool_protocol.py": "sha256:e595fbd4ff9a0686940fce2fcb89822dd756e1436a224f49197b1db2507bab95",
+    "python/carnot/experiment_7535_v659_native_pilot.py": "sha256:53549bc8542e370a208b4939a54dc10201e081e37cd942d5c09dc6c6b5712498",
+    "python/carnot/experiment_7548_v660_capture_runner.py": "sha256:73b247c8da18edb7371c0f262ba93f7cb6e60ea5b767a6884dd4ca8eed16113d",
+    "python/carnot/gpu_lease_phase_journal.py": "sha256:4308c325d2489c64503b9cbdbddc03ef3f02f422f746b77bf1a1ced461fbfa08",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7533_v659_tool_protocol.json": "sha256:4b6d0c6185bc645f9459afb31f0d973e387243a6ebd1f5b9d4d6c1ec6a8259b6",
+    "results/experiment_7535_v659_native_pilot.json": "sha256:42e3f7fe3bb306c1378e672671a80fe036c71bb7ba6e7706fcf291aaa34cd8fc",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7548_v660_capture_runner.py": "sha256:216a449685dd4f817503a7b5de6f38b08039118ac33e2a5409644b466c89b831",
+    "tests/python/test_experiment_7548_v660_capture_runner.py": "sha256:e33c77abb75a0176ccf72779c3df1aa1c4285bddbe6c9b638081844db1600161"
+  },
+  "source_swap_label_semantics": "features_only_original_source_label_applies",
+  "title": "V660 resumable source capture runner qualification",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7548_v660_capture_runner",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7548_v660_capture_runner"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 1.357568095001625,
+      "ended_at_utc": "2026-09-23T02:45:43.921231+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:d014663a08c44324e55719c88e19b705ce38af4e78f48bc4afea4212e5403d99",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7548_v660_capture_runner\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7548_v660_capture_runner.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7548_v660_capture_runner": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7548_v660_capture_runner.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-23T02:45:42.563346+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7548-validation-yt862tuc/basetemp/focused tests/python/test_experiment_7548_v660_capture_runner.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7548-validation-yt862tuc/basetemp/focused",
+        "tests/python/test_experiment_7548_v660_capture_runner.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.912184576998698,
+      "ended_at_utc": "2026-09-23T02:45:48.833925+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:7fd7ab30f851c287b50acbdeb4f92e21c8bee7c87c729b08b0b3f076c1b28082",
+      "name": "focused_pytest",
+      "output_tail": "........................................................................ [ 90%]\n........                                                                 [100%]\n80 passed in 2.00s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-23T02:45:43.921267+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7548-validation-yt862tuc/coverage/.coverage '--include=*/experiment_7548_v660_capture_runner.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7548-validation-yt862tuc/basetemp/coverage tests/python/test_experiment_7548_v660_capture_runner.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7548-validation-yt862tuc/coverage/.coverage",
+        "--include=*/experiment_7548_v660_capture_runner.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7548-validation-yt862tuc/basetemp/coverage",
+        "tests/python/test_experiment_7548_v660_capture_runner.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 7.944993127981434,
+      "ended_at_utc": "2026-09-23T02:45:56.779411+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:f55aff4d4a1e82bf2dd38dcf507a5d4f18108ce08d6792a3e453d972554239ec",
+      "name": "changed_module_coverage",
+      "output_tail": "........................................................................ [ 90%]\n........                                                                 [100%]\n80 passed in 3.63s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-23T02:45:48.833986+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7548_v660_capture_runner.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7548_v660_capture_runner.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7548-validation-yt862tuc/coverage/.coverage"
+      },
+      "duration_s": 0.1076532740262337,
+      "ended_at_utc": "2026-09-23T02:45:56.887388+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:45c8ca4c7b20aefb792582a87bdcbb2550c104e2fe3e8a3b294f0b09eaccd387",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                   Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------\npython/carnot/experiment_7548_v660_capture_runner.py     675      0   100%\n------------------------------------------------------------------------------------\nTOTAL                                                    675      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-23T02:45:56.779443+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7548_v660_capture_runner.py scripts/experiments/experiment_7548_v660_capture_runner.py tests/python/test_experiment_7548_v660_capture_runner.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7548_v660_capture_runner.py",
+        "scripts/experiments/experiment_7548_v660_capture_runner.py",
+        "tests/python/test_experiment_7548_v660_capture_runner.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011051232984755188,
+      "ended_at_utc": "2026-09-23T02:45:56.898755+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-23T02:45:56.887421+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7548_v660_capture_runner.py scripts/experiments/experiment_7548_v660_capture_runner.py tests/python/test_experiment_7548_v660_capture_runner.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7548_v660_capture_runner.py",
+        "scripts/experiments/experiment_7548_v660_capture_runner.py",
+        "tests/python/test_experiment_7548_v660_capture_runner.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.010438925004564226,
+      "ended_at_utc": "2026-09-23T02:45:56.909617+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-23T02:45:56.898789+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7548_v660_capture_runner.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7548_v660_capture_runner.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.11308521497994661,
+      "ended_at_utc": "2026-09-23T02:45:57.023304+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-23T02:45:56.909663+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7548_v660_capture_runner.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7548_v660_capture_runner.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02416800000355579,
+      "ended_at_utc": "2026-09-23T02:45:57.048018+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-23T02:45:57.023363+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/experiments/experiment_7548_v660_capture_runner.py --date 20260923 --cold-replay results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7548_v660_capture_runner.py",
+        "--date",
+        "20260923",
+        "--cold-replay",
+        "results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 1.5969389839738142,
+      "ended_at_utc": "2026-09-23T02:45:58.825911+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/terminal/00_declared_entrypoint_cold_replay/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:3abeaba2c21956880e6f7b24239fbd5e2d32e2bf0dfd998814df48f24412a2ce",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "{\"cold_replay_passed\": true, \"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "completion",
+      "started_at_utc": "2026-09-23T02:45:57.228528+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/experiments/experiment_7548_v660_capture_runner.py --date 20260923 --independent-reduce results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7548_v660_capture_runner.py",
+        "--date",
+        "20260923",
+        "--independent-reduce",
+        "results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 1.664022926997859,
+      "ended_at_utc": "2026-09-23T02:46:00.490237+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/terminal/01_independent_raw_reduction/00_independent_raw_reduction.log",
+      "log_sha256": "sha256:c5d44192c8634b72f8e00367f49cc234ec61a982301b0fae0f188eaf18ccbebe",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"capture_schedule_sha256\": \"sha256:1295b20e240f116f96e309c21d222dbfba9b85024a7aa5b336616a45a2524961\", \"complete_group_count\": 3, \"passed\": true, \"qualification_reduction_sha256\": \"sha256:53288ea23932c0f5bb7edb8f2d1b9a9bfe09aca61998b0e7a08203b36d2ec8a6\", \"qualification_row_count\": 18, \"schedule_count\": 1992}\n",
+      "passed": true,
+      "required": true,
+      "scope": "completion",
+      "started_at_utc": "2026-09-23T02:45:58.825941+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/adversarial_verify.py results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.6545595229836181,
+      "ended_at_utc": "2026-09-23T02:46:01.145127+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "safety",
+      "started_at_utc": "2026-09-23T02:46:00.490268+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "results/raw/experiment_7548_v660_capture_runner/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.044298938009887934,
+      "ended_at_utc": "2026-09-23T02:46:01.189877+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7548_v660_capture_runner/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "completion",
+      "started_at_utc": "2026-09-23T02:46:01.145156+00:00",
+      "timed_out": false
+    }
+  ],
+  "validation_reserve_s": 900.0,
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false,
+  "version": "v660"
+}

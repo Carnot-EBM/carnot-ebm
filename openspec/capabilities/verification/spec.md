@@ -45251,3 +45251,98 @@ readout pilot. The terminal artifact SHALL publish atomically at
 **When** the declared unbuffered entrypoint and fresh-process readers run
 **Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
 **And** only the exact validated terminal JSON publishes at the deliverable path.
+
+### REQ-VERIFY-7548: V660 Capture Runner SHALL Freeze And Resume Sealed Native Collection
+
+Exp7548 SHALL authenticate the exact Exp7533 terminal artifact, role and donor
+manifests, embedded-tokenizer identity, reader-access contract, sealed shard
+hashes, and required terminal validation receipts. It SHALL retain exactly 160
+fit, 40 tune, 40 policy, and 80 official-test groups. It SHALL exclude all 160
+online groups from V660 capture. It SHALL also freeze the same twelve
+label-blind development groups selected outside every Exp7533 role by the
+Exp7535 development selector.
+
+Each frozen group SHALL contain the complete original, absent, and same-role
+mismatched prompt in both semantic option orders. Each group SHALL therefore
+contain exactly six native option-logit requests at `n_ctx=4096`, with zero
+generated tokens. Request IDs, component and donor hashes, prompt hashes,
+token counts, semantic option IDs, option order, role, and group hash SHALL be
+stable. Changed source conditions SHALL supply features only. They SHALL NOT
+supply negative labels or open any evaluator shard.
+
+The reusable collection wrapper SHALL accept the Exp7535 `NativeOptionRunner`
+transport interface. It SHALL invoke only explicitly bounded roles and SHALL
+reserve 900 seconds for validation. It SHALL checkpoint complete groups
+atomically. It SHALL discard a partial group after an error or deadline and
+resume from the last complete group without adopting a foreign process. An
+independent reducer SHALL reload exact schedule and row bytes and reject a
+changed donor, option order, request ID, token count, group hash, non-finite
+logit, missing reset, duplicate request, or partial group.
+
+Exp7548 itself SHALL make no model load and no forward or generation call. It
+SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`,
+`inference_substrate_class=no_model_load`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. All current load,
+forward, and generation counters SHALL be zero. Scripted qualification rows
+SHALL remain fixture evidence and SHALL NOT become current model calls.
+
+After CPU qualification, Exp7548 SHALL make only bounded read-only GPU,
+procfs, and canonical lease observations. It SHALL retain device UUIDs,
+PID/start-time/process ancestry, observed memory, and lease identities. It
+SHALL set `gpu_capacity_observed_score=1` only when an RTX 3090 is idle under
+the existing Exp7535 admission rule. The observation SHALL send no signal,
+acquire no lease, and authorize no later model load. A later task SHALL acquire
+a fresh exclusive lease and recheck capacity.
+
+The bare `capture_runner_ready_score` SHALL depend on the sealed schedule,
+scripted transport controls, raw reduction, scoped validation, and cold replay.
+It SHALL remain independent of `gpu_capacity_observed_score` and predictive
+benefit. Missing external inputs SHALL produce a schema-complete
+`complete_blocked_*` result with exact upstream, path or field, expected, and
+observed operands. Required validation failure SHALL be disqualified. A valid
+runner with unmeasured benefit SHALL be null unless the independent GPU branch
+is externally blocked.
+
+The affected manifest SHALL name only the Exp7548 test, reusable module, and
+thin entrypoint. Required checks SHALL include scoped pytest, separate 100
+percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, scoped specification coverage, declared-entrypoint cold replay,
+independent raw reduction, adversarial verification, and strict verdict-row
+consistency. No numbered runtime E2E applies to this CPU qualification task.
+The terminal JSON SHALL publish atomically at
+`results/experiment_7548_v660_capture_runner.json` only after these checks.
+
+#### SCENARIO-VERIFY-7548-SCHEDULE: Exact Roles Share Six Stable Capture Cells
+
+**Given** the authenticated Exp7533 intervention shards and Exp7535 development selector
+**When** the V660 capture schedule freezes before any model work
+**Then** fit, tune, policy, test, and development contain 160, 40, 40, 80, and 12 groups
+**And** every group has the same source identity across its six complete prompt cells.
+
+#### SCENARIO-VERIFY-7548-RESUME: Only Complete Groups Survive A Restart
+
+**Given** a scripted native transport that stops inside one six-request group
+**When** the bounded runner checkpoints and a fresh runner resumes
+**Then** the interrupted group is discarded and replayed from its first request
+**And** every earlier complete group remains byte-identical and appears once.
+
+#### SCENARIO-VERIFY-7548-MUTATIONS: Schedule And Native Custody Fail Closed
+
+**Given** one independently reducible scripted capture
+**When** one donor, option order, request ID, token count, or group hash changes
+**Then** each private mutation fails its named identity or custody check
+**And** finite logits, state reset, six-cell completeness, and semantic IDs remain required.
+
+#### SCENARIO-VERIFY-7548-RESOURCE: Capacity Is Observation And Not A Lease
+
+**Given** bounded NVIDIA, procfs, ancestry, and lease snapshots after CPU work
+**When** the existing idle-device rule is reduced
+**Then** current idle capacity and runner readiness remain separate bare scores
+**And** no foreign process is signalled, adopted, or treated as later load authority.
+
+#### SCENARIO-VERIFY-7548-E2E: One Command Publishes A Cold-Valid Runner Contract
+
+**Given** a frozen affected-file manifest and hash-bound schedule sidecar
+**When** the declared entrypoint and fresh-process readers execute
+**Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
+**And** the validated terminal artifact reports zero current model calls.
