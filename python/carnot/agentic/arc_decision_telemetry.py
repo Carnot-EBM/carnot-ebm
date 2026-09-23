@@ -40,6 +40,18 @@ MAX_RECORDS_PER_EPISODE = 4096
 MAX_TOTAL_BYTES_PER_RUN = 32 * 1024 * 1024
 FLUSH_EVERY_RECORDS = 64
 INDUCTION_PROGRESS_WINDOW_ACTIONS = 32
+PLAN_LINEAGE_TERMINAL_STAGES = frozenset(
+    {
+        "transport_failed",
+        "parse_rejected",
+        "verifier_rejected",
+        "accepted_no_plan",
+        "planned_not_executed",
+        "executed_no_level_progress",
+        "executed_with_level_progress",
+        "censored",
+    }
+)
 FORBIDDEN_KEYS = frozenset(
     {
         "game_source",
@@ -215,6 +227,25 @@ class NoOpDecisionTelemetryRecorder:
     ) -> None:
         return None
 
+    def record_planner_invocation(
+        self, policy: Any, engine: Any, plan: Any, wall_time_s: float
+    ) -> None:
+        return None
+
+    def record_plan_consumption(self, policy: Any, plan: Any, plan_index: int, step: Any) -> None:
+        return None
+
+    def record_policy_action(
+        self,
+        policy: Any,
+        *,
+        proposed_move: Any,
+        selected_move: Any,
+        level_before: int | None,
+        provenance: str | None,
+    ) -> None:
+        return None
+
     def observe_induction_progress(self, policy: Any, latest: Any) -> None:
         return None
 
@@ -264,6 +295,16 @@ class DecisionTelemetryRecorder:
         self._next_induction_attempt = 0
         self._armed_induction_attempt_ids: list[str] = []
         self._pending_induction_outcomes: dict[str, dict[str, Any]] = {}
+        self._next_model_version = 0
+        self._next_plan_id = 0
+        self._next_action_id = 0
+        self._model_versions: dict[int, str] = {}
+        self._model_objects: dict[int, Any] = {}
+        self._planner_rows: dict[str, list[dict[str, Any]]] = {}
+        self._lineages: dict[str, dict[str, Any]] = {}
+        self._active_lineage_id: str | None = None
+        self._pending_plan_action: dict[str, Any] | None = None
+        self._previous_policy_action: dict[str, Any] | None = None
         try:
             if not self.path.parent.exists():
                 self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -400,6 +441,7 @@ class DecisionTelemetryRecorder:
                     level = int(raw_level)
             elif getattr(policy, "_prev_level", None) is not None:
                 level = int(policy._prev_level)
+            self._finalize_previous_action(level)
             self.begin_step(level_before=level, phase=str(getattr(policy, "phase", "unknown")))
         except Exception:
             self._error_count += 1
@@ -571,6 +613,105 @@ class DecisionTelemetryRecorder:
         self._next_induction_attempt += 1
         return f"{self.episode_id}:induction:{self._next_induction_attempt}"
 
+    @staticmethod
+    def _plan_signature(plan: Any) -> str:
+        """Identify plan values without retaining mutable policy lists."""
+
+        try:
+            safe = _sanitize(list(plan or ()))
+            return json.dumps(safe, sort_keys=True, separators=(",", ":"))
+        except Exception:
+            return repr(plan)[:MAX_STATE_TEXT_CHARS]
+
+    def _model_version(self, engine: Any) -> str:
+        key = id(engine)
+        existing = self._model_versions.get(key)
+        if existing is not None:
+            return existing
+        self._next_model_version += 1
+        value = f"{self.episode_id}:model:{self._next_model_version}"
+        self._model_versions[key] = value
+        self._model_objects[key] = engine
+        return value
+
+    def _current_attempt_id(self) -> str:
+        if self._armed_induction_attempt_ids:
+            return self._armed_induction_attempt_ids[0]
+        attempt_id = self._allocate_induction_attempt_id()
+        self._armed_induction_attempt_ids.append(attempt_id)
+        return attempt_id
+
+    def record_planner_invocation(
+        self, policy: Any, engine: Any, plan: Any, wall_time_s: float
+    ) -> None:
+        """Bind a real planner return to the attempt and model that produced it."""
+
+        try:
+            attempt_id = self._current_attempt_id()
+            model_version = self._model_version(engine)
+            plan_values = list(plan or ())
+            plan_id = None
+            if plan_values:
+                self._next_plan_id += 1
+                plan_id = f"{self.episode_id}:plan:{self._next_plan_id}"
+            row = {
+                "attempt_id": attempt_id,
+                "induction_attempt_id": attempt_id,
+                "model_version": model_version,
+                "plan_id": plan_id,
+                "plan_length": len(plan_values),
+                "plan_signature": self._plan_signature(plan_values),
+                "planner_invoked": True,
+            }
+            self._planner_rows.setdefault(attempt_id, []).append(dict(row))
+            self.record_event("planner_invocation", row, wall_time_s)
+        except Exception:
+            self._error_count += 1
+
+    def _emit_lineage_terminal(
+        self,
+        lineage: dict[str, Any],
+        stage: str,
+        closure_reason: str,
+        **extra: Any,
+    ) -> None:
+        if lineage.get("terminal_stage") is not None:
+            return
+        if stage not in PLAN_LINEAGE_TERMINAL_STAGES:
+            self._error_count += 1
+            return
+        lineage["terminal_stage"] = stage
+        lineage["closure_reason"] = closure_reason
+        lineage.update(extra)
+        row = self._common(
+            record_type="plan_lineage_terminal",
+            seam="plan_lineage",
+            wall_time_s=0.0,
+        )
+        row.update({key: value for key, value in lineage.items() if not str(key).startswith("_")})
+        self._append(row)
+        if self._active_lineage_id == lineage.get("induction_attempt_id"):
+            self._active_lineage_id = None
+
+    @staticmethod
+    def _failure_terminal_stage(attempt: Mapping[str, Any]) -> str | None:
+        skipped = str(attempt.get("skipped") or "")
+        if any(token in skipped for token in ("trust_below", "accuracy_below", "change_gate")):
+            return "verifier_rejected"
+        if skipped in {"proposer_failed", "proposer_failed_and_missing_plan_start_grid"}:
+            note = str(attempt.get("proposer_note") or "").lower()
+            if any(
+                token in note for token in ("connect", "http", "server", "timeout", "transport")
+            ):
+                return "transport_failed"
+            return "parse_rejected"
+        if skipped == "exception":
+            note = str(attempt.get("exception") or "").lower()
+            if any(token in note for token in ("connect", "http", "timeout", "transport")):
+                return "transport_failed"
+            return "parse_rejected"
+        return None
+
     def time_supervisor_selection(self, supervisor: Any, snapshot: Any) -> Any:
         span = _SupervisorSelectionSpan(self, snapshot, supervisor)
         span.__enter__()
@@ -630,6 +771,10 @@ class DecisionTelemetryRecorder:
         try:
             metrics = self._selection_metrics(result)
             selected_score = getattr(result, "selected_score", None)
+            selected_candidate = getattr(result, "selected", None)
+            selected_engine = getattr(selected_candidate, "engine", None)
+            if selected_engine is not None:
+                metrics["model_version"] = self._model_version(selected_engine)
             heldout = getattr(selected_score, "heldout_accuracy", None)
             accepted = (
                 None
@@ -659,6 +804,7 @@ class DecisionTelemetryRecorder:
         result = verifier.score(engine)
         elapsed = time.perf_counter() - started
         try:
+            model_version = self._model_version(engine)
             candidate_ids = [
                 str(getattr(candidate, "name", f"candidate:{index}"))
                 for index, candidate in enumerate(candidates)
@@ -668,6 +814,7 @@ class DecisionTelemetryRecorder:
             self._pending_world_gates.append(
                 {
                     "candidate_ids": [str(value) for value in candidate_ids],
+                    "model_version": model_version,
                     "candidate_count_total": len(candidate_ids),
                     "selected_candidate_id": str(candidate_ids[0]) if candidate_ids else None,
                     "candidates": [
@@ -718,6 +865,100 @@ class DecisionTelemetryRecorder:
             return "reject"
         return "accept"
 
+    def _complete_plan_lineage(
+        self,
+        policy: Any,
+        attempt_id: str,
+        attempt: Mapping[str, Any],
+        gates: Sequence[Mapping[str, Any]],
+        verifier_results: Sequence[str],
+    ) -> None:
+        planners = self._planner_rows.get(attempt_id, [])
+        plan_values = list(getattr(policy, "plan", ()) or ())
+        plan_signature = self._plan_signature(plan_values)
+        planner = next(
+            (
+                row
+                for row in reversed(planners)
+                if row.get("plan_signature") == plan_signature and row.get("plan_id")
+            ),
+            None,
+        )
+        model_version = next(
+            (
+                gate.get("model_version")
+                for gate, outcome in reversed(list(zip(gates, verifier_results, strict=False)))
+                if outcome == "accept" and gate.get("model_version")
+            ),
+            None,
+        )
+        if model_version is None and planner is not None:
+            model_version = planner.get("model_version")
+        plan_id = planner.get("plan_id") if planner is not None else None
+        if bool(attempt.get("planned")) and plan_values and plan_id is None:
+            self._next_plan_id += 1
+            plan_id = f"{self.episode_id}:plan:{self._next_plan_id}"
+            self.record_event(
+                "plan_registration",
+                {
+                    "attempt_id": attempt_id,
+                    "induction_attempt_id": attempt_id,
+                    "model_version": model_version,
+                    "plan_id": plan_id,
+                    "plan_length": len(plan_values),
+                    "plan_signature": plan_signature,
+                    "planner_invoked": bool(planners),
+                },
+                0.0,
+            )
+        lineage = {
+            "induction_attempt_id": attempt_id,
+            "model_version": model_version,
+            "verifier_outcome": verifier_results[-1] if verifier_results else "not_observed",
+            "planner_invoked": bool(planners),
+            "plan_id": plan_id,
+            "plan_length": len(plan_values),
+            "executed_action_ids": [],
+            "observation_actions": 0,
+            "foreign_action_interleaving": False,
+            "replacement_observed": False,
+            "episode_end_observed": False,
+            "terminal_stage": None,
+            "closure_reason": None,
+        }
+        self._lineages[attempt_id] = lineage
+        failure_stage = self._failure_terminal_stage(attempt)
+        if failure_stage is not None:
+            self._emit_lineage_terminal(lineage, failure_stage, str(attempt.get("skipped") or ""))
+            return
+        if verifier_results and verifier_results[-1] == "reject":
+            self._emit_lineage_terminal(lineage, "verifier_rejected", "verifier_rejected")
+            return
+        if not bool(attempt.get("planned")) or not plan_values:
+            if "accept" in verifier_results or planners:
+                self._emit_lineage_terminal(lineage, "accepted_no_plan", "planner_returned_no_plan")
+            else:
+                self._emit_lineage_terminal(lineage, "censored", "lineage_not_observed")
+            return
+        previous = self._lineages.get(str(self._active_lineage_id))
+        if previous is not None and previous.get("terminal_stage") is None:
+            prior_executed = list(previous.get("executed_action_ids") or [])
+            stage = "executed_no_level_progress" if prior_executed else "planned_not_executed"
+            reason = (
+                "model_replaced"
+                if previous.get("model_version") != model_version
+                else "plan_replaced"
+            )
+            self._emit_lineage_terminal(
+                previous,
+                stage,
+                reason,
+                replacement_observed=True,
+                replaced_by_model_version=model_version,
+                replaced_by_plan_id=plan_id,
+            )
+        self._active_lineage_id = attempt_id
+
     def complete_induction(
         self, policy: Any, attempt: Mapping[str, Any], wall_time_s: float
     ) -> None:
@@ -750,6 +991,13 @@ class DecisionTelemetryRecorder:
                     }
                 )
                 self.record_event("world_model_hypothesis_gate", payload, gate_wall)
+            self._complete_plan_lineage(
+                policy,
+                attempt_id,
+                attempt,
+                pending,
+                verifier_results,
+            )
             transitions = list(getattr(policy, "transitions", ()) or ())
             self._pending_induction_outcomes[attempt_id] = {
                 "attempt_id": attempt_id,
@@ -809,6 +1057,127 @@ class DecisionTelemetryRecorder:
             return None if value is None else int(value)
         except Exception:
             return None
+
+    def record_plan_consumption(self, policy: Any, plan: Any, plan_index: int, step: Any) -> None:
+        """Remember the exact plan step until the public action choke point returns."""
+
+        try:
+            lineage = self._lineages.get(str(self._active_lineage_id))
+            if lineage is None or lineage.get("terminal_stage") is not None:
+                self._pending_plan_action = None
+                return
+            self._pending_plan_action = {
+                "induction_attempt_id": lineage.get("induction_attempt_id"),
+                "model_version": lineage.get("model_version"),
+                "plan_id": lineage.get("plan_id"),
+                "plan_index": int(plan_index),
+                "plan_signature": self._plan_signature(plan),
+                "step": _sanitize(step),
+            }
+        except Exception:
+            self._error_count += 1
+            self._pending_plan_action = None
+
+    @staticmethod
+    def _same_move(left: Any, right: Any) -> bool:
+        try:
+            return _sanitize(left) == _sanitize(right)
+        except Exception:
+            return False
+
+    def record_policy_action(
+        self,
+        policy: Any,
+        *,
+        proposed_move: Any,
+        selected_move: Any,
+        level_before: int | None,
+        provenance: str | None,
+    ) -> None:
+        """Assign one action ID after every existing selector and supervisor runs."""
+
+        try:
+            self._next_action_id += 1
+            action_id = f"{self.episode_id}:action:{self._next_action_id}"
+            lineage = self._lineages.get(str(self._active_lineage_id))
+            pending = self._pending_plan_action
+            plan_linked = bool(
+                lineage is not None
+                and pending is not None
+                and pending.get("induction_attempt_id") == lineage.get("induction_attempt_id")
+                and pending.get("plan_id") == lineage.get("plan_id")
+                and self._same_move(proposed_move, selected_move)
+            )
+            if lineage is not None and lineage.get("terminal_stage") is None:
+                lineage["observation_actions"] = int(lineage.get("observation_actions") or 0) + 1
+                if plan_linked:
+                    lineage.setdefault("executed_action_ids", []).append(action_id)
+                else:
+                    lineage["foreign_action_interleaving"] = True
+            payload = {
+                "action_id": action_id,
+                "induction_attempt_id": (
+                    lineage.get("induction_attempt_id") if plan_linked else None
+                ),
+                "model_version": lineage.get("model_version") if plan_linked else None,
+                "plan_id": lineage.get("plan_id") if plan_linked else None,
+                "plan_index": pending.get("plan_index") if plan_linked and pending else None,
+                "plan_linked": plan_linked,
+                "provenance": provenance,
+                "proposed_move": _sanitize(proposed_move),
+                "selected_move": _sanitize(selected_move),
+                "foreign_action_interleaving": bool(lineage is not None and not plan_linked),
+                "level_before_action": level_before,
+            }
+            self.record_event("policy_action", payload, 0.0)
+            self._previous_policy_action = dict(payload)
+            self._pending_plan_action = None
+        except Exception:
+            self._error_count += 1
+
+    def _finalize_previous_action(self, level_after: int | None) -> None:
+        previous = self._previous_policy_action
+        if previous is None:
+            return
+        self._previous_policy_action = None
+        before = previous.get("level_before_action")
+        delta = None
+        if before is not None and level_after is not None:
+            delta = int(level_after) - int(before)
+        self.record_event(
+            "level_transition",
+            {
+                "action_id": previous.get("action_id"),
+                "induction_attempt_id": previous.get("induction_attempt_id"),
+                "model_version": previous.get("model_version"),
+                "plan_id": previous.get("plan_id"),
+                "plan_linked": previous.get("plan_linked"),
+                "level_before_action": before,
+                "level_after_action": level_after,
+                "level_delta": delta,
+            },
+            0.0,
+        )
+        lineage = self._lineages.get(str(previous.get("induction_attempt_id")))
+        if lineage is not None and lineage.get("terminal_stage") is None and delta is not None:
+            if delta > 0:
+                self._emit_lineage_terminal(
+                    lineage,
+                    "executed_with_level_progress",
+                    "joined_plan_action_level_transition",
+                    level_progress_action_id=previous.get("action_id"),
+                    level_delta=delta,
+                )
+                return
+        active = self._lineages.get(str(self._active_lineage_id))
+        if active is not None and active.get("terminal_stage") is None:
+            if int(active.get("observation_actions") or 0) >= INDUCTION_PROGRESS_WINDOW_ACTIONS:
+                stage = (
+                    "executed_no_level_progress"
+                    if active.get("executed_action_ids")
+                    else "planned_not_executed"
+                )
+                self._emit_lineage_terminal(active, stage, "policy_action_window_complete")
 
     def _emit_induction_outcome(self, attempt_id: str, *, censored: bool) -> None:
         outcome = self._pending_induction_outcomes.pop(attempt_id, None)
@@ -871,6 +1240,15 @@ class DecisionTelemetryRecorder:
         try:
             if self._episode_finished:
                 return
+            self._finalize_previous_action(level_end)
+            for lineage in list(self._lineages.values()):
+                if lineage.get("terminal_stage") is None:
+                    self._emit_lineage_terminal(
+                        lineage,
+                        "censored",
+                        "episode_end",
+                        episode_end_observed=True,
+                    )
             for attempt_id, outcome in list(self._pending_induction_outcomes.items()):
                 completion_step = int(outcome.get("_completion_step", self._current_step))
                 actions_observed = min(

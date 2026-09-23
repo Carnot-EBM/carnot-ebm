@@ -1,0 +1,2873 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "preconditions",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Missing upstream evidence must stop measurement."
+    },
+    {
+      "category": "validity",
+      "check": "lineage_reduction",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Malformed joins cannot support readiness."
+    },
+    {
+      "category": "readiness",
+      "check": "positive_join_control",
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "principle": "A known executed plan must reach a joined level transition."
+    },
+    {
+      "category": "readiness",
+      "check": "scripted_terminal_stages",
+      "expected": {
+        "censored": 2,
+        "executed_with_level_progress": 1,
+        "parse_rejected": 1,
+        "planned_not_executed": 1,
+        "verifier_rejected": 1
+      },
+      "observed": {
+        "censored": 2,
+        "executed_with_level_progress": 1,
+        "parse_rejected": 1,
+        "planned_not_executed": 1,
+        "verifier_rejected": 1
+      },
+      "op": "==",
+      "passed": true,
+      "principle": "Accepted, rejected, replaced, parse, and censored controls must stay distinct."
+    },
+    {
+      "category": "validity",
+      "check": "identifier_corruption_rejected",
+      "expected": {
+        "induction_attempt_id": true,
+        "model_version": true,
+        "plan_id": true
+      },
+      "observed": {
+        "induction_attempt_id": true,
+        "model_version": true,
+        "plan_id": true
+      },
+      "op": "==",
+      "passed": true,
+      "principle": "A copied or corrupted ID must not create an attribution edge."
+    },
+    {
+      "category": "readiness",
+      "check": "policy_parity",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "principle": "Observation must preserve actions, calls, provenance, and RNG."
+    },
+    {
+      "category": "readiness",
+      "check": "frozen_roster",
+      "expected": 12,
+      "observed": 12,
+      "op": "==",
+      "passed": true,
+      "principle": "Future outcomes must not alter the pre-registered roster."
+    },
+    {
+      "category": "validity",
+      "check": "required_validation",
+      "expected": true,
+      "observed": "pending",
+      "op": "==",
+      "passed": false,
+      "principle": "Only scoped checks and capability E2E can promote readiness."
+    },
+    {
+      "category": "benefit",
+      "check": "causal_benefit_not_claimed",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "principle": "Temporal lineage bookkeeping is not a causal treatment comparison."
+    }
+  ],
+  "action_priority_changed": false,
+  "causal_benefit_claimed": false,
+  "code_hashes": {
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:699ecd9fe5af5411aef6b3c919ab222e3b7670ef1b2c3e31d2698a45c1a233ec",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:a4501cbd70ac01c0bc46ce59f498c6baa6592259bdae7f78a589a589f4f71167",
+    "python/carnot/agentic/arc_decision_telemetry.py": "sha256:bbe5a52054e313e91524a5d558c5a3e1189b62e31476c6b24f059938eff11a6c",
+    "python/carnot/experiment_7562_v661_arc_plan_lineage.py": "sha256:d78208f3423e87058e8fabcea6fcd9999193ef8f2b6a63f3f0d69343c63315ee",
+    "scripts/experiments/experiment_7562_v661_arc_plan_lineage.py": "sha256:4d784155489f1e50de189b38ca02bb221fea8e6721313478e254bf44614e3ff7",
+    "tests/python/test_experiment_7562_v661_arc_plan_lineage.py": "sha256:4979ac82fe7c87e04d01603182244ff78ff97533d79885c7896ecf887be1f6d4"
+  },
+  "device_identity": {
+    "kind": "cpu",
+    "platform": "x86_64"
+  },
+  "duration_s": 39.355461761995684,
+  "execution_venue": "host",
+  "experiment_id": "exp7562-arc-plan-lineage",
+  "field_principles": {
+    "MODEL_SPECS": {
+      "principle": "An empty list prevents a no-load run from implying model work."
+    },
+    "acceptance_gate_results": {
+      "principle": "Completion cannot replace support or validity."
+    },
+    "action_priority_changed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "causal_benefit_claimed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "code_hashes": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "device_identity": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "duration_s": {
+      "principle": "Monotonic timing exposes implausibly short or padded work."
+    },
+    "execution_venue": {
+      "principle": "A legal venue value stays separate from CPU identity."
+    },
+    "experiment_id": {
+      "principle": "Binds the exact task, milestone, and run date."
+    },
+    "flagged_adversarial": {
+      "principle": "A prior or current quarantine cannot be erased."
+    },
+    "frozen_arc_roster": {
+      "principle": "The future twelve episodes are fixed before outcomes exist."
+    },
+    "game_source_read": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "gate_check_summary": {
+      "principle": "The first exact failure remains actionable."
+    },
+    "generator_weights_changed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "historical_model_calls": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "honest_verdict": {
+      "principle": "A terminal prefix gives the conductor an unambiguous state."
+    },
+    "identifier_corruption_controls": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "induction_eligibility_changed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "inference_substrate": {
+      "principle": "The runtime kind prevents false model-inference claims."
+    },
+    "inference_substrate_class": {
+      "principle": "The actual substrate determines the duration floor."
+    },
+    "invocation_counts": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "join_schema": {
+      "principle": "Immutable IDs distinguish plan execution from incidental movement."
+    },
+    "kernel_submitted": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "milestone": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "model_invoked": {
+      "principle": "Typed zero calls prevent historical work from becoming current work."
+    },
+    "model_selection_changed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "model_specs": {
+      "principle": "Resolved models are absent because this task loads none."
+    },
+    "new_model_calls": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "per_game_results": {
+      "principle": "Scripted fixtures cannot become live game outcomes."
+    },
+    "phase_spans": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "plan_lineage_ready_score": {
+      "principle": "Readiness needs reachability, joins, parity, and validation."
+    },
+    "planned_inference_substrate_class": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "policy_parity": {
+      "principle": "Observation must preserve actions, calls, provenance, and RNG."
+    },
+    "positive_claim": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "preconditions_checked": {
+      "principle": "Prevents measurement over missing upstream evidence."
+    },
+    "process_identity": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "production_defaults_changed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "random_seed": {
+      "principle": "Frozen seeds make ordering and parity controls reproducible."
+    },
+    "raw_control_row_hash": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "raw_control_rows": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "raw_control_sidecars": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "real_call_site_reachability": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "reproducibility_checksum": {
+      "principle": "The checksum binds sources, settings, code, and evidence."
+    },
+    "request_budget_changed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "roster_executed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "rows": {
+      "principle": "Absolute terminal rows keep missing outcomes from becoming zeros."
+    },
+    "run_date": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "sample_size_budget": {
+      "principle": "All attempted, censored, and unstarted units remain countable."
+    },
+    "sampling_changed": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "schema": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "scripted_results": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "solve_provenance": {
+      "principle": "Fixtures and repeated public levels claim no new solve."
+    },
+    "source_artifact_hashes": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "status": {
+      "principle": "This field keeps one terminal claim explicit and independently checkable."
+    },
+    "validation_receipts": {
+      "principle": "Exact commands and log hashes make checks independently auditable."
+    },
+    "verdict_class": {
+      "principle": "The closed class keeps fixture readiness separate from causal benefit."
+    },
+    "verifier_is_oracle": {
+      "principle": "Oracle fixtures cannot establish oracle-distinct benefit."
+    }
+  },
+  "flagged_adversarial": false,
+  "frozen_arc_roster": [
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:sb26:seed:7570001",
+      "game": "sb26",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:sb26:seed:7570002",
+      "game": "sb26",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:vc33:seed:7570001",
+      "game": "vc33",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:vc33:seed:7570002",
+      "game": "vc33",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:su15:seed:7570001",
+      "game": "su15",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:su15:seed:7570002",
+      "game": "su15",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:g50t:seed:7570001",
+      "game": "g50t",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:g50t:seed:7570002",
+      "game": "g50t",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:m0r0:seed:7570001",
+      "game": "m0r0",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:m0r0:seed:7570002",
+      "game": "m0r0",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:dc22:seed:7570001",
+      "game": "dc22",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:dc22:seed:7570002",
+      "game": "dc22",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    }
+  ],
+  "game_source_read": false,
+  "gate_check_summary": {
+    "all_passed": false,
+    "failed_count": 1,
+    "failures": [
+      {
+        "category": "validity",
+        "check": "required_validation",
+        "expected": true,
+        "observed": "pending",
+        "op": "==",
+        "passed": false,
+        "principle": "Only scoped checks and capability E2E can promote readiness."
+      }
+    ],
+    "first_failure": {
+      "category": "validity",
+      "check": "required_validation",
+      "expected": true,
+      "observed": "pending",
+      "op": "==",
+      "passed": false,
+      "principle": "Only scoped checks and capability E2E can promote readiness."
+    }
+  },
+  "generator_weights_changed": false,
+  "historical_model_calls": {
+    "exp7557": "preserved_as_upstream_not_current"
+  },
+  "honest_verdict": "complete_partial_terminal_validation_pending",
+  "identifier_corruption_controls": {
+    "induction_attempt_id": true,
+    "model_version": true,
+    "plan_id": true
+  },
+  "induction_eligibility_changed": false,
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_cancelled": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "forward_calls_in_flight": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "join_schema": {
+    "causal_interpretation": "temporal_attribution_only",
+    "keys": [
+      "episode_id",
+      "induction_attempt_id",
+      "model_version",
+      "plan_id",
+      "action_id"
+    ],
+    "missing_instrumentation": "unknown",
+    "observation_window_policy_actions": 32,
+    "terminal_stages": [
+      "accepted_no_plan",
+      "censored",
+      "executed_no_level_progress",
+      "executed_with_level_progress",
+      "parse_rejected",
+      "planned_not_executed",
+      "transport_failed",
+      "verifier_rejected"
+    ]
+  },
+  "kernel_submitted": false,
+  "milestone": "2026.09.661",
+  "model_invoked": false,
+  "model_selection_changed": false,
+  "model_specs": [],
+  "new_model_calls": 0,
+  "per_game_results": [],
+  "phase_spans": [
+    {
+      "duration_s": 0.0027803019911516458,
+      "end_s": 0.0027969329967163503,
+      "phase": "preconditions",
+      "start_s": 1.6631005564704537e-05
+    },
+    {
+      "duration_s": 0.00457939098123461,
+      "end_s": 0.007401651993859559,
+      "phase": "scripted_controls",
+      "start_s": 0.0028222610126249492
+    },
+    {
+      "duration_s": 13.370316297019599,
+      "end_s": 13.378083025017986,
+      "phase": "affected_validation",
+      "start_s": 0.0077667279983870685
+    },
+    {
+      "duration_s": 25.974362192006083,
+      "end_s": 39.35252250201302,
+      "phase": "capability_e2e",
+      "start_s": 13.378160310006933
+    }
+  ],
+  "plan_lineage_ready_score": 0,
+  "planned_inference_substrate_class": "no_model_load",
+  "policy_parity": {
+    "actions_equal": true,
+    "environment_calls_equal": true,
+    "existing_provenance_equal": true,
+    "model_calls_equal": true,
+    "off": {
+      "actions": [
+        [
+          2,
+          null
+        ]
+      ],
+      "environment_calls": 1,
+      "existing_provenance": [
+        {
+          "branch": "execute.plan_step",
+          "move": [
+            2,
+            null
+          ]
+        }
+      ],
+      "model_calls": 1,
+      "rng_draw_after": 0.4330541413608334,
+      "rng_state_after": "sha256:32acec8119b9bda0dd6e42b4ceee37e8f3772c33cf25cbc18cd43d8942c6c434"
+    },
+    "on": {
+      "actions": [
+        [
+          2,
+          null
+        ]
+      ],
+      "environment_calls": 1,
+      "existing_provenance": [
+        {
+          "branch": "execute.plan_step",
+          "move": [
+            2,
+            null
+          ]
+        }
+      ],
+      "model_calls": 1,
+      "rng_draw_after": 0.4330541413608334,
+      "rng_state_after": "sha256:32acec8119b9bda0dd6e42b4ceee37e8f3772c33cf25cbc18cd43d8942c6c434"
+    },
+    "passed": true,
+    "rng_draw_equal": true,
+    "rng_state_equal": true
+  },
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "artifact_field": "path",
+      "check": "exp7557_upstream_available",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7557_v660_arc_generalization.json",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "results/experiment_7557_v660_arc_generalization.json"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "check": "exp7557_identity",
+      "expected": "exp7557-arc-generalization",
+      "observed": "exp7557-arc-generalization",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7557_v660_arc_generalization.json",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "results/experiment_7557_v660_arc_generalization.json"
+    },
+    {
+      "artifact_field": "honest_verdict",
+      "check": "exp7557_literal_verdict",
+      "expected": "complete_null_feasibility_only_causal_endpoint_unavailable",
+      "observed": "complete_null_feasibility_only_causal_endpoint_unavailable",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7557_v660_arc_generalization.json",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "results/experiment_7557_v660_arc_generalization.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check": "exp7557_verdict_class",
+      "expected": "null",
+      "observed": "null",
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7557_v660_arc_generalization.json",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "results/experiment_7557_v660_arc_generalization.json"
+    },
+    {
+      "artifact_field": "arc_analysis_complete_score",
+      "check": "exp7557_ready",
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7557_v660_arc_generalization.json",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "results/experiment_7557_v660_arc_generalization.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "exp7557_not_flagged",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "results/experiment_7557_v660_arc_generalization.json",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "results/experiment_7557_v660_arc_generalization.json"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:AGENTS.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:CODEX.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:CLAUDE.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:research-program.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:ops/exclusion_manifest.yaml",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:ops/e2e-test-plan.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:ops/arc_solve_registry.yaml",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:python/carnot/experiment_7562_v661_arc_plan_lineage.py",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7562_v661_arc_plan_lineage.py",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "python/carnot/experiment_7562_v661_arc_plan_lineage.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:scripts/experiments/experiment_7562_v661_arc_plan_lineage.py",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7562_v661_arc_plan_lineage.py",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "scripts/experiments/experiment_7562_v661_arc_plan_lineage.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:tests/python/test_experiment_7562_v661_arc_plan_lineage.py",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_experiment_7562_v661_arc_plan_lineage.py",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "tests/python/test_experiment_7562_v661_arc_plan_lineage.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:python/carnot/agentic/arc_decision_telemetry.py",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/agentic/arc_decision_telemetry.py",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "python/carnot/agentic/arc_decision_telemetry.py"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_input:python/carnot/agentic/arc_competition_agent.py",
+      "expected": "readable_file",
+      "observed": "readable_file",
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "artifact_field": "REQ-ARC-WMTE-7562",
+      "check": "requirement_declared",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "sb26",
+      "check": "registry_precheck:sb26",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "artifact_field": "vc33",
+      "check": "registry_precheck:vc33",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "artifact_field": "su15",
+      "check": "registry_precheck:su15",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "artifact_field": "g50t",
+      "check": "registry_precheck:g50t",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "artifact_field": "m0r0",
+      "check": "registry_precheck:m0r0",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "artifact_field": "dc22",
+      "check": "registry_precheck:dc22",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "principle": "Dependent evidence must exist before measurement.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    }
+  ],
+  "process_identity": {
+    "pid": 1347554,
+    "worktree_root": "/home/ianblenke/github.com/ianblenke/carnot"
+  },
+  "production_defaults_changed": false,
+  "random_seed": {
+    "bootstrap_seed": 7562003,
+    "control_seed": 7562001,
+    "ordering_seed": 7562002
+  },
+  "raw_control_row_hash": "sha256:b8b33d922f036a4587e63862a0ef7e09d641985a4d70c03d59eb11e46d0bf956",
+  "raw_control_rows": [
+    {
+      "actions_used": 0,
+      "episode_id": "positive",
+      "game_id": "sb26",
+      "level_before": 0,
+      "level_start": 0,
+      "monotonic_timestamp_s": 165086.416873576,
+      "phase": "induce",
+      "record_type": "episode_start",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_fired": true,
+      "attempt_id": "positive:induction:1",
+      "decision": "induce",
+      "episode_id": "positive",
+      "game_id": "sb26",
+      "gate_decision": "induce_now",
+      "level_before": 0,
+      "monotonic_timestamp_s": 165086.416951102,
+      "phase": "induce",
+      "reason": "stall",
+      "record_type": "decision",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "state": {
+        "explored_out": false,
+        "goal_level": null,
+        "induced": false,
+        "last_verifier_outcome": {},
+        "level": 0,
+        "new_transitions_since_induction": 0,
+        "prior_induction_count": 0,
+        "stall_state": "stalled",
+        "transition_count": 0,
+        "won": false
+      },
+      "state_summary": "level=0 transitions=0 explored_out=False stall=stalled",
+      "step_index": 0,
+      "wall_time_s": 0.001
+    },
+    {
+      "attempt_id": "positive:induction:1",
+      "episode_id": "positive",
+      "game_id": "sb26",
+      "induction_attempt_id": "positive:induction:1",
+      "level_before": 0,
+      "model_version": "positive:model:1",
+      "monotonic_timestamp_s": 165086.4171047,
+      "phase": "induce",
+      "plan_id": "positive:plan:1",
+      "plan_length": 1,
+      "plan_signature": "[{\"action\":1,\"data\":null}]",
+      "planner_invoked": true,
+      "record_type": "decision",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "planner_invocation",
+      "step_index": 0,
+      "wall_time_s": 1.152e-06
+    },
+    {
+      "accepted_by_threshold": null,
+      "attempt_id": "positive:induction:1",
+      "candidate_count_total": 1,
+      "candidate_ids": [
+        "accepted-positive"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "accepted-positive",
+          "cell_recall": 1.0,
+          "change_accuracy": 1.0,
+          "exact_accuracy": 1.0,
+          "off_path_checks": {
+            "change_fidelity": 1.0,
+            "correct_changed_cells": 1,
+            "noop_hallucination_rate": 0.0,
+            "spurious_changed_cells": 0
+          },
+          "trust_energy": null
+        }
+      ],
+      "episode_id": "positive",
+      "game_id": "sb26",
+      "level_before": 0,
+      "model_version": "positive:model:1",
+      "monotonic_timestamp_s": 165086.417149935,
+      "outcome": "accept",
+      "phase": "induce",
+      "plan_found": true,
+      "record_type": "decision",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "world_model_hypothesis_gate",
+      "selected_candidate_id": "accepted-positive",
+      "step_index": 0,
+      "wall_time_s": 8.42e-07
+    },
+    {
+      "action_id": "positive:action:1",
+      "episode_id": "positive",
+      "foreign_action_interleaving": false,
+      "game_id": "sb26",
+      "induction_attempt_id": "positive:induction:1",
+      "level_before": 0,
+      "level_before_action": 0,
+      "model_version": "positive:model:1",
+      "monotonic_timestamp_s": 165086.417235586,
+      "phase": "induce",
+      "plan_id": "positive:plan:1",
+      "plan_index": 0,
+      "plan_linked": true,
+      "proposed_move": [
+        1,
+        null
+      ],
+      "provenance": "execute.plan_step",
+      "record_type": "decision",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "policy_action",
+      "selected_move": [
+        1,
+        null
+      ],
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "action_id": "positive:action:1",
+      "episode_id": "positive",
+      "game_id": "sb26",
+      "induction_attempt_id": "positive:induction:1",
+      "level_after_action": 1,
+      "level_before": 0,
+      "level_before_action": 0,
+      "level_delta": 1,
+      "model_version": "positive:model:1",
+      "monotonic_timestamp_s": 165086.417266223,
+      "phase": "induce",
+      "plan_id": "positive:plan:1",
+      "plan_linked": true,
+      "record_type": "decision",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "level_transition",
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "joined_plan_action_level_transition",
+      "episode_end_observed": false,
+      "episode_id": "positive",
+      "executed_action_ids": [
+        "positive:action:1"
+      ],
+      "foreign_action_interleaving": false,
+      "game_id": "sb26",
+      "induction_attempt_id": "positive:induction:1",
+      "level_before": 0,
+      "level_delta": 1,
+      "level_progress_action_id": "positive:action:1",
+      "model_version": "positive:model:1",
+      "monotonic_timestamp_s": 165086.41728584,
+      "observation_actions": 1,
+      "phase": "induce",
+      "plan_id": "positive:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "executed_with_level_progress",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_id": "positive:induction:1",
+      "completion_tokens": 7,
+      "decision": "induction_call",
+      "episode_id": "positive",
+      "frame_change_progress": false,
+      "game_id": "sb26",
+      "generated_tokens": 7,
+      "induction_wall_time_s": 0.01,
+      "level_before": 1,
+      "level_up_progress": true,
+      "monotonic_timestamp_s": 165086.417320195,
+      "phase": "execute",
+      "planned": true,
+      "progress_actions_observed": 1,
+      "progress_window_actions": 32,
+      "progress_window_censored": false,
+      "progress_within_window": true,
+      "prompt_tokens": 11,
+      "reason": "stall",
+      "record_type": "induction_attempt",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "seconds": 0.01,
+      "skipped": null,
+      "step_index": 1,
+      "transition_count": null,
+      "verifier_result": "accept",
+      "verifier_results": [
+        "accept"
+      ],
+      "wall_time_s": 0.01
+    },
+    {
+      "actions_used": 1,
+      "episode_id": "positive",
+      "game_id": "sb26",
+      "level_before": 1,
+      "level_end": 1,
+      "level_start": 0,
+      "levels_gained": 1,
+      "monotonic_timestamp_s": 165086.417348909,
+      "phase": "execute",
+      "record_type": "episode_end",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 1,
+      "wall_time_s": 0.0
+    },
+    {
+      "actions_used": 0,
+      "episode_id": "rejected",
+      "game_id": "vc33",
+      "level_before": 0,
+      "level_start": 0,
+      "monotonic_timestamp_s": 165086.417448316,
+      "phase": "induce",
+      "record_type": "episode_start",
+      "run_id": "rejected:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_fired": true,
+      "attempt_id": "rejected:induction:1",
+      "decision": "induce",
+      "episode_id": "rejected",
+      "game_id": "vc33",
+      "gate_decision": "induce_now",
+      "level_before": 0,
+      "monotonic_timestamp_s": 165086.417481428,
+      "phase": "induce",
+      "reason": "stall",
+      "record_type": "decision",
+      "run_id": "rejected:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "state": {
+        "explored_out": false,
+        "goal_level": null,
+        "induced": false,
+        "last_verifier_outcome": {},
+        "level": 0,
+        "new_transitions_since_induction": 0,
+        "prior_induction_count": 0,
+        "stall_state": "stalled",
+        "transition_count": 0,
+        "won": false
+      },
+      "state_summary": "level=0 transitions=0 explored_out=False stall=stalled",
+      "step_index": 0,
+      "wall_time_s": 0.001
+    },
+    {
+      "accepted_by_threshold": null,
+      "attempt_id": "rejected:induction:1",
+      "candidate_count_total": 1,
+      "candidate_ids": [
+        "rejected"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "rejected",
+          "cell_recall": 1.0,
+          "change_accuracy": 1.0,
+          "exact_accuracy": 1.0,
+          "off_path_checks": {
+            "change_fidelity": 1.0,
+            "correct_changed_cells": 1,
+            "noop_hallucination_rate": 0.0,
+            "spurious_changed_cells": 0
+          },
+          "trust_energy": null
+        }
+      ],
+      "episode_id": "rejected",
+      "game_id": "vc33",
+      "level_before": 0,
+      "model_version": "rejected:model:1",
+      "monotonic_timestamp_s": 165086.417529147,
+      "outcome": "reject",
+      "phase": "induce",
+      "plan_found": false,
+      "record_type": "decision",
+      "run_id": "rejected:1347554",
+      "schema_version": 1,
+      "seam": "world_model_hypothesis_gate",
+      "selected_candidate_id": "rejected",
+      "step_index": 0,
+      "wall_time_s": 4.61e-07
+    },
+    {
+      "closure_reason": "world_model_accuracy_below_threshold",
+      "episode_end_observed": false,
+      "episode_id": "rejected",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "vc33",
+      "induction_attempt_id": "rejected:induction:1",
+      "level_before": 0,
+      "model_version": null,
+      "monotonic_timestamp_s": 165086.417565395,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": null,
+      "plan_length": 0,
+      "planner_invoked": false,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "run_id": "rejected:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "verifier_rejected",
+      "verifier_outcome": "reject",
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_id": "rejected:induction:1",
+      "completion_tokens": 7,
+      "decision": "induction_call",
+      "episode_id": "rejected",
+      "frame_change_progress": false,
+      "game_id": "vc33",
+      "generated_tokens": 7,
+      "induction_wall_time_s": 0.01,
+      "level_before": 0,
+      "level_up_progress": false,
+      "monotonic_timestamp_s": 165086.417597175,
+      "phase": "induce",
+      "planned": false,
+      "progress_actions_observed": 0,
+      "progress_window_actions": 32,
+      "progress_window_censored": true,
+      "progress_within_window": false,
+      "prompt_tokens": 11,
+      "reason": null,
+      "record_type": "induction_attempt",
+      "run_id": "rejected:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "seconds": 0.01,
+      "skipped": "world_model_accuracy_below_threshold",
+      "step_index": 0,
+      "transition_count": null,
+      "verifier_result": "reject",
+      "verifier_results": [
+        "reject"
+      ],
+      "wall_time_s": 0.01
+    },
+    {
+      "actions_used": 1,
+      "episode_id": "rejected",
+      "game_id": "vc33",
+      "level_before": 0,
+      "level_end": 0,
+      "level_start": 0,
+      "levels_gained": 0,
+      "monotonic_timestamp_s": 165086.417622332,
+      "phase": "induce",
+      "record_type": "episode_end",
+      "run_id": "rejected:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "actions_used": 0,
+      "episode_id": "replaced",
+      "game_id": "su15",
+      "level_before": 0,
+      "level_start": 0,
+      "monotonic_timestamp_s": 165086.41767958,
+      "phase": "induce",
+      "record_type": "episode_start",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_fired": true,
+      "attempt_id": "replaced:induction:1",
+      "decision": "induce",
+      "episode_id": "replaced",
+      "game_id": "su15",
+      "gate_decision": "induce_now",
+      "level_before": 0,
+      "monotonic_timestamp_s": 165086.417705489,
+      "phase": "induce",
+      "reason": "stall",
+      "record_type": "decision",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "state": {
+        "explored_out": false,
+        "goal_level": null,
+        "induced": false,
+        "last_verifier_outcome": {},
+        "level": 0,
+        "new_transitions_since_induction": 0,
+        "prior_induction_count": 0,
+        "stall_state": "stalled",
+        "transition_count": 0,
+        "won": false
+      },
+      "state_summary": "level=0 transitions=0 explored_out=False stall=stalled",
+      "step_index": 0,
+      "wall_time_s": 0.001
+    },
+    {
+      "attempt_id": "replaced:induction:1",
+      "episode_id": "replaced",
+      "game_id": "su15",
+      "induction_attempt_id": "replaced:induction:1",
+      "level_before": 0,
+      "model_version": "replaced:model:1",
+      "monotonic_timestamp_s": 165086.417767104,
+      "phase": "induce",
+      "plan_id": "replaced:plan:1",
+      "plan_length": 1,
+      "plan_signature": "[{\"action\":1,\"data\":null}]",
+      "planner_invoked": true,
+      "record_type": "decision",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "planner_invocation",
+      "step_index": 0,
+      "wall_time_s": 8.22e-07
+    },
+    {
+      "accepted_by_threshold": null,
+      "attempt_id": "replaced:induction:1",
+      "candidate_count_total": 1,
+      "candidate_ids": [
+        "replacement-a"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "replacement-a",
+          "cell_recall": 1.0,
+          "change_accuracy": 1.0,
+          "exact_accuracy": 1.0,
+          "off_path_checks": {
+            "change_fidelity": 1.0,
+            "correct_changed_cells": 1,
+            "noop_hallucination_rate": 0.0,
+            "spurious_changed_cells": 0
+          },
+          "trust_energy": null
+        }
+      ],
+      "episode_id": "replaced",
+      "game_id": "su15",
+      "level_before": 0,
+      "model_version": "replaced:model:1",
+      "monotonic_timestamp_s": 165086.417799185,
+      "outcome": "accept",
+      "phase": "induce",
+      "plan_found": true,
+      "record_type": "decision",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "world_model_hypothesis_gate",
+      "selected_candidate_id": "replacement-a",
+      "step_index": 0,
+      "wall_time_s": 2.5e-07
+    },
+    {
+      "attempt_fired": true,
+      "attempt_id": "replaced:induction:2",
+      "decision": "induce",
+      "episode_id": "replaced",
+      "game_id": "su15",
+      "gate_decision": "induce_now",
+      "level_before": 0,
+      "monotonic_timestamp_s": 165086.417848688,
+      "phase": "induce",
+      "reason": "stall",
+      "record_type": "decision",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "state": {
+        "explored_out": false,
+        "goal_level": null,
+        "induced": false,
+        "last_verifier_outcome": {},
+        "level": 0,
+        "new_transitions_since_induction": 0,
+        "prior_induction_count": 0,
+        "stall_state": "stalled",
+        "transition_count": 0,
+        "won": false
+      },
+      "state_summary": "level=0 transitions=0 explored_out=False stall=stalled",
+      "step_index": 1,
+      "wall_time_s": 0.001
+    },
+    {
+      "attempt_id": "replaced:induction:2",
+      "episode_id": "replaced",
+      "game_id": "su15",
+      "induction_attempt_id": "replaced:induction:2",
+      "level_before": 0,
+      "model_version": "replaced:model:2",
+      "monotonic_timestamp_s": 165086.4178928,
+      "phase": "induce",
+      "plan_id": "replaced:plan:2",
+      "plan_length": 1,
+      "plan_signature": "[{\"action\":1,\"data\":null}]",
+      "planner_invoked": true,
+      "record_type": "decision",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "planner_invocation",
+      "step_index": 1,
+      "wall_time_s": 3.91e-07
+    },
+    {
+      "accepted_by_threshold": null,
+      "attempt_id": "replaced:induction:2",
+      "candidate_count_total": 1,
+      "candidate_ids": [
+        "replacement-b"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "replacement-b",
+          "cell_recall": 1.0,
+          "change_accuracy": 1.0,
+          "exact_accuracy": 1.0,
+          "off_path_checks": {
+            "change_fidelity": 1.0,
+            "correct_changed_cells": 1,
+            "noop_hallucination_rate": 0.0,
+            "spurious_changed_cells": 0
+          },
+          "trust_energy": null
+        }
+      ],
+      "episode_id": "replaced",
+      "game_id": "su15",
+      "level_before": 0,
+      "model_version": "replaced:model:2",
+      "monotonic_timestamp_s": 165086.417920763,
+      "outcome": "accept",
+      "phase": "induce",
+      "plan_found": true,
+      "record_type": "decision",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "world_model_hypothesis_gate",
+      "selected_candidate_id": "replacement-b",
+      "step_index": 1,
+      "wall_time_s": 2.11e-07
+    },
+    {
+      "closure_reason": "model_replaced",
+      "episode_end_observed": false,
+      "episode_id": "replaced",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "su15",
+      "induction_attempt_id": "replaced:induction:1",
+      "level_before": 0,
+      "model_version": "replaced:model:1",
+      "monotonic_timestamp_s": 165086.417950679,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": "replaced:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replaced_by_model_version": "replaced:model:2",
+      "replaced_by_plan_id": "replaced:plan:2",
+      "replacement_observed": true,
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 1,
+      "terminal_stage": "planned_not_executed",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "episode_end",
+      "episode_end_observed": true,
+      "episode_id": "replaced",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "su15",
+      "induction_attempt_id": "replaced:induction:2",
+      "level_before": 0,
+      "model_version": "replaced:model:2",
+      "monotonic_timestamp_s": 165086.41797766,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": "replaced:plan:2",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 1,
+      "terminal_stage": "censored",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_id": "replaced:induction:1",
+      "completion_tokens": 7,
+      "decision": "induction_call",
+      "episode_id": "replaced",
+      "frame_change_progress": false,
+      "game_id": "su15",
+      "generated_tokens": 7,
+      "induction_wall_time_s": 0.01,
+      "level_before": 0,
+      "level_up_progress": false,
+      "monotonic_timestamp_s": 165086.417999351,
+      "phase": "induce",
+      "planned": true,
+      "progress_actions_observed": 1,
+      "progress_window_actions": 32,
+      "progress_window_censored": true,
+      "progress_within_window": false,
+      "prompt_tokens": 11,
+      "reason": "stall",
+      "record_type": "induction_attempt",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "seconds": 0.01,
+      "skipped": null,
+      "step_index": 1,
+      "transition_count": null,
+      "verifier_result": "accept",
+      "verifier_results": [
+        "accept"
+      ],
+      "wall_time_s": 0.01
+    },
+    {
+      "attempt_id": "replaced:induction:2",
+      "completion_tokens": 7,
+      "decision": "induction_call",
+      "episode_id": "replaced",
+      "frame_change_progress": false,
+      "game_id": "su15",
+      "generated_tokens": 7,
+      "induction_wall_time_s": 0.01,
+      "level_before": 0,
+      "level_up_progress": false,
+      "monotonic_timestamp_s": 165086.418028375,
+      "phase": "induce",
+      "planned": true,
+      "progress_actions_observed": 0,
+      "progress_window_actions": 32,
+      "progress_window_censored": true,
+      "progress_within_window": false,
+      "prompt_tokens": 11,
+      "reason": "stall",
+      "record_type": "induction_attempt",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "seconds": 0.01,
+      "skipped": null,
+      "step_index": 1,
+      "transition_count": null,
+      "verifier_result": "accept",
+      "verifier_results": [
+        "accept"
+      ],
+      "wall_time_s": 0.01
+    },
+    {
+      "actions_used": 2,
+      "episode_id": "replaced",
+      "game_id": "su15",
+      "level_before": 0,
+      "level_end": 0,
+      "level_start": 0,
+      "levels_gained": 0,
+      "monotonic_timestamp_s": 165086.418049364,
+      "phase": "induce",
+      "record_type": "episode_end",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 1,
+      "wall_time_s": 0.0
+    },
+    {
+      "actions_used": 0,
+      "episode_id": "parse",
+      "game_id": "g50t",
+      "level_before": 0,
+      "level_start": 0,
+      "monotonic_timestamp_s": 165086.4181053,
+      "phase": "induce",
+      "record_type": "episode_start",
+      "run_id": "parse:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_fired": true,
+      "attempt_id": "parse:induction:1",
+      "decision": "induce",
+      "episode_id": "parse",
+      "game_id": "g50t",
+      "gate_decision": "induce_now",
+      "level_before": 0,
+      "monotonic_timestamp_s": 165086.418129996,
+      "phase": "induce",
+      "reason": "stall",
+      "record_type": "decision",
+      "run_id": "parse:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "state": {
+        "explored_out": false,
+        "goal_level": null,
+        "induced": false,
+        "last_verifier_outcome": {},
+        "level": 0,
+        "new_transitions_since_induction": 0,
+        "prior_induction_count": 0,
+        "stall_state": "stalled",
+        "transition_count": 0,
+        "won": false
+      },
+      "state_summary": "level=0 transitions=0 explored_out=False stall=stalled",
+      "step_index": 0,
+      "wall_time_s": 0.001
+    },
+    {
+      "closure_reason": "proposer_failed",
+      "episode_end_observed": false,
+      "episode_id": "parse",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "g50t",
+      "induction_attempt_id": "parse:induction:1",
+      "level_before": 0,
+      "model_version": null,
+      "monotonic_timestamp_s": 165086.418159571,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": null,
+      "plan_length": 0,
+      "planner_invoked": false,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "run_id": "parse:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "parse_rejected",
+      "verifier_outcome": "not_observed",
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_id": "parse:induction:1",
+      "completion_tokens": 7,
+      "decision": "induction_call",
+      "episode_id": "parse",
+      "frame_change_progress": false,
+      "game_id": "g50t",
+      "generated_tokens": 7,
+      "induction_wall_time_s": 0.01,
+      "level_before": 0,
+      "level_up_progress": false,
+      "monotonic_timestamp_s": 165086.418183897,
+      "phase": "induce",
+      "planned": false,
+      "progress_actions_observed": 0,
+      "progress_window_actions": 32,
+      "progress_window_censored": true,
+      "progress_within_window": false,
+      "prompt_tokens": 11,
+      "reason": null,
+      "record_type": "induction_attempt",
+      "run_id": "parse:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "seconds": 0.01,
+      "skipped": "proposer_failed",
+      "step_index": 0,
+      "transition_count": null,
+      "verifier_result": "not_observed",
+      "verifier_results": [],
+      "wall_time_s": 0.01
+    },
+    {
+      "actions_used": 1,
+      "episode_id": "parse",
+      "game_id": "g50t",
+      "level_before": 0,
+      "level_end": 0,
+      "level_start": 0,
+      "levels_gained": 0,
+      "monotonic_timestamp_s": 165086.418204826,
+      "phase": "induce",
+      "record_type": "episode_end",
+      "run_id": "parse:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "actions_used": 0,
+      "episode_id": "censored",
+      "game_id": "m0r0",
+      "level_before": 0,
+      "level_start": 0,
+      "monotonic_timestamp_s": 165086.418248989,
+      "phase": "induce",
+      "record_type": "episode_start",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_fired": true,
+      "attempt_id": "censored:induction:1",
+      "decision": "induce",
+      "episode_id": "censored",
+      "game_id": "m0r0",
+      "gate_decision": "induce_now",
+      "level_before": 0,
+      "monotonic_timestamp_s": 165086.418271151,
+      "phase": "induce",
+      "reason": "stall",
+      "record_type": "decision",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "state": {
+        "explored_out": false,
+        "goal_level": null,
+        "induced": false,
+        "last_verifier_outcome": {},
+        "level": 0,
+        "new_transitions_since_induction": 0,
+        "prior_induction_count": 0,
+        "stall_state": "stalled",
+        "transition_count": 0,
+        "won": false
+      },
+      "state_summary": "level=0 transitions=0 explored_out=False stall=stalled",
+      "step_index": 0,
+      "wall_time_s": 0.001
+    },
+    {
+      "attempt_id": "censored:induction:1",
+      "episode_id": "censored",
+      "game_id": "m0r0",
+      "induction_attempt_id": "censored:induction:1",
+      "level_before": 0,
+      "model_version": "censored:model:1",
+      "monotonic_timestamp_s": 165086.41831861,
+      "phase": "induce",
+      "plan_id": "censored:plan:1",
+      "plan_length": 1,
+      "plan_signature": "[{\"action\":1,\"data\":null}]",
+      "planner_invoked": true,
+      "record_type": "decision",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "planner_invocation",
+      "step_index": 0,
+      "wall_time_s": 5.41e-07
+    },
+    {
+      "accepted_by_threshold": null,
+      "attempt_id": "censored:induction:1",
+      "candidate_count_total": 1,
+      "candidate_ids": [
+        "accepted-censored"
+      ],
+      "candidates": [
+        {
+          "candidate_id": "accepted-censored",
+          "cell_recall": 1.0,
+          "change_accuracy": 1.0,
+          "exact_accuracy": 1.0,
+          "off_path_checks": {
+            "change_fidelity": 1.0,
+            "correct_changed_cells": 1,
+            "noop_hallucination_rate": 0.0,
+            "spurious_changed_cells": 0
+          },
+          "trust_energy": null
+        }
+      ],
+      "episode_id": "censored",
+      "game_id": "m0r0",
+      "level_before": 0,
+      "model_version": "censored:model:1",
+      "monotonic_timestamp_s": 165086.418347104,
+      "outcome": "accept",
+      "phase": "induce",
+      "plan_found": true,
+      "record_type": "decision",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "world_model_hypothesis_gate",
+      "selected_candidate_id": "accepted-censored",
+      "step_index": 0,
+      "wall_time_s": 2.31e-07
+    },
+    {
+      "action_id": "censored:action:1",
+      "episode_id": "censored",
+      "foreign_action_interleaving": false,
+      "game_id": "m0r0",
+      "induction_attempt_id": "censored:induction:1",
+      "level_before": 0,
+      "level_before_action": 0,
+      "model_version": "censored:model:1",
+      "monotonic_timestamp_s": 165086.418402928,
+      "phase": "induce",
+      "plan_id": "censored:plan:1",
+      "plan_index": 0,
+      "plan_linked": true,
+      "proposed_move": [
+        1,
+        null
+      ],
+      "provenance": "execute.plan_step",
+      "record_type": "decision",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "policy_action",
+      "selected_move": [
+        1,
+        null
+      ],
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "action_id": "censored:action:1",
+      "episode_id": "censored",
+      "game_id": "m0r0",
+      "induction_attempt_id": "censored:induction:1",
+      "level_after_action": 0,
+      "level_before": 0,
+      "level_before_action": 0,
+      "level_delta": 0,
+      "model_version": "censored:model:1",
+      "monotonic_timestamp_s": 165086.418427815,
+      "phase": "induce",
+      "plan_id": "censored:plan:1",
+      "plan_linked": true,
+      "record_type": "decision",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "level_transition",
+      "step_index": 0,
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "episode_end",
+      "episode_end_observed": true,
+      "episode_id": "censored",
+      "executed_action_ids": [
+        "censored:action:1"
+      ],
+      "foreign_action_interleaving": false,
+      "game_id": "m0r0",
+      "induction_attempt_id": "censored:induction:1",
+      "level_before": 0,
+      "model_version": "censored:model:1",
+      "monotonic_timestamp_s": 165086.418444887,
+      "observation_actions": 1,
+      "phase": "induce",
+      "plan_id": "censored:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "censored",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "attempt_id": "censored:induction:1",
+      "completion_tokens": 7,
+      "decision": "induction_call",
+      "episode_id": "censored",
+      "frame_change_progress": false,
+      "game_id": "m0r0",
+      "generated_tokens": 7,
+      "induction_wall_time_s": 0.01,
+      "level_before": 0,
+      "level_up_progress": false,
+      "monotonic_timestamp_s": 165086.418466217,
+      "phase": "induce",
+      "planned": true,
+      "progress_actions_observed": 0,
+      "progress_window_actions": 32,
+      "progress_window_censored": true,
+      "progress_within_window": false,
+      "prompt_tokens": 11,
+      "reason": "stall",
+      "record_type": "induction_attempt",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "induction_timing",
+      "seconds": 0.01,
+      "skipped": null,
+      "step_index": 0,
+      "transition_count": null,
+      "verifier_result": "accept",
+      "verifier_results": [
+        "accept"
+      ],
+      "wall_time_s": 0.01
+    },
+    {
+      "actions_used": 1,
+      "episode_id": "censored",
+      "game_id": "m0r0",
+      "level_before": 0,
+      "level_end": 0,
+      "level_start": 0,
+      "levels_gained": 0,
+      "monotonic_timestamp_s": 165086.418487367,
+      "phase": "induce",
+      "record_type": "episode_end",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": null,
+      "step_index": 0,
+      "wall_time_s": 0.0
+    }
+  ],
+  "raw_control_sidecars": [
+    {
+      "bytes": 5034,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/scripted/positive.jsonl",
+      "sha256": "sha256:35de6571f2b83c2f2a14836ba3fdc2c2d2bdc3bb2ca628b05e0c430bbd37625a"
+    },
+    {
+      "bytes": 3397,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/scripted/rejected.jsonl",
+      "sha256": "sha256:c33bc902fafbace85913a165de6aa58135dc2c7a4de8929857880ef1579266f3"
+    },
+    {
+      "bytes": 7241,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/scripted/replaced.jsonl",
+      "sha256": "sha256:558e9b84c00654391acbcc5b4388ca375c390d949e6a6b5a3920b0802362fc2b"
+    },
+    {
+      "bytes": 2573,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/scripted/parse.jsonl",
+      "sha256": "sha256:d75879a2d258f58490445e611f1f239f01a3ce95a3019c7bf70bd66af3337c39"
+    },
+    {
+      "bytes": 4926,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/scripted/censored.jsonl",
+      "sha256": "sha256:b81b8e1eb2ba72436e8822e7c25dcc48ef5cd14bcb896fa55a079d1b68ea1ded"
+    }
+  ],
+  "real_call_site_reachability": [
+    "E3AgentPolicy._call_plan_in_model",
+    "E3AgentPolicy._next_plan_move",
+    "DecisionTelemetryRecorder.record_policy_action",
+    "DecisionTelemetryRecorder.begin_policy_step"
+  ],
+  "reproducibility_checksum": "sha256:970fcf7431a139308bd7575dc2e9ca16c6f1e78e3e0451716de35c5316c987f4",
+  "request_budget_changed": false,
+  "roster_executed": false,
+  "rows": [
+    {
+      "closure_reason": "joined_plan_action_level_transition",
+      "disposition": "executed_with_level_progress",
+      "episode_end_observed": false,
+      "episode_id": "positive",
+      "executed_action_ids": [
+        "positive:action:1"
+      ],
+      "foreign_action_interleaving": false,
+      "game_id": "sb26",
+      "induction_attempt_id": "positive:induction:1",
+      "level_before": 0,
+      "level_delta": 1,
+      "level_progress_action_id": "positive:action:1",
+      "model_version": "positive:model:1",
+      "monotonic_timestamp_s": 165086.41728584,
+      "observation_actions": 1,
+      "phase": "induce",
+      "plan_id": "positive:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "executed_with_level_progress",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "world_model_accuracy_below_threshold",
+      "disposition": "verifier_rejected",
+      "episode_end_observed": false,
+      "episode_id": "rejected",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "vc33",
+      "induction_attempt_id": "rejected:induction:1",
+      "level_before": 0,
+      "model_version": null,
+      "monotonic_timestamp_s": 165086.417565395,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": null,
+      "plan_length": 0,
+      "planner_invoked": false,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "rejected:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "verifier_rejected",
+      "verifier_outcome": "reject",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "model_replaced",
+      "disposition": "planned_not_executed",
+      "episode_end_observed": false,
+      "episode_id": "replaced",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "su15",
+      "induction_attempt_id": "replaced:induction:1",
+      "level_before": 0,
+      "model_version": "replaced:model:1",
+      "monotonic_timestamp_s": 165086.417950679,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": "replaced:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replaced_by_model_version": "replaced:model:2",
+      "replaced_by_plan_id": "replaced:plan:2",
+      "replacement_observed": true,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 1,
+      "terminal_stage": "planned_not_executed",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "episode_end",
+      "disposition": "censored",
+      "episode_end_observed": true,
+      "episode_id": "replaced",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "su15",
+      "induction_attempt_id": "replaced:induction:2",
+      "level_before": 0,
+      "model_version": "replaced:model:2",
+      "monotonic_timestamp_s": 165086.41797766,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": "replaced:plan:2",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 1,
+      "terminal_stage": "censored",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "proposer_failed",
+      "disposition": "parse_rejected",
+      "episode_end_observed": false,
+      "episode_id": "parse",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "g50t",
+      "induction_attempt_id": "parse:induction:1",
+      "level_before": 0,
+      "model_version": null,
+      "monotonic_timestamp_s": 165086.418159571,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": null,
+      "plan_length": 0,
+      "planner_invoked": false,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "parse:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "parse_rejected",
+      "verifier_outcome": "not_observed",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "episode_end",
+      "disposition": "censored",
+      "episode_end_observed": true,
+      "episode_id": "censored",
+      "executed_action_ids": [
+        "censored:action:1"
+      ],
+      "foreign_action_interleaving": false,
+      "game_id": "m0r0",
+      "induction_attempt_id": "censored:induction:1",
+      "level_before": 0,
+      "model_version": "censored:model:1",
+      "monotonic_timestamp_s": 165086.418444887,
+      "observation_actions": 1,
+      "phase": "induce",
+      "plan_id": "censored:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "censored",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:sb26:seed:7570001",
+      "game": "sb26",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:sb26:seed:7570002",
+      "game": "sb26",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:vc33:seed:7570001",
+      "game": "vc33",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:vc33:seed:7570002",
+      "game": "vc33",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:su15:seed:7570001",
+      "game": "su15",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:su15:seed:7570002",
+      "game": "su15",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:g50t:seed:7570001",
+      "game": "g50t",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:g50t:seed:7570002",
+      "game": "g50t",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:m0r0:seed:7570001",
+      "game": "m0r0",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:m0r0:seed:7570002",
+      "game": "m0r0",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:dc22:seed:7570001",
+      "game": "dc22",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570001,
+      "supervisor_redirect_outcome": null
+    },
+    {
+      "adapter_withheld": true,
+      "checkpoint_scope": "whole_episode",
+      "disposition": "unstarted_exp7570_only",
+      "episode_id": "exp7570:dc22:seed:7570002",
+      "game": "dc22",
+      "induction_limit": 2,
+      "policy_action_limit": 600,
+      "request_token_ceiling": 4096,
+      "row_type": "frozen_future_episode",
+      "sampler": "existing_live_default",
+      "seed": 7570002,
+      "supervisor_redirect_outcome": null
+    }
+  ],
+  "run_date": "20260923",
+  "sample_size_budget": {
+    "attempted": 6,
+    "censored": 2,
+    "completed": 6,
+    "excluded": 0,
+    "failed": 0,
+    "planned": 6,
+    "unstarted": 0
+  },
+  "sampling_changed": false,
+  "schema": "carnot.exp7562.v661.arc_plan_lineage.v1",
+  "scripted_results": [
+    {
+      "closure_reason": "joined_plan_action_level_transition",
+      "disposition": "executed_with_level_progress",
+      "episode_end_observed": false,
+      "episode_id": "positive",
+      "executed_action_ids": [
+        "positive:action:1"
+      ],
+      "foreign_action_interleaving": false,
+      "game_id": "sb26",
+      "induction_attempt_id": "positive:induction:1",
+      "level_before": 0,
+      "level_delta": 1,
+      "level_progress_action_id": "positive:action:1",
+      "model_version": "positive:model:1",
+      "monotonic_timestamp_s": 165086.41728584,
+      "observation_actions": 1,
+      "phase": "induce",
+      "plan_id": "positive:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "positive:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "executed_with_level_progress",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "world_model_accuracy_below_threshold",
+      "disposition": "verifier_rejected",
+      "episode_end_observed": false,
+      "episode_id": "rejected",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "vc33",
+      "induction_attempt_id": "rejected:induction:1",
+      "level_before": 0,
+      "model_version": null,
+      "monotonic_timestamp_s": 165086.417565395,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": null,
+      "plan_length": 0,
+      "planner_invoked": false,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "rejected:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "verifier_rejected",
+      "verifier_outcome": "reject",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "model_replaced",
+      "disposition": "planned_not_executed",
+      "episode_end_observed": false,
+      "episode_id": "replaced",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "su15",
+      "induction_attempt_id": "replaced:induction:1",
+      "level_before": 0,
+      "model_version": "replaced:model:1",
+      "monotonic_timestamp_s": 165086.417950679,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": "replaced:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replaced_by_model_version": "replaced:model:2",
+      "replaced_by_plan_id": "replaced:plan:2",
+      "replacement_observed": true,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 1,
+      "terminal_stage": "planned_not_executed",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "episode_end",
+      "disposition": "censored",
+      "episode_end_observed": true,
+      "episode_id": "replaced",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "su15",
+      "induction_attempt_id": "replaced:induction:2",
+      "level_before": 0,
+      "model_version": "replaced:model:2",
+      "monotonic_timestamp_s": 165086.41797766,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": "replaced:plan:2",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "replaced:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 1,
+      "terminal_stage": "censored",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "proposer_failed",
+      "disposition": "parse_rejected",
+      "episode_end_observed": false,
+      "episode_id": "parse",
+      "executed_action_ids": [],
+      "foreign_action_interleaving": false,
+      "game_id": "g50t",
+      "induction_attempt_id": "parse:induction:1",
+      "level_before": 0,
+      "model_version": null,
+      "monotonic_timestamp_s": 165086.418159571,
+      "observation_actions": 0,
+      "phase": "induce",
+      "plan_id": null,
+      "plan_length": 0,
+      "planner_invoked": false,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "parse:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "parse_rejected",
+      "verifier_outcome": "not_observed",
+      "wall_time_s": 0.0
+    },
+    {
+      "closure_reason": "episode_end",
+      "disposition": "censored",
+      "episode_end_observed": true,
+      "episode_id": "censored",
+      "executed_action_ids": [
+        "censored:action:1"
+      ],
+      "foreign_action_interleaving": false,
+      "game_id": "m0r0",
+      "induction_attempt_id": "censored:induction:1",
+      "level_before": 0,
+      "model_version": "censored:model:1",
+      "monotonic_timestamp_s": 165086.418444887,
+      "observation_actions": 1,
+      "phase": "induce",
+      "plan_id": "censored:plan:1",
+      "plan_length": 1,
+      "planner_invoked": true,
+      "record_type": "plan_lineage_terminal",
+      "replacement_observed": false,
+      "row_type": "scripted_lineage_attempt",
+      "run_id": "censored:1347554",
+      "schema_version": 1,
+      "seam": "plan_lineage",
+      "step_index": 0,
+      "terminal_stage": "censored",
+      "verifier_outcome": "accept",
+      "wall_time_s": 0.0
+    }
+  ],
+  "solve_provenance": {
+    "credited_levels": 0,
+    "fixture_claim": "none",
+    "new_solve_claimed": false,
+    "registry_prechecked_games": [
+      "sb26",
+      "vc33",
+      "su15",
+      "g50t",
+      "m0r0",
+      "dc22"
+    ],
+    "required_for_future_credit": "live_agent_self_discovery"
+  },
+  "source_artifact_hashes": {
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:699ecd9fe5af5411aef6b3c919ab222e3b7670ef1b2c3e31d2698a45c1a233ec",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "results/experiment_7557_v660_arc_generalization.json": "sha256:f82eafa74627ea0f556162589aadc309bca400a22f253c6cdf71bfab1743aa3f"
+  },
+  "status": "complete_partial_terminal_validation_pending",
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7562_v661_arc_plan_lineage",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7562_v661_arc_plan_lineage"
+      ],
+      "duration_s": 1.5095216589979827,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/affected/00_worktree_imports.log",
+      "log_sha256": "sha256:8c16e1aca5acfda54cc59b131db755e8ba2f94d07a651eac05d5923fcc35017f",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7562_v661_arc_plan_lineage\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7562_v661_arc_plan_lineage.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7562_v661_arc_plan_lineage": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7562_v661_arc_plan_lineage.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7562-validation-e4051hoh/pytest/focused tests/python/test_experiment_7562_v661_arc_plan_lineage.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7562-validation-e4051hoh/pytest/focused",
+        "tests/python/test_experiment_7562_v661_arc_plan_lineage.py",
+        "-q"
+      ],
+      "duration_s": 4.51694276399212,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/affected/01_focused_pytest.log",
+      "log_sha256": "sha256:968ae72b18f9988b6e9c2947c2174e764827caf3eea1c26a6e0666924edf62fc",
+      "name": "focused_pytest",
+      "output_tail": "............                                                             [100%]\n12 passed in 1.88s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7562-validation-e4051hoh/.coverage.exp7562 '--include=*/experiment_7562_v661_arc_plan_lineage.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7562-validation-e4051hoh/pytest/coverage tests/python/test_experiment_7562_v661_arc_plan_lineage.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7562-validation-e4051hoh/.coverage.exp7562",
+        "--include=*/experiment_7562_v661_arc_plan_lineage.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7562-validation-e4051hoh/pytest/coverage",
+        "tests/python/test_experiment_7562_v661_arc_plan_lineage.py",
+        "-q"
+      ],
+      "duration_s": 7.13608130798093,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/affected/02_changed_module_coverage.log",
+      "log_sha256": "sha256:594f4088366de21aad736cbcd1a634536c215239e9f5c689ce194238ee338668",
+      "name": "changed_module_coverage",
+      "output_tail": "............                                                             [100%]\n12 passed in 3.35s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7562-validation-e4051hoh/.coverage.exp7562 '--include=*/experiment_7562_v661_arc_plan_lineage.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7562-validation-e4051hoh/.coverage.exp7562",
+        "--include=*/experiment_7562_v661_arc_plan_lineage.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.07159183800104074,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/affected/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:fa9c13bd90575f922f4f70a60893e2f4c8bf38c8b3f821b8ad6dd57230027961",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7562_v661_arc_plan_lineage.py     404      0   100%\n--------------------------------------------------------------------------------------\nTOTAL                                                      404      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7562_v661_arc_plan_lineage.py scripts/experiments/experiment_7562_v661_arc_plan_lineage.py python/carnot/agentic/arc_decision_telemetry.py python/carnot/agentic/arc_competition_agent.py tests/python/test_experiment_7562_v661_arc_plan_lineage.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7562_v661_arc_plan_lineage.py",
+        "scripts/experiments/experiment_7562_v661_arc_plan_lineage.py",
+        "python/carnot/agentic/arc_decision_telemetry.py",
+        "python/carnot/agentic/arc_competition_agent.py",
+        "tests/python/test_experiment_7562_v661_arc_plan_lineage.py"
+      ],
+      "duration_s": 0.01212813999154605,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/affected/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7562_v661_arc_plan_lineage.py scripts/experiments/experiment_7562_v661_arc_plan_lineage.py python/carnot/agentic/arc_decision_telemetry.py python/carnot/agentic/arc_competition_agent.py tests/python/test_experiment_7562_v661_arc_plan_lineage.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7562_v661_arc_plan_lineage.py",
+        "scripts/experiments/experiment_7562_v661_arc_plan_lineage.py",
+        "python/carnot/agentic/arc_decision_telemetry.py",
+        "python/carnot/agentic/arc_competition_agent.py",
+        "tests/python/test_experiment_7562_v661_arc_plan_lineage.py"
+      ],
+      "duration_s": 0.010580834001302719,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/affected/05_ruff_format.log",
+      "log_sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "name": "ruff_format",
+      "output_tail": "5 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7562_v661_arc_plan_lineage.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7562_v661_arc_plan_lineage.py"
+      ],
+      "duration_s": 0.09477392898406833,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/affected/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7562_v661_arc_plan_lineage.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7562_v661_arc_plan_lineage.py"
+      ],
+      "duration_s": 0.017542268993565813,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/affected/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7562-validation-e4051hoh/capability/e2e011 tests/python/test_arc_decision_telemetry.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7562-validation-e4051hoh/capability/e2e011",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "duration_s": 6.258219712995924,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/capability/00_e2e_011.log",
+      "log_sha256": "sha256:6a17f99495a716569540f3438e55b23d9f280f8cff5b488bf463d6d4e685e434",
+      "name": "e2e_011",
+      "output_tail": "...............                                                          [100%]\n15 passed in 3.62s\n",
+      "passed": true,
+      "scope": "E2E-011 ARC decision telemetry parity",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7562-validation-e4051hoh/capability/e2e012 tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7492_e6_timed_cost_profile.py tests/python/test_arc_decision_telemetry.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7562-validation-e4051hoh/capability/e2e012",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7492_e6_timed_cost_profile.py",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "duration_s": 8.110586988012074,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/capability/01_e2e_012.log",
+      "log_sha256": "sha256:2495e2b6d67eaa5000ea8d6d570d03092cbf9ffa4726e8a99df089891ad92a72",
+      "name": "e2e_012",
+      "output_tail": "..............................                                           [100%]\n30 passed in 5.48s\n",
+      "passed": true,
+      "scope": "E2E-012 exclusive timing parity",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7562-validation-e4051hoh/capability/e2e013 tests/python/test_arc_decision_telemetry.py tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7531_b2_induction_gate_measurement.py tests/python/test_semif_arc_readout_eval.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7562-validation-e4051hoh/capability/e2e013",
+        "tests/python/test_arc_decision_telemetry.py",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7531_b2_induction_gate_measurement.py",
+        "tests/python/test_semif_arc_readout_eval.py",
+        "-q"
+      ],
+      "duration_s": 8.48181375398417,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/capability/02_e2e_013.log",
+      "log_sha256": "sha256:7eb7f5a59d0fb982ce29f81c88d5ca4a15a38275454ef6c602dc95e40164959b",
+      "name": "e2e_013",
+      "output_tail": "........................................                                 [100%]\n40 passed in 5.70s\n",
+      "passed": true,
+      "scope": "E2E-013 induction-attempt outcome telemetry",
+      "timed_out": false
+    },
+    {
+      "command": "/usr/bin/env CARNOT_ARC_DISABLE_INDUCTION=1 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/exp7562-validation-e4051hoh/capability/r11l-smoke.json",
+      "command_argv": [
+        "/usr/bin/env",
+        "CARNOT_ARC_DISABLE_INDUCTION=1",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/exp7562-validation-e4051hoh/capability/r11l-smoke.json"
+      ],
+      "duration_s": 3.123045339016244,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7562_v661_arc_plan_lineage/run-1347554/validation/capability/03_llm_off_environment_smoke.log",
+      "log_sha256": "sha256:56f145df74841bd443b0a9eab59514fd8ff4f43dbe171e0d5792a4ee69d16049",
+      "name": "llm_off_environment_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-23 07:31:47 | INFO | Created new scorecard: de21901e-7af3-4a33-945d-774800012767\n2026-09-23 07:31:47 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-23 07:31:47 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/exp7562-validation-e4051hoh/capability/r11l-smoke.json\n",
+      "passed": true,
+      "scope": "private LLM-off real-environment smoke",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "partial",
+  "verifier_is_oracle": true
+}

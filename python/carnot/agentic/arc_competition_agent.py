@@ -6466,7 +6466,24 @@ class E3AgentPolicy:
         _max_nodes_override = os.environ.get("CARNOT_ARC_PLAN_MAX_NODES")
         if _max_nodes_override and self._planner_accepts_max_nodes(plan_in_model):
             kwargs["max_nodes"] = int(_max_nodes_override)
-        return plan_in_model(engine, is_done, start_grid, **kwargs)
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
+        if not decision_telemetry.enabled:
+            return plan_in_model(engine, is_done, start_grid, **kwargs)
+        import time as _time
+
+        started = _time.perf_counter()
+        plan = plan_in_model(engine, is_done, start_grid, **kwargs)
+        decision_telemetry.record_planner_invocation(
+            self,
+            engine,
+            plan,
+            _time.perf_counter() - started,
+        )
+        return plan
 
     def _guided_plan_in_model(self, plan_in_model):
         def _wrapped(engine, is_done, start_grid):
@@ -6476,6 +6493,13 @@ class E3AgentPolicy:
 
     def _next_plan_move(self) -> tuple:
         step = self.plan[self.pi]
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
+        if decision_telemetry.enabled:
+            decision_telemetry.record_plan_consumption(self, self.plan, self.pi, step)
         self.pi += 1
         move = (step["action"], step.get("data"))
         if self.structured_evidence_memory is not None:
@@ -6974,6 +6998,14 @@ class E3AgentPolicy:
         )
         self._record_outcome_transport_proposal(move, selected_move, latest)
         self._record_first_party_tool_gap_next_action(selected_move, latest)
+        if decision_telemetry.enabled:
+            decision_telemetry.record_policy_action(
+                self,
+                proposed_move=move,
+                selected_move=selected_move,
+                level_before=latest_level,
+                provenance=getattr(self, "_prov_top", None),
+            )
         return selected_move
 
     def install_trace_automaton_supervisor(self, supervisor: Any) -> None:

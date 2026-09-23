@@ -35306,6 +35306,90 @@ and keep the retired budget-raise lever closed.
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## V661 ARC plan-lineage observation — 2026-09-23
+
+### REQ-ARC-WMTE-7562: Join accepted models and plans to live policy outcomes
+
+Experiment 7562 SHALL extend the existing default-off decision telemetry at the
+real `E3AgentPolicy` verifier, planner, plan-consumption, action-return, and
+level-observation call sites. The enabled recorder SHALL bind immutable
+`episode_id`, `induction_attempt_id`, `model_version`, `plan_id`, and
+`action_id` values. It SHALL record verifier acceptance or rejection, planner
+invocation, action provenance, and the level transition observed after each
+action. Model replacement and plan replacement SHALL preserve the prior IDs.
+The disabled recorder SHALL remain a no-op.
+
+Each fired attempt SHALL have exactly one of these terminal stages:
+`transport_failed`, `parse_rejected`, `verifier_rejected`,
+`accepted_no_plan`, `planned_not_executed`,
+`executed_no_level_progress`, `executed_with_level_progress`, or `censored`.
+A joinable parse failure SHALL count as complete lineage evidence. Missing
+instrumentation SHALL be `unknown`, not a zero success. The recorder SHALL use
+a 32-policy-action observation window. It SHALL identify replacement, episode
+end, and foreign-action interleaving. A temporal join is attribution
+bookkeeping and SHALL not claim a causal treatment benefit.
+
+The scripted measurement SHALL exercise accepted, rejected, replaced, and
+censored outcomes through the real policy call sites. A positive control SHALL
+join an executed plan action to a scripted level transition. Corrupted attempt,
+model, and plan IDs SHALL fail independent reduction. Telemetry off and on
+SHALL preserve policy actions, model calls, environment calls, existing action
+provenance, and random state.
+
+The terminal artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, no
+current model calls, `planned_inference_substrate_class=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`. It SHALL
+freeze, but not execute, twelve future episodes: games `sb26`, `vc33`, `su15`,
+`g50t`, `m0r0`, and `dc22`, each with seeds `7570001` and `7570002`, a
+600-policy-action limit, and at most two inductions. Every frozen row SHALL be
+`unstarted`; only Experiment 7570 may execute that roster.
+
+`plan_lineage_ready_score` SHALL be the bare number one only when real-call-site
+reachability, the positive join control, identifier corruption rejection,
+default parity, scoped validation, cold replay, independent reduction,
+adversarial verification, and the strict row reader all pass. Fixture controls
+claim no solve. The task SHALL not change induction eligibility, sampling,
+request budgets, model selection, action priority, the 4096-token request
+ceiling, or production defaults.
+
+#### SCENARIO-ARC-WMTE-7562-POSITIVE-JOIN
+
+- **GIVEN** an accepted model, a planner result, and a consumed plan action
+- **WHEN** the next scripted observation increases the completed level
+- **THEN** one terminal row joins all five immutable IDs
+- **AND** its stage is `executed_with_level_progress`.
+
+#### SCENARIO-ARC-WMTE-7562-NEGATIVE-JOINS
+
+- **GIVEN** otherwise valid rows with one corrupted attempt, model, or plan ID
+- **WHEN** the independent reducer validates the lineage graph
+- **THEN** each corruption is rejected by a named join error
+- **AND** no missing join becomes a zero-success row.
+
+#### SCENARIO-ARC-WMTE-7562-REPLACEMENT-AND-CENSORING
+
+- **GIVEN** planned but unexecuted replacement and an unfinished episode
+- **WHEN** a new model replaces the first or the episode ends before 32 actions
+- **THEN** the first row records replacement as `planned_not_executed`
+- **AND** the unfinished row records episode-end censoring as `censored`.
+
+#### SCENARIO-ARC-WMTE-7562-PARITY
+
+- **GIVEN** the same scripted real policy, seeds, and environment responses
+- **WHEN** decision telemetry runs once off and once on
+- **THEN** actions, calls, existing provenance, environment calls, and RNG match
+- **AND** only the enabled run writes bounded lineage telemetry.
+
+#### SCENARIO-ARC-WMTE-7562-FROZEN-ROSTER
+
+- **GIVEN** six adapter-withheld games and two registered seeds
+- **WHEN** Experiment 7562 seals the successor roster
+- **THEN** all twelve rows retain fixed limits and `unstarted` disposition
+- **AND** the artifact reports no live game outcome or solve credit.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V660 ARC held-out-game generalization analysis — 2026-09-23
 
 ### REQ-ARC-WMTE-7557: Analyze corrected B2 evidence without re-solving games
