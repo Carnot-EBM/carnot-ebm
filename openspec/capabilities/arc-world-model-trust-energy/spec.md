@@ -35496,3 +35496,15 @@ benefit.
 
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+#### Closing finding, 2026-09-23 — a clean result, not a harness artifact
+
+Full analysis of Experiment 10009's 42 attempts: the verifier ran on 33 and rejected all 33,
+uniform across all 12 panel games. The remaining 9 are benign cold starts (an episode's first
+attempt, before any held-out transitions exist) or a `sp80` reinduction reusing a prior
+response -- not a new failure mode; real code exists in all 9. Single-shot, codeonly-suppressed
+induction from one open-weight model does not produce a world model that survives held-out
+verification on this panel, under this budget. B2 stops here: attempts are both too rare (never
+reached the 100-attempt sample floor across three live runs) and, when complete, too low-quality
+to fit a timing gate. Whether the live path's real multi-round refinement loop does better is a
+genuinely open, larger question, not started here.

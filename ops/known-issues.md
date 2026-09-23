@@ -27492,3 +27492,34 @@ attempts terminate deterministically within a bounded budget, which is what a wa
 measurement harness needs. A B2 result under codeonly suppression measures codeonly-suppressed
 induction, not the live path's current think-mode default. State this limitation plainly in the
 next B2 artifact rather than implying parity with the live agent.
+
+**CLOSING FINDING, 2026-09-23.** Analyzed experiment 10009's 42 attempts in full (not just the
+two raw responses spot-checked before merge). The verifier ran on 33 of 42 attempts and rejected
+all 33 -- 100%, uniform across all 12 panel games, no exceptions. The remaining 9 are not a new
+bug: all 9 are either an episode's first induction attempt (no held-out transitions exist yet to
+verify against -- a structurally expected cold start, not a failure) or a `sp80` reinduction that
+reused the prior attempt's response. Real code was generated in every one of those 9 too.
+
+This is now a clean, complete finding, not a harness artifact. The codeonly fix does its job:
+attempts complete and produce real, syntactically valid code. What fails is the induction task
+itself: single-shot, codeonly-suppressed generation from one open-weight model does not produce
+a world model that survives held-out verification, on this panel, under this budget. That is
+consistent with this project's broader, already-documented ARC induction difficulty -- it is not
+a new problem this measurement uncovered.
+
+**B2 stops here for now.** Four rounds this session (telemetry build -> 256-token cap ->
+4096-token cap, still capped by hidden reasoning -> a wrong first fix (corrected same day) ->
+the working codeonly fix) converged on a real, honestly-measured result: induction attempts are
+both too rare (60 then 35 then 42, never reaching the 100-attempt floor across three GPU runs)
+and, when they do complete, too low-quality (0/42 planned, 33/33 rejected where observed) for a
+timing gate to have anything to fit yet. Further "raise a parameter and rerun" work on this same
+single-shot approach is unlikely to change that.
+
+**The real open question, not started.** Whether the live path's actual multi-round refinement
+loop (deliberately NOT used here -- this measurement is single-shot only, to keep each attempt
+bounded and comparable) produces meaningfully better induction quality than the single codeonly
+call measured above. That is a different, larger experiment than a parameter fix: it would need
+to reproduce the live path's real refinement behavior (multiple rounds, counterexample-guided
+retries) inside a bounded measurement harness, which is new design work, not a quick rerun. Not
+scoped or started; queue it only with explicit direction, since it is a materially bigger task
+than anything run tonight.

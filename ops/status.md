@@ -1,6 +1,15 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-22
+**Last Updated:** 2026-09-23
+
+## 2026-09-23 — B2 closed for now: a clean induction-quality result, not a harness bug
+Full analysis of Experiment 10009's 42 attempts: the verifier ran on 33 and rejected all
+33, uniform across all 12 panel games. The remaining 9 are benign cold starts or a reused
+response, not a new failure. Single-shot, codeonly-suppressed induction does not produce a
+world model that survives held-out verification here. B2 stops for now: attempts never
+reached the 100-attempt sample floor across three live GPU runs, and completed attempts are
+too low-quality to fit a timing gate. Whether the live path's real multi-round refinement
+loop does better is open and not started -- a larger, separately-scoped question.
 
 ## 2026-09-22 — Corrected B2 induction-budget measurement remains capped
 REQ-ARC-WMTE-10008 passes 4,096 explicitly to both the B2 induction proposer
