@@ -18496,3 +18496,4 @@ code |
 | 2026-09-23 14:53 UTC | Capture sealed test and fresh online source interv | OK | 122 passed, 1 warning in 34.45s |
 | 2026-09-23 15:28 UTC | Fit contrastive source energies and freeze matched | OK | 95 passed, 1 warning in 8.54s |
 | 2026-09-23 16:13 UTC | Measure held-out source decisions with frozen cali | OK | 103 passed, 1 warning in 10.59s |
+| 2026-09-23 16:15 UTC | Measure fresh delayed recalibration and retained t | GATE_BLOCK | gate-unsat(final): 2 of 11 gate(s) failed; first failure: exp7561-recalibration-prototype.recalibration_ready_score (actual=0 == expected=1) |
