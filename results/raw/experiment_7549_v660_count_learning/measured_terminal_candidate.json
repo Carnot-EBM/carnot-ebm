@@ -1,0 +1,1243 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Invalid scoped checks cannot support science."
+    },
+    {
+      "category": "validity",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": false,
+      "op": "eq",
+      "passed": false,
+      "principle": "Fresh readers must accept the exact candidate."
+    },
+    {
+      "category": "readiness",
+      "check": "frozen_schedule_complete",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Five orders cannot become extra independent sources."
+    },
+    {
+      "category": "validity",
+      "check": "chronology",
+      "expected": 0,
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "principle": "Later labels cannot author earlier predictions."
+    },
+    {
+      "category": "validity",
+      "check": "restart_parity",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Persistence must not change count learning."
+    },
+    {
+      "category": "support",
+      "check": "source_support",
+      "expected": {
+        "per_label": 12,
+        "sources": 128
+      },
+      "observed": {
+        "labels": {
+          "0": 91,
+          "1": 68
+        },
+        "sources": 159
+      },
+      "op": "gte",
+      "passed": true,
+      "principle": "Sparse evidence cannot become a benefit claim."
+    },
+    {
+      "category": "support",
+      "check": "shuffled_bindings",
+      "expected": 40,
+      "observed": true,
+      "op": "gte_each_order",
+      "passed": true,
+      "principle": "A label-preserving shuffle is not a control."
+    },
+    {
+      "category": "benefit",
+      "check": "brier_benefit_vs_frozen",
+      "expected": {
+        "holm_alpha": 0.05,
+        "mean_delta_lte": -0.005,
+        "simultaneous_upper95_lt": 0.0
+      },
+      "observed": {
+        "bootstrap_replicates": 1000,
+        "comparator": "frozen",
+        "holm_adjusted_p": 0.5354645354645354,
+        "holm_passed": false,
+        "mean_delta": -0.007269976501000086,
+        "one_sided_p": 0.2677322677322677,
+        "simultaneous_upper95_delta": 0.008298107951703826,
+        "upper95_delta": 0.006716964584685459
+      },
+      "op": "all",
+      "passed": false,
+      "principle": "A noisy or too-small proper-loss change cannot become promotion."
+    },
+    {
+      "category": "benefit",
+      "check": "brier_benefit_vs_global_count",
+      "expected": {
+        "holm_alpha": 0.05,
+        "mean_delta_lte": -0.005,
+        "simultaneous_upper95_lt": 0.0
+      },
+      "observed": {
+        "bootstrap_replicates": 1000,
+        "comparator": "global_count",
+        "holm_adjusted_p": 0.975024975024975,
+        "holm_passed": false,
+        "mean_delta": 0.008769945635770493,
+        "one_sided_p": 0.975024975024975,
+        "simultaneous_upper95_delta": 0.019658516352718827,
+        "upper95_delta": 0.019658516352718827
+      },
+      "op": "all",
+      "passed": false,
+      "principle": "A noisy or too-small proper-loss change cannot become promotion."
+    },
+    {
+      "category": "benefit",
+      "check": "brier_benefit_vs_shuffled_local",
+      "expected": {
+        "holm_alpha": 0.05,
+        "mean_delta_lte": -0.005,
+        "simultaneous_upper95_lt": 0.0
+      },
+      "observed": {
+        "bootstrap_replicates": 1000,
+        "comparator": "shuffled_local",
+        "holm_adjusted_p": 0.03596403596403597,
+        "holm_passed": true,
+        "mean_delta": -0.030181875275351183,
+        "one_sided_p": 0.011988011988011988,
+        "simultaneous_upper95_delta": -0.001274872748623701,
+        "upper95_delta": -0.003858265844099096
+      },
+      "op": "all",
+      "passed": true,
+      "principle": "A noisy or too-small proper-loss change cannot become promotion."
+    },
+    {
+      "category": "benefit",
+      "check": "retention_brier",
+      "expected": 0.01,
+      "observed": 0.023085503232673027,
+      "op": "lte",
+      "passed": false,
+      "principle": "Learning must preserve held-out calibration."
+    },
+    {
+      "category": "benefit",
+      "check": "retention_primary_cost",
+      "expected": 0.01,
+      "observed": 0.031034482758620696,
+      "op": "lte",
+      "passed": false,
+      "principle": "Learning must preserve held-out decisions."
+    },
+    {
+      "category": "benefit",
+      "check": "confirmatory_benefit",
+      "expected": 0,
+      "observed": 0,
+      "op": "eq",
+      "passed": true,
+      "principle": "Prior corpus inspection forbids a confirmatory claim."
+    }
+  ],
+  "bootstrap_replicates": 1000,
+  "bootstrap_rows": {
+    "bytes": 485171,
+    "path": "results/raw/experiment_7549_v660_count_learning/bootstrap_rows.jsonl",
+    "rows": 1000,
+    "sha256": "sha256:7fe9c1964e2d8e3217f3dffa0d6873c147d45916ce60896f601f6a6beee94b8e"
+  },
+  "capability_e2e": {
+    "numbered_runtime_e2e": {
+      "applicable": [],
+      "reason": "No shared sampler, binding, ARC transport, or telemetry changed."
+    },
+    "orders_exercised": 5,
+    "passed": true,
+    "private_llm_off_real_environment_smoke": "this_authenticated_cached_count_replay",
+    "workflow": "predict_release_update_persist_reload"
+  },
+  "compute_details": {
+    "logical_cpu_count": 24,
+    "machine": "x86_64",
+    "processor": ""
+  },
+  "confirmatory_benefit_score": 0,
+  "continuous_self_learning_task": true,
+  "count_measurement_complete_score": 1,
+  "duration_s": 48.25610622501699,
+  "execution_venue": "host",
+  "expected_online_sources": 159,
+  "experiment_id": "exp7549-count-learning",
+  "exploratory_effect_score": 0,
+  "field_principles": {
+    "MODEL_SPECS": "Makes the no-model plan explicit.",
+    "acceptance_gate_results": "Keeps validity, readiness, support, and benefit independent.",
+    "bootstrap_replicates": "Preserves this field for independent drift detection.",
+    "bootstrap_rows": "Preserves this field for independent drift detection.",
+    "capability_e2e": "Preserves this field for independent drift detection.",
+    "compute_details": "Preserves this field for independent drift detection.",
+    "confirmatory_benefit_score": "Remains zero for the previously inspected corpus.",
+    "continuous_self_learning_task": "Identifies real across-event count updates.",
+    "count_measurement_complete_score": "Keeps auditable completion separate from effect.",
+    "duration_s": "Keeps current monotonic work separate from historical time.",
+    "execution_venue": "Uses the legal host enum instead of an invented device name.",
+    "expected_online_sources": "Preserves this field for independent drift detection.",
+    "experiment_id": "Binds evidence to the exact task and milestone.",
+    "exploratory_effect_score": "Requires every registered empirical effect gate.",
+    "field_principles": "Makes every artifact field state the failure it prevents.",
+    "flagged_adversarial": "Preserves adverse findings instead of clearing a gate.",
+    "frozen_settings": "Preserves this field for independent drift detection.",
+    "gate_check_summary": "Names exact failed operands instead of a vague status.",
+    "historical_model_calls": "Preserves this field for independent drift detection.",
+    "honest_verdict": "Uses one complete terminal disposition.",
+    "independent_reduction": "Preserves this field for independent drift detection.",
+    "inference_substrate": "Names upstream-artifact aggregation as the actual substrate.",
+    "inference_substrate_class": "Prevents CPU aggregation from being reported as model work.",
+    "invocation_counts": "Preserves this field for independent drift detection.",
+    "label_counts": "Preserves this field for independent drift detection.",
+    "milestone": "Preserves this field for independent drift detection.",
+    "model_invoked": "Separates current work from historical cached inference.",
+    "model_specs": "Keeps both required model manifests empty and consistent.",
+    "no_headroom": "Preserves this field for independent drift detection.",
+    "persistence_rows": "Preserves this field for independent drift detection.",
+    "phase_spans": "Preserves this field for independent drift detection.",
+    "planned_inference_substrate_class": "Preserves this field for independent drift detection.",
+    "positive_claim": "Preserves this field for independent drift detection.",
+    "preconditions_checked": "Prevents absent inputs from becoming fabricated measurements.",
+    "prediction_update_rows": "Preserves pre-update forecasts and causal state hashes.",
+    "prior_result": "Preserves this field for independent drift detection.",
+    "process_identity": "Preserves this field for independent drift detection.",
+    "random_seed": "Prevents outcome-aware order or bootstrap tuning.",
+    "release_rows": "Preserves this field for independent drift detection.",
+    "replay_summaries": "Preserves this field for independent drift detection.",
+    "repository_health": "Preserves this field for independent drift detection.",
+    "reproducibility_checksum": "Binds code, settings, source hashes, and raw rows.",
+    "restart_parity_score": "Requires exact resumed predictions and exactly-once feedback.",
+    "retention_rows": "Keeps held-out calibration and actions visible.",
+    "rows": "Keeps absolute arm metrics visible beside comparative effects.",
+    "run_date": "Preserves this field for independent drift detection.",
+    "sample_size_budget": "Distinguishes completed, censored, failed, and unstarted units.",
+    "schema": "Preserves this field for independent drift detection.",
+    "source_artifact_hashes": "Preserves this field for independent drift detection.",
+    "terminal_status": "Preserves this field for independent drift detection.",
+    "title": "Preserves this field for independent drift detection.",
+    "validation_receipts": "Stores exact command scope, exit, log hash, and cold readers.",
+    "verdict_class": "Restricts terminal classification to the closed vocabulary.",
+    "verifier_is_oracle": "Prevents probabilistic evidence from becoming a correctness proof."
+  },
+  "flagged_adversarial": false,
+  "frozen_settings": {
+    "block_size": 8,
+    "clip": 0.0001,
+    "feedback_delay": 8,
+    "holm_family_alpha": 0.05,
+    "prior_mass": 8,
+    "retention_checkpoints": [
+      0,
+      40,
+      80,
+      120,
+      159
+    ]
+  },
+  "gate_check_summary": {
+    "failed_checks": [
+      "terminal_validation",
+      "brier_benefit_vs_frozen",
+      "brier_benefit_vs_global_count",
+      "retention_brier",
+      "retention_primary_cost"
+    ],
+    "first_failure": {
+      "category": "validity",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": false,
+      "op": "eq",
+      "passed": false,
+      "principle": "Fresh readers must accept the exact candidate."
+    },
+    "passed": false
+  },
+  "historical_model_calls": {
+    "counted_as_current": false,
+    "source": "results/experiment_7547_v660_count_stream.json"
+  },
+  "honest_verdict": "complete_null_count_learning_valid_benefit_gate_failed",
+  "independent_reduction": {
+    "absolute_brier": {
+      "frozen": 0.15724915633734554,
+      "global_count": 0.14120923420057496,
+      "local_count": 0.14997917983634546,
+      "shuffled_local": 0.18016105511169664
+    },
+    "affected_validation_passed": true,
+    "chronology_passed": true,
+    "complete_online_source_count": 159,
+    "control_passed": true,
+    "effect_passed": false,
+    "independent_unit": "online_source_group",
+    "label_counts": {
+      "0": 91,
+      "1": 68
+    },
+    "mean_delta_brier": {
+      "frozen": -0.007269976501000086,
+      "global_count": 0.008769945635770493,
+      "shuffled_local": -0.030181875275351183
+    },
+    "measurement_complete": true,
+    "primary_contrasts": [
+      {
+        "bootstrap_replicates": 1000,
+        "comparator": "frozen",
+        "holm_adjusted_p": 0.5354645354645354,
+        "holm_passed": false,
+        "mean_delta": -0.007269976501000086,
+        "one_sided_p": 0.2677322677322677,
+        "simultaneous_upper95_delta": 0.008298107951703826,
+        "upper95_delta": 0.006716964584685459
+      },
+      {
+        "bootstrap_replicates": 1000,
+        "comparator": "global_count",
+        "holm_adjusted_p": 0.975024975024975,
+        "holm_passed": false,
+        "mean_delta": 0.008769945635770493,
+        "one_sided_p": 0.975024975024975,
+        "simultaneous_upper95_delta": 0.019658516352718827,
+        "upper95_delta": 0.019658516352718827
+      },
+      {
+        "bootstrap_replicates": 1000,
+        "comparator": "shuffled_local",
+        "holm_adjusted_p": 0.03596403596403597,
+        "holm_passed": true,
+        "mean_delta": -0.030181875275351183,
+        "one_sided_p": 0.011988011988011988,
+        "simultaneous_upper95_delta": -0.001274872748623701,
+        "upper95_delta": -0.003858265844099096
+      }
+    ],
+    "restart_passed": true,
+    "retention_brier_upper95_deterioration": 0.023085503232673027,
+    "retention_cost_upper95_deterioration": 0.031034482758620696,
+    "retention_passed": false,
+    "schedule_passed": true,
+    "support_passed": true,
+    "terminal_validation_passed": false,
+    "terminal_validation_present": false,
+    "uncertainty_passed": false
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "forward_calls": {
+      "attempted": 0,
+      "cancelled": 0,
+      "completed": 0,
+      "failed": 0,
+      "in_flight": 0
+    },
+    "generation_calls": {
+      "attempted": 0,
+      "cancelled": 0,
+      "completed": 0,
+      "failed": 0,
+      "in_flight": 0
+    },
+    "model_loads": {
+      "attempted": 0,
+      "cancelled": 0,
+      "completed": 0,
+      "failed": 0,
+      "in_flight": 0
+    }
+  },
+  "label_counts": {
+    "0": 91,
+    "1": 68
+  },
+  "milestone": "2026.09.660",
+  "model_invoked": false,
+  "model_specs": [],
+  "no_headroom": false,
+  "persistence_rows": {
+    "bytes": 31630,
+    "path": "results/raw/experiment_7549_v660_count_learning/persistence_rows.jsonl",
+    "rows": 90,
+    "sha256": "sha256:ef71ea83e17a56af4cf82a58a614d35119eed9eded7c6a407f96e4680201ffe6"
+  },
+  "phase_spans": [
+    {
+      "completed_units": 30,
+      "duration_s": 0.005418440996436402,
+      "end_offset_s": 0.0054426070128101856,
+      "phase": "preconditions",
+      "start_offset_s": 2.416601637378335e-05
+    },
+    {
+      "completed_units": 159,
+      "duration_s": 0.016296853020321578,
+      "end_offset_s": 0.024119438021443784,
+      "phase": "input_custody",
+      "start_offset_s": 0.007822585001122206
+    },
+    {
+      "completed_units": 5,
+      "duration_s": 7.762600827001734,
+      "end_offset_s": 7.786806337011512,
+      "phase": "count_learning",
+      "start_offset_s": 0.024205510009778664
+    },
+    {
+      "completed_units": 1000,
+      "duration_s": 25.40187679399969,
+      "end_offset_s": 33.188695434015244,
+      "phase": "source_cluster_bootstrap",
+      "start_offset_s": 7.786818640015554
+    },
+    {
+      "completed_units": 5,
+      "duration_s": 0.23486098198918626,
+      "end_offset_s": 33.42416666200734,
+      "phase": "sidecars",
+      "start_offset_s": 33.18930568001815
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 14.83095724802115,
+      "end_offset_s": 48.256086227018386,
+      "phase": "affected_validation",
+      "start_offset_s": 33.425128978997236
+    }
+  ],
+  "planned_inference_substrate_class": "no_model_load",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "check": "required_path:AGENTS.md",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "AGENTS.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:CODEX.md",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "CODEX.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:CLAUDE.md",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:research-program.md",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "research-program.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:ops/exclusion_manifest.yaml",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:ops/e2e-test-plan.md",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:scripts/experiment_template.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:python/carnot/reporting/current_work_receipt.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:python/carnot/experiment_7534_v659_count_memory.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "python/carnot/experiment_7534_v659_count_memory.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:python/carnot/experiment_7509_v657_causal_online.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "python/carnot/experiment_7509_v657_causal_online.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:python/carnot/experiment_7510_v657_causal_audit.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "python/carnot/experiment_7510_v657_causal_audit.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:python/carnot/experiment_7547_v660_count_stream.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "python/carnot/experiment_7547_v660_count_stream.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:results/experiment_7534_v659_count_memory.json",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7534_v659_count_memory.json",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:results/experiment_7547_v660_count_stream.json",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7547_v660_count_stream.json",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:openspec/capabilities/continuous-learning/spec.md",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/continuous-learning/spec.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:python/carnot/experiment_7549_v660_count_learning.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "python/carnot/experiment_7549_v660_count_learning.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:scripts/experiments/experiment_7549_v660_count_learning.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "scripts/experiments/experiment_7549_v660_count_learning.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path:tests/python/test_experiment_7549_v660_count_learning.py",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "tests/python/test_experiment_7549_v660_count_learning.py",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "requirement_registered",
+      "expected": true,
+      "field": "REQ-CL-7549",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/continuous-learning/spec.md",
+      "required": true,
+      "upstream": "openspec"
+    },
+    {
+      "check": "exp7547_cached_stream_ready",
+      "expected": 1,
+      "field": "cached_stream_ready_score",
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7547_v660_count_stream.json",
+      "required": true,
+      "upstream": "exp7547-count-stream"
+    },
+    {
+      "check": "exp7547_verdict_class",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "field": "verdict_class",
+      "observed": "null",
+      "op": "in",
+      "passed": true,
+      "path": "results/experiment_7547_v660_count_stream.json",
+      "required": true,
+      "upstream": "exp7547-count-stream"
+    },
+    {
+      "check": "exp7547_not_adversarial",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7547_v660_count_stream.json",
+      "required": true,
+      "upstream": "exp7547-count-stream"
+    },
+    {
+      "check": "exp7547_sidecar:final_states",
+      "expected": "sha256:f7b6059f8626d035c6e18a83be97a23db2b88ec6500f198075bc34e707456db1",
+      "field": "sha256",
+      "observed": "sha256:f7b6059f8626d035c6e18a83be97a23db2b88ec6500f198075bc34e707456db1",
+      "op": "eq",
+      "passed": true,
+      "path": "results/raw/experiment_7547_v660_count_stream/final_states.json",
+      "required": true,
+      "upstream": "exp7547-count-stream"
+    },
+    {
+      "check": "exp7547_sidecar:frozen_protocol",
+      "expected": "sha256:ec7a2689490d3176537151e6955105fb89c76268782561cc4bb81b08c461f215",
+      "field": "sha256",
+      "observed": "sha256:ec7a2689490d3176537151e6955105fb89c76268782561cc4bb81b08c461f215",
+      "op": "eq",
+      "passed": true,
+      "path": "results/raw/experiment_7547_v660_count_stream/frozen_protocol.json",
+      "required": true,
+      "upstream": "exp7547-count-stream"
+    },
+    {
+      "check": "exp7547_sidecar:retention_rows",
+      "expected": "sha256:4c355385eb57c179cde08dcd5fb8f5b6c29c3b307a65b3c1ce2c72e46d6cee4d",
+      "field": "sha256",
+      "observed": "sha256:4c355385eb57c179cde08dcd5fb8f5b6c29c3b307a65b3c1ce2c72e46d6cee4d",
+      "op": "eq",
+      "passed": true,
+      "path": "results/raw/experiment_7547_v660_count_stream/retention_rows.jsonl",
+      "required": true,
+      "upstream": "exp7547-count-stream"
+    },
+    {
+      "check": "exp7547_sidecar:stream_events",
+      "expected": "sha256:1fdec8399563355ff446d6b9a239e7f946351abad3f117fc698f4f5d9ad802fa",
+      "field": "sha256",
+      "observed": "sha256:1fdec8399563355ff446d6b9a239e7f946351abad3f117fc698f4f5d9ad802fa",
+      "op": "eq",
+      "passed": true,
+      "path": "results/raw/experiment_7547_v660_count_stream/stream_events.jsonl",
+      "required": true,
+      "upstream": "exp7547-count-stream"
+    },
+    {
+      "check": "host_cpu_available",
+      "expected": ">=1",
+      "field": "logical_cpu_count",
+      "observed": 24,
+      "op": "eq",
+      "passed": true,
+      "path": "/proc/cpuinfo",
+      "required": true,
+      "upstream": "current_host"
+    }
+  ],
+  "prediction_update_rows": {
+    "bytes": 3936263,
+    "path": "results/raw/experiment_7549_v660_count_learning/prediction_update_rows.jsonl",
+    "rows": 3180,
+    "sha256": "sha256:0d6d480dfb8643473baa977cdaca1e4b1249a7bb1697dcad12246df2711f4df1"
+  },
+  "prior_result": {
+    "experiment_id": "exp7509-causal-online",
+    "honest_verdict": "complete_null_causal_online_measurement_valid_benefit_gate_failed"
+  },
+  "process_identity": {
+    "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+    "pid": 1132717
+  },
+  "random_seed": {
+    "bootstrap_replicates": 1000,
+    "bootstrap_seed": 7549011,
+    "order_seeds": [
+      7549001,
+      7549002,
+      7549003,
+      7549004,
+      7549005
+    ]
+  },
+  "release_rows": {
+    "bytes": 150465,
+    "path": "results/raw/experiment_7549_v660_count_learning/release_rows.jsonl",
+    "rows": 100,
+    "sha256": "sha256:d130003cf99862fe1090e55886c03e0e615803b8c946eb81b5f441585fa11d8e"
+  },
+  "replay_summaries": [
+    {
+      "censored_source_count": 15,
+      "changed_label_binding_count": 50,
+      "chronology_violation_count": 0,
+      "disposition": "complete",
+      "duplicate_feedback_rejection_count": 18,
+      "final_state_hash": "sha256:cc16ea501d6b86439ca50b435d91d232091364152e54aeee49de1e770308e3a0",
+      "persistence_timing": {
+        "completed_persists": 18,
+        "duration_s": 0.30182914398028515,
+        "mean_persist_s": 0.016768285776682507
+      },
+      "released_source_count": 144,
+      "restart_mismatch_count": 0,
+      "retention_state_mutation_count": 0,
+      "seed": 7549001,
+      "update_timing": {
+        "completed_updates": 432,
+        "duration_s": 0.003942301991628483,
+        "mean_update_s": 9.125699054695562e-06
+      }
+    },
+    {
+      "censored_source_count": 15,
+      "changed_label_binding_count": 56,
+      "chronology_violation_count": 0,
+      "disposition": "complete",
+      "duplicate_feedback_rejection_count": 18,
+      "final_state_hash": "sha256:39d8a6c0d4cd24d72913d7169f3e2c543bca9b2421ba975b88231a49afebbf7a",
+      "persistence_timing": {
+        "completed_persists": 18,
+        "duration_s": 0.26639537696610205,
+        "mean_persist_s": 0.014799743164783448
+      },
+      "released_source_count": 144,
+      "restart_mismatch_count": 0,
+      "retention_state_mutation_count": 0,
+      "seed": 7549002,
+      "update_timing": {
+        "completed_updates": 432,
+        "duration_s": 0.003970535006374121,
+        "mean_update_s": 9.19105325549565e-06
+      }
+    },
+    {
+      "censored_source_count": 15,
+      "changed_label_binding_count": 60,
+      "chronology_violation_count": 0,
+      "disposition": "complete",
+      "duplicate_feedback_rejection_count": 18,
+      "final_state_hash": "sha256:a33e2070fd51d6d37bcdcf56c4c1b81b23f28579b66a258f83be48a39afc0cd3",
+      "persistence_timing": {
+        "completed_persists": 18,
+        "duration_s": 0.23122834900277667,
+        "mean_persist_s": 0.012846019389043149
+      },
+      "released_source_count": 144,
+      "restart_mismatch_count": 0,
+      "retention_state_mutation_count": 0,
+      "seed": 7549003,
+      "update_timing": {
+        "completed_updates": 432,
+        "duration_s": 0.00402913402649574,
+        "mean_update_s": 9.326699135406804e-06
+      }
+    },
+    {
+      "censored_source_count": 15,
+      "changed_label_binding_count": 66,
+      "chronology_violation_count": 0,
+      "disposition": "complete",
+      "duplicate_feedback_rejection_count": 18,
+      "final_state_hash": "sha256:79a5a4b6199a80d9123153bf1755cf8f91b5074af6ae4859ea43938140d51629",
+      "persistence_timing": {
+        "completed_persists": 18,
+        "duration_s": 0.23188006292912178,
+        "mean_persist_s": 0.012882225718284544
+      },
+      "released_source_count": 144,
+      "restart_mismatch_count": 0,
+      "retention_state_mutation_count": 0,
+      "seed": 7549004,
+      "update_timing": {
+        "completed_updates": 432,
+        "duration_s": 0.004012292047264054,
+        "mean_update_s": 9.287713072370496e-06
+      }
+    },
+    {
+      "censored_source_count": 15,
+      "changed_label_binding_count": 64,
+      "chronology_violation_count": 0,
+      "disposition": "complete",
+      "duplicate_feedback_rejection_count": 18,
+      "final_state_hash": "sha256:d14eca18403d5045db1cbe69d26b2ad088a3f5d34a2c2feddf079265d4510558",
+      "persistence_timing": {
+        "completed_persists": 18,
+        "duration_s": 0.23011770599987358,
+        "mean_persist_s": 0.012784316999992976
+      },
+      "released_source_count": 144,
+      "restart_mismatch_count": 0,
+      "retention_state_mutation_count": 0,
+      "seed": 7549005,
+      "update_timing": {
+        "completed_updates": 432,
+        "duration_s": 0.003963861963711679,
+        "mean_update_s": 9.175606397480738e-06
+      }
+    }
+  ],
+  "repository_health": {
+    "unrelated_debt_required_for_this_result": false,
+    "unscoped_python_suite": {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 2,
+      "interrupted_after_confirmed_failures": true,
+      "observed_before_stop": {
+        "collection_errors": 67,
+        "failed": 26,
+        "passed": 5291,
+        "skipped": 6
+      },
+      "representative_unrelated_debt": [
+        "missing unsloth/Qwen3.6-35B-A3B-GGUF registry entry",
+        "stale ARC submission dataset configuration"
+      ]
+    },
+    "unscoped_suite_required": false
+  },
+  "reproducibility_checksum": "sha256:db1d1cc5c4277725429b0ee9988382ec18064f47d27c51a3a6a671434d7341ca",
+  "restart_parity_score": 1,
+  "retention_rows": {
+    "bytes": 9558289,
+    "path": "results/raw/experiment_7549_v660_count_learning/retention_rows.jsonl",
+    "rows": 11600,
+    "sha256": "sha256:ab6f73bccdb2c85af7d842a1a9457ec8e9ee6f7b7042ab28c756cc46be34ae7e"
+  },
+  "rows": [
+    {
+      "absolute_metrics": {
+        "independent_source_groups": 159,
+        "mean_brier": 0.15724915633734554,
+        "prediction_count": 795
+      },
+      "arm": "frozen",
+      "censored": false,
+      "delta_brier_vs_local": 0.007269976501000086,
+      "disposition": "complete_comparative_arm",
+      "failed": false,
+      "unit_id": "arm-frozen"
+    },
+    {
+      "absolute_metrics": {
+        "independent_source_groups": 159,
+        "mean_brier": 0.14120923420057496,
+        "prediction_count": 795
+      },
+      "arm": "global_count",
+      "censored": false,
+      "delta_brier_vs_local": -0.008769945635770493,
+      "disposition": "complete_comparative_arm",
+      "failed": false,
+      "unit_id": "arm-global_count"
+    },
+    {
+      "absolute_metrics": {
+        "independent_source_groups": 159,
+        "mean_brier": 0.14997917983634546,
+        "prediction_count": 795
+      },
+      "arm": "local_count",
+      "censored": false,
+      "delta_brier_vs_local": 0.0,
+      "disposition": "complete_comparative_arm",
+      "failed": false,
+      "unit_id": "arm-local_count"
+    },
+    {
+      "absolute_metrics": {
+        "independent_source_groups": 159,
+        "mean_brier": 0.18016105511169664,
+        "prediction_count": 795
+      },
+      "arm": "shuffled_local",
+      "censored": false,
+      "delta_brier_vs_local": 0.030181875275351183,
+      "disposition": "complete_comparative_arm",
+      "failed": false,
+      "unit_id": "arm-shuffled_local"
+    }
+  ],
+  "run_date": "20260923",
+  "sample_size_budget": {
+    "feedback_updates": {
+      "attempted": 720,
+      "censored": 75,
+      "completed": 720,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 795,
+      "unstarted": 0
+    },
+    "independent_online_groups": {
+      "attempted": 159,
+      "censored": 0,
+      "completed": 159,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 159,
+      "unstarted": 0
+    },
+    "ordered_event_instances": {
+      "attempted": 795,
+      "censored": 75,
+      "completed": 795,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 795,
+      "unstarted": 0
+    },
+    "retention_groups": {
+      "attempted": 116,
+      "censored": 0,
+      "completed": 116,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 116,
+      "unstarted": 0
+    }
+  },
+  "schema": "carnot.exp7549.v660.count_learning.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+    "CODEX.md": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+    "openspec/capabilities/continuous-learning/spec.md": "sha256:a0e83b611e640894d517d5bd5e61a0813886622bb44d8638ecb9d1ff10a5536a",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:45c8c72038c598a924808cee2a7fc9a4448e2f1936cb9ac02318f58c4276276e",
+    "ops/e2e-test-plan.md": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+    "ops/exclusion_manifest.yaml": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7509_v657_causal_online.py": "sha256:8d9cb767ba8bc5643e6228e9eccd173634984aae0748018e8aed6ec00b5ce784",
+    "python/carnot/experiment_7510_v657_causal_audit.py": "sha256:a5227709fef93fc97197057aade926ff2b9ef9be8056720d1089b7361f1908f5",
+    "python/carnot/experiment_7534_v659_count_memory.py": "sha256:066fb1e29379263a4c0578f7a48bb24e4b2f113de3b2070aa93b580efd2e70d3",
+    "python/carnot/experiment_7547_v660_count_stream.py": "sha256:c4ae55c9ac6855b70d18c232e77c5858dfd3e31c90fdc54b22d3fd6ff1518988",
+    "python/carnot/experiment_7549_v660_count_learning.py": "sha256:858ce0cf4d54d4d6bb693287b595e10ebf465b2e6a493839bd8d03eeec74327d",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7534_v659_count_memory.json": "sha256:d18cbbf6ebdd82f773b62e6d97c2b2c62e3a4e7fb703c76fa4855eb75d067907",
+    "results/experiment_7547_v660_count_stream.json": "sha256:706f6678299789d5d72071cbe253222a0139afbc16c56af8f89e426c8fd34f8a",
+    "results/raw/experiment_7549_v660_count_learning/affected_validation_manifest.json": "sha256:f82a06c0d3dfa460dc52012c61c3d120ce3be81d2eab74a1e1660c2743b0f43d",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7549_v660_count_learning.py": "sha256:e2afda508178b1ef0d2908ca496533a73c9c3b9be8e2a83c0a459a67f1acfb4f",
+    "tests/python/test_experiment_7549_v660_count_learning.py": "sha256:f4bd1a0b1ccf3b428ec2c10f243ff86a4782877c940c98f34013d0e466106b94"
+  },
+  "terminal_status": "complete",
+  "title": "Delayed count learning and retained calibrated decisions",
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7549_v660_count_learning",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7549_v660_count_learning"
+      ],
+      "duration_s": 0.8105935550120194,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7549_v660_count_learning/validation/affected/00_worktree_imports.log",
+      "log_sha256": "sha256:5ab6381f2f8c0c24b606403a1f32f996b87b5bd15f8c8731a74ecd187ef92aef",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7549_v660_count_learning\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7549_v660_count_learning.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7549_v660_count_learning": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7549_v660_count_learning.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7549-validation-d51g6oy_/pytest/focused tests/python/test_experiment_7549_v660_count_learning.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7549-validation-d51g6oy_/pytest/focused",
+        "tests/python/test_experiment_7549_v660_count_learning.py",
+        "-q"
+      ],
+      "duration_s": 5.82207321698661,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7549_v660_count_learning/validation/affected/01_focused_pytest.log",
+      "log_sha256": "sha256:e18558a70cad037b613f1b545fb9ecaad38473f373317e7b55efa567fa5dbe6e",
+      "name": "focused_pytest",
+      "output_tail": ".................                                                        [100%]\n17 passed in 2.42s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7549-validation-d51g6oy_/.coverage.exp7549 '--include=*/experiment_7549_v660_count_learning.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7549-validation-d51g6oy_/pytest/coverage tests/python/test_experiment_7549_v660_count_learning.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7549-validation-d51g6oy_/.coverage.exp7549",
+        "--include=*/experiment_7549_v660_count_learning.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7549-validation-d51g6oy_/pytest/coverage",
+        "tests/python/test_experiment_7549_v660_count_learning.py",
+        "-q"
+      ],
+      "duration_s": 7.940151663002325,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7549_v660_count_learning/validation/affected/02_changed_module_coverage.log",
+      "log_sha256": "sha256:e1b55ec21fa84158dade765956858952295df271033b38500d2012a7a19ac03f",
+      "name": "changed_module_coverage",
+      "output_tail": ".................                                                        [100%]\n17 passed in 3.16s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7549-validation-d51g6oy_/.coverage.exp7549 '--include=*/experiment_7549_v660_count_learning.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7549-validation-d51g6oy_/.coverage.exp7549",
+        "--include=*/experiment_7549_v660_count_learning.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.09706537600141019,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7549_v660_count_learning/validation/affected/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:3e73a5cc750fa962e1effd85537537dc8ae4ea4ee1d0c3cf7d6cd7d8bdc8c6cc",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                   Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------\npython/carnot/experiment_7549_v660_count_learning.py     531      0   100%\n------------------------------------------------------------------------------------\nTOTAL                                                    531      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7549_v660_count_learning.py scripts/experiments/experiment_7549_v660_count_learning.py tests/python/test_experiment_7549_v660_count_learning.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7549_v660_count_learning.py",
+        "scripts/experiments/experiment_7549_v660_count_learning.py",
+        "tests/python/test_experiment_7549_v660_count_learning.py"
+      ],
+      "duration_s": 0.011782838992075995,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7549_v660_count_learning/validation/affected/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7549_v660_count_learning.py scripts/experiments/experiment_7549_v660_count_learning.py tests/python/test_experiment_7549_v660_count_learning.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7549_v660_count_learning.py",
+        "scripts/experiments/experiment_7549_v660_count_learning.py",
+        "tests/python/test_experiment_7549_v660_count_learning.py"
+      ],
+      "duration_s": 0.009893341979477555,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7549_v660_count_learning/validation/affected/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7549_v660_count_learning.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7549_v660_count_learning.py"
+      ],
+      "duration_s": 0.11881830199854448,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7549_v660_count_learning/validation/affected/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7549_v660_count_learning.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7549_v660_count_learning.py"
+      ],
+      "duration_s": 0.019148206018144265,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7549_v660_count_learning/validation/affected/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

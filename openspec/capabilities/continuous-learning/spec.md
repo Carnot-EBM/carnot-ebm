@@ -18872,3 +18872,104 @@ reload on real cached rows.
 - WHEN the terminal artifact is reduced
 - THEN `cached_stream_ready_score` can equal one with `verdict_class=null`
 - AND prior exposure, `positive_claim=false`, and unmeasured benefit stay explicit.
+
+## REQ-CL-7549: V660 Delayed Count Learning Measurement
+
+Exp7549 SHALL measure the qualified Exp7534 count learner on the exact
+authenticated Exp7547 stream. It SHALL read the frozen protocol, event rows,
+retention rows, and final state only from Exp7547 hash-bound sidecars. It SHALL
+not load a model or replace missing empirical inputs with fixtures.
+
+The measurement SHALL replay all 159 online source groups in each of the five
+frozen orders. Each arm SHALL predict before its next due feedback release.
+Each legal release SHALL update the global, local, and shuffled-local arms
+exactly once. The frozen arm SHALL never update. The shuffled control SHALL
+use only labels in the current release block and SHALL change at least 40
+source-to-label bindings in each order. All arms SHALL receive the same full
+feedback budget.
+
+Each prediction row SHALL retain the event and source identities, order seed,
+arm, baseline probability, corrected probability, two normalized energies,
+label availability, update identity, count and state hashes, Brier loss, log
+loss, and typed decision. Decision costs SHALL be `accept=5p`, `reject=1-p`,
+and `escalate=0.2`. Escalation SHALL win an exact tie.
+
+An isolated evaluator SHALL measure all 116 retention groups after 0, 40, 80,
+120, and 159 arrivals. Retention labels SHALL not update learner state. The
+measurement SHALL reject duplicate feedback. It SHALL prove exact persisted
+restart parity at release boundaries. It SHALL time incremental updates and
+state persistence separately.
+
+The uncertainty reducer SHALL use 1,000 source-cluster resamples. Each draw
+SHALL preserve source multiplicity and replay feedback chronology for all arms
+and orders. The primary gate SHALL require at least 128 complete online
+sources and at least 12 sources for each label. Local-count Brier improvement
+SHALL be at most `-0.005` against frozen, global-count, and shuffled-local.
+Each simultaneous Holm-adjusted one-sided upper 95 percent bound SHALL be less
+than zero. Retention Brier and primary-cost upper bounds SHALL not deteriorate
+by more than `0.01`. Chronology violations SHALL be zero and restart parity
+SHALL be exact.
+
+Effect or support failure SHALL produce a completed null. A required
+validation failure SHALL produce a disqualified result. An unchanged missing
+external prerequisite SHALL produce `complete_blocked_*`. The artifact SHALL
+keep `confirmatory_benefit_score=0` because this corpus was inspected before
+registration. Readiness SHALL remain independent of benefit.
+
+The terminal artifact SHALL use `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero typed current invocation counts,
+`inference_substrate_class=no_model_load`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. It SHALL publish
+large raw rows through hash-bound sidecars. Scoped validation SHALL include
+serial focused pytest, 100 percent changed-module coverage, scoped Ruff check
+and format, changed-module mypy, exact-test specification coverage, the
+declared entrypoint, cold replay, independent reduction, adversarial verify,
+and strict row consistency before atomic publication.
+
+### SCENARIO-CL-7549-CHRONOLOGY: Prediction Precedes Exactly-Once Feedback
+
+- GIVEN one frozen Exp7547 order and its delayed releases
+- WHEN all four arms replay the order
+- THEN each prediction precedes its due release and state update
+- AND duplicate or early feedback cannot change a count twice.
+
+### SCENARIO-CL-7549-CONTROLS: Matched Arms Use The Same Feedback Budget
+
+- GIVEN frozen, global-count, local-count, and shuffled-local arms
+- WHEN a release block becomes available
+- THEN each mutable arm consumes the same released label multiset once
+- AND each order changes at least 40 shuffled source-to-label bindings.
+
+### SCENARIO-CL-7549-RETENTION: Evaluation Labels Stay Isolated
+
+- GIVEN 116 retention groups and five registered arrival checkpoints
+- WHEN the evaluator computes loss, cost, and action coverage
+- THEN it returns no retention label to any learner
+- AND retention rows preserve the pre-evaluation state hash.
+
+### SCENARIO-CL-7549-RESTART: Durable Counts Resume Exactly
+
+- GIVEN a persisted state at each release boundary
+- WHEN a fresh learner resumes the remaining order
+- THEN later predictions and final state hashes equal uninterrupted replay
+- AND a duplicate release is rejected without a state change.
+
+### SCENARIO-CL-7549-UNCERTAINTY: Source Resampling Replays Chronology
+
+- GIVEN 159 independent source groups and five schedule replicates
+- WHEN 1,000 frozen bootstrap draws are reduced
+- THEN source multiplicity is preserved through complete chronological replay
+- AND Holm-adjusted upper bounds cover the three registered control contrasts.
+
+### SCENARIO-CL-7549-ARTIFACT: Valid Nulls Remain Complete
+
+- GIVEN complete rows, custody, lifecycle, and required validation
+- WHEN support or benefit misses its registered threshold
+- THEN `count_measurement_complete_score` remains one and the verdict is null
+- AND `exploratory_effect_score` and `confirmatory_benefit_score` stay distinct.
+
+## Implementation Status (REQ-CL-7549)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7549 and SCENARIO-CL-7549-* | Implemented: delayed count replay, isolated retention evaluation, source-cluster uncertainty, durable restart checks, terminal artifact producer, and thin entrypoint. | `tests/python/test_experiment_7549_v660_count_learning.py` covers lifecycle, controls, retention isolation, restart mutations, uncertainty, fail-closed artifacts, commands, and fresh readers with 100 percent changed-module coverage. The declared entrypoint performs the real capability E2E and terminal checks. |
