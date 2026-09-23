@@ -20352,3 +20352,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-23: Capture complete fitting and policy source interventions (⚠️ Research Finding) — honest_verdict=complete_null_fit_capture_ready_benefit_unmeasured; results/experiment_7564_v661_fit_capture.json
 - 2026-09-23: Capture sealed test and fresh online source interventions (⚠️ Research Finding) — honest_verdict=complete_null_test_online_capture_ready_benefit_unmeasured; results/experiment_7565_v661_test_online_capture.json
 - 2026-09-23: Fit contrastive source energies and freeze matched decision controls (⚠️ Research Finding) — honest_verdict=complete_null_energy_fit_ready_benefit_unmeasured; results/experiment_7566_v661_energy_fit.json
+- 2026-09-23: Measure held-out source decisions with frozen calibration and controls (⚠️ Research Finding) — honest_verdict=complete_null_source_evaluation_no_supported_benefit; results/experiment_7567_v661_source_evaluation.json
