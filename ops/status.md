@@ -2,6 +2,18 @@
 
 **Last Updated:** 2026-09-23
 
+## 2026-09-23 — B2 positive control: only 3 of 12 windows can be passed by a correct engine
+A 25-agent positive control checked, per window, whether an engine that sees only the grid can
+pass the live 1.0 held-out gate. Result:
+- Headroom on su15, sp80, ft09 only. There, 0 of 9 first shots passed (best 7/8).
+- 5 windows are capped by a HUD step counter and 3 by hidden undo state. vc33 is degenerate.
+- Under masked change fidelity, first shots average 0.13 against an expert ceiling of 1.0.
+- Gate issues: the HUD mask is off by default (a prior live A/B was null); raised rows are
+  dropped from graded metrics (unsafe only under a non-default trust metric); the gate does not
+  enforce engine purity; level-up re-induction on 1 row has no held-out test.
+Detail and the pre-registered think-ON pilot design:
+`docs/research-notes/b2-positive-control-2026-09-23.md`. Nothing is fixed or started yet.
+
 ## 2026-09-23 — Correction: B2 failures were produced by the harness; the earlier entry below is wrong in five places
 A read-only triage of all 42 Experiment 10009 attempts (14 agents, each finding re-derived by an
 independent verifier; outer loop checked the five largest claims in source) found:

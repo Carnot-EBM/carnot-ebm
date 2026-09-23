@@ -27566,3 +27566,34 @@ per-round rows that the agent computes. Earlier records that share (a) or (b) (7
 think-ON induction needs about 1,600-1,730 s against a 240 s cap. The research note has a
 measurable design (offline replay of the 12 staged windows with the live budget) and ranked fixes.
 None is started; each waits for operator direction.
+
+**POSITIVE CONTROL, 2026-09-23 (append-only; supersedes the "There is no positive control" line
+above).** A 25-agent control (workflow `wf_1b23ef1e-379`; detail in
+`docs/research-notes/b2-positive-control-2026-09-23.md`, evidence in
+`results/raw/b2_positive_control_2026_09_23/`) asked, per window, whether an engine that sees only
+`(grid, action, data)` can pass the live 1.0 held-out gate. An expert engine was written from the
+public game source and checked on fresh simulator transitions. An independent verifier audited
+each one.
+
+- **Headroom on 3 of 12 windows only: su15, sp80, ft09.** There, 0 of 9 first shots passed; the
+  best was su15 seed 7491001 at 7/8. The "What survives" claim above is narrowed to these 3.
+- **8 windows are capped below 1.0 for a correct engine:** 5 by a HUD step bar that shows a hidden
+  action count (g50t, m0r0, dc22, wa30, ka59), and 3 by hidden undo or history state (sb26, ar25,
+  bp35). vc33 is degenerate: its 1-row window uses the prompt row as the held-out row.
+- **Graded result:** under masked change fidelity on 10 windows, first shots average 0.13
+  (identity 0.0, expert 1.0).
+
+**Open gate issues, each waiting for an operator decision:**
+1. The HUD mask is off by default, so a correct engine cannot pass on HUD-counter games. A prior
+   live A/B (experiment 6015) was null, and this control says why: the mask is necessary, but the
+   induced engines are far from correct. Do not flip the mask alone.
+2. Raised rows are dropped from every graded metric (logged in `ops/verifier_gaps.md`, priority now
+   high). With `CARNOT_ARC_TRUST_METRIC=cell_recall`, the live selector accepts an engine that
+   raises on 7 of 8 held-out rows. The default `exact` metric is safe.
+3. The gate does not enforce engine purity (new gap GAP-WM-GATE-PURITY).
+4. Level-up re-induction on 1 transition has no out-of-sample test, and on vc33 its "board at the
+   start of the current level" block shows the wrong board.
+
+**Pilot design pre-registered** in the research note: think-ON, 1 round, live budget, 10 windows
+(drop vc33 and bp35), fixed masks and row exclusions, change fidelity as primary metric with raised
+rows counted as 0, codeonly baseline 0.13. Not started.

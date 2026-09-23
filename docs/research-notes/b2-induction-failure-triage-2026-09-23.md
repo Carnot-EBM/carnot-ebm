@@ -200,3 +200,24 @@ its prompt from all 25 rows, including the 8 held-out rows. Check before acting.
 - `ops/known-issues.md`, B2 entry, correction dated 2026-09-23
 - Workflow journal: session workflow `wf_e034f9f2-340` (outer-loop scratch, not
   committed)
+
+## Update 2026-09-23: positive control done
+
+The positive control is done: `docs/research-notes/b2-positive-control-2026-09-23.md`. It
+resolves these "Not checked" items:
+
+- **Positive control for the 1.0 threshold.** Only su15, sp80, and ft09 have headroom for a
+  grid-only engine. 8 windows are capped below 1.0 by a HUD step counter or by hidden undo state.
+  vc33 is degenerate. So the "0 of 36 would have passed" claim above narrows to 0 of 9 on 3
+  windows.
+- **Plain-fallback held-out leak.** Confirmed as staged but never sent (su15, m0r0, sp80, ar25).
+- **vc33 board label.** Proven: the block shows the last level-0 board, not the level-1 opening.
+
+It adds one item this note missed: with the CEGIS split off, the round-2 refactor prompt sent
+held-out row 19 with its true change (su15 seed 7491001, ft09 seed 7491002). Both responses were
+empty, so no scored engine was affected.
+
+It also corrects the measurable design above. The windows are not all usable: drop vc33 and bp35,
+mask the HUD rows on 5 windows, and exclude one undo row each on sb26 and ar25. Use change
+fidelity, not exact accuracy, as the primary metric. The research note has the full
+pre-registration.

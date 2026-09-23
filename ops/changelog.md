@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-09-23 — B2 positive control (operator request: option 1, "positive control")
+
+- Ran workflow `wf_1b23ef1e-379`: for each of the 12 B2 windows, a control agent wrote a grid-only
+  expert engine from the public game source and ran lookup, contradiction, simulator, and baseline
+  checks; an independent verifier audited each engine for memorization and hidden-state use; a
+  synthesis agent rescored every window. CPU only, no model calls.
+- The outer loop checked the HUD-mask default and the kernel flags in source, and found the prior
+  live mask A/B (experiment 6015, null), which limits the mask finding.
+- Added `docs/research-notes/b2-positive-control-2026-09-23.md` and preserved the evidence in
+  `results/raw/b2_positive_control_2026_09_23/` (excluded from ruff in `pyproject.toml`).
+- Appended `corrigendum_2026_09_23_positive_control` to the Experiment 10009 artifact, a dated
+  paragraph to the B2 entry in `ops/known-issues.md`, an update to the triage note, and three gap
+  records to `ops/verifier_gaps.md` (raise-row defect raised to high, new GAP-WM-GATE-PURITY,
+  quantified GAP-ARCH-GRID-ONLY-STATE).
+- Two control agents wrote gitignored bytecode caches under `environment_files/` while importing
+  game source. Harmless; recorded in the note.
+- No code changed. The pilot is pre-registered, not started.
+
 ## 2026-09-23 — B2 v3 induction failure triage (operator request: option 1 of "what next?")
 
 - Ran workflow `wf_e034f9f2-340`: 6 triage agents replayed all 42 Experiment 10009 attempts

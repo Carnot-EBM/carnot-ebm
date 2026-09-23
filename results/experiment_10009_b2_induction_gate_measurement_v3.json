@@ -7060,5 +7060,36 @@
       "Attempt rarity is a harness artifact: about 39.5 s of model-identity hashing per generate() (5 SHA-256 passes over the 17.1 GB GGUF) plus overrun episodes left 105 of 144 scheduled episodes unstarted."
     ],
     "not_rechecked": "Earlier records sharing the level reader or the timeout class (7431, 7457, 7471, 7491, 7531, 10008) were not re-audited."
+  },
+  "corrigendum_2026_09_23_positive_control": {
+    "principle": "Append-only correction. It supplies the positive control the earlier corrigendum said was missing. No earlier field is changed.",
+    "source": "docs/research-notes/b2-positive-control-2026-09-23.md (workflow wf_1b23ef1e-379: 12 control agents, 12 independent verifiers, 1 synthesis; evidence in results/raw/b2_positive_control_2026_09_23/)",
+    "supersedes_statement": "corrigendum_2026_09_23_failure_triage.false_negative_reason says there is no positive control for the 1.0 held-out threshold. That is now resolved per window.",
+    "original_positive_control_fields_note": "positive_control_headroom_exists=false and positive_control.headroom_exists=false in the original artifact came from a saturated progress proxy. The offline positive control below shows headroom on 3 windows and none on 8.",
+    "per_window_headroom": {
+      "su15": "headroom: source-derived grid-only engine scores 1.0 on the live gate",
+      "sp80": "headroom: 1.0",
+      "ft09": "headroom: 1.0 (a visible-rows-only engine also scores 8/8)",
+      "vc33": "degenerate: 1-row window, held-out row is the prompt row",
+      "sb26": "capped at 7/8 by an undo row with hidden history",
+      "ar25": "capped at 7/8 by an undo row with hidden history",
+      "g50t": "capped at 0.5 by a HUD step counter (1.0 with row 63 masked)",
+      "m0r0": "capped at 0.5 by a HUD step counter (1.0 with rows 0 and 63 masked)",
+      "dc22": "capped at 0.5 by a HUD step counter (1.0 with row 63 masked)",
+      "wa30": "capped at 0.625 by a HUD step counter (1.0 with row 63 masked)",
+      "ka59": "capped at 0.625 by a HUD step counter (1.0 with row 63 masked)",
+      "bp35": "capped at 0.625 by hidden undo and crusher state"
+    },
+    "narrowed_merit_claim": "On the 3 windows with clean headroom (su15, sp80, ft09), 0 of 9 first-shot codeonly responses passed; 7 of 9 reached the live gate and were rejected; best su15 seed 7491001 at 7/8. On the other windows the gate result does not show model failure. Under masked change fidelity on 10 windows the first shots average 0.13 (identity 0.0, expert 1.0). The sample is 12 windows with 3 draws of one identical prompt each, not 36 independent trials.",
+    "false_negative_risk": "Resolved for su15, sp80, ft09. Still present for the 8 capped windows and vc33 under the unmasked exact gate.",
+    "gate_defects": [
+      "HUD step counters make the unmasked gate unpassable for a correct engine on g50t, m0r0, dc22, wa30, ka59; the HUD mask is off by default (a prior live mask A/B, experiment 6015, was null).",
+      "Rows where the engine raises are dropped from cell_recall, change_fidelity, change_accuracy and noop_hallucination_rate; with CARNOT_ARC_TRUST_METRIC=cell_recall the live selector accepts an engine that raises on 7 of 8 held-out rows. The default exact metric is safe.",
+      "The gate does not enforce engine purity; stateful engines pass at 1.0 on sb26, m0r0, ka59, bp35, ar25.",
+      "Level-up re-induction on 1 transition uses the same row as visible and held-out (_split_prefix_heldout returns (rows, rows) when n < 2).",
+      "On vc33 the prompt block 'BOARD AT THE START OF THE CURRENT LEVEL' is the last level-0 board, not the level-1 opening.",
+      "With the CEGIS split off, the round-2 refactor prompt listed held-out row 19 with its true change (su15 seed 7491001, ft09 seed 7491002); both responses were empty.",
+      "The run did not record CARNOT_ARC_TRUST_METRIC, CARNOT_ARC_WM_HUD_MASK or CARNOT_ARC_CEGIS_ACCEPT_SPLIT."
+    ]
   }
 }

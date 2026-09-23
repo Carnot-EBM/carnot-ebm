@@ -4914,3 +4914,59 @@ worthless corpus — which is exactly the case layer 1 catches before induction 
   Exp7406 panel mechanism.
 - **outer-loop gap:** commit-time enforcement of the 20 MiB result limit remains
   deferred. The conductor does not yet supply that guard.
+
+---
+
+## 2026-09-23 B2 positive control: three gate gaps (one update, one new, one quantified)
+
+Source: `docs/research-notes/b2-positive-control-2026-09-23.md` (workflow `wf_1b23ef1e-379`,
+12 windows, each control re-derived by an independent verifier). Evidence is in
+`results/raw/b2_positive_control_2026_09_23/`. Logged per CLAUDE.md "Missing-Verifier Gap Logging".
+
+### UPDATE to "`change_accuracy`'s denominator is ENGINE-DEPENDENT" (filed 2026-08-03, above)
+
+- status: open. Priority raised to **high**.
+- evidence: the defect is wider than `change_accuracy`. `WorldModelVerifier.score` skips a raised
+  row before it counts changed or no-op rows, so `cell_recall`, `change_fidelity`,
+  `change_accuracy`, and `noop_hallucination_rate` all ignore it. Reproduced on su15: the expert
+  engine wrapped to raise on 7 of 8 held-out rows gets `cell_recall` 1.0 and passes the change
+  gate. With `CARNOT_ARC_TRUST_METRIC=cell_recall` the live selector accepts it at held-out 1.0
+  (`results/raw/b2_positive_control_2026_09_23/synth/raise_inflation.json`,
+  `raise_trustmetric.json`).
+- why high now: the entry above said it becomes high "the moment a non-zero change_accuracy is
+  claimed". The pending think-ON pilot pre-registers change fidelity as its primary metric, and
+  the codeonly baseline is already non-zero (mean 0.13).
+- the shipped path today: the default trust metric is `exact`, and the Kaggle kernel does not set
+  `CARNOT_ARC_TRUST_METRIC`. So the live gate is safe; the defect fails open on the other metrics.
+- candidate design: count a raised row as a miss in every graded metric (fidelity 0, recall 0, a
+  raised no-op row counted as hallucinated), and report `n_raised` beside each denominator.
+
+### GAP-WM-GATE-PURITY: the gate does not enforce the engine purity it asks for
+
+- status: open
+- evidence: the gate scores rows in trajectory order in one process
+  (`select_trusted_world_model` scores the prefix, then the held-out rows). Verifier agents built
+  stateful engines that pass at 1.0 on sb26, m0r0, ka59, bp35, and ar25, including on rows that
+  no pure engine can get right. The prompt says "Make engine() pure and deterministic".
+- failure mode: a stateful engine can use call order as hidden memory and pass the gate.
+  `plan_in_model` does not replay the trajectory, so that pass does not carry over to planning.
+  The gate then trusts an engine that is wrong inside the planner.
+- missing discriminator: order invariance. A pure engine gives the same output for a row whatever
+  was called before it.
+- candidate design: score each held-out row twice, in trajectory order and in a shuffled order
+  (or with a fresh module load per row), and reject any engine whose outputs differ.
+- priority: medium (no induced engine is known to exploit this today; it is a precondition for
+  trusting the first engine that passes).
+
+### Quantified instance of GAP-ARCH-GRID-ONLY-STATE (filed earlier, above)
+
+- evidence: on 8 of the 12 B2 panel windows, a source-derived engine that is correct on every
+  reachable state cannot reach unmasked exact 1.0 on the held-out rows. 5 windows (g50t, m0r0,
+  dc22, wa30, ka59) are capped at 0.5-0.625 by a HUD step bar that shows a hidden action count.
+  3 windows (sb26, ar25, bp35) are capped at 0.625-0.875 by undo or history state. With a row-63
+  mask (rows 0 and 63 on m0r0) the 5 HUD windows reach 1.0 and the swallow check returns `ok`.
+- context: the mask is off by default (`SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED = False`), and the
+  live mask A/B (`results/experiment_6015_wm_hud_mask_change_gate_four_arm_live.json`) was null.
+  This control is consistent with that null: the mask is necessary for a correct engine on these
+  games, but the induced engines are far from correct (mean masked change fidelity 0.13).
+- open question: how many of the other public games carry a hidden-count HUD bar.
