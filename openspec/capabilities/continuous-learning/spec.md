@@ -18973,3 +18973,125 @@ and strict row consistency before atomic publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7549 and SCENARIO-CL-7549-* | Implemented: delayed count replay, isolated retention evaluation, source-cluster uncertainty, durable restart checks, terminal artifact producer, and thin entrypoint. | `tests/python/test_experiment_7549_v660_count_learning.py` covers lifecycle, controls, retention isolation, restart mutations, uncertainty, fail-closed artifacts, commands, and fresh readers with 100 percent changed-module coverage. The declared entrypoint performs the real capability E2E and terminal checks. |
+
+## REQ-CL-7561: V661 Constrained Recalibration Prototype
+
+Exp7561 SHALL qualify a nine-knot piecewise-linear probability map with
+constructed fixtures only. Knot locations SHALL be `u_j=j/8`. The initial
+values SHALL equal the knot locations. After a legal feedback release, the
+learner SHALL minimize cumulative squared error plus
+`8 * ||theta - u||^2`. It SHALL store only the nine-by-nine design Gram
+matrix, the nine-value target vector, and lifecycle metadata. It SHALL not
+retain raw training examples in its numerical state.
+
+The fitted values SHALL satisfy `0 <= theta_0 <= ... <= theta_8 <= 1` and
+`|theta_j-u_j| <= 0.10`. The primary solver, tolerance `1e-8`, and
+deterministic iteration limit SHALL be frozen before labels open. An
+independent constrained solver and dense scalar cases SHALL verify the
+solution. A convergence, objective, constraint, or solver-parity failure
+SHALL close `recalibration_ready_score`.
+
+The map SHALL emit `E0=-log(1-q)` and `E1=-log(q)`. It SHALL clip `q` at
+`1e-6` only for log evaluation. Exact normalization SHALL recover that
+log-safe probability. The deterministic movement bound SHALL be `0.10`.
+It SHALL not be reported as empirical retention or efficacy evidence.
+
+The fixture protocol SHALL contain calibration-shift, no-shift, and
+recurrence cases. It SHALL qualify nontrivial parameter changes,
+monotonicity, the movement bound, energy normalization, duplicate feedback
+rejection, future-label rejection, and exact crash/restart replay. A fixture
+ablation SHALL compare the constrained map with an unconstrained map. The
+ablation SHALL not become an empirical control or benefit claim.
+
+The frozen future empirical protocol SHALL name 160 existing tool-online
+groups and 80 evaluator-only retention groups. It SHALL use label-blind order
+seeds 7568001 through 7568005, feedback delay eight, release blocks of eight,
+full audit, and checkpoints 0, 40, 80, 120, and 160. Controls SHALL be the raw
+original-source probability, global count correction, shipped eight-bin
+local count correction, and an identical constrained learner whose labels
+are shuffled only within the current released block. Count prior mass SHALL
+equal eight. Count means SHALL use fit-role probabilities without labels.
+
+The typed policy SHALL minimize `accept=5q`, `reject=1-q`, and
+`escalate=0.2`. Escalation SHALL win all exact ties. Retention labels SHALL
+never update learner state. Future empirical capture SHALL use untouched
+tool-online groups. This analytical prototype SHALL not read unavailable
+future labels or fabricate substitute empirical rows.
+
+The benchmark SHALL execute 1,000 complete 160-event resamples for each of
+the five frozen orders with fixture probabilities. It SHALL retain the full
+registered count after outcomes are visible. `learning_compute_feasible_score`
+SHALL be one only when the measured projection fits 2,400 seconds with a
+validation reserve. The protocol and sufficient-statistic schema SHALL be
+written below `results/raw/experiment_7561_v661_recalibration_prototype/`.
+
+Preconditions SHALL be checked before measurement. Missing required external
+evidence SHALL produce `complete_blocked_*`, `verdict_class=blocked`, and a
+`gate_check_summary` that names upstream, path or field, expected value, and
+observed value. The task SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+zero typed current invocation counts, `model_invoked=false`,
+`inference_substrate_class=no_model_load`, and legal host execution.
+
+The artifact SHALL keep readiness, compute feasibility, and benefit separate.
+Both named scores SHALL be bare numeric zero or one. Constructed oracle gains
+SHALL use `verdict_class=circular_positive`, `verifier_is_oracle=true`, and
+`positive_claim=false`. Valid fixture evidence SHALL not claim empirical
+calibration or retained predictive quality.
+
+The affected validation SHALL freeze an Exp7358 `AffectedManifest`. It SHALL
+use the Exp7303 runner for serial focused pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+and exact-test specification coverage. The declared entrypoint SHALL exercise
+predict, release, update, persist, and reload. Fresh-process cold replay,
+independent reduction, adversarial verification, and strict row consistency
+SHALL inspect the terminal candidate before atomic publication. This change
+does not alter ARC telemetry, policy transport, samplers, or bindings. No
+numbered runtime E2E from `ops/e2e-test-plan.md` applies.
+
+### SCENARIO-CL-7561-NUMERICAL: Two Solvers Qualify The Frozen Map
+
+- GIVEN dense scalar cases and released sufficient statistics
+- WHEN the primary and independent constrained solvers fit the nine knots
+- THEN both converge within the frozen tolerance and objective threshold
+- AND every knot satisfies order, range, and movement constraints.
+
+### SCENARIO-CL-7561-LIFECYCLE: Feedback Is Delayed And Exactly Once
+
+- GIVEN predictions sealed for one eight-event release block
+- WHEN that block becomes legally available
+- THEN matched learners update from that block only
+- AND duplicate or future feedback cannot alter state.
+
+### SCENARIO-CL-7561-RESTART: Sufficient Statistics Resume Exactly
+
+- GIVEN a persisted state after one legal release
+- WHEN a fresh process reloads and completes the same fixture
+- THEN later predictions, knots, receipts, and final state hashes match
+- AND no raw training example appears in the numerical state.
+
+### SCENARIO-CL-7561-FIXTURES: Analytical Gains Stay Circular
+
+- GIVEN calibration-shift, no-shift, and recurrence fixtures
+- WHEN constrained and unconstrained maps are compared
+- THEN real movement, monotonicity, normalization, and the bound are measured
+- AND fixture improvements do not become empirical efficacy claims.
+
+### SCENARIO-CL-7561-BENCHMARK: The Registered Replay Count Is Not Cut
+
+- GIVEN 1,000 resamples and five label-blind orders
+- WHEN the vectorized fixture benchmark completes
+- THEN all 5,000 order replays and 800,000 events are retained
+- AND compute feasibility uses the measured projection with validation reserve.
+
+### SCENARIO-CL-7561-ARTIFACT: Validity And Readiness Stay Separate
+
+- GIVEN complete fixture, benchmark, custody, and validation evidence
+- WHEN fresh readers reduce the exact candidate
+- THEN readiness scores remain numeric and independently reproducible
+- AND the verdict is circular positive without a positive empirical claim.
+
+## Implementation Status (REQ-CL-7561)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7561 and SCENARIO-CL-7561-* | Implemented: constrained sufficient-statistic map, delayed fixture lifecycle, frozen future protocol, complete replay benchmark, terminal artifact producer, and thin entrypoint. | `tests/python/test_experiment_7561_v661_recalibration_prototype.py` covers numerical parity, lifecycle, restart, benchmark accounting, fail-closed artifacts, and fresh readers with 100 percent changed-module coverage. The declared entrypoint runs the capability E2E and terminal readers. |

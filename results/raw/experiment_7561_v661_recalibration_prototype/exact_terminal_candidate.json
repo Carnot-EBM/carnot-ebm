@@ -1,0 +1,1143 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "preconditions",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Missing required evidence cannot become a measurement."
+    },
+    {
+      "category": "readiness",
+      "check": "numerical_qualification",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "A nonconverged map is not ready for empirical use."
+    },
+    {
+      "category": "readiness",
+      "check": "fixture_lifecycle",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Chronology and restart must pass before efficacy is measured."
+    },
+    {
+      "category": "readiness",
+      "check": "registered_replay_count",
+      "expected": 5000,
+      "observed": 5000,
+      "op": "eq",
+      "passed": true,
+      "principle": "The benchmark count cannot shrink after outcomes are visible."
+    },
+    {
+      "category": "readiness",
+      "check": "registered_event_count",
+      "expected": 800000,
+      "observed": 800000,
+      "op": "eq",
+      "passed": true,
+      "principle": "Every replay must retain all 160 events."
+    },
+    {
+      "category": "readiness",
+      "check": "compute_budget_with_reserve",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Feasibility needs time for both learning and validation."
+    },
+    {
+      "category": "validity",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Invalid scoped checks cannot support scientific readiness."
+    },
+    {
+      "category": "validity",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Fresh readers must agree before atomic publication."
+    },
+    {
+      "category": "benefit",
+      "check": "empirical_benefit",
+      "expected": "not_measured",
+      "observed": "analytical_fixtures_only",
+      "op": "eq",
+      "passed": false,
+      "principle": "Oracle-defined fixture gains cannot establish empirical value."
+    }
+  ],
+  "benchmark_receipt": {
+    "benchmark_scope": "constrained_predict_release_update_fixture_replay",
+    "bootstrap_replicates_completed": 1000,
+    "bootstrap_replicates_planned": 1000,
+    "censored": 0,
+    "compute_budget_s": 2400.0,
+    "events_completed": 800000,
+    "failed": 0,
+    "fits_2400_seconds_with_reserve": true,
+    "mean_prequential_brier": 0.5343062396146203,
+    "measured_duration_s": 53.456680622010026,
+    "order_replays_completed": 5000,
+    "projected_duration_s": 53.456680622010026,
+    "unstarted": 0,
+    "validation_reserve_s": 300.0
+  },
+  "compute_details": {
+    "device_type": "CPU",
+    "logical_cpu_count": 24,
+    "machine": "x86_64",
+    "processor": ""
+  },
+  "confirmatory_benefit_score": 0,
+  "continuous_self_learning_task": true,
+  "duration_s": 78.13985372698517,
+  "empirical_benefit_measured": false,
+  "execution_venue": "host",
+  "experiment_id": "exp7561-v661-recalibration-prototype",
+  "field_principles": {
+    "MODEL_SPECS": "Make no-model work explicit.",
+    "acceptance_gate_results": "Separate validity, readiness, and benefit.",
+    "benchmark_receipt": "Bind benchmark_receipt so independent replay detects drift.",
+    "compute_details": "Bind compute_details so independent replay detects drift.",
+    "confirmatory_benefit_score": "Bind confirmatory_benefit_score so independent replay detects drift.",
+    "continuous_self_learning_task": "Bind continuous_self_learning_task so independent replay detects drift.",
+    "duration_s": "Keep current monotonic work separate from historical time.",
+    "empirical_benefit_measured": "Bind empirical_benefit_measured so independent replay detects drift.",
+    "execution_venue": "Bind execution_venue so independent replay detects drift.",
+    "experiment_id": "Bind the exact task, milestone, and run date.",
+    "field_principles": "Bind field_principles so independent replay detects drift.",
+    "fixture_summary": "Bind fixture_summary so independent replay detects drift.",
+    "flagged_adversarial": "Bind flagged_adversarial so independent replay detects drift.",
+    "frozen_learning_protocol": "Bind frozen_learning_protocol so independent replay detects drift.",
+    "gate_check_summary": "Bind gate_check_summary so independent replay detects drift.",
+    "historical_model_calls": "Bind historical_model_calls so independent replay detects drift.",
+    "honest_verdict": "Use a closed terminal disposition.",
+    "inference_substrate": "Name artifact aggregation as the source of the result.",
+    "inference_substrate_class": "Prevent understated model work.",
+    "inference_substrate_details": "Bind inference_substrate_details so independent replay detects drift.",
+    "input_roles": "Bind input_roles so independent replay detects drift.",
+    "invocation_counts": "Bind invocation_counts so independent replay detects drift.",
+    "learning_compute_feasible_score": "Require the complete registered replay to fit its budget.",
+    "maximum_prediction_movement": "Keep a mathematical bound distinct from retention evidence.",
+    "milestone": "Bind milestone so independent replay detects drift.",
+    "model_invoked": "Separate current calls from historical evidence.",
+    "model_specs": "Keep resolved model identity empty when no model runs.",
+    "numerical_qualification": "Bind numerical_qualification so independent replay detects drift.",
+    "phase_spans": "Bind phase_spans so independent replay detects drift.",
+    "planned_inference_substrate_class": "Bind planned_inference_substrate_class so independent replay detects drift.",
+    "positive_claim": "Bind positive_claim so independent replay detects drift.",
+    "preconditions_checked": "Prevent missing inputs from becoming fallback data.",
+    "process_identity": "Bind process_identity so independent replay detects drift.",
+    "random_seed": "Bind random_seed so independent replay detects drift.",
+    "raw_sidecars": "Bind raw_sidecars so independent replay detects drift.",
+    "recalibration_ready_score": "Require numerical, chronology, and restart qualification.",
+    "repository_health": "Bind repository_health so independent replay detects drift.",
+    "reproducibility_checksum": "Bind reproducibility_checksum so independent replay detects drift.",
+    "rows": "Retain every compared fixture with an absolute metric.",
+    "run_date": "Bind run_date so independent replay detects drift.",
+    "sample_size_budget": "Keep attempted, failed, censored, and unstarted units visible.",
+    "schema": "Bind schema so independent replay detects drift.",
+    "source_artifact_hashes": "Bind source_artifact_hashes so independent replay detects drift.",
+    "state_bytes": "Show the small-state hardware path without claiming board speed.",
+    "terminal_status": "Bind terminal_status so independent replay detects drift.",
+    "title": "Bind title so independent replay detects drift.",
+    "validation_receipts": "Bind validation_receipts so independent replay detects drift.",
+    "verdict_class": "Bind verdict_class so independent replay detects drift.",
+    "verifier_is_oracle": "Prevent constructed truth from certifying source truth."
+  },
+  "fixture_summary": {
+    "duplicate_feedback_rejection_count": 3,
+    "fixture_gates_passed": true,
+    "future_label_rejection_count": 3,
+    "monotonicity_violation_count": 0,
+    "movement_violation_count": 0,
+    "normalization_failure_count": 0,
+    "parameter_change_count": 3,
+    "restart_mismatch_count": 0,
+    "verifier_is_oracle": true
+  },
+  "flagged_adversarial": false,
+  "frozen_learning_protocol": {
+    "empirical_capture_started": false,
+    "protocol_hash": "sha256:d9b2c52b77eb767ded652cdd5ad391525bf979deb2f8ab092d2ba45b61bf487e"
+  },
+  "gate_check_summary": {
+    "failed_checks": [
+      "empirical_benefit"
+    ],
+    "first_failure": {
+      "category": "benefit",
+      "check": "empirical_benefit",
+      "expected": "not_measured",
+      "observed": "analytical_fixtures_only",
+      "op": "eq",
+      "passed": false,
+      "principle": "Oracle-defined fixture gains cannot establish empirical value."
+    },
+    "passed": false
+  },
+  "historical_model_calls": {
+    "counted_as_current": false,
+    "source": "results/experiment_7550_v660_count_audit.json"
+  },
+  "honest_verdict": "complete_circular_positive_fixture_qualification",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "generated_tokens": 0,
+    "model_loads": 0,
+    "work": "analytical_fixture_qualification_and_cpu_replay"
+  },
+  "input_roles": {
+    "future_empirical": "untouched_tool_online_groups_not_opened",
+    "historical_context": "results/experiment_7550_v660_count_audit.json",
+    "measurement": "analytical_fixtures"
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "learning_compute_feasible_score": 1,
+  "maximum_prediction_movement": {
+    "bound": 0.1,
+    "mathematical_only_not_retention_certificate": true,
+    "maximum_observed": 0.1
+  },
+  "milestone": "2026.09.661",
+  "model_invoked": false,
+  "model_specs": [],
+  "numerical_qualification": {
+    "constraint_failure_count": 0,
+    "convergence_failure_count": 0,
+    "dense_scalar_case_count": 101,
+    "independent_solver": "COBYQA",
+    "maximum_objective_delta": 2.0670309908155104e-09,
+    "passed": true,
+    "primary_solver": "SLSQP",
+    "solver_pair_count": 5,
+    "solver_parity_failure_count": 0,
+    "solver_rows": [
+      {
+        "case": 0,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 31,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": 0.0,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 0.0,
+        "objective_delta": 0.0,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 1,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": 0.0,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      },
+      {
+        "case": 1,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 31,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": -5.999999999999998,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 2.7755575615628914e-17,
+        "objective_delta": 1.7763568394002505e-15,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 2,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": -6.0,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      },
+      {
+        "case": 2,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 31,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": 26.0,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 2.3604542495206614e-14,
+        "objective_delta": 0.0,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 2,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": 26.0,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      },
+      {
+        "case": 3,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 38,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": -32.0,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 0.0,
+        "objective_delta": 0.0,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 1,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": -32.0,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      },
+      {
+        "case": 4,
+        "independent": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 56,
+          "message": "The lower bound for the trust-region radius has been reached",
+          "method": "COBYQA",
+          "objective": -7.304698837510056,
+          "status": 0,
+          "tolerance": 1e-08
+        },
+        "maximum_theta_delta": 1.0967776847947697e-05,
+        "objective_delta": 2.0670309908155104e-09,
+        "primary": {
+          "constraint_errors": [],
+          "converged": true,
+          "iteration_cap": 500,
+          "iterations": 9,
+          "message": "Optimization terminated successfully",
+          "method": "SLSQP",
+          "objective": -7.304698835443025,
+          "status": 0,
+          "tolerance": 1e-08
+        }
+      }
+    ]
+  },
+  "phase_spans": [
+    {
+      "completed_units": 23,
+      "duration_s": 0.0024582559999544173,
+      "end_offset_s": 0.0024753079924266785,
+      "phase": "preconditions",
+      "start_offset_s": 1.705199247226119e-05
+    },
+    {
+      "completed_units": 3,
+      "duration_s": 0.002648393012350425,
+      "end_offset_s": 0.005143207992659882,
+      "phase": "protocol",
+      "start_offset_s": 0.0024948149803094566
+    },
+    {
+      "completed_units": 106,
+      "duration_s": 0.23585164299583994,
+      "end_offset_s": 0.24100693297805265,
+      "phase": "numerical_qualification",
+      "start_offset_s": 0.005155289982212707
+    },
+    {
+      "completed_units": 3,
+      "duration_s": 0.46941542098647915,
+      "end_offset_s": 0.7105134349840228,
+      "phase": "fixture_panel",
+      "start_offset_s": 0.2410980139975436
+    },
+    {
+      "completed_units": 5000,
+      "duration_s": 53.457010491983965,
+      "end_offset_s": 54.16755375298089,
+      "phase": "replay_benchmark",
+      "start_offset_s": 0.7105432609969284
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 21.988207704998786,
+      "end_offset_s": 76.16042666797875,
+      "phase": "affected_validation",
+      "start_offset_s": 54.17221896297997
+    },
+    {
+      "completed_units": 4,
+      "duration_s": 1.9721373000065796,
+      "end_offset_s": 78.13980222999817,
+      "phase": "terminal_validation",
+      "start_offset_s": 76.16766492999159
+    }
+  ],
+  "planned_inference_substrate_class": "no_model_load",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "check": "required_input:AGENTS.md",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "AGENTS.md",
+      "required": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "required_input:CODEX.md",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "CODEX.md",
+      "required": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "required_input:CLAUDE.md",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "CLAUDE.md",
+      "required": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "required_input:research-program.md",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "research-program.md",
+      "required": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "required_input:ops/exclusion_manifest.yaml",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "ops/exclusion_manifest.yaml",
+      "required": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "required_input:ops/e2e-test-plan.md",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "ops/e2e-test-plan.md",
+      "required": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "required_input:scripts/experiment_template.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "scripts/experiment_template.py",
+      "required": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "required_input:python/carnot/reporting/current_work_receipt.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/reporting/current_work_receipt.py",
+      "required": true,
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "required": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "required_input:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "required": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7534_v659_count_memory.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/experiment_7534_v659_count_memory.py",
+      "required": true,
+      "upstream": "python/carnot/experiment_7534_v659_count_memory.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7506_v657_causal_prototype.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/experiment_7506_v657_causal_prototype.py",
+      "required": true,
+      "upstream": "python/carnot/experiment_7506_v657_causal_prototype.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7549_v660_count_learning.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/experiment_7549_v660_count_learning.py",
+      "required": true,
+      "upstream": "python/carnot/experiment_7549_v660_count_learning.py"
+    },
+    {
+      "check": "required_input:results/experiment_7550_v660_count_audit.json",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/experiment_7550_v660_count_audit.json",
+      "required": true,
+      "upstream": "results/experiment_7550_v660_count_audit.json"
+    },
+    {
+      "check": "required_input:openspec/capabilities/continuous-learning/spec.md",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "openspec/capabilities/continuous-learning/spec.md",
+      "required": true,
+      "upstream": "openspec/capabilities/continuous-learning/spec.md"
+    },
+    {
+      "check": "required_input:research-references.md",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "research-references.md",
+      "required": true,
+      "upstream": "research-references.md"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7561_v661_recalibration_prototype.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/experiment_7561_v661_recalibration_prototype.py",
+      "required": true,
+      "upstream": "python/carnot/experiment_7561_v661_recalibration_prototype.py"
+    },
+    {
+      "check": "required_input:scripts/experiments/experiment_7561_v661_recalibration_prototype.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "scripts/experiments/experiment_7561_v661_recalibration_prototype.py",
+      "required": true,
+      "upstream": "scripts/experiments/experiment_7561_v661_recalibration_prototype.py"
+    },
+    {
+      "check": "required_input:tests/python/test_experiment_7561_v661_recalibration_prototype.py",
+      "expected": "present_file",
+      "observed": "present_file",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "tests/python/test_experiment_7561_v661_recalibration_prototype.py",
+      "required": true,
+      "upstream": "tests/python/test_experiment_7561_v661_recalibration_prototype.py"
+    },
+    {
+      "check": "spec_requirement_present",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "REQ-CL-7561 and SCENARIO-CL-7561-*",
+      "required": true,
+      "upstream": "openspec/capabilities/continuous-learning/spec.md"
+    },
+    {
+      "check": "v660_historical_verdict_preserved",
+      "expected": "complete_null_count_claims_qualified_benefit_gate_failed",
+      "observed": "complete_null_count_claims_qualified_benefit_gate_failed",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "honest_verdict",
+      "required": true,
+      "upstream": "results/experiment_7550_v660_count_audit.json"
+    },
+    {
+      "check": "scipy_available",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "minimize",
+      "required": true,
+      "upstream": "scipy.optimize"
+    },
+    {
+      "check": "logical_cpu_available",
+      "expected": ">=1",
+      "observed": 24,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "logical_cpu_count",
+      "required": true,
+      "upstream": "host"
+    }
+  ],
+  "process_identity": {
+    "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+    "pid": 1336411
+  },
+  "random_seed": {
+    "bootstrap_seed": 7561011,
+    "fitting_seed": null,
+    "model_seed": null,
+    "ordering_seeds": [
+      7568001,
+      7568002,
+      7568003,
+      7568004,
+      7568005
+    ]
+  },
+  "raw_sidecars": {
+    "frozen_learning_protocol": {
+      "bytes": 28060,
+      "path": "results/raw/experiment_7561_v661_recalibration_prototype/frozen_learning_protocol.json",
+      "scope": "current_work",
+      "sha256": "sha256:4ae4c3f7d85888f87925d7e8f207a9ed57ae3ac5625761fdd235b7f076e77588"
+    },
+    "numerical_state_schema": {
+      "bytes": 585,
+      "path": "results/raw/experiment_7561_v661_recalibration_prototype/numerical_state_schema.json",
+      "scope": "current_work",
+      "sha256": "sha256:9ff15323eeaac0da861a2c1449c9beb656c682b9e90197958721df576cdbb2fd"
+    }
+  },
+  "recalibration_ready_score": 1,
+  "repository_health": {
+    "unrelated_debt_required_for_this_result": false
+  },
+  "reproducibility_checksum": "sha256:d9d0fe02543e97c9494fc009b621c99ecce1d7b000c351042bfe23df50a438de",
+  "rows": [
+    {
+      "brier_improvement": 0.1094438794380096,
+      "constrained_brier": 0.5253217455619904,
+      "disposition": "complete",
+      "duplicate_feedback_rejections": 1,
+      "event_count": 160,
+      "final_state_hash": "sha256:f3ad3741953d00735423e2be4ed9cf5d076fc21ac3c2a322994d8273960e53a1",
+      "final_theta": [
+        0.1,
+        0.22499999999618728,
+        0.3499999999957567,
+        0.45192307696012884,
+        0.5,
+        0.5480769230398714,
+        0.6500000000041559,
+        0.7750000000036126,
+        1.0
+      ],
+      "fixture": "calibration_shift",
+      "future_label_rejections": 1,
+      "maximum_movement": 0.1,
+      "monotonicity_violations": 0,
+      "movement_violations": 0,
+      "normalization_failures": 0,
+      "parameter_changed": true,
+      "raw_brier": 0.634765625,
+      "restart_mismatches": 0,
+      "state_bytes": 17639,
+      "unconstrained_maximum_movement": 0.8780865477531913,
+      "unconstrained_solver": {
+        "constraint_errors": [
+          "probability_range",
+          "monotonicity",
+          "movement_bound"
+        ],
+        "converged": true,
+        "method": "analytic_unconstrained",
+        "objective": -90.72232178721146
+      }
+    },
+    {
+      "brier_improvement": 0.03999999999418963,
+      "constrained_brier": 0.14750000000581037,
+      "disposition": "complete",
+      "duplicate_feedback_rejections": 1,
+      "event_count": 160,
+      "final_state_hash": "sha256:2fffd06a3f3803118b0e0d59a82e78e824df3e80dc3dbb3219d50bfae8c7a957",
+      "final_theta": [
+        0.0,
+        0.125,
+        0.349999999980632,
+        0.375,
+        0.5,
+        0.625,
+        0.849999999980632,
+        0.875,
+        1.0
+      ],
+      "fixture": "no_shift",
+      "future_label_rejections": 1,
+      "maximum_movement": 0.09999999998063203,
+      "monotonicity_violations": 0,
+      "movement_violations": 0,
+      "normalization_failures": 0,
+      "parameter_changed": true,
+      "raw_brier": 0.1875,
+      "restart_mismatches": 0,
+      "state_bytes": 11791,
+      "unconstrained_maximum_movement": 0.2272727272727273,
+      "unconstrained_solver": {
+        "constraint_errors": [
+          "monotonicity",
+          "movement_bound"
+        ],
+        "converged": true,
+        "method": "analytic_unconstrained",
+        "objective": -99.09090909090911
+      }
+    },
+    {
+      "brier_improvement": 0.014897958437071618,
+      "constrained_brier": 0.09510204156292837,
+      "disposition": "complete",
+      "duplicate_feedback_rejections": 1,
+      "event_count": 160,
+      "final_state_hash": "sha256:93f536df09264a10b2d884a428d5d97b908bea194ab4dc5e2ab2f33d67d1184d",
+      "final_theta": [
+        0.0,
+        0.225,
+        0.27857116726129105,
+        0.375,
+        0.5,
+        0.625,
+        0.85,
+        0.974999999999998,
+        1.0
+      ],
+      "fixture": "recurrence",
+      "future_label_rejections": 1,
+      "maximum_movement": 0.1,
+      "monotonicity_violations": 0,
+      "movement_violations": 0,
+      "normalization_failures": 0,
+      "parameter_changed": true,
+      "raw_brier": 0.10999999999999999,
+      "restart_mismatches": 0,
+      "state_bytes": 13419,
+      "unconstrained_maximum_movement": 0.15384615384615152,
+      "unconstrained_solver": {
+        "constraint_errors": [
+          "probability_range",
+          "monotonicity",
+          "movement_bound"
+        ],
+        "converged": true,
+        "method": "analytic_unconstrained",
+        "objective": -84.66666666666639
+      }
+    }
+  ],
+  "run_date": "20260923",
+  "sample_size_budget": {
+    "analytical_fixture_cases": {
+      "attempted": 3,
+      "censored": 0,
+      "completed": 3,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 3,
+      "unstarted": 0
+    },
+    "benchmark_order_replays": {
+      "attempted": 5000,
+      "censored": 0,
+      "completed": 5000,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 5000,
+      "unstarted": 0
+    },
+    "future_empirical_online_groups": {
+      "attempted": 0,
+      "censored": 0,
+      "completed": 0,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 160,
+      "unstarted": 160
+    },
+    "future_retention_groups": {
+      "attempted": 0,
+      "censored": 0,
+      "completed": 0,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 80,
+      "unstarted": 80
+    }
+  },
+  "schema": "carnot.exp7561.v661.recalibration_prototype.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+    "CODEX.md": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+    "openspec/capabilities/continuous-learning/spec.md": "sha256:2564a772354a20e29ba30aad3ba6f4659ad0ec04184032e53deaab2bcf3f510d",
+    "ops/e2e-test-plan.md": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+    "ops/exclusion_manifest.yaml": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7506_v657_causal_prototype.py": "sha256:a4669fd558ed07137d796c963dfacc79aa31ff2b25035b91e5ea6c92604a1d50",
+    "python/carnot/experiment_7534_v659_count_memory.py": "sha256:066fb1e29379263a4c0578f7a48bb24e4b2f113de3b2070aa93b580efd2e70d3",
+    "python/carnot/experiment_7549_v660_count_learning.py": "sha256:858ce0cf4d54d4d6bb693287b595e10ebf465b2e6a493839bd8d03eeec74327d",
+    "python/carnot/experiment_7561_v661_recalibration_prototype.py": "sha256:2b72556bdb4533f0e692595ec402a549377069d5776084051e83863cfa5b06bf",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:9bf61a580ccc2580daa0c0ddb52356634565939028e2dbfc3b91cc8ea82b83f5",
+    "results/experiment_7550_v660_count_audit.json": "sha256:4341c6a4b5eb9332478333fbd70cac6adcc973ac63d38e1d0b461d82c1fa5980",
+    "results/raw/experiment_7561_v661_recalibration_prototype/affected_validation_manifest.json": "sha256:44712823d7f0b64315d1dd794e7b4f5bd92a7965eb77cc53b753acf4843458e6",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7561_v661_recalibration_prototype.py": "sha256:309494e705372e9c5ee63dafc3eb764975cd78e6b5b338a67aaf3d867b428553",
+    "tests/python/test_experiment_7561_v661_recalibration_prototype.py": "sha256:bf3e124e98c2c1a4157764ba6c94d60b95ff574f891bcd68b1f2762d4749dc4f"
+  },
+  "state_bytes": 17639,
+  "terminal_status": "complete",
+  "title": "Jointly constrained cumulative-Brier recalibration prototype",
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7561_v661_recalibration_prototype",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7561_v661_recalibration_prototype"
+      ],
+      "duration_s": 0.6474084630026482,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/affected/00_worktree_imports.log",
+      "log_sha256": "sha256:d158f38cab6166a69dff738753eeae5e7fcf25a2ce43666d51606a907421eae6",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7561_v661_recalibration_prototype\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7561_v661_recalibration_prototype.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7561_v661_recalibration_prototype": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7561_v661_recalibration_prototype.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7561-validation-7ysyv414/pytest/focused tests/python/test_experiment_7561_v661_recalibration_prototype.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7561-validation-7ysyv414/pytest/focused",
+        "tests/python/test_experiment_7561_v661_recalibration_prototype.py",
+        "-q"
+      ],
+      "duration_s": 7.117611117981141,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/affected/01_focused_pytest.log",
+      "log_sha256": "sha256:a0e7dc9d413913d01c6f35449aa2549cf3cd23b718ea3133fc3a5b2fd30514f9",
+      "name": "focused_pytest",
+      "output_tail": ".......................................                                  [100%]\n39 passed in 4.95s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7561-validation-7ysyv414/.coverage.exp7561 '--include=*/experiment_7561_v661_recalibration_prototype.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7561-validation-7ysyv414/pytest/coverage tests/python/test_experiment_7561_v661_recalibration_prototype.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7561-validation-7ysyv414/.coverage.exp7561",
+        "--include=*/experiment_7561_v661_recalibration_prototype.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7561-validation-7ysyv414/pytest/coverage",
+        "tests/python/test_experiment_7561_v661_recalibration_prototype.py",
+        "-q"
+      ],
+      "duration_s": 13.825958700996125,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/affected/02_changed_module_coverage.log",
+      "log_sha256": "sha256:75785eb506ccecd460f31f06f31515b36eeaa1cffeba58ab8c563a1fae96626d",
+      "name": "changed_module_coverage",
+      "output_tail": ".......................................                                  [100%]\n39 passed in 10.37s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7561-validation-7ysyv414/.coverage.exp7561 '--include=*/experiment_7561_v661_recalibration_prototype.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7561-validation-7ysyv414/.coverage.exp7561",
+        "--include=*/experiment_7561_v661_recalibration_prototype.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.0877007820236031,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/affected/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:aa85b79406b6d8addfdeee2b9ce738968438c7ec4b9e4aceae3d36469d8697ed",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                            Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------------\npython/carnot/experiment_7561_v661_recalibration_prototype.py     722      0   100%\n---------------------------------------------------------------------------------------------\nTOTAL                                                             722      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7561_v661_recalibration_prototype.py scripts/experiments/experiment_7561_v661_recalibration_prototype.py tests/python/test_experiment_7561_v661_recalibration_prototype.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7561_v661_recalibration_prototype.py",
+        "scripts/experiments/experiment_7561_v661_recalibration_prototype.py",
+        "tests/python/test_experiment_7561_v661_recalibration_prototype.py"
+      ],
+      "duration_s": 0.01352674001827836,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/affected/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7561_v661_recalibration_prototype.py scripts/experiments/experiment_7561_v661_recalibration_prototype.py tests/python/test_experiment_7561_v661_recalibration_prototype.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7561_v661_recalibration_prototype.py",
+        "scripts/experiments/experiment_7561_v661_recalibration_prototype.py",
+        "tests/python/test_experiment_7561_v661_recalibration_prototype.py"
+      ],
+      "duration_s": 0.013851851021172479,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/affected/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7561_v661_recalibration_prototype.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7561_v661_recalibration_prototype.py"
+      ],
+      "duration_s": 0.25826893901103176,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/affected/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7561_v661_recalibration_prototype.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7561_v661_recalibration_prototype.py"
+      ],
+      "duration_s": 0.022727486997609958,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/affected/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7561_v661_recalibration_prototype.py --date 20260923 --root /home/ianblenke/github.com/ianblenke/carnot --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7561_v661_recalibration_prototype/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7561_v661_recalibration_prototype.py",
+        "--date",
+        "20260923",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7561_v661_recalibration_prototype/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.6686750139924698,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/terminal/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:7d4fd999d1639ddf77779c10e79c5ed3a1da9f67bfa47048ee86291f9ce692f1",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"affected_validation_passed\": true, \"event\": \"cold_replay_passed\", \"fixture_lifecycle_passed\": true, \"learning_compute_feasible\": true, \"numerical_qualification_passed\": true, \"preconditions_passed\": true, \"raw_custody_passed\": true, \"recalibration_ready\": true, \"row_constraint_failure_count\": 0, \"terminal_validation_passed\": true, \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7561_v661_recalibration_prototype.py --date 20260923 --root /home/ianblenke/github.com/ianblenke/carnot --independent-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7561_v661_recalibration_prototype/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7561_v661_recalibration_prototype.py",
+        "--date",
+        "20260923",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--independent-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7561_v661_recalibration_prototype/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.721660939976573,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/terminal/01_independent_raw_reduction.log",
+      "log_sha256": "sha256:edb57d0fbc486db09447ae07dd89e606c56fc3b53b7b98e731d79cdececd19f3",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"affected_validation_passed\": true, \"event\": \"independent_reduction_passed\", \"fixture_lifecycle_passed\": true, \"learning_compute_feasible\": true, \"numerical_qualification_passed\": true, \"preconditions_passed\": true, \"raw_custody_passed\": true, \"recalibration_ready\": true, \"row_constraint_failure_count\": 0, \"terminal_validation_passed\": true, \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7561_v661_recalibration_prototype/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7561_v661_recalibration_prototype/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.5355267839913722,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/terminal/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7561_v661_recalibration_prototype/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7561_v661_recalibration_prototype/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.04533434798941016,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7561_v661_recalibration_prototype/validation/terminal/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true
+}
