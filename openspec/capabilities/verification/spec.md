@@ -45775,3 +45775,125 @@ publish atomically at `results/experiment_7566_v661_energy_fit.json`.
 **When** the declared entrypoint and fresh-process readers execute
 **Then** scoped validation, cold replay, independent reduction, and challenge controls pass
 **And** adversarial verification and strict row consistency pass before atomic publication.
+
+### REQ-VERIFY-7567: V661 Source Evaluation SHALL Measure Frozen Held-Out Decisions
+
+Exp7567 SHALL authenticate the exact terminal Exp7565 capture and Exp7566 fit
+before measurement. It SHALL require `test_capture_ready_score=1`,
+`energy_fit_ready_score=1`, `baseline_ready_score=1`, accepted terminal verdicts,
+and `flagged_adversarial=false`. It SHALL authenticate the capture role manifest,
+label-free prediction sidecar, sealed test-label sidecar, frozen head manifest,
+and every byte used in the reduction. Missing or changed external evidence SHALL
+publish a schema-complete `complete_blocked_*` artifact. The gate summary SHALL
+name the upstream, path, field, expected value, and observed value.
+
+The evaluator SHALL score all frozen arms on all 80 planned test groups before it
+opens the test-label sidecar. It SHALL persist label-free predictions first. Each
+arm row SHALL retain both mapped option-order probabilities, their pre-registered
+average, source-intervention diagnostics, and the immutable head identity. It
+SHALL not refit a head, change a threshold, select a subgroup, or use missing-source
+confidence as an oracle label.
+
+After prediction freeze, the evaluator SHALL join the sealed injected-error label.
+Each source-group arm row SHALL retain the label, final probability, Brier loss,
+log loss, primary action, realized primary cost, and descriptive cost-grid cells.
+The primary action costs SHALL be `accept=5q`, `reject=1-q`, and
+`escalate=0.2`, with escalation winning exact ties. The evaluator SHALL report
+Brier benefit and typed-decision benefit separately.
+
+The inference unit SHALL be one unique source component. Mapped orders and arms
+SHALL not become independent units. A supported claim SHALL require at least 64
+valid groups and at least 12 examples of each label. Any exclusion SHALL freeze
+before labels open and retain its reason. Production inference SHALL use 2,000
+paired source-component bootstrap resamples with seed `7567001`.
+
+The probability family SHALL compare source-contrast energy against the frozen
+strongest comparator, original-only energy, and unconstrained equal-capacity
+energy. Every contrast SHALL require mean Brier improvement of at least `0.01`,
+a Holm-adjusted one-sided result at family alpha `0.05`, and a simultaneous upper
+95 percent loss difference below zero. Log-loss and primary-cost upper 95 percent
+differences against the strongest comparator SHALL each be at most `0.01`.
+
+A typed-decision benefit SHALL additionally require primary-cost upper 95 percent
+difference below zero and source-contrast non-escalation coverage of at least
+`0.20`. The wider cost grid SHALL remain descriptive. Failed supported benefit
+gates SHALL produce a valid null, not a readiness failure. Prior test-label access
+SHALL prevent a fresh confirmatory claim. The artifact SHALL preserve that exposure
+finding even when descriptive metrics are favorable.
+
+The evaluator SHALL challenge source-independent shortcuts and option-permutation
+sensitivity. It SHALL run a separate analytical positive-control panel that passes
+the same probability and decision machinery without contributing empirical rows.
+A failed positive control SHALL prevent interpretation of an empirical null. The
+evaluator SHALL freeze a static report for independent Exp7569 reconstruction
+before promotion.
+
+Exp7567 SHALL load no model and generate no tokens. It SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `inference_substrate_class=no_model_load`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and zero current loads,
+forwards, and generations. It SHALL state that injected tool-error evaluation does
+not establish general hallucination detection, deterministic correctness, or source
+truth certification.
+
+`static_measurement_complete_score` SHALL be a bare integer one only for a complete
+frozen 80-group evaluation with required validation and positive-control sensitivity.
+`probability_benefit_score` SHALL be a bare integer one only when every registered
+Brier, non-regression, support, and exposure gate passes. `decision_benefit_score`
+SHALL be a bare integer one only when probability benefit and both primary-cost and
+coverage gates pass.
+
+Required validation SHALL include scoped pytest, separate 100 percent changed-module
+coverage, scoped Ruff check and format, changed-module mypy, scoped specification
+coverage, declared-entrypoint replay, independent reduction, adversarial verification,
+and strict verdict-row consistency. No numbered runtime E2E applies to this static
+read-only evaluator. Only the cold-valid terminal candidate SHALL publish atomically
+at `results/experiment_7567_v661_source_evaluation.json`.
+
+#### SCENARIO-VERIFY-7567-PRECONDITIONS: Exact Capture And Head Gates Open Evaluation
+
+**Given** the current Exp7565 and Exp7566 terminal artifacts and their sidecars
+**When** Exp7567 checks all prerequisites before prediction
+**Then** readiness, verdict, adversarial, role, head, and byte identities match
+**And** any absence or drift produces a complete blocked artifact with exact operands.
+
+#### SCENARIO-VERIFY-7567-CUSTODY: Every Prediction Freezes Before Test Labels Open
+
+**Given** 80 authenticated label-free test feature groups and frozen heads
+**When** the evaluator scores both mapped option orders for every arm
+**Then** it persists all label-free predictions before opening the test-label sidecar
+**And** no prediction function accepts labels, thresholds, or evaluation outcomes.
+
+#### SCENARIO-VERIFY-7567-ROWS: Source Groups Retain Absolute Outcomes
+
+**Given** frozen predictions and the sealed injected-error labels
+**When** the evaluator attaches losses and decisions
+**Then** every source-group arm row retains probability, both order predictions, losses, action, cost, and diagnostics
+**And** missing, failed, censored, excluded, and unstarted units remain distinct from zero.
+
+#### SCENARIO-VERIFY-7567-INFERENCE: Paired Source Bootstrap Enforces Registered Benefit
+
+**Given** all complete source-group rows and the frozen bootstrap seed
+**When** the evaluator reduces probability and primary-cost differences
+**Then** 2,000 source-component resamples feed one three-member Holm Brier family
+**And** support, simultaneous bounds, non-regression, coverage, and exposure gates remain explicit.
+
+#### SCENARIO-VERIFY-7567-CONTROLS: Shortcuts And Evaluation Power Stay Visible
+
+**Given** source interventions, both mapped option orders, and an analytical panel
+**When** the evaluator runs its challenge controls
+**Then** source-neutral behavior, option sensitivity, and missing-source confidence remain diagnostics
+**And** the separate positive control must pass before an empirical null is informative.
+
+#### SCENARIO-VERIFY-7567-BLOCKED: External Absence Stops Before Label Access
+
+**Given** a missing upstream gate, role manifest, label sidecar, or frozen head
+**When** no evaluation prediction starts
+**Then** the artifact records `blocked_no_run`, zero current model calls, and 80 unstarted groups
+**And** its verdict is blocked rather than partial.
+
+#### SCENARIO-VERIFY-7567-E2E: One Command Publishes Cold-Valid Static Evidence
+
+**Given** the affected manifest, frozen static report, and exact terminal candidate
+**When** the declared entrypoint and fresh-process readers execute
+**Then** scoped validation, cold replay, independent reduction, and positive controls pass
+**And** adversarial verification and strict row consistency pass before atomic publication.
