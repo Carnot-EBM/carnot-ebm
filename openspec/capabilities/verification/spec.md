@@ -45552,3 +45552,119 @@ isolated feature capture. The task SHALL publish atomically at
 **When** the declared entrypoint and fresh-process readers execute
 **Then** scoped validation, cold replay, independent reduction, and mutation controls pass
 **And** adversarial verification and strict row consistency pass before atomic publication.
+
+### REQ-VERIFY-7565: V661 Test And Online Capture SHALL Preserve Sealed Custody
+
+Exp7565 SHALL authenticate the exact terminal Exp7563 pilot before model work.
+It SHALL require `native_tool_ready_score=1`,
+`eval_capture_feasible_score=1`, `verdict_class` in `null | positive`, and
+`flagged_adversarial=false`. It SHALL authenticate every protocol, runner,
+wrapper, module, and model hash bound by the pilot. Missing or changed external
+evidence SHALL publish a schema-complete `complete_blocked_*` artifact. Its gate
+summary SHALL name the upstream, path, field, expected value, and observed value.
+
+The capture SHALL select the sealed 80 official-test groups and 160 online
+groups. Each group SHALL retain original, absent, and same-role mismatched
+source arms in both semantic option orders. The complete bundle SHALL contain
+240 groups and 1,440 zero-generation forwards. Test and online groups SHALL be
+disjoint from the fitting roles and from each other. The capture runner SHALL
+not read labels, shorten prompts, remove roles, rebuild interventions, or
+change option mappings.
+
+Before CUDA initialization, Exp7565 SHALL resolve the cached
+`unsloth/Qwen3.8-27B-GGUF` Q4_K_M file. It SHALL authenticate the exact model
+hash against Exp7563. It SHALL wait at most 300 seconds for current admission.
+It SHALL acquire one fresh exclusive GPU lease and use native GGUF tokenization
+with owned CUDA offload. Collection SHALL stop at 3,000 seconds and retain a
+900-second validation reserve. The task SHALL not stop a foreign process,
+adopt a server, substitute a model, or use a historical lease as authority.
+
+The runner SHALL checkpoint only complete six-forward groups. Each checkpoint
+SHALL bind the schedule, reset evidence, raw rows, and stable model identity.
+Resume SHALL accept only identical content-hashed state. Every missing, failed,
+cancelled, and unstarted forward SHALL remain visible. External absence before
+a current call starts SHALL be `blocked_no_run`. Retryable owned interruption
+SHALL be `partial`. Invalid evidence or required validation failure SHALL be
+`disqualified`.
+
+Prediction features and evaluator labels SHALL use separate hash-bound
+sidecars. The predictor sidecar SHALL contain no label field. The evaluator
+sidecars SHALL contain only their sealed test or online role. Labels SHALL open
+only after prediction bytes freeze. Online rows SHALL retain their sealed
+arrival order and delayed-release contract. The frozen online baseline SHALL
+be the mean mapped original-source unsupported probability. The label shall be
+one only for unsupported original content. Intervention absence SHALL never be
+used as a label.
+
+`test_capture_ready_score` SHALL be a bare integer one only for 80 complete
+test groups and 480 authenticated forwards. `online_capture_ready_score` SHALL
+be a bare integer one only for 160 complete online groups and 960 authenticated
+forwards. `capture_bundle_complete_score` SHALL be a bare integer one only when
+both role scores are one. Poor prediction values SHALL not close readiness.
+`predictive_benefit_measured` SHALL remain false.
+
+The exposure audit SHALL preserve prior outcome inspection. It SHALL not call
+the captured roles fresh confirmatory evidence when prior outcome access
+forbids that claim. Complete valid capture evidence SHALL use
+`verdict_class=null`; it SHALL not make a positive claim. The terminal JSON
+SHALL remain below 20 MiB. Full rows SHALL remain in hash-bound sidecars.
+
+Before publication, Exp7565 SHALL run zero-new-call cold replay and independent
+reduction. Private changes to one role, option order, donor role, and checkpoint
+identity SHALL each fail qualification. Required checks SHALL include scoped
+pytest, separate 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, scoped specification coverage, declared-entrypoint
+replay, independent reduction, adversarial verification, and strict verdict-row
+consistency. No numbered runtime E2E applies to this isolated capture. The task
+SHALL publish atomically at
+`results/experiment_7565_v661_test_online_capture.json` only after all required
+checks pass.
+
+#### SCENARIO-VERIFY-7565-PRECONDITIONS: Exact Pilot Authority Gates Collection
+
+**Given** the current Exp7563 terminal artifact and its bound source hashes
+**When** Exp7565 checks all prerequisites before current model work
+**Then** both pilot readiness scores, verdict, adversarial state, and bound bytes match
+**And** any absence or drift produces a complete blocked artifact with exact operands.
+
+#### SCENARIO-VERIFY-7565-CAPTURE: Both Evaluation Roles Retain Six Native Cells
+
+**Given** 80 official-test groups and 160 online groups from the sealed protocol
+**When** the evaluation wrapper expands and captures the schedule
+**Then** 240 groups retain all three source arms and both option orders
+**And** 1,440 rows retain prompt, token, logit, reset, timing, and model custody.
+
+#### SCENARIO-VERIFY-7565-CUSTODY: Predictions And Labels Stay Separate
+
+**Given** frozen native predictions and sealed evaluator labels
+**When** role-specific sidecars publish after capture
+**Then** predictor rows contain no labels and evaluator rows contain no logits
+**And** each sidecar hash binds its role, row count, and release boundary.
+
+#### SCENARIO-VERIFY-7565-EXPOSURE: Prior Inspection Prevents A Fresh Claim
+
+**Given** the preserved historical exposure inventory and protocol access events
+**When** Exp7565 records its exposure audit
+**Then** it preserves the previous outcome-inspection finding
+**And** it does not promote these rows as fresh confirmatory evidence.
+
+#### SCENARIO-VERIFY-7565-MUTATIONS: Private Identity Changes Fail Closed
+
+**Given** one independently reducible complete bundle
+**When** private copies change a role, option order, donor role, or checkpoint identity
+**Then** each mutation fails its named qualification control
+**And** the terminal evidence stays unchanged.
+
+#### SCENARIO-VERIFY-7565-BLOCKED: External Absence Does Not Become Owned Work
+
+**Given** a missing pilot gate, sealed shard, cached model, runtime, or owned GPU
+**When** no owned model call starts
+**Then** the artifact records `blocked_no_run`, zero current calls, and 1,440 unstarted forwards
+**And** both role scores and the bundle score remain bare integer zero.
+
+#### SCENARIO-VERIFY-7565-E2E: One Command Publishes Cold-Valid Capture Evidence
+
+**Given** the affected manifest, raw sidecars, and exact terminal candidate
+**When** the declared entrypoint and fresh-process readers execute
+**Then** scoped validation, replay, independent reduction, and mutations pass
+**And** both strict terminal linters pass before atomic publication.
