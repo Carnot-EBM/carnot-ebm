@@ -46577,3 +46577,64 @@ gallery's own captions, not the original posts or any code); none were run or ve
   a local-MLX or local-CPU reference implementation of the SemIf/Jev readout technique (Laya-MLX),
   or wants prior art for a model-routing cascade (Jevonian/Jev Model Router) before designing our
   own E11/E12 experiments.
+
+## 2026-09-23 — V662 planning review: useful probabilities and observable live verification
+
+This review precedes the V662 experiment design. It rechecks 2025–2026
+primary sources against terminal V661 evidence. New capture bytes do not
+make previously inspected source groups fresh. The V661 source comparison
+is descriptive; its raw original-source forecast remains a required control.
+
+### Eight-topic search and method decisions
+
+| Topic | Primary source checked | Finding and proposed use |
+|---|---|---|
+| EBM verification and reasoning | [Energy-Based Transformers, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4) | Compatibility energies and autoregressive energy interpretations motivate normalized small decision heads. Neither result makes a learned score a truth certificate. Rechecked, already filed. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461) | Learned iterative projections target linear constraints. Use exact feasibility checks for the small convex calibration problem; a neural solver is unnecessary at nine knots. Discovery lead; no transfer claim. |
+| Ising in ML | [Hybridizing Equilibrium Propagation with Ising Machines, 2606.09112](https://arxiv.org/abs/2606.09112) | Changes equilibrium dynamics while retaining two-phase local learning. Retain as a future training route; binary decision normalization does not need sampling. |
+| Hallucination detection | [Beyond Document Grounding, 2607.00895](https://arxiv.org/abs/2607.00895) | Supplies code/tool grounding with localized error labels. Reuse the acquired corpus with explicit exposure limits; source perturbations are features, not ground-truth labels. |
+| KANs | [PostHoc FREE Calibrating, 2503.01195](https://arxiv.org/abs/2503.01195); [ER-KANs, 2608.14773v2](https://arxiv.org/abs/2608.14773v2) | Calibration and robustness depend on the objective and local basis. ER-KAN's noisy analytic-function evidence motivates a noise-sensitivity control, not an expected LLM gain. |
+| Guided and constrained generation | [ETS, 2601.21484](https://arxiv.org/abs/2601.21484); [Draft-Conditioned Constrained Decoding, 2603.03305v2](https://arxiv.org/abs/2603.03305v2) | Distinguish structural validity from semantic success and include every generation cost. Defer a second generative pass until a useful live verifier endpoint exists. |
+| Hardware sampling | [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985); [Extropic Z1T, September 4](https://extropic.ai/writing/z1t) | Include orchestration, data transfer and persistence in speed comparisons. The Z1T article describes sparse models and estimated heterogeneous decoding costs; its efficiency claim is not a local measurement. |
+| Continual learning | [Calibeating Made Simple, 2603.22167](https://arxiv.org/html/2603.22167v1); [Proper Calibeating, 2605.26703](https://arxiv.org/abs/2605.26703); [On-chip online KAN learning, 2602.02056](https://arxiv.org/abs/2602.02056) | Optimize proper loss while measuring retained forecast skill. Test legal delayed feedback, restart and locality. Published immediate-feedback guarantees do not establish the delayed experimental guarantee. |
+
+The actionable hypothesis is a bounded, identity-initialized probability map
+trained directly on Brier loss, compared with the unchanged original forecast.
+This is a small normalized energy decision policy, not a new foundation model
+or an unrestricted generated-text ranker. Existing V661 numerical code should
+be qualified before empirical learning. A deliberately corrupted-feedback
+control must stay within the same release times as the real learner.
+
+A second actionable principle is to separate an executable world's observable
+prediction support from its score. Exceptions, duplicate train/evaluation rows
+and stateful engines can invalidate an apparent positive control. Any
+experiment prompted by the local B2 positive-control note must independently
+reproduce its defects before changing a default-off research path. Source-derived
+expert engines and game-specific masks remain development evidence only.
+
+### Secondary-source access receipts
+
+- **OpenReview:** searched ICLR/ICML 2026 EBM work and retrieved the
+  [ICLR EBT PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf).
+  The [ARM–EBM forum](https://openreview.net/forum?id=997oprE4sh) and
+  [compositional-energy forum](https://openreview.net/forum?id=5k0AHYc4MJ)
+  returned browser challenges. Do not infer review decisions from those pages.
+- **Semantic Scholar:** attempted citation lists for both seed papers using
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both reads returned internal errors. No verified new citing-paper list or
+  exhaustive citation survey is claimed.
+- **Hugging Face:** retrieved the [verification paper feed](https://huggingface.co/papers?q=verification).
+  Discovery only; the original papers above support the technical decisions.
+- **GitHub:** retrieved weekly [Python trending](https://github.com/trending/python?since=weekly)
+  and [Rust trending](https://github.com/trending/rust?since=weekly).
+  No verified relevant new repository from these pages justifies a dependency
+  change. Existing Carnot code remains the implementation starting point.
+- **Extropic:** the [writing index](https://extropic.ai/writing) exposed navigation
+  only; the Z1T article was readable. No local TSU access is established.
+- **Logical Intelligence:** retrieved the [Kona page](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  It supplies architectural context, but no reproducible training recipe or
+  downloadable checkpoint suitable for this milestone was established.
+
+Access date: 2026-09-23. These are planning sources, not Carnot experimental
+results. No model, board benchmark, purchase or external publication ran.

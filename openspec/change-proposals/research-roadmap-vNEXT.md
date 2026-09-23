@@ -1,252 +1,257 @@
-# Carnot Research Roadmap V661: Fresh Decisions and Persistent Recalibration
+# Carnot Research Roadmap V662: Useful Probabilities and Supported Live Verification
 
 **Created:** 2026-09-23
-**Milestone:** 2026.09.661
-**Title:** Fresh source decisions, constrained online recalibration, and attributable live-agent progress
-**Status:** Planned; not activated. No V661 experiment has run.
-**Supersedes:** Completed milestone 2026.09.660. Its design is preserved
-byte for byte in `research-roadmap-v660-preserved-20260923.md`.
+**Milestone:** 2026.09.662
+**Title:** Proper-loss decision learning and support-aware live world-model verification
+**Status:** Planned, not activated. No V662 experiment has run.
+**Supersedes:** Completed milestone 2026.09.661. Its design is preserved
+byte for byte in `research-roadmap-v661-preserved-20260923.md`.
 
-## What V660 Proved and Left Unmeasured
+## What V661 Proved and Left Unmeasured
 
-V660 has fourteen terminal conductor dispositions and nine producer artifacts.
-The completed ledger still ends at V659 during planning. The active roadmap,
-conductor log and actual artifact bytes establish the newer terminal state.
-All numerical findings below were read through `scripts/summarize_artifact.py`.
-A conductor `OK` is not evidence of a positive scientific result.
+V661 has thirteen terminal conductor dispositions, twelve producer artifacts
+and one pre-gate artifact. The completed ledger ends at V660 during planning;
+the active roadmap, terminal artifacts and conductor log establish V661 state.
+A conductor `OK` is execution status, not a positive scientific finding.
+The following findings were checked with `scripts/summarize_artifact.py`,
+including acceptance gates, flags, substrate and duration, before metrics.
 
-| Evidence | Finding | Consequence |
+| Evidence | Qualified finding | Consequence |
 |---|---|---|
-| Exp7546 | The fourteen-row contract and mutation checks passed. Harness-fit failed because the staged filename had been consumed at activation. Its adversarial flag remains. | Resolve the matching existing authority before running guards. Preserve the historical disqualification. |
-| Exp7547 | Cached count stream qualified. | Its previously inspected groups remain exploratory. Do not use them for a new confirmatory claim. |
-| Exp7548 | CPU capture runner qualified; GPU capacity was zero. | Reuse the runner. Recheck resource admission immediately before model load. |
-| Exp7549/7550 | Independent audit qualified a learning null. Local-count Brier difference versus global counts was +0.00877; both retention gates failed. | Change the learning objective and use fresh source groups. Keep the stronger global-count comparator. |
-| Exp7551–7555 | Pilot pre-gate blocked; five planned source producer artifacts are absent. | No source-intervention fit or evaluation was performed. Resource absence did not falsify this scientific hypothesis. |
-| Exp7556/7557 | Corrected B2 evidence qualified. There were 35 attempts, below the 100-attempt floor. Plan-linked outcomes were unavailable. | Add model/plan/action IDs before collecting another bounded live panel. Frame movement cannot stand in for useful induction. |
-| Exp7558 | Durable count service and board continuity qualified. The ideal update-only service speed ceiling was about 1.0614x. | Measure a new deployment kernel with full service costs. A fast update alone does not justify FPGA work. |
-| Exp7559 | Complete inventory, terminal blocked source-science branch, no new retirement rows. | Retain independent branch conclusions and honest missing-data dispositions. |
+| Exp7560 | Thirteen-row contract and method ingestion completed. | Reuse matching-authority selection; no new global science gate. |
+| Exp7561 | Numerical, fixture lifecycle and compute checks passed. Terminal strict row lint rejected the positive claim: its `brier_delta` rows showed zero wins and three losses under the reader's convention. | Independently recompute losses and correct the producer's claim/metric contract before empirical use. Do not weaken the reader or assume a sign bug without checking. |
+| Exp7562 | Live plan-lineage fixtures qualified with `circular_positive`. | Reuse the observation mechanism; fixtures do not prove live plan utility. |
+| Exp7563–7565 | Native Qwen transport and both full captures completed. | Reuse their authenticated bytes instead of buying the same data again. |
+| Exp7566–7567 | Source-contrast training completed, but probability and decision benefit gates failed. On 80 exposed evaluation groups, candidate Brier was 0.25463 versus raw original 0.14564; action cost was 0.2075 versus raw 0.1725. | Change the objective and capacity; keep raw forecasts as the primary control. These are descriptive comparisons, not fresh population estimates. |
+| Exp7567 exposure audit | All 2,487 candidate official-training source groups were previously exposed; fresh eligible count was zero. | Fresh capture bytes cannot reset source exposure. V662 source work stays exploratory. |
+| Exp7568–7569 | Learning never started after `recalibration_ready_score=0`. The audit qualified the source null but could not qualify learning. | Fix the numeric producer and keep learning independent of static benefit. No measured learning null exists here. |
+| Exp7570 | Flagged and disqualified before inference. The artifact reported unavailable upstream custody; validation logs show absent parents for pytest basetemp paths. | Test explicit absolute-root custody and directory lifecycle before another live panel. Preserve the old flag. |
+| Exp7571–7572 | Board continuity was retained; portable calibration remained blocked; capstone retained all thirteen dispositions. | Keep continuity unconditional and test whole-service cost only after numerical qualification. |
 
-A read-only planning observation on 2026-09-23 found GPU 1 at 4 MiB, zero
-utilization and no compute process. GPU 0 held an existing server. This is a
-changed prerequisite from V660, not a GPU reservation. Every proposed live
-task must acquire its own fresh exclusive lease. No process was stopped and
-no model was loaded during planning.
+The local, currently uncommitted B2 positive-control note dated 2026-09-23
+reports additional live-verifier defects: raised rows disappear from graded
+metric denominators, mutable engine state can affect scoring, and a one-row
+split overlaps its prompt. It also documents hidden-state/HUD limitations.
+These are **leads requiring independent reproduction**, not new accepted
+Carnot results. Source-derived engines and game-specific masks in that note
+must never enter V662 live panels or earn solve credit.
 
 ## Three Biggest Gaps Against the PRD
 
-1. **FR-12: source-grounded, calibrated decisions remain unproved.**
-   The corpus and transport exist, but fresh source-dependent comparisons
-   never ran. Measure an energy policy against controls with identical
-   information. Calibration is probabilistic; it is not a formal proof that
-   an extracted statement matches the source or is true in the world.
-2. **FR-11: durable learning has no qualified predictive advantage.**
-   Chronology and restart work. The local count learner lost to global counts
-   and failed retention. Test joint proper-loss recalibration on uninspected
-   source groups, with frozen controls and a separate retention evaluator.
-3. **FR-05/08, NFR-01 and the live-agent objective: deployment value lacks
-   a complete measurement.** ARC has no usable plan-to-action endpoint;
-   a small update kernel has little whole-service headroom. Add the missing
-   live observation and test an actual Rust kernel with equal durability.
-   This milestone does not claim to complete PyO3 integration or Rust training.
+1. **FR-12: useful, calibrated verification decisions.** An energy head can
+   fit labels and still lose to the original model forecast. Test a bounded
+   proper-loss map and expose both probability quality and action cost.
+   Calibration is not a formal guarantee of semantic correctness.
+2. **FR-11: measured continuous self-learning.** Durable counters and
+   numerical updates exist, but delayed learning has no qualified retained
+   advantage. Exercise prediction, legal feedback, update, persistence and
+   restart with informative and chronology-preserving corrupted controls.
+3. **FR-05/08, NFR-01 and the live-agent objective: deployable value.** Live
+   world-model scores need independent observable support and executed-plan
+   evidence. Portable speed needs equal durability and a complete service
+   denominator. Neither a fixture pass nor a fast isolated kernel closes this gap.
 
-## Research Basis and Scope
+## Research Basis and Deliberate Scope
 
-The V661 review was added to `research-references.md` before task design.
-It covers all eight requested arXiv topics and all six secondary channels.
-Semantic Scholar citation-list reads failed for both seed papers; the dated
-Hugging Face feed also failed. Usable original papers and other channel reads
-remain recorded. No exhaustive citation census or vendor capability claim is
-made.
+The dated V662 section in `research-references.md` was written **before** this
+experiment design. It covers all eight requested arXiv topics and six
+secondary channels. Semantic Scholar citation-list requests failed for both
+seed papers; two OpenReview forums returned browser challenges. The review
+records these limits rather than asserting an exhaustive literature census.
 
-| Source | Hypothesis or boundary | Tasks |
-|---|---|---|
-| [Calibeating Made Simple, 2603.22167](https://arxiv.org/html/2603.22167v1) and [Proper Calibeating, 2605.26703](https://arxiv.org/abs/2605.26703) | Optimize proper loss directly and retain original-forecast and decision-cost controls. Delayed-feedback guarantees do not transfer automatically. | Exp7561/7568/7569 |
-| [Optimal Recalibration, 2607.19689](https://arxiv.org/abs/2607.19689) | Bound movement from the starting forecast; measure retention rather than assuming it. | Exp7561/7568 |
-| [Beyond Document Grounding, 2607.00895](https://arxiv.org/abs/2607.00895) and [SAFE, 2609.16646](https://arxiv.org/abs/2609.16646) | Test original versus ablated source readouts on released tool-output groups. Textual transfer from visual probes remains a hypothesis. | Exp7563–7567 |
-| [KAN calibration, 2503.01195](https://arxiv.org/abs/2503.01195) and [local online KAN learning, 2602.02056v4](https://arxiv.org/abs/2602.02056v4) | Local basis functions need calibration controls and full update-service accounting. | Exp7561/7566/7571 |
-| [FPGA–ASIC co-design, 2602.15985v2](https://arxiv.org/abs/2602.15985v2) | Orchestration, movement and persistence belong in hardware cost comparisons. | Exp7571 |
+| Source | Experimental consequence |
+|---|---|
+| [Calibeating Made Simple](https://arxiv.org/html/2603.22167v1), [Proper Calibeating](https://arxiv.org/abs/2605.26703) | Direct proper-loss fitting, unchanged-forecast control and separately measured delayed-feedback retention in Exp7574–7579. Published guarantees do not automatically cover this delayed protocol. |
+| [KAN calibration](https://arxiv.org/abs/2503.01195), [local online KAN learning](https://arxiv.org/abs/2602.02056), [ER-KANs](https://arxiv.org/abs/2608.14773v2) | Small local basis, noise-sensitivity diagnostic and measured complete update service in Exp7576/7578/7585. No claimed replication of ER-KAN's analytic-function results. |
+| [Beyond Document Grounding](https://arxiv.org/abs/2607.00895) | Retain tool/source labels and component grouping, with explicit prior-exposure limits in Exp7575–7579. |
+| [Draft-conditioned constrained decoding](https://arxiv.org/abs/2603.03305v2), [ETS](https://arxiv.org/abs/2601.21484) | Separate executable syntax, supported verification and useful execution in Exp7580–7584. Defer additional generative passes until a useful endpoint is measured. |
+| [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985), [Extropic Z1T](https://extropic.ai/writing/z1t) | Exp7585 includes transfer, persistence and orchestration. External efficiency estimates do not establish local acceleration. |
 
-EBT, ARM–EBM, compositional energies, Ising equilibrium propagation and ETS
-remain architectural context. Binary decisions use exact normalization, so a
-sampler sweep has no present justification. The generic external-text scorer,
-unchanged importance anchor, four-expert mixture, compact generated-span
-extraction, induction-budget raises and public-game re-solving stay closed.
-Kona's inspected page supplies no reproducible training recipe or checkpoint.
-No generator weight update, purchase, submission or external publication is
-scheduled.
-
-**Decentralization implications:** the plan preserves local open models,
-local data custody and CPU/Rust implementations. It adds no closed service to
-the core and requires no paid cloud endpoint.
+EBT, ARM–EBM, neural constraint projection and Ising equilibrium propagation
+remain architecture references. This binary policy uses exact normalization;
+no sampler sweep is needed. The retired external-text reasoning ranker,
+unchanged importance anchor, four-expert mixture, HUD-mask-only ARC retry,
+per-game re-solving and generic budget increases stay closed. The learned
+policy consumes a verifier forecast; it is not an unrestricted text/logprob
+reranker against self-consistency. No generator weights, scored submission,
+operator-curated headlines, purchases or external publications change.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    C[Existing V661 authority and method limits] -. advisory .-> Z[Thirteen-disposition capstone]
-    P[Qualified tool roles and capture runner] --> N[Fresh GPU admission and native Qwen pilot]
-    N --> F[Fit / tune / policy capture]
-    N --> T[Test / online capture; separate labels]
-    F --> E[Contrastive energy heads and matched controls]
-    E --> V[Frozen held-out source decisions]
-    T --> V
-    R[Constrained recalibration prototype and frozen protocol] --> L[Predict; release; update; persist]
-    F --> L
-    T --> L
-    V --> A[Independent raw evidence audit]
+    C[Exact V662 authority and primary method limits] -. advisory .-> Z[Fourteen-disposition capstone]
+    Q[Independent numerical and runner qualification] --> F[Bounded Brier energy fit]
+    D[Authenticated exposed Qwen roles and frozen protocol] --> F
+    F --> V[Frozen descriptive decision evaluation]
+    D --> V
+    Q --> L[Delayed predict-release-update-persist-reload]
+    D --> L
+    V --> A[Independent probability and causal audit]
     L --> A
-    J[Default-off live model / plan / action IDs] --> G[Bounded adapter-withheld runtime panel]
-    R -. qualified prototype .-> H[Rust kernel parity and full service cost]
-    B[Historical board states and physical-change receipts] --> H
+    S[Fail-closed verifier and independent transition support] --> N[Owned bounded Qwen transport canary]
+    Q --> N
+    N --> P[Live adapter-withheld panel A]
+    N --> R[Live adapter-withheld panel B]
+    P --> I[Independent support and plan-action reduction]
+    R --> I
+    Q -. numerical branch .-> H[Rust parity and durable service timing]
+    B[KV260 / GateMate / PolarFire dated dispositions] --> H
     A --> Z
-    G --> Z
+    I --> Z
     H --> Z
 ```
 
-The prototype and ARC observation are CPU work. Fresh online learning uses raw
-original-source probabilities, so it has no static-energy benefit dependency.
-The contract report, independent audit and capstone are unconditional.
-The portability task always records board states even if its kernel branch is
-blocked. No off-ARC learned policy is inserted into the live ARC agent.
+The contract, both independent audits, hardware continuity and capstone run
+unconditionally. Panels A and B share readiness prerequisites but neither
+requires the other's outcome. Online learning has no static-benefit gate.
+No off-ARC learned policy is inserted into the ARC agent.
 
 ## Exact Task Contract
 
-**Exactly 13 tasks, exp7560 through exp7572, in this order.**
-The YAML and table below have identical full IDs, titles, phases, deliverables,
-substrate classes and conjunctive gates. There are no additional experiments
-promised outside this table. Conductor execution is sequential.
+**Exactly 14 tasks, exp7573 through exp7586, in this order.**
+The following table and `research-roadmap-next.yaml` agree on full IDs,
+titles, phases, paths, substrate classes and conjunctive gates. This table
+is the complete execution contract, not an aspirational task list.
 
 | Order | Task ID | Exact title | Phase | Deliverable | Substrate class | Structured gate |
 |---|---|---|---|---|---|---|
-| 1 | exp7560-contract-methods | Bind thirteen tasks and qualify methods against terminal V660 evidence | 1 | results/experiment_7560_v661_contract_methods.json | aggregation | none |
-| 2 | exp7561-recalibration-prototype | Qualify monotone proper-loss updates before fresh delayed learning | 1 | results/experiment_7561_v661_recalibration_prototype.json | no_model_load | none |
-| 3 | exp7562-arc-plan-lineage | Join live induction attempts to accepted models and executed plans | 1 | results/experiment_7562_v661_arc_plan_lineage.json | no_model_load | none |
-| 4 | exp7563-native-pilot | Measure fresh tool-source capture feasibility with current GPU admission | 2 | results/experiment_7563_v661_native_pilot.json | model_load_no_generation | none |
-| 5 | exp7564-fit-capture | Capture complete fitting and policy source interventions | 2 | results/experiment_7564_v661_fit_capture.json | model_load_no_generation | exp7563-native-pilot.native_tool_ready_score == 1; exp7563-native-pilot.fit_capture_feasible_score == 1; exp7563-native-pilot.verdict_class in ["null", "positive"]; exp7563-native-pilot.flagged_adversarial == false |
-| 6 | exp7565-test-online-capture | Capture sealed test and fresh online source interventions | 2 | results/experiment_7565_v661_test_online_capture.json | model_load_no_generation | exp7563-native-pilot.native_tool_ready_score == 1; exp7563-native-pilot.eval_capture_feasible_score == 1; exp7563-native-pilot.verdict_class in ["null", "positive"]; exp7563-native-pilot.flagged_adversarial == false |
-| 7 | exp7566-energy-fit | Fit contrastive source energies and freeze matched decision controls | 3 | results/experiment_7566_v661_energy_fit.json | no_model_load | exp7564-fit-capture.fit_capture_ready_score == 1; exp7564-fit-capture.verdict_class in ["null", "positive"]; exp7564-fit-capture.flagged_adversarial == false |
-| 8 | exp7567-source-evaluation | Measure held-out source decisions with frozen calibration and controls | 3 | results/experiment_7567_v661_source_evaluation.json | no_model_load | exp7565-test-online-capture.test_capture_ready_score == 1; exp7565-test-online-capture.verdict_class in ["null", "positive"]; exp7565-test-online-capture.flagged_adversarial == false; exp7566-energy-fit.energy_fit_ready_score == 1; exp7566-energy-fit.baseline_ready_score == 1; exp7566-energy-fit.verdict_class in ["null", "positive"]; exp7566-energy-fit.flagged_adversarial == false |
-| 9 | exp7568-continuous-recalibration | Measure fresh delayed recalibration and retained typed decisions | 3 | results/experiment_7568_v661_continuous_recalibration.json | no_model_load | exp7561-recalibration-prototype.recalibration_ready_score == 1; exp7561-recalibration-prototype.learning_compute_feasible_score == 1; exp7561-recalibration-prototype.verdict_class in ["null", "positive", "circular_positive"]; exp7561-recalibration-prototype.flagged_adversarial == false; exp7564-fit-capture.fit_capture_ready_score == 1; exp7564-fit-capture.verdict_class in ["null", "positive"]; exp7564-fit-capture.flagged_adversarial == false; exp7565-test-online-capture.online_capture_ready_score == 1; exp7565-test-online-capture.test_capture_ready_score == 1; exp7565-test-online-capture.verdict_class in ["null", "positive"]; exp7565-test-online-capture.flagged_adversarial == false |
-| 10 | exp7569-decision-learning-audit | Independently audit fresh source decisions and feedback causality | 3 | results/experiment_7569_v661_decision_learning_audit.json | aggregation | none |
-| 11 | exp7570-arc-live-lineage | Measure plan execution and supervisor outcomes on withheld live games | 4 | results/experiment_7570_v661_arc_live_lineage.json | model_full_generation | exp7562-arc-plan-lineage.plan_lineage_ready_score == 1; exp7562-arc-plan-lineage.verdict_class in ["null", "positive", "circular_positive"]; exp7562-arc-plan-lineage.flagged_adversarial == false |
-| 12 | exp7571-portable-calibration | Measure portable calibration kernels and preserve board continuity | 4 | results/experiment_7571_v661_portable_calibration.json | no_model_load | none |
-| 13 | exp7572-capstone | Reconcile thirteen dispositions and decide each research continuation | 4 | results/experiment_7572_v661_capstone.json | aggregation | none |
+| 1 | exp7573-contract-methods | Bind fourteen tasks and ingest methods against terminal V661 evidence | 1 | results/experiment_7573_v662_contract_methods.json | aggregation | none |
+| 2 | exp7574-measurement-requalification | Requalify numerical and ARC runners from reproduced validation failures | 1 | results/experiment_7574_v662_measurement_requalification.json | no_model_load | none |
+| 3 | exp7575-cached-learning-protocol | Seal descriptive source roles and delayed-feedback decision tests | 1 | results/experiment_7575_v662_cached_learning_protocol.json | no_model_load | none |
+| 4 | exp7576-proper-loss-energy | Train an identity-constrained proper-loss energy decision policy | 2 | results/experiment_7576_v662_proper_loss_energy.json | no_model_load | exp7574-measurement-requalification.recalibration_ready_score == 1; exp7574-measurement-requalification.verdict_class in ["null", "positive", "circular_positive"]; exp7574-measurement-requalification.flagged_adversarial == false; exp7575-cached-learning-protocol.cached_roles_ready_score == 1; exp7575-cached-learning-protocol.verdict_class in ["null", "positive"]; exp7575-cached-learning-protocol.flagged_adversarial == false |
+| 5 | exp7577-proper-loss-evaluation | Measure frozen probability and decision value without freshness claims | 2 | results/experiment_7577_v662_proper_loss_evaluation.json | no_model_load | exp7576-proper-loss-energy.proper_loss_fit_ready_score == 1; exp7576-proper-loss-energy.baseline_ready_score == 1; exp7576-proper-loss-energy.verdict_class in ["null", "positive"]; exp7576-proper-loss-energy.flagged_adversarial == false; exp7575-cached-learning-protocol.cached_roles_ready_score == 1; exp7575-cached-learning-protocol.verdict_class in ["null", "positive"]; exp7575-cached-learning-protocol.flagged_adversarial == false |
+| 6 | exp7578-continuous-proper-loss | Measure delayed proper-loss learning and durable retained decisions | 2 | results/experiment_7578_v662_continuous_proper_loss.json | no_model_load | exp7574-measurement-requalification.recalibration_ready_score == 1; exp7574-measurement-requalification.learning_compute_feasible_score == 1; exp7574-measurement-requalification.verdict_class in ["null", "positive", "circular_positive"]; exp7574-measurement-requalification.flagged_adversarial == false; exp7575-cached-learning-protocol.cached_roles_ready_score == 1; exp7575-cached-learning-protocol.online_protocol_ready_score == 1; exp7575-cached-learning-protocol.verdict_class in ["null", "positive"]; exp7575-cached-learning-protocol.flagged_adversarial == false |
+| 7 | exp7579-decision-learning-audit | Independently reduce probability and feedback-learning evidence | 2 | results/experiment_7579_v662_decision_learning_audit.json | aggregation | none |
+| 8 | exp7580-arc-verifier-support | Qualify fail-closed world-model scores and independent transition support | 3 | results/experiment_7580_v662_arc_verifier_support.json | no_model_load | none |
+| 9 | exp7581-arc-bounded-canary | Qualify owned Qwen transport and live-panel budget with a bounded canary | 3 | results/experiment_7581_v662_arc_bounded_canary.json | model_bounded_generation | exp7574-measurement-requalification.arc_runner_ready_score == 1; exp7574-measurement-requalification.verdict_class in ["null", "positive", "circular_positive"]; exp7574-measurement-requalification.flagged_adversarial == false; exp7580-arc-verifier-support.verifier_support_ready_score == 1; exp7580-arc-verifier-support.verdict_class in ["null", "positive", "circular_positive"]; exp7580-arc-verifier-support.flagged_adversarial == false |
+| 10 | exp7582-arc-panel-a | Measure adapter-withheld live verifier integrity on panel A | 3 | results/experiment_7582_v662_arc_panel_a.json | model_full_generation | exp7581-arc-bounded-canary.arc_transport_ready_score == 1; exp7581-arc-bounded-canary.panel_a_feasible_score == 1; exp7581-arc-bounded-canary.verdict_class in ["null", "positive"]; exp7581-arc-bounded-canary.flagged_adversarial == false; exp7580-arc-verifier-support.verifier_support_ready_score == 1; exp7580-arc-verifier-support.verdict_class in ["null", "positive", "circular_positive"]; exp7580-arc-verifier-support.flagged_adversarial == false |
+| 11 | exp7583-arc-panel-b | Measure adapter-withheld live verifier integrity on panel B | 3 | results/experiment_7583_v662_arc_panel_b.json | model_full_generation | exp7581-arc-bounded-canary.arc_transport_ready_score == 1; exp7581-arc-bounded-canary.panel_b_feasible_score == 1; exp7581-arc-bounded-canary.verdict_class in ["null", "positive"]; exp7581-arc-bounded-canary.flagged_adversarial == false; exp7580-arc-verifier-support.verifier_support_ready_score == 1; exp7580-arc-verifier-support.verdict_class in ["null", "positive", "circular_positive"]; exp7580-arc-verifier-support.flagged_adversarial == false |
+| 12 | exp7584-arc-independent-audit | Reduce live support, plan execution and supervisor evidence independently | 3 | results/experiment_7584_v662_arc_independent_audit.json | aggregation | none |
+| 13 | exp7585-portable-service | Measure Rust recalibration service and preserve all board dispositions | 4 | results/experiment_7585_v662_portable_service.json | no_model_load | none |
+| 14 | exp7586-capstone | Reconcile fourteen outcomes and decide each mechanism continuation | 4 | results/experiment_7586_v662_capstone.json | aggregation | none |
 
-## Phase 1 — Qualify the New Method and Missing Runtime Observation
+## Phase 1 — Qualify Measurement and Freeze the Evidence Boundary
 
-### Exp7560: contract and method ingestion
+**Exp7573 — Contract and methods.** Reuse the matching active/staged authority
+resolver. Verify fourteen exact rows and private order/path/gate mutations.
+Preserve V661's thirteen dispositions and archive lag. Ingest three to five
+primary method sections into `docs/research-notes/v662-method-map.md`.
+This task reports readiness; it cannot block unrelated science.
 
-Select the staged authority only while it exists and matches this milestone.
-After activation, select the matching active authority. Pass that actual path
-to guards. Test both states and private row/order/path/field mutations. Do not
-recreate a consumed staging file to make a guard pass. This fixes the diagnosed
-Exp7546 contract-check failure without rewriting its historical determination.
+**Exp7574 — Independent numerical and ARC runner qualification.** Recompute
+V661 fixture losses before diagnosing the row-lint failure. Correct only the
+new producer's metric/claim contract, leaving guards and old evidence intact.
+Qualify the existing constrained solver and its independent reference,
+delayed-update lifecycle and full 5,000-replay/800,000-event budget. Separately
+exercise ARC upstream custody from an alternate working directory and create
+private test-directory parents. Test truthful pre-inference blocked artifacts.
+Numerical readiness and ARC runner readiness have distinct fields.
 
-Read three to five original method sections and write
-`docs/research-notes/v661-method-map.md`. Keep the exact V660 inventory,
-retired mechanisms, source-access limits and publication G1–G4 separate from
-scientific readiness. No whole-suite diagnostic is part of this task.
+**Exp7575 — Frozen descriptive protocol.** Authenticate V661 raw bytes and
+role separation: 160 fitting, 40 tuning, 40 policy, 160 online and 80 evaluation
+source components. Keep the exact dataset revision and source-group joins.
+Persist prior exposure; `fresh_confirmatory_claim_allowed=false` throughout.
+Freeze all controls, costs, seeds, retention reads and uncertainty before new
+outcomes. Runtime label isolation is required even though historical exposure
+precludes a new confirmatory claim.
 
-### Exp7561: constrained proper-loss prototype
+Phase boundary: qualified inputs and numerical behavior, with no efficacy claim.
 
-Replace local count odds shifts with a nine-knot piecewise-linear probability
-map. Knots are `u_j=j/8`; initialize `theta=u`. After legal feedback, minimize
+## Phase 2 — Proper-Loss Decisions and Continuous Learning
+
+**Exp7576 — Bounded energy fit.** The hypothesis is that an identity-initialized
+low-capacity map can preserve useful original forecasts better than V661's
+source-contrast log-loss head. Fit nine linear knots at `u_j=j/8`:
 
 ```text
-sum_released_i (f_theta(p_i) - y_i)^2 + 8 * ||theta-u||^2
+min_theta sum_i (f_theta(p_i) - y_i)^2 + 8 ||theta-u||^2
 subject to 0 <= theta_0 <= ... <= theta_8 <= 1
            |theta_j-u_j| <= 0.10
+q = f_theta(p_original)
+E(error) = -log(q); E(correct) = -log(1-q)
 ```
 
-This is a small convex quadratic program. Its sufficient-statistic matrix and
-vector replace repeated training over stored examples. Freeze the solver,
-1e-8 convergence tolerance and iteration cap before empirical outcomes.
-Compare with an independent solver. Failed convergence closes readiness.
-Use `E0=-log(1-q)` and `E1=-log(q)`, clipping only log evaluation at 1e-6.
-The map movement bound is exact; predictive non-regression is unproved.
+Only logarithm evaluation clips at 1e-6. The qualified solver tolerance is
+1e-8. Controls are raw original probabilities, fitted temperature and a
+same-capacity unconstrained nine-knot Brier map. Fit only on fitting rows;
+choose the strongest comparator only on tuning rows. Freeze all heads before
+evaluation. Input noise levels 0, 0.01 and 0.05 are sensitivity diagnostics,
+not new labeled observations. Generator weights remain frozen.
 
-Freeze the later experiment now: 160 fresh online groups, 80 evaluator-only
-retention groups, five orders seeded 7568001–7568005, delay eight events and
-feedback release blocks of eight. Compare frozen original-source forecasts,
-global counts, local counts and a released-block shuffled constrained learner.
-Count priors have mass eight and means from fitting forecasts without labels.
-Retain the existing three-action costs: accept `5q`, reject `1-q`, escalate
-`0.2`; escalation wins ties.
+**Exp7577 — Frozen evaluation.** Evaluate all heads on the same 80 groups.
+Report per-group Brier, log loss, probability, action, cost and coverage.
+The typed policy uses error probability `q`: accept costs `5q`, reject costs
+`1-q`, escalate costs `0.2`; escalate wins ties. Require non-escalation >=0.10.
+Apply paired source-component uncertainty and Holm adjustment to primary
+static contrasts. A directional gate requires improvement lower95 >0 versus
+raw and the strongest tune-selected control. Cost benefit is a separate gate.
+A positive control must demonstrate that the evaluator can detect a useful
+forecast. Every empirical conclusion remains descriptive reuse.
 
-Qualify shift, no-shift, recurrence, future-label, duplicate-update and restart
-fixtures. Require parameter changes and numerical sensitivity on a constructed
-positive control. These are analytical controls, never empirical efficacy.
-Benchmark the full 1,000-resample, five-order replay cost on fixtures. It must
-fit 2,400 seconds before empirical learning is allowed; do not shrink its
-uncertainty calculation after outcomes arrive.
+**Exp7578 — Continuous self-learning.** Use the same qualified map, initialized
+to identity independently for five fixed orders, seeds 7578001–7578005. Predict
+before feedback; release blocks of eight after eight events; update sufficient
+statistics, solve, persist and acknowledge once. Compare raw, global counts,
+local counts and released-block shuffled feedback. Retention uses the 80-group
+evaluator-only role at events 40, 80, 120 and 160; restart at 80 and 120.
+Require retained Brier degradation upper95 <=0.005. Run 1,000 full causal
+resamples per order, including retraining; never resample only adapted losses.
+This is empirical replay with delayed feedback, not a newly acquired live
+stream. CPU sufficient statistics provide the immediate hardware path;
+Exp7585 tests Rust and quantifies the case for any later FPGA acceleration.
 
-### Exp7562: live plan lineage
+**Exp7579 — Independent audit.** Reconstruct predictions from raw features,
+parameters and event logs. Challenge signs, identities, hashes, duplicate
+updates and future-label leakage. Emit separate static, causal, retention and
+freshness conclusions. A blocked branch does not erase a valid null elsewhere.
 
-Extend default-off telemetry at actual `E3AgentPolicy` call sites. Bind episode,
-induction attempt, model version, verifier outcome, plan and action IDs. Record
-transport failure, parse rejection, verifier rejection, accepted/no-plan,
-planned/not-executed, executed/no-level-progress, executed/level-progress and
-censoring as mutually exclusive dispositions.
+Phase boundary: reproducible probability and causal evidence; no automatic
+production promotion and no claim that a learned energy equals truth.
 
-A 32-policy-action observation window retains replacement and foreign-action
-interleaving. An unavailable join is unknown. A temporal join is observational;
-it is not causal evidence that a suppression policy would help. Scripted
-positive and negative controls must exercise the real policy. Telemetry on/off
-must preserve actions, calls, environment work, prior provenance and RNG state.
+## Phase 3 — Supported Verification on the Live ARC Path
 
-Freeze six adapter-withheld E6 games: `sb26`, `vc33`, `su15`, `g50t`, `m0r0`,
-`dc22`. Each gets seeds 7570001 and 7570002, at most 600 actions and two
-inductions. Preserve the current sampler and 4096-token request ceiling.
-Only Exp7570 runs this roster with real generation.
+**Exp7580 — Fail-closed support.** Reproduce the B2 note's exception, mutable
+engine and overlapping-split issues on independent fixtures. Add an opt-in
+research wrapper reachable through `E3AgentPolicy`: raised rows remain in all
+denominators; use fresh isolated engine state; verify repeated-input purity;
+require at least two distinct held-out IDs disjoint from all prompts/refactors.
+Contradictory or unsupported transitions cannot pass. Keep the existing exact
+1.0 acceptance threshold and production flags. Do not introduce hand-derived
+HUD masks, source models or a new game-specific adapter. Test positive and
+adversarial fixtures at the actual live call site plus disabled-feature parity.
 
-Phase boundary: numerical updates and live observation must pass their own
-positive controls. Neither prototype claims a real-model improvement.
+**Exp7581 — Bounded canary.** Resolve `unsloth/Qwen3.8-27B-GGUF` with
+`cached_current_model()`. Acquire a fresh exclusive GPU lease. Make exactly
+two neutral 64-token requests and authenticate captured bytes and settings.
+This is `model_bounded_generation`, not a test of induction quality. Validate
+the future 4096-token proposer/capture ceilings without running the panel.
+Forecast each complete panel using historical p95 request timing and current
+load/capture costs; require <=3,000 seconds collection and <=4,200 seconds
+including a 900-second validation reserve. No post-outcome roster shrinkage.
 
-## Phase 2 — Acquire Fresh Source Evidence Within Measured Budgets
+**Exp7582/7583 — Separate live panels.** Panel A is `su15, sp80, ft09`;
+panel B is `sb26, g50t, dc22`. Each has both seeds 7582001/7582002 and two
+arms: current verifier versus the integrity guard. This gives twelve episodes
+and at most twelve full requests per task. Use 600 actions and one induction
+per episode, 4096 completion tokens and a 240-second request timeout. Record
+effective no-think, trust, HUD and CEGIS settings; both arms share them.
+Withhold adapters and stored solutions, registry-precheck, and capture live
+attempt/model/plan/action lineage with a 32-action observation window.
 
-### Exp7563: current admission and native pilot
+These are bounded full generative experiments. Record every cap hit and
+finish reason; truncation cannot establish unconstrained model inability.
+Six game clusters and at most 24 attempts across both panels support a pilot,
+not the B2 gate-quality claim requiring 100 attempts and 1,000 opportunities.
+No source-derived control is credited as a live solve, and known registry
+levels are not credited again. Submission defaults stay unchanged.
 
-Authenticate Exp7533 roles and Exp7548's qualified CPU runner independently of
-its blocked resource verdict. The runner readiness is reusable; its old idle
-snapshot is not. Extend a thin wrapper to include the already-sealed online
-role. Avoid another transport implementation.
+**Exp7584 — Independent live reduction.** Recompute support denominators and
+plan execution from raw evidence. Distinguish motion from useful execution,
+unknown/censored from failure, and unsupported transitions from bad induction.
+Use paired episode rows and disclose game-level clustering. Read actual
+supervisor redirects; no firings means no supported refinement. Do not fit or
+ship a timing gate from an under-supported panel.
 
-Pin `KRLabsOrg/lettucedetect-code-hallucination` at revision
-`866a7c5392c3cf87e4fbc2b3808815d524f54331`. Preserve connected-component
-source grouping, official-test membership, exposure exclusions and whole
-prompts. Roles are 160 fit, 40 tune, 40 policy, 160 online and 80 test groups;
-12 development groups stay excluded. Donors remain within their assigned role.
-
-Wait at most 300 observable seconds for current capacity, then acquire an
-exclusive lease before CUDA initialization. Do not evict or borrow a foreign
-server. Resolve `cached_current_model()` to the mandated Qwen GGUF. Pin file,
-tokenizer, template, runtime, process start tick, GPU UUID and owned offload.
-A cache or resource failure is blocked, with zero fabricated calls.
-
-The pilot runs 72 native option forwards: 12 groups, three source variants and
-two mapped option orders. It generates no tokens. Original, absent and
-mismatched sources create features, not synthetic negative labels. Preserve
-request/reply bytes, exact option token boundaries and reset identities.
-
-Forecast the fit capture and evaluation capture separately using p95 forward
-latency, complete-prompt lengths, load and checkpoint costs. Each contains
-1,440 forwards. Each needs predicted collection <=3,000 seconds and total
-execution plus a 900-second validation reserve <=4,200 seconds. No outcome-
-dependent shrinkage or truncation opens a feasibility gate.
-
-### Exp7564 and Exp7565: separate role captures
-
-Exp7564 captures 240 fit/tune/policy groups, 1,440 forwards. Exp7565 captures
-80 test plus 160 online groups, also 1,440 forwards. Each task gets its own
-admission check, owned process, checkpoint directory and conductor budget.
-Checkpoint complete groups, retain errors and unstarted units, and resume only
-identical content-hashed work. Poor scores cannot fail transport readiness.
-
-The forward runner does not read labels. Keep prediction and evaluator-label
-sidecars separate. Test and online readiness are distinct fields. Exposure
-violations prevent confirmatory use; replacing those groups with inspected
-cached forecasts is not allowed.
-
-Phase boundary: only complete authenticated captures open fitting and learning.
-A resource block closes those scientific branches without blocking ARC work,
-prototype qualification, board continuity or the disposition reports.
+Phase boundary: qualified live observation and guarded research behavior;
+benefit, official-score improvement and supervisor refinement remain separate.
