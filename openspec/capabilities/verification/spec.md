@@ -45346,3 +45346,107 @@ The terminal JSON SHALL publish atomically at
 **When** the declared entrypoint and fresh-process readers execute
 **Then** scoped checks, independent reduction, adversarial verification, and strict row lint pass
 **And** the validated terminal artifact reports zero current model calls.
+
+### REQ-VERIFY-7563: V661 Native Pilot SHALL Recheck Capacity And Measure The Sealed Readout
+
+Exp7563 SHALL authenticate the Exp7533 sealed corpus and the Exp7548 runner
+qualification as separate inputs. It SHALL require the pinned
+`KRLabsOrg/lettucedetect-code-hallucination` revision
+`866a7c5392c3cf87e4fbc2b3808815d524f54331`. It SHALL preserve 160 fit, 40
+tune, 40 policy, 160 online, and 80 test groups. It SHALL preserve the twelve
+excluded development groups. It SHALL verify component grouping, official-test
+membership, complete prompts, same-role donors, exposure exclusions, and zero
+capture-label access. Exp7548 SHALL require `capture_runner_ready_score=1`,
+no adversarial flag, and independently passing transport controls. Its historic
+blocked capacity verdict SHALL remain evidence and SHALL NOT count as runner
+failure or current capacity.
+
+The pilot SHALL reuse the Exp7535 native transport and the Exp7548 collection
+wrapper. A small role wrapper SHALL add the already-sealed online role. It
+SHALL NOT rebuild native transport. The pilot SHALL run exactly 72 native
+option forwards over twelve development groups, three source conditions, and
+two semantic option orders. It SHALL generate zero tokens. Each row SHALL keep
+the exact prompt and reply bytes, option-token boundaries, semantic logits,
+normalized probabilities, token counts, reset epochs, complete source and
+response windows, durations, and errors. Forward values SHALL be features and
+SHALL NOT become source-truth labels.
+
+Before CUDA initialization, the task SHALL resolve the cached
+`unsloth/Qwen3.8-27B-GGUF` Q4_K_M model through `cached_current_model()`. It
+SHALL recheck GPU processes and lease journals for at most 300 seconds. It
+SHALL acquire one fresh exclusive lease only for an actually admissible GPU.
+The current receipt SHALL bind the model file hash, native tokenizer and chat
+template, CUDA runtime, physical GPU UUID, owned PID, and process start tick.
+It SHALL not stop another process, adopt an endpoint, use a small substitute,
+or use the obsolete Exp7548 capacity snapshot as admission. A capacity block
+SHALL be terminal `blocked_no_run`. Planned work SHALL remain
+`model_load_no_generation`. Actual option forwards SHALL declare
+`live_llm_embedding_extraction`, `readout_kind=option_logits`, and zero
+generated tokens.
+
+The task SHALL forecast the fit capture over fit, tune, and policy roles. It
+SHALL forecast evaluation separately over test and online roles. Each capture
+SHALL contain 240 groups and 1,440 forwards. Each forecast SHALL use measured
+model load, full-prompt token lengths, p95 forward time, and checkpoint cost.
+Predicted acquisition SHALL not exceed 3,000 seconds. Predicted execution plus
+the 900-second validation reserve SHALL not exceed 4,200 seconds. The task
+SHALL not shorten prompts or remove roles to make a forecast pass. Pilot
+transport readiness SHALL remain separate from fit and evaluation feasibility.
+
+Missing external inputs SHALL publish a schema-complete `complete_blocked_*`
+artifact with `verdict_class=blocked`. A model call that does not start SHALL
+use `blocked_no_run` while it retains the planned substrate class separately.
+Required validation failure SHALL be disqualified. Complete valid no-benefit
+evidence SHALL remain null. `partial` SHALL apply only to unfinished owned
+work that a retry can complete.
+
+The affected manifest SHALL name only the Exp7563 test, reusable module, and
+thin entrypoint. Checks SHALL include scoped pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+scoped specification coverage, declared-entrypoint replay, independent raw
+reduction, adversarial verification, and strict verdict-row consistency. No
+numbered runtime E2E applies to this isolated native readout pilot. The task
+SHALL publish the terminal JSON atomically at
+`results/experiment_7563_v661_native_pilot.json` only after all checks pass.
+
+#### SCENARIO-VERIFY-7563-PRECONDITIONS: Sealed Inputs And Runner Qualification Stay Separate
+
+**Given** the sealed v659 corpus and the v660 qualified runner artifact
+**When** Exp7563 checks provenance before measurement
+**Then** corpus roles, donors, exclusions, and label access retain their exact identities
+**And** runner readiness depends on transport controls rather than its historic capacity verdict.
+
+#### SCENARIO-VERIFY-7563-CUSTODY: Seventy-Two Zero-Generation Rows Retain Native Bytes
+
+**Given** twelve excluded development groups and an owned Qwen runtime
+**When** three source conditions run in two mapped option orders
+**Then** exactly 72 rows preserve complete byte, token, probability, reset, and error evidence
+**And** no generated token or source-truth label enters the capture.
+
+#### SCENARIO-VERIFY-7563-FORECAST: Fit And Evaluation Captures Use Independent Budgets
+
+**Given** measured load, p95 forward time, full-prompt lengths, and checkpoint cost
+**When** fit and evaluation forecasts each expand 240 groups into 1,440 forwards
+**Then** each acquisition forecast is at most 3,000 seconds to receive a feasible score
+**And** each total with the 900-second validation reserve is at most 4,200 seconds.
+
+#### SCENARIO-VERIFY-7563-OWNERSHIP: Fresh Admission Binds One Owned Physical GPU
+
+**Given** current process and lease-journal observations
+**When** the task admits a device before CUDA initialization
+**Then** a fresh exclusive lease binds its UUID, owned PID, start tick, model hash, and CUDA runtime
+**And** no historic snapshot, foreign process, endpoint, or substitute model authorizes work.
+
+#### SCENARIO-VERIFY-7563-BLOCKED: External Absence Stops Before Fabricated Work
+
+**Given** a missing sealed field, runner control, cached model, runtime, or owned GPU
+**When** its precondition fails
+**Then** a complete blocked artifact records zero unstarted calls and bare readiness scores
+**And** the gate summary names the upstream, path, field, expected, and observed values.
+
+#### SCENARIO-VERIFY-7563-E2E: The Declared Entrypoint Publishes Only Cold-Valid Evidence
+
+**Given** one frozen affected-file manifest and exact terminal candidate
+**When** the entrypoint, cold replay, and independent reduction run
+**Then** scoped validation and both strict terminal readers pass
+**And** only the hash-bound terminal candidate publishes at the deliverable path.
