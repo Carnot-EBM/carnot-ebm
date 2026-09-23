@@ -46524,3 +46524,56 @@ questions for this review, rather than reasons to repeat unchanged sweeps.
 
 No external publication, contact, model run or hardware change was performed.
 Previously filed sources are marked as rechecks rather than new discoveries.
+
+## 2026-09-23: Jev demos gallery — swept for ARC-AGI-3-relevant patterns (reference note)
+
+Requested by the operator: read the full data source (562 entries: 24 featured + 538 general)
+behind [webdevcody.github.io/jev-demos](https://webdevcody.github.io/jev-demos/), fetched
+directly from the raw embedded JSON at
+[github.com/webdevcody/jev-demos](https://raw.githubusercontent.com/webdevcody/jev-demos/refs/heads/main/index.html)
+rather than relying on the client-rendered page. Every entry is a community demo (an X/Twitter
+post), captioned by the gallery's own maintainer, of someone hooking TypeSafe's Jev decision
+model to a game, browser, or agent harness. 138 of 562 entries matched a broad
+game/agent/world-model keyword filter. No entry names ARC-AGI-3 directly. Several are
+structurally close enough to be worth recording. All facts below are second-hand (read from the
+gallery's own captions, not the original posts or any code); none were run or verified.
+
+- **Laya-MLX, an open-source local port with real numbers**
+  ([github.com/mizorewww/laya-mlx](https://github.com/mizorewww/laya-mlx), cited via the gallery
+  entry "Laya-MLX: local encoder plays Snake at 60 decisions/s", mizorewww, 2026-09-20). Ports
+  the Jev-style typed-decision technique to run locally on Apple Silicon (MLX), reading decisions
+  from text-output probabilities -- the same technique as our own SemIf readout. A quoted
+  follow-up benchmark on the same Snake task: Laya 86.5 decisions/s, P50 ~9ms latency, score 46;
+  cloud Jev 1.13.0 at 3.2 decisions/s, ~317ms RTT. A separate reply on that thread reports Laya
+  "starts guessing once the option count or context gets [larger]" (text cuts off in the source).
+  That degradation matches our own overflow/truncation finding from the Jev-Tetris fork work
+  this session (experiments 10004-10006) -- independent evidence that option-count/context
+  degradation is a known limitation of this technique family, not specific to our port.
+- **FreeDoom via a text briefing, no pixels** (Mellon0x, 2026-09-21, via ViZDoom). Converts full
+  game state into a compact text briefing (health, ammo, enemies, distance, direction, walls,
+  door) and picks one of eight discrete actions. Structurally identical to our own approach
+  (compact state description in, pick from a small enumerated action set) at a materially higher
+  complexity than Tetris -- a precedent that the pattern scales.
+- **Independent Tetris runs, with numbers to compare against ours** (experiments 10004-10009,
+  this session): "Jev Tetris on super-hard mode" (AlanDaitch, 2026-09-17) reports 357 pieces
+  placed, 134 lines cleared in 2 minutes. "Tetris reflex versus DeepSeek Flash" (huhaoai,
+  2026-09-21) reports a same-seed match at a 128ms/cell drop timer, Jev ahead 12 garbage lines
+  cleared by 22 seconds (the caption cuts off before a final result). "Tetris with real-time Jev
+  decisions" (marcus_lowe, 2026-09-16) claims decisions fast enough that the agent pushes pieces
+  down rather than waiting out the drop timer -- a latency claim well below our own measured
+  median ~1,237 completion tokens per decision on local Qwen.
+- **Per-turn model routing, a transferable idea outside game-playing.** "Jev Model Router for
+  Claude Code" (dani_avila7, 2026-09-19) and "Jevonian" (xinyao27, 2026-09-21) both use a cheap
+  Jev-style classifier to pick which model or effort level handles each turn, not to play a game.
+  This is the same shape as this project's own Needle-to-SemIf-to-27B cascade idea (plan section
+  7, E11/E12) -- independent, separate discovery of "a cheap classifier gates an expensive model
+  call" for the same cost/latency reason.
+- **Head-to-head benchmarks exist against our own models, but outcomes are not in this dataset.**
+  "Jev vs Qwen 3.8 27B" (civitcio, 2026-09-20, chess) and "Sonnet 5 vs Jev, first game" (civitcio,
+  2026-09-20, chess) both name models this project directly depends on (the mandated ARC
+  generator; the model writing this note). The gallery's captions describe only the setup, not a
+  result. Not followed up further this session.
+- **Status.** Unreplicated, second-hand, no code run. Worth a look only if a future session needs
+  a local-MLX or local-CPU reference implementation of the SemIf/Jev readout technique (Laya-MLX),
+  or wants prior art for a model-routing cascade (Jevonian/Jev Model Router) before designing our
+  own E11/E12 experiments.
