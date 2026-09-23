@@ -77312,6 +77312,91 @@ scenario applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7515 and SCENARIO-REPORT-7515-* | Implemented: V657 capstone reducer, retrospective, bounded retirement rows, read-only publication gates, and thin entrypoint. | Spec-linked tests cover paired authorities, producer custody, receipt variants, claim boundaries, terminal precedence, retirement, retrospective content, protected mutations, scoped validation, and 100 percent changed-module coverage. The entrypoint requires all affected and terminal readers before publication. |
+
+## REQ-REPORT-7550: Independently audit V660 count learning
+
+The repository SHALL provide Exp7550 as an aggregation-only audit. It SHALL
+read the exact Exp7547 protocol and Exp7549 terminal artifact after each
+producer exits. It SHALL authenticate the raw prediction, release, retention,
+bootstrap, and persistence sidecars. An absent or externally blocked producer
+SHALL yield a complete blocked record with its exact path and field. Invalid
+present evidence SHALL yield a disqualified record.
+
+The audit SHALL reconstruct every frozen, global-count, local-count, and
+shuffled-local prediction from direct Beta counts. It SHALL normalize both
+binary energies directly. It SHALL not call the Exp7549 reducer or trust its
+headline fields. The audit SHALL verify prediction-before-release order,
+delivered labels, same-block shuffled controls, exactly-once updates, group
+identity, persisted state, and aggregate agreement. Retention labels SHALL
+remain evaluation-only and SHALL not change learner state.
+
+The reducer SHALL preserve each source across all five orders as one dependent
+unit. It SHALL recompute absolute Brier loss, primary costs, support, the 1,000
+source-resampled interval rows, Holm results, and retained loss limits. The
+frozen thresholds and seeds in the V660 design SHALL control the result.
+Earlier inspection SHALL keep `confirmatory_benefit_score` at zero.
+
+Private mutations SHALL swap a released label with a future label, change
+label orientation, duplicate an update, permute a group ID, alter a checkpoint,
+and make one aggregate inconsistent with its rows. Each mutation SHALL fail its
+named check. Corrupted private bytes SHALL not enter the terminal artifact.
+
+`count_claims_qualified_score` SHALL be a bare zero or one. It SHALL require
+independent arithmetic, chronology, restart, uncertainty, and raw custody.
+`qualified_exploratory_effect_score` SHALL not exceed the independent retained
+evidence. A valid null MAY qualify the count claims. Exp7509 and Exp7510 SHALL
+retain their prior null dispositions.
+
+The task SHALL declare empty `MODEL_SPECS` and `model_specs`, no current model
+invocation, balanced zero call counts, `aggregation_from_upstream_artifacts`,
+the `aggregation` class, and host execution. The affected-file manifest SHALL
+freeze one test, one changed module, and one thin entrypoint. Validation SHALL
+run focused pytest, 100 percent changed-module coverage, scoped Ruff,
+changed-module mypy, scoped specification coverage, the declared entrypoint,
+fresh-process replay, independent reduction, adversarial verification, and
+strict row consistency. No numbered runtime end-to-end scenario applies.
+
+### SCENARIO-REPORT-7550-INVENTORY: Missing and invalid producers stay distinct
+
+**Given** the exact Exp7547 and Exp7549 artifact paths
+**When** the audit inventories terminal fields and raw sidecars
+**Then** missing external evidence produces a complete blocked result
+**And** invalid present evidence produces a disqualified result.
+
+### SCENARIO-REPORT-7550-CAUSALITY: Direct counts control predictions
+
+**Given** the sealed protocol, predictions, releases, and persistence receipts
+**When** the audit replays each order with direct Beta arithmetic
+**Then** predictions precede matching feedback and each update occurs once
+**And** binary normalization, shuffled labels, and restart state agree.
+
+### SCENARIO-REPORT-7550-REDUCTION: Sources remain the independent units
+
+**Given** five repeated orders for each online source
+**When** the audit recomputes losses, costs, intervals, and Holm decisions
+**Then** repeated orders do not multiply support
+**And** retention limits and all frozen benefit thresholds remain unchanged.
+
+### SCENARIO-REPORT-7550-MUTATIONS: Six private corruptions fail closed
+
+**Given** a compact valid audit fixture
+**When** future labels, orientation, updates, groups, checkpoints, or aggregates change
+**Then** every corruption produces its named audit error
+**And** no corrupted fixture enters the published result.
+
+### SCENARIO-REPORT-7550-NULL: Qualification does not promote a null
+
+**Given** valid evidence that fails one or more benefit gates
+**When** the audit classifies the independent result
+**Then** count claims can qualify while exploratory effect remains zero
+**And** confirmatory benefit remains zero because the corpus was inspected.
+
+### SCENARIO-REPORT-7550-E2E: Exact readers control atomic publication
+
+**Given** a frozen affected manifest and measured terminal candidate
+**When** fresh processes replay, reduce, adversarially verify, and strictly lint it
+**Then** source, row, score, gate, principle, receipt, or checksum drift fails
+**And** only the exact validated terminal JSON publishes at the declared path.
 ## REQ-REPORT-V658-PLAN: Paired V658 planning authorities
 
 Milestone `2026.09.658` SHALL have exactly fourteen ordered tasks,

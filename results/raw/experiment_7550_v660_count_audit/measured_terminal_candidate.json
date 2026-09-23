@@ -1,0 +1,1375 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "independent_arithmetic",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Invalid arithmetic cannot support a count-learning claim."
+    },
+    {
+      "category": "validity",
+      "check": "feedback_chronology",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Future feedback cannot author an earlier prediction."
+    },
+    {
+      "category": "validity",
+      "check": "restart_and_exactly_once",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "A changed or repeated update invalidates persistent learning."
+    },
+    {
+      "category": "readiness",
+      "check": "count_claims_qualified",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "A valid null remains auditable without becoming a benefit."
+    },
+    {
+      "category": "support",
+      "check": "source_support",
+      "expected": {
+        "per_label": 12,
+        "sources": 128
+      },
+      "observed": {
+        "labels": {
+          "0": 91,
+          "1": 68
+        },
+        "sources": 159
+      },
+      "op": "gte",
+      "passed": true,
+      "principle": "Repeated orders cannot multiply independent source support."
+    },
+    {
+      "category": "benefit",
+      "check": "exploratory_effect",
+      "expected": true,
+      "observed": false,
+      "op": "eq",
+      "passed": false,
+      "principle": "Insufficient effect or retention evidence cannot become promotion."
+    },
+    {
+      "category": "benefit",
+      "check": "confirmatory_benefit",
+      "expected": 0,
+      "observed": 0,
+      "op": "eq",
+      "passed": true,
+      "principle": "Prior corpus inspection forbids confirmatory promotion."
+    },
+    {
+      "category": "validity",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "principle": "Scoped checks must pass before current evidence can qualify."
+    },
+    {
+      "category": "validity",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": "pending",
+      "op": "eq",
+      "passed": true,
+      "principle": "Fresh readers must accept the exact measured candidate."
+    },
+    {
+      "category": "validity",
+      "check": "private_mutations",
+      "expected": 6,
+      "observed": 6,
+      "op": "eq",
+      "passed": true,
+      "principle": "Required corruptions must fail before scientific interpretation."
+    }
+  ],
+  "capability_e2e": {
+    "numbered_runtime_e2e": {
+      "applicable": [],
+      "reason": "Read-only reporting changed no shared runtime, binding, ARC, or telemetry path."
+    },
+    "passed": true,
+    "private_llm_off_real_environment_smoke": "authenticated_cached_count_replay",
+    "workflow": "predict_release_update_persist_reload_independent_replay"
+  },
+  "compute_details": {
+    "logical_cpu_count": 24,
+    "machine": "x86_64",
+    "processor": ""
+  },
+  "confirmatory_benefit_score": 0,
+  "count_claims_qualified_score": 1,
+  "duration_s": 144.00204191499506,
+  "execution_venue": "host",
+  "experiment_id": "exp7550-count-audit",
+  "field_principles": {
+    "MODEL_SPECS": "Makes the no-model plan explicit.",
+    "acceptance_gate_results": "Keeps validity, readiness, support, and benefit separate.",
+    "capability_e2e": "Preserves this field for independent drift detection.",
+    "compute_details": "Preserves this field for independent drift detection.",
+    "confirmatory_benefit_score": "Remains zero on previously inspected data.",
+    "count_claims_qualified_score": "Requires arithmetic, chronology, restart, and uncertainty agreement.",
+    "duration_s": "Reports measured current work without padding.",
+    "execution_venue": "Uses the legal host venue enum.",
+    "experiment_id": "Binds the exact task, milestone, and run date.",
+    "field_principles": "States the failure prevented by every terminal field.",
+    "flagged_adversarial": "Preserves actual falsification outcomes.",
+    "gate_check_summary": "Names exact failed operands instead of a vague status.",
+    "historical_model_calls": "Preserves this field for independent drift detection.",
+    "honest_verdict": "Uses one complete terminal disposition.",
+    "independent_reduction": "Preserves this field for independent drift detection.",
+    "inference_substrate": "Names upstream-artifact aggregation as the actual substrate.",
+    "inference_substrate_class": "Keeps aggregation distinct from model inference.",
+    "invocation_counts": "Preserves this field for independent drift detection.",
+    "milestone": "Preserves this field for independent drift detection.",
+    "model_invoked": "Separates current aggregation from historical model calls.",
+    "model_specs": "Keeps both required model manifests empty.",
+    "mutation_rows": "Exposes every required private falsification result.",
+    "no_headroom": "Preserves this field for independent drift detection.",
+    "no_headroom_annotation": "Preserves this field for independent drift detection.",
+    "phase_spans": "Preserves this field for independent drift detection.",
+    "planned_inference_substrate_class": "Preserves this field for independent drift detection.",
+    "positive_claim": "Preserves this field for independent drift detection.",
+    "preconditions_checked": "Prevents absent inputs from becoming fabricated measurements.",
+    "prior_results": "Preserves this field for independent drift detection.",
+    "process_identity": "Preserves this field for independent drift detection.",
+    "qualified_exploratory_effect_score": "Cannot exceed independently retained evidence.",
+    "random_seed": "Prevents outcome-aware resampling changes.",
+    "raw_evidence": "Preserves this field for independent drift detection.",
+    "reproducibility_checksum": "Binds code, inputs, settings, and raw evidence.",
+    "rows": "Keeps absolute arm metrics beside comparative effects.",
+    "run_date": "Preserves this field for independent drift detection.",
+    "sample_size_budget": "Separates completed, failed, censored, and unstarted units.",
+    "schema": "Preserves this field for independent drift detection.",
+    "source_artifact_hashes": "Preserves this field for independent drift detection.",
+    "terminal_status": "Preserves this field for independent drift detection.",
+    "title": "Preserves this field for independent drift detection.",
+    "validation_receipts": "Stores exact command scopes, exits, logs, and cold readers.",
+    "verdict_class": "Restricts classification to the closed vocabulary.",
+    "verifier_is_oracle": "Prevents probability evidence from becoming a correctness proof."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      "exploratory_effect"
+    ],
+    "first_failure": {
+      "category": "benefit",
+      "check": "exploratory_effect",
+      "expected": true,
+      "observed": false,
+      "op": "eq",
+      "passed": false,
+      "principle": "Insufficient effect or retention evidence cannot become promotion."
+    },
+    "passed": false
+  },
+  "historical_model_calls": {
+    "counted_as_current": false,
+    "source": "results/experiment_7547_v660_count_stream.json"
+  },
+  "honest_verdict": "complete_null_count_claims_qualified_benefit_gate_failed",
+  "independent_reduction": {
+    "absolute_brier": {
+      "frozen": 0.15724915633734554,
+      "global_count": 0.14120923420057496,
+      "local_count": 0.14997917983634546,
+      "shuffled_local": 0.18016105511169664
+    },
+    "absolute_primary_cost": {
+      "frozen": 0.18490566037735848,
+      "global_count": 0.19119496855345913,
+      "local_count": 0.20075471698113206,
+      "shuffled_local": 0.19144654088050317
+    },
+    "arithmetic_passed": true,
+    "audit_errors": [],
+    "censored_ordered_event_count": 75,
+    "chronology_passed": true,
+    "complete_online_source_count": 159,
+    "control_passed": true,
+    "count_claims_qualified": true,
+    "effect_passed": false,
+    "independent_unit": "online_source_group",
+    "label_counts": {
+      "0": 91,
+      "1": 68
+    },
+    "mean_delta_brier": {
+      "frozen": -0.007269976501000086,
+      "global_count": 0.008769945635770493,
+      "shuffled_local": -0.030181875275351183
+    },
+    "primary_contrasts": [
+      {
+        "bootstrap_replicates": 1000,
+        "comparator": "frozen",
+        "holm_adjusted_p": 0.5354645354645354,
+        "holm_passed": false,
+        "mean_delta": -0.007269976501000086,
+        "one_sided_p": 0.2677322677322677,
+        "simultaneous_upper95_delta": 0.008298107951703826,
+        "upper95_delta": 0.006716964584685459
+      },
+      {
+        "bootstrap_replicates": 1000,
+        "comparator": "global_count",
+        "holm_adjusted_p": 0.975024975024975,
+        "holm_passed": false,
+        "mean_delta": 0.008769945635770493,
+        "one_sided_p": 0.975024975024975,
+        "simultaneous_upper95_delta": 0.019658516352718827,
+        "upper95_delta": 0.019658516352718827
+      },
+      {
+        "bootstrap_replicates": 1000,
+        "comparator": "shuffled_local",
+        "holm_adjusted_p": 0.03596403596403597,
+        "holm_passed": true,
+        "mean_delta": -0.030181875275351183,
+        "one_sided_p": 0.011988011988011988,
+        "simultaneous_upper95_delta": -0.001274872748623701,
+        "upper95_delta": -0.003858265844099096
+      }
+    ],
+    "producer_aggregate_agreement": true,
+    "restart_passed": true,
+    "retained_absolute_brier": {
+      "frozen": 0.1233918207088767,
+      "global_count": 0.11148342139454416,
+      "local_count": 0.11308011943518248,
+      "shuffled_local": 0.14414371488517425
+    },
+    "retention_brier_upper95_deterioration": 0.023085503232673027,
+    "retention_cost_upper95_deterioration": 0.031034482758620696,
+    "retention_isolation_passed": true,
+    "retention_passed": false,
+    "schedule_passed": true,
+    "source_resample_agreement": true,
+    "source_resample_replicates": 1000,
+    "support_passed": true,
+    "uncertainty_passed": false
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_cancelled": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "forward_calls_in_flight": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.660",
+  "model_invoked": false,
+  "model_specs": [],
+  "mutation_rows": [
+    {
+      "corrupted_fixture_published": false,
+      "disposition": "complete_private_falsification",
+      "expected": "rejected",
+      "mutation": "future_label_swap",
+      "observed_errors": [
+        "row_brier_mismatch:1:group-0:frozen",
+        "row_brier_mismatch:1:group-0:global_count",
+        "row_brier_mismatch:1:group-0:local_count",
+        "row_brier_mismatch:1:group-0:shuffled_local",
+        "released_label_mismatch:1:0",
+        "changed_binding_mismatch:1:0",
+        "post_count_state_mismatch:1:group-0:frozen",
+        "post_count_state_mismatch:1:group-0:global_count",
+        "post_count_state_mismatch:1:group-0:local_count",
+        "post_count_state_mismatch:1:group-0:shuffled_local",
+        "post_count_state_mismatch:1:group-1:frozen",
+        "post_count_state_mismatch:1:group-1:global_count",
+        "post_count_state_mismatch:1:group-1:local_count",
+        "post_count_state_mismatch:1:group-1:shuffled_local",
+        "count_state_mismatch:1:group-3:frozen",
+        "count_state_mismatch:1:group-3:global_count",
+        "probability_mismatch:1:group-3:global_count",
+        "energy_mismatch:1:group-3:global_count",
+        "normalization_mismatch:1:group-3:global_count",
+        "row_brier_mismatch:1:group-3:global_count",
+        "row_cost_mismatch:1:group-3:global_count",
+        "count_state_mismatch:1:group-3:local_count",
+        "probability_mismatch:1:group-3:local_count",
+        "energy_mismatch:1:group-3:local_count",
+        "normalization_mismatch:1:group-3:local_count",
+        "row_brier_mismatch:1:group-3:local_count",
+        "row_cost_mismatch:1:group-3:local_count",
+        "count_state_mismatch:1:group-3:shuffled_local",
+        "producer_aggregate_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "corrupted_fixture_published": false,
+      "disposition": "complete_private_falsification",
+      "expected": "rejected",
+      "mutation": "orientation_change",
+      "observed_errors": [
+        "label_orientation_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "corrupted_fixture_published": false,
+      "disposition": "complete_private_falsification",
+      "expected": "rejected",
+      "mutation": "duplicate_update",
+      "observed_errors": [
+        "duplicate_update:1:0",
+        "duplicate_release_time:1:2",
+        "checkpoint_count_mismatch",
+        "producer_aggregate_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "corrupted_fixture_published": false,
+      "disposition": "complete_private_falsification",
+      "expected": "rejected",
+      "mutation": "group_id_permutation",
+      "observed_errors": [
+        "prediction_arm_roster_mismatch:1:group-0",
+        "released_prediction_missing:1:group-0",
+        "released_label_mismatch:1:0",
+        "shuffled_label_mismatch:1:0",
+        "changed_binding_mismatch:1:0",
+        "post_count_state_mismatch:1:group-1:frozen",
+        "post_count_state_mismatch:1:group-1:global_count",
+        "post_count_state_mismatch:1:group-1:local_count",
+        "post_count_state_mismatch:1:group-1:shuffled_local",
+        "count_state_mismatch:1:group-3:frozen",
+        "count_state_mismatch:1:group-3:global_count",
+        "probability_mismatch:1:group-3:global_count",
+        "energy_mismatch:1:group-3:global_count",
+        "normalization_mismatch:1:group-3:global_count",
+        "row_brier_mismatch:1:group-3:global_count",
+        "row_cost_mismatch:1:group-3:global_count",
+        "count_state_mismatch:1:group-3:local_count",
+        "probability_mismatch:1:group-3:local_count",
+        "energy_mismatch:1:group-3:local_count",
+        "normalization_mismatch:1:group-3:local_count",
+        "row_brier_mismatch:1:group-3:local_count",
+        "row_cost_mismatch:1:group-3:local_count",
+        "count_state_mismatch:1:group-3:shuffled_local",
+        "probability_mismatch:1:group-3:shuffled_local",
+        "energy_mismatch:1:group-3:shuffled_local",
+        "normalization_mismatch:1:group-3:shuffled_local",
+        "row_brier_mismatch:1:group-3:shuffled_local",
+        "row_cost_mismatch:1:group-3:shuffled_local",
+        "prediction_group_extra:1",
+        "producer_aggregate_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "corrupted_fixture_published": false,
+      "disposition": "complete_private_falsification",
+      "expected": "rejected",
+      "mutation": "checkpoint_change",
+      "observed_errors": [
+        "checkpoint_state_mismatch:1:0",
+        "producer_aggregate_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "corrupted_fixture_published": false,
+      "disposition": "complete_private_falsification",
+      "expected": "rejected",
+      "mutation": "aggregate_row_mismatch",
+      "observed_errors": [
+        "producer_aggregate_mismatch"
+      ],
+      "passed": true
+    }
+  ],
+  "no_headroom": false,
+  "no_headroom_annotation": "No no-headroom claim is made. The local arm lost to the global control and exceeded retention limits.",
+  "phase_spans": [
+    {
+      "completed_units": 45,
+      "duration_s": 0.09844375899410807,
+      "end_offset_s": 0.09846473898505792,
+      "phase": "preconditions",
+      "start_offset_s": 2.0979990949854255e-05
+    },
+    {
+      "completed_units": 3180,
+      "duration_s": 0.15866976999677718,
+      "end_offset_s": 0.2712536249891855,
+      "phase": "input_custody",
+      "start_offset_s": 0.1125838549924083
+    },
+    {
+      "completed_units": 1000,
+      "duration_s": 24.753382339986274,
+      "end_offset_s": 25.02466760398238,
+      "phase": "independent_reduction",
+      "start_offset_s": 0.27128526399610564
+    },
+    {
+      "completed_units": 6,
+      "duration_s": 0.008344049012521282,
+      "end_offset_s": 25.033038883993868,
+      "phase": "private_mutations",
+      "start_offset_s": 25.024694834981347
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 118.96823234498152,
+      "end_offset_s": 144.00202089597587,
+      "phase": "affected_validation",
+      "start_offset_s": 25.03378855099436
+    }
+  ],
+  "planned_inference_substrate_class": "aggregation",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "check": "required_input:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "AGENTS.md",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "required_input:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "CODEX.md",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "required_input:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "CLAUDE.md",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "required_input:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "research-program.md",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "required_input:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "ops/exclusion_manifest.yaml",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "required_input:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "ops/e2e-test-plan.md",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "required_input:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "scripts/experiment_template.py",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "required_input:python/carnot/reporting/current_work_receipt.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/reporting/current_work_receipt.py",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/experiment_7358_v646_validation_contract.py",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "check": "required_input:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7510_v657_causal_audit.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/experiment_7510_v657_causal_audit.py",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "python/carnot/experiment_7510_v657_causal_audit.py"
+    },
+    {
+      "check": "required_input:python/carnot/experiment_7534_v659_count_memory.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "python/carnot/experiment_7534_v659_count_memory.py",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "python/carnot/experiment_7534_v659_count_memory.py"
+    },
+    {
+      "check": "required_input:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "openspec/capabilities/research-reporting/spec.md",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "required_input:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "check": "required_input:results/experiment_7547_v660_count_stream.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/experiment_7547_v660_count_stream.json",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7547_v660_count_stream.json"
+    },
+    {
+      "check": "required_input:results/experiment_7549_v660_count_learning.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/experiment_7549_v660_count_learning.json",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "required_input:results/experiment_7509_v657_causal_online.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/experiment_7509_v657_causal_online.json",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7509_v657_causal_online.json"
+    },
+    {
+      "check": "required_input:results/experiment_7510_v657_causal_audit.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/experiment_7510_v657_causal_audit.json",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7510_v657_causal_audit.json"
+    },
+    {
+      "check": "driving_requirement",
+      "expected": "REQ-REPORT-7550",
+      "observed": "REQ-REPORT-7550",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "REQ-*",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "upstream_stream:experiment_id",
+      "expected": "exp7547-count-stream",
+      "observed": "exp7547-count-stream",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "experiment_id",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7547_v660_count_stream.json"
+    },
+    {
+      "check": "upstream_stream:milestone",
+      "expected": "2026.09.660",
+      "observed": "2026.09.660",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "milestone",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7547_v660_count_stream.json"
+    },
+    {
+      "check": "upstream_stream:run_date",
+      "expected": "20260923",
+      "observed": "20260923",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "run_date",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7547_v660_count_stream.json"
+    },
+    {
+      "check": "upstream_stream:cached_stream_ready_score",
+      "expected": 1,
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "cached_stream_ready_score",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7547_v660_count_stream.json"
+    },
+    {
+      "check": "upstream_stream:verdict_class",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "observed": "null",
+      "op": "in",
+      "passed": true,
+      "path_or_field": "verdict_class",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7547_v660_count_stream.json"
+    },
+    {
+      "check": "upstream_stream:flagged_adversarial",
+      "expected": false,
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "flagged_adversarial",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7547_v660_count_stream.json"
+    },
+    {
+      "check": "upstream_producer:experiment_id",
+      "expected": "exp7549-count-learning",
+      "observed": "exp7549-count-learning",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "experiment_id",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "upstream_producer:milestone",
+      "expected": "2026.09.660",
+      "observed": "2026.09.660",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "milestone",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "upstream_producer:run_date",
+      "expected": "20260923",
+      "observed": "20260923",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "run_date",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "upstream_producer:terminal_status",
+      "expected": "complete",
+      "observed": "complete",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "terminal_status",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "upstream_producer:count_measurement_complete_score",
+      "expected": 1,
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "count_measurement_complete_score",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "upstream_producer:verdict_class",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "observed": "null",
+      "op": "in",
+      "passed": true,
+      "path_or_field": "verdict_class",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "upstream_producer:flagged_adversarial",
+      "expected": false,
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "flagged_adversarial",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "upstream_prior_7509:honest_verdict",
+      "expected": "complete_null_causal_online_measurement_valid_benefit_gate_failed",
+      "observed": "complete_null_causal_online_measurement_valid_benefit_gate_failed",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "honest_verdict",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7509_v657_causal_online.json"
+    },
+    {
+      "check": "upstream_prior_7509:verdict_class",
+      "expected": "null",
+      "observed": "null",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "verdict_class",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7509_v657_causal_online.json"
+    },
+    {
+      "check": "upstream_prior_7510:honest_verdict",
+      "expected": "complete_null_v657_causal_audit_benefit_gate_failed",
+      "observed": "complete_null_v657_causal_audit_benefit_gate_failed",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "honest_verdict",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7510_v657_causal_audit.json"
+    },
+    {
+      "check": "upstream_prior_7510:verdict_class",
+      "expected": "null",
+      "observed": "null",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "verdict_class",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7510_v657_causal_audit.json"
+    },
+    {
+      "check": "upstream_prior_7510:causal_claims_qualified_score",
+      "expected": 1,
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "causal_claims_qualified_score",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7510_v657_causal_audit.json"
+    },
+    {
+      "check": "upstream_prior_7510:qualified_online_benefit_score",
+      "expected": 0,
+      "observed": 0,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "qualified_online_benefit_score",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7510_v657_causal_audit.json"
+    },
+    {
+      "check": "raw_custody:stream.frozen_protocol",
+      "expected": "sha256:ec7a2689490d3176537151e6955105fb89c76268782561cc4bb81b08c461f215",
+      "observed": "sha256:ec7a2689490d3176537151e6955105fb89c76268782561cc4bb81b08c461f215",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/raw/experiment_7547_v660_count_stream/frozen_protocol.json",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7547_v660_count_stream.json"
+    },
+    {
+      "check": "raw_custody:producer.prediction_update_rows",
+      "expected": "sha256:0d6d480dfb8643473baa977cdaca1e4b1249a7bb1697dcad12246df2711f4df1",
+      "observed": "sha256:0d6d480dfb8643473baa977cdaca1e4b1249a7bb1697dcad12246df2711f4df1",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/raw/experiment_7549_v660_count_learning/prediction_update_rows.jsonl",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "raw_custody:producer.release_rows",
+      "expected": "sha256:d130003cf99862fe1090e55886c03e0e615803b8c946eb81b5f441585fa11d8e",
+      "observed": "sha256:d130003cf99862fe1090e55886c03e0e615803b8c946eb81b5f441585fa11d8e",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/raw/experiment_7549_v660_count_learning/release_rows.jsonl",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "raw_custody:producer.persistence_rows",
+      "expected": "sha256:ef71ea83e17a56af4cf82a58a614d35119eed9eded7c6a407f96e4680201ffe6",
+      "observed": "sha256:ef71ea83e17a56af4cf82a58a614d35119eed9eded7c6a407f96e4680201ffe6",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/raw/experiment_7549_v660_count_learning/persistence_rows.jsonl",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "raw_custody:producer.retention_rows",
+      "expected": "sha256:ab6f73bccdb2c85af7d842a1a9457ec8e9ee6f7b7042ab28c756cc46be34ae7e",
+      "observed": "sha256:ab6f73bccdb2c85af7d842a1a9457ec8e9ee6f7b7042ab28c756cc46be34ae7e",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/raw/experiment_7549_v660_count_learning/retention_rows.jsonl",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "raw_custody:producer.bootstrap_rows",
+      "expected": "sha256:7fe9c1964e2d8e3217f3dffa0d6873c147d45916ce60896f601f6a6beee94b8e",
+      "observed": "sha256:7fe9c1964e2d8e3217f3dffa0d6873c147d45916ce60896f601f6a6beee94b8e",
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "results/raw/experiment_7549_v660_count_learning/bootstrap_rows.jsonl",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "upstream": "results/experiment_7549_v660_count_learning.json"
+    },
+    {
+      "check": "resource_availability",
+      "expected": true,
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path_or_field": "cpu_count_and_repository_storage",
+      "principle": "Exact prerequisite operands prevent fabricated fallback evidence.",
+      "required": true,
+      "resource_observation": {
+        "gpu_required": false,
+        "logical_cpu_count": 24,
+        "repository_device": 64770
+      },
+      "upstream": "host CPU/RAM/storage"
+    }
+  ],
+  "prior_results": [
+    {
+      "honest_verdict": "complete_null_causal_online_measurement_valid_benefit_gate_failed",
+      "path": "results/experiment_7509_v657_causal_online.json",
+      "verdict_class": "null"
+    },
+    {
+      "honest_verdict": "complete_null_v657_causal_audit_benefit_gate_failed",
+      "path": "results/experiment_7510_v657_causal_audit.json",
+      "verdict_class": "null"
+    }
+  ],
+  "process_identity": {
+    "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+    "pid": 1141904
+  },
+  "qualified_exploratory_effect_score": 0,
+  "random_seed": {
+    "bootstrap_replicates": 1000,
+    "bootstrap_seed": 7549011,
+    "order_seeds": [
+      7549001,
+      7549002,
+      7549003,
+      7549004,
+      7549005
+    ]
+  },
+  "raw_evidence": {
+    "bootstrap_rows": {
+      "bytes": 485171,
+      "path": "results/raw/experiment_7549_v660_count_learning/bootstrap_rows.jsonl",
+      "rows": 1000,
+      "sha256": "sha256:7fe9c1964e2d8e3217f3dffa0d6873c147d45916ce60896f601f6a6beee94b8e"
+    },
+    "persistence_rows": {
+      "bytes": 31630,
+      "path": "results/raw/experiment_7549_v660_count_learning/persistence_rows.jsonl",
+      "rows": 90,
+      "sha256": "sha256:ef71ea83e17a56af4cf82a58a614d35119eed9eded7c6a407f96e4680201ffe6"
+    },
+    "prediction_rows": {
+      "bytes": 3936263,
+      "path": "results/raw/experiment_7549_v660_count_learning/prediction_update_rows.jsonl",
+      "rows": 3180,
+      "sha256": "sha256:0d6d480dfb8643473baa977cdaca1e4b1249a7bb1697dcad12246df2711f4df1"
+    },
+    "producer": {
+      "bytes": 56790,
+      "path": "results/experiment_7549_v660_count_learning.json",
+      "sha256": "sha256:d2408d44699b57371c022fb0001a9162567d8428143708b7e54d247c235db9fa"
+    },
+    "protocol": {
+      "bytes": 68541,
+      "path": "results/raw/experiment_7547_v660_count_stream/frozen_protocol.json",
+      "sha256": "sha256:ec7a2689490d3176537151e6955105fb89c76268782561cc4bb81b08c461f215"
+    },
+    "release_rows": {
+      "bytes": 150465,
+      "path": "results/raw/experiment_7549_v660_count_learning/release_rows.jsonl",
+      "rows": 100,
+      "sha256": "sha256:d130003cf99862fe1090e55886c03e0e615803b8c946eb81b5f441585fa11d8e"
+    },
+    "retention_rows": {
+      "bytes": 9558289,
+      "path": "results/raw/experiment_7549_v660_count_learning/retention_rows.jsonl",
+      "rows": 11600,
+      "sha256": "sha256:ab6f73bccdb2c85af7d842a1a9457ec8e9ee6f7b7042ab28c756cc46be34ae7e"
+    },
+    "stream": {
+      "bytes": 171623,
+      "path": "results/experiment_7547_v660_count_stream.json",
+      "sha256": "sha256:706f6678299789d5d72071cbe253222a0139afbc16c56af8f89e426c8fd34f8a"
+    }
+  },
+  "reproducibility_checksum": "sha256:ab9a9953a6e52dcbf7038dd130951ba44aa38f63fa1145343d355c0fc130b514",
+  "rows": [
+    {
+      "absolute_metrics": {
+        "independent_source_groups": 159,
+        "mean_brier": 0.15724915633734554,
+        "mean_primary_cost": 0.18490566037735848,
+        "mean_retained_brier": 0.1233918207088767,
+        "prediction_count": 795
+      },
+      "arm": "frozen",
+      "censored": false,
+      "delta_brier_vs_local": 0.007269976501000086,
+      "disposition": "complete_comparative_arm",
+      "failed": false,
+      "unit_id": "arm-frozen"
+    },
+    {
+      "absolute_metrics": {
+        "independent_source_groups": 159,
+        "mean_brier": 0.14120923420057496,
+        "mean_primary_cost": 0.19119496855345913,
+        "mean_retained_brier": 0.11148342139454416,
+        "prediction_count": 795
+      },
+      "arm": "global_count",
+      "censored": false,
+      "delta_brier_vs_local": -0.008769945635770493,
+      "disposition": "complete_comparative_arm",
+      "failed": false,
+      "unit_id": "arm-global_count"
+    },
+    {
+      "absolute_metrics": {
+        "independent_source_groups": 159,
+        "mean_brier": 0.14997917983634546,
+        "mean_primary_cost": 0.20075471698113206,
+        "mean_retained_brier": 0.11308011943518248,
+        "prediction_count": 795
+      },
+      "arm": "local_count",
+      "censored": false,
+      "delta_brier_vs_local": 0.0,
+      "disposition": "complete_comparative_arm",
+      "failed": false,
+      "unit_id": "arm-local_count"
+    },
+    {
+      "absolute_metrics": {
+        "independent_source_groups": 159,
+        "mean_brier": 0.18016105511169664,
+        "mean_primary_cost": 0.19144654088050317,
+        "mean_retained_brier": 0.14414371488517425,
+        "prediction_count": 795
+      },
+      "arm": "shuffled_local",
+      "censored": false,
+      "delta_brier_vs_local": 0.030181875275351183,
+      "disposition": "complete_comparative_arm",
+      "failed": false,
+      "unit_id": "arm-shuffled_local"
+    }
+  ],
+  "run_date": "20260923",
+  "sample_size_budget": {
+    "independent_online_groups": {
+      "attempted": 159,
+      "censored": 0,
+      "completed": 159,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 159,
+      "unstarted": 0
+    },
+    "ordered_event_instances": {
+      "attempted": 795,
+      "censored": 75,
+      "completed": 795,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 795,
+      "unstarted": 0
+    },
+    "source_resamples": {
+      "attempted": 1000,
+      "censored": 0,
+      "completed": 1000,
+      "excluded": 0,
+      "failed": 0,
+      "planned": 1000,
+      "unstarted": 0
+    }
+  },
+  "schema": "carnot.exp7550.v660.count_audit.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+    "CODEX.md": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:a2be5121ac0e230fb4efce6742defed364feb8ea347eac603b25fa0d5945a882",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:45c8c72038c598a924808cee2a7fc9a4448e2f1936cb9ac02318f58c4276276e",
+    "ops/e2e-test-plan.md": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+    "ops/exclusion_manifest.yaml": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7510_v657_causal_audit.py": "sha256:a5227709fef93fc97197057aade926ff2b9ef9be8056720d1089b7361f1908f5",
+    "python/carnot/experiment_7534_v659_count_memory.py": "sha256:066fb1e29379263a4c0578f7a48bb24e4b2f113de3b2070aa93b580efd2e70d3",
+    "python/carnot/experiment_7550_v660_count_audit.py": "sha256:c4c28c623e5f0eaa1d5f15b45a9dc0720739c1e755ae80c0f4fd60f43377bf90",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7509_v657_causal_online.json": "sha256:11b2c20fdaa31ee285cb752175e28e1b11fbdab4e5b77f45befbaafb6019d9f7",
+    "results/experiment_7510_v657_causal_audit.json": "sha256:f60a55b3c38859c9818ca3ebea33e3f6beefe805a0472804e52c237852fbed90",
+    "results/experiment_7547_v660_count_stream.json": "sha256:706f6678299789d5d72071cbe253222a0139afbc16c56af8f89e426c8fd34f8a",
+    "results/experiment_7549_v660_count_learning.json": "sha256:d2408d44699b57371c022fb0001a9162567d8428143708b7e54d247c235db9fa",
+    "results/raw/experiment_7550_v660_count_audit/affected_validation_manifest.json": "sha256:bdbb120fdeeae45c122f66876908c9aaa72935f084060c4e90cbe3bb1abd0bbe",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7550_v660_count_audit.py": "sha256:dc29d86eca502ec4ae53426ee698a42a814c06d593b5deacea944a22d35bbc7a",
+    "tests/python/test_experiment_7550_v660_count_audit.py": "sha256:4d91ac76c2e99b5604d204152a18b0d633c0bad1aa7e95e7d063e2d18cf1810e"
+  },
+  "terminal_status": "complete",
+  "title": "Independent V660 feedback causality and count-learning audit",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7550_v660_count_audit",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7550_v660_count_audit"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5236328229948413,
+      "ended_at_utc": "2026-09-23T04:13:51.568749+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7550_v660_count_audit/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:c96c9cbda7eb779a7cc3b3aab99db8d4762eb950a57d931da4a883390929b7e9",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7550_v660_count_audit\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7550_v660_count_audit.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7550_v660_count_audit": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7550_v660_count_audit.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-23T04:13:51.044765+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7550-validation-_4yikbme/basetemp/focused tests/python/test_experiment_7550_v660_count_audit.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7550-validation-_4yikbme/basetemp/focused",
+        "tests/python/test_experiment_7550_v660_count_audit.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 29.120044871000573,
+      "ended_at_utc": "2026-09-23T04:14:20.689082+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7550_v660_count_audit/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:527b6592593aa52ca7221049e4ac787be0c4447c8db13427e1ebc18817224160",
+      "name": "focused_pytest",
+      "output_tail": ".................                                                        [100%]\n17 passed in 26.81s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-23T04:13:51.568786+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7550-validation-_4yikbme/coverage/.coverage '--include=*/experiment_7550_v660_count_audit.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7550-validation-_4yikbme/basetemp/coverage tests/python/test_experiment_7550_v660_count_audit.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7550-validation-_4yikbme/coverage/.coverage",
+        "--include=*/experiment_7550_v660_count_audit.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7550-validation-_4yikbme/basetemp/coverage",
+        "tests/python/test_experiment_7550_v660_count_audit.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 89.04563857600442,
+      "ended_at_utc": "2026-09-23T04:15:49.735150+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7550_v660_count_audit/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:d846b6214c29d7bc3cebcdcc3285f43d24718e46bc7cc2ac60f24352467a16ee",
+      "name": "changed_module_coverage",
+      "output_tail": ".................                                                        [100%]\n17 passed in 85.32s (0:01:25)\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-23T04:14:20.689113+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7550_v660_count_audit.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7550_v660_count_audit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7550-validation-_4yikbme/coverage/.coverage"
+      },
+      "duration_s": 0.11744951098808087,
+      "ended_at_utc": "2026-09-23T04:15:49.853230+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7550_v660_count_audit/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:568f255ace4bbac89877c8b65831b3593efdf621bd070c144f8b84ceceade10e",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------\npython/carnot/experiment_7550_v660_count_audit.py     839      0   100%\n---------------------------------------------------------------------------------\nTOTAL                                                 839      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-23T04:15:49.735243+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7550_v660_count_audit.py scripts/experiments/experiment_7550_v660_count_audit.py tests/python/test_experiment_7550_v660_count_audit.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7550_v660_count_audit.py",
+        "scripts/experiments/experiment_7550_v660_count_audit.py",
+        "tests/python/test_experiment_7550_v660_count_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01688146000378765,
+      "ended_at_utc": "2026-09-23T04:15:49.870636+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7550_v660_count_audit/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-23T04:15:49.853290+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7550_v660_count_audit.py scripts/experiments/experiment_7550_v660_count_audit.py tests/python/test_experiment_7550_v660_count_audit.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7550_v660_count_audit.py",
+        "scripts/experiments/experiment_7550_v660_count_audit.py",
+        "tests/python/test_experiment_7550_v660_count_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011360730015439913,
+      "ended_at_utc": "2026-09-23T04:15:49.882458+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7550_v660_count_audit/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-23T04:15:49.870681+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7550_v660_count_audit.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7550_v660_count_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.10713568597566336,
+      "ended_at_utc": "2026-09-23T04:15:49.989984+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7550_v660_count_audit/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-23T04:15:49.882496+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7550_v660_count_audit.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7550_v660_count_audit.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02272617901326157,
+      "ended_at_utc": "2026-09-23T04:15:50.012968+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7550_v660_count_audit/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-23T04:15:49.990017+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}
