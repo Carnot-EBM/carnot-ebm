@@ -45668,3 +45668,110 @@ checks pass.
 **When** the declared entrypoint and fresh-process readers execute
 **Then** scoped validation, replay, independent reduction, and mutations pass
 **And** both strict terminal linters pass before atomic publication.
+
+### REQ-VERIFY-7566: V661 Source Energy Fit SHALL Freeze Matched Decision Heads
+
+Exp7566 SHALL authenticate the terminal Exp7564 capture before it reads labels.
+It SHALL require `fit_capture_ready_score=1`, `verdict_class` in
+`null | positive`, and `flagged_adversarial=false`. It SHALL authenticate all
+capture shards and the sealed Exp7533 fit, tune, and policy label shards. A
+missing path, changed hash, or failed upstream field SHALL produce a complete
+blocked artifact with the exact upstream, path, field, expected, and observed
+values. It SHALL not fabricate replacement rows.
+
+The fit reader SHALL join exactly 160 fit, 40 tune, and 40 policy groups. Each
+group SHALL retain its original, absent, and same-role mismatched source cells
+in both mapped option orders. Each order view SHALL contain `z_original`,
+`z_original-z_absent`, and `z_original-z_mismatched`. Source variants and
+option orders SHALL not move between groups. Test and online labels SHALL stay
+closed.
+
+The registered source energy SHALL use one intercept and eight fixed cubic
+local-basis coefficients for each of the three features. It SHALL therefore
+contain exactly 25 parameters. It SHALL set `E(0,x)=0` and `E(1,x)=-f(x)` and
+use exact two-state normalization. The fit SHALL minimize binary log loss plus
+mapped-option-order Jensen-Shannon consistency. It SHALL use lambda values
+`0`, `0.1`, and `1`; L2 values `0.001`, `0.01`, and `0.1`; 300 full-batch
+steps; rate `0.03`; and seed `7566001`.
+
+The comparison SHALL include unconstrained equal-capacity energy,
+original-only local-basis energy, same-information logistic, raw,
+temperature, constant-feature, and shuffled-label controls. Each main
+trainable family SHALL retain all nine lambda and L2 candidates. Every
+candidate SHALL retain its parameter count, train cost, loss trace, tuning
+Brier, status, and failure. A loss increase SHALL remain a failed candidate.
+
+Each family SHALL select only on tune-role Brier. The strongest family SHALL
+freeze before policy labels open. The policy role SHALL produce descriptive
+calibration only. It SHALL not select weights or thresholds. The common action
+rule SHALL minimize costs `accept=5q`, `reject=1-q`, and `escalate=0.2`.
+Escalation SHALL win exact ties. Frozen heads, transforms, option mapping,
+selection evidence, and policy hashes SHALL publish as hash-bound sidecars.
+
+Readiness SHALL challenge option swaps, constant inputs, shuffled labels,
+donor-role leakage, and failed normalization. `energy_fit_ready_score` SHALL be
+one only for qualified frozen source-dependent heads.
+`baseline_ready_score` SHALL be one only for completed matched controls and a
+preselected comparator. Fixture gains SHALL not support an empirical claim.
+The artifact SHALL state that this is a small learned energy policy, not formal
+verification or a generic text reranker. It SHALL set
+`predictive_benefit_measured=false` until independent held-out evaluation.
+
+Exp7566 SHALL load no model and SHALL generate no tokens. It SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `inference_substrate_class=no_model_load`,
+and zero current model loads, forwards, and generations. Required validation
+SHALL include scoped pytest, separate 100 percent changed-module coverage,
+scoped Ruff check and format, changed-module mypy, scoped specification
+coverage, declared-entrypoint replay, independent reduction, adversarial
+verification, and strict verdict-row consistency. No numbered runtime E2E
+applies to this isolated CPU fit. Only the cold-valid terminal candidate SHALL
+publish atomically at `results/experiment_7566_v661_energy_fit.json`.
+
+#### SCENARIO-VERIFY-7566-FEATURES: Source Contrasts Stay Inside Their Group
+
+**Given** six authenticated native rows for one source group
+**When** Exp7566 maps both option orders into source features
+**Then** each view contains the original logit and both registered source contrasts
+**And** an option swap, missing cell, changed donor role, or nonfinite logit fails closed.
+
+#### SCENARIO-VERIFY-7566-ENERGY: The Registered Local Energy Is Exact
+
+**Given** three finite source features and the frozen cubic transform
+**When** the 25-parameter head scores both binary states
+**Then** state-zero energy is zero and state-one energy is the negative fitted logit
+**And** both normalized probabilities are finite and sum to one.
+
+#### SCENARIO-VERIFY-7566-BUDGET: Every Trainable Family Retains Nine Candidates
+
+**Given** authenticated fit and tune groups
+**When** each registered trainable family runs its frozen search
+**Then** all nine lambda and L2 cells run for 300 steps at rate 0.03
+**And** failed or increasing-loss candidates remain in the training rows.
+
+#### SCENARIO-VERIFY-7566-FREEZE: Tune Selects Before Policy Labels Open
+
+**Given** complete candidate rows and closed policy labels
+**When** tune Brier selects each family and the strongest comparator
+**Then** all selected heads and transforms freeze before policy access
+**And** policy labels produce only a descriptive calibration report and fixed-cost actions.
+
+#### SCENARIO-VERIFY-7566-CONTROLS: Adversarial Inputs Cannot Open Readiness
+
+**Given** option-swap, constant-input, shuffled-label, donor-leakage, and normalization challenges
+**When** the independent reducer checks the frozen fit
+**Then** every challenge has its expected disposition and all matched controls remain visible
+**And** readiness stays separate from held-out predictive benefit.
+
+#### SCENARIO-VERIFY-7566-BLOCKED: External Absence Stops Before Fitting
+
+**Given** a missing upstream gate, capture shard, label shard, or requirement
+**When** preconditions run before measurement
+**Then** a complete blocked artifact records zero current model calls and zero ready scores
+**And** its gate summary names the exact failed upstream, path, field, expected, and observed values.
+
+#### SCENARIO-VERIFY-7566-E2E: One Command Publishes A Cold-Valid Frozen Fit
+
+**Given** the affected manifest, frozen sidecars, and exact terminal candidate
+**When** the declared entrypoint and fresh-process readers execute
+**Then** scoped validation, cold replay, independent reduction, and challenge controls pass
+**And** adversarial verification and strict row consistency pass before atomic publication.
