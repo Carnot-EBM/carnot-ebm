@@ -35508,3 +35508,98 @@ verification on this panel, under this budget. B2 stops here: attempts are both 
 reached the 100-attempt sample floor across three live runs) and, when complete, too low-quality
 to fit a timing gate. Whether the live path's real multi-round refinement loop does better is a
 genuinely open, larger question, not started here.
+
+## V661 ARC live plan-lineage diagnostic — 2026-09-23
+
+### REQ-ARC-WMTE-7570: Measure live plan lineage on the frozen withheld roster
+
+Experiment 7570 SHALL require the exact Experiment 7562 artifact. It SHALL
+require `plan_lineage_ready_score=1`, an allowed terminal verdict class, and
+`flagged_adversarial=false`. A failed external check SHALL produce a
+`complete_blocked_*` artifact. Its gate summary SHALL name the upstream, path,
+field, expected value, and observed value. A blocked run SHALL retain
+`planned_inference_substrate_class=model_full_generation` and SHALL report
+`inference_substrate_class=blocked_no_run` when no model call starts.
+
+The live run SHALL copy the exact twelve-episode roster from Experiment 7562.
+It SHALL use `E3AgentPolicy` through `make_carnot_agent`. Per-game adapters,
+stored engines, registry trajectories, banked solutions, game source, and an
+offline ground-truth search SHALL stay disabled. The run SHALL use
+`unsloth/Qwen3.8-27B-GGUF` with the submitted sampler settings and the existing
+4,096-token request ceiling. It SHALL limit each episode to 600 policy actions
+and two induction requests.
+
+The experiment SHALL acquire one fresh exclusive GPU lease after read-only
+admission. It SHALL authenticate owned CUDA offload. Real generation and game
+work SHALL stop after 3,000 seconds. It SHALL persist each finished episode
+immediately. After completed episodes exist, it SHALL stop starting episodes
+when the remaining budget is less than the measured episode p95. It SHALL keep
+every later unit as `unstarted` and every interrupted unit as censored. It SHALL
+stop and unload only owned processes.
+
+The reducer SHALL join request, engine, verifier, plan, policy action, and level
+transition rows through the immutable Experiment 7562 lineage IDs. It SHALL
+retain rejection reasons and accepted plans that were not used. It SHALL keep
+plan-derived level progress separate from incidental frame changes and unknown
+attribution. These joins are observational and SHALL not claim causal efficacy.
+Actual live attempts SHALL use `live_agent_self_discovery` provenance. Registry
+precheck SHALL prevent duplicate solve credit. Reproduced public levels SHALL
+not become new solves or official scores.
+
+The artifact SHALL report each trajectory-supervisor arm's fired and helped
+counts plus `stagnations_unredirected`. Zero firings SHALL support no arm
+refinement. This experiment SHALL ship no suppression policy and no new arm.
+`gate_ready_to_ship` SHALL be false.
+
+`plan_lineage_measured_score` SHALL be the bare number one only when at least
+one completed fired attempt exists and at least 95 percent of completed fired
+attempts have a valid lifecycle disposition. Zero attempts SHALL be a valid
+null with score zero. `arc_measurement_complete_score` SHALL be one only when
+current model calls are authenticated, every planned episode is budget
+accounted, scoped validation passes, cold replay passes, independent reduction
+passes, and both strict terminal readers pass.
+
+Numerical gate-quality claims SHALL require at least 1,000 opportunities, 100
+actual attempts, and four games in each outcome class. Below any floor, the
+artifact SHALL publish feasibility and raw counts only. It SHALL not report a
+classifier-quality number or a general efficacy claim.
+
+#### SCENARIO-ARC-WMTE-7570-UPSTREAM-BLOCK
+
+- **GIVEN** the roadmap-selected Experiment 7562 artifact
+- **WHEN** its path, readiness, verdict class, or adversarial flag is wrong
+- **THEN** the artifact is complete blocked with zero current calls
+- **AND** the first failed gate records expected and observed values.
+
+#### SCENARIO-ARC-WMTE-7570-FROZEN-ROSTER
+
+- **GIVEN** Experiment 7562's twelve sealed episode rows
+- **WHEN** Experiment 7570 builds the live schedule
+- **THEN** episode IDs, games, seeds, action limits, induction limits, sampler,
+  and token ceiling match exactly
+- **AND** no omitted episode disappears from budget accounting.
+
+#### SCENARIO-ARC-WMTE-7570-LINEAGE-REDUCTION
+
+- **GIVEN** live telemetry with rejected, accepted-unused, executed, and
+  censored attempts
+- **WHEN** the independent reducer joins the lifecycle
+- **THEN** each completed fired attempt has one valid disposition or is unknown
+- **AND** only joined plan actions can receive plan-derived progress credit.
+
+#### SCENARIO-ARC-WMTE-7570-BUDGET-STOP
+
+- **GIVEN** completed episode durations and a fixed 3,000-second budget
+- **WHEN** remaining time cannot fit the measured episode p95
+- **THEN** the runner starts no new episode
+- **AND** it persists all remaining rows as unstarted.
+
+#### SCENARIO-ARC-WMTE-7570-TERMINAL-NULL
+
+- **GIVEN** authenticated current calls and complete budget accounting
+- **WHEN** lineage attempts are absent or support floors are unmet
+- **THEN** the result is a valid complete null feasibility record
+- **AND** no classifier, efficacy, solve, or shipping claim is made.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.
