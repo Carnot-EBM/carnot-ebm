@@ -20349,3 +20349,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-23: Qualify monotone proper-loss updates before fresh delayed learning (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7561_v661_recalibration_prototype.json
 - 2026-09-23: Join live induction attempts to accepted models and executed plans (⚠️ Research Finding) — honest_verdict=complete_circular_positive_plan_lineage_ready_fixture_only; results/experiment_7562_v661_arc_plan_lineage.json
 - 2026-09-23: Measure fresh tool-source capture feasibility with current GPU admission (⚠️ Research Finding) — honest_verdict=complete_null_native_transport_ready_benefit_unmeasured; results/experiment_7563_v661_native_pilot.json
+- 2026-09-23: Capture complete fitting and policy source interventions (⚠️ Research Finding) — honest_verdict=complete_null_fit_capture_ready_benefit_unmeasured; results/experiment_7564_v661_fit_capture.json
