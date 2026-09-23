@@ -6084,3 +6084,12 @@ Tool grounding, continual calibration, online recalibration, and consistency
 map to separate V659 tasks. External results remain source context.
 Exact sections, counterexamples, and destinations are in
 `docs/research-notes/v659-method-map.md`.
+
+<!-- EXP7546-V660-METHOD-INGESTION -->
+## 2026-09-23 Exp7546 — V660 methods — INGESTED
+
+SAFE source ablation, adversarial world-model sequences, proper-loss
+recalibration, and continual calibration map to separate V660 tasks.
+External results remain source context. Semantic Scholar HTTP 429 and
+the OpenReview browser challenge keep secondary access incomplete.
+See `docs/research-notes/v660-method-map.md` for limits and destinations.

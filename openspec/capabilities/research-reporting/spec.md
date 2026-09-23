@@ -77661,3 +77661,87 @@ validation SHALL record real outcomes without running proposed experiments.
 
 Planning package authored; validation receipt and final status are appended
 by this planning task. No new experimental implementation is claimed.
+
+## REQ-REPORT-7546: V660 contract and method evidence receipt
+
+Exp7546 SHALL compare the V660 design table with the matching staged roadmap
+before activation, or with the matching active roadmap after activation. It
+SHALL compare exactly fourteen ordered tasks, exp7546 through exp7559. Each row
+SHALL compare the full ID, title, phase, deliverable, substrate class, and all
+structured gates. Private controls SHALL reject task removal, task reordering,
+and changes to IDs, titles, paths, substrates, milestones, or upstream gate
+fields. This advisory receipt SHALL NOT become a global science gate.
+
+The report SHALL preserve all eight actual V659 dispositions and six unissued
+promises, exp7540 through exp7545. It SHALL quote produced verdicts literally.
+It SHALL preserve Exp7532's flagged `host_cpu` venue as historical evidence
+while current work uses legal `execution_venue=host`. It SHALL preserve
+Exp7535's zero-call GPU block. When scheduled Exp7536 or Exp7537 deliverables
+are absent, it SHALL read the exact pre-gate diagnostics. Missing Exp7538 and
+Exp7539 outputs SHALL remain absent, not zero metrics or archive entries.
+
+The report SHALL ingest three to five primary method sections from the dated
+V660 review. These SHALL include SAFE source ablation, adversarial world-model
+sequences, and online proper-loss recalibration. Each row SHALL name its source
+section, local adaptation, counterexample, destination, and access status.
+Semantic Scholar HTTP 429 and OpenReview browser challenges SHALL remain
+incomplete access. External results SHALL NOT become local measurements.
+
+The report SHALL declare empty `MODEL_SPECS` and `model_specs`, false
+`model_invoked`, zero typed current invocation counts, substrate class
+`aggregation`, and substrate `aggregation_from_upstream_artifacts`. It SHALL
+measure current duration with monotonic phase spans. Readiness fields SHALL be
+bare numeric zero or one. A valid advisory result SHALL keep
+`positive_claim=false`; readiness SHALL NOT imply benefit.
+
+The report SHALL freeze its affected-file manifest. It SHALL run scoped pytest
+without ambient addopts or coverage. It SHALL separately require 100 percent
+changed-module coverage with a command-local coverage file. It SHALL run scoped
+Ruff check and format, changed-module mypy, scoped spec coverage, and prove
+imports resolve below this worktree. It SHALL run unchanged schema,
+prior-failure, exclusion, gate, ARC-floor, harness-fit, overdue-priority, and
+publication G1-G4 checks. Repository-wide Python health SHALL remain separate.
+
+The declared entrypoint and a fresh-process reducer SHALL replay the candidate.
+An independent reduction SHALL agree. The candidate SHALL pass
+`adversarial_verify.py` and strict `verdict_row_consistency_lint.py` before
+atomic publication. This reporting-only work has no numbered runtime E2E.
+Every artifact field and acceptance gate SHALL state the failure it prevents.
+
+### SCENARIO-REPORT-7546-CONTRACT: Complete active authorities qualify
+
+**Given** the matching V660 design and active fourteen-task roadmap
+**When** Exp7546 reduces both authorities
+**Then** every ordered task field and producer gate declaration agrees
+**And** each private authority mutation fails while the baseline passes.
+
+### SCENARIO-REPORT-7546-CUSTODY: V659 absence stays distinct from zero
+
+**Given** four V659 artifacts, two diagnostics, two absent outputs, and six
+unissued promises
+**When** Exp7546 records prior dispositions
+**Then** all dispositions and promises remain separate
+**And** the flagged venue, zero calls, failed fields, and absences stay literal.
+
+### SCENARIO-REPORT-7546-METHODS: Primary methods remain bounded
+
+**Given** the dated V660 method review and secondary access failures
+**When** Exp7546 writes the method map and study marker
+**Then** adaptations, counterexamples, destinations, and limits are explicit
+**And** no external claim becomes local evidence or a current invocation.
+
+### SCENARIO-REPORT-7546-VALIDATION: Exact readers control publication
+
+**Given** a frozen affected-file manifest and measured candidate
+**When** scoped checks, coverage, policy checks, entrypoint replay, independent
+reduction, and both strict readers run
+**Then** all required receipts pass before atomic publication
+**And** publication G1-G4 are reported without publication
+**And** no numbered runtime E2E is claimed.
+
+### Implementation Status (REQ-REPORT-7546)
+
+Implemented: exact authorities, V659 custody, bounded methods, independent
+reduction, and a thin entrypoint. Verification uses linked tests, full
+changed-module coverage, cold replay, and strict readers. The unscoped suite
+and harness path finding remain separate repository-health observations.
