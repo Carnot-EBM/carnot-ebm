@@ -77913,3 +77913,106 @@ entrypoint. Spec-linked tests cover source custody, equal durability, batch
 delay, restart parity, crash recovery, Amdahl reduction, board scope, blocked
 artifacts, mutations, cold replay, and exact command scope. Changed-module
 coverage is 100 percent. The declared entrypoint passed all terminal readers.
+
+## REQ-REPORT-7559: Reconcile all fourteen V660 dispositions
+
+Exp7559 SHALL provide an aggregation-only V660 capstone. It SHALL compare the
+active milestone `2026.09.660` YAML with the independent V660 design. It SHALL
+record exactly fourteen ordered dispositions, exp7546 through exp7559. The
+current row SHALL not require its future terminal artifact. Earlier rows SHALL
+resolve each declared producer path and any conductor pre-gate diagnostic path.
+An absent producer SHALL remain absent. A conductor gate block SHALL name the
+exact upstream path, field, operator, expected value, observed value, and status.
+
+The capstone SHALL preserve Exp7546's advisory disqualification and adversarial
+flag without making that advisory report a global science gate. It SHALL retain
+all V659 unissued tasks and B2 corrections through byte-bound producer evidence.
+It SHALL not rehabilitate Exp7532 or the V657 static audit. It SHALL quote each
+historical producer verdict literally and retain each producer's readiness,
+adversarial flag, no-headroom annotation, validation custody, and absolute rows.
+
+The capstone SHALL state four independent branch conclusions. The cached count
+branch SHALL require Exp7550's independent audit and SHALL remain a qualified
+exploratory null when the audited benefit gate is zero. The fresh source branch
+SHALL require Exp7555's independent source reduction; an unavailable GPU and its
+gate cascade SHALL be terminal blocked, not a zero effect or retryable partial.
+The corrected ARC branch SHALL preserve qualified custody separately from the
+Exp7557 generalization result and SHALL not promote readiness or opportunity
+counts into efficacy. The CPU durability and board branch SHALL preserve service
+completion, hardware benefit, KV260, PolarFire, and GateMate as separate scopes.
+
+The report SHALL compare literal prior verdicts before any retirement. It SHALL
+retire only the same completed scientific mechanism named by `prior_failures`.
+It SHALL not retire unchanged external resource absence. Each continuation row
+SHALL name changed evidence or a changed mechanism. Fixture wins SHALL remain
+`circular_positive`. Valid completed measurements without benefit SHALL remain
+`null`. Missing external science SHALL make the aggregate verdict
+`complete_blocked_*` with `verdict_class=blocked` exactly once.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, false
+`model_invoked`, and zero typed current invocation counts. It SHALL use planned
+and actual substrate class `aggregation`, substrate
+`aggregation_from_upstream_artifacts`, and legal venue `host`. It SHALL measure
+current monotonic duration and phase spans. `capstone_complete_score` SHALL be a
+bare zero or one and SHALL equal one only when all fourteen honest dispositions
+and required current validation receipts are complete. This accounting score
+SHALL remain independent of scientific benefit.
+
+The capstone SHALL compute publication G1 through G4 with the unchanged
+`publication_gate.py --json` reader. `paper_ready` SHALL be their conjunction,
+and exact unmet gates SHALL remain visible. The capstone SHALL not activate or
+archive a roadmap, alter the conductor, publish, submit, contact anyone, change
+production defaults or generator weights, or push.
+
+The implementation SHALL freeze an affected-file validation manifest. It SHALL
+run scoped pytest without ambient addopts or coverage, separate 100 percent
+changed-module coverage with a command-local coverage file, scoped Ruff check
+and format, changed-module mypy, scoped spec coverage, and worktree import
+resolution. The declared entrypoint and fresh-process independent reducer SHALL
+accept the exact candidate. `adversarial_verify.py` and strict
+`verdict_row_consistency_lint.py` SHALL both exit zero before atomic terminal
+publication. Reporting-only work has no numbered runtime E2E.
+
+### SCENARIO-REPORT-7559-INVENTORY: Fourteen ordered dispositions stay complete
+
+**Given** the V660 design, active YAML, producer paths, and conductor diagnostics
+**When** Exp7559 inventories all fourteen tasks before branch reduction
+**Then** each task has one ordered disposition with exact source custody
+**And** the current row does not depend on its future terminal artifact
+**And** missing producer bytes and gate-block diagnostics remain distinct.
+
+### SCENARIO-REPORT-7559-BRANCHES: Independent conclusions do not promote readiness
+
+**Given** audited count evidence, blocked source collection, corrected ARC
+evidence, durable CPU service, and board continuity
+**When** Exp7559 reduces the four scientific branches
+**Then** count is an audited exploratory null and fresh source science is blocked
+**And** ARC custody stays separate from causal generalization benefit
+**And** service completion stays separate from hardware benefit and board state.
+
+### SCENARIO-REPORT-7559-FAILURES: External absence is terminal blocked once
+
+**Given** a valid current capstone with missing externally gated source science
+**When** terminal classification and prior-failure retirement run
+**Then** the aggregate class is blocked with one `complete_blocked_*` verdict
+**And** partial remains reserved for unfinished owned capstone validation
+**And** unchanged resource absence does not retire a scientific mechanism.
+
+### SCENARIO-REPORT-7559-VALIDATION: Exact readers control atomic publication
+
+**Given** a frozen manifest and a measured terminal candidate
+**When** scoped checks, 100 percent changed-module coverage, entrypoint replay,
+independent reduction, adversarial verification, and strict row consistency run
+**Then** every required receipt passes before atomic publication
+**And** worktree imports resolve below this repository
+**And** G1 through G4 are read without publishing or changing the roadmap.
+
+### Implementation Status (REQ-REPORT-7559)
+
+Implemented: V660 fourteen-row capstone, four independent branch conclusions,
+conductor gate-block custody, prior-failure retirement controls, publication
+gates, scoped validation, fresh-process reduction, and a thin entrypoint.
+Spec-linked tests cover authority drift, present and absent producer custody,
+exact conductor failures, branch isolation, terminal precedence, source hashes,
+continuations, publication conjunction, and protected artifact mutations. The
+changed module has 100 percent line coverage.
