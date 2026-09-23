@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.660",
+  "generated_at": "2026-09-23T07:44:25Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 12.0,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Independently test feedback causality and count-learning conclusions",
+      "duration_minutes": 3.25,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen complete authorities and ingest the new method limits",
+      "duration_minutes": 2.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure durable count-service cost and preserve all board states",
+      "duration_minutes": 2.75,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify bounded source collection and observe changed GPU availability",
+      "duration_minutes": 1.13,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure delayed count learning and retained calibrated decisions",
+      "duration_minutes": 0.86,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.660 completed 9 experiments, all compute-bound, in 12.0 wall-time minutes. The longest tasks were 'Independently test feedback causality and count-learning conclusions' at 3.25 minutes, 'Bind fourteen complete authorities and ingest the new method limits' at 2.9 minutes, and 'Measure durable count-service cost and preserve all board states' at 2.75 minutes. Sub-phase timing was not recorded within these runs to separate model inference duration from validation scaffolding or artifact serialization overhead.",
+  "bottlenecks_identified": [
+    "'Independently test feedback causality and count-learning conclusions' was the longest task at 3.25 minutes out of 12.0 total wall-time minutes, but lacks granular sub-phase instrumentation to isolate model inference from verification scaffolding or artifact serialization.",
+    "'Bind fourteen complete authorities and ingest the new method limits' (2.9 minutes) and 'Measure durable count-service cost and preserve all board states' (2.75 minutes) accounted for an additional 5.65 minutes combined without recorded intra-task phase durations.",
+    "The top three compute-bound tasks accounted for 8.9 out of 12.0 total wall-time minutes (approx. 74% of milestone execution time), with timing reconstructed from disk mtimes rather than continuous runtime stage logs.",
+    "The GPU monitor report provides an isolated post-completion snapshot (PID 772157 on GPU 0 with 18054MB allocated at 0% utilization, GPU 1 idle at 4MB) after milestone execution, leaving GPU utilization across active compute execution windows unmeasured.",
+    "Task launch records did not log model concurrency or runner dispatch details, although all completed tasks were single-model runs where DualGPURunner multi-model dispatch is not applicable."
+  ],
+  "improvements_suggested": [
+    "Instrument granular sub-phase duration timers and monotonic stage logging inside feedback causality, authority binding, and count-service workflows to isolate model inference latency from validation scaffolding and disk serialization.",
+    "Deploy continuous, task-aligned accelerator telemetry during compute-bound executions to sample live GPU utilization and VRAM occupancy across active compute windows rather than relying on point-in-time monitor snapshots.",
+    "Record explicit model concurrency and runner dispatch metadata in experiment task receipts to audit DualGPURunner eligibility whenever two or more models run concurrently.",
+    "Implement runtime milestone-scoped execution logging to avoid reliance on post-hoc disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration timers and per-stage progress logging inside the feedback causality audit and authority binding pipelines.",
+    "Deploy continuous accelerator telemetry during compute-bound task execution to record live GPU utilization and VRAM occupancy across active execution windows.",
+    "Emit explicit model concurrency and runner dispatch metadata in experiment receipts to audit DualGPURunner engagement on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone completed 9 compute-bound tasks in 12.0 wall-time minutes, with execution concentrated in feedback causality testing (3.25 minutes), authority binding (2.9 minutes), and count-service cost measurement (2.75 minutes). The post-run GPU monitor report confirms an idle llama.cpp process on GPU 0 after completion but cannot evaluate active-window compute efficiency, and because only single-model tasks were executed, no DualGPURunner multi-model dispatch opportunity was missed. Sub-phase timing and continuous execution telemetry are necessary next steps to identify actionable latency optimizations."
+}
