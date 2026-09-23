@@ -19144,3 +19144,120 @@ field, operator, expected value, and observed value.
 
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## REQ-CL-7575: V662 Cached Learning Protocol
+
+Experiment 7575 SHALL freeze and evaluate an exploratory cached-learning
+protocol from the exact Experiment 7564 and Experiment 7565 capture bytes. It
+SHALL use the pinned `KRLabsOrg/lettucedetect-code-hallucination` revision
+`866a7c5392c3cf87e4fbc2b3808815d524f54331`. The fixed roles SHALL contain
+160 fit, 40 tune, 40 policy, 160 online, and 80 evaluator-only groups. Missing
+or duplicate groups SHALL close readiness. The workflow SHALL preserve each
+source ID, complete context, official split, and all prior exposure records.
+
+Original-source probabilities SHALL be reconstructed from the raw native
+option logits and each row's option-order mapping. Source removal and source
+mismatch SHALL remain diagnostics. They SHALL never supply synthetic labels.
+Feature readers SHALL not receive evaluator labels. The immutable exposure
+manifest SHALL set `fresh_confirmatory_claim_allowed=false` and
+`claim_scope=descriptive_reuse` because runtime label isolation cannot erase
+historical access.
+
+Static controls SHALL be the raw original forecast, a temperature chosen only
+on the tune role, and an equal-capacity unconstrained nine-knot Brier fit. The
+bounded learner SHALL use the frozen nine-knot cumulative-Brier map with its
+fixed ridge, monotonicity, range, and movement constraints. Tune labels SHALL
+select the strongest static control only after all fits freeze. Policy labels
+SHALL measure the frozen static contrasts.
+
+Before online outcomes open, the protocol SHALL freeze orders 7578001 through
+7578005, 160 events per order, an eight-event feedback delay, release blocks of
+eight, and all 80 evaluator-only retention groups. The arms SHALL be the
+bounded learner, frozen raw forecast, existing global count, existing local
+count, and a bounded learner with feedback shuffled only within its released
+block. Every replay SHALL predict, release, update, persist, and reload in
+causal order. A stateful arm SHALL never read a retention label.
+
+Uncertainty SHALL use 1,000 complete source-component replays per order. Every
+replay SHALL retrain in causal order from real released labels. Primary static
+contrasts SHALL use source-component resampling and Holm adjustment. Online
+results SHALL disclose order dependence.
+
+The primary gates SHALL require paired Brier improvement lower95 greater than
+zero versus raw and the strongest tune-selected control. Decision-cost
+improvement lower95 SHALL be greater than zero with non-escalation coverage at
+least 0.10. Retention Brier upper95 degradation SHALL be at most 0.005.
+Validity, readiness, and benefit SHALL remain separate. These gates support
+exploratory evidence only and cannot promote deployment or a fresh-population
+claim.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`historical_model_id=unsloth/Qwen3.8-27B-GGUF`, `model_invoked=false`, and zero
+current load, forward, generation, and token counts. It SHALL authenticate
+historical request and response hashes. It SHALL set
+`inference_substrate_class=no_model_load` and record planned and actual
+substrates separately. `protocol_sha256` SHALL bind roles, orders, costs,
+controls, uncertainty, and stopping rules before fitting.
+
+Missing external evidence SHALL produce `complete_blocked_*`,
+`verdict_class=blocked`, and a `gate_check_summary` with the failed check,
+upstream, path, field, operator, expected, and observed values. The terminal
+artifact SHALL include one comparison row per unit and arm with raw numerator,
+denominator, metric direction, seed, censoring, and provenance. Analytical
+positive controls SHALL be `circular_positive` only when their own row
+contrasts support that claim. Readiness alone SHALL remain null.
+
+The affected validation SHALL freeze an Exp7358 manifest. It SHALL run focused
+serial pytest, separate 100 percent changed-module coverage, scoped Ruff check
+and format, changed-module mypy, and exact-test specification coverage. It
+SHALL create private pytest parent directories before each subprocess. The
+declared entrypoint, fresh-process cold replay, independent reduction,
+adversarial verifier, and strict row reader SHALL inspect the exact terminal
+candidate before atomic publication. This read-only cached task has no numbered
+runtime E2E. Its capability E2E SHALL exercise predict, release, update,
+persist, and reload.
+
+### SCENARIO-CL-7575-CUSTODY: Exact Cached Roles Fail Closed
+
+- GIVEN the two historical capture artifacts and their hash-bound sidecars
+- WHEN source IDs, contexts, mapped option logits, roles, revision, and hashes are authenticated
+- THEN exactly 160/40/40/160/80 whole groups enter the protocol
+- AND a missing, duplicate, changed, or synthesized row closes readiness.
+
+### SCENARIO-CL-7575-ISOLATION: Exposure Survives Runtime Separation
+
+- GIVEN feature stores and separately opened evaluator stores
+- WHEN the protocol freezes before online labels open
+- THEN feature readers cannot receive evaluator labels
+- AND all prior exposure and official splits remain in an immutable manifest.
+
+### SCENARIO-CL-7575-CAUSAL: Released Labels Alone Update State
+
+- GIVEN one frozen 160-event order with delay and release block size eight
+- WHEN the bounded, count, and shuffled arms replay it
+- THEN every prediction precedes its legal update and durable reload
+- AND shuffled origins remain inside the current released block.
+
+### SCENARIO-CL-7575-RETENTION: Evaluator Labels Never Train
+
+- GIVEN a final state hash and 80 evaluator-only groups
+- WHEN retention Brier and typed decision costs are measured
+- THEN the state hash is unchanged across evaluation
+- AND no retention label enters any sufficient statistic or count.
+
+### SCENARIO-CL-7575-GATES: Exploratory Effects Stay Descriptive
+
+- GIVEN complete static rows and 5,000 causal uncertainty replays
+- WHEN Holm-adjusted Brier, cost, coverage, and retention gates are reduced
+- THEN validity, readiness, and benefit are reported separately
+- AND no fresh-population or deployment promotion is available.
+
+### SCENARIO-CL-7575-TERMINAL: Fresh Readers Control Publication
+
+- GIVEN a hash-bound candidate, raw rows, protocol, and validation receipts
+- WHEN cold replay, independent reduction, adversarial verification, and the strict row reader inspect the same bytes
+- THEN every reader must agree before atomic publication
+- AND completion alone does not establish benefit.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.
