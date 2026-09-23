@@ -78045,3 +78045,80 @@ file writes, scoped checks and honest terminal classification.
 
 Planning documents only. Future task implementations require their own
 capability requirements and tests before code changes.
+
+## REQ-REPORT-7560: Bind V661 contract and method limits after activation
+
+Exp7560 SHALL select a staged roadmap only when that file exists and declares
+milestone `2026.09.661`. Otherwise, it SHALL select the matching active
+roadmap. It SHALL pass the selected path to every roadmap guard. A consumed
+staging filename SHALL NOT count as an input failure.
+
+The report SHALL compare exactly thirteen ordered tasks, Exp7560 through
+Exp7572, between the selected YAML and the preserved V661 design. It SHALL
+compare each full ID, title, phase, deliverable, substrate class, and complete
+conjunctive gate list. Private row, order, path, and field mutations SHALL fail
+without changing either authority.
+
+The report SHALL authenticate fourteen V660 dispositions from the preserved
+design, original producer or diagnostic bytes, and conductor log. It SHALL
+retain nine producer artifacts and five source absences. Exp7546 SHALL retain
+its adversarial flag. Exp7549 and Exp7550 SHALL remain null. Exp7548 SHALL
+retain its resource block. Exp7551 SHALL remain pre-gate evidence and SHALL
+NOT become a successful pilot. The completed ledger SHALL remain at V659.
+
+The report SHALL map three to five reviewed primary method sections to a test
+or an explicit deferral. It SHALL include proper-loss calibeating limits,
+textual source-intervention limits, and the revised FPGA-ASIC cost boundary.
+It SHALL preserve failed secondary access and retired mechanisms.
+
+The report SHALL perform aggregation only. It SHALL use no model and report
+zero current load, forward, and generation calls. It SHALL keep contract and
+method readiness separate from scientific benefit. It SHALL run only scoped
+changed-file validation, the unchanged roadmap guards, a declared entrypoint
+replay, an independent reduction, adversarial verification, and strict row
+consistency before atomic publication.
+
+### SCENARIO-REPORT-7560-AUTHORITY: Activation consumes the staging path
+
+**Given** either a matching staged V661 roadmap or a matching active roadmap
+after activation
+**When** Exp7560 resolves planning authority and runs roadmap guards
+**Then** it selects the matching existing path and records both candidates
+**And** all thirteen task rows agree with the V661 design
+**And** private row, order, path, field, and substrate mutations are rejected.
+
+### SCENARIO-REPORT-7560-CUSTODY: Historical absence stays distinct from null
+
+**Given** fourteen terminal V660 dispositions with nine producer artifacts
+and five missing source producers
+**When** Exp7560 authenticates original bytes and conductor rows
+**Then** the Exp7546 flag, Exp7548 block, Exp7549 and Exp7550 nulls remain exact
+**And** the Exp7551 diagnostic stays pre-gate evidence
+**And** a missing producer is never converted to zero, null, or success.
+
+### SCENARIO-REPORT-7560-METHODS: External methods remain bounded adaptations
+
+**Given** the V661 primary-source review and its access failures
+**When** Exp7560 creates the method map
+**Then** each selected method names a local test or a specific deferral
+**And** paper results do not become Carnot measurements
+**And** retired generation, sampler, and generic reranking mechanisms stay closed.
+
+### SCENARIO-REPORT-7560-VALIDATION: Exact readers control atomic publication
+
+**Given** a frozen affected-file manifest and terminal candidate
+**When** scoped tests, changed-module coverage, static checks, selected-roadmap
+guards, entrypoint replay, independent reduction, and strict readers run
+**Then** required validation passes before atomic publication
+**And** imports resolve below this worktree
+**And** the report remains advisory with no scientific benefit claim.
+
+### Implementation Status (REQ-REPORT-7560)
+
+Implemented: dual-state authority selection, exact thirteen-row comparison,
+private authority mutations, fourteen-row V660 custody, four bounded method
+maps, selected-roadmap guards, scoped validation, fresh-process replay, and
+atomic advisory publication. Spec-linked tests cover activation states,
+contract drift, producer absence, source hashes, method limits, blocked input,
+artifact mutations, and command scope. The changed module has 100 percent line
+coverage.

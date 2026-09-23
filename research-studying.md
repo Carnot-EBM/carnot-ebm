@@ -6093,3 +6093,11 @@ recalibration, and continual calibration map to separate V660 tasks.
 External results remain source context. Semantic Scholar HTTP 429 and
 the OpenReview browser challenge keep secondary access incomplete.
 See `docs/research-notes/v660-method-map.md` for limits and destinations.
+
+<!-- EXP7560-V661-METHOD-INGESTION -->
+## 2026-09-23 Exp7560 — V661 methods — INGESTED
+
+Proper-loss recalibration, scoring-rule limits, textual source changes,
+and full-service hardware costs map to separate V661 tests. External
+results remain context. Access failures and retired mechanisms remain
+explicit in `docs/research-notes/v661-method-map.md`.
