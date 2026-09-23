@@ -1,0 +1,68 @@
+{
+  "id": "llm-20260923-151001-003",
+  "timestamp": "2026-09-23T15:10:04.324710+00:00",
+  "benchmark": "calibrated_decision",
+  "description": "Measured on the training split only: linear stage 0.841, CV picks 50 steps (CV AUROC 0.857), final train AUROC 0.864, train Brier 0.014, 65 distinct scores, ~2.2 s wall clock (budget 8.9 s). The eu==0 unit learned a negative readout, as predicted.",
+  "code": "import math\nimport time\n\nimport numpy as np\n\n\ndef _auroc(scores, labels):\n    # Rank-based Mann-Whitney AUROC, ties as half wins (harness convention).\n    s = np.asarray(scores, dtype=np.float64)\n    y = np.asarray(labels)\n    order = np.argsort(s, kind=\"mergesort\")\n    ss = s[order]\n    n = len(ss)\n    ranks = np.empty(n)\n    i = 0\n    while i < n:\n        j = i\n        while j + 1 < n and ss[j + 1] == ss[i]:\n            j += 1\n        ranks[order[i:j + 1]] = 0.5 * (i + j) + 1.0\n        i = j + 1\n    n1 = int((y == 1).sum())\n    n0 = n - n1\n    if n1 == 0 or n0 == 0:\n        return None\n    return float((ranks[y == 1].sum() - n1 * (n1 + 1) / 2.0) / (n1 * n0))\n\n\ndef _linear_direction(X, y):\n    # Grid over the angle; AUROC of a linear scorer depends only on the angle.\n    best = -1.0\n    best_angles = []\n    for th in np.linspace(0.0, 2.0 * math.pi, 720, endpoint=False):\n        a = np.array([math.cos(th), math.sin(th)])\n        v = _auroc(X @ a, y)\n        if v > best + 1e-12:\n            best, best_angles = v, [th]\n        elif abs(v - best) <= 1e-12:\n            best_angles.append(th)\n    # Midpoint of the top plateau (contiguous angles), not an edge of it.\n    th = float(np.median(best_angles))\n    return np.array([math.cos(th), math.sin(th)]), best\n\n\ndef run(benchmark_data):\n    import jax\n    import jax.numpy as jnp\n\n    t0 = time.time()\n    GibbsConfig = benchmark_data[\"GibbsConfig\"]\n    GibbsModel = benchmark_data[\"GibbsModel\"]\n    nce_loss = benchmark_data[\"nce_loss\"]\n    C = np.asarray(benchmark_data[\"calibrated_decision_train_correct\"], dtype=np.float64)\n    I = np.asarray(benchmark_data[\"calibrated_decision_train_incorrect\"], dtype=np.float64)\n    X = np.vstack([C, I])\n    y = np.r_[np.zeros(len(C), dtype=int), np.ones(len(I), dtype=int)]\n\n    # 1. Linear stage: train-AUROC-optimal direction over the two raw signals.\n    direction, lin_auroc = _linear_direction(X, y)\n    scale = 8.0\n    mean_x = X.mean(axis=0)\n    a = scale * direction\n    c = -float(a @ mean_x)\n\n    # 2. Structured init. Units 0/1: exact linear map via SiLU(z) - SiLU(-z) = z.\n    #    Unit 2: bump at entity_uptake == 0 (probe sentinel for \"no numeric\n    #    entities\", carries no evidence). Unit 3: falsifiability > 0 detector.\n    #    Both extra units start with zero readout: NCE decides their weight.\n    w1_0 = np.array([[a[0], a[1]], [-a[0], -a[1]], [-40.0, 0.0], [0.0, 30.0]])\n    b1_0 = np.array([c, -c, 2.0, -1.5])\n    wo_0 = np.array([1.0, -1.0, 0.0, 0.0])\n    bo_0 = 0.0\n\n    cfg = GibbsConfig(input_dim=2, hidden_dims=[4])\n    model = GibbsModel(cfg, key=jax.random.PRNGKey(0))\n\n    def set_params(m, p):\n        m.layers[0] = (p[\"w1\"], p[\"b1\"])\n        m.output_weight = p[\"wo\"]\n        m.output_bias = p[\"bo\"]\n\n    def loss_fn(p, Cj, Ij):\n        set_params(model, p)\n        base = nce_loss(model, Cj, Ij)\n        # L2-SP: pull toward the structured init, not toward zero.\n        sp = sum(jnp.sum((p[k] - p0[k]) ** 2) for k in (\"w1\", \"b1\", \"wo\")) + (p[\"bo\"] - p0[\"bo\"]) ** 2\n        return base + lam * sp\n\n    lam = 1e-3\n    lr = 0.02\n    p0 = {\"w1\": jnp.asarray(w1_0), \"b1\": jnp.asarray(b1_0), \"wo\": jnp.asarray(wo_0), \"bo\": jnp.asarray(bo_0)}\n    grad_fn = jax.jit(jax.value_and_grad(loss_fn))\n\n    def train(Cj, Ij, n_steps, snapshots):\n        p = {k: jnp.array(v) for k, v in p0.items()}\n        m = {k: jnp.zeros_like(v) for k, v in p.items()}\n        v = {k: jnp.zeros_like(x) for k, x in p.items()}\n        out = {}\n        if 0 in snapshots:\n            out[0] = {k: np.asarray(x) for k, x in p.items()}\n        first = last = None\n        for t in range(1, n_steps + 1):\n            loss, g = grad_fn(p, Cj, Ij)\n            first = float(loss) if first is None else first\n            last = float(loss)\n            for k in p:\n                m[k] = 0.9 * m[k] + 0.1 * g[k]\n                v[k] = 0.999 * v[k] + 0.001 * g[k] ** 2\n                mh = m[k] / (1 - 0.9 ** t)\n                vh = v[k] / (1 - 0.999 ** t)\n                p[k] = jnp.clip(p[k] - lr * mh / (jnp.sqrt(vh) + 1e-8), -45.0, 45.0)\n            if t in snapshots:\n                out[t] = {k: np.asarray(x) for k, x in p.items()}\n        return out, first, last\n\n    def forward(p, Xn):\n        h = Xn @ p[\"w1\"].T + p[\"b1\"]\n        h = h / (1.0 + np.exp(-h))\n        return h @ p[\"wo\"] + float(p[\"bo\"])\n\n    # 3. Step count by repeated stratified 3-fold CV on train AUROC.\n    candidates = [0, 50, 100, 200, 400]\n    rng = np.random.RandomState(0)\n    cv = {k: [] for k in candidates}\n    pos = np.where(y == 1)[0]\n    neg = np.where(y == 0)[0]\n    for rep in range(2):\n        pf = rng.permutation(pos)\n        nf = rng.permutation(neg)\n        for f in range(3):\n            va = np.r_[pf[f::3], nf[f::3]]\n            mask = np.ones(len(y), bool)\n            mask[va] = False\n            Ctr = jnp.asarray(X[mask & (y == 0)])\n            Itr = jnp.asarray(X[mask & (y == 1)])\n            snaps, _, _ = train(Ctr, Itr, max(candidates), set(candidates))\n            for k in candidates:\n                cv[k].append(_auroc(forward(snaps[k], X[va]), y[va]))\n    cv_mean = {k: float(np.mean(v)) for k, v in cv.items()}\n    # Prefer fewer steps unless more steps win by a clear margin.\n    best_k = 0\n    for k in candidates:\n        if cv_mean[k] > cv_mean[best_k] + 0.005:\n            best_k = k\n\n    # 4. Final fit on all rows, then prior-odds shift of the readout bias so\n    #    sigmoid(energy) tracks the 1.8% positive rate (Brier), AUROC unchanged.\n    snaps, l_first, l_last = train(jnp.asarray(C), jnp.asarray(I), best_k, {best_k})\n    p = snaps[best_k]\n    bo = float(p[\"bo\"]) - math.log(len(C) / len(I))\n    p_final = {\"w1\": p[\"w1\"], \"b1\": p[\"b1\"], \"wo\": p[\"wo\"], \"bo\": bo}\n    set_params(model, {\"w1\": jnp.asarray(p[\"w1\"]), \"b1\": jnp.asarray(p[\"b1\"]), \"wo\": jnp.asarray(p[\"wo\"]), \"bo\": jnp.asarray(bo)})\n    train_scores = forward(p_final, X)\n    train_auroc = _auroc(train_scores, y)\n    brier = float(np.mean((1.0 / (1.0 + np.exp(-train_scores)) - y) ** 2))\n    state = {\n        \"w1\": [[float(v) for v in row] for row in p_final[\"w1\"]],\n        \"b1\": [float(v) for v in p_final[\"b1\"]],\n        \"w_out\": [float(v) for v in p_final[\"wo\"]],\n        \"b_out\": float(bo),\n    }\n    return {\n        \"calibrated_decision\": {\n            \"final_state\": state,\n            \"wall_clock_seconds\": time.time() - t0,\n            \"linear_train_auroc\": lin_auroc,\n            \"linear_direction\": [float(direction[0]), float(direction[1])],\n            \"cv_mean_auroc_by_steps\": cv_mean,\n            \"chosen_steps\": best_k,\n            \"nce_loss_first\": l_first,\n            \"nce_loss_last\": l_last,\n            \"train_auroc\": train_auroc,\n            \"train_brier\": brier,\n            \"distinct_train_scores\": int(len(set(np.round(train_scores, 12)))),\n            \"random_seed\": 0,\n        }\n    }",
+  "metrics": {
+    "final_state": {
+      "w1": [
+        [
+          -2.095487594604492,
+          7.7176008224487305
+        ],
+        [
+          2.501499891281128,
+          -7.736868381500244
+        ],
+        [
+          -40.042667388916016,
+          -0.0004172491026110947
+        ],
+        [
+          -0.13845078647136688,
+          29.982383728027344
+        ]
+      ],
+      "b1": [
+        1.6149877309799194,
+        -1.064215898513794,
+        2.9973385334014893,
+        -1.2776787281036377
+      ],
+      "w_out": [
+        1.5660995244979858,
+        -1.5363060235977173,
+        -0.8791441321372986,
+        0.17317722737789154
+      ],
+      "b_out": -4.161962333524222
+    },
+    "wall_clock_seconds": 1.9309179782867432,
+    "linear_train_auroc": 0.8413218089750305,
+    "linear_direction": [
+      -0.25881904510252085,
+      0.9659258262890683
+    ],
+    "cv_mean_auroc_by_steps": {
+      "0": 0.8409058481076674,
+      "50": 0.8574366742746123,
+      "100": 0.8510014945746079,
+      "200": 0.8421277749529098,
+      "400": 0.8421496813932797
+    },
+    "chosen_steps": 50,
+    "nce_loss_first": 1.0884805917739868,
+    "nce_loss_last": 0.91501784324646,
+    "train_auroc": 0.8638175891973692,
+    "train_brier": 0.014481649510053455,
+    "distinct_train_scores": 65,
+    "random_seed": 0,
+    "final_energy": 0.29342541436464087,
+    "brier": 0.01938761572820606
+  },
+  "eval_verdict": "PASS",
+  "eval_reason": "Improved: calibrated_decision",
+  "baseline_final_energy_before": 0.2955786938659867,
+  "baseline_final_energy_after": 0.29342541436464087
+}
