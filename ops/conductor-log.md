@@ -18471,3 +18471,4 @@ code |
 | 2026-09-23 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_goal_energy_claim_text age-week 0: OPEN 1 days: SILENT_N |
 | 2026-09-23 00:42 UTC | Plan milestone 2026.09.660 | OK | 14 tasks proposed |
 | 2026-09-23 00:53 UTC | Milestone 2026.09.660 activated | OK | 14 tasks queued |
+| 2026-09-23 01:29 UTC | Bind fourteen complete authorities and ingest the  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 127 passed, 1 warning in 11.72s |
