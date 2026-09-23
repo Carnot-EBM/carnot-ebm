@@ -35223,3 +35223,85 @@ closing fence), validated 2026-06-25 for exactly B2's observed failure. Applying
 borrows a validated mechanism for deterministic bounded completion; it does not restore parity
 with the live path's current default, and the resulting B2 measurement should be described as
 codeonly-suppressed induction, not representative think-mode induction.
+
+## V660 corrected B2 evidence custody — 2026-09-23
+
+### REQ-ARC-WMTE-7556: Qualify completed corrected B2 evidence without new inference
+
+Experiment 7556 SHALL inspect
+`results/experiment_10008_b2_induction_gate_measurement_v2.json` in the current
+worktree first. It SHALL use `/home/ianblenke/carnot-wt-b2c` only as the
+documented read-only fallback. It SHALL not start, stop, or duplicate a model or
+game process. The current task SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical Qwen calls SHALL remain in `historical_model_calls`.
+
+The custody reducer SHALL accept only a terminal Experiment 10008 producer. It
+SHALL require an exited child with return code zero, a released lease, no
+unfinished historical invocation, one telemetry run identity, and stable source
+and raw bytes. It SHALL authenticate cited raw hashes before it reads dependent
+claims. An absent, blocked, or active corrected producer SHALL emit
+`complete_blocked_corrected_b2_not_available`, `verdict_class=blocked`, and
+`corrected_arc_ready_score=0`. Its gate summary SHALL name the exact path or
+field, expected value, and observed value.
+
+The reducer SHALL reconstruct all 144 scheduled game and seed units. It SHALL
+retain attempted, completed, failed, censored, excluded, and unstarted counts.
+It SHALL reconstruct every fired induction attempt with its timestamp, window
+censoring, request disposition, completion tokens, finish reason, emitted
+content bytes, reasoning bytes, plan state, verifier result, frame-change label,
+level-up label, and action-provenance disposition. Response-byte token totals
+SHALL match the published durable distribution. A request-budget-exhausted row
+without a distinct response SHALL remain explicit and SHALL not borrow a prior
+response as new evidence.
+
+The reducer SHALL verify the real `make_carnot_agent` to `E3AgentPolicy` path,
+withheld adapters and stored engines, no game-source read, mandated Qwen GGUF,
+and the observed 4096-token cap. It SHALL report the uniform second saturation.
+It SHALL join world-model, verifier, plan, action, and progress evidence without
+converting incidental frame change into level progress. Any credited level SHALL
+have `solve_provenance=live_agent_self_discovery` and matching action evidence.
+Development proxies and outer-loop reproduction SHALL not receive headline
+solve credit.
+
+`corrected_arc_ready_score` SHALL equal one after custody, reconstruction,
+scoped validation, cold replay, and terminal readers all pass. This readiness
+score is independent of benefit. The verdict SHALL remain null when corrected
+runtime evidence is complete but no plan, verifier result, or attributable
+level progress exists. Configuration repair SHALL not count as efficacy. The
+artifact SHALL preserve Experiment 7531's literal verdict and both appended
+corrections. It SHALL keep `positive_claim=false`, identify saturated progress,
+and keep the retired budget-raise lever closed.
+
+#### SCENARIO-ARC-WMTE-7556-STABLE-HANDOFF
+
+- **GIVEN** a local or documented external Experiment 10008 artifact
+- **WHEN** custody checks its producer, session identity, lease, and cited bytes
+- **THEN** only a terminal stable producer can enter scientific reduction
+- **AND** active-producer and swapped-session mutations fail with exact gates.
+
+#### SCENARIO-ARC-WMTE-7556-CAP-AND-PROVENANCE
+
+- **GIVEN** durable request and response bytes plus attempt telemetry
+- **WHEN** the reducer joins each attempt to its response and later actions
+- **THEN** a 4096-token or wrong-cap mutation changes the gate result
+- **AND** a credited level without live action provenance fails qualification.
+
+#### SCENARIO-ARC-WMTE-7556-PER-UNIT-RECONSTRUCTION
+
+- **GIVEN** the frozen 144-unit schedule and 35 fired attempts
+- **WHEN** custody reconstructs all dispositions and bounded windows
+- **THEN** no missing unit becomes a zero and no retained prior usage becomes a response
+- **AND** frame-change-only progress remains distinct from level-up progress.
+
+#### SCENARIO-ARC-WMTE-7556-TERMINAL-NULL
+
+- **GIVEN** authentic complete custody with uniform length finishes and no plans
+- **WHEN** affected checks, cold replay, independent reduction, and strict readers pass
+- **THEN** `corrected_arc_ready_score` is the bare number one
+- **AND** the verdict is complete null with no efficacy or solve promotion.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.
