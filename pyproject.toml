@@ -364,6 +364,10 @@ extend-exclude = [
     "results/**/agent_factory.py",
     "results/**/live_policy.py",
     "results/**/scorer.py",
+    # Same reasoning again: a per-attempt snapshot of the induced ARC world-model, saved as raw
+    # evidence of what the model actually emitted. Found blocking a commit 2026-09-23 when the
+    # B2 codeonly-fix run saved 5 fresh copies; 47 older copies already exist untouched.
+    "results/**/engine.py",
     "results/**/e3",
     "results/arc_e3",
     "results/arc_e3_origin_fixtures",

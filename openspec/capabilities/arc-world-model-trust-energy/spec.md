@@ -35305,3 +35305,110 @@ and keep the retired budget-raise lever closed.
 
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## V660 ARC held-out-game generalization analysis — 2026-09-23
+
+### REQ-ARC-WMTE-7557: Analyze corrected B2 evidence without re-solving games
+
+Experiment 7557 SHALL read
+`results/experiment_7556_v660_arc_corrected_custody.json` only after its
+producer is terminal. It SHALL require `corrected_arc_ready_score=1`, a
+qualified terminal verdict class, and `flagged_adversarial=false`. A missing
+or failed upstream field SHALL emit `complete_blocked_<reason>`,
+`verdict_class=blocked`, and an exact gate row with the upstream, path or
+field, expected value, and observed value. It SHALL not read game source,
+change production defaults, submit a kernel, or make a model call.
+
+Current work SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero typed invocation counts,
+`planned_inference_substrate_class=aggregation`,
+`inference_substrate_class=aggregation`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and
+`execution_venue=host`. Historical calls SHALL remain separate. The analysis
+SHALL authenticate each raw file against the hashes qualified by Experiment
+7556 before it reduces that file.
+
+The analysis SHALL preserve the bounded frame-change endpoint for historical
+comparison. It SHALL report plan-linked execution and actual level progress as
+separate endpoints. A frame change SHALL not become useful induction. A useful
+attempt requires an accepted world model linked through a subsequent executed
+plan to attributable progress. Missing model, plan, or action joins SHALL make
+that endpoint unavailable rather than false. Any cited level SHALL retain
+`solve_provenance=live_agent_self_discovery`; the task SHALL claim no new solve.
+
+Numerical B2 gate-quality fitting SHALL require at least 1,000 opportunities,
+100 actual attempts, both useful and useless identifiable outcomes, and at
+least four games contributing each outcome. Below any floor, the artifact
+SHALL publish feasibility counts only, set `numeric_gate_quality_claim=false`,
+and set `gate_ready_to_ship=false`. It SHALL not fit a partial classifier or
+convert unidentifiable outcomes to negative labels.
+
+If all support floors pass, the analysis SHALL fit only an L2-logistic gate.
+Predictors SHALL be limited to pre-attempt stagnation age, repeat count,
+observed novelty, and prior model rejection. It SHALL choose L2 inside the
+training games only. It SHALL evaluate leave-one-game-out, cluster uncertainty
+by held-out game, and compare the current trigger with matched-rate random
+suppression under frozen seeds. Outcome tokens, generated plans, and later
+progress SHALL not be predictors. It SHALL report missed useful attempts and
+lost level gains. Retrospective evidence alone SHALL keep
+`gate_ready_to_ship=false`.
+
+An analysis-only oracle MAY suppress observed useless attempts while retaining
+all observed useful attempts. Its saved tokens are optimistic logged-data
+headroom, not counterfactual policy value. The artifact SHALL report whether
+the oracle endpoint is identifiable and SHALL not turn a saturated proxy into
+a no-headroom claim.
+
+The analysis SHALL aggregate every available supervisor selection receipt.
+It SHALL report each configured arm with fired and helped counts, including
+zero-firing arms, plus `stagnations_unredirected`. A help count requires later
+observed level gain with a bounded episode join. No selection-only row SHALL
+manufacture help. A successor hypothesis SHALL be absent unless identifiable
+evidence warrants it.
+
+The terminal artifact SHALL retain per-game absolute attempt, token, cost,
+frame-change, plan-linked, and level-progress counts with uncertainty
+availability. It SHALL retain planned, attempted, completed, excluded, failed,
+censored, and unstarted independent units. `arc_analysis_complete_score` SHALL
+be the bare number one only after scoped validation, a fresh-process cold
+replay, an independent reduction, adversarial verification, and the strict
+verdict-row consistency reader pass. Readiness SHALL remain independent of
+benefit.
+
+#### SCENARIO-ARC-WMTE-7557-UPSTREAM-GATE
+
+- **GIVEN** the exact Experiment 7556 deliverable path
+- **WHEN** a readiness, verdict, flag, raw path, or raw hash is absent or wrong
+- **THEN** Experiment 7557 publishes a complete blocked record
+- **AND** the gate summary names the exact expected and observed value.
+
+#### SCENARIO-ARC-WMTE-7557-ENDPOINT-IDENTIFIABILITY
+
+- **GIVEN** attempts with frame movement but no accepted model and plan join
+- **WHEN** the analysis classifies induction usefulness
+- **THEN** it keeps the old frame-change count for comparison
+- **AND** it marks plan-linked efficacy unavailable rather than false.
+
+#### SCENARIO-ARC-WMTE-7557-SUPPORT-FLOORS
+
+- **GIVEN** 11,813 opportunities but fewer than 100 attempts
+- **WHEN** gate-quality support is reduced
+- **THEN** no numerical model is fit and no numeric quality claim is emitted
+- **AND** each failed support floor stays explicit in the acceptance gates.
+
+#### SCENARIO-ARC-WMTE-7557-ORACLE-AND-SUPERVISOR
+
+- **GIVEN** authenticated attempt outcomes and supervisor selection receipts
+- **WHEN** optimistic headroom and arm outcomes are reduced
+- **THEN** only identifiable useful and useless attempts enter the oracle
+- **AND** every supervisor arm retains fired, helped, and no-firing evidence.
+
+#### SCENARIO-ARC-WMTE-7557-TERMINAL-FEASIBILITY
+
+- **GIVEN** valid corrected evidence that does not meet the fitting floors
+- **WHEN** all required validation and terminal readers pass
+- **THEN** `arc_analysis_complete_score` is the bare number one
+- **AND** the artifact is a complete null feasibility result with no ship claim.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.

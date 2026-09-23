@@ -1396,6 +1396,7 @@ def _construct_induction_proposer(
     *,
     max_tokens: int,
     proposer_type: Any,
+    induction_codeonly: bool = False,
 ) -> Any:
     """Construct the E3 induction proposer at a mockable budget seam."""
 
@@ -1416,13 +1417,53 @@ def _construct_induction_proposer(
     proposer.model_revision = str(args.model_revision)
     proposer.requested_model_filename = MODEL_FILENAME
     proposer.requested_model_path = exp7471.live_support._absolute_model_path(args.model_path)
+    if induction_codeonly:
+        _install_b2_codeonly_generation(proposer)
     return proposer
+
+
+def _restore_environment(name: str, previous: str | None) -> None:
+    if previous is None:
+        os.environ.pop(name, None)
+    else:
+        os.environ[name] = previous
+
+
+def _install_b2_codeonly_generation(proposer: Any) -> None:
+    """Reuse the live module's validated codeonly branch for eligible B2 calls only.
+
+    LocalGGUFProposer.generate owns the directive text, pre-opened fence, and
+    closing-fence stop sequence. This wrapper only selects that existing branch
+    for B2 while preventing the documented chat-template interaction.
+    """
+
+    original_generate = proposer.generate
+
+    def b2_generate(self: Any, *args: Any, **kwargs: Any) -> Any:
+        if kwargs.get("codeonly_eligible") is not True:
+            return original_generate(*args, **kwargs)
+        previous_think = os.environ.get("CARNOT_ARC_INDUCE_THINK")
+        previous_codeonly = os.environ.get("CARNOT_ARC_CODEONLY_INDUCE")
+        previous_chat_template = self.use_chat_template
+        os.environ["CARNOT_ARC_INDUCE_THINK"] = "0"
+        os.environ["CARNOT_ARC_CODEONLY_INDUCE"] = "1"
+        self.use_chat_template = False
+        try:
+            return original_generate(*args, **kwargs)
+        finally:
+            self.use_chat_template = previous_chat_template
+            _restore_environment("CARNOT_ARC_INDUCE_THINK", previous_think)
+            _restore_environment("CARNOT_ARC_CODEONLY_INDUCE", previous_codeonly)
+
+    proposer.generate = MethodType(b2_generate, proposer)
+    proposer.b2_induction_codeonly = True
 
 
 def run_live_session(
     args: argparse.Namespace,
     *,
     induction_max_tokens: int | None = None,
+    induction_codeonly: bool = False,
 ) -> int:  # pragma: no cover - owned child.
     """Load one owned server and run all frozen episodes on GPU 1."""
 
@@ -1469,6 +1510,7 @@ def run_live_session(
             args,
             max_tokens=effective_induction_max_tokens,
             proposer_type=LocalGGUFProposer,
+            induction_codeonly=induction_codeonly,
         )
         if not proposer._ensure_server():
             raise RuntimeError("owned native CUDA llama-server failed to start")
@@ -1495,6 +1537,14 @@ def run_live_session(
             "mtp": False,
             "max_new_tokens": effective_induction_max_tokens,
             "request_limit_per_episode": REQUEST_LIMIT,
+            **(
+                {
+                    "induction_codeonly": True,
+                    "induction_codeonly_transport": "raw_completion",
+                }
+                if induction_codeonly
+                else {}
+            ),
         }
         session["model_loaded"] = True
         current_work_receipt.atomic_json(

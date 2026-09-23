@@ -1,0 +1,403 @@
+The executable world model at results/arc_e3/g50t/world_model.py reproduces
+only 1/25 (4%) of the observed transitions. Below are
+failing cases (BEFORE / your PREDICTED / the true OBSERVED next grid). Fix engine() so it
+reproduces these too, and REFACTOR toward simpler, more general rules (replace special
+cases with shared rules) while keeping the cases it already gets right. Edit only that
+file.
+
+REQUIRED OUTPUT STRUCTURE -- do not deviate from this: your fixed code must define EXACTLY two
+TOP-LEVEL functions, in the SAME format as the file you are correcting:
+
+    def engine(grid, action, data):
+        ...
+    def is_level_complete(grid):
+        ...
+
+Do NOT wrap them in a class. Do NOT use `self`. Do NOT invent a new internal grid
+representation or shape -- `grid` is the SAME real grid shape/format already used by the
+code above; reuse it exactly, do not redesign it.
+
+MISMATCHES:
+[
+ {
+  "i": 0,
+  "action": 1,
+  "data": null,
+  "true_change": [],
+  "your_prediction_was_wrong_at": [
+   [
+    8,
+    14,
+    5,
+    9
+   ],
+   [
+    8,
+    15,
+    5,
+    9
+   ],
+   [
+    8,
+    16,
+    5,
+    9
+   ],
+   [
+    8,
+    17,
+    5,
+    9
+   ],
+   [
+    8,
+    18,
+    5,
+    9
+   ],
+   [
+    9,
+    14,
+    5,
+    9
+   ],
+   [
+    9,
+    15,
+    5,
+    9
+   ],
+   [
+    9,
+    16,
+    5,
+    9
+   ]
+  ],
+  "your_prediction_was_wrong_at_omitted_count": 43
+ },
+ {
+  "i": 1,
+  "action": 2,
+  "data": null,
+  "true_change": [
+   [
+    8,
+    14,
+    9,
+    5
+   ],
+   [
+    8,
+    15,
+    9,
+    5
+   ],
+   [
+    8,
+    16,
+    9,
+    5
+   ],
+   [
+    8,
+    17,
+    9,
+    5
+   ],
+   [
+    8,
+    18,
+    9,
+    5
+   ],
+   [
+    9,
+    14,
+    9,
+    5
+   ],
+   [
+    9,
+    15,
+    9,
+    5
+   ],
+   [
+    9,
+    16,
+    9,
+    5
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    10,
+    16,
+    9,
+    5
+   ],
+   [
+    16,
+    16,
+    9,
+    5
+   ]
+  ],
+  "true_change_omitted_count": 41
+ },
+ {
+  "i": 2,
+  "action": 1,
+  "data": null,
+  "true_change": [
+   [
+    8,
+    14,
+    5,
+    9
+   ],
+   [
+    8,
+    15,
+    5,
+    9
+   ],
+   [
+    8,
+    16,
+    5,
+    9
+   ],
+   [
+    8,
+    17,
+    5,
+    9
+   ],
+   [
+    8,
+    18,
+    5,
+    9
+   ],
+   [
+    9,
+    14,
+    5,
+    9
+   ],
+   [
+    9,
+    15,
+    5,
+    9
+   ],
+   [
+    9,
+    16,
+    5,
+    9
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    10,
+    16,
+    9,
+    5
+   ],
+   [
+    16,
+    16,
+    9,
+    5
+   ],
+   [
+    63,
+    62,
+    1,
+    9
+   ]
+  ],
+  "true_change_omitted_count": 40
+ },
+ {
+  "i": 3,
+  "action": 3,
+  "data": null,
+  "true_change": [
+   [
+    63,
+    62,
+    9,
+    1
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    8,
+    14,
+    5,
+    9
+   ],
+   [
+    8,
+    15,
+    5,
+    9
+   ],
+   [
+    8,
+    16,
+    5,
+    9
+   ],
+   [
+    8,
+    17,
+    5,
+    9
+   ],
+   [
+    8,
+    18,
+    5,
+    9
+   ],
+   [
+    9,
+    14,
+    5,
+    9
+   ],
+   [
+    9,
+    15,
+    5,
+    9
+   ],
+   [
+    9,
+    16,
+    5,
+    9
+   ]
+  ],
+  "your_prediction_was_wrong_at_omitted_count": 42
+ },
+ {
+  "i": 4,
+  "action": 4,
+  "data": null,
+  "true_change": [
+   [
+    8,
+    14,
+    9,
+    5
+   ],
+   [
+    8,
+    15,
+    9,
+    5
+   ],
+   [
+    8,
+    16,
+    9,
+    5
+   ],
+   [
+    8,
+    17,
+    9,
+    5
+   ],
+   [
+    8,
+    18,
+    9,
+    5
+   ],
+   [
+    8,
+    20,
+    5,
+    9
+   ],
+   [
+    8,
+    21,
+    5,
+    9
+   ],
+   [
+    8,
+    22,
+    5,
+    9
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    8,
+    14,
+    9,
+    5
+   ],
+   [
+    8,
+    15,
+    9,
+    5
+   ],
+   [
+    8,
+    16,
+    9,
+    5
+   ],
+   [
+    8,
+    17,
+    9,
+    5
+   ],
+   [
+    8,
+    18,
+    9,
+    5
+   ],
+   [
+    8,
+    20,
+    5,
+    9
+   ],
+   [
+    8,
+    21,
+    5,
+    9
+   ],
+   [
+    8,
+    22,
+    5,
+    9
+   ]
+  ],
+  "true_change_omitted_count": 40,
+  "your_prediction_was_wrong_at_omitted_count": 41
+ }
+]
+
+Reminder: return ONLY the corrected `engine(grid, action, data)` and `is_level_complete(grid)`
+top-level functions -- no classes, no `self`, no invented state, no renamed parameters.
+
+
+Return ONLY the corrected ```python file.
+```python

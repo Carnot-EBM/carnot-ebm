@@ -1,0 +1,305 @@
+The executable world model at results/arc_e3/ka59/world_model.py reproduces
+only 7/25 (28%) of the observed transitions. Below are
+failing cases (BEFORE / your PREDICTED / the true OBSERVED next grid). Fix engine() so it
+reproduces these too, and REFACTOR toward simpler, more general rules (replace special
+cases with shared rules) while keeping the cases it already gets right. Edit only that
+file.
+
+REQUIRED OUTPUT STRUCTURE -- do not deviate from this: your fixed code must define EXACTLY two
+TOP-LEVEL functions, in the SAME format as the file you are correcting:
+
+    def engine(grid, action, data):
+        ...
+    def is_level_complete(grid):
+        ...
+
+Do NOT wrap them in a class. Do NOT use `self`. Do NOT invent a new internal grid
+representation or shape -- `grid` is the SAME real grid shape/format already used by the
+code above; reuse it exactly, do not redesign it.
+
+MISMATCHES:
+[
+ {
+  "i": 0,
+  "action": 4,
+  "data": null,
+  "true_change": [
+   [
+    30,
+    18,
+    14,
+    1
+   ],
+   [
+    30,
+    19,
+    14,
+    1
+   ],
+   [
+    30,
+    20,
+    14,
+    1
+   ],
+   [
+    30,
+    21,
+    1,
+    14
+   ],
+   [
+    30,
+    22,
+    1,
+    14
+   ],
+   [
+    30,
+    23,
+    1,
+    14
+   ],
+   [
+    31,
+    18,
+    14,
+    1
+   ],
+   [
+    31,
+    19,
+    0,
+    1
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    63,
+    63,
+    4,
+    0
+   ]
+  ],
+  "true_change_omitted_count": 11
+ },
+ {
+  "i": 1,
+  "action": 6,
+  "data": {
+   "x": 28,
+   "y": 31
+  },
+  "true_change": [
+   [
+    31,
+    22,
+    0,
+    4
+   ],
+   [
+    31,
+    28,
+    5,
+    0
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    31,
+    22,
+    0,
+    4
+   ],
+   [
+    31,
+    28,
+    5,
+    0
+   ],
+   [
+    63,
+    62,
+    0,
+    4
+   ]
+  ]
+ },
+ {
+  "i": 3,
+  "action": 1,
+  "data": null,
+  "true_change": [
+   [
+    63,
+    61,
+    4,
+    0
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    63,
+    61,
+    4,
+    0
+   ]
+  ]
+ },
+ {
+  "i": 4,
+  "action": 6,
+  "data": {
+   "x": 22,
+   "y": 31
+  },
+  "true_change": [
+   [
+    31,
+    22,
+    4,
+    0
+   ],
+   [
+    31,
+    28,
+    0,
+    4
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    31,
+    22,
+    4,
+    0
+   ],
+   [
+    31,
+    28,
+    0,
+    4
+   ],
+   [
+    63,
+    60,
+    0,
+    4
+   ]
+  ]
+ },
+ {
+  "i": 5,
+  "action": 4,
+  "data": null,
+  "true_change": [
+   [
+    30,
+    21,
+    14,
+    1
+   ],
+   [
+    30,
+    22,
+    14,
+    1
+   ],
+   [
+    30,
+    23,
+    14,
+    1
+   ],
+   [
+    30,
+    24,
+    1,
+    14
+   ],
+   [
+    30,
+    25,
+    1,
+    14
+   ],
+   [
+    30,
+    26,
+    1,
+    0
+   ],
+   [
+    31,
+    21,
+    14,
+    1
+   ],
+   [
+    31,
+    22,
+    0,
+    1
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    30,
+    21,
+    14,
+    1
+   ],
+   [
+    30,
+    22,
+    14,
+    1
+   ],
+   [
+    30,
+    23,
+    14,
+    1
+   ],
+   [
+    30,
+    24,
+    1,
+    14
+   ],
+   [
+    30,
+    25,
+    1,
+    14
+   ],
+   [
+    30,
+    26,
+    1,
+    0
+   ],
+   [
+    31,
+    21,
+    14,
+    1
+   ],
+   [
+    31,
+    22,
+    0,
+    1
+   ]
+  ],
+  "true_change_omitted_count": 11,
+  "your_prediction_was_wrong_at_omitted_count": 11
+ }
+]
+
+Reminder: return ONLY the corrected `engine(grid, action, data)` and `is_level_complete(grid)`
+top-level functions -- no classes, no `self`, no invented state, no renamed parameters.
+
+
+Return ONLY the corrected ```python file.
+```python

@@ -3,8 +3,33 @@
 from __future__ import annotations
 
 import json
+import urllib.request
+
+import pytest
 
 from carnot import experiment_7531_b2_induction_gate_measurement as exp7531
+from carnot.agentic import arc_executable_world_model as awm
+
+
+_VALID_BARE_CODE = (
+    "import numpy as np\n"
+    "def engine(grid, action, data):\n    return np.asarray(grid)\n"
+    "def is_level_complete(grid):\n    return False\n"
+)
+
+
+class _FakeResponse:
+    def __init__(self, payload: bytes) -> None:
+        self._payload = payload
+
+    def __enter__(self) -> "_FakeResponse":
+        return self
+
+    def __exit__(self, *_args: object) -> bool:
+        return False
+
+    def read(self, *_args: object) -> bytes:
+        return self._payload
 
 
 def test_schedule_reuses_only_the_frozen_e6_panel() -> None:
@@ -22,18 +47,24 @@ def test_schedule_reuses_only_the_frozen_e6_panel() -> None:
 
 
 def test_b2_induction_generation_receives_4096_without_changing_7471(monkeypatch) -> None:
-    """SCENARIO-ARC-WMTE-10008-INDUCTION-BUDGET overrides only the B2 child."""
+    """REQ-ARC-WMTE-10009 keeps the budget and opts only this B2 child into codeonly."""
 
-    observed: dict[str, int] = {}
+    observed: dict[str, object] = {}
 
-    def mocked_generation_boundary(_args: object, *, induction_max_tokens: int) -> int:
+    def mocked_generation_boundary(
+        _args: object,
+        *,
+        induction_max_tokens: int,
+        induction_codeonly: bool = False,
+    ) -> int:
         observed["max_tokens"] = induction_max_tokens
+        observed["codeonly"] = induction_codeonly
         return 0
 
     monkeypatch.setattr(exp7531.e6, "run_live_session", mocked_generation_boundary)
 
     assert exp7531.run_live_session(exp7531.argparse.Namespace()) == 0
-    assert observed == {"max_tokens": 4096}
+    assert observed == {"max_tokens": 4096, "codeonly": True}
     assert exp7531.exp7471.MAX_NEW_TOKENS == 256
 
 
@@ -58,6 +89,95 @@ def test_e6_induction_proposer_constructor_receives_4096() -> None:
 
     assert isinstance(proposer, MockProposer)
     assert observed["max_tokens"] == 4096
+
+
+def test_b2_codeonly_on_builds_raw_directive_fence_and_stop(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-ARC-WMTE-10009-CODEONLY-ON captures the mocked generation request."""
+
+    captured: dict[str, object] = {}
+
+    def fake_urlopen(
+        request: urllib.request.Request, timeout: float | None = None
+    ) -> _FakeResponse:
+        del timeout
+        captured["url"] = request.full_url
+        captured["body"] = json.loads(bytes(request.data or b"").decode())
+        response = {
+            "content": _VALID_BARE_CODE,
+            "stop_type": "stop",
+            "truncated": False,
+        }
+        return _FakeResponse(json.dumps(response).encode())
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1")
+    monkeypatch.setenv("CARNOT_ARC_CODEONLY_INDUCE", "0")
+    proposer = exp7531.e6._construct_induction_proposer(
+        exp7531.argparse.Namespace(
+            model_path="/tmp/mock-model.gguf",
+            model_revision="mock-revision",
+            port=59999,
+        ),
+        max_tokens=4096,
+        proposer_type=awm.LocalGGUFProposer,
+        induction_codeonly=True,
+    )
+    monkeypatch.setattr(proposer, "_ensure_server", lambda: True)
+
+    assert proposer.use_chat_template is True
+    ok, _code = proposer.generate(
+        "BASE_PROMPT",
+        ("engine", "is_level_complete"),
+        tries=1,
+        codeonly_eligible=True,
+    )
+
+    assert ok is True
+    assert captured["url"] == "http://127.0.0.1:59999/completion"
+    body = captured["body"]
+    assert isinstance(body, dict)
+    assert body["prompt"].startswith(awm._L2_CODEONLY_DIRECTIVE)
+    assert body["prompt"].endswith("BASE_PROMPT\n```python\n")
+    assert body["stop"] == ["```"]
+    assert body["n_predict"] == 4096
+    assert proposer.use_chat_template is True
+    assert exp7531.os.environ["CARNOT_ARC_INDUCE_THINK"] == "1"
+    assert exp7531.os.environ["CARNOT_ARC_CODEONLY_INDUCE"] == "0"
+
+
+def test_b2_codeonly_off_preserves_prior_generation_call() -> None:
+    """SCENARIO-ARC-WMTE-10009-CODEONLY-OFF is prior-round parity."""
+
+    observed: dict[str, object] = {}
+
+    class MockProposer:
+        def __init__(self, **kwargs: object) -> None:
+            observed["constructor"] = kwargs
+            self.use_chat_template = kwargs["use_chat_template"]
+
+        def generate(self, prompt: str, **kwargs: object) -> tuple[bool, str]:
+            observed["prompt"] = prompt
+            observed["generation"] = kwargs
+            return True, "unchanged"
+
+    proposer = exp7531.e6._construct_induction_proposer(
+        exp7531.argparse.Namespace(
+            model_path="/tmp/mock-model.gguf",
+            model_revision="mock-revision",
+            port=59999,
+        ),
+        max_tokens=4096,
+        proposer_type=MockProposer,
+    )
+    result = proposer.generate("BASE_PROMPT", codeonly_eligible=True)
+
+    assert result == (True, "unchanged")
+    assert observed["prompt"] == "BASE_PROMPT"
+    assert observed["generation"] == {"codeonly_eligible": True}
+    assert observed["constructor"]["use_chat_template"] is True
+    assert observed["constructor"]["max_tokens"] == 4096
 
 
 def test_completion_token_distribution_exposes_nonuniform_lengths() -> None:
@@ -90,6 +210,14 @@ def test_durable_completion_receipts_exclude_stale_attempt_usage(tmp_path) -> No
 
     request_dir = tmp_path / "sp80__seed-1" / "requests"
     request_dir.mkdir(parents=True)
+    (request_dir / "00_request.json").write_text(
+        json.dumps(
+            {
+                "prompt": awm._L2_CODEONLY_DIRECTIVE + "PROMPT\n```python\n",
+                "stop": ["```"],
+            }
+        )
+    )
     (request_dir / "00_response.json").write_text(
         json.dumps({"usage": {"completion_tokens": 4096}})
     )
@@ -111,6 +239,47 @@ def test_durable_completion_receipts_exclude_stale_attempt_usage(tmp_path) -> No
     assert evidence["distribution"]["histogram"] == {"4096": 1}
     assert evidence["per_attempt_reported_distribution"]["histogram"] == {"4096": 2}
     assert evidence["rows_without_distinct_completed_response"] == ["sp80:seed-1:induction:2"]
+
+
+def test_raw_response_evidence_excludes_non_codeonly_refactor(tmp_path) -> None:
+    """REQ-ARC-WMTE-10009 attributes raw outcomes only to codeonly induction calls."""
+
+    request_dir = tmp_path / "sb26__seed-1" / "requests"
+    request_dir.mkdir(parents=True)
+    (request_dir / "00_request.json").write_text(
+        json.dumps(
+            {
+                "prompt": awm._L2_CODEONLY_DIRECTIVE + "PROMPT\n```python\n",
+                "stop": ["```"],
+            }
+        )
+    )
+    (request_dir / "00_response.json").write_text(
+        json.dumps({"content": "def engine():\n    pass", "stop_type": "word"})
+    )
+    (request_dir / "01_request.json").write_text(
+        json.dumps({"messages": [{"role": "user", "content": "refactor"}]})
+    )
+    (request_dir / "01_response.json").write_text(
+        json.dumps(
+            {
+                "choices": [
+                    {
+                        "finish_reason": "length",
+                        "message": {"content": "", "reasoning_content": "hidden"},
+                    }
+                ]
+            }
+        )
+    )
+
+    evidence = exp7531.raw_response_evidence(tmp_path)
+
+    assert evidence["response_count"] == 1
+    assert evidence["content_nonempty_count"] == 1
+    assert evidence["all_content_nonempty"] is True
+    assert evidence["normalized_finish_reason_histogram"] == {"stop": 1}
+    assert evidence["excluded_non_codeonly_responses"]["response_count"] == 1
 
 
 def test_induction_model_spec_records_the_effective_budget() -> None:

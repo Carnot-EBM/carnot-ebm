@@ -1,0 +1,359 @@
+The executable world model at results/arc_e3/su15/world_model.py reproduces
+only 22/25 (88%) of the observed transitions. Below are
+failing cases (BEFORE / your PREDICTED / the true OBSERVED next grid). Fix engine() so it
+reproduces these too, and REFACTOR toward simpler, more general rules (replace special
+cases with shared rules) while keeping the cases it already gets right. Edit only that
+file.
+
+REQUIRED OUTPUT STRUCTURE -- do not deviate from this: your fixed code must define EXACTLY two
+TOP-LEVEL functions, in the SAME format as the file you are correcting:
+
+    def engine(grid, action, data):
+        ...
+    def is_level_complete(grid):
+        ...
+
+Do NOT wrap them in a class. Do NOT use `self`. Do NOT invent a new internal grid
+representation or shape -- `grid` is the SAME real grid shape/format already used by the
+code above; reuse it exactly, do not redesign it.
+
+MISMATCHES:
+[
+ {
+  "i": 4,
+  "action": 6,
+  "data": {
+   "x": 10,
+   "y": 53
+  },
+  "true_change": [
+   [
+    52,
+    9,
+    5,
+    15
+   ],
+   [
+    52,
+    10,
+    0,
+    15
+   ],
+   [
+    52,
+    11,
+    5,
+    15
+   ],
+   [
+    53,
+    9,
+    0,
+    15
+   ],
+   [
+    53,
+    10,
+    0,
+    15
+   ],
+   [
+    53,
+    11,
+    0,
+    15
+   ],
+   [
+    54,
+    9,
+    5,
+    15
+   ],
+   [
+    54,
+    10,
+    0,
+    15
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    52,
+    9,
+    5,
+    15
+   ],
+   [
+    52,
+    10,
+    0,
+    15
+   ],
+   [
+    52,
+    11,
+    5,
+    15
+   ],
+   [
+    53,
+    9,
+    0,
+    15
+   ],
+   [
+    53,
+    10,
+    0,
+    15
+   ],
+   [
+    53,
+    11,
+    0,
+    15
+   ],
+   [
+    54,
+    9,
+    5,
+    15
+   ],
+   [
+    54,
+    10,
+    0,
+    15
+   ]
+  ],
+  "true_change_omitted_count": 12,
+  "your_prediction_was_wrong_at_omitted_count": 10
+ },
+ {
+  "i": 12,
+  "action": 6,
+  "data": {
+   "x": 8,
+   "y": 55
+  },
+  "true_change": [
+   [
+    52,
+    10,
+    0,
+    5
+   ],
+   [
+    53,
+    9,
+    0,
+    5
+   ],
+   [
+    53,
+    10,
+    0,
+    3
+   ],
+   [
+    53,
+    11,
+    0,
+    5
+   ],
+   [
+    54,
+    7,
+    5,
+    15
+   ],
+   [
+    54,
+    8,
+    5,
+    15
+   ],
+   [
+    54,
+    9,
+    5,
+    15
+   ],
+   [
+    54,
+    10,
+    0,
+    5
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    52,
+    10,
+    0,
+    5
+   ],
+   [
+    53,
+    9,
+    0,
+    5
+   ],
+   [
+    53,
+    10,
+    0,
+    3
+   ],
+   [
+    53,
+    11,
+    0,
+    5
+   ],
+   [
+    54,
+    7,
+    5,
+    15
+   ],
+   [
+    54,
+    8,
+    5,
+    15
+   ],
+   [
+    54,
+    9,
+    5,
+    15
+   ],
+   [
+    54,
+    10,
+    0,
+    5
+   ]
+  ],
+  "true_change_omitted_count": 17,
+  "your_prediction_was_wrong_at_omitted_count": 15
+ },
+ {
+  "i": 19,
+  "action": 6,
+  "data": {
+   "x": 6,
+   "y": 57
+  },
+  "true_change": [
+   [
+    54,
+    7,
+    15,
+    5
+   ],
+   [
+    54,
+    8,
+    15,
+    5
+   ],
+   [
+    54,
+    9,
+    15,
+    5
+   ],
+   [
+    55,
+    7,
+    15,
+    5
+   ],
+   [
+    55,
+    8,
+    15,
+    3
+   ],
+   [
+    55,
+    9,
+    15,
+    5
+   ],
+   [
+    56,
+    5,
+    5,
+    15
+   ],
+   [
+    56,
+    6,
+    5,
+    15
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    54,
+    7,
+    15,
+    5
+   ],
+   [
+    54,
+    8,
+    15,
+    5
+   ],
+   [
+    54,
+    9,
+    15,
+    5
+   ],
+   [
+    55,
+    7,
+    15,
+    5
+   ],
+   [
+    55,
+    8,
+    15,
+    3
+   ],
+   [
+    55,
+    9,
+    15,
+    5
+   ],
+   [
+    56,
+    5,
+    5,
+    15
+   ],
+   [
+    56,
+    6,
+    5,
+    15
+   ]
+  ],
+  "true_change_omitted_count": 10,
+  "your_prediction_was_wrong_at_omitted_count": 8
+ }
+]
+
+Reminder: return ONLY the corrected `engine(grid, action, data)` and `is_level_complete(grid)`
+top-level functions -- no classes, no `self`, no invented state, no renamed parameters.
+
+
+Return ONLY the corrected ```python file.
+```python

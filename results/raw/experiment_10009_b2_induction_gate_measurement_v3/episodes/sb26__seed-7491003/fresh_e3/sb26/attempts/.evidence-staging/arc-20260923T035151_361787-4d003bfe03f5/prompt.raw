@@ -1,0 +1,576 @@
+The executable world model at results/arc_e3/sb26/world_model.py reproduces
+only 9/25 (36%) of the observed transitions. Below are
+failing cases (BEFORE / your PREDICTED / the true OBSERVED next grid). Fix engine() so it
+reproduces these too, and REFACTOR toward simpler, more general rules (replace special
+cases with shared rules) while keeping the cases it already gets right. Edit only that
+file.
+
+REQUIRED OUTPUT STRUCTURE -- do not deviate from this: your fixed code must define EXACTLY two
+TOP-LEVEL functions, in the SAME format as the file you are correcting:
+
+    def engine(grid, action, data):
+        ...
+    def is_level_complete(grid):
+        ...
+
+Do NOT wrap them in a class. Do NOT use `self`. Do NOT invent a new internal grid
+representation or shape -- `grid` is the SAME real grid shape/format already used by the
+code above; reuse it exactly, do not redesign it.
+
+MISMATCHES:
+[
+ {
+  "i": 0,
+  "action": 6,
+  "data": {
+   "x": 35,
+   "y": 58
+  },
+  "true_change": [
+   [
+    56,
+    33,
+    4,
+    0
+   ],
+   [
+    56,
+    34,
+    4,
+    0
+   ],
+   [
+    56,
+    35,
+    4,
+    0
+   ],
+   [
+    56,
+    36,
+    4,
+    0
+   ],
+   [
+    56,
+    37,
+    4,
+    0
+   ],
+   [
+    56,
+    38,
+    4,
+    0
+   ],
+   [
+    57,
+    33,
+    4,
+    0
+   ],
+   [
+    57,
+    38,
+    4,
+    0
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    56,
+    33,
+    4,
+    0
+   ],
+   [
+    56,
+    34,
+    4,
+    0
+   ],
+   [
+    56,
+    35,
+    4,
+    0
+   ],
+   [
+    56,
+    36,
+    4,
+    0
+   ],
+   [
+    56,
+    37,
+    4,
+    0
+   ],
+   [
+    56,
+    38,
+    4,
+    0
+   ],
+   [
+    57,
+    33,
+    4,
+    0
+   ],
+   [
+    57,
+    34,
+    0,
+    9
+   ]
+  ],
+  "true_change_omitted_count": 12,
+  "your_prediction_was_wrong_at_omitted_count": 28
+ },
+ {
+  "i": 1,
+  "action": 6,
+  "data": {
+   "x": 43,
+   "y": 58
+  },
+  "true_change": [
+   [
+    56,
+    33,
+    0,
+    4
+   ],
+   [
+    56,
+    34,
+    0,
+    4
+   ],
+   [
+    56,
+    35,
+    0,
+    4
+   ],
+   [
+    56,
+    36,
+    0,
+    4
+   ],
+   [
+    56,
+    37,
+    0,
+    4
+   ],
+   [
+    56,
+    38,
+    0,
+    4
+   ],
+   [
+    56,
+    41,
+    4,
+    0
+   ],
+   [
+    56,
+    42,
+    4,
+    0
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    56,
+    33,
+    0,
+    4
+   ],
+   [
+    56,
+    34,
+    0,
+    4
+   ],
+   [
+    56,
+    35,
+    0,
+    4
+   ],
+   [
+    56,
+    36,
+    0,
+    4
+   ],
+   [
+    56,
+    37,
+    0,
+    4
+   ],
+   [
+    56,
+    38,
+    0,
+    4
+   ],
+   [
+    56,
+    41,
+    4,
+    0
+   ],
+   [
+    56,
+    42,
+    4,
+    0
+   ]
+  ],
+  "true_change_omitted_count": 32,
+  "your_prediction_was_wrong_at_omitted_count": 48
+ },
+ {
+  "i": 2,
+  "action": 5,
+  "data": null,
+  "true_change": [
+   [
+    53,
+    63,
+    2,
+    3
+   ],
+   [
+    56,
+    41,
+    0,
+    4
+   ],
+   [
+    56,
+    42,
+    0,
+    4
+   ],
+   [
+    56,
+    43,
+    0,
+    4
+   ],
+   [
+    56,
+    44,
+    0,
+    4
+   ],
+   [
+    56,
+    45,
+    0,
+    4
+   ],
+   [
+    56,
+    46,
+    0,
+    4
+   ],
+   [
+    57,
+    41,
+    0,
+    4
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    56,
+    41,
+    0,
+    4
+   ],
+   [
+    56,
+    42,
+    0,
+    4
+   ],
+   [
+    56,
+    43,
+    0,
+    4
+   ],
+   [
+    56,
+    44,
+    0,
+    4
+   ],
+   [
+    56,
+    45,
+    0,
+    4
+   ],
+   [
+    56,
+    46,
+    0,
+    4
+   ],
+   [
+    57,
+    41,
+    0,
+    4
+   ],
+   [
+    57,
+    46,
+    0,
+    4
+   ]
+  ],
+  "true_change_omitted_count": 13,
+  "your_prediction_was_wrong_at_omitted_count": 12
+ },
+ {
+  "i": 3,
+  "action": 6,
+  "data": {
+   "x": 27,
+   "y": 58
+  },
+  "true_change": [
+   [
+    56,
+    25,
+    4,
+    0
+   ],
+   [
+    56,
+    26,
+    4,
+    0
+   ],
+   [
+    56,
+    27,
+    4,
+    0
+   ],
+   [
+    56,
+    28,
+    4,
+    0
+   ],
+   [
+    56,
+    29,
+    4,
+    0
+   ],
+   [
+    56,
+    30,
+    4,
+    0
+   ],
+   [
+    57,
+    25,
+    4,
+    0
+   ],
+   [
+    57,
+    30,
+    4,
+    0
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    56,
+    25,
+    4,
+    0
+   ],
+   [
+    56,
+    26,
+    4,
+    0
+   ],
+   [
+    56,
+    27,
+    4,
+    0
+   ],
+   [
+    56,
+    28,
+    4,
+    0
+   ],
+   [
+    56,
+    29,
+    4,
+    0
+   ],
+   [
+    56,
+    30,
+    4,
+    0
+   ],
+   [
+    57,
+    25,
+    4,
+    0
+   ],
+   [
+    57,
+    26,
+    0,
+    15
+   ]
+  ],
+  "true_change_omitted_count": 12,
+  "your_prediction_was_wrong_at_omitted_count": 28
+ },
+ {
+  "i": 5,
+  "action": 6,
+  "data": {
+   "x": 27,
+   "y": 58
+  },
+  "true_change": [
+   [
+    56,
+    25,
+    0,
+    4
+   ],
+   [
+    56,
+    26,
+    0,
+    4
+   ],
+   [
+    56,
+    27,
+    0,
+    4
+   ],
+   [
+    56,
+    28,
+    0,
+    4
+   ],
+   [
+    56,
+    29,
+    0,
+    4
+   ],
+   [
+    56,
+    30,
+    0,
+    4
+   ],
+   [
+    57,
+    25,
+    0,
+    4
+   ],
+   [
+    57,
+    30,
+    0,
+    4
+   ]
+  ],
+  "your_prediction_was_wrong_at": [
+   [
+    56,
+    25,
+    0,
+    4
+   ],
+   [
+    56,
+    26,
+    0,
+    4
+   ],
+   [
+    56,
+    27,
+    0,
+    4
+   ],
+   [
+    56,
+    28,
+    0,
+    4
+   ],
+   [
+    56,
+    29,
+    0,
+    4
+   ],
+   [
+    56,
+    30,
+    0,
+    4
+   ],
+   [
+    57,
+    25,
+    0,
+    4
+   ],
+   [
+    57,
+    26,
+    0,
+    15
+   ]
+  ],
+  "true_change_omitted_count": 12,
+  "your_prediction_was_wrong_at_omitted_count": 28
+ }
+]
+
+Reminder: return ONLY the corrected `engine(grid, action, data)` and `is_level_complete(grid)`
+top-level functions -- no classes, no `self`, no invented state, no renamed parameters.
+
+
+Return ONLY the corrected ```python file.
+```python
