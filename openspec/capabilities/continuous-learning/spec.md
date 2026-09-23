@@ -19145,6 +19145,102 @@ field, operator, expected value, and observed value.
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-CL-7577: V662 Frozen Proper-Loss Evaluation
+
+Experiment 7577 SHALL evaluate every immutable Experiment 7576 forecast head
+once on the same 80 Experiment 7575 evaluator-only source components. It SHALL
+authenticate the protocol, role sidecar, head manifest, and every declared byte
+hash before opening evaluator labels. A feature reader SHALL return no label.
+A separate evaluator SHALL join labels only after forecasts and head identities
+freeze. Duplicate source IDs, order-map drift, roster drift, or head-digest
+drift SHALL fail before a comparative result is accepted.
+
+The registered arms SHALL include the bounded proper-loss map, raw original
+probability, frozen temperature control, equal-capacity unconstrained nine-knot
+control, and an explicit escalate-all constant policy. Escalate-all SHALL have
+cost `0.2` and non-escalation coverage zero. Each source-arm row SHALL retain
+the forecast `q`, observed error, Brier loss, log loss, typed action, realized
+cost, raw numerators and denominators, metric direction, seed, censoring, and
+source provenance. Candidate-minus-control loss and positive-is-better
+improvement SHALL both remain available with their signs stated.
+
+Uncertainty SHALL resample complete source components. Registered static Brier
+contrasts SHALL use the Experiment 7575 paired draws and Holm one-sided
+multiplicity handling. Probability benefit SHALL require the paired Brier
+improvement gates versus raw and the tune-selected strongest comparator.
+Decision benefit SHALL independently require positive paired cost improvement
+and a non-escalation coverage lower bound of at least `0.10`. The task SHALL not
+change this floor after reading outcomes.
+
+The actual evaluator SHALL run four sensitivity fixtures. An informative
+forecast SHALL be detected as a positive control. Swapped outcome labels,
+changed option-order custody, and duplicate components SHALL be rejected.
+Null efficacy is interpretable only when the positive control passes and all
+three invalid-custody fixtures fail closed. Oracle-defined fixture evidence
+SHALL not support an oracle-distinct positive claim.
+
+Validity, readiness, probability benefit, and decision benefit SHALL remain
+separate. A valid completed null SHALL set
+`static_measurement_complete_score=1`. It SHALL set
+`fresh_confirmatory_claim_allowed=false` and `no_deployment_promotion=true`
+because these evaluator rows were exposed before registration. Improvement on
+these rows SHALL remain descriptive and SHALL not create a fresh confirmatory
+positive verdict.
+
+Missing external evidence SHALL produce `complete_blocked_*`,
+`verdict_class=blocked`, and a gate summary with check, upstream, path, field,
+operator, expected, and observed values. The task SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `no_model_load=true`, and zero current
+loads, forwards, generations, and tokens. Historical Qwen identity SHALL remain
+source custody only.
+
+The affected validation SHALL freeze an Exp7358 manifest. It SHALL run focused
+serial pytest, separate 100 percent changed-module coverage, scoped Ruff check
+and format, changed-module mypy, and exact-test specification coverage. The
+declared entrypoint and fresh-process cold replay SHALL provide the capability
+E2E. Independent reduction, adversarial verification, and strict row
+consistency SHALL inspect the exact terminal candidate before atomic
+publication. No numbered runtime E2E applies to this read-only reporting task.
+
+### SCENARIO-CL-7577-CUSTODY: Frozen Inputs Fail Closed
+
+- GIVEN the hash-bound Experiment 7575 protocol and Experiment 7576 heads
+- WHEN the evaluation reader authenticates 80 label-free features and labels
+- THEN every arm uses the identical ordered source roster
+- AND duplicate IDs, mapping drift, roster drift, or head drift is rejected.
+
+### SCENARIO-CL-7577-ROWS: Proper Loss And Decisions Stay Reproducible
+
+- GIVEN one frozen forecast per source and arm
+- WHEN the separate evaluator joins the observed error
+- THEN Brier, log loss, typed action, realized cost, and raw arithmetic reproduce
+- AND raw original and escalate-all remain visible beside stronger controls.
+
+### SCENARIO-CL-7577-GATES: Probability And Action Claims Stay Separate
+
+- GIVEN complete source-paired rows and registered bootstrap draws
+- WHEN Holm-adjusted Brier and decision gates are reduced
+- THEN probability benefit depends only on registered paired Brier contrasts
+- AND decision benefit requires both cost improvement and coverage support.
+
+### SCENARIO-CL-7577-CONTROLS: Sensitivity And Custody Use One Evaluator
+
+- GIVEN informative, swapped-label, changed-mapping, and duplicate fixtures
+- WHEN each fixture passes through the production evaluator
+- THEN informative forecasts are detected and invalid custody is rejected
+- AND readiness alone never becomes a circular-positive claim.
+
+### SCENARIO-CL-7577-TERMINAL: Exposed Evaluation Cannot Refresh Evidence
+
+- GIVEN a hash-bound candidate, raw rows, intervals, and validation receipts
+- WHEN cold replay, independent reduction, adversarial verification, and the
+  strict row reader inspect the identical bytes
+- THEN a valid comparison is complete even when benefit is null
+- AND freshness and deployment promotion remain false.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-CL-7576: V662 Proper-Loss Energy Fit
 
 Experiment 7576 SHALL fit one nine-knot piecewise-linear map from cached
