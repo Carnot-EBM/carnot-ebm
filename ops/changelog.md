@@ -20340,3 +20340,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-23: Qualify bounded source collection and observe changed GPU availability (⚠️ Blocked) — honest_verdict=complete_blocked_gpu_capacity_unavailable; results/experiment_7548_v660_capture_runner.json
 - 2026-09-23: Measure delayed count learning and retained calibrated decisions (⚠️ Research Finding) — honest_verdict=complete_null_count_learning_valid_benefit_gate_failed; results/experiment_7549_v660_count_learning.json
 - 2026-09-23: Independently test feedback causality and count-learning conclusions (⚠️ Research Finding) — honest_verdict=complete_null_count_claims_qualified_benefit_gate_failed; results/experiment_7550_v660_count_audit.json
+- 2026-09-23: Qualify corrected B2 live-agent evidence without repeating its run (⚠️ Research Finding) — honest_verdict=complete_null_corrected_b2_authenticated_no_efficacy; results/experiment_7556_v660_arc_corrected_custody.json
