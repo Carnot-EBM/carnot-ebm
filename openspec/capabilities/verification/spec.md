@@ -45450,3 +45450,105 @@ SHALL publish the terminal JSON atomically at
 **When** the entrypoint, cold replay, and independent reduction run
 **Then** scoped validation and both strict terminal readers pass
 **And** only the hash-bound terminal candidate publishes at the deliverable path.
+
+### REQ-VERIFY-7564: V661 Fit Capture SHALL Preserve Every Sealed Native Forward
+
+Exp7564 SHALL authenticate the exact terminal Exp7563 pilot before model work.
+It SHALL require `native_tool_ready_score=1`, `fit_capture_feasible_score=1`,
+`verdict_class` in `null | positive`, and `flagged_adversarial=false`. It SHALL
+also authenticate the protocol, runner, wrapper, module, and model hashes bound
+by that pilot. Missing or changed external evidence SHALL publish a
+schema-complete `complete_blocked_*` artifact. The gate summary SHALL name the
+upstream, path, field, expected value, and observed value.
+
+The capture SHALL use the qualified Exp7548 resumable runner and the Exp7535
+native option transport. A thin role wrapper SHALL select only the frozen fit,
+tune, and policy roles. The fixed schedule SHALL contain 160 fit groups, 40
+tune groups, and 40 policy groups. Each group SHALL retain original, absent,
+and mismatched source arms in both semantic option orders. The complete capture
+SHALL contain 240 groups and 1,440 forwards. Capture code SHALL not read source
+labels. It SHALL not shorten prompts, remove roles, rebuild interventions, or
+change option mappings.
+
+Before CUDA initialization, Exp7564 SHALL resolve the cached
+`unsloth/Qwen3.8-27B-GGUF` Q4_K_M file and authenticate its exact hash against
+Exp7563. It SHALL wait at most 300 seconds for current admission and acquire a
+fresh exclusive GPU lease. It SHALL use native GGUF tokenization and owned CUDA
+offload. It SHALL not stop a foreign process, adopt a server, substitute a
+model, or use the old pilot lease as current authority. Collection SHALL stop
+at 3,000 seconds and retain a 900-second validation reserve.
+
+The runner SHALL checkpoint only complete six-forward groups. Each checkpoint
+SHALL bind the complete request schedule, reset evidence, raw row bytes, and
+model identity. Resume SHALL accept only identical content-hashed state. Failed
+and unstarted units SHALL remain visible. A retryable interruption after owned
+work starts SHALL be `partial`; external absence before a current call starts
+SHALL be `blocked_no_run`; invalid evidence or validation SHALL be
+`disqualified`.
+
+Every completed row SHALL retain exact prompt and response bytes, actual token
+counts, option-token boundaries, semantic option logits, mapped probabilities,
+timing, reset epoch, model identity, and zero generated tokens. Readiness SHALL
+require 240 complete groups, 1,440 authenticated forwards, correct semantic
+option mapping, and zero cross-role donors. Poor prediction values SHALL not
+close transport readiness. `predictive_benefit_measured` SHALL remain false.
+
+The terminal artifact SHALL include all roadmap-required identity, provenance,
+invocation, timing, budget, gate, verdict, row, raw-manifest, role, label-access,
+and field-principle fields. `fit_capture_ready_score` SHALL be a bare integer
+zero or one. Complete valid capture evidence SHALL use `verdict_class=null` and
+shall not make a positive claim. The terminal JSON SHALL remain below 20 MiB;
+full transport rows SHALL remain in hash-bound sidecars.
+
+Before publication, Exp7564 SHALL run a zero-new-call cold replay and independent
+reduction. Private mutations to one option order, one donor role, and one
+checkpoint identity SHALL each fail qualification. The affected manifest SHALL
+name only the Exp7564 test, reusable module, and thin entrypoint. Required checks
+SHALL include scoped pytest, separate 100 percent changed-module coverage,
+scoped Ruff check and format, changed-module mypy, scoped specification coverage,
+declared-entrypoint replay, independent reduction, adversarial verification,
+and strict verdict-row consistency. No numbered runtime E2E applies to this
+isolated feature capture. The task SHALL publish atomically at
+`results/experiment_7564_v661_fit_capture.json` only after required checks pass.
+
+#### SCENARIO-VERIFY-7564-PRECONDITIONS: Exact Pilot Authority Gates Collection
+
+**Given** the current Exp7563 terminal artifact and its bound source hashes
+**When** Exp7564 checks prerequisites before current model work
+**Then** both pilot readiness scores, verdict, adversarial state, and bound bytes match
+**And** any absence or drift produces a complete blocked artifact with exact operands.
+
+#### SCENARIO-VERIFY-7564-CAPTURE: All Fit Roles Retain Six Native Cells
+
+**Given** 160 fit, 40 tune, and 40 policy groups from the sealed protocol
+**When** the role-specific wrapper expands and captures the schedule
+**Then** 240 complete groups retain all three source arms and both option orders
+**And** 1,440 zero-generation rows retain prompt, token, logit, reset, timing, and model custody.
+
+#### SCENARIO-VERIFY-7564-RESUME: Only Complete Identical Groups Resume
+
+**Given** an interrupted owned collection with content-hashed checkpoints
+**When** the same schedule, model identity, and complete raw groups resume
+**Then** the runner skips only authenticated complete groups
+**And** a changed schedule, model identity, partial group, or changed raw row fails closed.
+
+#### SCENARIO-VERIFY-7564-MUTATIONS: Identity And Role Corruption Fails Qualification
+
+**Given** one independently reducible complete capture
+**When** private copies change one option order, one donor role, or one checkpoint identity
+**Then** each mutation fails its named qualification control
+**And** no mutation changes the retained terminal evidence.
+
+#### SCENARIO-VERIFY-7564-BLOCKED: Missing External Capacity Does Not Become Partial Work
+
+**Given** a missing pilot gate, cached model, runtime, or currently admissible GPU
+**When** no owned model call starts
+**Then** the artifact records `blocked_no_run`, zero current calls, and 1,440 unstarted forwards
+**And** `verdict_class=blocked` distinguishes external absence from retryable owned interruption.
+
+#### SCENARIO-VERIFY-7564-E2E: One Command Publishes Cold-Valid Capture Evidence
+
+**Given** the frozen affected manifest, raw sidecars, and exact terminal candidate
+**When** the declared entrypoint and fresh-process readers execute
+**Then** scoped validation, cold replay, independent reduction, and mutation controls pass
+**And** adversarial verification and strict row consistency pass before atomic publication.

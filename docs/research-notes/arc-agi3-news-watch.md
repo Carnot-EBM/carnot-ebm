@@ -342,3 +342,9 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 - On July 17, ARC Prize published an analysis of 500 failed submissions: roughly one-third had no traceable notebook error, nearly 20% requested GPU workloads without enabling a GPU, and smaller categories included missing datasets/dependencies, CUDA OOM, incorrect API endpoints, and writes to read-only `/kaggle/input`. Organizers also confirmed that submission logs are intentionally restricted and private notebooks remain inaccessible to them until open-sourced. [Kaggle announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-09-23 13:13 UTC -- NEW
+
+- Sep. 3: ARC Prize reported GPT-6 Astra scoring 62.7% on ARC-AGI-3 Semi-Private with the Standard harness and 99.9% with a Provider Adapter harness. Future ARC benchmark leaderboards will label these harness types separately. This was a Foundation benchmark evaluation, not a Kaggle competition submission. [ARC Prize](https://arcprize.org/blog/astra)
+
+- Sep. 23: The Kaggle public leaderboard changed sharply: Lord Han Solo leads at 19.40, followed by Tufa Labs at 18.81, NVARC3 at 16.07, Yi-Chia Chen at 15.98, and Daniel Franzen at 13.12. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
