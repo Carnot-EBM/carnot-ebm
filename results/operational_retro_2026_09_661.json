@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.661",
+  "generated_at": "2026-09-23T18:42:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 83.9,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 12,
+  "slowest_experiments": [
+    {
+      "experiment": "Capture sealed test and fresh online source interventions",
+      "duration_minutes": 40.19,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture complete fitting and policy source interventions",
+      "duration_minutes": 35.34,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure fresh tool-source capture feasibility with current GPU admission",
+      "duration_minutes": 3.37,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify monotone proper-loss updates before fresh delayed learning",
+      "duration_minutes": 1.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and qualify methods against terminal V660 evidence",
+      "duration_minutes": 0.87,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.661 completed 12 experiments, all compute-bound, in 83.9 wall-time minutes. The longest tasks were 'Capture sealed test and fresh online source interventions' at 40.19 minutes and 'Capture complete fitting and policy source interventions' at 35.34 minutes, jointly accounting for 75.53 minutes. Sub-phase timing was not recorded within these runs to separate model inference duration from validation scaffolding or artifact serialization overhead.",
+  "bottlenecks_identified": [
+    "'Capture sealed test and fresh online source interventions' was the longest task at 40.19 minutes out of 83.9 total wall-time minutes, but lacks granular sub-phase instrumentation to isolate model inference latency from validation scaffolding and disk serialization.",
+    "'Capture complete fitting and policy source interventions' required 35.34 minutes without recorded intra-task phase durations, combining with the longest task for 75.53 minutes (approx. 90% of total milestone wall time).",
+    "The remaining top compute-bound tasks ('Measure fresh tool-source capture feasibility with current GPU admission' at 3.37 minutes, 'Qualify monotone proper-loss updates before fresh delayed learning' at 1.29 minutes, and 'Bind thirteen tasks and qualify methods against terminal V660 evidence' at 0.87 minutes) bring the top 5 to 81.06 minutes, with timing reconstructed from disk mtimes rather than continuous runtime execution logs.",
+    "The GPU monitor report provides an isolated post-completion snapshot (PID 772157 on GPU 0 with 18054MB allocated at 0% utilization, GPU 1 idle at 4MB), leaving GPU utilization across active compute execution windows unmeasured.",
+    "Task launch records did not log model concurrency or runner dispatch details, although all completed tasks were single-model runs where DualGPURunner multi-model dispatch is not applicable."
+  ],
+  "improvements_suggested": [
+    "Instrument granular sub-phase duration timers and monotonic stage logging inside long-running source intervention capture workflows to isolate model inference latency from verification scaffolding and disk serialization.",
+    "Deploy continuous, task-aligned accelerator telemetry during compute-bound executions to sample live GPU utilization and VRAM occupancy across active compute windows rather than relying on point-in-time post-run snapshots.",
+    "Record explicit model concurrency and runner dispatch metadata in experiment task receipts to audit DualGPURunner eligibility whenever two or more models run concurrently.",
+    "Implement runtime milestone-scoped execution logging to avoid reliance on post-hoc disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration timers and per-stage progress logging inside the source intervention capture pipelines.",
+    "Deploy continuous accelerator telemetry during compute-bound task execution to record live GPU utilization and VRAM occupancy across active execution windows.",
+    "Emit explicit model concurrency and runner dispatch metadata in experiment receipts to audit DualGPURunner engagement on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone completed 12 compute-bound tasks in 83.9 wall-time minutes, with execution heavily concentrated in two source intervention capture tasks taking 40.19 and 35.34 minutes. The post-run GPU monitor report confirms an idle llama.cpp process on GPU 0 after completion but cannot evaluate active-window compute efficiency, and because only single-model tasks were executed, no DualGPURunner multi-model dispatch opportunity was missed. Sub-phase timing and continuous execution telemetry are necessary next steps to identify actionable latency optimizations."
+}

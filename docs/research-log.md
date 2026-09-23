@@ -6934,3 +6934,10 @@ The critical path for milestone .250:
 - theme: feedback causality auditing, authority binding, and count-service cost measurement led an all-compute execution window lacking sub-task telemetry
 - key result: honest operational negative — the three slowest compute-bound tasks accounted for 8.9 of 12.0 total wall-time minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.661
+
+- exp_range: no data available this milestone
+- theme: source intervention capture on sealed test and fitting policies dominated milestone wall time across an all-compute execution lacking sub-task telemetry
+- key result: honest operational negative — source intervention captures consumed 75.53 of 83.9 total wall-time minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
+- acceptance: no data available this milestone
