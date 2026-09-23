@@ -20338,3 +20338,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-23: Bind fourteen complete authorities and ingest the new method limits (⚠️ Research Finding) — honest_verdict=complete_disqualified_v660_contract_or_validation; results/experiment_7546_v660_contract_methods.json
 - 2026-09-23: Seal an empirical count-learning stream from qualified cached Qwen evidence (⚠️ Research Finding) — honest_verdict=complete_null_cached_count_stream_ready_benefit_unmeasured; results/experiment_7547_v660_count_stream.json
 - 2026-09-23: Qualify bounded source collection and observe changed GPU availability (⚠️ Blocked) — honest_verdict=complete_blocked_gpu_capacity_unavailable; results/experiment_7548_v660_capture_runner.json
+- 2026-09-23: Measure delayed count learning and retained calibrated decisions (⚠️ Research Finding) — honest_verdict=complete_null_count_learning_valid_benefit_gate_failed; results/experiment_7549_v660_count_learning.json
