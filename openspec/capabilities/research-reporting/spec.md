@@ -78292,3 +78292,94 @@ changes no shared Rust binding, so E2E-004 is recorded as not applicable.
 ### Implementation Status (REQ-REPORT-7571)
 
 Planned. Implementation and validation evidence will be recorded by Exp7571.
+
+## REQ-REPORT-7572: Reconcile V661 without merging independent claims
+
+Exp7572 SHALL resolve the matching active or staged V661 authority and compare
+its exact thirteen-task contract with the preserved V661 design. It SHALL
+inventory one ordered disposition for Exp7560 through Exp7572. The current
+Exp7572 row SHALL not require its future terminal artifact. Present producer
+bytes SHALL retain their literal verdict, class, adversarial flag, readiness
+values, and hash. An absent producer SHALL retain the original conductor gate
+diagnostic with its upstream, path, field, operator, expected, and observed
+values. Missing evidence SHALL never become a zero measurement.
+
+Source and learning conclusions SHALL come only from the independently
+qualified Exp7569 branches. The report SHALL keep probability improvement,
+decision cost, freshness, retention, and restart as separate outcomes. It
+SHALL exclude disqualified or flagged producer evidence from scientific
+metrics without removing its disposition. An exact label check SHALL remain
+execution-grounded and SHALL not become oracle-distinct verifier benefit.
+
+The ARC conclusion SHALL retain Exp7570 runtime lineage and supervisor results
+independently of source collection. A temporal join SHALL not prove causal
+suppression efficacy. A repeated public level SHALL not become new solve
+credit, and a local proxy SHALL not become an official score. The portability
+conclusion SHALL keep Rust parity, full service costs, and the three board
+states separate. A fixture or kernel parity result SHALL not promote a
+scientific benefit claim.
+
+Each branch SHALL have one continue, defer, or retire row with a falsifiable
+changed prerequisite. Literal prior-verdict equality SHALL control the narrow
+`retire_if_same_verdict` rule. A resource block SHALL not retire the scientific
+hypothesis. A second supported null for an unchanged construction SHALL close
+only that construction, and a newly diagnosed cause SHALL precede a retry.
+
+The report SHALL run `scripts/publication_gate.py --json` and retain stable G1
+through G4, `unmet_gates`, and their conjunction as `paper_ready`. It SHALL
+perform aggregation only, declare both model-spec lists empty, and record zero
+current model loads, forwards, and generations. Its terminal class SHALL be
+blocked for valid inventory with absent external evidence, disqualified for
+present invalid required evidence, null for valid no-benefit evidence, and
+partial only for unfinished owned validation.
+
+The affected manifest SHALL freeze the new test, module, thin entrypoint, and
+this requirement. Validation SHALL run focused pytest, 100 percent
+changed-module coverage, scoped Ruff, changed-module mypy, scoped spec
+coverage, declared entrypoint replay, cold reduction, adversarial verification,
+and strict row consistency. Every required receipt SHALL pass before atomic
+publication. This read-only report has no numbered runtime E2E.
+
+### SCENARIO-REPORT-7572-INVENTORY: Thirteen dispositions retain custody
+
+**Given** the exact V661 authorities, present producer artifacts, and an absent
+externally gated producer
+**When** Exp7572 builds the ordered task inventory
+**Then** all thirteen tasks remain visible with exact source custody
+**And** the current row does not depend on its future terminal file
+**And** absence remains blocked rather than partial, null, or zero.
+
+### SCENARIO-REPORT-7572-BRANCHES: Claim boundaries stay independent
+
+**Given** qualified source evidence, blocked learning evidence, disqualified
+ARC evidence, and blocked portability measurement
+**When** Exp7572 reduces the four branches
+**Then** no branch promotes another branch's readiness or benefit
+**And** flagged or disqualified rows remain visible but support no science
+**And** execution-grounded checks do not become oracle-distinct claims.
+
+### SCENARIO-REPORT-7572-CONTINUATION: Retry decisions require a change
+
+**Given** literal prior verdicts and current branch conclusions
+**When** continuation and retirement rows are reduced
+**Then** every retry names a falsifiable changed prerequisite or mechanism
+**And** resource absence does not retire source science
+**And** retirement applies only to a literal repeated verdict and its narrow construction.
+
+### SCENARIO-REPORT-7572-VALIDATION: Exact readers control publication
+
+**Given** a frozen affected manifest and exact terminal candidate
+**When** scoped checks, fresh-process replays, independent reduction, and both
+strict terminal readers run
+**Then** every required receipt passes before atomic publication
+**And** imports resolve below this worktree
+**And** stable G1 through G4 are reported without external publication.
+
+### Implementation Status (REQ-REPORT-7572)
+
+Implemented: exact thirteen-row V661 custody, independent source, learning,
+ARC, and portability conclusions, falsifiable continuation decisions, stable
+publication gates, scoped validation, cold replay, strict terminal readers,
+and atomic publication. Spec-linked tests cover authority, absence, flags,
+terminal precedence, branch isolation, source hashes, mutation rejection, and
+100 percent changed-module coverage.
