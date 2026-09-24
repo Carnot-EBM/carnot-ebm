@@ -20508,3 +20508,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Qualify bounded Qwen evidence pointers and capture feasibility (⚠️ Research Finding) — honest_verdict=complete_null_transport_feasibility_measured; results/experiment_7604_v664_evidence_pilot.json
 - 2026-09-24: Independently reduce evidence decisions and delayed learning (⚠️ Blocked) — honest_verdict=complete_blocked_v664_evidence_chain_unavailable; results/experiment_7610_v664_evidence_audit.json
 - 2026-09-24: Qualify matched-history replay from the live agents own attempts (⚠️ Research Finding) — honest_verdict=complete_null_matched_prefix_fixture_ready_empirical_benefit_not_established; results/experiment_7611_v664_arc_matched_support.json
+- 2026-09-24: Measure cross-game state aliasing with matched runtime histories (⚠️ Blocked) — honest_verdict=complete_blocked_exp7611_protocol; results/experiment_7612_v664_arc_history_measurement.json
