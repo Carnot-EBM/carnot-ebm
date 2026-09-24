@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-09-24 — Experiment 7628 self-source validation repair
+
+- Corrected the V665 capstone source manifest so its current output is a planned
+  destination rather than a hashed input. This removes the impossible circular
+  self-hash comparison that broke cold validation after publication.
+- Added an exact regression assertion for the self-source row and regenerated
+  the terminal artifact through the declared entrypoint.
+- Verified 15 focused tests and 347/347 changed-module statements, all eight
+  scoped checks, and all six terminal readers. No skip, weakened test, revert,
+  or `scripts/research_conductor.py` edit was used.
+
 ## 2026-09-24 — Experiment 7626 standalone native-test repair
 
 - Repaired the four setup errors in

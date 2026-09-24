@@ -2,6 +2,15 @@
 
 **Last Updated:** 2026-09-24
 
+## 2026-09-24 — Experiment 7628 V665 capstone repaired and terminal
+- Fixed circular source validation: the capstone's planned output remains in
+  the self disposition but is no longer treated as its own immutable input.
+- The focused suite passes 15/15 with 347/347 statements covered. All eight
+  scoped checks and six terminal readers pass, including cold replay,
+  adversarial verification, and strict row consistency.
+- The terminal result remains `complete_blocked_required_v665_external_evidence`.
+  No model, GPU, board, publication, roadmap, default, or conductor action ran.
+
 ## 2026-09-24 — Experiment 7626 native test gate repaired
 - The four setup errors in the conductor-equivalent subset were caused by the
   focused fixture requiring `CARNOT_EXP7626_EXTENSION`, which ordinary pytest

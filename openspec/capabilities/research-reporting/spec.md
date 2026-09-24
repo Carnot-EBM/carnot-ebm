@@ -79950,3 +79950,111 @@ external publication, purchase, or generator training change is authorized.
 
 Specification added before tests and implementation. The conductor owns later
 status, changelog, and traceability reconciliation.
+
+## REQ-REPORT-7628: Reconcile V665 without repeating externally blocked work
+
+Experiment 7628 SHALL resolve the staged or active task authority whose
+milestone is `2026.09.665`. It SHALL accept consumed staging when the active
+authority matches. It SHALL enumerate exactly fourteen ordered task IDs from
+Exp7615 through Exp7628. Each disposition SHALL distinguish a terminal producer,
+a conductor pre-gate record, missing work, and the current self row. A planned
+deliverable path SHALL not require a producer that the conductor never ran.
+
+The capstone SHALL consume independently audited evidence and learning
+eligibility only from Experiment 7624, supervisor outcomes from Experiment 7625,
+and measured native cost from Experiment 7627. It SHALL independently recompute
+the ARC counts and native headline ratios from per-unit rows. It SHALL keep
+syntax readiness, calibration benefit, semantic evidence dependence, retained
+delayed learning, observational ARC support, and deployment speed separate.
+Historically exposed evidence roles SHALL retain `freshness=false`.
+
+Absent required external evidence SHALL produce
+`complete_blocked_required_v665_external_evidence` with class `blocked`, never
+`partial`. Every blocking gate SHALL record its check, upstream, path, exact
+field, operator, expected value, and observed value. A completed eligible branch
+with no benefit SHALL remain a terminal null. A failed benefit gate SHALL not
+support a positive conclusion. Exact fixtures SHALL remain
+`circular_positive`, and protocol readiness SHALL remain null.
+
+The report SHALL retain the prior Exp7614 blocked verdict without retrying it.
+Repeated failure SHALL retire only the unchanged mechanism in its exact scope.
+Environmental, operator, or evidence-custody absence SHALL defer rather than
+retire a scientific hypothesis. Every failed-scope continuation SHALL name a
+changed premise. Decision evidence, causal retained learning, and total
+deployment cost SHALL remain the three open PRD gaps after current results.
+
+The artifact SHALL declare planned and actual `aggregation`, `MODEL_SPECS=[]`,
+no current model invocation, typed zero loads, forwards, generations and tokens,
+the actual host venue, monotonic duration, disjoint phase spans, explicit seeds,
+exact source hashes, independent sample budgets, per-unit rows, complete field
+principles, validation receipts, and one checksum over immutable inputs,
+configuration, and reductions. Acceptance gates SHALL separately report
+validity, readiness, benefit, retention, and freshness.
+The current self row SHALL retain its planned output path, but its source-hash
+entry SHALL use `actual_path=null`, `exists=false`, and `sha256=null` because a
+new output is not its own immutable input.
+
+Fixed publication gates G1 through G4 SHALL come from
+`scripts/publication_gate.py --json`, with hashes for the gate script, manual
+state, and headline source. Existing FoVer eligibility SHALL not become a V665
+claim or submission authority. The task SHALL not publish, submit, purchase,
+activate a roadmap, change a production default, modify generator weights, or
+modify the research conductor.
+
+Validation SHALL freeze the affected-file manifest. It SHALL use worktree-pinned
+imports, focused serial pytest with cleared addopts and a private base temp,
+command-local 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, and affected-test specification coverage. The declared
+entrypoint, fresh-process cold reduction, exact fourteen-disposition replay,
+missing-producer mutation, blocked-versus-partial classification, independent
+headline recomputation, adversarial reader, and strict verdict-row reader SHALL
+accept the exact candidate before atomic publication.
+
+### SCENARIO-REPORT-7628-CUSTODY: Fourteen literal dispositions preserve source type
+
+**Given** the matching V665 authority, producer artifacts, conductor pre-gates,
+and absent downstream work
+**When** Experiment 7628 builds the ordered milestone inventory
+**Then** exactly fourteen task IDs appear once in authority order
+**And** terminal producers, pre-gates, missing work, and the self row remain distinct
+**And** an absent planned producer is reported rather than demanded as a precondition.
+
+### SCENARIO-REPORT-7628-BRANCHES: Independent rows bound every headline
+
+**Given** authenticated Experiments 7624, 7625, and 7627
+**When** the capstone reduces evidence, learning, ARC, and deployment branches
+**Then** static and learning ineligibility remain unavailable rather than null
+**And** observational ARC counts and native timing ratios recompute from row receipts
+**And** syntax, semantics, retention, freshness, and speed remain separate claims.
+
+### SCENARIO-REPORT-7628-CLASSIFY: External absence is terminal blocked
+
+**Given** complete capstone work and required external evidence that did not run
+**When** the terminal classifier evaluates the aggregate
+**Then** the honest verdict is `complete_blocked_required_v665_external_evidence`
+**And** the class is `blocked`, not `partial`
+**And** every blocking row retains all seven exact diagnostic operands.
+
+### SCENARIO-REPORT-7628-RETIREMENT: Retirement applies only to measured scope
+
+**Given** repeated unavailable science and completed null or positive side branches
+**When** the capstone applies prior-failure and mechanism stopping rules
+**Then** custody and operator blocks do not retire unmeasured hypotheses
+**And** unchanged unsuccessful mechanisms name their exact retired scope
+**And** every continuation names a materially changed premise.
+
+### SCENARIO-REPORT-7628-TERMINAL: Cold readers control atomic publication
+
+**Given** a frozen affected manifest and one exact terminal candidate
+**When** scoped checks, cold replay, mutations, independent reduction, and strict readers run
+**Then** commands, exits, worktree paths, log hashes, and reader outcomes persist
+**And** only validated bytes publish atomically
+**And** no roadmap, conductor, default, weight, hardware, or external-publication action occurs.
+
+### Implementation Status (REQ-REPORT-7628)
+
+Implemented by Experiment 7628 with fourteen literal custody rows, independent
+branch reductions, closed terminal classification, non-circular self-source
+accounting, scoped 100 percent coverage, and six cold terminal readers. The
+published artifact is terminal blocked because required external evidence is
+absent; no model, GPU, board, publication, or roadmap action occurred.

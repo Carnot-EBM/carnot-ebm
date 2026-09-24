@@ -1,6 +1,14 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-24
+**Operational Note:** 2026-09-24 REQ-REPORT-7628 maps the V665 fourteen-task
+custody inventory, independent branch reductions, terminal classifier, and cold
+readers to `python/carnot/experiment_7628_v665_capstone.py` and its 15 focused
+tests. The self row now retains its planned destination without treating the
+already-published output as an immutable source, avoiding a circular hash check.
+The affected suite passes 15/15 with 347/347 statements covered; all eight
+scoped checks and six terminal readers pass. The result remains honestly blocked
+on absent external evidence, and `scripts/research_conductor.py` is unchanged.
 **Operational Note:** 2026-09-24 REQ-REPORT-7626 maps the shared durable Rust
 recalibration core, thin JSONL binary, and direct PyO3 class to
 `python/carnot/experiment_7626_v665_native_service.py` and its 13 focused tests.
