@@ -20487,3 +20487,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Measure causal history support on adapter-withheld live games (⚠️ Research Finding) — honest_verdict=complete_null_insufficient_history_support; results/experiment_7597_v663_arc_history_generalization.json
 - 2026-09-24: Ship an opt-in typed consumer for the durable Rust service (⚠️ Research Finding) — honest_verdict=complete_null_rust_consumer_ready_speed_gate_failed; results/experiment_7598_v663_rust_consumer.json
 - 2026-09-24: Preserve board terminal scopes and size the measured service boundary (⚠️ Research Finding) — honest_verdict=complete_null_board_continuity_placement_unmeasured; results/experiment_7599_v663_board_continuity.json
+- 2026-09-24: Reconcile fourteen dispositions and decide information-source continuation (⚠️ Blocked) — honest_verdict=complete_blocked_required_v663_external_evidence; results/experiment_7600_v663_capstone.json
