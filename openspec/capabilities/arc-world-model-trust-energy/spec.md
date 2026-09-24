@@ -35974,3 +35974,131 @@ Production defaults SHALL remain unchanged.
 
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## V662 bounded ARC transport canary — 2026-09-24
+
+### REQ-ARC-WMTE-7581: Qualify owned bounded generation before live panels
+
+Experiment 7581 SHALL consume Experiment 7574's `arc_runner_ready_score=1`
+and Experiment 7580's frozen live-panel protocol from their explicit absolute
+paths. It SHALL bind both files by exact byte hash before measurement. A
+missing, malformed, changed, or failed prerequisite SHALL produce a
+`complete_blocked_*` verdict with `verdict_class=blocked`, zero current calls,
+and `inference_substrate_class=blocked_no_run`. Every blocked gate summary
+SHALL name the check, upstream, path, field, operation, expected value, and
+observed value. The task SHALL NOT synthesize replacement evidence.
+
+`MODEL_SPECS` SHALL include `unsloth/Qwen3.8-27B-GGUF` resolved only through
+`cached_current_model()`. The planned substrate SHALL be
+`model_bounded_generation`. After at most 300 observable seconds waiting for
+owned CUDA capacity, the experiment SHALL acquire one exclusive GPU lease
+before loading. It SHALL never stop a foreign server or use a foreign server's
+responses. It SHALL record the GPU UUID, owning PID and start tick, GGUF byte
+hash, embedded tokenizer and chat-template evidence, and effective CUDA
+offload layers.
+
+The live canary SHALL reuse the production-compatible `LocalGGUFProposer` and
+durable byte capture used by live ARC panels. It SHALL make exactly two owned
+chat requests on neutral prompts. Each request SHALL cap output at 64 new
+tokens and SHALL use the explicit no-think control. The artifact SHALL retain
+prompt and reply byte hashes, actual completion tokens, finish reason, elapsed
+time, effective sampler flags, current process identity, and owned runtime
+identity. A short or semantically unhelpful reply is still transport evidence;
+it SHALL NOT become a world-model or efficacy claim. A live result SHALL have
+at least ten seconds of real monotonic generation work, with no artificial
+sleep. If no generation call starts, the actual substrate SHALL remain
+`blocked_no_run` and the verdict SHALL be `complete_blocked_*`.
+
+Before model admission, the experiment SHALL run one private, LLM-off E3
+episode through the real panel runner from a foreign current directory. It
+SHALL then construct, without sending, every future request implied by the
+frozen protocol. Each constructed request SHALL use a 4,096-token generation
+ceiling, a 4,096-token capture ceiling, a 240-second timeout, and one request
+per episode. Any inherited 256-token capture ceiling SHALL fail closed.
+
+Panel A and Panel B SHALL be forecast independently before either panel runs.
+Each forecast SHALL preserve the frozen twelve requests and twelve episodes.
+It SHALL use authenticated historical p95 request timings, scaled to the
+4,096-token ceiling and capped by the declared request timeout, plus measured
+current load and capture costs. No roster may shrink after outcomes are seen.
+The runner SHALL stop before starting a future request when the remaining
+measurement allowance cannot cover its 240-second timeout. A panel is feasible
+only when its complete forecast is at most 3,000 seconds and the forecast plus
+the 900-second validation reserve is at most 4,200 seconds. Transport readiness
+and panel-budget feasibility SHALL remain separate scores.
+
+The artifact SHALL exercise the qualified predict-release-update-persist-reload
+learner lifecycle without using it to claim model benefit. It SHALL publish
+one row for each current canary request and each frozen future comparison unit
+and arm. Every row SHALL retain raw numerator and denominator, metric
+direction, seed, censoring, and provenance. `solve_provenance` SHALL say that
+the canary has no solve claim; `live_agent_self_discovery` is reserved for
+later episodes. Oracle or label-accessing controls SHALL not support a distinct
+positive claim.
+
+The experiment SHALL freeze its affected-file validation manifest and create
+private pytest and coverage parents immediately before each bounded child. It
+SHALL run serial scoped pytest without repository addopts or inherited
+coverage, 100 percent changed-module coverage with command-local
+`COVERAGE_FILE`, scoped Ruff check and format, changed-module mypy, and scoped
+spec coverage. It SHALL prove changed imports resolve below this worktree. It
+SHALL also run E2E-009, E2E-010, E2E-011, E2E-012, E2E-013, the foreign-CWD
+LLM-off real-environment smoke, the declared entrypoint, and a fresh-process
+cold replay. Exact candidate bytes SHALL pass independent reduction,
+`scripts/adversarial_verify.py`, and
+`scripts/verdict_row_consistency_lint.py --strict` before atomic publication.
+Repository-wide pre-existing debt SHALL stay separate from required checks.
+
+The terminal artifact SHALL include `honest_verdict`, `verdict_class`,
+`flagged_adversarial`, `gate_check_summary`, `acceptance_gate_results`, `rows`,
+`inference_substrate_class`, `planned_inference_substrate_class`, `MODEL_SPECS`,
+`invocation_counts`, `duration_s`, `source_artifact_hashes`,
+`validation_receipts`, `field_principles`, `verifier_is_oracle`,
+`arc_transport_ready_score`, `panel_a_feasible_score`,
+`panel_b_feasible_score`, `raw_request_receipts`, and `solve_provenance`.
+Completion alone SHALL establish neither transport readiness nor benefit.
+
+#### SCENARIO-ARC-WMTE-7581-UPSTREAM-BLOCK
+
+- **GIVEN** an absent, changed, or non-ready Exp7574 or Exp7580 input
+- **WHEN** preflight authenticates the explicit source bytes
+- **THEN** no model load or generation starts and the result is complete blocked
+- **AND** the first failed gate preserves every required operand.
+
+#### SCENARIO-ARC-WMTE-7581-OWNED-TRANSPORT
+
+- **GIVEN** an exclusive owned GPU lease and the mandated cached GGUF
+- **WHEN** the two neutral 64-token requests cross the production chat transport
+- **THEN** exactly two request/reply byte pairs and their actual token/finish data persist
+- **AND** PID start ticks, GPU UUID, model hash, chat template, and offload stay joined.
+
+#### SCENARIO-ARC-WMTE-7581-NO-CALL
+
+- **GIVEN** foreign GPU owners, a cache miss, or a failure before dispatch
+- **WHEN** no owned request starts
+- **THEN** invocation counts remain zero and the actual substrate is blocked no-run
+- **AND** a load-only attempt cannot be reported as bounded generation.
+
+#### SCENARIO-ARC-WMTE-7581-FUTURE-REQUESTS
+
+- **GIVEN** all 24 frozen Exp7580 panel rows
+- **WHEN** future requests are constructed without sending
+- **THEN** every row has one 4,096-token request and a 240-second timeout
+- **AND** a 256-token generation or capture ceiling rejects the construction.
+
+#### SCENARIO-ARC-WMTE-7581-PANEL-FORECASTS
+
+- **GIVEN** authenticated historical request durations and current load/capture costs
+- **WHEN** each twelve-episode panel is forecast independently
+- **THEN** its full roster determines its feasibility score before outcomes
+- **AND** transport readiness cannot hide a failed panel budget.
+
+#### SCENARIO-ARC-WMTE-7581-LIFECYCLE-AND-TERMINAL
+
+- **GIVEN** valid canary and frozen-panel rows
+- **WHEN** predict, release, update, persist, reload, cold replay, and strict readers run
+- **THEN** independent reducers reproduce counters, forecasts, and lifecycle state
+- **AND** the atomic artifact makes no efficacy, world-model, or solve claim.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
