@@ -2,6 +2,18 @@
 
 **Last Updated:** 2026-09-23
 
+## 2026-09-24 — vLLM answer-channel fix merged; needs the next Kaggle submission to confirm
+- REQ-ARC-WMTE-10011: the scored vLLM path no longer reads code from the model's thinking. Answer
+  text keeps only what follows the last `</think>`; a cut-off thought counts as no answer; vLLM
+  launches with `--reasoning-parser qwen3` when available. Replaying the 8 pilot answers now gives
+  the same engines as the llama.cpp path.
+- Built by codex, reviewed by one independent agent (merge approved, 9 minor findings), 8 code
+  findings fixed in a second codex round, checked by the outer loop. 25 new tests.
+- The vLLM repetition penalty stays OFF by default (`CARNOT_ARC_VLLM_REPETITION_PENALTY` opts in):
+  vLLM's penalty has no window and covers the prompt, unlike llama.cpp's.
+- **Next (operator):** submit to Kaggle. In the log, the `LLM VLLM PROBE` line should show
+  `reasoning_parser_decision` with the parser added and `server_up=True`.
+
 ## 2026-09-24 — Experiment 10010 think-ON pilot complete: 0.574 vs 0.128, and the Kaggle path would discard every engine
 - Live default induction (think-ON, 1 round, live budget) on the 10 pre-registered windows: mean
   masked change fidelity 0.574 against the codeonly 0.128. 7 of 10 windows above baseline.

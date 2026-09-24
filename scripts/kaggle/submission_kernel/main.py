@@ -755,7 +755,15 @@ if server and gguf:
             _vp = _VProp(port=8919, max_tokens=int(_maxtok), timeout=600)
             _vt_start = time.time()
             _vup = _vp._ensure_vllm_server()
-            print(f"LLM VLLM PROBE: server_up={_vup} in {time.time() - _vt_start:.0f}s", flush=True)
+            print(f"LLM VLLM PROBE: server_up={_vup} in {time.time() - _vt_start:.0f}s "
+                  f"reasoning_parser_decision={_vp.last_vllm_reasoning_parser_decision!r} "
+                  f"launch_argv={list(_vp.last_launch_argv)!r}", flush=True)
+            os.environ["CARNOT_ARC_VLLM_REUSED_REASONING_PARSER_DECISION"] = (
+                _vp.last_vllm_reasoning_parser_decision
+            )
+            os.environ["CARNOT_ARC_VLLM_REUSED_LAUNCH_ARGV"] = _vj.dumps(
+                list(_vp.last_launch_argv)
+            )
             if not _vup:
                 print("LLM VLLM PROBE FAILED TO START: "
                       f"{_vp.server_failure_diagnostics or 'no diagnostic recorded'}. The agent "

@@ -333,6 +333,30 @@ def test_final_answer_is_scored_and_monotone_accept_keeps_the_better_candidate(
     assert "min(g.shape[1] - 1" in written
 
 
+def test_vllm_final_answer_ignores_reasoning_draft_fence(monkeypatch, proposer, tmp_path):
+    """REQ-ARC-WMTE-10011: the tool loop extracts only the vLLM answer channel."""
+    monkeypatch.setenv("CARNOT_ARC_LLM_BACKEND", "vllm")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_TURNS", "1")
+    content = f"```python\n{IDENTITY_CODE}```\n</think>\n```python\n{GOOD_CODE}```"
+    fake = _FakeHTTP(
+        chat_replies=[
+            _chat_reply(
+                {"role": "assistant", "content": content, "reasoning": "private chain"},
+                tokens=10,
+            )
+        ]
+    )
+    _patch_http(monkeypatch, fake)
+
+    ok, _ = proposer.induce("vllmfinal", _mover_window(), 1)
+
+    assert ok
+    written = (tmp_path / "vllmfinal" / "world_model.py").read_text()
+    assert "min(g.shape[1] - 1" in written
+    assert "private chain" in proposer.last_raw_completion
+
+
 ENGINE_ONLY_CODE = GOOD_CODE.split("def is_level_complete")[0]
 
 

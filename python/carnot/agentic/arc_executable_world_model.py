@@ -32,6 +32,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -4116,12 +4117,84 @@ def _gguf_declares_baked_mtp(path: str | Path) -> bool:
 _VLLM_BACKEND_ENV = "CARNOT_ARC_LLM_BACKEND"
 _VLLM_MODEL_DIR_ENV = "CARNOT_ARC_VLLM_MODEL_DIR"
 _VLLM_MAX_SEQS_ENV = "CARNOT_ARC_VLLM_MAX_SEQS"
+_VLLM_REPETITION_PENALTY_ENV = "CARNOT_ARC_VLLM_REPETITION_PENALTY"
+_VLLM_REUSED_PARSER_DECISION_ENV = "CARNOT_ARC_VLLM_REUSED_REASONING_PARSER_DECISION"
+_VLLM_REUSED_LAUNCH_ARGV_ENV = "CARNOT_ARC_VLLM_REUSED_LAUNCH_ARGV"
 
 
 def _vllm_backend_active() -> bool:
     """True only on the explicit opt-in. Anything else -- unset, empty, llamacpp, typo -- is the
     llama.cpp path, so a broken env var cannot silently migrate the generator."""
     return os.environ.get(_VLLM_BACKEND_ENV, "").strip().lower() == "vllm"
+
+
+def _vllm_answer_text(text: str, *, require_closed_think: bool = False) -> tuple[str, int]:
+    """Return vLLM's answer-channel text and the number of removed characters."""
+    closing = "</think>"
+    if closing in text:
+        answer = text[text.rfind(closing) + len(closing) :]
+        return answer, len(text) - len(answer)
+    opening = "<think>"
+    if text.lstrip().startswith(opening):
+        return "", len(text)
+    if opening in text:
+        answer = text[: text.find(opening)]
+        return answer, len(text) - len(answer)
+    if require_closed_think:
+        return "", len(text)
+    return text, 0
+
+
+def _vllm_repetition_penalty_setting() -> tuple[Optional[float], str]:
+    """Resolve the opt-in vLLM penalty without letting a bad value break a scored call."""
+    import math
+
+    raw = os.environ.get(_VLLM_REPETITION_PENALTY_ENV)
+    if raw is None or not raw.strip():
+        return None, "unset"
+    try:
+        value = float(raw)
+    except ValueError:
+        return None, f"invalid:{raw[:40]}"
+    if not math.isfinite(value) or value <= 0:
+        return None, f"invalid:{raw[:40]}"
+    return value, "env"
+
+
+def _vllm_qwen3_reasoning_parser_registration() -> tuple[bool, str]:
+    """Inspect vLLM's registration source without importing its CUDA-facing runtime."""
+    try:
+        import ast
+        import importlib.util
+
+        spec = importlib.util.find_spec("vllm")
+        if spec is None:
+            return False, "omitted:vllm_not_found"
+        roots = list(spec.submodule_search_locations or ())
+        if not roots and spec.origin:
+            roots = [str(Path(spec.origin).parent)]
+        if not roots:
+            return False, "omitted:package_location_missing"
+        source_path = Path(roots[0]) / "reasoning" / "__init__.py"
+        tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Assign) or not isinstance(node.value, ast.Dict):
+                continue
+            if not any(
+                isinstance(target, ast.Name) and target.id == "_REASONING_PARSERS_TO_REGISTER"
+                for target in node.targets
+            ):
+                continue
+            names = {
+                key.value
+                for key in node.value.keys
+                if isinstance(key, ast.Constant) and isinstance(key.value, str)
+            }
+            if "qwen3" in names:
+                return True, f"registered:qwen3 source={source_path}"
+        return False, f"omitted:not_registered source={source_path}"
+    except Exception as exc:  # fail closed: an unsupported flag can prevent server startup
+        return False, f"omitted:check_failed:{type(exc).__name__}:{str(exc)[:120]}"
 
 
 def _resolve_vllm_model_dir() -> Optional[str]:
@@ -6134,6 +6207,7 @@ def _ffn_cpu_override_regex(n_cpu_layers: int) -> str:
 #   chat_completions       -- chat requests, the only ones with a real channel split
 #   chars_final            -- length of the answer channel
 #   chars_reasoning        -- length of the thought channel
+#   chars_think_stripped   -- characters removed before vLLM code extraction
 #   reasoning_only         -- answer channel empty while the thought channel is not: the shape
 #                             that spends a whole budget and returns no code
 #   both_channels_empty    -- the server answered with nothing in either channel
@@ -6143,6 +6217,7 @@ _EMPTY_CHANNEL_TOTALS: dict[str, int] = {
     "chat_completions": 0,
     "chars_final": 0,
     "chars_reasoning": 0,
+    "chars_think_stripped": 0,
     "reasoning_only": 0,
     "both_channels_empty": 0,
     # Client-side request timeouts (REQ-ARC-WMTE-6890). Without this, a timed-out generation
@@ -6292,6 +6367,14 @@ class LocalGGUFProposer:
     # private method, a silently-dropped argument looks identical to a working one. Empty until
     # the first launch. Pinned by tests/python/test_arc_ffn_cpu_offload.py.
     last_launch_argv: tuple = ()
+    # vLLM launch/request receipts. The parser decision records why its startup-sensitive flag
+    # was used or omitted; one sampling receipt plus a count avoids per-request witness growth.
+    last_vllm_reasoning_parser_decision: str = ""
+    vllm_request_sampling_receipts: list[dict[str, Any]] = field(default_factory=list)
+    vllm_request_count: int = 0
+    _vllm_sampling_receipt_lock: Any = field(
+        default_factory=threading.Lock, repr=False, compare=False
+    )
     # The KV cache type THIS launch actually used, or None when the flags were dropped. Recorded
     # for the same reason as `last_launch_argv`: `CARNOT_ARC_KV_QUANT` can override the field, so
     # the field alone no longer tells an artifact what the server ran with.
@@ -6653,6 +6736,11 @@ class LocalGGUFProposer:
             "generator_model_observed": self.observed_server_model_path,
             "generator_reuse_model_check": str(self.reuse_model_check),
             "generator_max_tokens": int(self.max_tokens),
+            "generator_vllm_reasoning_parser_decision": str(
+                self.last_vllm_reasoning_parser_decision
+            ),
+            "generator_vllm_request_sampling_receipts": list(self.vllm_request_sampling_receipts),
+            "generator_vllm_request_count": int(self.vllm_request_count),
             # MTP: what we ASKED for, versus what the runtime SAID it did. Published as three
             # separate fields on purpose. `generator_mtp_requested` is our configuration;
             # `generator_mtp_draft_path` is the argv we built; `generator_mtp_engaged` is the only
@@ -6690,6 +6778,29 @@ class LocalGGUFProposer:
             # response that carried nothing at all.
             key = "reasoning_only" if reasoning.strip() else "both_channels_empty"
             self.channel_totals[key] += 1
+
+    def _record_vllm_sampling_receipt(
+        self, repetition_penalty: Optional[float], reason: str
+    ) -> None:
+        """Keep one effective sampling setting and a total request count."""
+        lock = getattr(self, "_vllm_sampling_receipt_lock", None)
+        if lock is None:
+            lock = threading.Lock()
+            self._vllm_sampling_receipt_lock = lock
+        with lock:
+            self.vllm_request_count = int(getattr(self, "vllm_request_count", 0)) + 1
+            receipt = {"repetition_penalty": repetition_penalty, "reason": reason}
+            receipts = getattr(self, "vllm_request_sampling_receipts", None)
+            if isinstance(receipts, list):
+                receipts[:] = [receipt]
+            else:
+                self.vllm_request_sampling_receipts = [receipt]
+
+    def _vllm_extraction_text(self, text: str, *, require_closed_think: bool = False) -> str:
+        """Strip vLLM thinking only at the extraction boundary, retaining the full record."""
+        answer, stripped = _vllm_answer_text(text, require_closed_think=require_closed_think)
+        self.channel_totals["chars_think_stripped"] += stripped
+        return answer
 
     def _record_completion_diagnostics(self, response: dict) -> None:
         self.last_stop_type = str(response.get("stop_type") or "")
@@ -6748,6 +6859,7 @@ class LocalGGUFProposer:
         attempt: int = 0,
         repeat_penalty: Optional[float] = None,
         repeat_last_n: Optional[int] = None,
+        think_mode: bool = False,
         _continuation_prefix: Optional[str] = None,
         memory_receipt: Any = None,
         memory_bytes: int = 0,
@@ -6784,6 +6896,7 @@ class LocalGGUFProposer:
         import json as _json
         import urllib.request
 
+        vllm_backend = _vllm_backend_active()
         messages: list[dict[str, str]] = [{"role": "user", "content": prompt}]
         if _continuation_prefix is not None:
             messages.append({"role": "assistant", "content": _continuation_prefix})
@@ -6802,6 +6915,13 @@ class LocalGGUFProposer:
             payload["repeat_penalty"] = repeat_penalty
             if repeat_last_n is not None:
                 payload["repeat_last_n"] = repeat_last_n
+        if vllm_backend:
+            # vLLM 0.27.1/0.29.0 penalties.py:173-176 covers every prompt/output token and
+            # exposes no recent-token window, unlike llama.cpp's 256-token control. Opt-in only.
+            vllm_penalty, penalty_reason = _vllm_repetition_penalty_setting()
+            self._record_vllm_sampling_receipt(vllm_penalty, penalty_reason)
+            if vllm_penalty is not None:
+                payload["repetition_penalty"] = vllm_penalty
         # Same opt-in determinism as the raw /completion path -- it must be on BOTH, or the
         # chat-template route (which Qwen3.6/ThinkingCap take) would stay nondeterministic while
         # the artifact claimed a seeded run. `attempt` is threaded in from the retry ladder so
@@ -6865,7 +6985,10 @@ class LocalGGUFProposer:
         choice = (raw.get("choices") or [{}])[0]
         msg = choice.get("message") or {}
         final = str(msg.get("content") or "")
-        reasoning = str(msg.get("reasoning_content") or "")
+        reasoning_value = msg.get("reasoning_content")
+        if vllm_backend and not reasoning_value:
+            reasoning_value = msg.get("reasoning")
+        reasoning = str(reasoning_value or "")
         # OpenAI finish_reason 'length' == hit max_tokens == llama.cpp stop_type 'limit' (overran).
         stop_type = "limit" if choice.get("finish_reason") == "length" else "eos"
         full = f"<think>\n{reasoning}\n</think>\n{final}" if reasoning else final
@@ -6891,9 +7014,17 @@ class LocalGGUFProposer:
         # inherit it silently. It is also strictly a NO-OP whenever `final` is non-empty: every
         # existing passing path is byte-identical with the flag on or off, which is the property
         # the both-directions test pins.
-        extraction = final
+        extraction = (
+            self._vllm_extraction_text(
+                final,
+                require_closed_think=bool(think_mode and not reasoning.strip()),
+            )
+            if vllm_backend
+            else final
+        )
         if (
-            not final.strip()
+            not vllm_backend
+            and not extraction.strip()
             and reasoning.strip()
             and os.environ.get("CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK") == "1"
         ):
@@ -6924,7 +7055,8 @@ class LocalGGUFProposer:
         # No-op whenever `extraction` already has a code marker: every passing path is untouched
         # with the flag on or off, which is the property the both-directions test pins.
         if (
-            _continuation_prefix is None
+            not vllm_backend
+            and _continuation_prefix is None
             and "```" not in extraction
             and "def " not in extraction
             and reasoning.strip()
@@ -6940,6 +7072,7 @@ class LocalGGUFProposer:
                 attempt=attempt,
                 repeat_penalty=repeat_penalty,
                 repeat_last_n=repeat_last_n,
+                think_mode=think_mode,
                 _continuation_prefix=_prefix,
                 **(
                     {"memory_receipt": memory_receipt, "memory_bytes": memory_bytes}
@@ -7213,6 +7346,58 @@ class LocalGGUFProposer:
         if len(self.orphaned_child_cleanups) < 24:
             self.orphaned_child_cleanups.append(diagnostic[:400])
 
+    def _build_vllm_launch_argv(self, model_dir: str) -> list[str]:
+        """Build and record fail-safe vLLM argv, including the parser decision receipt."""
+        max_len = int(_INDUCE_WORST_CASE_PROMPT_TOKENS + self.max_tokens + 2048)
+        registered, decision = _vllm_qwen3_reasoning_parser_registration()
+        parser_args = ["--reasoning-parser", "qwen3"] if registered else []
+        args = [
+            sys.executable,
+            "-m",
+            "vllm.entrypoints.openai.api_server",
+            "--model",
+            model_dir,
+            "--served-model-name",
+            "m",
+            "--max-model-len",
+            str(max_len),
+            "--gpu-memory-utilization",
+            "0.90",
+            "--max-num-seqs",
+            str(_vllm_max_seqs()),
+            "--kv-cache-dtype",
+            "fp8",
+            *parser_args,
+            "--port",
+            str(self.port),
+            "--host",
+            "127.0.0.1",
+        ]
+        self.last_vllm_reasoning_parser_decision = decision
+        self.last_launch_argv = list(args)
+        return args
+
+    def _record_vllm_reuse_launch_receipt(self) -> None:
+        """Restore the scored probe's launch receipt when this proposer reuses its server."""
+        if self.last_vllm_reasoning_parser_decision and self.last_launch_argv:
+            return
+        decision = (os.environ.get(_VLLM_REUSED_PARSER_DECISION_ENV) or "").strip()
+        argv_raw = (os.environ.get(_VLLM_REUSED_LAUNCH_ARGV_ENV) or "").strip()
+        if decision:
+            self.last_vllm_reasoning_parser_decision = decision
+        if argv_raw:
+            try:
+                argv = json.loads(argv_raw)
+                if isinstance(argv, list) and all(isinstance(value, str) for value in argv):
+                    self.last_launch_argv = list(argv)
+            except (TypeError, ValueError):
+                pass
+        if not self.last_vllm_reasoning_parser_decision:
+            _registered, local_decision = _vllm_qwen3_reasoning_parser_registration()
+            self.last_vllm_reasoning_parser_decision = (
+                f"reused:launch_receipt_unavailable; local_check={local_decision}"
+            )
+
     def _ensure_vllm_server(self) -> bool:
         """Launch or reuse a vLLM OpenAI server (REQ-ARC-WMTE-6510). Kaggle-Blackwell only.
 
@@ -7242,34 +7427,11 @@ class LocalGGUFProposer:
             )
             return False
         if self._vllm_healthy() and self._vllm_reusable(model_dir):
+            self._record_vllm_reuse_launch_receipt()
             return True
         self._terminate_stale_proc("replacing server for vllm launch")
-        # max-model-len from the SAME admission arithmetic the llama.cpp path uses, expressed
-        # per-sequence: prompt + completion + slack. PagedAttention shares the pool, so this is
-        # a per-request ceiling rather than a divided static pool.
-        max_len = int(_INDUCE_WORST_CASE_PROMPT_TOKENS + self.max_tokens + 2048)
-        args = [
-            sys.executable,
-            "-m",
-            "vllm.entrypoints.openai.api_server",
-            "--model",
-            model_dir,
-            "--served-model-name",
-            "m",
-            "--max-model-len",
-            str(max_len),
-            "--gpu-memory-utilization",
-            "0.90",
-            "--max-num-seqs",
-            str(_vllm_max_seqs()),
-            "--kv-cache-dtype",
-            "fp8",
-            "--port",
-            str(self.port),
-            "--host",
-            "127.0.0.1",
-        ]
-        self.last_launch_argv = list(args)
+        # max-model-len is built from the same per-sequence admission arithmetic as llama.cpp.
+        args = self._build_vllm_launch_argv(model_dir)
         self.generator_server_path = f"vllm:{model_dir}"
         # Honour CARNOT_ARC_SERVER_LOG_DIR, the same knob the llama.cpp launch below uses. On
         # Kaggle the kernel points it at /kaggle/working so the server log survives the run --
@@ -7368,6 +7530,8 @@ class LocalGGUFProposer:
         import json as _json
         import urllib.request
 
+        vllm_penalty, penalty_reason = _vllm_repetition_penalty_setting()
+        self._record_vllm_sampling_receipt(vllm_penalty, penalty_reason)
         body = _json.dumps(
             {
                 "model": "m",
@@ -7376,6 +7540,7 @@ class LocalGGUFProposer:
                 "temperature": float(payload.get("temperature", 0.0)),
                 **({"seed": payload["seed"]} if "seed" in payload else {}),
                 **({"stop": payload["stop"]} if payload.get("stop") else {}),
+                **({"repetition_penalty": vllm_penalty} if vllm_penalty is not None else {}),
             }
         ).encode()
         req = urllib.request.Request(
@@ -8136,6 +8301,7 @@ class LocalGGUFProposer:
                         attempt=attempt,
                         repeat_penalty=_payload.get("repeat_penalty"),
                         repeat_last_n=_payload.get("repeat_last_n"),
+                        **({"think_mode": _think_on} if _vllm_backend_active() else {}),
                         **(
                             {"memory_receipt": memory_receipt, "memory_bytes": prompt_extra_tokens}
                             if memory_receipt is not None
@@ -8150,7 +8316,7 @@ class LocalGGUFProposer:
                     _response = self._vllm_raw_completion(_payload)
                     if memory_receipt is not None:
                         memory_receipt.delivered(prompt_extra_tokens)
-                    text = _response.get("content", "")
+                    text = self._vllm_extraction_text(str(_response.get("content", "")))
                 else:
                     req = urllib.request.Request(
                         self._url() + "/completion",

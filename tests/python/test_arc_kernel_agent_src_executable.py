@@ -175,3 +175,15 @@ def test_agent_src_has_no_undefined_names() -> None:
         "scored run, and `ast.parse` cannot see it:\n"
         + textwrap.indent(out.stdout + out.stderr, "    ")
     )
+
+
+def test_scored_vllm_probe_prints_and_exports_parser_launch_receipt() -> None:
+    """REQ-ARC-WMTE-10011: scored logs and the reusing agent retain the parser receipt."""
+    src = _agent_src()
+    start = src.index("LLM VLLM PROBE: server_up=")
+    block = src[start : src.index("if not _vup:", start)]
+
+    assert "reasoning_parser_decision=" in block
+    assert "launch_argv=" in block
+    assert "CARNOT_ARC_VLLM_REUSED_REASONING_PARSER_DECISION" in block
+    assert "CARNOT_ARC_VLLM_REUSED_LAUNCH_ARGV" in block

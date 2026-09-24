@@ -56,6 +56,29 @@ engines in most calls. Two fixes, both cheap: launch vLLM with `--reasoning-pars
 strip everything up to the last `</think>` before `_extract_python` so extraction does not depend
 on a server flag. Neither is done; both need a Kaggle-side check.
 
+**RESOLUTION, 2026-09-24 (append-only; code fixed, Kaggle confirmation pending).**
+REQ-ARC-WMTE-10011, merged from branch `vllm-extract-fix` (f8dae78cea + 960e575aff):
+
+- **Defect 2 fixed.** Before extraction, vLLM answer text keeps only what follows the last
+  `</think>`. In think mode, content with no `</think>` and no separate reasoning channel counts
+  as no answer, because the Kaggle chat template puts `<think>` in the prompt and a cut-off thought
+  arrives untagged. vLLM also launches with `--reasoning-parser qwen3` when the installed vLLM
+  registers that parser (a source check, no import; vLLM 0.27.1, the Kaggle wheel, does). The
+  reasoning channel is read from `reasoning_content` or vLLM's `reasoning`. A replay of the 8
+  saved pilot answers now extracts the same engine as the llama.cpp path (before the fix: 0 of 8).
+- **Defect 1 NOT switched on, on purpose.** In both vLLM 0.27.1 and 0.29.0,
+  `repetition_penalty` covers every prompt and output token with no window
+  (`vllm/v1/worker/gpu/sample/penalties.py`). llama.cpp's 1.1 covers the last 256 tokens. They
+  are different interventions, so the vLLM penalty is opt-in only:
+  `CARNOT_ARC_VLLM_REPETITION_PENALTY=<float>`. Whether to set it is an operator decision and
+  needs a Kaggle A/B.
+- **Confirmation step.** The scored kernel now prints `reasoning_parser_decision` and the vLLM
+  `launch_argv` on its `LLM VLLM PROBE` line. On the next scored run, check that line shows the
+  parser was added and the server came up.
+- **Check or prose.** Checks: 25 unit tests in `tests/python/test_arc_vllm_reasoning_extraction.py`,
+  including the real-evidence replay and a mutation that survived review. A real vLLM response
+  was not tested locally; the Kaggle log line above is the check for that.
+
 ### NEW 2026-09-02: a document/YAML task-count divergence cost 3 of 4 tasks in milestone 602
 
 **What happened.** `experiment_6874_v602_evidence_substrate_manifest_contract` is CLEAN (not

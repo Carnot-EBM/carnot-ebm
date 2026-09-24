@@ -35873,6 +35873,101 @@ Implementation status (amendment 2): implemented and tested 2026-09-23 on branch
 `exp10010-isolation-fix`. A shard from a run on the earlier code can be rescored
 on CPU with the fixed code, because each shard row stores its engine source.
 
+## Scored vLLM reasoning-channel extraction — 2026-09-24
+
+### REQ-ARC-WMTE-10011: Extract only the vLLM answer channel without changing default sampling
+
+The scored ARC vLLM path SHALL remove model thinking from the text passed to
+`_extract_python`. If vLLM content contains `</think>`, extraction SHALL receive only the
+bytes after the last closing tag. Without a closing tag, content whose first non-whitespace
+bytes are `<think>` SHALL yield no answer; a later stray `<think>` SHALL terminate the answer
+without discarding valid preceding bytes. On a think-mode vLLM chat request where the server
+did not supply a separate reasoning field, untagged content SHALL also yield no answer because
+the model template pre-opened the reasoning channel outside the generated content. An answer
+already separated from a non-empty `reasoning` or `reasoning_content` field SHALL not require a
+closing tag. Outside that unsplit think-mode chat case, content with no think tag SHALL reach
+extraction byte-for-byte unchanged. The llama.cpp path SHALL remain unchanged. The normalized
+full response SHALL retain all generated text, and the existing channel diagnostics SHALL
+accumulate the number of characters removed.
+
+Every vLLM completion route that can pass model text to `_extract_python`, including the
+tool-loop final-answer route, SHALL enforce the same answer-channel rule. Chat response
+normalization and tool-loop diagnostics SHALL read reasoning from `reasoning_content` when
+supplied and otherwise from vLLM's `reasoning` field. The vLLM backend SHALL ignore
+`CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK` and
+`CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION`; neither opt-in may extract a reasoning draft or
+send a llama.cpp-specific assistant-prefill retry through vLLM.
+
+Before launching vLLM, the agent SHALL inspect the installed
+`vllm/reasoning/__init__.py` without importing the vLLM runtime. It SHALL add
+`--reasoning-parser qwen3` only when that source confirms the parser registration. A
+missing package, unreadable or invalid source file, failed inspection, or absent
+registration SHALL omit the flag. The launch argv and a reason for the decision SHALL be
+recorded in the launch receipt. The scored kernel probe SHALL print both values, and SHALL
+publish them to a proposer that reuses the probe-started server so the agent witness is not
+blank merely because it did not own the launch.
+
+`CARNOT_ARC_VLLM_REPETITION_PENALTY` SHALL be the only opt-in that sends vLLM's
+`repetition_penalty` field on vLLM chat and raw-completion requests. When unset, the field
+SHALL be absent and the scored sampling behavior SHALL remain unchanged. A valid positive
+finite float SHALL be sent unchanged. A malformed, non-finite, or non-positive value SHALL
+fail safe by omitting the field. The effective value or omission reason SHALL be recorded as
+one bounded setting receipt alongside the total vLLM request count, rather than copied once
+per request. This control SHALL remain separate from llama.cpp's `repeat_penalty` and
+`repeat_last_n` because the inspected vLLM 0.27.1 and 0.29.0 implementations penalize tokens
+seen anywhere in the prompt or generated output and expose no 256-token window.
+
+#### SCENARIO-ARC-WMTE-10011-ANSWER
+
+- **GIVEN** vLLM content containing a draft Python fence in reasoning, `</think>`, and a final Python fence
+- **WHEN** the scored extractor reads the completion
+- **THEN** it extracts the final fence and preserves the full completion in diagnostics
+- **AND** the channel counters record exactly the characters removed.
+
+#### SCENARIO-ARC-WMTE-10011-UNCLOSED
+
+- **GIVEN** an untagged, truncated think-mode vLLM chat response from a template that pre-opened `<think>`
+- **WHEN** extraction runs
+- **THEN** the answer channel is empty and no code is extracted
+- **AND** untagged think-OFF raw completions remain byte-for-byte unchanged.
+
+#### SCENARIO-ARC-WMTE-10011-CHANNELS
+
+- **GIVEN** one vLLM response with `reasoning` and one compatible response with `reasoning_content`
+- **WHEN** chat responses are normalized
+- **THEN** each reasoning value is retained in the faithful full record
+- **AND** neither reasoning value can outrank a final-answer Python fence
+- **AND** the reasoning fallback and assistant-prefill retry flags remain disabled on vLLM.
+
+#### SCENARIO-ARC-WMTE-10011-PARSER
+
+- **GIVEN** an installed vLLM source tree that registers `qwen3`
+- **WHEN** launch argv is built
+- **THEN** it contains `--reasoning-parser qwen3` and records the confirmed source
+- **AND** an absent registration or failed check omits both arguments and records why
+- **AND** the scored probe prints the decision and argv and makes the receipt available on reuse.
+
+#### SCENARIO-ARC-WMTE-10011-SAMPLING
+
+- **GIVEN** the vLLM repetition-penalty environment flag is unset
+- **WHEN** a chat or raw-completion request is serialized
+- **THEN** no vLLM repetition penalty is sent and the payload is otherwise unchanged
+- **AND** a valid configured float is sent as `repetition_penalty`
+- **AND** repeated requests increment a count without growing the setting receipt.
+
+#### SCENARIO-ARC-WMTE-10011-PILOT
+
+- **GIVEN** each of the eight saved Experiment 10010 calls that produced an engine
+- **WHEN** its reasoning, closing tag, and final answer are shaped like vLLM without a parser
+- **THEN** fixed extraction has the same engine SHA-256 as llama.cpp-shaped answer extraction
+- **AND** a reasoning draft fence cannot become the extracted engine.
+
+Implementation status: implemented and CPU-tested 2026-09-24. The regression uses all
+eight saved Experiment 10010 engine-producing calls and does not start a model server. Review
+amendments cover realistic untagged truncation, stray and repeated tags, parser receipts on scored
+reuse, bounded sampling telemetry, vLLM-incompatible fallback flags, the tool loop, and raw
+repetition-penalty requests.
+
 ## V662 fail-closed verifier support qualification — 2026-09-24
 
 ### REQ-ARC-WMTE-7580: Qualify independent transition support before E3 accepts a world model

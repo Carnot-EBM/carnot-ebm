@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-09-24 — vLLM answer-channel extraction fix (operator request: "1", fix the vLLM path)
+
+- codex (gpt-5.6-sol, CPU, worktree `vllm-extract-fix`) implemented REQ-ARC-WMTE-10011; one Claude
+  reviewer (workflow `wf_3ae13dd9-817`) approved it with 9 minor findings; a second codex round
+  fixed the 8 code findings. The outer loop checked the kernel edit, ran 83 related tests, and
+  confirmed the surviving rfind mutant now fails, using a scratch overlay.
+- Merged by patch into main. Appended a resolution note to the vLLM entry in `ops/known-issues.md`.
+- Deleted mutation marker e0deb6e8 in the worktree deliberately: codex's own RED/GREEN run armed
+  it while the fix was an uncommitted edit (attributed_to_run empty).
+- The repetition penalty is opt-in only; vLLM's semantics differ from llama.cpp's.
+
 ## 2026-09-24 — Experiment 10010 think-ON pilot run and written up (operator request: "1", run the pilot)
 
 - Ran the pilot on GPU 1 (21:30-02:47 UTC, 5.3 h) from the harness worktree; the conductor kept

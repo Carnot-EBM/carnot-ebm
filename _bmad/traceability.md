@@ -1,6 +1,16 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-23
+**Last Updated:** 2026-09-24
+**Operational Note:** 2026-09-24 REQ-ARC-WMTE-10011 maps scored vLLM answer-channel
+sanitization, compatible reasoning-field reads, bounded sampling receipts, fail-safe `qwen3`
+parser launch detection, and opt-in vLLM repetition penalties to
+`python/carnot/agentic/arc_executable_world_model.py`. Tool-loop final answers map to
+`python/carnot/agentic/arc_induction_tool_loop.py`; the scored launch receipt maps to
+`scripts/kaggle/submission_kernel/main.py`. The 25 CPU tests in
+`tests/python/test_arc_vllm_reasoning_extraction.py` include realistic untagged think-mode
+truncation and a last-closing-tag mutant guard. Integration tests cover the tool loop and kernel
+source. The real-evidence regression still covers all eight saved Experiment 10010
+engine-producing calls. Status: review fixes implemented and CPU-tested; no server was started.
 **Operational Note:** 2026-09-23 (review fixes) REQ-ARC-WMTE-10010 now also maps to
 `python/carnot/experiment_10010_engine_child.py` (isolated engine scoring). 86 tests; new
 scenarios ISOLATION, LADDER, and INFRA. Status: built, review fixes applied, GPU run not started.

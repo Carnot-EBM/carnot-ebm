@@ -398,6 +398,9 @@ def _post_chat(
 
     Returns the raw response dict. Raises on transport failure -- the loop converts
     that into a clean fallback, same contract as _chat_complete_request."""
+    from carnot.agentic.arc_executable_world_model import _vllm_backend_active
+
+    vllm_backend = _vllm_backend_active()
     payload: dict[str, Any] = {
         "messages": messages,
         "max_tokens": int(proposer.max_tokens),
@@ -405,9 +408,7 @@ def _post_chat(
         "cache_prompt": True,
     }
     if grammar is not None:
-        from carnot.agentic.arc_executable_world_model import _vllm_backend_active
-
-        if _vllm_backend_active():
+        if vllm_backend:
             raise ValueError("tool grammar requires the confirmed llama.cpp backend")
         # The text is built ONCE per session (see induce_with_tool_loop) from a copy of
         # the frozen schemas, so a schema dict mutated mid-run cannot change a later turn.
@@ -420,6 +421,13 @@ def _post_chat(
         # this IS the TOOL_SCHEMAS object, so the default payload cannot drift.
         payload["tools"] = tools_payload if tools_payload is not None else TOOL_SCHEMAS
         payload["tool_choice"] = "auto"
+    if vllm_backend:
+        from carnot.agentic.arc_executable_world_model import _vllm_repetition_penalty_setting
+
+        penalty, penalty_reason = _vllm_repetition_penalty_setting()
+        proposer._record_vllm_sampling_receipt(penalty, penalty_reason)
+        if penalty is not None:
+            payload["repetition_penalty"] = penalty
     _sampling_overrides(payload)
     # Per-turn seed via the proposer's own ladder helper, so a seeded run is
     # deterministic per turn without collapsing all turns onto one draw.
@@ -465,12 +473,23 @@ def _completion_tokens(raw: dict[str, Any]) -> int:
     return ct if isinstance(ct, int) else 0
 
 
+def _message_reasoning_text(msg: dict[str, Any]) -> str:
+    """Read vLLM's reasoning alias only when that backend is active."""
+    reasoning = msg.get("reasoning_content")
+    if not reasoning:
+        from carnot.agentic.arc_executable_world_model import _vllm_backend_active
+
+        if _vllm_backend_active():
+            reasoning = msg.get("reasoning")
+    return str(reasoning or "")
+
+
 def _record_turn(proposer: Any, raw: dict[str, Any], msg: dict[str, Any]) -> None:
     """Feed the shared completion diagnostics, so existing instrumentation
     (stop-type logs, raw-length monkeypatches in the measurement harnesses) sees
     every loop turn exactly as it sees single-shot responses."""
     content = str(msg.get("content") or "")
-    reasoning = str(msg.get("reasoning_content") or "")
+    reasoning = _message_reasoning_text(msg)
     full = f"<think>\n{reasoning}\n</think>\n{content}" if reasoning else content
     choice = (raw.get("choices") or [{}])[0]
     normalized: dict[str, Any] = {
@@ -1144,7 +1163,19 @@ def induce_with_tool_loop(
                 force_submit = True
             continue
 
-        final_code = _extract_final_code(content)
+        extraction_content = content
+        from carnot.agentic.arc_executable_world_model import (
+            _vllm_answer_text,
+            _vllm_backend_active,
+        )
+
+        if _vllm_backend_active():
+            reasoning = _message_reasoning_text(msg)
+            extraction_content = _vllm_answer_text(
+                content,
+                require_closed_think=not bool(reasoning.strip()),
+            )[0]
+        final_code = _extract_final_code(extraction_content)
         if final_code and "def engine" in final_code:
             stats["final_answer_seen"] = True
             # Score the final answer so the monotone accept can compare it fairly
