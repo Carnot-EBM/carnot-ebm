@@ -18529,3 +18529,4 @@ code |
 | 2026-09-24 06:29 UTC | Train a bounded evidence-residual energy decision | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7591-fit-evidence, exp7591-fit-evidence, exp7591-fit-evidence) |
 | 2026-09-24 06:29 UTC | Measure incremental evidence value and calibrated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7592-test-online-evidence, exp7592-test-online-evidence, exp7592-test-online-evidence) |
 | 2026-09-24 06:29 UTC | Measure delayed evidence learning with held-back u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7592-test-online-evidence, exp7592-test-online-evidence, exp7592-test-online-evidence) |
+| 2026-09-24 06:43 UTC | Independently reduce evidence value and delayed up | OK | 90 passed, 1 warning in 7.41s |
