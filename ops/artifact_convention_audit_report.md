@@ -9,26 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 8 |
 
-## experiment_7588_v663_evidence_protocol.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7589_v663_arc_output_boundary.json
+## experiment_7605_fit_evidence.json
 
 **CHECKABLE**
 
@@ -36,7 +19,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The experiment was blocked at the conductor pre-gate because upstream task `exp7604-evidence-pilot` failed the gate check with an `evidence_transport_ready_score` of 0 against an expected value of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -44,7 +27,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7590_evidence_pilot.json
+## experiment_7606_test_online_evidence.json
 
 **CHECKABLE**
 
@@ -52,7 +35,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because upstream dependency exp7588 failed its readiness gate checks.
+No claim; execution was blocked at conductor_pre_gate because upstream gate checks failed.
 
 ## WHAT IS MISSING
 nothing
@@ -60,7 +43,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7596_v663_evidence_audit.json
+## experiment_7610_v664_evidence_audit.json
 
 **CHECKABLE**
 
@@ -68,7 +51,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because required upstream scientific producer artifacts were missing.
+The audit is blocked because required upstream evidence producers in the v664 evidence chain are missing or ineligible, with no comparative claims made.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +59,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7597_v663_arc_history_generalization.json
+## experiment_7611_v664_arc_matched_support.json
 
 **CHECKABLE**
 
@@ -84,7 +67,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-No comparative claim; the artifact reports an honest null result (`complete_null_insufficient_history_support`) with no policy benefit claimed due to insufficient history support across games.
+Protocol fixture readiness is established, but empirical benefit was not established (an honest null due to zero selected matched keys).
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +75,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7598_v663_rust_consumer.json
+## experiment_7612_v664_arc_history_measurement.json
 
 **CHECKABLE**
 
@@ -100,7 +83,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The benefit gate failed because `strongest_comparator_lower95` was 0.6797261332013704, below the required value greater than 1.0.
+The experiment was blocked (`verdict_class`: "blocked") due to a failed upstream precondition check (`exp7611_protocol`) on the matched protocol path from experiment 7611.
 
 ## WHAT IS MISSING
 nothing
@@ -108,7 +91,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7599_v663_board_continuity.json
+## experiment_7613_v664_service_attribution.json
 
 **CHECKABLE**
 
@@ -116,7 +99,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports an honest null (`complete_null_board_continuity_placement_unmeasured`): board continuity is tracked across three targets with hardware placement benefit unmeasured, GateMate blocked on an unfulfilled physical prerequisite, and no new accelerator purchase justified.
+The empirical accelerator-benefit gate failed, preserving the conclusion `complete_null_rust_consumer_ready_speed_gate_failed`.
+
+## WHAT IS MISSING
+nothing; `acceptance_gate_results` records the failed check with `expected`, `observed`, and `passed`, while `consumer_stage_rows` provides per-unit measurements keyed by `pair_id`, `seed`, `unit_id`, and `arm`; the GateMate block also records `error`, `exact_missing_receipt`, and `last_diagnostic`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7614_v664_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment makes no positive comparative claim (`positive_claim`: false) and is blocked by missing and failing upstream prerequisites (`honest_verdict`: "complete_blocked_required_v664_external_evidence").
 
 ## WHAT IS MISSING
 nothing
@@ -124,18 +123,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7600_v663_capstone.json
+## experiment_10012_gate_usefulness.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-Consumer parity passed, but the registered Rust-versus-Python aggregate speed gate failed.
+The experiment completed gate-usefulness measurement with 3 informative windows and 0 unrecoverable cases.
 
 ## WHAT IS MISSING
-Per-pair timing rows for the 120 independent comparisons are missing; only aggregate fields such as `"comparison_summary"`, `"independent_pair_count"`, `"paired_ratio"`, `"positive_count"`, `"negative_count"`, and percentile summaries are present.
+nothing; the aggregate `"gate_tables_by_arm"` are backed by `"per_pair_rows"` containing per-pair `"arm_status"`, reasons, and execution diagnostics.
 
 ## THE CHECK A READER CANNOT DO
-Were the speed-gate results broad across individual pairs, or driven by a few extreme timing observations?
+none

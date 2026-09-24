@@ -3463,3 +3463,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 22 | 2026-09-24T13:19:55Z | 2026-09-24T13:21:17Z | Operator chose gate analysis: launched codex (CPU, worktree gate-usefulness) for exp10012 — pre-registered usefulness label (plan in engine, execute in offline sim) vs candidate gates over think/codeonly/expert/identity engines |
 | 23 | 2026-09-24T13:39:45Z | 2026-09-24T13:47:06Z | exp10012 done (68 s): 2/10 windows label-informative; relaxing gate adds accepted-not-useful; 2 faithful engines had wrong win predicate; committed 2a911cfa81 in worktree; 1-agent review wf_0e2a4bf5-09f (effort medium) |
 | 25 | 2026-09-24T14:21:35Z | 2026-09-24T14:26:19Z | exp10012 corrected (LIVE_SCORED): useful su15 THINK has accuracy 0.125, every gate rejects it; merged to main + note + ops; retraction recorded |
+| 26 | 2026-09-24T14:30:00Z | 2026-09-24T14:29:50Z | Saved memory: scored agent vs offline twin execution trap |

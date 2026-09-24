@@ -79332,3 +79332,34 @@ runtime suites do not apply.
 
 Planned. The conductor owns later status, changelog, and traceability
 reconciliation.
+
+## REQ-REPORT-V665-PLAN: Plan schema-aligned evidence and retained learning
+
+The planner SHALL produce matching design and execution files for milestone
+2026.09.665. The design SHALL use the V7/V8 structure. Both authorities SHALL
+contain exactly fourteen ordered tasks, exp7615 through exp7628, with identical
+IDs, titles, deliverables, phases, substrate classes and structured gates.
+
+The plan SHALL distinguish the V664 schema rejection from semantic failure.
+It SHALL preserve the original role roster and historical exposure. It SHALL
+separate online and evaluation captures to meet bounded execution budgets.
+It SHALL include calibrated energy training, delayed continuous learning,
+independent reduction, ARC generalization through supervisor outcomes, and
+measured deployment with all attached-board dispositions.
+
+Every prompt SHALL declare progress, bounded writes, prerequisites, artifact
+principles, closed verdict class and applicable verification. Comparable tasks
+SHALL emit per-unit rows. Gates SHALL reference fields required by earlier tasks
+in this roadmap. Scope continuations SHALL carry complete prior-failure entries.
+LLM tasks SHALL use unsloth/Qwen3.8-27B-GGUF and the actual substrate class.
+
+### SCENARIO-REPORT-V665-PLAN: Validate the staged execution contract
+
+**Given** the V665 design and fourteen-task staged YAML
+**When** the planner checks schema, exclusions, gate references and exact parity
+**Then** all authorities SHALL agree without activating the plan or changing
+research-roadmap.yaml or scripts/research_conductor.py.
+
+### Implementation Status (REQ-REPORT-V665-PLAN)
+
+Planning specification recorded before authoring. Validation is pending.

@@ -46758,3 +46758,78 @@ None of these sources warrants reopening PHASE D text/logprob reranking.
 
 Access date: 2026-09-24. Literature and source-custody checks only; no model
 inference, board operation, purchase, external contact or publication.
+
+## 2026-09-24 — V665 planning review: schema agreement before evidence learning
+
+Recorded before milestone design. The review covered the eight research topics
+and six secondary channels below. Existing references are marked as rechecks.
+Search date is not publication date. No model or board ran during this review.
+
+### Local evidence that changes the next question
+
+Exp7604 completed eight Qwen3.8 evidence extractions. All eight failed
+`evidence_output_value_invalid`. The prompt named `entity_type` but omitted its
+legal values. The parser accepts person, organization, location, date, numeric,
+code, other and none. Every saved response instead used values such as
+`file_path`, `code_location` or `code_snippet`. This explains an actual rejection
+path. It does not establish that the proposed links were semantically correct.
+Keep the original raw responses and verdict. Test a shared schema and explicit
+enums; do not coerce the saved outputs into passing evidence.
+
+The same pilot projected 120 online/evaluation requests beyond its fixed
+3,000-second capture budget. Separate the existing online80 and evaluation40
+roles into bounded jobs. Do not shorten source text or change group selection.
+
+### Primary sources and candidate methods
+
+| Topic | Source and date | Finding and potential use |
+|---|---|---|
+| EBM verification/reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, December 2025, revised May 2026](https://arxiv.org/abs/2512.15605) | Rechecks. Learned input/candidate compatibility and the ARM–EBM correspondence motivate normalized conditional energies. They do not make a fitted probability an exact truth certificate. |
+| Neural constraint satisfaction | [Learning Symbolic Constraint Representations from Examples, September 2026](https://arxiv.org/abs/2609.12267) | New lead in this review: neural and symbolic constraint acquisition from examples. Consider a future source-derived constraint library after useful evidence is measured. Abstract-level review only; no solver replication is proposed. |
+| Ising applications | [Parallel Sampling from the Ising p-Spin Model, July 2026](https://arxiv.org/abs/2607.12348) | New lead: parallel sampling under a high-temperature regime. Keep its assumptions explicit. A two-state decision head needs exact normalization, not a large sampler. Defer a benchmark until a relevant sampling workload exists. |
+| Hallucination detection | [EAEV, September 8, 2026](https://arxiv.org/html/2609.08267v1); [Input-Side Evidence Alignment, August 2026](https://arxiv.org/abs/2608.15804) | EAEV recheck, sections 3.3–3.6: distinguish lexical identity, semantic alignment and consistency; perturb evidence to test dependence. The second paper is a new lead on joint span detection and input alignment using masked prediction. Test sentence-linked features first; do not claim replication of either paper. |
+| KANs | [On-chip online learning through spline locality, February 2026, v4 June 19](https://arxiv.org/html/2602.02056v4) | Recheck. Sparse local updates and fixed-point robustness provide a hardware path. A new KAN architecture is deferred until evidence has predictive value. Whole-service costs still govern deployment. |
+| Constrained/energy-guided generation | [JSONSchemaBench, January 2025](https://arxiv.org/html/2501.10868v1); [ETS, January 2026, revised May](https://arxiv.org/abs/2601.21484) | JSONSchemaBench sections 4–6 separate grammar coverage, latency and output quality. Test the same schema in prompt, decoder and independent validator. ETS recheck motivates compute-matched evaluation; no energy-guided reasoning run is justified by syntax repair alone. |
+| Hardware sampling | [FPGA–ASIC decomposition, February 2026](https://arxiv.org/abs/2602.15985); [Extropic Z1T, September 4, 2026](https://extropic.ai/writing/z1t) | Rechecks. Host/device coordination belongs in the denominator. Exp7613's small arithmetic share motivates a bounded test of the calling boundary before any arithmetic accelerator. Vendor results do not establish Carnot hardware access or speed. |
+| Continuous learning | [Proper Calibeating, May 2026](https://arxiv.org/html/2605.26703v2); [Trust Region Continual Learning, February 2026](https://arxiv.org/abs/2602.02417) | Rechecks. Proper scoring rules and bounded updates motivate separate probability, decision-cost and retention tests. Use delayed, role-separated feedback with frozen and corrupted-feedback controls. No immediate-feedback theorem or other-domain retention guarantee transfers automatically. |
+
+JSONSchemaBench's feature-coverage and failure-analysis sections were read,
+as were EAEV's alignment sections and Proper Calibeating's calibration result.
+The principal adaptation is a schema-complete transport test followed by the
+previously unmeasured evidence experiment. Grammar validity remains independent
+of pointer integrity and semantic benefit. The [author benchmark repository](https://github.com/guidance-ai/jsonschemabench)
+and [llama.cpp grammar documentation](https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md)
+are implementation references. Pin the installed runtime; do not assume every
+JSON Schema feature is supported. No new dependency is required by this review.
+
+### Secondary-source receipts and limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. The index returned
+  [NRGPT](https://openreview.net/pdf/6feb228b3e35f6b1a41057403fa2aed7deebda65.pdf)
+  and [energy-based nonconformity scores](https://openreview.net/pdf?id=zCwTMRtASZ).
+  The direct NRGPT PDF returned a browser challenge. These are discovery leads;
+  no new experiment depends on inaccessible full text or an inferred decision.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  readable [Z1T article](https://extropic.ai/writing/z1t). The index exposed
+  navigation only. Z1T links open weights and training code. Hardware energy
+  estimates remain vendor claims, separate from local device availability.
+- **Semantic Scholar:** searched both seed IDs and attempted the
+  [EBT citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both direct reads failed. No verified citing-paper census is claimed.
+- **Hugging Face:** the [verification papers feed](https://huggingface.co/papers?q=verification)
+  returned verification-granularity and reward-verification leads. It included
+  older papers and was cached six days earlier. Technical choices above cite
+  original papers, not the discovery feed.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Both were cached
+  from the prior week. No newly trending EBM/constraint/KAN dependency was
+  established. The author JSONSchemaBench repository was readable.
+- **Logical Intelligence:** rechecked the [Kona architecture page](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  It provides context for energy-based reasoning. This review established no
+  open checkpoint or reproducible training recipe available for this milestone.
+
+Promote schema agreement and source-dependent counterfactual controls into the
+next design. Retain the new span-alignment, constraint-acquisition and parallel
+sampling leads for future work. Preserve the generator mandate and all retired
+mechanism boundaries. No external contact or publication occurred.
