@@ -79552,3 +79552,91 @@ Implemented by Experiment 7616 with a shared decoder authority, exact historical
 replay, canonical sentence inputs, authenticated role and lifecycle custody,
 scoped validation, and strict terminal readers. The conductor owns later status,
 changelog and traceability reconciliation.
+
+## REQ-REPORT-7617: Measure the V665 shared-schema pilot
+
+Experiment 7617 SHALL use current `model_bounded_generation` with
+`MODEL_SPECS=["unsloth/Qwen3.8-27B-GGUF"]`. It SHALL resolve the model through
+`cached_sota_pair()` and prefer the authenticated Experiment 7604 Q4_K_M asset.
+It SHALL record the exact GGUF hash, quantization, chat template, backend, GPU
+UUID, lease, owned PID, offload proof, and token counts. It SHALL not evict or
+signal foreign work.
+
+The experiment SHALL freeze the eight disjoint pilot group IDs from Experiment
+7616. It SHALL issue one request per group to each of two paired arms. Both arms
+SHALL use the same lossless canonical input, system prompt, `/no_think`, zero
+temperature, 512-token output limit, and seeded arm order. The control arm SHALL
+use the explicit schema prompt without grammar. The grammar arm SHALL add the
+installed supported grammar from the same schema authority. Every request SHALL
+run once without retry, relabeling, filtering, or generated labels. Raw requests,
+responses, finish reasons, timings, exceptions, parser results, unknown fractions,
+seeds, censoring, and provenance SHALL be retained for all 16 rows. Unsupported
+constrained decoding SHALL make the grammar arm unavailable, not successful.
+
+An independent parser SHALL reduce the saved response bytes. The grammar arm
+SHALL be selected first only when at least six of eight groups have valid,
+completed outputs and accepted rows contain zero invalid ID references. Otherwise,
+the control SHALL be selected under the same rule. If neither arm passes, scaling
+SHALL stop. Syntax transport SHALL remain separate from semantic correctness,
+abstention, and evidence utility. `semantic_benefit_claim` SHALL remain false.
+
+Measured projection SHALL use current load time plus 1.25 times the per-row p90
+generation time and an explicit validation reserve. It SHALL publish separate
+fixed-roster projections for 120 fit/tune/policy, 80 online, and 40 evaluation
+requests. A roster is feasible only when projected generation is at most 3000
+seconds and projected total task time is at most 4500 seconds. The experiment
+SHALL not resize a roster. Current requests SHALL hard-stop by 3000 seconds.
+
+The terminal artifact SHALL use a `complete_` verdict and the closed verdict
+class enum. It SHALL keep the eight excluded pilot groups out of every measured
+role. It SHALL separate validity, readiness, benefit, retention, and freshness
+gates and persist complete diagnostic operands. It SHALL include the required
+sample budget, preconditions, current substrate and venue, disjoint phase spans,
+invocation counts, seeds, checksums, source hashes, field principles, selected
+immutable configuration, paired pilot rows, and validation receipts. Exact
+fixtures SHALL use `circular_positive`; protocol readiness SHALL use `null`.
+
+Validation SHALL freeze an affected-file manifest and use worktree-pinned imports,
+focused serial pytest without ambient addopts, a private base temp, command-local
+100 percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and affected-test specification coverage. The declared entrypoint, a
+fresh-process request for the selected arm, cold replay, independent reduction,
+adversarial reader, and strict verdict-row reader SHALL accept the exact terminal
+candidate before atomic publication. Old artifacts, weights, defaults, roadmap,
+and the research conductor SHALL remain unchanged.
+
+### SCENARIO-REPORT-7617-PAIRED: Both arms receive the same lossless input
+
+**Given** the eight authenticated pilot groups and one shared schema authority
+**When** the seeded paired pilot runs
+**Then** each group contributes one control row and one grammar row
+**And** the arms differ only by installed constrained decoding
+**And** all failures remain in the paired denominator without retry.
+
+### SCENARIO-REPORT-7617-SELECT: Selection fails closed
+
+**Given** independently parsed outputs for both arms
+**When** the selector evaluates the grammar arm before the control arm
+**Then** it selects an arm only with at least six valid completed groups
+**And** accepted rows contain zero invalid ID references
+**And** it stops scaling when neither arm passes.
+
+### SCENARIO-REPORT-7617-PROJECT: Fixed rosters use conservative measured cost
+
+**Given** authenticated load time and paired row timings
+**When** fit, online, and evaluation projections are computed
+**Then** each fixed roster uses load plus 1.25 times per-row p90 and validation reserve
+**And** generation and total-task limits produce three independent feasibility flags.
+
+### SCENARIO-REPORT-7617-TERMINAL: Fresh readers control publication
+
+**Given** a frozen validation manifest and exact terminal candidate
+**When** scoped checks and fresh-process task readers run
+**Then** all exits, worktree paths, and log hashes are retained
+**And** terminal reader outcomes precede atomic publication
+**And** syntax readiness does not imply semantic benefit or default promotion.
+
+### Implementation Status (REQ-REPORT-7617)
+
+Planned for Experiment 7617. The conductor owns later status, changelog, and
+traceability reconciliation.

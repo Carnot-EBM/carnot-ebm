@@ -1,0 +1,933 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [],
+  "default_promotion_authorized": false,
+  "duration_s": 16.488063042,
+  "evaluation_capture_feasible_score": 0,
+  "evidence_transport_ready_score": 0,
+  "execution_venue": "host",
+  "execution_venue_details": {
+    "gpu_uuid": null,
+    "host": "icbfl1"
+  },
+  "experiment": 7617,
+  "experiment_id": "exp7617-v665-schema-pilot",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "Every current LLM call uses unsloth/Qwen3.8-27B-GGUF.",
+    "acceptance_gate_results": "Validity, readiness, benefit, retention, and freshness remain separate.",
+    "default_promotion_authorized": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "duration_s": "Use current monotonic elapsed time and never inherit or pad runtime.",
+    "evaluation_capture_feasible_score": "One requires the fixed 40-row roster within both measured limits.",
+    "evidence_transport_ready_score": "One requires a selected arm under the frozen six-of-eight rule.",
+    "execution_venue": "Name the current host and physical GPU UUID.",
+    "execution_venue_details": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "experiment": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "experiment_id": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "external_publication_authorized": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "field_principles": "Every governed field carries a nearby interpretation rule.",
+    "fit_capture_feasible_score": "One requires the fixed 120-row roster within both measured limits.",
+    "flagged_adversarial": "Persist the terminal reader result; flagged evidence opens no downstream gate.",
+    "gate_check_summary": "Every failure keeps its upstream, path, field, operator, expected, and observed operands.",
+    "honest_verdict": "A complete_ prefix reports terminal execution, not scientific benefit.",
+    "inference_substrate": "Describe current execution, never historical GPU work.",
+    "inference_substrate_class": "Bounded generation needs at least ten measured seconds without padding.",
+    "invocation_counts": "Loads, forwards, generations, and tokens count only current work.",
+    "milestone": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "model_invoked": "True means a current load or generation was attempted.",
+    "model_specs": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "online_capture_feasible_score": "One requires the fixed 80-row roster within both measured limits.",
+    "paired_pilot_rows": "Eight groups produce exactly two rows; retries and replays never add samples.",
+    "phase_spans": "Stages are disjoint and keep planned, completed, pending, and checkpoint state.",
+    "planned_inference_substrate_class": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "preconditions_checked": "Only checks actually run before inference can authenticate prerequisites.",
+    "purchase_authorized": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "random_seed": "Persist each stochastic seed and its single purpose.",
+    "random_seeds": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "reproducibility_checksum": "Bind immutable inputs, configuration, raw rows, and reductions.",
+    "research_conductor_modified": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "research_roadmap_modified": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "rows": "Each group-arm unit keeps absolute counts, seed, direction, censoring, and raw provenance.",
+    "run_date": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "sample_size_budget": "Intended, observed, excluded, and censored counts use independent groups.",
+    "schema": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "selected_config_path": "Bind the immutable prompt, decoder, backend, parser, and model configuration.",
+    "semantic_benefit_claim": "Syntax coverage alone cannot claim factual correctness or evidence utility.",
+    "source_artifact_hashes": "Distinguish producers, pre-gate records, model bytes, and current raw evidence.",
+    "status": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "submission_authorized": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "terminal_reader_outcomes": "Interpret this field only within the authenticated current-run scope and its gates.",
+    "validation_receipts": "Record actual commands, exits, worktrees, log hashes, and final readers.",
+    "verdict_class": "Only positive, circular_positive, null, blocked, disqualified, or partial is valid.",
+    "verifier_is_oracle": "Syntax validation does not establish oracle-distinct semantic advantage."
+  },
+  "fit_capture_feasible_score": 0,
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      "exclusive_cuda_capacity"
+    ],
+    "failed_count": 1,
+    "first_failure": {
+      "category": "readiness",
+      "check": "exclusive_cuda_capacity",
+      "condition": "idle_gpu_with_required_free_mb gte expected value",
+      "expected": 20000,
+      "field": "idle_gpu_with_required_free_mb",
+      "observed": [
+        {
+          "index": 0,
+          "memory_free_mb": 5853,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18325,
+          "name": "NVIDIA GeForce RTX 3090",
+          "processes": [
+            {
+              "name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "pid": 772157,
+              "used_memory_mb": 18054
+            },
+            {
+              "name": ".venv/bin/python",
+              "pid": 2364911,
+              "used_memory_mb": 256
+            }
+          ],
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 23912,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "processes": [
+            {
+              "name": ".venv/bin/python",
+              "pid": 2364911,
+              "used_memory_mb": 256
+            }
+          ],
+          "utilization_pct": 21,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "operator": "gte",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7617_v665_schema_pilot",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "nvidia-smi"
+    },
+    "passed": false
+  },
+  "honest_verdict": "complete_blocked_exclusive_cuda_capacity",
+  "inference_substrate": "blocked_no_run",
+  "inference_substrate_class": "blocked_no_run",
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_completed": 0,
+    "forward_calls_failed": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "input_tokens": 0,
+    "model_loads_attempted": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "output_tokens": 0,
+    "warmup_calls": 0
+  },
+  "milestone": "2026.09.665",
+  "model_invoked": false,
+  "model_specs": [],
+  "online_capture_feasible_score": 0,
+  "paired_pilot_rows": [],
+  "phase_spans": [],
+  "planned_inference_substrate_class": "model_bounded_generation",
+  "preconditions_checked": [
+    {
+      "category": "validity",
+      "check": "named_input:CLAUDE.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:CODEX.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:research-program.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:exclusion_manifest.yaml",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:e2e-test-plan.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_template.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:current_work_receipt.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7303_validation_scope.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7604_v664_evidence_pilot.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7604_v664_evidence_pilot.py",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7616_v665_evidence_schema.json",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7604_v664_evidence_pilot.json",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7604_v664_evidence_pilot.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:spec.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:pilot_model_inputs.jsonl",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:schema_authority.json",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7616_v665_evidence_schema/schema_authority.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:capture_configuration.json",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7616_v665_evidence_schema/capture_configuration.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "driving_requirement",
+      "condition": "REQ-* contains expected value",
+      "expected": "REQ-REPORT-7617",
+      "field": "REQ-*",
+      "observed": "REQ-REPORT-7617",
+      "operator": "contains",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "research_reporting_spec"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_honest_verdict",
+      "condition": "honest_verdict eq expected value",
+      "expected": "complete_null_evidence_schema_ready",
+      "field": "honest_verdict",
+      "observed": "complete_null_evidence_schema_ready",
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_terminal"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_verdict_class",
+      "condition": "verdict_class eq expected value",
+      "expected": "null",
+      "field": "verdict_class",
+      "observed": "null",
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_terminal"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_flagged_adversarial",
+      "condition": "flagged_adversarial eq expected value",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_terminal"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_evidence_schema_ready_score",
+      "condition": "evidence_schema_ready_score eq expected value",
+      "expected": 1,
+      "field": "evidence_schema_ready_score",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_terminal"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_role_contract_ready_score",
+      "condition": "role_contract_ready_score eq expected value",
+      "expected": 1,
+      "field": "role_contract_ready_score",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_terminal"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_guarded_update_ready_score",
+      "condition": "guarded_update_ready_score eq expected value",
+      "expected": 1,
+      "field": "guarded_update_ready_score",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_terminal"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_reproducibility_checksum",
+      "condition": "reproducibility_checksum eq expected value",
+      "expected": "sha256:16a1052b93da21e5201c0dfb2c383273f46897908074ade485ae9f699e2f2268",
+      "field": "reproducibility_checksum",
+      "observed": "sha256:16a1052b93da21e5201c0dfb2c383273f46897908074ade485ae9f699e2f2268",
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_terminal"
+    },
+    {
+      "category": "validity",
+      "check": "exp7604_verdict_class",
+      "condition": "verdict_class eq expected value",
+      "expected": "null",
+      "field": "verdict_class",
+      "observed": "null",
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7604_v664_evidence_pilot.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7604_historical_context"
+    },
+    {
+      "category": "validity",
+      "check": "exp7604_flagged_adversarial",
+      "condition": "flagged_adversarial eq expected value",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7604_v664_evidence_pilot.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7604_historical_context"
+    },
+    {
+      "category": "validity",
+      "check": "exp7604_MODEL_SPECS",
+      "condition": "MODEL_SPECS eq expected value",
+      "expected": [
+        "unsloth/Qwen3.8-27B-GGUF"
+      ],
+      "field": "MODEL_SPECS",
+      "observed": [
+        "unsloth/Qwen3.8-27B-GGUF"
+      ],
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7604_v664_evidence_pilot.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7604_historical_context"
+    },
+    {
+      "category": "validity",
+      "check": "exp7604_reproducibility_checksum",
+      "condition": "reproducibility_checksum eq expected value",
+      "expected": "sha256:1681fd0b2daa76b612195d8e27d3f97b54cc222a84d2d2dec1c77e806c5dae0a",
+      "field": "reproducibility_checksum",
+      "observed": "sha256:1681fd0b2daa76b612195d8e27d3f97b54cc222a84d2d2dec1c77e806c5dae0a",
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7604_v664_evidence_pilot.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7604_historical_context"
+    },
+    {
+      "category": "validity",
+      "check": "frozen_disjoint_pilot_groups",
+      "condition": "component_hashes ordered_eq expected value",
+      "expected": [
+        "sha256:7c28304dd46b096e234742e59bbf88b5208548225c427641547e23401e373da4",
+        "sha256:5481a5993c4e8488eb9b00d0245cc07cf527a2df9a4c6f2beab5e104afb584be",
+        "sha256:8250589339bd7bc0dea485aecf136f89966d92ff58fec019e1af9923a2955eb7",
+        "sha256:54e8ef94946cc3f75790d598d3cae106a0a4a9931d2b2f976228bd49c010b6ba",
+        "sha256:72f9446d8704d0371ac9d6ec1231f92f0c00661644499d15be1bbe22d3704642",
+        "sha256:81bd2bdd91a0567437a8e89d33d4b6a697f7f0a199612934a0039f5c2e2bb2d7",
+        "sha256:fd0636489092fb1466fd949ad71982104da55b50f215f2bddc434f4d06559e24",
+        "sha256:5f6ca927809e4c23e870f3dbae9630b7095f933f79d6a256142adf247a3ed356"
+      ],
+      "field": "component_hashes",
+      "observed": [
+        "sha256:7c28304dd46b096e234742e59bbf88b5208548225c427641547e23401e373da4",
+        "sha256:5481a5993c4e8488eb9b00d0245cc07cf527a2df9a4c6f2beab5e104afb584be",
+        "sha256:8250589339bd7bc0dea485aecf136f89966d92ff58fec019e1af9923a2955eb7",
+        "sha256:54e8ef94946cc3f75790d598d3cae106a0a4a9931d2b2f976228bd49c010b6ba",
+        "sha256:72f9446d8704d0371ac9d6ec1231f92f0c00661644499d15be1bbe22d3704642",
+        "sha256:81bd2bdd91a0567437a8e89d33d4b6a697f7f0a199612934a0039f5c2e2bb2d7",
+        "sha256:fd0636489092fb1466fd949ad71982104da55b50f215f2bddc434f4d06559e24",
+        "sha256:5f6ca927809e4c23e870f3dbae9630b7095f933f79d6a256142adf247a3ed356"
+      ],
+      "operator": "ordered_eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_canonical_inputs"
+    },
+    {
+      "category": "validity",
+      "check": "pilot_groups_excluded_from_measured_roles",
+      "condition": "role_contract_receipt.disjoint_pilot_count eq expected value",
+      "expected": {
+        "pilot_count": 8,
+        "pilot_disjoint": true
+      },
+      "field": "role_contract_receipt.disjoint_pilot_count",
+      "observed": {
+        "pilot_count": 8,
+        "pilot_disjoint": true
+      },
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7616_role_contract"
+    },
+    {
+      "category": "validity",
+      "check": "declared_tool_versions",
+      "condition": "python_pytest_ruff_mypy all_declared expected value",
+      "expected": [
+        "python",
+        "pytest",
+        "ruff",
+        "mypy"
+      ],
+      "field": "python_pytest_ruff_mypy",
+      "observed": {
+        "mypy": "mypy 2.2.0 (compiled: yes)",
+        "pytest": "pytest 9.0.3",
+        "python": "Python 3.12.13",
+        "ruff": "ruff 0.15.17"
+      },
+      "operator": "all_declared",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "worktree_virtualenv"
+    },
+    {
+      "category": "readiness",
+      "check": "cached_sota_pair_q4_k_m",
+      "condition": "hf_id_quantization_bytes authenticated expected value",
+      "expected": {
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "minimum_bytes": 15000000000,
+        "quantization": "Q4_K_M"
+      },
+      "field": "hf_id_quantization_bytes",
+      "observed": {
+        "bytes": 17106775008,
+        "declared_name": "Qwen3.8-27B-Q4_K_M.gguf",
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "resolved_name": "7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "operator": "authenticated",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "cached_sota_pair"
+    },
+    {
+      "category": "readiness",
+      "check": "identical_v664_model_bytes",
+      "condition": "model_sha256 eq expected value",
+      "expected": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "field": "model_sha256",
+      "observed": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "exp7604_model_receipt"
+    },
+    {
+      "category": "readiness",
+      "check": "embedded_tokenizer",
+      "condition": "embedded_gguf_tokenizer loadable expected value",
+      "expected": true,
+      "field": "embedded_gguf_tokenizer",
+      "observed": {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "passed": true
+      },
+      "operator": "loadable",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "gguf_tokenizer_loadable"
+    },
+    {
+      "category": "readiness",
+      "check": "exclusive_cuda_capacity",
+      "condition": "idle_gpu_with_required_free_mb gte expected value",
+      "expected": 20000,
+      "field": "idle_gpu_with_required_free_mb",
+      "observed": [
+        {
+          "index": 0,
+          "memory_free_mb": 5853,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 18325,
+          "name": "NVIDIA GeForce RTX 3090",
+          "processes": [
+            {
+              "name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+              "pid": 772157,
+              "used_memory_mb": 18054
+            },
+            {
+              "name": ".venv/bin/python",
+              "pid": 2364911,
+              "used_memory_mb": 256
+            }
+          ],
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 23912,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "processes": [
+            {
+              "name": ".venv/bin/python",
+              "pid": 2364911,
+              "used_memory_mb": 256
+            }
+          ],
+          "utilization_pct": 21,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "operator": "gte",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7617_v665_schema_pilot",
+      "principle": "Unavailable or changed input bytes block current evidence.",
+      "upstream": "nvidia-smi"
+    }
+  ],
+  "purchase_authorized": false,
+  "random_seed": 7617001,
+  "random_seeds": [
+    {
+      "purpose": "planned_arm_order",
+      "seed": 7617002
+    }
+  ],
+  "reproducibility_checksum": "sha256:6320b9d61f2ba133905b0e12a281a951429e1d4f7e6511744285ed16d1908954",
+  "research_conductor_modified": false,
+  "research_roadmap_modified": false,
+  "rows": [],
+  "run_date": "20260924",
+  "sample_size_budget": {
+    "censored": 8,
+    "excluded": 0,
+    "excluded_from_all_measured_roles": 8,
+    "independent_unit": "frozen_pilot_group",
+    "intended": 8,
+    "observed": 0
+  },
+  "schema": "carnot.exp7617.v665.schema_pilot.v1",
+  "selected_config_path": null,
+  "semantic_benefit_claim": false,
+  "source_artifact_hashes": [
+    {
+      "bytes": 318291,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 2697,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 28560,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 63348,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "producer": "declared_task_input",
+      "sha256": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 10701,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 115811,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 12790,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 13393,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 87396,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7604_v664_evidence_pilot.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:0f9b96cbad05102381e011e5c1e53cc616d51effcd5de412b34637e3e6b08f80",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 4843851,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "producer": "declared_task_input",
+      "sha256": "sha256:d9f34c4d37ba465b6f7a1ef8adfd71903a896a02355a6cf5d4bc93a2c3785806",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 522424,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7604_v664_evidence_pilot.json",
+      "producer": "declared_task_input",
+      "sha256": "sha256:d354cb4172cdab522fd097321e17afd000ebc0f44187fbd5549e16e0e7aad229",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 4669378,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:c5f7a6dd3d5437b28932f3ff5bfd8303ab30bce8c3c33ffbbed152c43b8c345a",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 97937,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "producer": "declared_task_input",
+      "sha256": "sha256:51368fff2f49215e7315ce5f43371c1c836cbaa8ad96caa484e34bfc47c98c8e",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 75739,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7616_v665_evidence_schema/schema_authority.json",
+      "producer": "declared_task_input",
+      "sha256": "sha256:a22ba07539a20d21a7ac0a7f5df218a3e9116c27ab9457c14973c23eecc63047",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 6384,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7616_v665_evidence_schema/capture_configuration.json",
+      "producer": "declared_task_input",
+      "sha256": "sha256:9cb0fed6593364ef859e9c1e8f1bc9352f304d7638167c2d20589bea06d0bcca",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 17106775008,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "producer": "cached_sota_pair",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "source_class": "authenticated_model"
+    }
+  ],
+  "status": "complete",
+  "submission_authorized": false,
+  "terminal_reader_outcomes": [
+    {
+      "exit_code": 0,
+      "log_sha256": "sha256:476c5df8cdefcb5cc97a9f90476948ccf11b08881a4632863bd129a484e71a82",
+      "name": "fresh_process_cold_replay",
+      "passed": true,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "exit_code": 0,
+      "log_sha256": "sha256:d99b5447991ff1f15160cab3dd91dee45bab2aa932c7c458d048618c5de46ebd",
+      "name": "independent_reduction",
+      "passed": true,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "exit_code": 0,
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "passed": true,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "exit_code": 0,
+      "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+      "name": "verdict_row_consistency_strict",
+      "passed": true,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    }
+  ],
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7617_v665_schema_pilot.py --root /home/ianblenke/github.com/ianblenke/carnot --cold-replay /tmp/carnot-exp7617-1tkb5dyk/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7617_v665_schema_pilot.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--cold-replay",
+        "/tmp/carnot-exp7617-1tkb5dyk/terminal_candidate.json"
+      ],
+      "duration_s": 0.6634676699759439,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7617-1tkb5dyk/logs/terminal/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:476c5df8cdefcb5cc97a9f90476948ccf11b08881a4632863bd129a484e71a82",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"candidate_sha256\": \"sha256:1ffd1f4ad5052c643cb982212c842e20a1b1506a60886eb3154b9c40ed1eabc8\", \"errors\": [], \"mode\": \"cold_replay\", \"paired_row_count\": 0, \"passed\": true}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7617_v665_schema_pilot.py --root /home/ianblenke/github.com/ianblenke/carnot --independent-reduce /tmp/carnot-exp7617-1tkb5dyk/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7617_v665_schema_pilot.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--independent-reduce",
+        "/tmp/carnot-exp7617-1tkb5dyk/terminal_candidate.json"
+      ],
+      "duration_s": 0.6759946779930033,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7617-1tkb5dyk/logs/terminal/01_independent_reduction.log",
+      "log_sha256": "sha256:d99b5447991ff1f15160cab3dd91dee45bab2aa932c7c458d048618c5de46ebd",
+      "name": "independent_reduction",
+      "output_tail": "{\"blocked_without_fabricated_rows\": true, \"comparative_metrics_recomputed_from_rows\": false, \"errors\": [], \"mode\": \"independent_reduction\", \"passed\": true, \"row_reduction_sha256\": \"sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\"}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7617-1tkb5dyk/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7617-1tkb5dyk/terminal_candidate.json"
+      ],
+      "duration_s": 0.5636013530311175,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7617-1tkb5dyk/logs/terminal/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7617-1tkb5dyk/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7617-1tkb5dyk/terminal_candidate.json"
+      ],
+      "duration_s": 0.02521902899025008,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7617-1tkb5dyk/logs/terminal/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
