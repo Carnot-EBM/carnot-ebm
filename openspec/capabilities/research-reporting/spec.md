@@ -78660,3 +78660,103 @@ receipts and hashes and SHALL publish the validated artifact atomically.
 ### Implementation Status (REQ-REPORT-7585)
 
 Planned. The conductor owns later status, changelog, and traceability reconciliation.
+
+## REQ-REPORT-7586: Reconcile all fourteen V662 outcomes
+
+Experiment 7586 SHALL resolve the matching staged V662 roadmap when present.
+Otherwise, it SHALL resolve the matching active V662 roadmap. It SHALL compare
+that authority with the independent fourteen-row contract from Experiment 7573.
+The ordered inventory SHALL contain Exp7573 through Exp7586 exactly once. The
+current row SHALL not require its future artifact. A conductor pre-gate artifact
+SHALL satisfy custody for its matching task without becoming producer evidence.
+An absent external producer SHALL remain absent and SHALL not become a zero.
+
+Every task SHALL have exactly one disposition: `valid_terminal`,
+`absent_external_or_pre_gated`, `disqualified`, or `owned_incomplete`.
+Disposition rows SHALL retain the declared deliverable, resolved evidence path,
+exact byte hash when present, original verdict, original substrate, adversarial
+flag, and producer-validation state. Flagged or disqualified evidence SHALL stay
+visible but SHALL not support a scientific conclusion. All source-data findings
+SHALL have claim scope `descriptive_reuse`.
+
+The capstone SHALL reduce four branches independently. The static proper-loss
+branch SHALL use the independent Exp7579 audit and preserve the supported null.
+The delayed-learning branch SHALL preserve its no-benefit and retention-failure
+outcomes separately. The live-verifier branch SHALL preserve Exp7580 fixture
+readiness, Exp7581's failed ARC checks, the panel pre-gate artifact, the absent
+panel, and Exp7584's blocked audit without asserting a semantic null. The
+portable-service branch SHALL preserve Exp7585's Rust complete-service benefit
+and all three board states without promoting that result into another branch.
+
+Literal `prior_failures` equality SHALL control retirement. A second valid null
+for the unchanged proper-loss construction SHALL retire only that construction.
+External absence, invalid ARC support, or truncated generation SHALL not retire
+the ARC hypothesis. Each continuation SHALL name the exact changed prerequisite
+or mechanism. The report SHALL preserve all producer and retirement records.
+
+The capstone SHALL perform aggregation only. It SHALL declare `MODEL_SPECS=[]`,
+`model_specs=[]`, false `model_invoked`, and zero current loads, forwards,
+generations, calls, and tokens. Historical model identities SHALL remain source
+metadata. The artifact SHALL report actual and planned substrate class
+`aggregation`, current monotonic duration, phase spans, source hashes, and
+validation receipt hashes. `capstone_complete_score` SHALL equal one only when
+all fourteen dispositions and owned validation are complete. It SHALL not imply
+research benefit.
+
+The aggregate terminal class SHALL be blocked when required external evidence
+is absent, disqualified when present required evidence is invalid, null when all
+required evidence is valid without benefit, and partial only for unfinished work
+owned by Exp7586. Every blocked result SHALL include a gate summary with check,
+upstream, path, field, operator, expected value, and observed value. Validity,
+readiness, benefit, retention, and freshness SHALL remain separate gates.
+
+The report SHALL compute unchanged publication G1 through G4 through
+`scripts/publication_gate.py --json`. It SHALL report `unmet_gates` and the
+unchanged conjunction `paper_ready`. It SHALL not publish, alter operator prose,
+change the active roadmap, modify the conductor, submit externally, or push.
+
+The affected manifest SHALL freeze the new test, module, thin entrypoint, and
+this requirement. Validation SHALL prove worktree imports, run focused pytest,
+100 percent changed-module coverage, scoped Ruff, changed-module mypy, and
+scoped specification coverage. The declared entrypoint and a fresh process SHALL
+replay the capability. Independent reduction, `adversarial_verify.py`, and
+strict row consistency SHALL accept the exact terminal candidate before atomic
+publication. This read-only report has no numbered runtime E2E.
+
+### SCENARIO-REPORT-7586-INVENTORY: Fourteen dispositions preserve custody
+
+**Given** the exact V662 authority, contract, producers, and pre-gate evidence
+**When** Exp7586 builds the ordered task inventory
+**Then** all fourteen tasks have one exact disposition and source identity
+**And** the current row does not depend on its future artifact
+**And** pre-gate evidence and absent producers remain distinct.
+
+### SCENARIO-REPORT-7586-BRANCHES: Independent outcomes do not promote
+
+**Given** audited decision learning, blocked ARC panels, and portable service rows
+**When** Exp7586 reduces the four branch conclusions
+**Then** static and learning nulls stay separate from ARC invalidity
+**And** Rust service benefit stays separate from board and science claims
+**And** every source-data conclusion remains descriptive reuse.
+
+### SCENARIO-REPORT-7586-RETIREMENT: Only repeated constructions retire
+
+**Given** literal prior verdicts and current independent conclusions
+**When** Exp7586 decides continuation and retirement
+**Then** a repeated supported proper-loss null closes only that construction
+**And** external absence or invalid support does not retire the ARC hypothesis
+**And** every continuation names a falsifiable changed prerequisite.
+
+### SCENARIO-REPORT-7586-VALIDATION: Exact readers control publication
+
+**Given** a frozen affected manifest and terminal candidate
+**When** scoped checks, entrypoint replay, cold reduction, and strict readers run
+**Then** every required receipt passes before atomic publication
+**And** imports resolve below this worktree with full changed-module coverage
+**And** stable publication gates are reported without publication.
+
+### Implementation Status (REQ-REPORT-7586)
+
+Implemented by the reusable Exp7586 reducer, thin CLI, requirement-linked
+tests, exact source custody, four independent branch conclusions, and strict
+terminal readers. The conductor owns later ops and traceability reconciliation.
