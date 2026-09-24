@@ -78850,3 +78850,95 @@ read-only report has no numbered runtime E2E.
 Implemented by the reusable Exp7587 reducer, thin CLI, requirement-linked
 tests, exact V662 custody, bounded primary-method mapping, and strict terminal
 readers. The conductor owns later ops and traceability reconciliation.
+
+## REQ-REPORT-7596: Audit V663 evidence and delayed updates independently
+
+Experiment 7596 SHALL run unconditionally as an aggregation-only audit. It
+SHALL inventory the declared Experiment 7590 through 7595 evidence paths. It
+SHALL distinguish an authenticated producer, a missing producer, a conductor
+pre-gate artifact, and an adversarially flagged producer. Missing external
+evidence SHALL produce a terminal blocked result, not partial work or a
+scientific null. Every failed check SHALL retain the upstream, path, field,
+operator, expected value, and observed value.
+
+When the Experiment 7594 producer is valid, the static branch SHALL recompute
+exact input round-trip, full-text pointer coverage, all eight features, frozen
+probabilities, human-label losses, typed decisions, and costs from authenticated
+sidecars. It SHALL rescore all 40 source groups without importing a producer
+aggregate reducer. Deterministic values SHALL agree within `1e-10`. Source
+groups, not arms, seeds, or windows, SHALL own the independent sample count.
+
+When the Experiment 7595 producer is valid, the online branch SHALL reconstruct
+prediction, held-back release, admission, update, persistence, reload, and
+retention chronology from authenticated logs. It SHALL replay all 80 source
+groups in five registered orders. Admission and evaluation labels SHALL never
+enter gradients. Rejected updates SHALL not count as retained usefulness.
+Stored bootstrap draws and a private independent resample subset SHALL verify
+the declared uncertainty within recorded tolerances.
+
+Private mutations SHALL reject dropped rows, inflated independent counts,
+inverted Brier signs, unchanged controls, future-origin shuffles, leaked anchor
+or evaluator roles, and duplicated accepted updates. Each receipt SHALL name
+the changed private input and failed check. No private corruption SHALL enter
+the published artifact.
+
+Incremental evidence, probability, decision cost, causal update behavior,
+retention, and exposure conclusions SHALL remain separate. Each branch SHALL
+separate validity, readiness, benefit, retention, and freshness. Missing
+capture SHALL remain blocked. A complete valid no-benefit measurement SHALL
+remain null. Oracle-defined controls SHALL remain circular positive evidence.
+No result SHALL activate production or claim a hidden score.
+
+The task SHALL declare `inference_substrate_class=aggregation`,
+`inference_substrate=aggregation_from_upstream_artifacts`, `MODEL_SPECS=[]`,
+and zero current model loads, forwards, generations, calls, and tokens. It
+SHALL record monotonic current duration, explicit seeds, source byte hashes,
+field principles, and exact validation receipts. The affected-file manifest
+SHALL freeze this requirement, one reusable module, one thin CLI, and one
+requirement-linked test.
+
+Validation SHALL use private paths below `/tmp`. It SHALL run focused serial
+pytest without ambient addopts, separate 100 percent changed-module coverage,
+scoped Ruff, changed-module mypy, and scoped specification coverage. The
+declared entrypoint, fresh-process cold replay, independent reduction,
+adversarial verification, and strict row consistency SHALL accept the exact
+candidate before atomic publication. This read-only report has no numbered
+runtime E2E.
+
+### SCENARIO-REPORT-7596-BLOCKED: Missing capture remains external absence
+
+**Given** the Experiment 7594 and 7595 producer paths are absent
+**When** Experiment 7596 inventories the complete V663 evidence chain
+**Then** its verdict is `complete_blocked_missing_v663_evidence_producers`
+**And** its class is blocked rather than partial or null
+**And** each missing branch names the exact failed path and expected state.
+
+### SCENARIO-REPORT-7596-CUSTODY: Gate and producer evidence stay distinct
+
+**Given** absent producer paths, a present conductor pre-gate artifact, and a
+private flagged producer fixture
+**When** source custody is classified and authenticated
+**Then** each receives a different disposition
+**And** the flagged producer stays visible but cannot open a readiness gate.
+
+### SCENARIO-REPORT-7596-MUTATIONS: Seven private corruptions fail closed
+
+**Given** compact valid static and online audit fixtures
+**When** each registered row, count, sign, control, chronology, role, or update
+corruption is applied separately
+**Then** every corruption fails its named check
+**And** no failed mutation can qualify a branch.
+
+### SCENARIO-REPORT-7596-TERMINAL: Exact readers control publication
+
+**Given** a frozen affected-file manifest and terminal candidate
+**When** scoped validation, cold replay, independent reduction, and both strict
+terminal readers run
+**Then** every required receipt passes before atomic publication
+**And** worktree imports resolve below the declared root
+**And** the artifact reports zero current model work.
+
+### Implementation Status (REQ-REPORT-7596)
+
+Planned. Experiment 7596 implementation and terminal receipts will complete
+this requirement.

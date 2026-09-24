@@ -1,0 +1,822 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "producer_validity",
+      "expected": "qualified",
+      "observed": "missing_external",
+      "op": "eq",
+      "passed": false,
+      "principle": "Validity, readiness, benefit, retention, and freshness remain separate."
+    },
+    {
+      "category": "readiness",
+      "check": "static_readiness",
+      "expected": "qualified",
+      "observed": "not_started",
+      "op": "eq",
+      "passed": false,
+      "principle": "Validity, readiness, benefit, retention, and freshness remain separate."
+    },
+    {
+      "category": "benefit",
+      "check": "scientific_benefit",
+      "expected": "qualified",
+      "observed": "not_measured",
+      "op": "eq",
+      "passed": false,
+      "principle": "Validity, readiness, benefit, retention, and freshness remain separate."
+    },
+    {
+      "category": "retention",
+      "check": "retained_usefulness",
+      "expected": "qualified",
+      "observed": "not_measured",
+      "op": "eq",
+      "passed": false,
+      "principle": "Validity, readiness, benefit, retention, and freshness remain separate."
+    },
+    {
+      "category": "freshness",
+      "check": "fresh_confirmatory_data",
+      "expected": "qualified",
+      "observed": "not_assessed",
+      "op": "eq",
+      "passed": false,
+      "principle": "Validity, readiness, benefit, retention, and freshness remain separate."
+    }
+  ],
+  "applicable_numbered_e2e": [],
+  "branch_conclusions": [
+    {
+      "benefit": "not_measured",
+      "branch": "incremental_evidence",
+      "conclusion": "missing_external_evidence_not_scientific_failure",
+      "freshness": "not_assessed",
+      "readiness": "not_established",
+      "retention": "not_applicable",
+      "upstream": "exp7594-decision-evaluation",
+      "validity": "blocked_missing_capture"
+    },
+    {
+      "benefit": "not_measured",
+      "branch": "probability",
+      "conclusion": "missing_external_evidence_not_scientific_failure",
+      "freshness": "not_assessed",
+      "readiness": "not_established",
+      "retention": "not_applicable",
+      "upstream": "exp7594-decision-evaluation",
+      "validity": "blocked_missing_capture"
+    },
+    {
+      "benefit": "not_measured",
+      "branch": "decision_cost",
+      "conclusion": "missing_external_evidence_not_scientific_failure",
+      "freshness": "not_assessed",
+      "readiness": "not_established",
+      "retention": "not_applicable",
+      "upstream": "exp7594-decision-evaluation",
+      "validity": "blocked_missing_capture"
+    },
+    {
+      "benefit": "not_measured",
+      "branch": "causal_update_behavior",
+      "conclusion": "missing_external_evidence_not_scientific_failure",
+      "freshness": "not_assessed",
+      "readiness": "not_established",
+      "retention": "not_applicable",
+      "upstream": "exp7595-guarded-learning",
+      "validity": "blocked_missing_capture"
+    },
+    {
+      "benefit": "not_measured",
+      "branch": "retention",
+      "conclusion": "missing_external_evidence_not_scientific_failure",
+      "freshness": "not_assessed",
+      "readiness": "not_established",
+      "retention": "not_measured",
+      "upstream": "exp7595-guarded-learning",
+      "validity": "blocked_missing_capture"
+    },
+    {
+      "benefit": "not_measured",
+      "branch": "exposure",
+      "conclusion": "missing_external_evidence_not_scientific_failure",
+      "freshness": "not_assessed",
+      "readiness": "not_established",
+      "retention": "not_applicable",
+      "upstream": "exp7594-and-exp7595",
+      "validity": "blocked_missing_capture"
+    }
+  ],
+  "duration_s": 9.923543816024903,
+  "exact_new_information_source_earned_continuation": null,
+  "experiment_id": "exp7596-v663-evidence-audit",
+  "field_principles": {
+    "MODEL_SPECS": "No current LLM call means the current model roster is empty.",
+    "acceptance_gate_results": "Validity, readiness, benefit, retention, and freshness stay separate.",
+    "branch_conclusions": "Positive, null, missing, and invalid branches stay individually visible.",
+    "duration_s": "Monotonic current work excludes inherited time and artificial padding.",
+    "field_principles": "Each required field carries its own omission guard.",
+    "flagged_adversarial": "The terminal reader outcome cannot open a gate when evidence is flagged.",
+    "gate_check_summary": "A blocked result retains every operand needed to reproduce the failure.",
+    "honest_verdict": "A complete prefix reports terminal work; completion does not prove benefit.",
+    "inference_substrate": "Current aggregation cannot inherit upstream GPU execution.",
+    "inference_substrate_class": "Actual and planned execution classes remain explicit.",
+    "invocation_counts": "Loads, forwards, generations, and tokens are counted independently from history.",
+    "mutation_receipts": "Actual private changes and failed checks replace a list of intended attacks.",
+    "online_audit_ready_score": "Chronology validity remains separate from retention success.",
+    "random_seed": "Every stochastic audit stage must have an explicit replay seed.",
+    "reproducibility_checksum": "One digest binds immutable sources, configuration, and terminal reduction.",
+    "rows": "Each measured unit and arm must retain absolute operands, direction, seed, missingness, and provenance.",
+    "sample_size_budget": "Source groups own inference; seeds and windows do not multiply sample size.",
+    "source_artifact_hashes": "Producer, absence, pre-gate, and flagged custody remain distinct.",
+    "static_audit_ready_score": "Static validity remains separate from static benefit.",
+    "validation_receipts": "Commands, exits, worktree, and log hashes bind terminal checks.",
+    "verdict_class": "A closed class keeps missing external work blocked rather than partial or null.",
+    "verifier_is_oracle": "Exact labels and hand-built controls cannot support an oracle-distinct claim."
+  },
+  "flagged_adversarial": false,
+  "fresh_confirmatory_claim_allowed": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      "required_scientific_producer",
+      "required_scientific_producer"
+    ],
+    "failed_count": 2,
+    "first_failure": {
+      "check": "required_scientific_producer",
+      "expected": true,
+      "field": "exists_and_eligible",
+      "observed": false,
+      "op": "eq",
+      "path": "results/experiment_7594_v663_decision_evaluation.json",
+      "upstream": "exp7594-decision-evaluation"
+    },
+    "passed": false
+  },
+  "hidden_score_claimed": false,
+  "honest_verdict": "complete_blocked_missing_v663_evidence_producers",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "forward_calls": 0,
+    "generation_calls": 0,
+    "input_tokens": 0,
+    "model_loads": 0,
+    "output_tokens": 0
+  },
+  "milestone": "2026.09.663",
+  "model_invoked": false,
+  "model_specs": [],
+  "mutation_receipts": [
+    {
+      "after_sha256": "sha256:3d97156a7b9991ad53d1d4a10bc453fed9e09b6d28b12b9aff7601661396ae96",
+      "before_sha256": "sha256:5632f0e7ffa8be7bc6252920ccf0eed2ddc128f8b5e86d19218e1ad8ec27d75a",
+      "changed_private_path": "static_group_ids[-1]",
+      "expected_failure": "static_row_count_mismatch",
+      "mutation": "dropped_rows",
+      "observed_failures": [
+        "static_row_count_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "after_sha256": "sha256:90ac193dcf1260f775517bb3f1f8ca8d71dee0cd7ab4fa01b73cc0a9678197fd",
+      "before_sha256": "sha256:5632f0e7ffa8be7bc6252920ccf0eed2ddc128f8b5e86d19218e1ad8ec27d75a",
+      "changed_private_path": "declared_online_count",
+      "expected_failure": "independent_sample_count_mismatch",
+      "mutation": "inflated_independent_count",
+      "observed_failures": [
+        "independent_sample_count_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "after_sha256": "sha256:3b8a6728db057b4ab4c3664d0d13fe4b95f3694fa92a2756836f76a8572e1776",
+      "before_sha256": "sha256:5632f0e7ffa8be7bc6252920ccf0eed2ddc128f8b5e86d19218e1ad8ec27d75a",
+      "changed_private_path": "brier_improvement",
+      "expected_failure": "brier_sign_mismatch",
+      "mutation": "inverted_brier_sign",
+      "observed_failures": [
+        "brier_sign_mismatch"
+      ],
+      "passed": true
+    },
+    {
+      "after_sha256": "sha256:68263afde688c91d6a4db956a7feb7eddf4ef1b587af2edf66571a928f638c78",
+      "before_sha256": "sha256:5632f0e7ffa8be7bc6252920ccf0eed2ddc128f8b5e86d19218e1ad8ec27d75a",
+      "changed_private_path": "control_predictions",
+      "expected_failure": "control_unchanged",
+      "mutation": "unchanged_controls",
+      "observed_failures": [
+        "control_unchanged"
+      ],
+      "passed": true
+    },
+    {
+      "after_sha256": "sha256:6b55e036a334d1adc52835915a9cfad9ded2b15bee206b2b87e31b2fdcb124df",
+      "before_sha256": "sha256:5632f0e7ffa8be7bc6252920ccf0eed2ddc128f8b5e86d19218e1ad8ec27d75a",
+      "changed_private_path": "shuffle_pairs[0].source_release",
+      "expected_failure": "future_origin_shuffle",
+      "mutation": "future_origin_shuffle",
+      "observed_failures": [
+        "future_origin_shuffle"
+      ],
+      "passed": true
+    },
+    {
+      "after_sha256": "sha256:7df4f56ffd2ebb157e8dd67d9dcfb7e3d3c7ff07c40a343a80539e545d6b9ed5",
+      "before_sha256": "sha256:5632f0e7ffa8be7bc6252920ccf0eed2ddc128f8b5e86d19218e1ad8ec27d75a",
+      "changed_private_path": "gradient_roles[-1]",
+      "expected_failure": "gradient_role_leak",
+      "mutation": "leaked_roles",
+      "observed_failures": [
+        "gradient_role_leak"
+      ],
+      "passed": true
+    },
+    {
+      "after_sha256": "sha256:e1a086626abacd09b1cf9c6bedbbf68958646677421f2775ce3295125c349f08",
+      "before_sha256": "sha256:5632f0e7ffa8be7bc6252920ccf0eed2ddc128f8b5e86d19218e1ad8ec27d75a",
+      "changed_private_path": "accepted_update_ids[-1]",
+      "expected_failure": "duplicate_accepted_update",
+      "mutation": "duplicated_accepted_update",
+      "observed_failures": [
+        "duplicate_accepted_update"
+      ],
+      "passed": true
+    }
+  ],
+  "online_audit_ready_score": 0,
+  "oracle_distinct_claim_allowed": false,
+  "phase_spans": [
+    {
+      "completed_units": 7,
+      "duration_s": 0.0045162379974499345,
+      "end_offset_s": 0.004541376023553312,
+      "phase": "preconditions",
+      "start_offset_s": 2.5138026103377342e-05
+    },
+    {
+      "completed_units": 11,
+      "duration_s": 0.006345853005768731,
+      "end_offset_s": 0.010913628007983789,
+      "phase": "manifest",
+      "start_offset_s": 0.004567775002215058
+    },
+    {
+      "completed_units": 7,
+      "duration_s": 0.00016754399985074997,
+      "end_offset_s": 0.0111014400026761,
+      "phase": "private_mutations",
+      "start_offset_s": 0.01093389600282535
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 8.473025649989722,
+      "end_offset_s": 8.484506312001031,
+      "phase": "scoped_validation",
+      "start_offset_s": 0.011480662011308596
+    },
+    {
+      "completed_units": 4,
+      "duration_s": 1.436705575993983,
+      "end_offset_s": 9.923516454000492,
+      "phase": "terminal_validation",
+      "start_offset_s": 8.486810878006509
+    }
+  ],
+  "planned_inference_substrate_class": "aggregation",
+  "preconditions_checked": [
+    {
+      "check": "required_path",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "AGENTS.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "CODEX.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "required_path",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "required": true,
+      "upstream": "worktree"
+    },
+    {
+      "check": "matching_requirement",
+      "expected": true,
+      "field": "REQ-REPORT-7596",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "required": true,
+      "upstream": "openspec"
+    },
+    {
+      "check": "required_scientific_producer",
+      "expected": true,
+      "field": "exists_and_eligible",
+      "observed": false,
+      "op": "eq",
+      "passed": false,
+      "path": "results/experiment_7594_v663_decision_evaluation.json",
+      "required": true,
+      "upstream": "exp7594-decision-evaluation"
+    },
+    {
+      "check": "required_scientific_producer",
+      "expected": true,
+      "field": "exists_and_eligible",
+      "observed": false,
+      "op": "eq",
+      "passed": false,
+      "path": "results/experiment_7595_v663_guarded_learning.json",
+      "required": true,
+      "upstream": "exp7595-guarded-learning"
+    }
+  ],
+  "prior_verdict_disposition": {
+    "action": "not_triggered_by_missing_external_resources",
+    "literal_prior_verdict": "complete_null_independent_static_and_learning_audit",
+    "repeated": false,
+    "retire_if_same_verdict": true,
+    "scientific_hypothesis_retired": false
+  },
+  "production_activation_authorized": false,
+  "random_seed": 7596001,
+  "reproducibility_checksum": "sha256:f58483e747dfabdc7cf3b7a4d6dd1c122392fe276119b432394f65fb19eac65f",
+  "rows": [],
+  "run_date": "20260924",
+  "sample_size_budget": [
+    {
+      "branch": "static",
+      "censored": 0,
+      "excluded": 0,
+      "independent_unit": "source_group",
+      "intended": 40,
+      "missing_external": 40,
+      "observed": 0
+    },
+    {
+      "branch": "online",
+      "censored": 0,
+      "excluded": 0,
+      "independent_unit": "source_group",
+      "intended": 80,
+      "missing_external": 80,
+      "observed": 0,
+      "orders_multiply_independent_units": false,
+      "registered_orders": 5
+    }
+  ],
+  "schema": "carnot.exp7596.v663.evidence_audit.v1",
+  "source_artifact_hashes": [
+    {
+      "bytes": 3364,
+      "conductor_path": "results/experiment_7590_evidence_pilot.json",
+      "disposition": "conductor_pre_gate",
+      "eligible_for_science": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_7590_evidence_pilot.json",
+      "producer_path": "results/experiment_7590_v663_evidence_pilot.json",
+      "sha256": "sha256:7c93ca2cc5d56149ec2c81f42a86a51abceaed51dd6636819782645c5e11ca8a",
+      "upstream": "exp7590-evidence-pilot",
+      "verdict_class": "blocked"
+    },
+    {
+      "bytes": null,
+      "conductor_path": "results/experiment_7591_fit_evidence.json",
+      "disposition": "missing_producer",
+      "eligible_for_science": false,
+      "flagged_adversarial": null,
+      "honest_verdict": null,
+      "path": "results/experiment_7591_v663_fit_evidence.json",
+      "producer_path": "results/experiment_7591_v663_fit_evidence.json",
+      "sha256": null,
+      "upstream": "exp7591-fit-evidence",
+      "verdict_class": null
+    },
+    {
+      "bytes": null,
+      "conductor_path": "results/experiment_7592_test_online_evidence.json",
+      "disposition": "missing_producer",
+      "eligible_for_science": false,
+      "flagged_adversarial": null,
+      "honest_verdict": null,
+      "path": "results/experiment_7592_v663_test_online_evidence.json",
+      "producer_path": "results/experiment_7592_v663_test_online_evidence.json",
+      "sha256": null,
+      "upstream": "exp7592-test-online-evidence",
+      "verdict_class": null
+    },
+    {
+      "bytes": null,
+      "conductor_path": "results/experiment_7593_evidence_energy.json",
+      "disposition": "missing_producer",
+      "eligible_for_science": false,
+      "flagged_adversarial": null,
+      "honest_verdict": null,
+      "path": "results/experiment_7593_v663_evidence_energy.json",
+      "producer_path": "results/experiment_7593_v663_evidence_energy.json",
+      "sha256": null,
+      "upstream": "exp7593-evidence-energy",
+      "verdict_class": null
+    },
+    {
+      "bytes": null,
+      "conductor_path": "results/experiment_7594_decision_evaluation.json",
+      "disposition": "missing_producer",
+      "eligible_for_science": false,
+      "flagged_adversarial": null,
+      "honest_verdict": null,
+      "path": "results/experiment_7594_v663_decision_evaluation.json",
+      "producer_path": "results/experiment_7594_v663_decision_evaluation.json",
+      "sha256": null,
+      "upstream": "exp7594-decision-evaluation",
+      "verdict_class": null
+    },
+    {
+      "bytes": null,
+      "conductor_path": "results/experiment_7595_guarded_learning.json",
+      "disposition": "missing_producer",
+      "eligible_for_science": false,
+      "flagged_adversarial": null,
+      "honest_verdict": null,
+      "path": "results/experiment_7595_v663_guarded_learning.json",
+      "producer_path": "results/experiment_7595_v663_guarded_learning.json",
+      "sha256": null,
+      "upstream": "exp7595-guarded-learning",
+      "verdict_class": null
+    },
+    {
+      "bytes": 40410,
+      "conductor_path": null,
+      "disposition": "task_owned_source",
+      "eligible_for_science": false,
+      "flagged_adversarial": false,
+      "honest_verdict": null,
+      "path": "python/carnot/experiment_7596_v663_evidence_audit.py",
+      "producer_path": "python/carnot/experiment_7596_v663_evidence_audit.py",
+      "sha256": "sha256:bcd3dda74be000072fe60d6fbf8fe476c743a59efb23ad77e72ca2211cb1e230",
+      "upstream": "exp7596.implementation",
+      "verdict_class": null
+    },
+    {
+      "bytes": 196,
+      "conductor_path": null,
+      "disposition": "task_owned_source",
+      "eligible_for_science": false,
+      "flagged_adversarial": false,
+      "honest_verdict": null,
+      "path": "scripts/experiments/experiment_7596_v663_evidence_audit.py",
+      "producer_path": "scripts/experiments/experiment_7596_v663_evidence_audit.py",
+      "sha256": "sha256:6a7eb30002a772f0ffdab90866d73ee58b385bca9d3776f554dbecfb2585a107",
+      "upstream": "exp7596.entrypoint",
+      "verdict_class": null
+    },
+    {
+      "bytes": 12605,
+      "conductor_path": null,
+      "disposition": "task_owned_source",
+      "eligible_for_science": false,
+      "flagged_adversarial": false,
+      "honest_verdict": null,
+      "path": "tests/python/test_experiment_7596_v663_evidence_audit.py",
+      "producer_path": "tests/python/test_experiment_7596_v663_evidence_audit.py",
+      "sha256": "sha256:96ffbaaf9d2692f44ccb261e1f5b3b8c9d198af3c6b4ab434d5e1f6fc1acbb7b",
+      "upstream": "exp7596.tests",
+      "verdict_class": null
+    },
+    {
+      "bytes": 4628779,
+      "conductor_path": null,
+      "disposition": "task_owned_source",
+      "eligible_for_science": false,
+      "flagged_adversarial": false,
+      "honest_verdict": null,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "producer_path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:d2a362d4ff0728fe54abbe2674760a8153a75ee7d46d9f452dc810a039146b29",
+      "upstream": "exp7596.spec",
+      "verdict_class": null
+    },
+    {
+      "bytes": 394,
+      "conductor_path": null,
+      "disposition": "task_owned_source",
+      "eligible_for_science": false,
+      "flagged_adversarial": false,
+      "honest_verdict": null,
+      "path": "results/raw/experiment_7596_v663_evidence_audit/affected_validation_manifest.json",
+      "producer_path": "results/raw/experiment_7596_v663_evidence_audit/affected_validation_manifest.json",
+      "sha256": "sha256:d89d1162a78e2f170a3f9e95eb7e63c931d1828c64744b6ab8adfa7c572a1c5b",
+      "upstream": "exp7596.validation_manifest",
+      "verdict_class": null
+    }
+  ],
+  "static_audit_ready_score": 0,
+  "stochastic_stages_started": [],
+  "submitted_externally": false,
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7596_v663_evidence_audit",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7596_v663_evidence_audit"
+      ],
+      "duration_s": 0.5071359610010404,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/validation_logs/00_worktree_imports.log",
+      "log_sha256": "sha256:be886a6d57c4365cab568e57f11f8a39435caff0b851311ba0f79c19f70d2b38",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7596_v663_evidence_audit\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7596_v663_evidence_audit.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7596_v663_evidence_audit": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7596_v663_evidence_audit.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7596-z1khyb3y/pytest/focused tests/python/test_experiment_7596_v663_evidence_audit.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7596-z1khyb3y/pytest/focused",
+        "tests/python/test_experiment_7596_v663_evidence_audit.py",
+        "-q"
+      ],
+      "duration_s": 2.8930841429973952,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/validation_logs/01_focused_pytest.log",
+      "log_sha256": "sha256:e6f89f40290a2e5fe34e1216f7a4777227b5c4b0ab7e3d4aea5fea3ea9a3b8fa",
+      "name": "focused_pytest",
+      "output_tail": ".........                                                                [100%]\n9 passed in 0.83s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7596-z1khyb3y/pytest/.coverage.exp7596 '--include=*/experiment_7596_v663_evidence_audit.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7596-z1khyb3y/pytest/coverage tests/python/test_experiment_7596_v663_evidence_audit.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7596-z1khyb3y/pytest/.coverage.exp7596",
+        "--include=*/experiment_7596_v663_evidence_audit.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7596-z1khyb3y/pytest/coverage",
+        "tests/python/test_experiment_7596_v663_evidence_audit.py",
+        "-q"
+      ],
+      "duration_s": 4.847379798011389,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/validation_logs/02_changed_module_coverage.log",
+      "log_sha256": "sha256:f4a62bceaa8fb3cff227351052b8c6e744b52305a2225194567bb44f0b4fe70a",
+      "name": "changed_module_coverage",
+      "output_tail": ".........                                                                [100%]\n9 passed in 1.58s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7596-z1khyb3y/pytest/.coverage.exp7596 '--include=*/experiment_7596_v663_evidence_audit.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7596-z1khyb3y/pytest/.coverage.exp7596",
+        "--include=*/experiment_7596_v663_evidence_audit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.07813512900611386,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/validation_logs/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:6ae6108f2347add48169563998f717b528d50e48a773ed3a1aa8fe3fa8a176c4",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                   Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------\npython/carnot/experiment_7596_v663_evidence_audit.py     276      0   100%\n------------------------------------------------------------------------------------\nTOTAL                                                    276      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7596_v663_evidence_audit.py scripts/experiments/experiment_7596_v663_evidence_audit.py tests/python/test_experiment_7596_v663_evidence_audit.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7596_v663_evidence_audit.py",
+        "scripts/experiments/experiment_7596_v663_evidence_audit.py",
+        "tests/python/test_experiment_7596_v663_evidence_audit.py"
+      ],
+      "duration_s": 0.012368108000373468,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/validation_logs/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7596_v663_evidence_audit.py scripts/experiments/experiment_7596_v663_evidence_audit.py tests/python/test_experiment_7596_v663_evidence_audit.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7596_v663_evidence_audit.py",
+        "scripts/experiments/experiment_7596_v663_evidence_audit.py",
+        "tests/python/test_experiment_7596_v663_evidence_audit.py"
+      ],
+      "duration_s": 0.008452566980849952,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/validation_logs/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7596_v663_evidence_audit.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7596_v663_evidence_audit.py"
+      ],
+      "duration_s": 0.09429272101260722,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/validation_logs/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7596_v663_evidence_audit.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7596_v663_evidence_audit.py"
+      ],
+      "duration_s": 0.03093434200854972,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/validation_logs/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7596_v663_evidence_audit.py --root /home/ianblenke/github.com/ianblenke/carnot --date 20260924 --cold-replay /tmp/carnot-exp7596-z1khyb3y/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7596_v663_evidence_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--date",
+        "20260924",
+        "--cold-replay",
+        "/tmp/carnot-exp7596-z1khyb3y/terminal_candidate.json"
+      ],
+      "duration_s": 0.4417423580016475,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/terminal_logs_provisional/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:24740a995444b8e4dfe5a037b79816b8f266e5497eabc04817d91039410eb894",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"mode\": \"cold_replay\", \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7596_v663_evidence_audit.py --root /home/ianblenke/github.com/ianblenke/carnot --date 20260924 --independent-reduce /tmp/carnot-exp7596-z1khyb3y/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7596_v663_evidence_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--date",
+        "20260924",
+        "--independent-reduce",
+        "/tmp/carnot-exp7596-z1khyb3y/terminal_candidate.json"
+      ],
+      "duration_s": 0.430575245001819,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/terminal_logs_provisional/01_independent_raw_reduction.log",
+      "log_sha256": "sha256:562cbba056e577b938d5ac7fe580710121bccbb6e4adca9e2d5d34ae3da1b603",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"mode\": \"independent_reduction\", \"online_disposition\": \"missing_producer\", \"row_count\": 0, \"source_count\": 11, \"static_disposition\": \"missing_producer\", \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7596-z1khyb3y/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7596-z1khyb3y/terminal_candidate.json"
+      ],
+      "duration_s": 0.5354313760180958,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/terminal_logs_provisional/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7596-z1khyb3y/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7596-z1khyb3y/terminal_candidate.json"
+      ],
+      "duration_s": 0.028141357994172722,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7596-z1khyb3y/terminal_logs_provisional/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false,
+  "worktree_root": "/home/ianblenke/github.com/ianblenke/carnot"
+}
