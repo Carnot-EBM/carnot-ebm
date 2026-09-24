@@ -27649,3 +27649,13 @@ each one.
 **Pilot design pre-registered** in the research note: think-ON, 1 round, live budget, 10 windows
 (drop vc33 and bp35), fixed masks and row exclusions, change fidelity as primary metric with raised
 rows counted as 0, codeonly baseline 0.13. Not started.
+
+**THINK-ON PILOT RESULT, 2026-09-24 (append-only).** Experiment 10010 ran the live default
+(think-ON, 1 round, live budget) on the 10 pre-registered windows. Mean masked change fidelity
+0.574 against the codeonly 0.128; 7 of 10 windows above baseline (Wilcoxon one-sided p = 0.024,
+sign test p = 0.17; neither pre-registered). No window passes the live exact 1.0 gate; best sp80
+at 7/8. 2 of 10 calls hit the 2,400 s limit. Scored the Kaggle vLLM way, the mean is 0.0: all 8
+engines are lost to the extraction defect in the vLLM entry at the top of this file. Detail:
+`docs/research-notes/b2-think-on-pilot-2026-09-24.md`. B2's codeonly measurement understated the
+live default; the remaining blockers are the vLLM extraction defect and the exact gate.
+

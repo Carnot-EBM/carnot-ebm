@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-09-24 — Experiment 10010 think-ON pilot run and written up (operator request: "1", run the pilot)
+
+- Ran the pilot on GPU 1 (21:30-02:47 UTC, 5.3 h) from the harness worktree; the conductor kept
+  GPU 0. Rescored the finished shard on CPU with the isolated scorer from d7a33399e9 (no score
+  changed) and committed artifact plus evidence (d1252e5267).
+- Added `docs/research-notes/b2-think-on-pilot-2026-09-24.md`, and appended the result to
+  `ops/known-issues.md` and `ops/status.md`.
+- No code changed. The vLLM extraction and repetition-penalty fixes wait for operator direction.
+
 ## 2026-09-23 — Experiment 10010 scoring isolation fix merged (agent-initiated during the pilot)
 
 - The final check of the pilot harness found a scoring leak: one child process held all held-out

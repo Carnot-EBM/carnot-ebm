@@ -2,6 +2,17 @@
 
 **Last Updated:** 2026-09-23
 
+## 2026-09-24 — Experiment 10010 think-ON pilot complete: 0.574 vs 0.128, and the Kaggle path would discard every engine
+- Live default induction (think-ON, 1 round, live budget) on the 10 pre-registered windows: mean
+  masked change fidelity 0.574 against the codeonly 0.128. 7 of 10 windows above baseline.
+  Rescored with the isolated scorer; no score changed. Not flagged by `adversarial_verify.py`.
+- No window passes the live exact 1.0 gate (best sp80 7/8).
+- Scored the way the Kaggle vLLM path extracts code, the mean is 0.0: the vLLM server runs with
+  no reasoning parser, and all 8 engines' reasoning holds a python fence the extractor picks.
+- Next (operator decision): fix the vLLM extraction and repetition-penalty defects and confirm on
+  Kaggle; then decide whether the live gate should accept near-exact engines.
+- Detail: `docs/research-notes/b2-think-on-pilot-2026-09-24.md`.
+
 ## 2026-09-23 — Experiment 10010 GPU run in progress; scoring leak fixed; rescore required
 - The GPU run started 21:30 UTC on GPU 1 from worktree `.claude/worktrees/wf_166c6939-336-1`
   (commit 756529e3b5). su15 finished: one call, 75,503 tokens, natural stop at 2,363 s, primary
