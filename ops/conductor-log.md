@@ -18509,3 +18509,5 @@ code |
 | 2026-09-23 22:52 UTC | Train an identity-constrained proper-loss energy d | OK | 101 passed, 1 warning in 9.27s |
 | 2026-09-23 23:35 UTC | Measure frozen probability and decision value with | OK | 114 passed, 1 warning in 9.98s |
 | 2026-09-24 00:28 UTC | Measure delayed proper-loss learning and durable r | OK | 102 passed, 1 warning in 22.00s |
+| 2026-09-24 00:31 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 1: OPEN 13 days: REAL_B |
+| 2026-09-24 00:31 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 1: OPEN 12 da |

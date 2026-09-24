@@ -78471,3 +78471,105 @@ reduction, adversarial verification, and strict row consistency run
 
 Planned. Exp7573 implementation and validation evidence will complete this
 status after the requirement-linked tests pass.
+
+## REQ-REPORT-7579: Independently audit V662 decision learning
+
+Exp7579 SHALL authenticate the exact Exp7575, Exp7576, Exp7577, and Exp7578
+producer artifacts and their declared raw sidecars. It SHALL run even when one
+scientific branch is unavailable. A missing producer SHALL close only its
+dependent branch and SHALL produce a complete blocked verdict when no auditable
+branch remains. Each blocked verdict SHALL name the failed check, upstream,
+path, field, operation, expected value, and observed value. External absence
+SHALL NOT be classified as retryable partial work.
+
+The audit SHALL reconstruct every Exp7577 static probability from the frozen
+Exp7576 head parameters and Exp7575 raw feature probabilities. Its evaluator
+SHALL normalize binary energies independently and SHALL NOT trust producer
+headline probabilities. The audit SHALL recompute per-arm Brier numerators,
+denominators, actions, costs, coverage, and registered group-level contrasts.
+Exposed evaluation data SHALL remain descriptive. Oracle or label-accessing
+controls SHALL remain circular and SHALL NOT support an oracle-distinct claim.
+
+The audit SHALL reconstruct Exp7578 prediction-before-release order from raw
+prediction, release, acknowledgment, comparison, retention, and persisted-state
+rows. It SHALL verify delayed labels, sequential releases, exactly-once updates,
+state-hash continuity, persistence before acknowledgment, restart equality, and
+read-only retention. It SHALL independently reduce prequential and retention
+rows and the registered bootstrap intervals. Private future-label, order,
+missing-row, sign, hash, and duplicate-update mutations SHALL close learning
+qualification.
+
+Static, causal, retention, and freshness conclusions SHALL remain separate.
+Each SHALL report readiness, benefit, and freshness. The report SHALL name no
+signal, harmful recalibration, uncertainty, coverage, or missing work as the
+applicable failure source. A complete independent static null SHALL set
+`static_claims_qualified_score=1`. Only complete causal reconstruction SHALL set
+`learning_claims_qualified_score=1`. Every V662 source-data conclusion SHALL set
+`fresh_confirmatory_claim_allowed=false`.
+
+The report SHALL declare aggregation, `MODEL_SPECS=[]`, and zero current load,
+forward, generation, and token calls. It SHALL distinguish absent evidence from
+a measured zero effect. It SHALL emit one row per comparison unit and arm with
+raw numerator, denominator, metric direction, seed, censoring, and provenance.
+It SHALL keep validity, readiness, benefit, retention, and freshness gates
+separate. Its verdict SHALL use a complete terminal prefix and one allowed
+verdict class.
+
+The implementation SHALL freeze an affected-file manifest. It SHALL prove that
+imports resolve below this worktree and create each private pytest base
+directory before use. It SHALL run scoped pytest without ambient addopts or
+coverage, separate 100 percent changed-module coverage with a command-local
+coverage file, scoped Ruff check and format, changed-module mypy, and scoped
+specification coverage. The declared entrypoint and a fresh process SHALL replay
+the capability. The learning replay SHALL exercise predict, release, update,
+persist, and reload. Independent reduction, adversarial verification, and strict
+row consistency SHALL accept the exact candidate before atomic publication.
+This read-only reporting change has no numbered runtime E2E.
+
+### SCENARIO-REPORT-7579-ABSENCE: Scientific branches close independently
+
+**Given** one or more absent or invalid V662 producer inputs
+**When** Exp7579 authenticates prerequisites before measurement
+**Then** each dependent branch records the exact failed operand
+**And** an unavailable external branch remains blocked rather than partial
+**And** no substitute evidence or measured-zero claim is synthesized.
+
+### SCENARIO-REPORT-7579-STATIC: Frozen heads replay from raw features
+
+**Given** authenticated frozen head parameters and evaluation source rows
+**When** an independent energy evaluator reconstructs each registered arm
+**Then** every probability, loss, action, coverage value, and group contrast
+matches the sealed raw evidence
+**And** exposed-data findings remain descriptive and non-confirmatory.
+
+### SCENARIO-REPORT-7579-CAUSAL: Delayed learning replays before labels
+
+**Given** authenticated prediction, release, acknowledgment, persistence, and
+retention rows
+**When** the audit replays each registered order
+**Then** predictions precede labels, releases and updates occur exactly once,
+persisted states survive reload, and retention does not mutate the learner
+**And** registered contrasts and retention intervals reduce from raw rows.
+
+### SCENARIO-REPORT-7579-MUTATIONS: Invalid evidence closes qualification
+
+**Given** valid compact static and learning fixtures
+**When** future-label, order, missing-row, sign, hash, or duplicate-update
+corruption is introduced separately
+**Then** every corruption fails the applicable reader
+**And** no failed mutation can leave either qualification score open.
+
+### SCENARIO-REPORT-7579-VALIDATION: Exact terminal readers control publication
+
+**Given** a frozen affected-file manifest and exact terminal candidate
+**When** scoped tests, changed-module coverage, static checks, cold replay,
+independent reduction, adversarial verification, and strict row consistency run
+**Then** every required receipt passes before atomic publication
+**And** imports resolve below the declared worktree
+**And** no numbered runtime E2E or current model invocation is claimed.
+
+### Implementation Status (REQ-REPORT-7579)
+
+Implemented by `python/carnot/experiment_7579_v662_decision_learning_audit.py`,
+its thin experiment CLI, and requirement-linked focused tests. The terminal
+artifact records the exact scoped and fresh-process validation receipts.
