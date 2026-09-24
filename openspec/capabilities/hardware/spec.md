@@ -2383,3 +2383,129 @@ GateMate retains or truthfully updates its physical blocker, current
 reachability stays unknown without a probe, and no hardware command runs.
 
 **Implementation status:** Implemented (Exp 7513)
+
+---
+
+### REQ-HW-7599
+
+**Title:** Exp7599 MUST preserve dated board scopes and size only an eligible host service boundary
+
+**Description:**
+Experiment 7599 SHALL produce
+`results/experiment_7599_v663_board_continuity.json` for run date 20260924
+and milestone 2026.09.663. It SHALL run as host aggregation. It SHALL set
+`MODEL_SPECS=[]`, `model_specs=[]`, and every current model invocation count
+to zero. It SHALL set `inference_substrate=aggregation_from_upstream_artifacts`
+and `inference_substrate_class=aggregation`. It SHALL issue no hardware
+operation.
+
+The experiment SHALL read and hash the dated KV260, PolarFire, and GateMate
+dispositions even when an optional placement input is absent. Each board row
+SHALL state its evidence date, source path, byte hash, venue, claim scope,
+current reachability, missingness, and provenance. A historical hash SHALL not
+establish current reachability. KV260 SHALL retain only graduated FPGA-fabric
+scope. Future KV260 access SHALL use `ssh kria`. A host block-device check is
+not permitted. The row SHALL retain `k_max<=5` where the architecture applies.
+PolarFire SHALL retain only graduated Linux CPU-dispatch scope. It SHALL state
+that FPGA sampling remains unmeasured.
+
+GateMate SHALL require an operator-authored dated receipt for a cable, port,
+power, board, JTAG, or DirtyJTAG physical change after Exp6559. The experiment
+SHALL preserve the last diagnostic. Without a qualifying receipt, its row
+SHALL use `blocked_unchanged_physical_prerequisite`. The gate summary SHALL
+name the upstream, path, field, comparison, expected value, and observed
+value. A new receipt SHALL authorize only a separately scoped execution task.
+This experiment MUST issue no detect, flash, SSH, USB, power, synthesis, or
+other board command.
+
+The placement branch MAY use Exp7598 only when its terminal artifact is
+present, unflagged, source-authenticated, and contains eligible measured
+public-client stage times. Eligible stage times SHALL cover arithmetic, IPC,
+and persistence in one whole-client denominator. The artifact SHALL report
+each fraction as `stage_time / whole_client_time`. It SHALL report the Amdahl
+upper bound for infinitely fast arithmetic as
+`whole_client_time / (whole_client_time - arithmetic_time)`. This value is a
+bound, not a measured speedup. When eligible times are absent, placement SHALL
+be `placement_unmeasured`. Board rows SHALL remain complete.
+
+The acquisition note SHALL state that a small host update does not justify a
+new accelerator purchase. Extropic or THRML SHALL remain compatibility or
+future-access work. XDNA and a larger FPGA SHALL require a concrete workload
+and satisfied tool or access prerequisites. Exact binary normalization SHALL
+not require a thermodynamic sampler. Host service speed SHALL not become board
+or TSU speed.
+
+The artifact SHALL publish atomically only after scoped validation, a fresh
+process cold replay, independent row reduction, adversarial verification, and
+strict verdict-row consistency checks pass.
+
+Required artifact fields include all common identity, provenance, model,
+timing, row, gate, verdict, validation, and field-principle fields. They also
+include `board_continuity_complete_score`, `board_rows`,
+`hardware_operations_issued`, `placement_scope`, `amdahl_upper_bound`, and
+`acquisition_decision`.
+
+Required field principles:
+
+- `board_continuity_complete_score`: principle "One requires three authenticated dated scopes and explicit unresolved prerequisites."
+- `board_rows`: principle "KV260 FPGA history, PolarFire CPU history, and GateMate physical prerequisites remain separate."
+- `hardware_operations_issued`: principle "An empty list proves this task made no present board execution claim."
+- `placement_scope`: principle "Use whole-client measured decomposition when eligible; otherwise report unmeasured."
+- `amdahl_upper_bound`: principle "Compute a bound from eligible measured stage fractions; never report it as measured speedup."
+
+**Acceptance criteria:**
+- The declared entrypoint writes the terminal JSON for 20260924.
+- Exactly three hash-bound board rows preserve their venue-specific scopes.
+- GateMate retains its exact receipt blocker unless a qualifying new receipt
+  exists. All current hardware operation counts remain zero.
+- Eligible Exp7598 timings produce transparent stage fractions and the stated
+  Amdahl bound. Ineligible or missing timings produce
+  `placement_unmeasured` without removing board rows.
+- The acquisition decision authorizes no purchase, device claim, or default
+  promotion.
+- Fresh-process validation and independent reduction reproduce board count,
+  blocked row count, stage fractions, and the Amdahl bound.
+
+**Implementation status:** Implemented (Exp 7599)
+
+---
+
+### SCENARIO-HW-7599-BOARD-SCOPES
+
+**Scenario:** Exp7599 preserves all dated board scopes without probing hardware.
+
+**Given:** The three historical board dispositions authenticate,
+**When:** Exp7599 reduces the continuity rows,
+**Then:** KV260 retains FPGA-fabric scope, PolarFire retains Linux CPU-dispatch
+scope with FPGA sampling unmeasured, GateMate retains its physical prerequisite,
+and `hardware_operations_issued` is empty.
+
+**Implementation status:** Implemented (Exp 7599)
+
+---
+
+### SCENARIO-HW-7599-PLACEMENT
+
+**Scenario:** Exp7599 sizes only an eligible whole-client host decomposition.
+
+**Given:** Exp7598 authenticates and supplies measured arithmetic, IPC, and
+persistence times in one public-client denominator,
+**When:** Exp7599 reduces the placement branch,
+**Then:** each fraction uses the measured whole-client denominator and the
+arithmetic Amdahl result is labeled as an upper bound, not a measurement.
+
+**Implementation status:** Implemented (Exp 7599)
+
+---
+
+### SCENARIO-HW-7599-PLACEMENT-UNMEASURED
+
+**Scenario:** Exp7599 keeps continuity complete when placement cannot be measured.
+
+**Given:** Exp7598 is absent, invalid, flagged, or lacks an eligible stage
+decomposition,
+**When:** Exp7599 reduces the artifact,
+**Then:** placement is `placement_unmeasured`, the exact failed check appears in
+the gate summary, and all three board rows remain present.
+
+**Implementation status:** Implemented (Exp 7599)

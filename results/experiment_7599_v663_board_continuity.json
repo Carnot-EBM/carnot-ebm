@@ -1,0 +1,1700 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "dated_sources_authenticated",
+      "expected": true,
+      "field": "dated_sources_authenticated",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "board_rows",
+      "principle": "Keep validity, readiness, benefit, retention, and freshness separate.",
+      "upstream": "current Exp7599 reduction"
+    },
+    {
+      "category": "readiness",
+      "check": "board_continuity_complete",
+      "expected": 1,
+      "field": "board_continuity_complete",
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path": "board_rows",
+      "principle": "Keep validity, readiness, benefit, retention, and freshness separate.",
+      "upstream": "current Exp7599 reduction"
+    },
+    {
+      "category": "benefit",
+      "check": "new_hardware_benefit_measured",
+      "expected": 1,
+      "field": "new_hardware_benefit_measured",
+      "observed": 0,
+      "op": "eq",
+      "passed": false,
+      "path": "placement_scope",
+      "principle": "Keep validity, readiness, benefit, retention, and freshness separate.",
+      "upstream": "current Exp7599 reduction"
+    },
+    {
+      "category": "retention",
+      "check": "zero_current_hardware_operations",
+      "expected": 0,
+      "field": "zero_current_hardware_operations",
+      "observed": 0,
+      "op": "eq",
+      "passed": true,
+      "path": "board_rows",
+      "principle": "Keep validity, readiness, benefit, retention, and freshness separate.",
+      "upstream": "current Exp7599 reduction"
+    },
+    {
+      "category": "freshness",
+      "check": "historical_hash_is_current_reachability",
+      "expected": false,
+      "field": "historical_hash_is_current_reachability",
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path": "board_rows",
+      "principle": "Keep validity, readiness, benefit, retention, and freshness separate.",
+      "upstream": "current Exp7599 reduction"
+    }
+  ],
+  "acquisition_decision": {
+    "decision_note": "No new accelerator purchase is justified solely by this small host update.",
+    "extropic_thrml": {
+      "required_evidence": "authenticated device access and a concrete workload",
+      "status": "compatibility_or_future_access"
+    },
+    "larger_fpga": {
+      "required_evidence": "concrete workload, tool access, and transfer-orchestration timing",
+      "status": "deferred"
+    },
+    "literature_comparison": {
+      "fpga_orchestration": {
+        "finding": "transfer and control costs need whole-client measurement",
+        "project_index": "docs/research-notes/v661-method-map.md",
+        "source": "arXiv:2602.15985v2"
+      },
+      "local_kan_update": {
+        "finding": "small local arithmetic does not establish accelerator value",
+        "project_index": "docs/research-notes/v663-method-map.md",
+        "source": "arXiv:2602.02056v4"
+      }
+    },
+    "new_accelerator_justified_by_small_host_update": false,
+    "purchase_authorized": false,
+    "reason": "exact binary normalization is deterministic arithmetic",
+    "thermodynamic_sampler_required": false,
+    "xdna": {
+      "required_evidence": "concrete workload plus an installed and qualified execution provider",
+      "status": "deferred"
+    }
+  },
+  "amdahl_upper_bound": null,
+  "amdahl_upper_bound_is_measured_speedup": false,
+  "board_continuity_complete_score": 1,
+  "board_rows": [
+    {
+      "abstention": false,
+      "arm": "historical_scope",
+      "board": "KV260",
+      "censored": false,
+      "claim_scope": "historical programmable-logic latency transcript and synthesis only",
+      "current_reachability": "unknown_not_probed",
+      "denominator": 1,
+      "direction": "documentation_only",
+      "disposition": "graduated_fpga_fabric_scope_preserved",
+      "error": null,
+      "evidence_artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "evidence_artifact_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "evidence_date": "20260913",
+      "exact_next_condition": "none; future access is separately scoped",
+      "execution_venue": "kv260_fpga_fabric_historical",
+      "future_access": "ssh kria",
+      "hardware_operations_issued": [],
+      "historical_hash_establishes_current_reachability": false,
+      "host_block_device_precondition_allowed": false,
+      "k_max": 5,
+      "metric": true,
+      "missing": false,
+      "numerator": 1,
+      "processor_class": "fpga_fabric",
+      "provenance": "authenticated historical disposition; no current board command",
+      "row_type": "board_continuity",
+      "seed": null,
+      "source_artifact_sha256": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_path": "results/experiment_7314_v642_board_continuity.json#board=KV260",
+      "source_sha256": "sha256:98032efb16d856e0a31be6631a85d46e68bfba14a1fc9fff4286a6579d4326ac",
+      "unit_id": "board:KV260"
+    },
+    {
+      "abstention": false,
+      "arm": "historical_scope",
+      "board": "PolarFire",
+      "censored": false,
+      "claim_scope": "historical hash-matched Linux CPU dispatch only",
+      "current_reachability": "unknown_not_probed",
+      "denominator": 1,
+      "direction": "documentation_only",
+      "disposition": "graduated_linux_cpu_dispatch_scope_preserved",
+      "error": null,
+      "evidence_artifact_path": "results/experiment_7231_v636_board_continuity.json",
+      "evidence_artifact_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "evidence_date": "20260913",
+      "exact_next_condition": "FPGA sampling needs a separate measured task",
+      "execution_venue": "polarfire_linux_cpu_historical",
+      "fpga_sampling_measured": false,
+      "hardware_operations_issued": [],
+      "historical_hash_establishes_current_reachability": false,
+      "metric": true,
+      "missing": false,
+      "numerator": 1,
+      "processor_class": "linux_cpu",
+      "provenance": "authenticated historical disposition; no current board command",
+      "row_type": "board_continuity",
+      "seed": null,
+      "source_artifact_sha256": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_path": "results/experiment_7314_v642_board_continuity.json#board=PolarFire",
+      "source_sha256": "sha256:466751ae6895638f6bff87cde7a54108bd41a005930a1164cb6005a1eb24b362",
+      "unit_id": "board:PolarFire"
+    },
+    {
+      "abstention": true,
+      "arm": "historical_scope",
+      "board": "GateMate",
+      "censored": false,
+      "claim_scope": "physical and JTAG scope remains unexecuted",
+      "current_hardware_execution_authorized": false,
+      "current_reachability": "unknown_not_probed",
+      "denominator": 1,
+      "direction": "documentation_only",
+      "disposition": "blocked_unchanged_physical_prerequisite",
+      "error": "no qualifying operator physical-change receipt after Exp6559",
+      "evidence_artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "evidence_artifact_sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "evidence_date": "20260915",
+      "exact_missing_receipt": "no qualifying operator physical-change receipt after Exp6559",
+      "exact_next_condition": "operator records a dated GateMate cable, port, power, board, JTAG, or DirtyJTAG physical change after Exp6559",
+      "execution_venue": "none_read_only",
+      "hardware_operations_issued": [],
+      "historical_hash_establishes_current_reachability": false,
+      "last_diagnostic": {
+        "meaning": "all-ones TDO; open or unpowered target remained possible",
+        "observed": "0xffffffff",
+        "scope": "v477 physical/JTAG block",
+        "source": "results/experiment_6559_gatemate_changed_state_continuity.json"
+      },
+      "metric": false,
+      "missing": false,
+      "numerator": 0,
+      "operator_receipt": null,
+      "processor_class": "not_executed",
+      "provenance": "authenticated historical disposition; no current board command",
+      "row_type": "board_continuity",
+      "seed": null,
+      "source_artifact_sha256": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_path": "results/experiment_7314_v642_board_continuity.json#board=GateMate",
+      "source_sha256": "sha256:636adfd6d0d74eaa419b4f7ef13109e0b119b386ed5802827803cd47b211187e",
+      "terminal_criterion_met": false,
+      "unit_id": "board:GateMate"
+    }
+  ],
+  "completed_at_utc": "2026-09-24T08:14:36.210884+00:00",
+  "duration_s": 11.17684355698293,
+  "execution_venue": "host",
+  "experiment_id": "exp7599-v663-board-continuity",
+  "field_principles": {
+    "MODEL_SPECS": "No current LLM call means an empty model list.",
+    "acceptance_gate_results": "Keep validity, readiness, benefit, retention, and freshness separate.",
+    "acquisition_decision": "Retain acquisition_decision so this terminal scope cannot disappear silently.",
+    "amdahl_upper_bound": "Compute a bound from eligible measured stage fractions; never report measured speedup.",
+    "amdahl_upper_bound_is_measured_speedup": "Retain amdahl_upper_bound_is_measured_speedup so this terminal scope cannot disappear silently.",
+    "board_continuity_complete_score": "One requires three authenticated dated scopes and explicit unresolved prerequisites.",
+    "board_rows": "KV260 FPGA history, PolarFire CPU history, and GateMate physical prerequisites remain separate.",
+    "completed_at_utc": "Retain completed_at_utc so this terminal scope cannot disappear silently.",
+    "duration_s": "Measure current monotonic work without padding or inherited time.",
+    "execution_venue": "Retain execution_venue so this terminal scope cannot disappear silently.",
+    "experiment_id": "Retain experiment_id so this terminal scope cannot disappear silently.",
+    "field_principles": "Carry each reporting principle in the emitted artifact.",
+    "flagged_adversarial": "Persist the terminal reader outcome; flagged evidence opens no gate.",
+    "gate_check_summary": "A failed check names upstream, path, field, operator, expected, and observed.",
+    "hardware_command_count": "Retain hardware_command_count so this terminal scope cannot disappear silently.",
+    "hardware_operations_issued": "An empty list proves this task made no present board execution claim.",
+    "historical_model_identity": "Retain historical_model_identity so this terminal scope cannot disappear silently.",
+    "honest_verdict": "Use a complete_ prefix; completed aggregation does not prove benefit.",
+    "host_speed_reported_as_board_or_tsu_speed": "Retain host_speed_reported_as_board_or_tsu_speed so this terminal scope cannot disappear silently.",
+    "independent_reduction": "Retain independent_reduction so this terminal scope cannot disappear silently.",
+    "inference_substrate": "State that current work is host aggregation, not inherited board execution.",
+    "inference_substrate_class": "Keep actual aggregation separate from planned hardware classes.",
+    "invocation_counts": "Count current loads, forwards, generations, and tokens independently.",
+    "milestone": "Retain milestone so this terminal scope cannot disappear silently.",
+    "model_invoked": "Retain model_invoked so this terminal scope cannot disappear silently.",
+    "model_specs": "Retain model_specs so this terminal scope cannot disappear silently.",
+    "phase_spans": "Retain phase_spans so this terminal scope cannot disappear silently.",
+    "physical_state_receipt": "Retain physical_state_receipt so this terminal scope cannot disappear silently.",
+    "placement_evidence": "Retain placement_evidence so this terminal scope cannot disappear silently.",
+    "placement_fractions": "Retain placement_fractions so this terminal scope cannot disappear silently.",
+    "placement_scope": "Use whole-client measured decomposition when eligible; otherwise report unmeasured.",
+    "planned_inference_substrate_class": "Retain planned_inference_substrate_class so this terminal scope cannot disappear silently.",
+    "preconditions_checked": "Retain preconditions_checked so this terminal scope cannot disappear silently.",
+    "prior_verdict_retirement": "Retain prior_verdict_retirement so this terminal scope cannot disappear silently.",
+    "random_seed": "Record the fixed seed even though current reduction is deterministic.",
+    "reproducibility_checksum": "Bind immutable evidence, configuration, and terminal reduction.",
+    "resource_ownership": "Retain resource_ownership so this terminal scope cannot disappear silently.",
+    "retire_if_same_verdict": "Retain retire_if_same_verdict so this terminal scope cannot disappear silently.",
+    "rows": "Keep one auditable row for each board and venue.",
+    "run_date": "Retain run_date so this terminal scope cannot disappear silently.",
+    "sample_size_budget": "Count boards as units; seeds and windows do not multiply them.",
+    "schema": "Retain schema so this terminal scope cannot disappear silently.",
+    "source_artifact_hashes": "Separate authenticated producer bytes from missing evidence.",
+    "spec_refs": "Retain spec_refs so this terminal scope cannot disappear silently.",
+    "started_at_utc": "Retain started_at_utc so this terminal scope cannot disappear silently.",
+    "terminal_reader_outcomes": "Retain terminal_reader_outcomes so this terminal scope cannot disappear silently.",
+    "validation_receipts": "Bind command, worktree, exit code, and raw log hash.",
+    "verdict_class": "Use one closed class; only unfinished owned work is partial.",
+    "verifier_is_oracle": "Exact historical labels cannot support an oracle-distinct benefit claim.",
+    "worktree": "Retain worktree so this terminal scope cannot disappear silently."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [
+    {
+      "check": "gatemate_receipt",
+      "expected": 0,
+      "field": "accepted_receipt_count",
+      "observed": 0,
+      "op": "gt",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7599_v663_board_continuity/gatemate_receipt_search.json",
+      "upstream": "operator physical-change receipt"
+    },
+    {
+      "check": "eligible_public_client_stage_timings",
+      "expected": "measured whole-client arithmetic, IPC, persistence, and other times",
+      "field": "public_client_stage_timings",
+      "observed": "missing separate measured IPC and persistence fields",
+      "op": "contains",
+      "passed": false,
+      "path": "results/experiment_7598_v663_rust_consumer.json",
+      "upstream": "Exp7598"
+    }
+  ],
+  "hardware_command_count": 0,
+  "hardware_operations_issued": [],
+  "historical_model_identity": {
+    "current_identity": [],
+    "scope": "historical source declarations only; not current inference"
+  },
+  "honest_verdict": "complete_null_board_continuity_placement_unmeasured",
+  "host_speed_reported_as_board_or_tsu_speed": false,
+  "independent_reduction": {
+    "amdahl_upper_bound": null,
+    "authenticated_board_count": 3,
+    "blocked_board_count": 1,
+    "board_count": 3,
+    "fractions": {},
+    "hardware_operation_count": 0,
+    "placement_scope": "placement_unmeasured"
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "current_llm_calls": 0,
+    "forward_calls": 0,
+    "generation_calls": 0,
+    "input_tokens": 0,
+    "model_loads": 0,
+    "output_tokens": 0
+  },
+  "milestone": "2026.09.663",
+  "model_invoked": false,
+  "model_specs": [],
+  "phase_spans": [
+    {
+      "completed_units": 6,
+      "duration_s": 0.04678787000011653,
+      "ended_offset_s": 0.046794201974989846,
+      "phase": "preconditions",
+      "started_offset_s": 6.331974873319268e-06
+    },
+    {
+      "completed_units": 0,
+      "duration_s": 6.810005288571119e-07,
+      "ended_offset_s": 0.046821301977615803,
+      "phase": "model_load",
+      "started_offset_s": 0.046820620977086946
+    },
+    {
+      "completed_units": 0,
+      "duration_s": 3.00002284348011e-07,
+      "ended_offset_s": 0.04682758398121223,
+      "phase": "generation",
+      "started_offset_s": 0.04682728397892788
+    },
+    {
+      "completed_units": 0,
+      "duration_s": 2.00001522898674e-07,
+      "ended_offset_s": 0.04683223299798556,
+      "phase": "benchmark",
+      "started_offset_s": 0.04683203299646266
+    },
+    {
+      "completed_units": 7,
+      "duration_s": 9.680427487008274,
+      "ended_offset_s": 9.727623252983904,
+      "phase": "scoped_validation",
+      "started_offset_s": 0.04719576597562991
+    },
+    {
+      "completed_units": 4,
+      "duration_s": 1.398678302008193,
+      "ended_offset_s": 11.176816225983202,
+      "phase": "terminal_validation",
+      "started_offset_s": 9.77813792397501
+    }
+  ],
+  "physical_state_receipt": {
+    "accepted_receipt_count": 0,
+    "candidate_rows": [
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 1,
+        "excerpt": "### 2026-07-29 (outer-loop, SURVEYED \u2014 OPERATOR DECISION PENDING): running the test suite rewrites the research record **Status:** the survey the hazard commit (`b3e31d341`) said it had NOT done is now done, and two guards shipped. **NO TEST WAS CHANGED** \u2014 the repair is an operator design call. Full report: `docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md`. **The hazard.** `pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py` left 39 tracked files modifie",
+        "material_physical_fields": [
+          "port"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### 2026-07-29 (outer-loop, SURVEYED \u2014 OPERATOR DECISION PENDING): running the test suite rewrites the research record"
+        },
+        "receipt_date": "20260729",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-001",
+        "source": "### 2026-07-29 (outer-loop, SURVEYED \u2014 OPERATOR DECISION PENDING): running the test suite rewrites the research record",
+        "target_ok": false,
+        "text_sha256": "sha256:3cfd5acc59e75b96bc895f047786d6292c14a47b87ba1861c0f93fa749284782",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 2,
+        "excerpt": "### RESOLVED 2026-07-14 (MANDATORY \u2014 outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY **Origin:** operational retrospectives for milestones .469, .473 (three separate generation passes), and .474 (two separate generation passes) have ALL reported a false \"no experiment commits found since activation\" TIMING DATA block, even though `git log <activate-commit>..HEAD` shows dozens of rea",
+        "material_physical_fields": [
+          "port"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### RESOLVED 2026-07-14 (MANDATORY \u2014 outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY"
+        },
+        "receipt_date": "20260714",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-002",
+        "source": "### RESOLVED 2026-07-14 (MANDATORY \u2014 outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY",
+        "target_ok": false,
+        "text_sha256": "sha256:e30adeb5dbed742dda2897411842983c26cee7797299a53f65e9fe09752fd8f0",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 3,
+        "excerpt": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY) **Origin:** 2026-05-24 operator confirmed the GateMate A1-EVB-2M is reattached after a power-cycle replug. exp2957 (`.278) had emitted `blocked_board_not_detected` because the",
+        "material_physical_fields": [
+          "board",
+          "dirtyjtag",
+          "power"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY)"
+        },
+        "receipt_date": "20260630",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-003",
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY)",
+        "target_ok": true,
+        "text_sha256": "sha256:bc68fc20b72ce2195060366c96062b66872d571cfae27b83f3e49b2ec8db804e",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 4,
+        "excerpt": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 Phase-3 FPGA corrigenda deprioritized; KV260 is POC-tier per the hardware re-scope + the paper-v6 narrowing already reframed the KV260 claims; board continuity is the per-milestone rotation) \u2014 was: NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda \u2014 Three FATAL-Rescue Experiments (.276+ MANDATORY) **Origin:** 2026-05-23 Phase-3 Empirical-Readiness Deep Think round (see `docs/research-notes/phase3-empirical-readiness-deep-think-results.md`) p",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 Phase-3 FPGA corrigenda deprioritized; KV260 is POC-tier per the hardware re-scope + the paper-v6 narrowing already reframed the KV260 claims; board continuity is the per-milestone rotation) \u2014 was: NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda \u2014 Three FATAL-Rescue Experiments (.276+ MANDATORY)"
+        },
+        "receipt_date": "20260630",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-004",
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 Phase-3 FPGA corrigenda deprioritized; KV260 is POC-tier per the hardware re-scope + the paper-v6 narrowing already reframed the KV260 claims; board continuity is the per-milestone rotation) \u2014 was: NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda \u2014 Three FATAL-Rescue Experiments (.276+ MANDATORY)",
+        "target_ok": false,
+        "text_sha256": "sha256:e913f293f0612a7d92f4a50525a5904f7dfffd64035f3c4d20d4f34808ae8ebb",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 5,
+        "excerpt": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v2 build-version entry is obsolete) \u2014 was: NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 \u2014 Corrected Toolchain Invocation (.276+ MANDATORY) **Origin:** 2026-05-23 operator directive (\"can we unblock gatemate?\") after exp2899 (`.274) emitted `blocked_gatemate_toolchain_missing`. Investigation showed the toolchain is fully present \u2014 `nextpnr-gatemate` as a",
+        "material_physical_fields": [],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v2 build-version entry is obsolete) \u2014 was: NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 \u2014 Corrected Toolchain Invocation (.276+ MANDATORY)"
+        },
+        "receipt_date": "20260630",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-005",
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v2 build-version entry is obsolete) \u2014 was: NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 \u2014 Corrected Toolchain Invocation (.276+ MANDATORY)",
+        "target_ok": false,
+        "text_sha256": "sha256:8bad558b1aed45b04d2fd9b492f514a04f9f7d301ecfb716b52174d9a61d06cc",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 6,
+        "excerpt": "### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone \u2014 DURABLE (.237+ MANDATORY, until each board's terminal state) **Origin:** 2026-05-18 operator directive: \"I just don't want you to forget about the FPGAs again.\" Codified as CLAUDE.md MANDATORY rule \"Hardware-Task Continuity Discipline\" (commit b9e3ad392). **The rule (summary):** every milestone roadmap MUST include at least one task targeting EACH attached FPGA board until that board reaches its defined terminal state. The t",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone \u2014 DURABLE (.237+ MANDATORY, until each board's terminal state)"
+        },
+        "receipt_date": "20260518",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-006",
+        "source": "### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone \u2014 DURABLE (.237+ MANDATORY, until each board's terminal state)",
+        "target_ok": false,
+        "text_sha256": "sha256:8d1b3b8d6810620178e35ede81395180c7a963d6fe4f863acd5285251689599a",
+        "usb_only_evidence": true,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 7,
+        "excerpt": "### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 \u2014 Precondition-Gated, Not Fabricated (.237+ MANDATORY) **Origin:** 2026-05-18 23:55Z operator request after verifying both PolarFire SoC Discovery Kit and GateMate A1-EVB-2M are physically attached to the bench and udev rules are installed. The prior smoke attempt (exp1680 PolarFire smoke v2) is the canonical fabrication exemplar cited in CLAUDE.md \"Pre-Launch Preconditions Discipline\" \u2014 it reported TPR=1.0 with `run_duration_s=0` and never act",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 \u2014 Precondition-Gated, Not Fabricated (.237+ MANDATORY)"
+        },
+        "receipt_date": "20260518",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-007",
+        "source": "### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 \u2014 Precondition-Gated, Not Fabricated (.237+ MANDATORY)",
+        "target_ok": true,
+        "text_sha256": "sha256:a01e1a160fb9dcc2b117056545caac2a6ba0f4be707ea87df0619c29bbd7c40e",
+        "usb_only_evidence": true,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 8,
+        "excerpt": "### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track \u2014 Decoupled from Paper + Hardware (.121+ MANDATORY) **Operator directives 2026-05-08 ~21:30Z:** 1. \"I want to kick the paper and arXiv submission into the next phase as it should not block us\" 2. \"I do not want to wait on the GateMate + PolarFire Soc hardware validation for phase 1 as it should not block us\" **Effect:** Phase 1 ship gate is now purely software-operational. See CLAUDE.md \"Project Vision\" + memory entry `feedback_phase_1_ship_decoupl",
+        "material_physical_fields": [
+          "board",
+          "port"
+        ],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track \u2014 Decoupled from Paper + Hardware (.121+ MANDATORY)"
+        },
+        "receipt_date": "20260508",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-008",
+        "source": "### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track \u2014 Decoupled from Paper + Hardware (.121+ MANDATORY)",
+        "target_ok": false,
+        "text_sha256": "sha256:ee4bea61dc5d29d6c25ec269827d46ee41c34814ad1ee2f846149cbdf728111f",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 9,
+        "excerpt": "## 2026-08-11 operator physical action: ALL FPGA hardware power-cycled \u2014 GateMate changed-state gate should now unblock **Operator directive (2026-08-11T12:58:49Z UTC):** \"I have just power cycled all of the FPGA hardware.\" This is the physical state change `REQ-HW-6121` / `experiment_6121_gatemate_changed_ state_gate_v530.py` has been blocked waiting on since `.530` (2026-08-04): \"operator must change physical state and record a dated receipt.\" **Dated physical receipt (structured, for the next",
+        "material_physical_fields": [
+          "board",
+          "dirtyjtag",
+          "power"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "board": "Cologne Chip GateMate A1-EVB-2M",
+          "changes": [
+            {
+              "description": "operator power-cycled all attached FPGA boards, including GateMate",
+              "field": "power"
+            }
+          ],
+          "exists": true,
+          "power": "power-cycled 2026-08-11 per operator directive (was: cached physical power unresolved; raw all-ones TDO suggested open or unpowered target)",
+          "receipt_date": "20260811",
+          "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+          "usb_dirtyjtag": "1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)",
+          "verified_read_only": "lsusb (2026-08-11T12:58:49Z): 1209:c0ca present, bus 3 device 11, path 2.3 -- no JTAG command run, no detect attempted; that single non-destructive detect is reserved for the gated script per the operator_action_packet's do_not_do list"
+        },
+        "receipt_date": "20260811",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-009",
+        "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+        "target_ok": true,
+        "text_sha256": "sha256:e6a2ed275f1d60984640d0b760b52a5d5a2080f55285c9e929856640164c3d73",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 10,
+        "excerpt": "### 2026-09-08 \u2014 OPERATOR ACTION: GateMate has blocked on the same missing receipt for five weeks **This one cannot be resolved by the loop or by me. It needs an operator attestation.** exp7146 closed `blocked_no_new_operator_physical_state_receipt_after_exp6559`. It is not the first. Measured across the artifact corpus, blocks on a missing physical receipt: | date | experiment | verdict | |---|---|---| | 2026-08-04 | exp6121 | `blocked_physical_action: unchanged GateMate cable/port/power` | | 2",
+        "material_physical_fields": [
+          "board",
+          "cable",
+          "port",
+          "power"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### 2026-09-08 \u2014 OPERATOR ACTION: GateMate has blocked on the same missing receipt for five weeks"
+        },
+        "receipt_date": "20260908",
+        "reject_reason": "wrong_or_ambiguous_target",
+        "row_id": "receipt-010",
+        "source": "### 2026-09-08 \u2014 OPERATOR ACTION: GateMate has blocked on the same missing receipt for five weeks",
+        "target_ok": false,
+        "text_sha256": "sha256:20cd972b81dd81fb6074882673e4182cbb1b26dcbfffe4d05d8a8c6349111907",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 11,
+        "excerpt": "#### What I measured, and what I deliberately did NOT do Observable state, checked directly just now: - DirtyJTAG bridge enumerated: `1209:c0ca (bus 3, device 6) path: 2.3` - `openFPGALoader` present at `/opt/oss-cad-suite/bin/openFPGALoader` - `openFPGALoader -c dirtyJtag --detect` returns exit 0 and the expected IDCODE: `idcode 0x20000001, manufacturer colognechip, family GateMate Series, model GM1Ax` **So the board is connected, powered, and its JTAG path is live.** Nothing is broken. **I did",
+        "material_physical_fields": [
+          "board",
+          "cable",
+          "dirtyjtag",
+          "port",
+          "power"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "#### What I measured, and what I deliberately did NOT do"
+        },
+        "receipt_date": null,
+        "reject_reason": "undated",
+        "row_id": "receipt-011",
+        "source": "#### What I measured, and what I deliberately did NOT do",
+        "target_ok": true,
+        "text_sha256": "sha256:1cef0872345139a4c97e028f97a804262b385b4638828ec37bff9ff6c83f209f",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 12,
+        "excerpt": "#### The exact shape the check accepts Scanned files include `ops/known-issues.md`, `ops/hardware-bringup-prep.md`, `ops/operator-followup.md`, `ops/status.md`. The exemplar in `experiment_6559_gatemate_changed_state_continuity.py:DEFAULT_VALID_TEST_RECEIPT`: ``` receipt_date: YYYYMMDD, must be AFTER 20260823 operator_authored: true board: the GateMate A1-EVB-2M usb_dirtyjtag: \"1209:c0ca DirtyJTAG\" power: what the power state now is changes: [{field: ..., description: ...}] action: e.g. \"detect\"",
+        "material_physical_fields": [
+          "board",
+          "dirtyjtag",
+          "power"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "#### The exact shape the check accepts"
+        },
+        "receipt_date": "20260823",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-012",
+        "source": "#### The exact shape the check accepts",
+        "target_ok": true,
+        "text_sha256": "sha256:f0fe16c23f70d777f5a1439a9c38f8493050afcb53b9641a7d817d36ec3a9ab9",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 13,
+        "excerpt": "#### The question underneath, which is yours and not mine The check demands evidence of a CHANGED physical state. If nothing about the board has changed since 2026-08-23 \u2014 and the detect above suggests a working, undisturbed setup \u2014 then **no honest receipt can be written and the task is unsatisfiable by design.** That would make five weeks of blocks the correct behaviour of a check whose premise no longer holds. Two coherent resolutions, both yours: 1. **Something did change** \u2014 write the recei",
+        "material_physical_fields": [
+          "board"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "#### The question underneath, which is yours and not mine"
+        },
+        "receipt_date": "20260823",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-013",
+        "source": "#### The question underneath, which is yours and not mine",
+        "target_ok": false,
+        "text_sha256": "sha256:583a3e50eec14bc18fadc071c6663080407c8b7448da406852af0f96021dd304",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 14,
+        "excerpt": "### 2026-09-09 \u2014 the dominant failure mode is guards that FIRE and are never answered Three independent alarms measured today, all firing correctly, none answered until an operator happened to ask an unrelated question: | alarm | firings | span | state | |---|---|---|---| | `WRONG_MODEL_LOADED` | **14**, across 9 distinct days | 2026-08-23 to 2026-09-09 (**17 days**) | unanswered until 2026-09-08 | | GateMate physical receipt | 5 blocked tasks | 2026-08-04 to 2026-09-08 (**5 weeks**) | still ope",
+        "material_physical_fields": [
+          "board",
+          "port"
+        ],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### 2026-09-09 \u2014 the dominant failure mode is guards that FIRE and are never answered"
+        },
+        "receipt_date": "20260909",
+        "reject_reason": "wrong_or_ambiguous_target",
+        "row_id": "receipt-014",
+        "source": "### 2026-09-09 \u2014 the dominant failure mode is guards that FIRE and are never answered",
+        "target_ok": false,
+        "text_sha256": "sha256:7533694856e9ad8454c9972efaddcd8c898648ec009c5000c7ffa9f634eaeec4",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 15,
+        "excerpt": "#### REFINEMENT, same hour: one of those three is unanswered BY DESIGN The entry above groups three alarms as \"fired correctly, nobody answered\". That framing is right for two of them and **wrong for `WRONG_MODEL_LOADED`**, which I checked afterwards. `WRONG_MODEL_LOADED` is written by the **run sentinel** in `~/.carnot/orphan-cleanup.sh`, whose own comment says it is *\"Read-only except those ops appends; it NEVER kills a process.\"* The acting half is a separate **stop authority** that reaps a p",
+        "material_physical_fields": [],
+        "operator_authored": true,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "#### REFINEMENT, same hour: one of those three is unanswered BY DESIGN"
+        },
+        "receipt_date": null,
+        "reject_reason": "undated",
+        "row_id": "receipt-015",
+        "source": "#### REFINEMENT, same hour: one of those three is unanswered BY DESIGN",
+        "target_ok": false,
+        "text_sha256": "sha256:403086b0a8b5910245b7738982d5dcd406b0df4df489a27a0068751cce518093",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 16,
+        "excerpt": "### 2026-09-09 \u2014 READ THIS FILE AS DEFECT-SAMPLED, NOT AS A HEALTH ASSESSMENT A note about this file itself, because a future session will read it and draw the wrong conclusion. **I have added 28 entries to this file since 2026-09-08. Eight of them mention anything working.** That ratio is not a measurement of the system; it is a measurement of my job. The outer loop is asked to hunt for green checks that never fire, claims nobody measured, and guards silent because they are broken. **The sampli",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### 2026-09-09 \u2014 READ THIS FILE AS DEFECT-SAMPLED, NOT AS A HEALTH ASSESSMENT"
+        },
+        "receipt_date": "20260909",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-016",
+        "source": "### 2026-09-09 \u2014 READ THIS FILE AS DEFECT-SAMPLED, NOT AS A HEALTH ASSESSMENT",
+        "target_ok": false,
+        "text_sha256": "sha256:5ae57fb3921402c52ef0dfc225e18f0aa7e98ade52fe89bd06600cc30bd43695",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 17,
+        "excerpt": "#### CORRECTION, same day: \"reserved slots sit at the end by convention\" was asserted from n=1 The entry above explains WHY three mandatory disciplines lose their slot to a tail truncation by saying reserved slots are placed at the end of a roadmap by convention. That was inferred from `.631` alone and filed without measuring. Measured now, over the git history of `research-roadmap.yaml` (~60 activated versions), position expressed as a fraction where 1.00 is the last task: | slot | n | median p",
+        "material_physical_fields": [
+          "board",
+          "port"
+        ],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "#### CORRECTION, same day: \"reserved slots sit at the end by convention\" was asserted from n=1"
+        },
+        "receipt_date": null,
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-017",
+        "source": "#### CORRECTION, same day: \"reserved slots sit at the end by convention\" was asserted from n=1",
+        "target_ok": false,
+        "text_sha256": "sha256:841e642c68fbbcf12b97d485b5edf8a542bcc3752ffa4aaf02e324a7561964fc",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 18,
+        "excerpt": "### 2026-09-09 \u2014 Hardware-Task Continuity audit: two boards graduated, GateMate unmet since .566, and my own measurement was too narrow Delegated audit, verified here on the three load-bearing artifacts before recording. **First, a correction to my own entry earlier today.** I scanned ~60 roadmap versions for hardware tasks with `kv260|kria|gatemate|polarfire|three-board|board` against ids and titles, found 2, and explicitly refused to call the discipline unmet because the pattern might be too n",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### 2026-09-09 \u2014 Hardware-Task Continuity audit: two boards graduated, GateMate unmet since .566, and my own measurement was too narrow"
+        },
+        "receipt_date": "20260909",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-018",
+        "source": "### 2026-09-09 \u2014 Hardware-Task Continuity audit: two boards graduated, GateMate unmet since .566, and my own measurement was too narrow",
+        "target_ok": false,
+        "text_sha256": "sha256:88c3f15447c7316a84962922af4b8e5bd210f00d632d841890231fb83836630f",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 19,
+        "excerpt": "### 2026-09-10 23:13Z \u2014 exp7194's tool-gap audit: clean null, quarantined on a labeling technicality `exp7194-arc-gap-audit` (gated on exp7193, which unblocked at 22:13Z) landed `complete_null_no_missing_tool_requested_banked_progress_noncausal` \u2014 an honest, informative result: no missing tool was ever requested, and this round's banked progress was not causally linked to the tool loop. Consistent with every measurement to date. **Quarantined anyway.** `flagged_adversarial: True`, live re-check ",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### 2026-09-10 23:13Z \u2014 exp7194's tool-gap audit: clean null, quarantined on a labeling technicality"
+        },
+        "receipt_date": "20260910",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-019",
+        "source": "### 2026-09-10 23:13Z \u2014 exp7194's tool-gap audit: clean null, quarantined on a labeling technicality",
+        "target_ok": false,
+        "text_sha256": "sha256:29049d97e86b7b929d23396290e2eaca21db2086d21fdfca4c6eb3a3db7bc9a9",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 20,
+        "excerpt": "### 2026-09-11 04:34 UTC \u2014 a compiled PyO3 binding fails to load on this host, and execution_venue's labeling bug recurred a second time **Second EXECUTION_VENUE_INVALID in ~6 hours, different script.** exp7194 (fixed `128af4c0d0`) and now `exp7202-slice-cost-quality` (`experiment_7202_v634_slice_cost_quality.py`, fixed `afd30922c6`) both independently wrote a free-text `execution_venue` value outside the closed set (`host:icbfl1` and `host_cpu` respectively) \u2014 two different agent authors making",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/known-issues.md",
+        "raw_receipt": {
+          "source": "### 2026-09-11 04:34 UTC \u2014 a compiled PyO3 binding fails to load on this host, and execution_venue's labeling bug recurred a second time"
+        },
+        "receipt_date": "20260911",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-020",
+        "source": "### 2026-09-11 04:34 UTC \u2014 a compiled PyO3 binding fails to load on this host, and execution_venue's labeling bug recurred a second time",
+        "target_ok": false,
+        "text_sha256": "sha256:f87244048183fa807e8a34787e45873ba3674d2361298e300aaffe3b1cad34e6",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 21,
+        "excerpt": "### Active hardware tracks (Exp 1460 + 2026-05-22 update) | Track | Why active now | Boundary | |---|---|---| | Dual RTX 3090 CUDA local SOTA runtime repair | Exp 1442 saw two RTX 3090s and cached flagship GGUF models; the blocker is the local llama.cpp CUDA runtime. **2026-05-22 update:** exp2862 (`.270 SOTA Runtime Cache Offload Resolver v3) recorded `usable_response=true`. CUDA runtime is now operational. | No live SOTA inference claim until a smoke run records `usable_response=true`. **Close",
+        "material_physical_fields": [
+          "board",
+          "dirtyjtag",
+          "port"
+        ],
+        "operator_authored": false,
+        "path": "research-hardware-wishlist.md",
+        "raw_receipt": {
+          "source": "### Active hardware tracks (Exp 1460 + 2026-05-22 update)"
+        },
+        "receipt_date": "20260522",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-021",
+        "source": "### Active hardware tracks (Exp 1460 + 2026-05-22 update)",
+        "target_ok": false,
+        "text_sha256": "sha256:023a199a9f5e65a19fd6f93ec36b89f53b331c9a40f96ccfab59c998a389eca6",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 22,
+        "excerpt": "### Exp 5231 hardware continuity + p-bit boundary plan (2026-07-04) - KV260 continuity remains SSH-only; no benchmark speedup is claimed. - PolarFire continuity uses SSH plus a bounded hash/correctness smoke when reachable. - GateMate preserves the v477 physical/JTAG block (`0xffffffff`) until the operator changes cable, port, or board power setup. - Future sampler plan: `docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md` for `distributed_sparse_pbit_boundary_exchan",
+        "material_physical_fields": [
+          "board",
+          "cable",
+          "port",
+          "power"
+        ],
+        "operator_authored": true,
+        "path": "research-hardware-wishlist.md",
+        "raw_receipt": {
+          "source": "### Exp 5231 hardware continuity + p-bit boundary plan (2026-07-04)"
+        },
+        "receipt_date": "20260704",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-022",
+        "source": "### Exp 5231 hardware continuity + p-bit boundary plan (2026-07-04)",
+        "target_ok": false,
+        "text_sha256": "sha256:44ba2f32889956b9822da703bbd8682f38a33dd90b52fdbe0c7cec4360bae7d1",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 23,
+        "excerpt": "# Hardware bring-up prep \u2014 GateMate A1 + PolarFire SoC Discovery Kit **Filed by:** outer-loop (Claude) 2026-05-14 16:55Z **Status:** boards physically on bench; software prep documented below **Affects experiments:** `.166 exp2105 (GateMate smoke), planned `.166/`.167 PolarFire smoke",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "# Hardware bring-up prep \u2014 GateMate A1 + PolarFire SoC Discovery Kit"
+        },
+        "receipt_date": "20260514",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-023",
+        "source": "# Hardware bring-up prep \u2014 GateMate A1 + PolarFire SoC Discovery Kit",
+        "target_ok": false,
+        "text_sha256": "sha256:20788ca5731c5a54f0b21e02e9aa79209a93ff0e422ad6e4a49d45e7e021a54f",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 24,
+        "excerpt": "## What's verified working | Component | Status | Evidence | |---|---|---| | GateMate A1-EVB-2M physical | attached, **programmer is ONBOARD** | The Olimex variant ships with an integrated DirtyJTAG-firmware MCU on the PCB; programming goes over the board's own USB-C cable. Verified 2026-05-18 via `/sys/bus/usb/devices/3-2.3/` (5-interface composite: vendor JTAG + 2x CDC ACM + 2x CDC data). The earlier note about needing an external DirtyJTAG was misleading \u2014 `lsusb` was checked for FTDI VIDs, b",
+        "material_physical_fields": [],
+        "operator_authored": true,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "## What's verified working"
+        },
+        "receipt_date": "20260518",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-024",
+        "source": "## What's verified working",
+        "target_ok": true,
+        "text_sha256": "sha256:28a190e7a212b402e032a251e526d6a8525ac3491e43dccd5e40d858a3c8b244",
+        "usb_only_evidence": true,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 25,
+        "excerpt": "## 2026-05-14 22:15Z note \u2014 THERMAL CONSTRAINTS (operator) **Neither the PolarFire SoC Discovery Kit nor the GateMate A1-EVB-2M has active cooling.** The KV260 has a small fan + heatsink; these two boards are bare / passively cooled. **Implications:** - **Sustained high-load workloads risk thermal throttling.** RISC-V cores on the MPFS095T may down-clock under sustained 100% utilization. FPGA fabric on either board may degrade or warp under extended high-toggle-rate operation. - **Benchmark resu",
+        "material_physical_fields": [],
+        "operator_authored": true,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "## 2026-05-14 22:15Z note \u2014 THERMAL CONSTRAINTS (operator)"
+        },
+        "receipt_date": "20260514",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-025",
+        "source": "## 2026-05-14 22:15Z note \u2014 THERMAL CONSTRAINTS (operator)",
+        "target_ok": false,
+        "text_sha256": "sha256:6afe6a0608ae83f96b29d759b522d09c4928a089d13aaf28b306c7aa905a533d",
+        "usb_only_evidence": true,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 26,
+        "excerpt": "## What's NOT yet working | Component | Issue | Fix path | |---|---|---| | DirtyJTAG USB raw access | `openFPGALoader -c dirtyJtag --detect` fails with \"fails to open device\" because /dev/bus/usb/003/006 is 664 root:root | Install /tmp/99-fpga-boards.rules (sudo) \u2014 see below | | FlashPro5 USB raw access (for JTAG/flash ops, not UART) | ~~needs udev rule~~ \u2014 INSTALLED 2026-05-18 | `/etc/udev/rules.d/99-fpga-boards.rules` grants `uucp` group raw access to 1209:c0ca + 1514:2008 | | ~~GateMate JTAG ",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "## What's NOT yet working"
+        },
+        "receipt_date": "20260518",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-026",
+        "source": "## What's NOT yet working",
+        "target_ok": true,
+        "text_sha256": "sha256:14b4360011cad24b996dbb0acb7363a276cc56c3bb7435e8a6859cfe21452c69",
+        "usb_only_evidence": true,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 27,
+        "excerpt": "## Pre-prepared artifacts | Artifact | Path | Purpose | |---|---|---| | Minimal n=16 GateMate Ising tile (RTL) | `rtl/gatemate_ising_n16.v` | exp2105 smoke target | | yosys synthesis script | `rtl/gatemate_ising_n16.ys` | yosys -p flow documented | | Synthesized JSON netlist | `rtl/gatemate_ising_n16.json` | verified produces 136 cells (~0.7% of A1 budget); P&R blocked on LUT mapping | | udev rule file | `/etc/udev/rules.d/99-fpga-boards.rules` | **INSTALLED 2026-05-18 19:54Z** by outer-loop; ve",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "## Pre-prepared artifacts"
+        },
+        "receipt_date": "20260518",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-027",
+        "source": "## Pre-prepared artifacts",
+        "target_ok": false,
+        "text_sha256": "sha256:c0a38f71fb95db1238906eb6f1ff7e853ce276bd6cf46a49bbfae8edbbac24ec",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 28,
+        "excerpt": "# 2. DirtyJTAG access \u2014 VERIFIED 2026-05-18:",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "# 2. DirtyJTAG access \u2014 VERIFIED 2026-05-18:"
+        },
+        "receipt_date": "20260518",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-028",
+        "source": "# 2. DirtyJTAG access \u2014 VERIFIED 2026-05-18:",
+        "target_ok": false,
+        "text_sha256": "sha256:6f0fa9de12820d842fe4d7b0cd739c1326634d649d9baa14585f3be0cda02c52",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 29,
+        "excerpt": "# openFPGALoader -c dirtyJtag --detect",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "#    openFPGALoader -c dirtyJtag --detect"
+        },
+        "receipt_date": null,
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-029",
+        "source": "#    openFPGALoader -c dirtyJtag --detect",
+        "target_ok": false,
+        "text_sha256": "sha256:491b85958d83a5ea8e545e93412f9aace7a5780c9dc805cbbb13f19039237b2d",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 30,
+        "excerpt": "# uptime: 4 days 5:41 ``` **No further bench-side action required for either board** as of 2026-05-18. The only remaining technical blocker is the yosys\u2194nextpnr LUT mapping mismatch (`synth_gatemate -abc9` workaround pending), which is software not hardware.",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "#       uptime: 4 days 5:41"
+        },
+        "receipt_date": "20260518",
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-030",
+        "source": "#       uptime: 4 days 5:41",
+        "target_ok": false,
+        "text_sha256": "sha256:91799dbebe7dfc042b9629dd443b4ad052e38506f8145c27dbd2159145adb52e",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 31,
+        "excerpt": "### Bench-side (physical actions) 1. **GateMate JTAG wiring**: identify the GateMate A1-EVB-2M JTAG header (typically a 10-pin or 14-pin connector marked \"JTAG\" on the silkscreen). Wire from the DirtyJTAG's host pins: - DirtyJTAG TCK \u2192 GateMate JTAG TCK - DirtyJTAG TMS \u2192 GateMate JTAG TMS - DirtyJTAG TDI \u2192 GateMate JTAG TDI - DirtyJTAG TDO \u2192 GateMate JTAG TDO - DirtyJTAG GND \u2192 GateMate GND - (optionally) DirtyJTAG TRST \u2192 GateMate JTAG TRST Pinout for DirtyJTAG depends on the firmware variant; ch",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "### Bench-side (physical actions)"
+        },
+        "receipt_date": null,
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-031",
+        "source": "### Bench-side (physical actions)",
+        "target_ok": true,
+        "text_sha256": "sha256:579a66447eacd1e1fe1be7a9672b991270259a92cafbd5862d078c4240403416",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 32,
+        "excerpt": "## Next milestone tasks - `.166 exp2105: GateMate A1 toolchain smoke (RTL synth + P&R; flash conditional on JTAG wiring complete) - `.166 exp2106 (proposed, pending operator confirmation): PolarFire SoC smoke (UART banner read + boot-mode documentation) - `.167+: real Carnot Ising sampler on GateMate (replace the minimal n=16 with the verifier-relevant sampler from rtl/ising_sampler_v3.v adapted)",
+        "material_physical_fields": [],
+        "operator_authored": true,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "## Next milestone tasks"
+        },
+        "receipt_date": null,
+        "reject_reason": "undated",
+        "row_id": "receipt-032",
+        "source": "## Next milestone tasks",
+        "target_ok": false,
+        "text_sha256": "sha256:fdb47234a27bdff7f96040112ab0645ceec305a9eb5de233ecda709544e7947b",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 33,
+        "excerpt": "## Why nothing further can be done from this session Without sudo (udev rule), the DirtyJTAG and FlashPro5 USB raw devices remain root-only. The conductor's experiments would face the same \"fails to open device\" error. Once the udev rule lands, every subsequent JTAG/flash op should work from non-root.",
+        "material_physical_fields": [],
+        "operator_authored": false,
+        "path": "ops/hardware-bringup-prep.md",
+        "raw_receipt": {
+          "source": "## Why nothing further can be done from this session"
+        },
+        "receipt_date": null,
+        "reject_reason": "not_operator_authored",
+        "row_id": "receipt-033",
+        "source": "## Why nothing further can be done from this session",
+        "target_ok": false,
+        "text_sha256": "sha256:1ac797c63f7743ab15a879c56103ecc5b43b3bfdaed9bee62df4dceb4a046833",
+        "usb_only_evidence": true,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 34,
+        "excerpt": "### 2026-05-20: GateMate \u2014 terminal state met, optional follow-on tasks GateMate has fully graduated from per-milestone mandatory inclusion (both terminal-state halves met: bitstream flashed + on-board sampler timing benchmark at 951 Hz sample rate, KL=1.92 from analytic Boltzmann). **Optional operator-side direction**: do you want to push KL toward tighter analytic match (which would require RNG-source improvement or larger n)? Or treat the n=16 result as sufficient for paper-v6's sovereignty s",
+        "material_physical_fields": [],
+        "operator_authored": true,
+        "path": "ops/operator-followup.md",
+        "raw_receipt": {
+          "source": "### 2026-05-20: GateMate \u2014 terminal state met, optional follow-on tasks"
+        },
+        "receipt_date": "20260520",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-034",
+        "source": "### 2026-05-20: GateMate \u2014 terminal state met, optional follow-on tasks",
+        "target_ok": false,
+        "text_sha256": "sha256:0f2b2989e55ae2da76d71be3bb5e698c5ddc2998b3e2d42f1c5ecc684f14dcca",
+        "usb_only_evidence": false,
+        "valid": false
+      },
+      {
+        "action": "detect",
+        "bitstream_path": null,
+        "candidate_index": 35,
+        "excerpt": "### 2026-05-19: Paper-v6 arXiv submission \u2014 operator-only per CLAUDE.md `feedback_publication_holds_until_phase4_pivot.md` (2026-05-02) + CLAUDE.md \"Operator-Only External Publication\" rule (commit `49cc90b7e` 2026-05-19) both apply. Current state: - `arxiv_ready=False` per `.243 capstone (Phase 4 v3 blocked on real IsingVerifier step-energy implementation) - exp2536 `.244 LaTeX compile success, 205-word abstract, package assembled - AUROC 0.9750 adversarially-verified, +5.14pp over HIVE peer - ",
+        "material_physical_fields": [],
+        "operator_authored": true,
+        "path": "ops/operator-followup.md",
+        "raw_receipt": {
+          "source": "### 2026-05-19: Paper-v6 arXiv submission \u2014 operator-only per CLAUDE.md"
+        },
+        "receipt_date": "20260519",
+        "reject_reason": "stale_or_not_newer_than_exp6525",
+        "row_id": "receipt-035",
+        "source": "### 2026-05-19: Paper-v6 arXiv submission \u2014 operator-only per CLAUDE.md",
+        "target_ok": false,
+        "text_sha256": "sha256:85d4d90659b30f5f4b530cc10ac452dfdc0e966636cf10360eca288022a55c5d",
+        "usb_only_evidence": false,
+        "valid": false
+      }
+    ],
+    "exists": false,
+    "latest_receipt_date": "20260911",
+    "reason": "no dated operator-authored physical receipt newer than Exp6525",
+    "required_operator_action": "operator records a dated GateMate cable, port, power, board, JTAG, or DirtyJTAG physical change after Exp6559",
+    "search_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7599_v663_board_continuity/gatemate_receipt_search.json",
+    "search_sha256": "sha256:77d3d98cd75569b04d7aed2ee5caad58e6745fd1a2318b250b6cabe814c9d94e"
+  },
+  "placement_evidence": {
+    "amdahl_upper_bound": null,
+    "failed_check": {
+      "check": "eligible_public_client_stage_timings",
+      "expected": "measured whole-client arithmetic, IPC, persistence, and other times",
+      "field": "public_client_stage_timings",
+      "observed": "missing separate measured IPC and persistence fields",
+      "op": "contains",
+      "passed": false,
+      "path": "results/experiment_7598_v663_rust_consumer.json",
+      "upstream": "Exp7598"
+    },
+    "formula": "whole_client / (whole_client - arithmetic)",
+    "fractions": {},
+    "placement_scope": "placement_unmeasured",
+    "projected_latency_is_measurement": false
+  },
+  "placement_fractions": {},
+  "placement_scope": "placement_unmeasured",
+  "planned_inference_substrate_class": "aggregation",
+  "preconditions_checked": [
+    {
+      "check": "dated_board_disposition",
+      "expected": "readable nonempty file",
+      "field": "path",
+      "observed": "readable nonempty file",
+      "op": "exists",
+      "passed": true,
+      "path": "results/experiment_7314_v642_board_continuity.json",
+      "upstream": "prior board ledger dated disposition"
+    },
+    {
+      "check": "dated_board_disposition",
+      "expected": "readable nonempty file",
+      "field": "path",
+      "observed": "readable nonempty file",
+      "op": "exists",
+      "passed": true,
+      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "upstream": "KV260 dated disposition"
+    },
+    {
+      "check": "dated_board_disposition",
+      "expected": "readable nonempty file",
+      "field": "path",
+      "observed": "readable nonempty file",
+      "op": "exists",
+      "passed": true,
+      "path": "results/experiment_7231_v636_board_continuity.json",
+      "upstream": "PolarFire dated disposition"
+    },
+    {
+      "check": "dated_board_disposition",
+      "expected": "readable nonempty file",
+      "field": "path",
+      "observed": "readable nonempty file",
+      "op": "exists",
+      "passed": true,
+      "path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "upstream": "GateMate dated disposition"
+    },
+    {
+      "check": "capability_requirement",
+      "expected": [
+        "REQ-HW-7599",
+        "SCENARIO-HW-7599-BOARD-SCOPES",
+        "SCENARIO-HW-7599-PLACEMENT",
+        "SCENARIO-HW-7599-PLACEMENT-UNMEASURED"
+      ],
+      "field": "REQ-HW-7599 and scenarios",
+      "observed": [
+        "REQ-HW-7599",
+        "SCENARIO-HW-7599-BOARD-SCOPES",
+        "SCENARIO-HW-7599-PLACEMENT",
+        "SCENARIO-HW-7599-PLACEMENT-UNMEASURED"
+      ],
+      "op": "contains",
+      "passed": true,
+      "path": "openspec/capabilities/hardware/spec.md",
+      "upstream": "hardware capability"
+    },
+    {
+      "check": "optional_exp7598_presence",
+      "expected": "present or explicit absent",
+      "field": "path",
+      "observed": "present",
+      "op": "optional",
+      "passed": true,
+      "path": "results/experiment_7598_v663_rust_consumer.json",
+      "upstream": "Exp7598 public client"
+    }
+  ],
+  "prior_verdict_retirement": {
+    "disposition": "not_retired; board continuity remains independent",
+    "literal_verdict_repeated": false,
+    "prior_experiment": "exp7571-portable-calibration",
+    "prior_verdict": "complete_blocked_exp7561_recalibration_ready_score"
+  },
+  "random_seed": 7599001,
+  "reproducibility_checksum": "sha256:7b64746ec5a1e829fe8cc7ba457c5a017a11260d2b5a195bee3622ba793e9fa1",
+  "resource_ownership": {
+    "raw_parent_creatable": true,
+    "result_parent_writable": true,
+    "root": "/home/ianblenke/github.com/ianblenke/carnot"
+  },
+  "retire_if_same_verdict": true,
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "historical_scope",
+      "board": "KV260",
+      "censored": false,
+      "claim_scope": "historical programmable-logic latency transcript and synthesis only",
+      "current_reachability": "unknown_not_probed",
+      "denominator": 1,
+      "direction": "documentation_only",
+      "disposition": "graduated_fpga_fabric_scope_preserved",
+      "error": null,
+      "evidence_artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "evidence_artifact_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "evidence_date": "20260913",
+      "exact_next_condition": "none; future access is separately scoped",
+      "execution_venue": "kv260_fpga_fabric_historical",
+      "future_access": "ssh kria",
+      "hardware_operations_issued": [],
+      "historical_hash_establishes_current_reachability": false,
+      "host_block_device_precondition_allowed": false,
+      "k_max": 5,
+      "metric": true,
+      "missing": false,
+      "numerator": 1,
+      "processor_class": "fpga_fabric",
+      "provenance": "authenticated historical disposition; no current board command",
+      "row_type": "board_continuity",
+      "seed": null,
+      "source_artifact_sha256": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_path": "results/experiment_7314_v642_board_continuity.json#board=KV260",
+      "source_sha256": "sha256:98032efb16d856e0a31be6631a85d46e68bfba14a1fc9fff4286a6579d4326ac",
+      "unit_id": "board:KV260"
+    },
+    {
+      "abstention": false,
+      "arm": "historical_scope",
+      "board": "PolarFire",
+      "censored": false,
+      "claim_scope": "historical hash-matched Linux CPU dispatch only",
+      "current_reachability": "unknown_not_probed",
+      "denominator": 1,
+      "direction": "documentation_only",
+      "disposition": "graduated_linux_cpu_dispatch_scope_preserved",
+      "error": null,
+      "evidence_artifact_path": "results/experiment_7231_v636_board_continuity.json",
+      "evidence_artifact_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "evidence_date": "20260913",
+      "exact_next_condition": "FPGA sampling needs a separate measured task",
+      "execution_venue": "polarfire_linux_cpu_historical",
+      "fpga_sampling_measured": false,
+      "hardware_operations_issued": [],
+      "historical_hash_establishes_current_reachability": false,
+      "metric": true,
+      "missing": false,
+      "numerator": 1,
+      "processor_class": "linux_cpu",
+      "provenance": "authenticated historical disposition; no current board command",
+      "row_type": "board_continuity",
+      "seed": null,
+      "source_artifact_sha256": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_path": "results/experiment_7314_v642_board_continuity.json#board=PolarFire",
+      "source_sha256": "sha256:466751ae6895638f6bff87cde7a54108bd41a005930a1164cb6005a1eb24b362",
+      "unit_id": "board:PolarFire"
+    },
+    {
+      "abstention": true,
+      "arm": "historical_scope",
+      "board": "GateMate",
+      "censored": false,
+      "claim_scope": "physical and JTAG scope remains unexecuted",
+      "current_hardware_execution_authorized": false,
+      "current_reachability": "unknown_not_probed",
+      "denominator": 1,
+      "direction": "documentation_only",
+      "disposition": "blocked_unchanged_physical_prerequisite",
+      "error": "no qualifying operator physical-change receipt after Exp6559",
+      "evidence_artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "evidence_artifact_sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "evidence_date": "20260915",
+      "exact_missing_receipt": "no qualifying operator physical-change receipt after Exp6559",
+      "exact_next_condition": "operator records a dated GateMate cable, port, power, board, JTAG, or DirtyJTAG physical change after Exp6559",
+      "execution_venue": "none_read_only",
+      "hardware_operations_issued": [],
+      "historical_hash_establishes_current_reachability": false,
+      "last_diagnostic": {
+        "meaning": "all-ones TDO; open or unpowered target remained possible",
+        "observed": "0xffffffff",
+        "scope": "v477 physical/JTAG block",
+        "source": "results/experiment_6559_gatemate_changed_state_continuity.json"
+      },
+      "metric": false,
+      "missing": false,
+      "numerator": 0,
+      "operator_receipt": null,
+      "processor_class": "not_executed",
+      "provenance": "authenticated historical disposition; no current board command",
+      "row_type": "board_continuity",
+      "seed": null,
+      "source_artifact_sha256": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_path": "results/experiment_7314_v642_board_continuity.json#board=GateMate",
+      "source_sha256": "sha256:636adfd6d0d74eaa419b4f7ef13109e0b119b386ed5802827803cd47b211187e",
+      "terminal_criterion_met": false,
+      "unit_id": "board:GateMate"
+    }
+  ],
+  "run_date": "20260924",
+  "sample_size_budget": {
+    "censored_independent_units": 0,
+    "excluded_independent_units": 0,
+    "intended_independent_units": 3,
+    "observed_independent_units": 3,
+    "seeds": [],
+    "windows_multiply_source_groups": false
+  },
+  "schema": "carnot.exp7599.v663.board_continuity.v1",
+  "source_artifact_hashes": {
+    "openspec/capabilities/hardware/spec.md": {
+      "bytes": 125081,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": null,
+      "original_verdict_class": null,
+      "path": "openspec/capabilities/hardware/spec.md",
+      "sha256": "sha256:1c60014b1b89d28c54b0f6c01491854819a02c3b79e16e41d91c99baa41b9ce7"
+    },
+    "python/carnot/experiment_7599_v663_board_continuity.py": {
+      "bytes": 48728,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": null,
+      "original_verdict_class": null,
+      "path": "python/carnot/experiment_7599_v663_board_continuity.py",
+      "sha256": "sha256:924a0adb3d1d003eb71bd1bcbbbfc4785530c20340fe66b2dace170b21c6c392"
+    },
+    "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json": {
+      "bytes": 7191,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete: kv260_terminal_confirmed_mandate_lift_recommended_polarfire_gatemate_audited",
+      "original_verdict_class": null,
+      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+    },
+    "results/experiment_6559_gatemate_changed_state_continuity.json": {
+      "bytes": 66021,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "blocked_missing_new_physical_receipt: no operator-authored dated GateMate physical-state receipt newer than Exp6525 exists; zero hardware commands run and Exp3866 remains excluded",
+      "original_verdict_class": "blocked",
+      "path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66"
+    },
+    "results/experiment_7231_v636_board_continuity.json": {
+      "bytes": 51575,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete: all three board dispositions are authenticated. KV260 graduation and its exact terminal criterion remain preserved. GateMate remains read-only without a post-Exp6559 physical-state receipt. The deployed PolarFire CPU binary executed once and its raw transcript and hashes are retained. This is not programmable-logic sampling.",
+      "original_verdict_class": "positive",
+      "path": "results/experiment_7231_v636_board_continuity.json",
+      "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+    },
+    "results/experiment_7314_v642_board_continuity.json": {
+      "bytes": 77883,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": "complete: three authenticated board dispositions and exact next conditions are recorded. KV260 fabric graduation remains preserved with SSH-only future access. PolarFire hash-matched CPU dispatch remains preserved and is not FPGA sampling. GateMate remains blocked_changed_physical_state because no qualifying operator receipt exists. Extropic and KAN are deployment context only. This task issued zero hardware or external operations.",
+      "original_verdict_class": "positive",
+      "path": "results/experiment_7314_v642_board_continuity.json",
+      "sha256": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6"
+    },
+    "results/experiment_7598_v663_rust_consumer.json": {
+      "bytes": 868219,
+      "original_flagged_adversarial": false,
+      "original_honest_verdict": "complete_null_rust_consumer_ready_speed_gate_failed",
+      "original_verdict_class": "null",
+      "path": "results/experiment_7598_v663_rust_consumer.json",
+      "sha256": "sha256:b47f96330b506ff979573b3cef962ab1ed8ccacf512c2f161c5accefa3c10fa5"
+    },
+    "results/raw/experiment_7599_v663_board_continuity/gatemate_receipt_search.json": {
+      "bytes": 47774,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": null,
+      "original_verdict_class": null,
+      "path": "results/raw/experiment_7599_v663_board_continuity/gatemate_receipt_search.json",
+      "sha256": "sha256:77d3d98cd75569b04d7aed2ee5caad58e6745fd1a2318b250b6cabe814c9d94e"
+    },
+    "scripts/experiments/experiment_7599_v663_board_continuity.py": {
+      "bytes": 196,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": null,
+      "original_verdict_class": null,
+      "path": "scripts/experiments/experiment_7599_v663_board_continuity.py",
+      "sha256": "sha256:5635c7d857bb3fb0e2605904ccefa880eeb799ecd281b91182b48efa0dd37db8"
+    },
+    "tests/python/test_experiment_7599_v663_board_continuity.py": {
+      "bytes": 16664,
+      "original_flagged_adversarial": null,
+      "original_honest_verdict": null,
+      "original_verdict_class": null,
+      "path": "tests/python/test_experiment_7599_v663_board_continuity.py",
+      "sha256": "sha256:6f162cf318071eb495781b7f7e29dc2373fc38b3e399c3c8f4578876546db81c"
+    }
+  },
+  "spec_refs": [
+    "REQ-HW-7599",
+    "SCENARIO-HW-7599-BOARD-SCOPES",
+    "SCENARIO-HW-7599-PLACEMENT",
+    "SCENARIO-HW-7599-PLACEMENT-UNMEASURED"
+  ],
+  "started_at_utc": "2026-09-24T08:14:36.210873+00:00",
+  "terminal_reader_outcomes": {
+    "adversarial_verify": {
+      "exit_code": 0,
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "passed": true
+    },
+    "fresh_process_cold_replay": {
+      "exit_code": 0,
+      "log_sha256": "sha256:a4e88fe3283b8da3ef4a098a560ba8bca4714177cfd090554d4ef0087021e4e5",
+      "passed": true
+    },
+    "independent_raw_reduction": {
+      "exit_code": 0,
+      "log_sha256": "sha256:a4e88fe3283b8da3ef4a098a560ba8bca4714177cfd090554d4ef0087021e4e5",
+      "passed": true
+    },
+    "verdict_row_consistency_strict": {
+      "exit_code": 0,
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "passed": true
+    }
+  },
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7599-o9tlb1eh/validation/basetemp/focused tests/python/test_experiment_7599_v663_board_continuity.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7599-o9tlb1eh/validation/basetemp/focused",
+        "tests/python/test_experiment_7599_v663_board_continuity.py",
+        "-q"
+      ],
+      "duration_s": 3.4933635740017053,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/affected/00_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:78091f028c1e90093e676fa6ba765a6a295e55f6b66602909d3bb99702c4e480",
+      "name": "focused_pytest",
+      "output_tail": "............................                                             [100%]\n28 passed in 1.38s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7599-o9tlb1eh/validation/coverage/.coverage '--include=*/experiment_7599_v663_board_continuity.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7599-o9tlb1eh/validation/basetemp/coverage tests/python/test_experiment_7599_v663_board_continuity.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7599-o9tlb1eh/validation/coverage/.coverage",
+        "--include=*/experiment_7599_v663_board_continuity.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7599-o9tlb1eh/validation/basetemp/coverage",
+        "tests/python/test_experiment_7599_v663_board_continuity.py",
+        "-q"
+      ],
+      "duration_s": 5.902545521996217,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/affected/01_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:5f0841c0e9e0020dea12c68bb3fd3cc1cec432d03f9d8185686c6ff21ebf872f",
+      "name": "changed_module_coverage",
+      "output_tail": "............................                                             [100%]\n28 passed in 2.66s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7599-o9tlb1eh/validation/coverage/.coverage '--include=*/experiment_7599_v663_board_continuity.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7599-o9tlb1eh/validation/coverage/.coverage",
+        "--include=*/experiment_7599_v663_board_continuity.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.08731793100014329,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/affected/02_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:02f682a4184ac3bb71093f9afe76dda4d5b33bc3781c8b3ec401a8fce20be0e7",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7599_v663_board_continuity.py     334      0   100%\n--------------------------------------------------------------------------------------\nTOTAL                                                      334      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7599_v663_board_continuity.py scripts/experiments/experiment_7599_v663_board_continuity.py tests/python/test_experiment_7599_v663_board_continuity.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7599_v663_board_continuity.py",
+        "scripts/experiments/experiment_7599_v663_board_continuity.py",
+        "tests/python/test_experiment_7599_v663_board_continuity.py"
+      ],
+      "duration_s": 0.014191914000548422,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/affected/03_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7599_v663_board_continuity.py scripts/experiments/experiment_7599_v663_board_continuity.py tests/python/test_experiment_7599_v663_board_continuity.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7599_v663_board_continuity.py",
+        "scripts/experiments/experiment_7599_v663_board_continuity.py",
+        "tests/python/test_experiment_7599_v663_board_continuity.py"
+      ],
+      "duration_s": 0.010263656004099175,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/affected/04_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7599_v663_board_continuity.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7599_v663_board_continuity.py"
+      ],
+      "duration_s": 0.13731350700254552,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/affected/05_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7599_v663_board_continuity.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7599_v663_board_continuity.py"
+      ],
+      "duration_s": 0.032316613011062145,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/affected/06_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7599_v663_board_continuity.py --root /home/ianblenke/github.com/ianblenke/carnot --cold-replay /tmp/carnot-exp7599-o9tlb1eh/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7599_v663_board_continuity.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--cold-replay",
+        "/tmp/carnot-exp7599-o9tlb1eh/candidate.json"
+      ],
+      "duration_s": 0.4141514130169526,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/terminal/00_fresh_process_cold_replay/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:a4e88fe3283b8da3ef4a098a560ba8bca4714177cfd090554d4ef0087021e4e5",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"errors\": [], \"validation_passed\": true}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7599_v663_board_continuity.py --root /home/ianblenke/github.com/ianblenke/carnot --independent-reduce /tmp/carnot-exp7599-o9tlb1eh/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7599_v663_board_continuity.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--independent-reduce",
+        "/tmp/carnot-exp7599-o9tlb1eh/candidate.json"
+      ],
+      "duration_s": 0.43310882701189257,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/terminal/01_independent_raw_reduction/00_independent_raw_reduction.log",
+      "log_sha256": "sha256:a4e88fe3283b8da3ef4a098a560ba8bca4714177cfd090554d4ef0087021e4e5",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"errors\": [], \"validation_passed\": true}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7599-o9tlb1eh/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7599-o9tlb1eh/candidate.json"
+      ],
+      "duration_s": 0.5204748880059924,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7599-o9tlb1eh/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7599-o9tlb1eh/candidate.json"
+      ],
+      "duration_s": 0.02935842701117508,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7599-o9tlb1eh/logs/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false,
+  "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+}
