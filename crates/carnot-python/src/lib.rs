@@ -18,6 +18,7 @@ mod mode_jump;
 mod one_axis_tempering;
 mod packed_belief;
 mod pipeline;
+mod portable_recalibration;
 mod s2kan;
 mod safety_net;
 mod schedule;
@@ -487,6 +488,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Immutable acquired schedule constraints
     schedule::register_schedule_module(m)?;
+
+    // Durable portable recalibration service
+    portable_recalibration::register_portable_recalibration_module(m)?;
 
     Ok(())
 }

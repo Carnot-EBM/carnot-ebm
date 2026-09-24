@@ -1,0 +1,237 @@
+{
+  "PYTHONPATH": "/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot",
+  "affected_files": [
+    {
+      "path": "python/carnot/experiment_7626_v665_native_service.py",
+      "sha256": "sha256:66e140b866e1f5eb933bb78d87a299da81024d2a3cf4c697df854813e56bb5ae"
+    },
+    {
+      "path": "scripts/experiments/experiment_7626_v665_native_service.py",
+      "sha256": "sha256:8e6a3527c38e81eae80663a68639859522783eddb85488414a0f5431609b93ac"
+    },
+    {
+      "path": "tests/python/test_experiment_7626_v665_native_service.py",
+      "sha256": "sha256:e2fb6ab7ac6d381197bd791a491caa1aff4f2b04810d2f304dc27411941600f8"
+    },
+    {
+      "path": "crates/carnot-core/src/portable_recalibration.rs",
+      "sha256": "sha256:c68ec0c485dce186da316f728fd8000d95318eb260ad608bef5abbca937cec21"
+    },
+    {
+      "path": "crates/carnot-core/src/bin/portable-recalibration-service.rs",
+      "sha256": "sha256:fb55eb8b074106d3a336a6b78a900d537626c22e1cc60f73c1951801b13371fa"
+    },
+    {
+      "path": "crates/carnot-python/src/portable_recalibration.rs",
+      "sha256": "sha256:49ce62a5573360b3cade44edff9099cee048ad058080b57b3f0cf317c46a02cb"
+    },
+    {
+      "path": "crates/carnot-python/src/lib.rs",
+      "sha256": "sha256:4000f4715328596cf83f2d1e8176d5c1de3a2478563ec890a9ee92ac4e8df88f"
+    },
+    {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:f393d1284bdc595ab9d14a3d4f2672190de23e2572a42c5b3f1a99e8d7984bda"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7626_v665_native_service"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7626-private-dn39lkig/validation/basetemp/focused",
+        "tests/python/test_experiment_7626_v665_native_service.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7626-private-dn39lkig/validation/.coverage-exp7626",
+        "--include=*/experiment_7626_v665_native_service.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7626-private-dn39lkig/validation/basetemp/coverage",
+        "tests/python/test_experiment_7626_v665_native_service.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7626-private-dn39lkig/validation/.coverage-exp7626",
+        "--include=*/experiment_7626_v665_native_service.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7626_v665_native_service.py",
+        "scripts/experiments/experiment_7626_v665_native_service.py",
+        "tests/python/test_experiment_7626_v665_native_service.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7626_v665_native_service.py",
+        "scripts/experiments/experiment_7626_v665_native_service.py",
+        "tests/python/test_experiment_7626_v665_native_service.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7626_v665_native_service.py"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7626_v665_native_service.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "carnot-core",
+        "portable_recalibration"
+      ],
+      "name": "cargo_test_portable_recalibration",
+      "scope": "changed Rust core",
+      "timeout_s": 300.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "carnot-python",
+        "--lib"
+      ],
+      "name": "cargo_test_python_binding",
+      "scope": "changed PyO3 adapter",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2021",
+        "--check",
+        "crates/carnot-core/src/portable_recalibration.rs",
+        "crates/carnot-core/src/bin/portable-recalibration-service.rs",
+        "crates/carnot-python/src/portable_recalibration.rs"
+      ],
+      "name": "cargo_fmt",
+      "scope": "changed Rust files",
+      "timeout_s": 120.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "carnot-core",
+        "--lib",
+        "--bin",
+        "portable-recalibration-service",
+        "--no-deps",
+        "--",
+        "-A",
+        "clippy::needless-late-init",
+        "-D",
+        "warnings"
+      ],
+      "name": "cargo_clippy_core",
+      "scope": "changed Rust core and caller",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "carnot-python",
+        "--lib",
+        "--no-deps",
+        "--",
+        "-A",
+        "unused-imports",
+        "-A",
+        "deprecated",
+        "-A",
+        "clippy::too-many-arguments",
+        "-A",
+        "clippy::needless-range-loop",
+        "-D",
+        "warnings"
+      ],
+      "name": "cargo_clippy_binding",
+      "scope": "changed PyO3 adapter",
+      "timeout_s": 900.0
+    }
+  ],
+  "coverage_file": "/tmp/carnot-exp7626-private-dn39lkig/validation/.coverage-exp7626",
+  "extension": "/tmp/carnot-exp7626-private-dn39lkig/extension/_rust.cpython-312-x86_64-linux-gnu.so",
+  "frozen_before_validation": true,
+  "private_basetemp": "/tmp/carnot-exp7626-private-dn39lkig/validation/basetemp",
+  "schema": "carnot.exp7626.affected_manifest.v1",
+  "worktree": "/home/ianblenke/github.com/ianblenke/carnot",
+  "worktree_status_sha256": "sha256:bac36f944eb3f315e80ee2dce5bd617f155373801a6e4c55a6f50e54ffe9c509"
+}

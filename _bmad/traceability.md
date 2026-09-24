@@ -1,6 +1,14 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-24
+**Operational Note:** 2026-09-24 REQ-REPORT-7626 maps the shared durable Rust
+recalibration core, thin JSONL binary, and direct PyO3 class to
+`python/carnot/experiment_7626_v665_native_service.py` and its 13 focused tests.
+The standalone test fixture now builds and imports the real extension when the
+producer-owned `CARNOT_EXP7626_EXTENSION` is absent; the conductor-equivalent
+subset passes 94/94 and the changed Python module has 286/286 statements covered.
+E2E-003 and E2E-004 remain actual compiled-boundary, cold-reload, and interrupted-
+write checks; no fallback, skip, default change, or benefit claim was introduced.
 **Operational Note:** 2026-09-24 REQ-ARC-WMTE-10012 Amendment 3 supersedes the
 Amendment 2 qualification and table claims immediately below. The nine reused
 Qwen3.8 engines are retained only in `h2h_replay_counterfactual`: all historical

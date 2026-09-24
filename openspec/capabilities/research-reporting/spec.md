@@ -79733,3 +79733,100 @@ Implemented by the reusable Experiment 7624 reducer, thin CLI, independent
 static and learning fixtures, negative mutation panel, and exact terminal
 readers. The conductor owns later status, changelog, and traceability
 reconciliation.
+
+## REQ-REPORT-7626: Qualify the direct native durable service boundary
+
+Experiment 7626 SHALL run with planned and actual `no_model_load`,
+`MODEL_SPECS=[]`, no current model invocation, and zero model loads, forwards,
+generations, and tokens. It SHALL authenticate the Experiment 7598 workload,
+the portable Rust service source, the Python reference, and the declared Python,
+Rust, compiler, and ABI tools before execution. Missing external prerequisites
+SHALL produce one terminal `complete_blocked_*` artifact with class `blocked`
+and the exact failed check operands. A new output SHALL never be a precondition.
+
+The existing portable recalibration algorithm SHALL move into one reusable
+`carnot-core` module without numerical changes. The JSON-lines executable SHALL
+be a thin caller of that module. A narrow PyO3 class SHALL call the same module
+directly. The class SHALL retain typed decisions, atomic file replacement,
+file and directory fsync before acknowledgment, reload verification, duplicate
+rejection, and restart behavior. No Python fallback or memory-only substitute
+may count as native execution.
+
+The experiment SHALL freeze a representative workload derived from Experiment
+7598. It SHALL run identical prediction, update, checkpoint, and cold-reload
+sequences through the Python service, JSON-lines Rust service, and direct Rust
+binding. Every typed decision SHALL match. Numeric results SHALL differ by at
+most `1e-10`. Every acknowledged update SHALL survive a fresh reload. Invalid
+input and an injected pre-rename write interruption SHALL fail without a false
+durable acknowledgment or loss of the last acknowledged state.
+
+The terminal artifact SHALL use a `complete_` verdict and the closed verdict
+class enum. Protocol compatibility SHALL use class `null`; exact oracle fixture
+checks SHALL use `circular_positive`. Readiness SHALL remain separate from speed
+or scientific benefit. `native_service_ready_score=1` requires an actual private
+extension import, three-arm parity, durable restart, and interrupted-write
+checks. The artifact SHALL retain the private build manifest path, workload
+manifest path, per-request parity rows, durability event rows, independent-unit
+rows, sample budget, preconditions, source hashes, current host, disjoint phase
+spans, invocation counts, seeds, field principles, gate operands, validation
+receipts, terminal reader results, and a checksum over immutable inputs and
+reductions.
+
+Validation SHALL freeze the affected-file manifest. It SHALL use worktree-pinned
+imports, serial focused pytest without ambient addopts, a private base temp,
+command-local 100 percent coverage of changed Python behavior, scoped Ruff
+check and format, changed-module mypy, affected-test specification coverage,
+scoped Cargo tests, Rust format, and Rust clippy. E2E-003 SHALL import and call
+the actual extension. E2E-004 SHALL verify this service JSON-state format across
+the binary and binding and SHALL run a process interruption plus cold reload.
+This does not replace the existing safetensor E2E. The declared entrypoint,
+fresh-process cold reduction, independent reduction, adversarial reader, and
+strict verdict-row reader SHALL accept the exact candidate before atomic
+publication. Production defaults, model weights, old verdicts, the roadmap,
+and the research conductor SHALL remain unchanged.
+
+### SCENARIO-REPORT-7626-PARITY: Three callers share one durable core
+
+**Given** one frozen Experiment 7598 workload and three independent state paths
+**When** the Python service, Rust JSON-lines service, and direct binding run it
+**Then** typed decisions match exactly and numeric values are within `1e-10`
+**And** each arm reports the same acknowledged sample count after cold reload.
+
+### SCENARIO-REPORT-7626-INVALID: Invalid requests fail without acknowledgment
+
+**Given** a loaded durable state and invalid probability, label, or duplicate ID
+**When** any caller rejects the request
+**Then** it reports the typed error and no durable acknowledgment
+**And** the last acknowledged state remains readable and unchanged.
+
+### SCENARIO-REPORT-7626-INTERRUPT: Atomic replacement preserves the prior state
+
+**Given** one acknowledged checkpoint and an owned child process
+**When** test-only fault injection exits before the temporary file rename
+**Then** the child returns no acknowledgment and the prior checkpoint reloads
+**And** the experiment terminates only the owned child and records the event.
+
+### SCENARIO-REPORT-7626-COLD: A fresh extension instance reloads durable state
+
+**Given** updates acknowledged by the direct native binding
+**When** a new process imports the private extension and opens the state path
+**Then** its prediction and state metadata match the existing Rust service
+**And** the imported module path and binary hash match the build manifest.
+
+### SCENARIO-REPORT-7626-TERMINAL: Exact readers control atomic publication
+
+**Given** a frozen affected-file manifest and one exact terminal candidate
+**When** scoped validation, cold reduction, and both strict readers run
+**Then** command exits, worktree paths, log hashes, and outcomes remain recorded
+**And** only the exact validated bytes publish atomically
+**And** readiness opens no speed, calibration, or learned-head benefit gate.
+
+### Implementation Status (REQ-REPORT-7626)
+
+Implemented by Experiment 7626 with one extracted durable Rust core, thin JSONL
+and typed PyO3 callers, fixed three-arm parity, interrupted-write and cold-reload
+checks, scoped validation, and exact terminal readers. The focused tests use the
+producer-authenticated private extension when supplied and otherwise build and
+load the same real Rust boundary under a locked temporary target, so standalone
+and conductor pytest runs cannot bypass E2E-003 through missing environment setup.
+The conductor owns later status, changelog, and traceability reconciliation.

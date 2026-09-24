@@ -1,6 +1,17 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-23
+**Last Updated:** 2026-09-24
+
+## 2026-09-24 — Experiment 7626 native test gate repaired
+- The four setup errors in the conductor-equivalent subset were caused by the
+  focused fixture requiring `CARNOT_EXP7626_EXTENSION`, which ordinary pytest
+  does not set. The fixture now builds and privately copies the actual PyO3
+  extension plus JSONL binary when that producer-owned path is absent.
+- The same native calls, three-caller parity, cold reload, and interrupted-write
+  assertions run in both modes. The affected subset passes 94/94; the Experiment
+  7626 module retains 100% statement coverage (286/286).
+- No tests were skipped, weakened, deleted, or reverted. Production defaults and
+  `scripts/research_conductor.py` are unchanged.
 
 ## 2026-09-24 — Gate analysis expanded and corrected; the planner search is a bottleneck
 - Experiment 10012 amendments 2-3: real win conditions for four experts, g50t expert repaired,

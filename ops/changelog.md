@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-09-24 — Experiment 7626 standalone native-test repair
+
+- Repaired the four setup errors in
+  `tests/python/test_experiment_7626_v665_native_service.py`: without the
+  experiment runner, pytest now builds the real PyO3 extension in a locked
+  temporary Cargo target, copies it into pytest-owned storage, and builds the
+  real JSONL service binary before executing the unchanged native E2E checks.
+- Preserved the authenticated `CARNOT_EXP7626_EXTENSION` path used by the
+  producer and retained strict module-path assertions. No Python substitute,
+  skip, test deletion, expectation weakening, source revert, or conductor edit.
+- Verified the conductor-equivalent subset at 94 passed, focused tests under
+  xdist at 13 passed, and changed-module coverage at 286/286 statements (100%).
+
 ## 2026-09-24 — Experiment 10012 amendments 2-3 (operator request: "1", expand the windows)
 
 - codex (CPU, worktree `gate-expand`) wrote validated win conditions for the sp80, dc22, wa30, sb26
