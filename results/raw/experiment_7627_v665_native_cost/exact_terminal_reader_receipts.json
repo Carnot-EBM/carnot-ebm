@@ -1,0 +1,79 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7627_v665_native_cost.py --cold-replay /tmp/carnot-exp7627-private-drz69etz/exact-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7627_v665_native_cost.py",
+        "--cold-replay",
+        "/tmp/carnot-exp7627-private-drz69etz/exact-terminal-candidate.json"
+      ],
+      "duration_s": 1.6537265130318701,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7627_v665_native_cost/validation/exact_terminal/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:771952cf37b7e38d9e98e8e4eb1476f06a829a16eaf6690e2e7eef89cc8801e9",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"errors\": [], \"sha256\": \"sha256:5afdcc505e103a9424e81cb91ece58c66d3f32a8e41c9913d5c5452016c0a86a\", \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact terminal candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7627_v665_native_cost.py --independent-replay /tmp/carnot-exp7627-private-drz69etz/exact-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7627_v665_native_cost.py",
+        "--independent-replay",
+        "/tmp/carnot-exp7627-private-drz69etz/exact-terminal-candidate.json"
+      ],
+      "duration_s": 1.6315993149764836,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7627_v665_native_cost/validation/exact_terminal/01_independent_raw_reduction.log",
+      "log_sha256": "sha256:981fb32080e8261c582573e491b54600348816dacaba5a8d87ee33fc71329e2a",
+      "name": "independent_raw_reduction",
+      "output_tail": "2973832518649235, \"pair_count\": 10}, \"cold:8\": {\"enabled_over_disabled_lower95\": 0.8306297162083063, \"enabled_over_disabled_median\": 1.029805941497399, \"enabled_over_disabled_upper95\": 1.1701696524728415, \"pair_count\": 10}, \"warm:1\": {\"enabled_over_disabled_lower95\": 0.687020658062276, \"enabled_over_disabled_median\": 1.2186049653802828, \"enabled_over_disabled_upper95\": 2.207836697536049, \"pair_count\": 10}, \"warm:8\": {\"enabled_over_disabled_lower95\": 0.8160107762006555, \"enabled_over_disabled_median\": 0.9628997313573742, \"enabled_over_disabled_upper95\": 1.1580460924476301, \"pair_count\": 10}}}, \"timing_reduction\": {\"complete\": true, \"equal_stratum_geometric_mean\": {\"python_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 9627, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"equal_stratum_weight\": true, \"estimate\": 7.827002746229495, \"independent_blocks\": 120, \"lower95\": 7.284307759345477, \"upper95\": 8.382614773402585}, \"rust_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 10627, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"equal_stratum_weight\": true, \"estimate\": 2.6492877005903535, \"independent_blocks\": 120, \"lower95\": 2.4659437842692813, \"upper95\": 2.9172622269234436}}, \"extra_native_errors\": 0, \"independent_blocks\": 120, \"minimum_primary_stratum_lower95\": 2.6682914199518204, \"native_speed_benefit_score\": 1, \"nfr_10x_met\": false, \"parity_complete\": true, \"primary_comparator\": \"python_inprocess\", \"secondary_comparator\": \"rust_jsonl\", \"strata\": {\"cold:1\": {\"bootstrap_draws\": 2000, \"censored_count\": 0, \"excluded_count\": 0, \"pair_count\": 30, \"python_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 7628, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"estimate\": 2.926591991639715, \"lower95\": 2.6682914199518204, \"pair_count\": 30, \"upper95\": 3.240561790512279}, \"rust_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 8628, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"estimate\": 3.488497624509799, \"lower95\": 3.324108929195576, \"pair_count\": 30, \"upper95\": 3.8336272241807157}}, \"cold:8\": {\"bootstrap_draws\": 2000, \"censored_count\": 0, \"excluded_count\": 0, \"pair_count\": 30, \"python_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 7635, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"estimate\": 10.182084837422408, \"lower95\": 8.953357973534262, \"pair_count\": 30, \"upper95\": 10.915840201877236}, \"rust_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 8635, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"estimate\": 4.698683689079762, \"lower95\": 3.8194909487132813, \"pair_count\": 30, \"upper95\": 6.227481444019528}}, \"warm:1\": {\"bootstrap_draws\": 2000, \"censored_count\": 0, \"excluded_count\": 0, \"pair_count\": 30, \"python_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 7728, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"estimate\": 5.499118469414107, \"lower95\": 4.855404750782858, \"pair_count\": 30, \"upper95\": 5.853418965026596}, \"rust_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 8728, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"estimate\": 1.4745086916476486, \"lower95\": 1.3824611614226485, \"pair_count\": 30, \"upper95\": 1.6807443841071303}}, \"warm:8\": {\"bootstrap_draws\": 2000, \"censored_count\": 0, \"excluded_count\": 0, \"pair_count\": 30, \"python_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 7735, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"estimate\": 22.90287367868201, \"lower95\": 19.283830930841944, \"pair_count\": 30, \"upper95\": 28.40467843823878}, \"rust_over_direct_native\": {\"bootstrap_draws\": 2000, \"bootstrap_seed\": 8735, \"direction\": \"comparator_over_direct_native_higher_favors_native\", \"estimate\": 2.038236220061144, \"lower95\": 1.8506058453385765, \"pair_count\": 30, \"upper95\": 2.3834155292961245}}}}, \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact terminal candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7627-private-drz69etz/exact-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7627-private-drz69etz/exact-terminal-candidate.json"
+      ],
+      "duration_s": 1.0634432539809495,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7627_v665_native_cost/validation/exact_terminal/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact terminal candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7627-private-drz69etz/exact-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7627-private-drz69etz/exact-terminal-candidate.json"
+      ],
+      "duration_s": 0.05864714802009985,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7627_v665_native_cost/validation/exact_terminal/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact terminal candidate",
+      "timed_out": false
+    }
+  ]
+}

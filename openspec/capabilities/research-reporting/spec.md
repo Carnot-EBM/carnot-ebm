@@ -79830,3 +79830,123 @@ producer-authenticated private extension when supplied and otherwise build and
 load the same real Rust boundary under a locked temporary target, so standalone
 and conductor pytest runs cannot bypass E2E-003 through missing environment setup.
 The conductor owns later status, changelog, and traceability reconciliation.
+
+## REQ-REPORT-7627: Measure total consumer cost at the native boundary
+
+Experiment 7627 SHALL run with planned and actual `no_model_load`,
+`MODEL_SPECS=[]`, no current model invocation, and zero loads, forwards,
+generations, and tokens. It SHALL authenticate Experiment 7626 readiness,
+verdict class, adversarial status, build hashes, and an actual private extension
+import before native timing. It SHALL also authenticate the Python comparator,
+the existing Rust JSON-lines binary, Experiment 7599 board continuity, declared
+tools, and this requirement. A missing external prerequisite SHALL produce a
+terminal `complete_blocked_*` artifact with class `blocked`. Its gate summary
+SHALL give the check, upstream, path, exact field, operator, expected value, and
+observed value. Board disposition processing SHALL still run when the native
+producer is absent. The task SHALL not build or benchmark a missing service.
+
+The experiment SHALL freeze 120 independent paired blocks. It SHALL measure 30
+blocks in each cold or warm and batch-one or batch-eight stratum. Each block
+SHALL use the same generated event workload and durable acknowledgment semantics
+for the in-process Python, existing Rust JSON-lines, and direct PyO3 arms. Arm
+order SHALL be randomized from seed 7627 before timing. Cold totals SHALL include
+process or import and initialization work. Warm totals SHALL include applicable
+serialization, calls, updates, persistence, acknowledgment, and reload checks.
+Each row SHALL retain the total, exclusive spans, reload agreement, failures,
+CPU affinity, environment, numerator, denominator, seed, direction, censoring,
+and raw provenance. No pooled fast-only or memory-only value may be a headline.
+
+The independent reducer SHALL compute direct-native speed ratios against both
+the predeclared in-process Python comparator and the old Rust JSON-lines path.
+It SHALL use 2,000 paired block bootstrap resamples per stratum. It SHALL compute
+an equal-stratum geometric mean by resampling paired blocks within every stratum.
+The primary benefit gate SHALL require a Python-over-native geometric ratio and
+its lower 95 percent bound of at least `1.10`. Every Python-over-native stratum
+lower bound SHALL be at least `0.95`. It SHALL also require full decision and
+state parity with no extra native errors. The old Rust comparison SHALL not
+replace the registered Python comparator after timing. `nfr_10x_met` SHALL stay
+separate and require a measured total-cost ratio of at least `10.0`; arithmetic
+elimination bounds do not satisfy it.
+
+The experiment SHALL run 40 independent telemetry-control blocks. Each block
+SHALL pair enabled and disabled measurement of the same workload. Controls SHALL
+bound instrumentation overhead and SHALL not select the primary comparator. The
+artifact SHALL report intended, observed, excluded, and censored units without
+counting arms, views, seeds, or replays as new independent samples.
+
+The artifact SHALL retain the dated Experiment 7599 KV260, PolarFire, and
+GateMate dispositions without a current board operation. KV260 SHALL remain
+graduated historical FPGA fabric with `k_max<=5`. PolarFire SHALL remain
+graduated Linux CPU dispatch and not fabric sampling. GateMate SHALL remain
+blocked on a new physical-chain operator receipt after `0xffffffff`. The two
+local RTX 3090 leases SHALL remain historical input evidence, not current model
+use. Extropic TSU and AMD XDNA SHALL remain unavailable prospective devices.
+The task SHALL issue no blind JTAG, network-board, TSU, XDNA, or purchase action.
+
+The terminal artifact SHALL use a `complete_` honest verdict and the closed
+verdict class enum. It SHALL keep validity, readiness, benefit, retention, and
+freshness gates separate. It SHALL include raw rows, paired timing rows,
+instrumentation rows, budgets, preconditions, phase spans, invocation counts,
+execution venue, seeds, build and source hashes, hardware dispositions,
+validation receipts, terminal reader outcomes, field principles, and one
+checksum over immutable inputs and reductions. `native_cost_valid_score=1`
+requires a complete fair paired measurement and an independent reduction.
+`native_speed_benefit_score=1` requires all fixed total-cost, cold-regression,
+parity, and error gates. A failed benefit gate cannot support class `positive`.
+
+Validation SHALL freeze the affected-file manifest. It SHALL use worktree-pinned
+imports, focused serial pytest without ambient addopts, a private base temp,
+command-local 100 percent coverage of changed Python behavior, scoped Ruff check
+and format, changed-module mypy, and affected-test specification coverage. The
+declared entrypoint, fresh-process cold replay, independent reduction, relevant
+Experiment 7626 E2E-003 and E2E-004 receipts, adversarial reader, and strict
+verdict-row reader SHALL accept the exact candidate before atomic publication.
+No model weight, production default, old verdict, roadmap, research conductor,
+external publication, purchase, or generator training change is authorized.
+
+### SCENARIO-REPORT-7627-PRECONDITIONS: Native absence blocks only performance
+
+**Given** authenticated board receipts and an absent or invalid native producer
+**When** Experiment 7627 evaluates its preconditions
+**Then** it records the exact internal performance blocker and skips native timing
+**And** it still emits all hardware dispositions without new hardware operations.
+
+### SCENARIO-REPORT-7627-PAIRED: Three arms run matched durable workloads
+
+**Given** four declared strata and 30 registered blocks in each stratum
+**When** the three arms run each seeded workload in randomized order
+**Then** all 360 timing rows retain total and exclusive measured costs
+**And** acknowledgments, decisions, reload state, errors, affinity, and environment remain auditable.
+
+### SCENARIO-REPORT-7627-REDUCTION: Fixed comparators control benefit
+
+**Given** 120 complete parity-qualified paired blocks
+**When** an independent reader performs 2,000 paired bootstrap resamples
+**Then** each stratum and the equal-stratum geometric mean report uncertainty
+**And** Python remains primary while the old Rust comparison stays secondary.
+
+### SCENARIO-REPORT-7627-OVERHEAD: Controls bound telemetry cost
+
+**Given** 40 registered workloads with telemetry on and off
+**When** the control reducer pairs identical workloads
+**Then** it reports total-cost ratios without changing comparator selection
+**And** each control block counts once regardless of its two observed arms.
+
+### SCENARIO-REPORT-7627-HARDWARE: Historical devices remain bounded
+
+**Given** authenticated board continuity and hardware wishlist receipts
+**When** no new physical input is present
+**Then** KV260, PolarFire, GateMate, local GPUs, TSU, and XDNA retain separate dispositions
+**And** no historical row becomes a current execution or graduation change.
+
+### SCENARIO-REPORT-7627-TERMINAL: Exact readers control publication
+
+**Given** a frozen affected-file manifest and one exact terminal candidate
+**When** scoped checks, cold reduction, independent recomputation, and strict readers run
+**Then** commands, exits, worktree paths, log hashes, and outcomes remain recorded
+**And** only the exact validated bytes publish atomically.
+
+### Implementation Status (REQ-REPORT-7627)
+
+Specification added before tests and implementation. The conductor owns later
+status, changelog, and traceability reconciliation.
