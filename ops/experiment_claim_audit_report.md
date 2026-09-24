@@ -11,11 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 5 |
-| NO_CLAIM | 2 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| CLAIM_SUPPORTED | 4 |
+| CLAIM_OVERSTATED | 1 |
+| NO_CLAIM | 3 |
 
-## experiment_7566_v661_energy_fit.json
+## experiment_7579_v662_decision_learning_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -23,41 +23,237 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Contrastive energy model fitting and decision control freezing completed with verified readiness, but predictive benefit over the baseline remains unmeasured and yields an honest null result.
+The decision-learning candidate demonstrates a complete null result with no statistically significant benefit over count-based or raw baselines across static calibration and online feedback, and fails retention non-regression.
+
+## WHAT WOULD REFUTE IT
+The null claim would be refuted if the artifact's own data showed the candidate achieving statistically significant reductions in Brier loss and decision cost against serious baseline controls (`local_count`, `global_count`, `raw_original`) with one-sided Holm-adjusted p-values below 0.05 (`reject_at_0_05` being true) alongside non-negative retention degradation, thereby passing the benefit and retention gates (`static_probability_benefit`, `learning_feedback_benefit`, and `retention_non_regression`).
+
+## WAS THAT CHECKED
+Yes. Refutation was given a real chance to happen across:
+- `acceptance_gate_results` and `gate_check_summary`, specifically evaluating `static_probability_benefit`, `learning_feedback_benefit`, and `retention_non_regression`.
+- `learning_interval_reduction` over 5,000 bootstrap replays, explicitly testing contrasts and Holm-adjusted one-sided p-values against serious rivals (`brier_vs_local_count`, `brier_vs_global_count`, `brier_vs_raw`) as well as `brier_vs_shuffled_feedback`.
+- `retention_reduction` over 5,000 replays tracking `retention_degradation`.
+- `static_reconstruction` computing contrasts against `raw_original` and `temperature_original` across 80 units and 1,000 draws.
+- Sensitivity verification in `mutation_rows`, confirming that corrupted fixtures (such as label leakage, ordering mismatches, missing rows, duplicate updates, and sign errors) are actively detected and cause test failures rather than silently passing.
+
+## EVIDENCE
+- `"honest_verdict": "complete_null_independent_static_and_learning_audit"`
+- `"verdict_class": "null"`
+- `"verifier_is_oracle": false`
+- `"flagged_adversarial": false`
+- `"fresh_confirmatory_claim_allowed": false`
+- `"descriptive_exposed_data_only": true`
+- `"gate_check_summary"`: `"passed": false`
+- `"failed_count": 3`
+- `"failed_checks": [ "static_probability_benefit", "learning_feedback_benefit", "retention_non_regression" ]`
+- `"branch_conclusions"`:
+  - `"causal"`: `"benefit": false`, `"failure_source": "no_signal_against_counts_and_uncertainty"`
+  - `"retention"`: `"benefit": false`, `"failure_source": "harmful_recalibration"`
+  - `"static"`: `"benefit": false`, `"failure_source": "harmful_recalibration_and_uncertainty"`
+- `"learning_interval_reduction"`:
+  - `"benefit_passed": false`
+  - `"retention_passed": false`
+  - `"brier_vs_global_count"`: `"reject_at_0_05": false`, `"holm_adjusted_p": 0.9818036392721455`
+  - `"brier_vs_local_count"`: `"reject_at_0_05": false`, `"holm_adjusted_p": 0.9818036392721455`
+  - `"brier_vs_raw"`: `"reject_at_0_05": false`, `"holm_adjusted_p": 0.19436112777444509`
+  - `"brier_vs_shuffled_feedback"`: `"reject_at_0_05": false`, `"holm_adjusted_p": 0.07678464307138572`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7580_v662_arc_verifier_support.json
+
+**CLAIM_OVERSTATED**
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+The verifier integrity guard achieves full readiness (`verifier_support_ready_score` = 1) by reproducing verifier defects, passing positive controls, and rejecting impure engines across deterministic fixtures.
+
+## WHAT WOULD REFUTE IT
+The claim would be refuted if the integrity guard were evaluated against an independent, external correctness oracle on live panel rollouts or active model generations, and was observed either generating false-positive rejections of valid models or failing to catch execution defects.
+
+## WAS THAT CHECKED
+No. Refutation was not given a chance to happen. Zero live model loads or forward passes were executed, all evaluations were run against deterministic hand-crafted CPU fixtures where the verifier serves as its own oracle, and the live panel protocol was left unexecuted (`frozen_protocol_unstarted`).
+
+## EVIDENCE
+- `honest_verdict`: `complete_circular_positive_fixture_guard_support_ready_no_live_benefit_claim`
+- `verdict_class`: `circular_positive`
+- `verifier_is_oracle`: `true`
+- `benefit`: `false`
+- `benefit_reason`: `No live panel or model call ran; fixture success is circular.`
+- `readiness`: `true`
+- `verifier_support_ready_score`: `1`
+- `inference_substrate`: `deterministic_cpu_verifier_fixtures_and_protocol_freeze`
+- `inference_substrate_class`: `no_model_load`
+- `model_invoked`: `false`
+- `methodology_note`: `Exact 1.0 is expected on the code-defined positive fixture. It is a circular plumbing control, not a model-capability or live-benefit result.`
+- `provenance`: `frozen_protocol_unstarted`
+
+## RECOMMENDATION
+NARROW_CLAIM
+
+## experiment_7581_v662_arc_bounded_canary.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+An observation that the artifact asserted a positive capability, solve rate, or operational readiness claim despite failing preflight acceptance gates.
+
+## WAS THAT CHECKED
+Yes; acceptance gates were evaluated under `acceptance_gate_results` and `gate_check_summary`, where `arc_e2e` failed, properly setting the status to blocked and halting execution before model invocation.
+
+## EVIDENCE
+`positive_claim`: `false`
+`world_model_quality_claim`: `false`
+`solve_provenance`: `canary_no_solve_claim`
+`verdict_class`: `blocked`
+`honest_verdict`: `complete_blocked_arc_e2e`
+`status`: `complete_blocked_arc_e2e`
+`inference_substrate`: `blocked_no_run`
+`model_invoked`: `false`
+`The canary has no solve claim; live_agent_self_discovery begins only in later episodes.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7582_arc_panel_a.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No falsifying observation applies because the artifact reports a blocked pre-gate check, not a result about verifier integrity.
+
+## WAS THAT CHECKED
+No; the intended experiment did not run because upstream readiness gates failed.
+
+## EVIDENCE
+`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"gate_check_summary"`: `"gate-unsat(final): 3 of 7 gate(s) failed; first failure: exp7581-arc-bounded-canary.arc_transport_ready_score (actual=0 == expected=1)"`; `"blocked_at_layer"`: `"conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7584_v662_arc_independent_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Because the artifact disclaims any performance score, supervisor refinement, or empirical induction benefit, there is no headline comparative claim to refute. To refute the artifact's characterization as a pre-gate transport block, the artifact's own data would need to show uncensored episode rows with valid scores (`raw_numerator` not `null`), completed model calls (`completed_calls` > 0), or passing producer verification gates (`producer_exists` observing `true`).
+
+## WAS THAT CHECKED
+No. The upstream panel producers `results/experiment_7582_v662_arc_panel_a.json` and `results/experiment_7583_v662_arc_panel_b.json` were absent, tripping the `producer_exists` acceptance gate and blocking live execution before any comparative evaluation could take place.
+
+## EVIDENCE
+- `honest_verdict`: `complete_blocked_live_panel_producers_missing_or_invalid`
+- `verdict_class`: `blocked`
+- `official_score_claimed`: `false`
+- `pooled_independence_claim`: `false`
+- `supervisor_refinement_supported`: `false`
+- `arc_claims_qualified_score`: `0`
+- `solve_provenance`: `no_new_solve_credit`
+- `prior_verdict_disposition`: `narrow_pre_gate_transport_block_preserved_not_scientific_hypothesis_retirement`
+- `model_invoked`: `false`
+- `check`: `producer_exists`
+- `observed`: `false`
+- `passed`: `false`
+- `benefit`: `not_measured`
+- `censored`: `true`
+- `censoring_reason`: `producer_absent_or_invalid`
+- `raw_numerator`: `null`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_10010_b2_think_on_pilot.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+In this 10-window pilot, think-on achieved mean held-out change fidelity of 0.574 versus 0.128 for the code-only baseline.
+
+## WHAT WOULD REFUTE IT
+A matched code-only arm tying or exceeding the think-on arm on mean held-out change fidelity would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The artifact scores both approaches against recorded held-out transitions using the same primary metric, reproduces the preregistered code-only baseline, checks for held-out leakage, and reports 0.574 versus 0.128. Independent identity and expert controls demonstrate that the scoring could produce both failure and success.
+
+## EVIDENCE
+`honest_verdict`: `complete_think_on_pilot_10_windows_mean_change_fidelity_0.574_vs_codeonly_0.128`
+
+`primary`: `masked symmetric-union change fidelity over held-out changing rows; a raised, wrong-type, or wrong-shape row scores 0`
+
+`codeonly_baseline_mean_reproduced`: `0.12753842112150332`
+
+`codeonly_baseline_ok`: `true`
+
+`identity_all_zero`: `true`
+
+`expert_all_one`: `true`
+
+`heldout_leak_check`: `passed`: `true`
+
+`verifier_is_oracle`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7585_v662_portable_service.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Porting the recalibration service to a standalone Rust binary achieves a statistically significant whole-service latency improvement over the incumbent Python service while preserving numerical parity and board continuity.
 
 ## WHAT WOULD REFUTE IT
 The claim would be refuted if:
-1. Candidate energy heads had demonstrated superior, verified predictive benefit over the baseline on held-out evaluation data, contradicting the null verdict; or
-2. Preconditions, custody verification, optimization loss convergence, or readiness gates had failed or crashed, contradicting the claim that the energy fit and baseline controls are verified and ready; or
-3. The artifact had asserted a positive empirical benefit (`positive_claim: true` or `complete_positive`) despite the temperature baseline outperforming all candidate energy models on tuning Brier score.
+1. The lower 95% confidence bound of the warm whole-service speedup was <= 1.0x (indicating no demonstrable whole-service latency advantage over the Python baseline),
+2. The Rust service failed numerical parity against the Python implementation (`typed_decision_mismatch_count` > 0, `max_probability_absolute_error` exceeding numerical tolerance, or any mismatched states/acknowledgments across the evaluated event streams), or
+3. Core build, compilation, or test validation checks failed for the Rust binary.
 
 ## WAS THAT CHECKED
 Yes:
-- Validity, preconditions, custody (`raw_custody` observed 240), and readiness scores were evaluated and passed in `acceptance_gate_results`, `validation_receipts`, and `challenge_controls`.
-- Baseline superiority was verified in `frozen_head_manifest.strongest_comparator` and `frozen_head_manifest.temperature_baseline`, where the temperature baseline attained a lower `tune_brier` (`0.11930674576400344`) than any fitted energy head (lowest candidate `tune_brier` was `0.13525139808043912`).
-- The absence of unearned held-out claims was explicitly checked in `acceptance_gate_results` under `heldout_benefit_unmeasured`, confirming `predictive_benefit_measured` is `false`.
+1. Service speedup was empirically measured on host processes over 30 paired runs comparing the Rust service binary against the incumbent Python service (`pair_count`: 30), verifying that the lower 95% confidence interval exceeded 1.0x (evaluated in `acceptance_gate_results` under `whole_service_improvement_lower95` and reported in `whole_service_speedup.warm`).
+2. Numerical parity was evaluated across 1,000 streams and 16,000 events between Python and Rust processes (evaluated in `acceptance_gate_results` under `kernel_numerical_readiness` and detailed in `parity_summary` and `rows`).
+3. Rust release compilation, code formatting, and module imports were executed and validated (evaluated in `acceptance_gate_results` under `required_validation` and detailed in `rust_validation_receipts`).
 
 ## EVIDENCE
-- `"honest_verdict": "complete_null_energy_fit_ready_benefit_unmeasured"`
-- `"positive_claim": false`
-- `"verdict_class": "null"`
-- `"benefit_measured": false`
-- `"predictive_benefit_measured": false`
-- `"complete": true`
-- `"ready": true`
-- `"energy_fit_ready_score": 1`
-- `"baseline_ready_score": 1`
-- `"principle": "A valid null remains reusable."`
-- `"principle": "Completion cannot substitute for empirical value."`
-- `"strongest_comparator"`: `"family": "temperature_original"`, `"tune_brier": 0.11930674576400344`
-- `"source_contrast_energy"`: `"tune_brier": 0.13570556747592802`
-- `"unconstrained_equal_capacity_energy"`: `"tune_brier": 0.13525139808043912`
-- `"required_checks_passed": true`
+- `honest_verdict`: `"complete_positive_portable_service_improvement"`
+- `verdict_class`: `"positive"`
+- `verifier_is_oracle`: `false`
+- `check`: `"whole_service_improvement_lower95"`, `expected`: `1.0`, `op`: `"gt"`, `observed`: `31.122338001012775`, `passed`: `true`
+- `whole_service_speedup`: `warm`: `estimate`: `33.59268279121724`, `lower95`: `31.122338001012775`, `pair_count`: `30`
+- `check`: `"kernel_numerical_readiness"`, `field`: `"portable_parity_score"`, `expected`: `1`, `observed`: `1`, `passed`: `true`
+- `parity_summary`: `stream_count`: `1000`, `event_count`: `16000`, `typed_decision_mismatch_count`: `0`, `max_probability_absolute_error`: `4.440892098500626e-15`, `all_states_match`: `true`, `all_acknowledgments_match`: `true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7567_v661_source_evaluation.json
+## experiment_7586_v662_capstone.json
 
 **CLAIM_SUPPORTED**
 
@@ -65,174 +261,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The candidate method `source_contrast_energy` demonstrates no supported probability or decision benefit over the baseline comparator `temperature_original` in source-grounded tool-error evaluation.
+Required v662 external evidence remains blocked, despite completion of the capstone’s accounting and validation work.
 
 ## WHAT WOULD REFUTE IT
-Statistically significant empirical improvement of `source_contrast_energy` over `temperature_original` on the registered metrics (achieving Brier score improvement $\ge 0.01$ with Holm-adjusted $p < 0.05$, log loss non-regression, and primary cost reduction) resulting in non-zero `probability_benefit_score` and `decision_benefit_score`.
+Terminal, valid, unblocked live-panel producer artifacts—along with a passing transport pre-gate—would refute the blocked-evidence claim.
 
 ## WAS THAT CHECKED
-Yes. Statistical comparison was executed across 80 groups with 2,000 bootstrap draws under `paired_intervals` and `probability_metrics`, while evaluation sensitivity/power was separately verified via the analytical positive control panel in `positive_control_results`.
+Yes. The acceptance and producer gates explicitly checked artifact existence, producer terminal status, and transport readiness; four required checks failed. The invalid live-verifier branch was not promoted into a benefit claim, and the circular fixture result was identified as circular.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_source_evaluation_no_supported_benefit`
-- `positive_claim`: `false`
-- `verdict_class`: `null`
-- `probability_benefit_score`: `0`
-- `decision_benefit_score`: `0`
-- `failed_benefit_gates`: `fresh_confirmatory_claim_forbidden`, `registered_brier_family`, `log_loss_nonregression`, `primary_cost_nonregression`, `primary_cost_improvement`
-- `gate_check_summary` -> `failed_checks`: `fresh_confirmatory_claim_allowed`, `probability_benefit`, `decision_benefit`
-- `temperature_original` Brier comparison: `delta`: `0.10277710332291774`, `holm_adjusted_p`: `1.0`, `one_sided_p`: `0.9995002498750625`
-- `positive_control_results` -> `panel`: `analytical_oracle_defined_separate_from_empirical_rows`, `passed`: `true`, `probability_benefit_score`: `1`, `decision_benefit_score`: `1`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7568_continuous_recalibration.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-An empirical measurement or comparative finding reported despite failed execution gates, or proof that the upstream prerequisite checks had actually passed.
-
-## WAS THAT CHECKED
-No; no experimental execution or comparative evaluation occurred because prerequisite gates failed at the conductor pre-gate layer.
-
-## EVIDENCE
-`"schema": "blocked_gate_check_v1"`
-`"status": "blocked"`
-`"honest_verdict": "blocked_gate_check_failed"`
-`"duration_s": 0.0`
-`"blocked_at_layer": "conductor_pre_gate"`
-`"gate_check_summary": "gate-unsat(final): 2 of 11 gate(s) failed; first failure: exp7561-recalibration-prototype.recalibration_ready_score (actual=0 == expected=1)"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7569_v661_decision_learning_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Decision learning is blocked by an upstream recalibration gate failure, while source evaluation establishes an honest null result with zero probability or decision benefit over baselines.
-
-## WHAT WOULD REFUTE IT
-The blocked-learning and source-null verdict would be refuted if:
-1. Upstream producer `exp7561` reported `recalibration_ready_score` equal to `1`, unblocking the learning branch.
-2. The candidate source model demonstrated statistically significant probability improvement (lower Brier score or log loss with Holm-adjusted p < 0.05) or lower decision cost compared to `temperature_original` or `raw_original`.
-3. The raw reconstruction checks failed or private corruption mutations did not fail closed.
-
-## WAS THAT CHECKED
-Yes. Upstream readiness was checked under `learning_producer_available` (observed `blocked_pre_gate` due to upstream `recalibration_ready_score` observing `0` against expected `1`). Comparative benefit was evaluated across 80 source components and 480 rows in `static_reconstruction`, where the candidate underperformed `temperature_original` on Brier score (`delta` of `0.10277710332291774`, `holm_adjusted_p` of `1.0`), yielding observed values of `0` on both `source_probability_benefit` and `source_decision_benefit`. Data integrity and fail-closed behaviors were confirmed via `private_corruptions_fail_closed` (8 of 8 passed) and `source_raw_reconstruction`.
-
-## EVIDENCE
-- `honest_verdict`: `complete_blocked_learning_external_source_null`
-- `verdict_class`: `blocked`
-- `check`: `learning_producer_available`
-- `observed`: `blocked_pre_gate`
-- `field`: `recalibration_ready_score`
-- `observed`: `0`
-- `expected`: `1`
-- `check`: `source_probability_benefit`
-- `observed`: `0`
-- `expected`: `1`
-- `check`: `source_decision_benefit`
-- `observed`: `0`
-- `expected`: `1`
-- `check`: `learning_effect_and_retention`
-- `observed`: `null`
-- `expected`: `1`
-- `producer_probability_benefit_score`: `0`
-- `producer_decision_benefit_score`: `0`
-- `source_claims_qualified_score`: `1`
-- `learning_claims_qualified_score`: `0`
-- `qualified_source_benefit_score`: `0`
-- `qualified_learning_benefit_score`: `0`
-- `strongest_comparator`: `temperature_original`
-- `delta`: `0.10277710332291774`
-- `holm_adjusted_p`: `1.0`
-- `check`: `private_corruptions_fail_closed`
-- `observed`: `8`
-- `expected`: `8`
-- `passed`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7570_v661_arc_live_lineage.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7571_v661_portable_calibration.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The task completed in a blocked state because the upstream Exp7561 recalibration prototype was not ready.
-
-## WHAT WOULD REFUTE IT
-An upstream `recalibration_ready_score` of 1—or completed kernel-parity work despite that prerequisite—would refute the claimed block.
-
-## WAS THAT CHECKED
-Yes. The readiness gate explicitly tested for 1 and observed 0 from the named upstream artifact; the independent reduction also records that parity and service trials never started. No portability or benefit claim was made.
-
-## EVIDENCE
-`honest_verdict` `complete_blocked_exp7561_recalibration_ready_score`; `check` `exp7561_recalibration_ready_score`; `expected` `1`; `observed` `0`; `passed` `false`; `verdict_class` `disqualified`; `portable_kernel_ready_score` `0`; `parity_cases_started` `false`; `paired_service_trials_started` `false`; `positive_claim` `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_10009_b2_induction_gate_measurement_v3.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The owned native-CUDA model feasibly produced nonempty code-only induction responses under the bounded 4,096-token protocol, without claiming gate quality or efficacy.
-
-## WHAT WOULD REFUTE IT
-Scoped code-only requests yielding no distinct nonempty responses, or evidence that the model was not actually invoked and GPU-offloaded, would refute the feasibility claim.
-
-## WAS THAT CHECKED
-Yes. Durable response files were joined to the scoped code-only requests: 42 responses were counted as nonempty, while invocation and real CUDA offload were separately recorded. The artifact expressly limits publication to feasibility because the efficacy sample floor was not met.
-
-## EVIDENCE
-`honest_verdict`: `complete_feasibility_only_sample_floor_not_met`; `publication_mode`: `feasibility_only`; `numeric_gate_quality_claim`: `false`; `hidden_game_efficacy_claim`: `false`; `model_invoked`: `true`; `response_count`: `42`; `content_nonempty_count`: `42`; `all_content_nonempty`: `true`; `offload_real`: `true`; `passed`: `true`; `met`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7572_v661_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; the artifact makes no comparative efficacy or value claim.
-
-## WAS THAT CHECKED
-No; not applicable to this read-only aggregation and disposition receipt.
-
-## EVIDENCE
-`"positive_claim": false`; `"model_invoked": false`; `"inference_substrate": "aggregation_from_upstream_artifacts"`; `"numbered_runtime_e2e": "not_applicable_read_only_reporting"`; `"honest_verdict": "complete_disqualified_required_v661_evidence"`; `"hardware_benefit_claimed": false`
+`honest_verdict`: `complete_blocked_required_v662_external_evidence`; `positive_claim`: `false`; `failed_count`: `4`; `arc_transport_ready_score`; `observed`: `0`; `path`: `results/experiment_7583_v662_arc_panel_b.json`; `observed`: `false`; `validity`: `false`; `benefit`: `not_measured`; `fixture_positive_is_circular`: `true`; `oracle_distinct_positive_claimed`: `false`; `semantic_null_claimed`: `false`
 
 ## RECOMMENDATION
 KEEP

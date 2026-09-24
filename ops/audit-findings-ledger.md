@@ -201,3 +201,7 @@ of truth, not this line.)
 | 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_path_has_marker | SILENT_NON_FIRING | OPEN | |
 | 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_has_nontrivial_lever_run | SILENT_NON_FIRING | OPEN | |
 | 2026-09-23 | qa_layer_authenticity_audit | adversarial_verify.py::_pool_degenerate_reasons | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | experiment_claim_audit | experiment_7580_v662_arc_verifier_support.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_shape_dims | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_grid_shape_degenerate_reasons | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_scorer_diagnostics_error_reasons | SILENT_NON_FIRING | OPEN | |

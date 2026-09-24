@@ -46638,3 +46638,61 @@ expert engines and game-specific masks remain development evidence only.
 
 Access date: 2026-09-23. These are planning sources, not Carnot experimental
 results. No model, board benchmark, purchase or external publication ran.
+
+## 2026-09-24 — V663 planning research: evidence alignment before more calibration
+
+Recorded before the V663 experiment design. V662 measured valid static and
+online calibration nulls; retention also failed. Its Rust service improved
+within the measured workload. Its ARC canary stopped before inference because
+private test outputs were under the protected results directory. These local
+findings motivate changed evidence features, an explicit learning safety control,
+and repair of the experiment's output locations, rather than larger budgets.
+
+### Primary-source search across all eight requested topics
+
+| Topic | Primary source and date | Finding, use and boundary |
+|---|---|---|
+| Energy-based verification/reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092), [ARM–EBM, December 2025](https://arxiv.org/abs/2512.15605), [distributional verification, May 2026](https://arxiv.org/abs/2605.18871) | Rechecked compatibility scoring and normalized decisions. Learned energy is not a correctness certificate. The distributional text-ranker does not reopen Carnot's retired PHASE D mechanism. |
+| Neural constraint satisfaction | [Certified Correctness Requires Symbolic Integration, 2026](https://arxiv.org/abs/2608.14569), [Neural Slack Variables, June 2026](https://arxiv.org/abs/2606.13803) | Distinguish measured constraint satisfaction from instance-level certification. Use exact bounds and referential-integrity checks on extracted evidence. No new neural optimizer is needed for a small decision head. |
+| Ising applications in ML | [A computational phase transition for learning-to-sample, May 2026](https://arxiv.org/abs/2605.24752) | Parameter learning can be easier than sampling under the stated hardness assumptions. Defer a new sampling sweep; do not infer mixing quality from accurate energies. |
+| Hallucination detection | [Evidence-Aligned Entity Verification (EAEV), September 8, 2026](https://arxiv.org/html/2609.08267v1), [RT4CHART, March 2026](https://arxiv.org/html/2603.27752v1) | EAEV separates identity, semantic and consistency evidence and tests evidence perturbations. RT4CHART preserves claim-level support and contradiction. Test sentence-ID evidence links while retaining complete response/source text, with erased and permuted evidence controls. This is an adaptation, not a replication or an exact semantic oracle. |
+| Kolmogorov–Arnold Networks | [On-chip online learning via spline locality, February 2026, v4 June 19](https://arxiv.org/html/2602.02056v4), [KAC, March 2025](https://arxiv.org/abs/2503.21076) | Local basis updates have a fixed-point hardware path. Locality alone does not prove retention. Prefer a small bounded residual with explicit old-distribution checks before a larger KAN architecture. |
+| Energy-guided/constrained generation | [ETS, January 2026, v3 May 19](https://arxiv.org/abs/2601.21484), [CRANE, February 2025](https://arxiv.org/abs/2502.09061), [Verifier-Assisted Query Complexity, February 2025](https://arxiv.org/abs/2502.12123) | Constraint syntax and verifier-assisted search have distinct assumptions. An extraction schema must preserve unknown/unsupported outputs and record truncation. Do not treat valid JSON or a clipped completion as semantic success. |
+| Hardware-accelerated sampling | [FPGA–ASIC co-design, February 2026, v2 September 4](https://arxiv.org/abs/2602.15985), [Extropic Z1T](https://extropic.ai/writing/z1t) | Orchestration can dominate an accelerator. Measure the actual Python/Rust call, serialization and durable acknowledgement boundary. External device estimates do not establish local FPGA or TSU acceleration. |
+| Continual/online learning | [U-Calibration, June 2026](https://arxiv.org/html/2606.18527v1), [Proper Calibeating, September 12 revision](https://arxiv.org/abs/2605.26703) | Proper losses expose different decision risks. Compare cumulative Brier and downstream cost, and retain the unchanged predictor. These immediate-feedback results do not supply a guarantee for Carnot's delayed, finite, reused stream. |
+
+EAEV and U-Calibration were inspected beyond their abstracts. EAEV sections
+3.3–3.6 motivate evidence-link features and counterfactual controls. The
+U-Calibration paper motivates reporting proper-loss regret separately from
+accuracy; no claim is made to implement its FTPL algorithm. The on-chip KAN
+paper supplies a portability direction, not permission to project its device
+latency onto this host. Sources already present elsewhere in this file are
+rechecks. The changed proposal is to add evidence before fitting another map.
+
+### Secondary sources and access limitations
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work; retrieved the
+  [ICLR 2026 EBT paper](https://openreview.net/pdf?id=ZBj3Qp1bYg).
+  [AtomGraph](https://openreview.net/forum?id=dNsIZln2uv) was a discovery lead
+  whose forum returned a browser challenge; no method or acceptance claim is
+  based on that inaccessible forum.
+- **Semantic Scholar:** searched both seed IDs and attempted the Graph API
+  [EBT citation list](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citation list](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both reads returned internal errors. No verified citing-paper census follows.
+- **Hugging Face:** checked the [verification papers feed](https://huggingface.co/papers?q=verification).
+  It is a discovery source; the linked original papers support method choices.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending pages and
+  [EBT author code](https://github.com/alexiglad/EBT). The pages were cached
+  from the prior week; no same-day trend or new dependency is asserted.
+  The [THRML repository](https://github.com/Extropic-AI/thrml) read failed.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  readable Z1T article. Keep authenticated local hardware access separate
+  from the vendor's hardware and heterogeneous-system claims.
+- **Logical Intelligence:** rechecked [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  It describes constraint-based reasoning; this review established no open
+  checkpoint or reproducible training recipe that Carnot can adopt now.
+
+Access date: 2026-09-24. No inference, board operation, purchase, contact or
+external publication was performed during this literature review.

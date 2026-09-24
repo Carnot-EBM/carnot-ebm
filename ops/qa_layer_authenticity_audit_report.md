@@ -3,197 +3,453 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-23
 
-Scanned 4 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 9 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 4 of 20 unit(s); rotation advances by 4 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 9 of 20 unit(s); rotation advances by 9 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
 | `CLEAN` | 0 |
-| `MINOR_RISK` | 1 |
+| `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 2 |
+| `SILENT_NON_FIRING` | 8 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 1 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_has_nontrivial_lever_run` — json { "experiment": "arc_go_explore_live", "inference_substrate": "go-explore replay over cached ARC transitions", "honest_verdict": "complete: honest null after 13 attempted archive expansions", "attempted": 13, "go_explore_archive_diagnostics": { "actions_injected": 0, "stored_cells": 0 } }
-- `adversarial_verify.py::_pool_degenerate_reasons` — results/experiment_4544_llm_proposer_reinduction.json: dynamics_candidate_names: []
+- `adversarial_verify.py::_shape_dims` — {"grid_shape": {"principle": "Recorded runtime tensor shape.", "value": [1, 64, 64]}}` is a project-valid annotated field, but the wrapper is parsed as no dimensions and the degenerate leading singleton is not detected.
+- `adversarial_verify.py::_grid_shape_degenerate_reasons` — "grid_dimensions": [1, 64, 64]
+- `adversarial_verify.py::_scorer_diagnostics_error_reasons` — json "scorer_diagnostics": { "principle": "Nonzero scorer failures invalidate this arm.", "value": {"errors": 2, "observed": 4737, "fits": 936} }
+- `adversarial_verify.py::_has_positive_online_training_evidence` — json { "arms": [{ "arm": "online-warm", "scorer_diagnostics": { "principle": "Aggregate online-scorer counters proving the loop ran.", "value": { "observed": 4737, "fits": 935, "errors": 0 } } }] } ``` This project-conforming nested annotation contains genuine positive evidence, but the function returns false.
+- `adversarial_verify.py::_online_arm_metric_items` — {"arms":{"principle":"Per-arm online evaluation results.","value":[{"arm":"treatment","first_win_rate":1.4}]}}
+- `adversarial_verify.py::_byte_identical_online_arm_reason` — This realistic artifact fragment has byte-identical first-win results across the canonical three arms, but the additional solve-rate metric makes the function return `None`: ```json { "frozen_first_win": 0.04, "online_scratch_first_win": 0.04, "online_warm_first_win": 0.04, "online_warm_solve_rate": 0.20 }
+- `adversarial_verify.py::_has_positive_probe_exercise_evidence` — A real active-probe run with probe_actions_taken equal to 3 and posterior_entropy_reduction equal to 0.0.
+- `adversarial_verify.py::_declared_but_unrun_probe_reasons` — json { "lever_probe_status": "declared_not_run", "probe_actions_taken": [] } ``` This is an explicit declared-but-unrun probe, but none of the three reason branches appends anything, so the function returns an empty list.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_has_nontrivial_lever_run` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_pool_degenerate_reasons` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_shape_dims` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_grid_shape_degenerate_reasons` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_scorer_diagnostics_error_reasons` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_positive_online_training_evidence` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_online_arm_metric_items` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_byte_identical_online_arm_reason` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_positive_probe_exercise_evidence` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_declared_but_unrun_probe_reasons` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_max_positive_real_field
-
-**Verdict:** `MINOR_RISK`
-
-## VERDICT
-MINOR_RISK
-
-## CLAIM
-The name `_max_positive_real_field` claims to return the largest positive real numeric leaf associated with a requested field.
-
-## FINDINGS
-1. Silent non-firing: none found; this helper computes a value and does not itself claim to emit a flag.
-2. Field extraction: no direct type assumption exists. `for value in _real_field_values(d, wanted_key)` delegates wrapped-dict, list, nested-field, and missing-value handling, while `for number in _numeric_leaf_values(value)` filters numeric leaves.
-3. String boundaries and negation: no string matching or free-text scanning exists.
-4. Boundary behavior is correct: `if number > 0.0` excludes zero and negatives, exactly matching “positive.” The maximum is selected by `return max(positives, default=None)`.
-5. Claim versus implementation: the implementation matches the function name; it is neither broader nor narrower.
-6. Pattern-list coverage: there is no hardcoded token list, prefix, regex, or alternation in this function.
-7. Untested rule: deleting `if number > 0.0` produced no additional failure across the 481 adversarial-verifier tests examined; 480 passed and one unrelated test already failed without the mutation. The positive-only boundary therefore appears unpinned.
-8. There is no absolute path, write side effect, recognizer-chain fail-open default, or prematurely computed measurement here.
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-ADD_TEST_CASE
-
-## RATIONALE
-The implementation is mechanically sound and handles annotated or nested numeric values through its helpers. The only concrete weakness is test coverage: the defining positivity filter can be removed without a relevant regression failure, so add direct cases for zero, negative, wrapped, list-valued, and missing fields.
-
-
-## adversarial_verify.py::_has_nontrivial_lever_run
+## adversarial_verify.py::_shape_dims
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
-
 SILENT_NON_FIRING
 
 ## CLAIM
-
-The name `_has_nontrivial_lever_run` claims to determine whether an artifact records a nontrivial lever run.
+There is no docstring; the name `_shape_dims` claims to recover integer dimensions from a shape representation.
 
 ## FINDINGS
+1. Silent non-firing: `if isinstance(value, str):` and `if isinstance(value, (list, tuple)):` are the only recognized outer shapes. A principle-annotated dictionary reaches the final `return []`, so a valid wrapped shape is silently indistinguishable from absent or invalid evidence. There are no dict-field reads that unwrap its value.
 
-1. The line `return any(value is True for value in _real_field_values(d, "attempted"))` assumes attempted is a bare boolean. A principle/value wrapper, a list containing true, or the corpus-real numeric form attempted: 13 all evaluate false.
+2. `return [int(part) for part in re.findall(r"\d+", value)]` is not a shape parser. The unanchored pattern extracts digits from dtype names, version labels, prose, decimals, and longer alphanumeric tokens; it also discards minus signs. This permits both false negatives from extra leading numbers and false positives from negative dimensions becoming positive singleton dimensions.
 
-2. The recognizer list `("actions", "budget", "duration_s", "iterations", "attempts", "observed")` stands for evidence that work executed, but omits real members of that concept such as steps, episodes, probe_actions_taken, environment_steps, and numeric attempted. Exact field-name lookup makes those omissions silent.
+3. List handling makes another rigid type assumption. `if isinstance(item, int):` and `elif isinstance(item, float) and item.is_integer():` accept only bare built-in numeric values; an annotated component or any other representation causes `return []` for the entire shape. None is handled without an exception but is silently mapped to the same empty result.
 
-3. Unrecognized execution evidence falls through to false. Its caller then skips dead-archive inspection entirely, making an unknown schema indistinguishable from a genuine no-run artifact.
+4. Negation/context blindness is not applicable: this function does not search prose for semantic claims or forbidden phrases.
 
-4. The logic is also broader than its name: a configured positive budget or setup duration is treated as proof of execution even when attempted is false. That can falsely classify an unstarted run as nontrivial.
+5. There is no threshold off-by-one comparison. However, sign handling is representation-dependent: negative integers remain negative in lists, while the same dimensions in strings lose their signs through `r"\d+"`.
 
-5. Mutation coverage is defective. The dead-archive regression fixture simultaneously carries actions 117, budget 120, duration_s 60.000066, attempts 1, and attempted true; deleting any one recognizer remains covered by the others. Iterations and observed have no isolated case, so every individual rule is deletable without a focused regression failure.
+6. The implementation is simultaneously broader and narrower than its name. It is broader because any digit-bearing string is treated as dimensions, and narrower because annotated dictionaries are rejected; `return []` also conflates a valid rank-zero shape, an unsupported representation, and malformed input.
 
-6. The strict-positive numeric boundary is consistent with “nontrivial”: zero is rejected and positive values are accepted. This function performs no free-text substring matching, negation scanning, filesystem writes, absolute-path computation, or pre-work metric measurement.
+7. Pattern-list gaps: `(list, tuple)` represents supported structured shape encodings but omits the project-standard annotated dictionary. The regex `r"\d+"` represents numeric dimension tokens but omits signed tokens and proper token boundaries while accepting digits embedded in unrelated tokens.
 
-7. The implementation is narrower and broader than the claimed concept: it misses valid execution representations while accepting configuration values that do not establish execution.
+8. Mutation coverage is incomplete. The repository directly tests strings, lists containing integers and integral floats, bool rejection, unsupported items, and None; it does not directly test the tuple member of `(list, tuple)`, annotated dictionaries, signed strings, dtype-qualified strings, or fractional-float rejection. Removing tuple acceptance, or removing the `item.is_integer()` restriction while retaining float acceptance, would plausibly leave the existing helper tests green.
+
+9. The early and terminal `return []` branches are fail-open recognizer defaults. Current callers use an empty result as “pattern did not match,” so unsupported input produces no explicit warning and cannot be distinguished from a genuine non-match.
+
+10. No absolute path, filesystem write, tracked-state mutation, clock, duration, counter, or other measurement exists in this function. Classes D, E, and G do not apply.
 
 ## COUNTEREXAMPLE
+`{"grid_shape": "torch.float32[1, 64, 64]"}` is parsed as `[32, 1, 64, 64]`, so the real leading singleton grid axis is missed: a false negative.
 
-False negative:
+## MISSED INPUT
+`{"grid_shape": {"principle": "Recorded runtime tensor shape.", "value": [1, 64, 64]}}` is a project-valid annotated field, but the wrapper is parsed as no dimensions and the degenerate leading singleton is not detected.
 
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The function silently treats unsupported and malformed representations as `return []`, which downstream checks interpret exactly like a harmless non-match. It needs wrapper-aware extraction, a grammar for complete shape strings rather than digit scavenging, and an explicit invalid/unrecognized result covered by mutation-resistant tests.
+
+
+## adversarial_verify.py::_grid_shape_degenerate_reasons
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_grid_shape_degenerate_reasons` claims to return reasons for degenerate grid shapes.
+
+## FINDINGS
+1. Field extraction is delegated by `for path, value in _iter_real_fields(d):` and `dims = _shape_dims(value)`. Whether principle-wrapped dictionaries, lists, and None are handled correctly cannot be determined without those helpers; this function itself performs no unsafe string or numeric conversion. It does assume `path[-1]` exists and is a string when executing `leaf = path[-1].lower()`.
+
+2. The marker test `if "shape" not in leaf and "grid_tensor" not in leaf:` uses unrestricted substring matching. The shape marker can match an unrelated compound such as a shapelet-metrics field, while the grid-tensor marker can match a longer token such as an off-grid TensorBoard field.
+
+3. The same marker test silently omits genuine grid-shape synonyms. A field named grid_dimensions never reaches `_shape_dims(value)`, so a degenerate value is indistinguishable from a clean artifact. The hardcoded markers stand in for the concept of fields describing grid or tensor dimensions but omit common members such as grid_dimensions, tensor_dimensions, dimensions, and tensor_size.
+
+4. The terminal behavior is fail-open: skipped fields produce no reason, and `return reasons` returns an empty list identical to a genuine pass. There is no indication that a plausible shape-bearing field was unrecognized and therefore not checked.
+
+5. The structural test `if len(dims) >= 3 and dims[0] == 1 and dims[-2] > 1 and dims[-1] > 1:` is narrower than the function name. It detects only rank-three-or-greater shapes with a singleton first dimension and two non-singleton trailing dimensions; it misses a degenerate rank-two grid such as a one-by-sixty-four sweep and other singleton-axis degeneracies.
+
+6. No numeric off-by-one defect is demonstrable from the supplied claim: `dims[0] == 1` includes the exact singleton boundary, while `dims[-2] > 1` and `dims[-1] > 1` consistently require non-singleton trailing axes. There is no docstring specifying different inclusive behavior.
+
+7. No free-text value is scanned, so negation blindness is not present in the shown function. No absolute path, write side effect, tracked-state mutation, or prematurely computed metric exists in this code.
+
+8. Test mutation coverage cannot be determined because no tests were supplied. No condition is logically double-covered here: deleting either marker or any conjunct in the structural test changes the accepted input set.
+
+## COUNTEREXAMPLE
 ```json
 {
-  "experiment": "arc_go_explore_archive_probe",
-  "honest_verdict": "complete: honest Go-Explore null after attempted archive run",
-  "inference_substrate": "go-explore replay over cached ARC transitions",
-  "attempted": {
-    "principle": "whether the Go-Explore archive run was attempted",
-    "value": true
-  },
-  "go_explore_archive_diagnostics": {
-    "actions_injected": 0,
-    "stored_cells": 0
+  "grid_dimensions": [1, 64, 64]
+}
+```
+This plausible degenerate experiment grid is skipped because its field name contains neither recognized marker, producing a false negative.
+
+## MISSED INPUT
+`"grid_dimensions": [1, 64, 64]`
+
+## RECOMMENDATION
+WIDEN_PATTERN_TO_CONCEPT
+
+## RATIONALE
+The substring gate `if "shape" not in leaf and "grid_tensor" not in leaf:` is simultaneously overbroad for unrelated compound names and underinclusive for ordinary dimension-field names. Because `return reasons` exposes an unrecognized field exactly like a verified pass, this is a silent fail-open defect rather than merely incomplete diagnostics.
+
+
+## adversarial_verify.py::_scorer_diagnostics_error_reasons
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_scorer_diagnostics_error_reasons` claims to produce reasons for errors reported by scorer diagnostics.
+
+## FINDINGS
+1. Field extraction is unsafe. `errors = value.get("errors")` assumes a bare numeric value; a principle/value wrapper, list, string, or None silently fails the finite-number test. `observed = value.get("observed")` and `fits = value.get("fits")` make the same assumption, although those failures only remove useful context.
+
+2. Wrapping the entire diagnostics field also defeats detection. `if not isinstance(value, dict) or path[-1].lower() != "scorer_diagnostics":` examines the wrapper as the diagnostics object, finds no errors member, and later rejects the actual payload because its path ends in value. A list of per-arm diagnostics is likewise skipped because the list fails the dict check and its elements have index path components.
+
+3. The default is unsafe. `return reasons` produces the identical empty result for a valid zero error count and for malformed, wrapped, missing, non-finite, negative, or otherwise unrecognized error data. The caller therefore cannot distinguish a genuine pass from an unevaluated check.
+
+4. There is no substring-boundary or negation bug here: the only string recognition is exact case-insensitive field-name equality, and no free text is scanned. There is also no hardcoded list, tuple, set, prefix, or regex alternation whose conceptual coverage can be audited.
+
+5. `float(errors) > 0.0` handles the zero boundary correctly: zero means no recorded errors. However, negative and non-finite error counts are impossible diagnostics and are silently treated as clean rather than malformed.
+
+6. The implementation is narrower than its name: it detects only a bare, finite, positive numeric errors member inside a bare dict whose field name is exactly scorer_diagnostics. It does not generally produce reasons for wrapped or malformed scorer-diagnostic errors.
+
+7. The core positive-error rule is pinned by a test that requires scorer_diagnostics.errors in the emitted detail. The branches containing `detail += f", observed={observed}"` and `detail += f", fits={fits}"` have no corresponding assertion and appear deletable with the suite still green; there is also no wrapper, list, None, negative, or non-finite regression case.
+
+8. The function contains no path computation, absolute write target, filesystem side effect, tracked-state mutation, or measurement timing logic.
+
+## COUNTEREXAMPLE
+```json
+{
+  "experiment": "experiment_4710_online_action_learning_arms",
+  "honest_verdict": "complete: online scorer ran with four archived cells",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "archive_cells": 4,
+  "scorer_diagnostics": {
+    "principle": "Nonzero scorer failures invalidate this arm.",
+    "value": {
+      "errors": 2,
+      "observed": 4737,
+      "fits": 936
+    }
   }
 }
 ```
-
-The wrapped true is ignored, the run is classified as nontrivial=false, and the zero-cell archive produces no flag.
+This returns no scorer-diagnostics reason and the surrounding lever check emits no flag.
 
 ## MISSED INPUT
-
 ```json
-{
-  "experiment": "arc_go_explore_live",
-  "inference_substrate": "go-explore replay over cached ARC transitions",
-  "honest_verdict": "complete: honest null after 13 attempted archive expansions",
-  "attempted": 13,
-  "go_explore_archive_diagnostics": {
-    "actions_injected": 0,
-    "stored_cells": 0
-  }
+"scorer_diagnostics": {
+  "principle": "Nonzero scorer failures invalidate this arm.",
+  "value": {"errors": 2, "observed": 4737, "fits": 936}
 }
 ```
 
 ## RECOMMENDATION
+ADD_FIELD_UNWRAP
 
+## RATIONALE
+The function collapses unrecognized diagnostics and genuinely clean diagnostics into the same empty `reasons` result. It must unwrap principle/value fields and report malformed declared diagnostics explicitly; otherwise positive scorer failures can pass silently.
+
+
+## adversarial_verify.py::_has_positive_online_training_evidence
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_has_positive_online_training_evidence` claims to recognize affirmative evidence that online training actually ran.
+
+## FINDINGS
+1. Field extraction is shape-fragile. `observed = value.get("observed")`, `fits = value.get("fits")`, and `errors = value.get("errors", 0)` require bare numeric leaves. Nested principle wrappers and lists fail silently; None is rejected, while a missing error field is perversely accepted.
+
+2. `errors = value.get("errors", 0)` is fail-open. Omitting the error counter is treated as explicit zero errors, so positive observed/fits values establish “clean” training without any error evidence. Explicit None fails while total omission passes.
+
+3. `not isinstance(value, dict)` rejects list-shaped diagnostics. A realistic per-scorer list of successful diagnostic records is skipped, and its children cannot match because their final path component is a list index.
+
+4. There is no substring-boundary bug: `path[-1].lower() != "scorer_diagnostics"` is exact equality. The inverse problem exists: semantically equivalent names such as online_scorer_diagnostics or training_diagnostics never fire.
+
+5. Context is ignored. Any nested dictionary named scorer_diagnostics satisfying `float(observed) > 0.0`, `float(fits) > 0.0`, and `float(errors) == 0.0` returns `True`, even under an offline baseline or unrelated evaluation branch. Nothing establishes that the counters belong to an online arm.
+
+6. The numeric boundaries themselves are correct: exact zero is not positive, and `float(errors) == 0.0` accepts exactly zero. The error-field default defeats that otherwise-correct boundary by converting absence into zero.
+
+7. The implementation is simultaneously narrower and broader than its name: narrower because it recognizes only one exact container and three exact scalar fields, broader because it accepts that container at any path without proving online-training context. The repository’s real n_online_updates field is an omitted member of the claimed concept.
+
+8. `return False` conflates absent diagnostics, malformed diagnostics, wrapped diagnostics, list diagnostics, unknown spellings, and genuine zero activity. It does not directly disable the caller’s check, but it provides no way to distinguish an unrecognized schema from verified absence of evidence.
+
+9. The error-count rule is mutation-unpinned. Removing the error extraction and all error predicates passed all 480 relevant adversarial-verifier functional assertions; the only functional failure was an unrelated duration-floor test. Positive errors are double-covered by a neighboring diagnostic-error rule, so the suite does not prove that this function itself requires explicit zero errors.
+
+10. There is no free-text or negation scan, no absolute path, no file write, and no duration or counter computed before work in this function. Relevant tests read fixed historical artifacts but do not overwrite them.
+
+## COUNTEREXAMPLE
+```json
+{
+  "experiment": "arc_online_action_learning_driver",
+  "honest_verdict": "complete: online_action_learning_no_first_win_lift_null",
+  "arms": [
+    {"arm": "frozen", "first_win_rate": 0.04},
+    {"arm": "online-scratch", "first_win_rate": 0.04},
+    {
+      "arm": "online-warm",
+      "first_win_rate": 0.04,
+      "scorer_diagnostics": {
+        "observed": 4737,
+        "fits": 935
+      }
+    }
+  ]
+}
+```
+
+The missing `errors` field defaults to zero, so the function returns true and the byte-identical-arm check is suppressed.
+
+## MISSED INPUT
+```json
+{
+  "arms": [{
+    "arm": "online-warm",
+    "scorer_diagnostics": {
+      "principle": "Aggregate online-scorer counters proving the loop ran.",
+      "value": {
+        "observed": 4737,
+        "fits": 935,
+        "errors": 0
+      }
+    }
+  }]
+}
+```
+
+This project-conforming nested annotation contains genuine positive evidence, but the function returns false.
+
+## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
+`errors = value.get("errors", 0)` lets incomplete evidence masquerade as clean evidence, while the rigid leaf reads reject valid annotated evidence. Fixing only unwrapping is insufficient: the recognizer must fail closed on missing required counters, normalize supported shapes, and bind evidence to an actual online-training arm.
 
-The function conflates configured capacity with observed execution, rejects supported wrapped values, and silently treats unknown execution schemas as no-run. Replace the enumerated heuristic with typed, wrapper-aware execution evidence that distinguishes configuration from observed work and reports unrecognized evidence as unverified.
+
+## adversarial_verify.py::_online_arm_metric_items
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_online_arm_metric_items` claims to collect numeric online-arm metrics from an artifact into named floating-point items.
+
+## FINDINGS
+1. Silent non-firing: `arms = d.get("arms")` followed by `if isinstance(arms, list):` silently ignores a principle-wrapped arms list. It returns the same empty result as an artifact containing no arm metrics, so callers cannot distinguish “nothing present” from “present but unchecked.”
+
+2. `value = row.get("first_win_rate")` and `if _is_finite_number(value):` assume a bare number. A principle-wrapped number, list, or None is silently omitted. The same defect affects top-level values because `if not _is_finite_number(value):` executes before marker recognition.
+
+3. `arm = str(row.get("arm", f"arm_{index}"))` assumes a scalar arm name. A wrapped dict or list becomes its Python representation; an explicitly present None becomes the label None rather than using the fallback.
+
+4. Both `if not any(marker in kl for marker in _LEVER_ONLINE_ARM_MARKERS):` and `if not any(marker in kl for marker in _LEVER_ONLINE_METRIC_MARKERS):` use boundary-blind substring matching. This can select unrelated longer field names, but a concrete realistic collision cannot be established because neither marker collection is included.
+
+5. There is no negation/context bug in the shown function because it does not scan free-text values. There are also no numeric thresholds or comparison operators to audit for an off-by-one error.
+
+6. The implementation is narrower than its name: nested arm rows recognize only `value = row.get("first_win_rate")`, while other possible online-arm metrics are ignored. Whether a particular omitted metric is required cannot be determined without the schema and marker definitions.
+
+7. Pattern-list completeness and mutation coverage cannot be determined from this excerpt: the contents of `_LEVER_ONLINE_ARM_MARKERS`, `_LEVER_ONLINE_METRIC_MARKERS`, and the test suite are absent. No shown branch is demonstrably deletable or double-covered.
+
+8. No absolute path, filesystem write, tracked-state mutation, duration measurement, or other side effect appears in the function.
+
+9. Although there is no terminal no-check recognizer branch, repeated `continue` paths followed by `return items` create the same unsafe outcome: unsupported field shapes disappear without an error or unverified-state result.
+
+## COUNTEREXAMPLE
+{"arms":[{"arm":{"principle":"Identifies the evaluated online arm.","value":"treatment"},"first_win_rate":{"principle":"Observed first-win probability; must be between zero and one.","value":1.4}}]}
+
+This returns an empty list instead of exposing the impossible 1.4 rate for validation.
+
+## MISSED INPUT
+{"arms":{"principle":"Per-arm online evaluation results.","value":[{"arm":"treatment","first_win_rate":1.4}]}}
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+Principle-wrapped numeric metrics and even the entire arms collection are silently treated as absent, defeating the extractor without producing an error. Unwrap supported artifact fields before type checks and make unsupported present shapes explicitly fail or report an unverified result rather than returning an ordinary empty list.
 
 
-## adversarial_verify.py::_archive_zero_reasons
+## adversarial_verify.py::_byte_identical_online_arm_reason
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`_byte_identical_online_arm_reason` claims to return a reason for byte-identical online-arm results.
+
+## FINDINGS
+1. Silent non-firing: `_significant_digits_match(first_value, value, TAUTOLOGY_DIGITS) for _, value in items[1:]` quantifies over every collected metric. Three identical first-win values are missed if the artifact also contains one differing solve-rate metric; the function returns `None` instead of evaluating comparable metrics separately.
+2. There are no direct dict-field reads here. Field extraction is delegated by `items = _online_arm_metric_items(d)`, after which `label.lower()` and `{value:.6g}` assume the helper returned bare strings and numbers. This function provides no unwrap or validation fallback.
+3. `marker in labels` is boundary- and context-blind. Longer identifiers containing an arm marker, including negated or disabled identifiers, satisfy `all(marker in labels for marker in _LEVER_ONLINE_ARM_MARKERS)`.
+4. `len(items) < 3` counts metric entries, not distinct arms. Multiple metrics from one arm can satisfy the count, and the aggregate label test does not prove a one-to-one mapping between markers, arms, and a common metric.
+5. The exact-three boundary is correct: three items pass, fewer do not. The significant-digit threshold is delegated, so no numeric off-by-one can be established from this function alone.
+6. The name is broader and different from the implementation. The function requires at least three specific marker classes, yet compares approximate numeric equality rather than byte identity; valid two-arm or alternate-role comparisons are omitted, while unrelated mixed metrics can be accepted.
+7. The whole rule is tested: deleting it breaks the historical byte-identical-arms regression. However, the marker-presence half of `if len(items) < 3 or not all(marker in labels for marker in _LEVER_ONLINE_ARM_MARKERS):` is not independently pinned; deleting that half leaves the focused lever-evidence and carveout tests green.
+8. There is no absolute path, write, tracked-state mutation, or pre-work measurement here. There is a fail-open default: insufficient, unrecognized, mixed, or unequal input all collapse to the same `return None`, so callers cannot distinguish “verified clean” from “not evaluated.”
+
+## COUNTEREXAMPLE
+This plausible fragment is falsely classified as three byte-identical online arms even though it mixes one arm metric, a scratchpad metric, and an explicitly non-warm metric:
+
+```json
+{
+  "frozen_first_win": 0.04,
+  "scratchpad_solve_rate": 0.04,
+  "not_warm_live_solve_rate": 0.04
+}
+```
+
+## MISSED INPUT
+This realistic artifact fragment has byte-identical first-win results across the canonical three arms, but the additional solve-rate metric makes the function return `None`:
+
+```json
+{
+  "frozen_first_win": 0.04,
+  "online_scratch_first_win": 0.04,
+  "online_warm_first_win": 0.04,
+  "online_warm_solve_rate": 0.20
+}
+```
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The fail-open `return None` conflates an unrecognized or mixed shape with a genuine non-match, while one extra metric can suppress an exact three-arm signature. Arm identifiers must be boundary-normalized and metrics grouped by comparable metric name before enforcing distinct-arm coverage and pairwise equality.
+
+
+## adversarial_verify.py::_has_positive_probe_exercise_evidence
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`True when a declared active-probe path emitted real exercise evidence.`
+
+## FINDINGS
+1. Silent non-firing: `return probe_actions_positive and entropy_reduction_positive` conflates exercising a probe with obtaining a successful entropy reduction. A genuine probe can take actions yet produce zero information gain; this function returns false and silently classifies that execution as lacking evidence.
+2. Field extraction is delegated through `for value in _real_field_values(d, "probe_actions_taken")` and `for value in _real_field_values(d, "posterior_entropy_reduction")`. Whether wrapped dictionaries, lists, and nulls work cannot be determined without the two helper implementations. The direct `float(number) > 0.0` conversion additionally assumes every emitted leaf is float-convertible.
+3. No substring, prefix, suffix, regex, or free-text matching occurs, so there is no word-boundary or negation-context defect here.
+4. The exact-zero boundary is implemented consistently with “positive”: `float(number) > 0.0` excludes zero. The semantic bug is that positive entropy reduction is required at all, not the comparison operator.
+5. The implementation is narrower than its claim. It recognizes only positive values in two exact fields and requires both, while the docstring claims to recognize real exercise evidence generally and also refers to a declared path that the function never checks.
+6. The hardcoded field pair stands in for active-probe execution evidence but omits direct evidence such as an emitted probe-action trace. No list, tuple, set, prefix, or regex alternation otherwise appears.
+7. Test and mutation coverage cannot be determined from this function alone. Neither predicate is logically double-covered by the other, but whether deleting either would fail the suite requires the tests.
+8. There is no absolute path, write operation, tracked-state mutation, duration measurement, or terminal no-check default. The function always returns a boolean; caller handling cannot be assessed from the supplied code.
+9. Non-finite positive numbers are accepted unless `_numeric_leaf_values` rejects them first: `float(number) > 0.0` is true for positive infinity. Calling that “real” evidence requires validation not visible here.
+
+## COUNTEREXAMPLE
+{"probe_actions_taken": 3, "posterior_entropy_reduction": 0.0}
+
+This represents three genuine probe actions whose observations happened to provide no information gain. The function returns false.
+
+## MISSED INPUT
+A real active-probe run with probe_actions_taken equal to 3 and posterior_entropy_reduction equal to 0.0.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+`return probe_actions_positive and entropy_reduction_positive` tests successful probing, not merely exercised probing as the docstring claims. Execution evidence and effectiveness evidence must be separate predicates, with explicit handling for missing, malformed, and non-finite measurements.
+
+
+## adversarial_verify.py::_declared_but_unrun_probe_reasons
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_declared_but_unrun_probe_reasons` claims to identify reasons that a declared probe was not exercised.
+
+## FINDINGS
+1. No direct dictionary-field reads occur; extraction is delegated to `_iter_real_fields(d)`, so support for principle-wrapped fields cannot be determined from this excerpt. Locally, `leaf = path[-1].lower()` assumes every yielded path is nonempty and ends in a string.
+2. `leaf == "probe_actions_taken" and _is_finite_number(value)` recognizes only numeric zero. An empty action list, null, false, or wrapped value is silently ignored unless `_iter_real_fields(d)` normalizes it.
+3. `leaf == "hypothesis_posterior_built" and value is False` assumes a bare built-in boolean. A principle-wrapped boolean, numeric false representation, null, or status string will not match unless normalized upstream.
+4. `any(marker in path_lower for marker in _LEVER_PROBE_DECLARATION_MARKERS)` performs boundary-free substring matching. It can treat a negated field such as a not-declared-reason field as positive declaration evidence; the actual marker values are absent, so exact collision coverage cannot be established.
+5. Declaration recognition examines only field paths, not their values. It cannot distinguish a declaration field from a field documenting that declaration was explicitly avoided or inapplicable.
+6. The exact-zero comparisons in `float(value) == 0.0` include the threshold itself, which is consistent with detecting no work. No contradictory docstring is present, so no off-by-one defect is established.
+7. The implementation is narrower than its name: it emits reasons only for three exact leaf names and representations, not every plausible declared-but-unrun state.
+8. The effective pattern set standing for “evidence that a probe was not run” omits empty action lists and explicit status values such as not-run. The contents of `_LEVER_PROBE_DECLARATION_MARKERS` are not provided, so omissions from that separate declaration-name taxonomy cannot be proven.
+9. Deletion or double-coverage of individual branches cannot be assessed without `_has_positive_probe_exercise_evidence`, the marker list, and the test suite.
+10. Both `if not declared:` and an empty `reasons` list lead to `return []`. Thus an unrecognized declaration or unrecognized not-run representation is indistinguishable from a genuine pass.
+11. The shown function contains no filesystem path, write operation, tracked-state mutation, duration measurement, or work-timing logic; classes D, E, and G do not apply here.
+
+## COUNTEREXAMPLE
+False positive:
+```json
+{
+  "lever_probe_not_declared_reason": "Not applicable: this observational baseline has no intervention surface.",
+  "probe_actions_taken": 0
+}
+```
+If the declaration markers include the expected `lever_probe` token, the negated explanatory field sets `declared = True`, and the zero action count is incorrectly reported as a declared-but-unrun probe.
+
+## MISSED INPUT
+```json
+{
+  "lever_probe_status": "declared_not_run",
+  "probe_actions_taken": []
+}
+```
+This is an explicit declared-but-unrun probe, but none of the three reason branches appends anything, so the function returns an empty list.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The function reduces a semantic state to path substrings plus three exact value shapes, then uses `return []` for both clean artifacts and unrecognized evidence. That creates a silent false-negative channel, while `marker in path_lower` also permits negated metadata to create false positives.
+
+
+## adversarial_verify.py::_has_nondegenerate_lever_evidence
 
 (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## adversarial_verify.py::_pool_degenerate_reasons
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The name `_pool_degenerate_reasons` claims to detect degenerate pools, including empty pools and byte-identical before/after transforms.
-
-## FINDINGS
-1. Silent non-firing: the real artifact results/experiment_4544_llm_proposer_reinduction.json contains dynamics_candidate_names: [] and goal_candidate_names: []; neither field matches the pool-marker vocabulary, so both empty generated-candidate collections are ignored.
-
-2. Field-wrapper bug: `for path, value in _iter_real_fields(d):` preserves a principle wrapper as the value associated with the pool field. `elif isinstance(value, dict):` then searches the wrapper itself for pre/post keys instead of unwrapping its value, so a principle-wrapped empty or unchanged pool silently passes. Bare None, empty strings, lists, and dictionaries are handled only by `value in (None, "", [], {})`; structured empty containers are not.
-
-3. Falsy-value bug: `keys.get("pre") or keys.get("before") or keys.get("input")` and `keys.get("post") or keys.get("after") or keys.get("output")` discard valid falsy snapshots. A pool represented as pre=[] and post=[], pre=0 and post=0, or pre=false and post=false produces no reason even though it is empty or unchanged.
-
-4. Substring-boundary bug: `if not any(marker in leaf for marker in _LEVER_POOL_KEY_MARKERS):` has no token boundary. A field named proposal_pooling_layer_notes falsely matches proposal_pool, while candidate-pool, proposalPool, generated_candidates, and candidate_set falsely fail to match.
-
-5. Context blindness: candidate_pool_not_used still matches the marker despite explicitly saying the pool was not used. If its value is empty, the helper flags an unused diagnostic field as evidence that the exercised lever was degenerate.
-
-6. Claim/implementation mismatch: `left == right` tests Python semantic equality, not byte identity. Pre=[1] and post=[1.0], or dictionaries with different serialized key order, are reported as byte-identical even though their bytes differ; the implementation is broader than its diagnostic claim.
-
-7. Pattern-list gaps: `_LEVER_POOL_KEY_MARKERS` stands for candidate/proposal collection fields but omits real vocabulary such as dynamics_candidate_names and goal_candidate_names. The before-side aliases stand for the original pool but omit baseline, control, and source; the after-side aliases stand for the transformed pool but omit result, transformed, and generated; the empty-value tuple stands for zero candidates but omits structured forms such as a nonempty dictionary containing an empty items list or zero count.
-
-8. Untested patterns: the regression suite directly pins proposal_pool with [], candidate_pool with pre/post equality, and the two corresponding branches. Repository search found no direct coverage for candidate_generation_pool, generated_pool, the before/input/after/output aliases, or the individual None, empty-string, and empty-dictionary cases; those rules appear deletable while the existing suite remains green.
-
-9. Unsafe default: terminal `return reasons` returns an empty list for unrecognized pool names, malformed pool shapes, wrappers, and clean pools alike. The caller treats all four states as no finding, so an operator cannot distinguish “checked and clean” from “recognizer never fired.”
-
-10. There are no numeric thresholds or off-by-one comparisons in this helper. It performs no path computation, writes, tracked-state mutation, or measurement, so the absolute-target, side-effect, and pre-work metric defects do not apply here.
-
-## COUNTEREXAMPLE
-```json
-{
-  "experiment": "arc_synthetic_generation_lever",
-  "schema": "carnot.arc.synthetic_generation_lever.v1",
-  "honest_verdict": "complete: generation_null_after_zero_candidates",
-  "inference_substrate": "exploration lever exercise replay",
-  "duration_s": 1.0,
-  "candidate_pool": {
-    "principle": "records the alternatives actually generated",
-    "value": []
-  }
-}
-```
-This is a false negative: the declared pool is empty, but the full lever-evidence check emits no flag.
-
-## MISSED INPUT
-results/experiment_4544_llm_proposer_reinduction.json: dynamics_candidate_names: []
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-This helper confuses recognized syntax with the underlying concept and lets wrapper shape, falsy values, or ordinary vocabulary changes defeat the check. Its `return reasons` makes non-recognition indistinguishable from successful verification, while `left == right` overstates semantic equality as byte identity. Fixing one token would leave the unsafe architecture intact.
-
