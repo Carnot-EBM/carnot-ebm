@@ -79363,3 +79363,74 @@ research-roadmap.yaml or scripts/research_conductor.py.
 ### Implementation Status (REQ-REPORT-V665-PLAN)
 
 Planning specification recorded before authoring. Validation is pending.
+
+## REQ-REPORT-7615: Bind V665 and qualify schema-constrained evidence methods
+
+Experiment 7615 SHALL resolve the staged or activated roadmap whose milestone is
+`2026.09.665` without activating or rewriting either authority. It SHALL compare
+exactly fourteen ordered tasks, Exp7615 through Exp7628, against the V665 design.
+Full IDs, titles, phases, deliverables, inference substrate classes and complete
+structured gates SHALL agree. `contract_ready_score` SHALL equal one only when
+the baseline agrees, consumed-staging selection works, private missing-task,
+reordered-task, altered-path and misspelled-field copies are rejected, and all
+schema, gate, exclusion, harness-fit, ARC-floor and overdue-priority guards pass.
+
+The report SHALL authenticate the V664 capstone and preserve all fourteen prior
+dispositions. Actual terminal producers, conductor pre-gate records and absent
+producers SHALL remain separate. The eight real but parser-invalid generations,
+unmeasured evidence chain, blocked ARC protocol and service-attribution null SHALL
+retain their original scopes. Environmental or custody absence SHALL not retire a
+scientific hypothesis, and an exact fixture SHALL remain `circular_positive`.
+
+The task SHALL declare planned and actual `aggregation`, `MODEL_SPECS=[]`, zero
+current model invocations and the actual host venue. It SHALL map JSONSchemaBench
+coverage, quality and speed measures to the schema pilot; EAEV identity, semantic,
+consistency and counterfactual factors to evidence controls; and Proper Calibeating
+assumptions to the delayed-loss experiment. The local learner SHALL NOT be called a
+reproduction of any paper or theorem. Verified primary methods and inaccessible
+secondary sources SHALL be recorded in the method map and studying log.
+
+Validity, readiness, benefit, retention and freshness SHALL remain separate. This
+administrative contract task gates no science. Fixed publication G1-G4 SHALL remain
+unchanged and SHALL distinguish historic FoVer eligibility from new evidence. The
+artifact SHALL include complete principles, per-task raw operands, exact source
+hashes, command receipts, independent reduction, terminal reader outcomes and a
+checksum before atomic publication.
+
+### SCENARIO-REPORT-7615-AUTHORITY: Exact authority and lifecycle controls
+
+**Given** the V665 design and a matching staged or activated roadmap
+**When** Experiment 7615 compares the complete ordered contract
+**Then** all fourteen identities, titles, phases, paths, substrates and gates match
+**And** missing, reordered, altered-path and misspelled-field copies fail
+**And** consumed staging selects the matching activated authority without mutation.
+
+### SCENARIO-REPORT-7615-CUSTODY: V664 dispositions remain literal
+
+**Given** the authenticated V664 terminal capstone
+**When** Experiment 7615 reduces its fourteen task dispositions
+**Then** producers, pre-gate records and literal absences remain distinct
+**And** blocked evidence does not become partial or a scientific null
+**And** no environmental or custody block retires an unmeasured hypothesis.
+
+### SCENARIO-REPORT-7615-METHODS: Primary methods keep their assumptions
+
+**Given** the named primary JSONSchemaBench, EAEV and Proper Calibeating sections
+**When** Experiment 7615 records the V665 method map
+**Then** schema coverage, quality and speed remain separate measures
+**And** evidence factors map to explicit erasure, derangement and source controls
+**And** delayed local learning is not reported as reproducing a published theorem.
+
+### SCENARIO-REPORT-7615-TERMINAL: Exact readers control publication
+
+**Given** a frozen affected-file manifest and one exact terminal candidate
+**When** scoped tests, coverage, static checks, guards and cold reduction run
+**Then** commands, exits, worktree paths and log hashes are retained
+**And** independent reduction and both strict readers pass before atomic publication
+**And** the complete null advisory opens no scientific benefit gate.
+
+### Implementation Status (REQ-REPORT-7615)
+
+Implemented by Experiment 7615 with exact authority controls, authenticated V664
+custody, primary-method limits, scoped validation and terminal readers. The
+conductor owns later status, changelog and traceability reconciliation.

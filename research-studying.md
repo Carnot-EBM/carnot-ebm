@@ -6123,3 +6123,11 @@ U-Calibration Algorithm 1. Locality and readiness do not establish retention.
 EAEV controls, local KAN updates, and proper-loss evaluation map to bounded
 V664 tests. The guarded delayed learner is not published U-Calibration.
 The spintronic and sparse-transformer repositories remain future leads.
+
+<!-- EXP7615-V665-METHOD-INGESTION -->
+## 2026-09-24 Exp7615 — V665 contract methods — INGESTED
+
+JSONSchemaBench coverage, quality and speed; EAEV evidence factors; and Proper
+Calibeating assumptions map to separate V665 tests. The local finite delayed
+learner is not a reproduction of a paper or theorem. Semantic Scholar citation
+endpoints and one OpenReview PDF remained inaccessible secondary sources.
