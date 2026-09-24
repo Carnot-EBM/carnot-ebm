@@ -18554,3 +18554,5 @@ code |
 | 2026-09-24 16:08 UTC | Milestone 2026.09.665 activated | OK | 14 tasks queued |
 | 2026-09-24 16:32 UTC | Bind fourteen tasks and qualify schema-constrained | OK | 99 passed, 1 warning in 10.76s |
 | 2026-09-24 16:58 UTC | Unify evidence prompt, decoder schema and independ | OK | 112 passed, 1 warning in 11.51s |
+| 2026-09-24 17:25 UTC | Compare explicit-schema prompting and constrained  | OK | 88 passed, 1 warning in 7.84s |
+| 2026-09-24 17:27 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 2365987 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
