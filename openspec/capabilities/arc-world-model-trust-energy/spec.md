@@ -36166,6 +36166,130 @@ thresholds SHALL remain unchanged.
 Implementation status: specified 2026-09-24. The conductor owns status,
 changelog, and traceability reconciliation.
 
+### REQ-ARC-WMTE-7597: Measure observable-history support on real live-path episodes
+
+Experiment 7597 SHALL measure whether public runtime observations and selected
+actions support a deterministic next-frame model. It SHALL run the scored
+`E3AgentPolicy` against the offline arcade. It SHALL not use a `GameAdapter`, a
+stored solution, a loaded route, game source, hidden state, an offline
+ground-truth search, or a model call. Induction SHALL be disabled. The six games
+SHALL be `su15`, `sp80`, `ft09`, `sb26`, `g50t`, and `dc22`. Each game SHALL run
+once with seed 7597001 and once with seed 7597002. Each episode SHALL receive at
+most 600 action opportunities.
+
+The experiment SHALL registry-precheck all six games. Existing reproduced
+levels SHALL remain duplicate development history and SHALL not create solve
+credit. Incidental runtime progress SHALL retain
+`solve_provenance=live_agent_self_discovery`. The result SHALL claim no official
+score, hidden-game solve, beneficial policy change, threshold change, generator
+weight change, or production-default promotion.
+
+Each episode SHALL use the qualified final-action observer seam. Its raw log
+SHALL retain the original public frame, selected action and coordinates, runtime
+legal actions, observed level before and after the action, reset and level
+boundaries, public termination state, and the trajectory-supervisor receipt.
+Logs SHALL first be written below one task-owned `/tmp` directory. A durable
+evidence copy MAY be made only after the episode process exits. No live scratch
+path may be below `results/`.
+
+A fresh process SHALL reduce all twelve raw logs. For history lengths 0, 1, 2,
+and 4 it SHALL form each causal key before reading the next frame. A reset SHALL
+clear history before the reset key is formed. A level boundary SHALL finalize
+the preceding transition and clear history before the next key is formed. For
+every key, the reduction SHALL retain its support count, exact raw next-frame
+hash distribution, repeated-support status, and conditional conflict rate.
+Singleton keys SHALL be `unknown_support`; zero observed conflicts SHALL not be
+described as proof of Markov state or determinism.
+
+Seed 7597001 SHALL define candidate keys. Seed 7597002 SHALL supply the supported
+predictive check. A seed-2 transition is supported only when its exact key was
+seen in seed 1. The report SHALL keep within-seed conflict, cross-seed target
+conflict, unseen-key censoring, repeat coverage, and exact numerators and
+denominators separate. Longer histories SHALL not receive credit merely because
+they made keys unique.
+
+The experiment SHALL publish a matched common-support comparison. For one game,
+only transition operands whose keys meet repeated support for every compared
+history length may enter the matched comparison. A cross-game comparison SHALL
+require at least 20 matched repeated keys on each of at least three games. If
+that floor is not met, the comparison SHALL be a valid insufficient-support null
+with numeric benefit fields suppressed. If it is met, game-level cluster
+bootstrap differences MAY be reported descriptively. Games, not seeds or
+windows, are the independent clusters.
+
+The output SHALL include support-versus-conflict curves, per-game, per-seed, and
+per-history results, raw support operands, censoring, reset and level counts,
+legal-action receipts, supervisor fired and helped counts, and immutable source
+hashes. No supervisor firing means there is nothing to refine. Mere frame motion
+does not imply induction usefulness. Learned probabilities SHALL remain separate
+from exact raw-frame truth.
+
+The task SHALL declare `MODEL_SPECS=[]`, `live_llm_invoked=false`, and
+`inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm`.
+Current model loads, forwards, generations, and tokens SHALL all be zero. It
+SHALL exercise predict, release, update, persist, reload, and duplicate
+rejection without model-weight changes.
+
+`arc_history_measurement_ready_score` MAY equal one only when all twelve causal
+episode receipts exist, are hash-authenticated, and a fresh process independently
+reduces their raw logs. `history_support_ready_score` MAY equal one only when the
+declared 20-key, three-game matched support floor passes. Readiness alone is a
+null. Oracle-defined controls are `circular_positive`. A missing upstream or
+failed pre-gate input is `blocked`, not `partial`.
+
+The terminal artifact SHALL carry one auditable row per episode and history arm.
+Each row SHALL include absolute metrics, numerator, denominator, seed, direction,
+missingness, censoring, and provenance. It SHALL record intended, observed,
+excluded, and censored independent units without multiplying games by seeds. It
+SHALL separate validity, readiness, benefit, retention, and freshness gates.
+Every gate and required artifact field SHALL carry a one-line principle.
+
+The experiment SHALL freeze its affected-file scope. It SHALL run serial scoped
+pytest without repository addopts, changed-module 100 percent coverage with a
+private coverage file, scoped Ruff check and format, changed-module mypy, and
+scoped spec coverage. It SHALL run E2E-009 through E2E-013 and a private-output
+LLM-off environment smoke. The declared entrypoint, fresh-process cold replay,
+independent raw-log reduction, adversarial verifier, and strict verdict-row
+reader SHALL inspect the terminal candidate before atomic publication.
+
+#### SCENARIO-ARC-WMTE-7597-LIVE-EPISODES
+
+- **GIVEN** the frozen six-game roster, two seeds, and 600-action ceiling
+- **WHEN** the real `E3AgentPolicy` runs with induction disabled
+- **THEN** twelve private raw logs retain public frames, final actions, legal actions, boundaries, and termination
+- **AND** model-call counters remain zero and no adapter, route, source, hidden state, or stored solve is used.
+
+#### SCENARIO-ARC-WMTE-7597-CAUSAL-REDUCTION
+
+- **GIVEN** one raw episode with resets, level changes, repeated keys, and conflicting next frames
+- **WHEN** histories 0, 1, 2, and 4 are reduced in a fresh process
+- **THEN** every key precedes its target, every reset and level boundary clears history, and exact target counts reconcile
+- **AND** singleton keys remain unknown instead of being counted as deterministic.
+
+#### SCENARIO-ARC-WMTE-7597-CROSS-SEED-SUPPORT
+
+- **GIVEN** seed 7597001 candidate keys and seed 7597002 evaluation transitions
+- **WHEN** supported predictive checks are computed
+- **THEN** unseen seed-2 keys are censored and cross-seed target conflicts retain exact numerators and denominators
+- **AND** both within-seed and cross-seed conflicts remain separate from repeat coverage.
+
+#### SCENARIO-ARC-WMTE-7597-MATCHED-SUPPORT
+
+- **GIVEN** longer histories that can turn repeated short keys into singleton long keys
+- **WHEN** history arms are compared
+- **THEN** a matched transition cohort supplies every arm's operands
+- **AND** fewer than 20 matched repeated keys on three games yields an insufficient-support null.
+
+#### SCENARIO-ARC-WMTE-7597-TERMINAL
+
+- **GIVEN** twelve closed raw logs, current source hashes, and zero model calls
+- **WHEN** scoped checks, ARC E2Es, cold replay, independent reduction, and strict readers finish
+- **THEN** the validated artifact publishes atomically with separate readiness and benefit gates
+- **AND** production exact acceptance, Qwen thinking behavior, policy defaults, and supervisor arms remain unchanged.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V662 independent ARC live-panel audit — 2026-09-24
 
 ### REQ-ARC-WMTE-7584: Reduce both live panels without substituting missing evidence
