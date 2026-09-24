@@ -1,6 +1,15 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-24
+**Operational Note:** 2026-09-24 REQ-ARC-WMTE-10012 maps the offline cached-engine
+gate-usefulness measurement to `python/carnot/experiment_10012_gate_usefulness.py`,
+its thin entrypoint, and twelve small-fake tests. Amendment 1 preserves the v1
+offline-twin artifact and separates LIVE_SCORED, OFFLINE_TWIN_HALT, and the NOT
+LIVE BUDGET_150K arm. All ten stall inductions replay from their reset roots under
+the primary arm. EXPERT makes three LIVE_SCORED windows label-informative; explicit
+goal-defect, budget, halt-rule, and unresolved codes account for the rest. The
+60-pair CPU artifact retains per-arm control-inclusive and candidate-only count
+tables. No live gate changed.
 **Operational Note:** 2026-09-24 REQ-ARC-WMTE-10011 maps scored vLLM answer-channel
 sanitization, compatible reasoning-field reads, bounded sampling receipts, fail-safe `qwen3`
 parser launch detection, and opt-in vLLM repetition penalties to

@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-09-24 — Experiment 10012 gate-usefulness analysis (operator request: "1", gate analysis)
+
+- codex (gpt-5.6-sol, CPU, worktree `gate-usefulness`) built and ran REQ-ARC-WMTE-10012 with a
+  pre-registered design. One Claude reviewer (workflow `wf_0e2a4bf5-09f`) found the harness did
+  not execute like the scored agent: it halted on divergence and planned from the wrong start
+  state. Cause: the outer loop's brief described the scored agent wrongly. The outer loop confirmed
+  this in source, retracted its reported conclusion, and had codex re-run with amendment 1
+  (LIVE_SCORED primary arm; v1 kept as a labelled arm; 150k-node NOT-LIVE arm).
+- Merged by patch into main with the research note `docs/research-notes/gate-usefulness-2026-09-24.md`.
+- Prevention: the harness now has tests for no-halt execution, start-state choice, and RESET from
+  root. The brief error (offline twin semantics taken for the scored agent) is recorded in the
+  note; any future brief should cite the scored agent's execute phase directly.
+
 ## 2026-09-24 — vLLM answer-channel extraction fix (operator request: "1", fix the vLLM path)
 
 - codex (gpt-5.6-sol, CPU, worktree `vllm-extract-fix`) implemented REQ-ARC-WMTE-10011; one Claude

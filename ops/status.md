@@ -2,6 +2,19 @@
 
 **Last Updated:** 2026-09-23
 
+## 2026-09-24 — Kaggle v75 scored 0.09; gate analysis says transition accuracy does not predict usefulness
+- Kernel v75 (vLLM answer-channel fix) submitted on the operator's command: public score 0.09
+  (last completed vLLM run 0.02; best 0.12). A month of other changes sits in between, so the fix
+  is not isolated.
+- Experiment 10012 measured gate candidates against a real-simulator usefulness label. The first
+  run modelled the scored agent wrongly (halt on divergence, wrong start state); the outer loop's
+  "keep exact 1.0" conclusion was retracted. Corrected run: the only useful induced model (su15
+  think-ON) has held-out accuracy 0.125, so every candidate gate rejects it; looser gates add only
+  bad accepts. Two models had right dynamics but wrong win conditions.
+- Next (operator decision): make more windows informative (real win conditions for the sp80,
+  dc22, wa30, sb26 experts; more windows), or look at checking plans and goals instead of per-cell
+  dynamics. Detail: `docs/research-notes/gate-usefulness-2026-09-24.md`.
+
 ## 2026-09-24 — vLLM answer-channel fix merged; needs the next Kaggle submission to confirm
 - REQ-ARC-WMTE-10011: the scored vLLM path no longer reads code from the model's thinking. Answer
   text keeps only what follows the last `</think>`; a cut-off thought counts as no answer; vLLM

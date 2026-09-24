@@ -36070,6 +36070,199 @@ Production defaults SHALL remain unchanged.
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+### REQ-ARC-WMTE-10012: Measure whether relaxed world-model gates predict real usefulness
+
+Experiment 10012 SHALL remain an offline, CPU-only development-proxy measurement
+over the ten frozen B2 pilot windows `su15`, `sp80`, `ft09`, `g50t`, `m0r0`,
+`dc22`, `wa30`, `ka59`, `sb26`, and `ar25`. It SHALL make no model-server, GPU,
+network, or LLM call and SHALL NOT change the live gate. Its inference substrate
+SHALL be `verifier_ensemble_against_cached_candidates` and its solve provenance
+SHALL be `development_proxy`.
+
+For each window it SHALL score four cached engine arms: the Experiment 10010
+THINK source when one exists; the three recorded Experiment 10009 CODEONLY
+first-shot sources at seeds 7491001, 7491002, and 7491003; the frozen public-source
+EXPERT; and IDENTITY. Every held-out row SHALL execute in a fresh child process
+through `experiment_10010_engine_child.py`. The fixed held-out exclusions SHALL be
+row 20 for `sb26` and row 19 for `ar25`. The fixed masks SHALL be row 63 for
+`g50t`, `dc22`, `wa30`, and `ka59`, rows 0 and 63 for `m0r0`, and no mask for the
+other windows. Raised changing rows SHALL score zero change fidelity; raised no-op
+rows SHALL count as hallucinated.
+
+Each pair SHALL report live unmasked exact accuracy, masked exact accuracy,
+masked symmetric-union change fidelity, no-op hallucination rate, and cell recall,
+plus the shipped-default live selector decision and the existing change-gate
+decision. Missing, invalid, or incomplete cached sources SHALL remain explicit
+pair rows rather than disappearing from denominators.
+
+For usefulness, the harness SHALL select the first seed-7491001
+`record_type=induction_attempt` telemetry row for the window and retain its
+`step_index`. It SHALL compute the induction start as monotonic end timestamp minus
+the recorded induction duration, locate the recorded action interval enclosing
+that start, and replay from RESET only the actions strictly before that interval.
+The resulting frame's `levels_completed` SHALL be the level source; `env._game`
+SHALL never be used. The logical grid SHALL equal the window's final `next_grid`.
+A mismatch SHALL mark the whole window `state_unrecoverable`, exclude it from
+usefulness scoring, and preserve the observed and expected hashes and alignment
+evidence.
+
+Planning SHALL call the live `plan_in_model` with the shipped defaults: 20,000
+nodes, depth 80, and the live first-contact binary goal energy (0 for a state where
+the candidate's `is_level_complete` is true, otherwise the submitted guidance
+lambda 1.0). The harness SHALL retain diagnostics. It SHALL execute the returned
+plan from the already-rebuilt simulator state and, for every step, first compute
+the engine prediction, then perform the real action, declare a level-up from the
+returned frame's `levels_completed`, and otherwise halt immediately on shape or
+cell divergence. This is the same level-up-before-divergence ordering as
+`plan_and_execute`. It SHALL report plan found, plan length, executed real-action
+count, matched steps before divergence, level-up, whether real state changed, and
+the executed action prefix.
+
+`USEFUL` SHALL mean a real level-up occurred during that executed prefix.
+`FAITHFUL` SHALL mean at least three executed steps matched their engine prediction
+and the real logical state changed. If an EXPERT cannot produce a real level-up
+from the rebuilt state under that live planning budget, the window SHALL be
+`label_uninformative` and excluded from gate precision tables. If IDENTITY is ever
+USEFUL, the harness SHALL stop before publishing a complete result and report a
+harness bug. The explorer comparison is optional and may be omitted when it is not
+cheap.
+
+The candidate gate list SHALL be fixed before any result: live exact accuracy 1.0;
+masked exact accuracy at least 1.0, 0.875, and 0.75; masked change fidelity at
+least 1.0, 0.9, 0.8, and 0.7, each separately combined with no-op hallucination at
+most 0 and at most 0.25; and cell recall at least 0.9 and 0.8. For USEFUL and again
+for FAITHFUL, each gate SHALL report only accepted-and-positive,
+accepted-and-negative, rejected-positive, and rejected-negative counts over
+label-informative, recoverable pairs. No p-value SHALL be computed and no threshold
+SHALL be selected by maximizing an observed score.
+
+The terminal artifact SHALL contain an `honest_verdict` beginning `complete_`, or
+`blocked_<reason>` when a precondition fails; `inference_substrate`,
+`solve_provenance`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, `duration_s`, every per-pair row, both fixed gate tables,
+`deviations`, and `limits`. Raw per-pair evidence SHALL live under
+`results/raw/experiment_10012_gate_usefulness/`. Any design change after this
+requirement is written SHALL be retained as a named deviation with its reason.
+
+#### SCENARIO-ARC-WMTE-10012-ISOLATED-GATE-METRICS
+
+- **GIVEN** a cached candidate and the fixed held-out rows, masks, and exclusions
+- **WHEN** every row is scored in a fresh restricted process
+- **THEN** all five gate metrics and both existing gate decisions are retained
+- **AND** raised rows fail closed in the appropriate change or no-op channel.
+
+#### SCENARIO-ARC-WMTE-10012-STATE-REBUILD
+
+- **GIVEN** the first seed-7491001 induction telemetry and recorded action intervals
+- **WHEN** actions strictly before the induction-containing interval are replayed
+- **THEN** the frame level is read from `levels_completed`
+- **AND** a logical-grid mismatch excludes the window as `state_unrecoverable`.
+
+#### SCENARIO-ARC-WMTE-10012-LIVE-PLAN-EXECUTE
+
+- **GIVEN** a recovered real state and candidate dynamics and goal functions
+- **WHEN** the 20,000-node, depth-80 binary-energy live planner returns a plan
+- **THEN** the real simulator executes its prefix and halts on first divergence
+- **AND** a returned-frame level-up is counted before any divergence on that step.
+
+#### SCENARIO-ARC-WMTE-10012-LABEL-GUARDS
+
+- **GIVEN** all arms for one recovered window
+- **WHEN** usefulness labels are assigned
+- **THEN** an EXPERT without a real level-up makes that window uninformative
+- **AND** an IDENTITY level-up stops the complete run as a harness bug.
+
+#### SCENARIO-ARC-WMTE-10012-GATE-TABLES
+
+- **GIVEN** the fixed candidate gates and informative, recovered pair rows
+- **WHEN** USEFUL and FAITHFUL tables are reduced
+- **THEN** each gate reports the four confusion counts without p-values
+- **AND** no observed outcome changes the frozen threshold list.
+
+#### SCENARIO-ARC-WMTE-10012-ARTIFACT
+
+- **GIVEN** a completed or blocked CPU run
+- **WHEN** raw evidence and the terminal artifact are published
+- **THEN** provenance, seed, checksum, preconditions, duration, deviations, and limits remain auditable
+- **AND** adversarial verification can recompute the artifact's integrity without a model call.
+
+Implementation status: pre-registered before scoring on 2026-09-24, then implemented
+and measured. All ten states were recoverable; two windows were label-informative.
+
+#### AMENDMENT 1 — scored-agent execution parity (2026-09-24, before rerun)
+
+The original design misdescribed the scored `E3AgentPolicy` in two ways. First,
+the scored execute phase replays `self.plan` until it is exhausted and does not
+compare the engine prediction with the real observation
+(`python/carnot/agentic/arc_competition_agent.py:7681-7690`); the original
+halt-on-divergence order belongs to the offline twin
+(`python/carnot/agentic/arc_executable_world_model.py:9527-9607`). Second, the scored
+agent plans from the latest transition only when `_execute_plan_from_current` is
+true, otherwise it plans from `self.root_grid`
+(`python/carnot/agentic/arc_competition_agent.py:8110-8124`) and returns RESET
+before plan replay (`python/carnot/agentic/arc_competition_agent.py:7669-7678`).
+Non-level-up induction paths set that flag false
+(`python/carnot/agentic/arc_competition_agent.py:7591-7595,7626-7630`).
+
+The corrected primary arm SHALL be named `LIVE_SCORED`. For each window it SHALL
+read the induction `reason` from the selected telemetry row and derive
+`_execute_plan_from_current` by the scored-agent rule. It SHALL plan from the
+latest transition grid only when that flag is true. Otherwise it SHALL plan from
+the level root, issue RESET with the same scored-agent semantics, rebuild the
+real simulator at that reset root, and execute from there. It SHALL execute the
+whole returned plan without halting on prediction divergence. It SHALL still
+compute predictions for measurement and retain matched steps, the first
+divergence index, real level-up, real actions used, and real actions spent after
+the first divergence. A real level boundary ends the old plan because the scored
+agent observes that boundary before its next phase dispatch and clears the old
+plan (`python/carnot/agentic/arc_competition_agent.py:5946-5949,7568-7585`).
+
+The original behavior SHALL remain as the labelled secondary arm
+`OFFLINE_TWIN_HALT`: 20,000 nodes, depth 80, induction-state planning and
+execution, full-unmasked-grid prediction comparison, level-up checked before
+divergence, and halt at the first divergence. A second secondary arm SHALL be
+named `BUDGET_150K`; it SHALL use `LIVE_SCORED` start and execution semantics
+with 150,000 nodes and depth 200 and SHALL be labelled `NOT LIVE`. These arms
+change only the execution measurement. All frozen windows, candidates, held-out
+rows, exclusions, masks, gate metrics, thresholds, provenance, and other design
+choices remain unchanged.
+
+Each window SHALL retain one of these uninformative reason codes:
+`expert_goal_predicate_always_false`, `expert_goal_predicate_missing`,
+`planner_budget`, `harness_halt_rule`, or `unresolved`. IDENTITY SHALL define its
+own constant-False `is_level_complete` predicate, even when the expert predicate
+is absent, so a missing expert predicate cannot silently disable the negative
+control. Every arm SHALL publish USEFUL and FAITHFUL gate tables both with all
+controls and with the EXPERT and IDENTITY controls removed; tables contain
+counts only. The original terminal
+artifact SHALL be preserved at
+`results/raw/experiment_10012_gate_usefulness/v1_offline_twin_halt_artifact.json`
+and the corrected artifact SHALL cite that path in its deviations.
+
+##### SCENARIO-ARC-WMTE-10012-A1-EXECUTION-ARMS
+
+- **GIVEN** a stall or other non-level-up induction and a returned model plan
+- **WHEN** all three execution arms are measured
+- **THEN** `LIVE_SCORED` and `BUDGET_150K` RESET, start from root, and replay the full plan
+- **AND** `OFFLINE_TWIN_HALT` starts from the induction state and stops at first full-grid divergence.
+
+##### SCENARIO-ARC-WMTE-10012-A1-DIVERGENCE-WASTE
+
+- **GIVEN** a model prediction first diverges before its plan is exhausted
+- **WHEN** `LIVE_SCORED` continues as the scored policy does
+- **THEN** the first divergence index and every real action spent after it are counted
+- **AND** a later real level-up remains USEFUL despite the prediction mismatch.
+
+##### SCENARIO-ARC-WMTE-10012-A1-CONTROLS-AND-TABLES
+
+- **GIVEN** an EXPERT without a callable or satisfiable goal predicate
+- **WHEN** the window and its IDENTITY negative control are evaluated
+- **THEN** the window receives the explicit defect reason and IDENTITY still has a constant-False goal
+- **AND** each arm reports count-only gate tables both including and excluding EXPERT rows.
+
+Implementation status: Amendment 1 specified before, then implemented and measured
+on 2026-09-24. The original results remain preserved as the named v1 artifact.
+
 ## V663 ARC output-boundary repair and observable alias audit — 2026-09-24
 
 ### REQ-ARC-WMTE-7589: Keep ARC validation scratch outside immutable evidence
