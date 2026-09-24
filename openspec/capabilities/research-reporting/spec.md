@@ -79640,3 +79640,96 @@ and the research conductor SHALL remain unchanged.
 
 Planned for Experiment 7617. The conductor owns later status, changelog, and
 traceability reconciliation.
+
+## REQ-REPORT-7624: Audit V665 evidence and learning branches independently
+
+Experiment 7624 SHALL authenticate the actual Experiment 7616 through 7623
+paths. It SHALL classify terminal producers, conductor pre-gate receipts,
+flagged or invalid producers, and missing producers separately. It SHALL not
+apply one global pre-gate. Missing external producers SHALL yield a terminal
+`complete_blocked_*` verdict with class `blocked`, not `partial` or a semantic
+null. Available administrative readiness SHALL not establish scientific
+benefit.
+
+The audit SHALL independently rebuild static evidence from raw row and
+checkpoint bytes. It SHALL verify source-group identity, model identity, role
+maps, checkpoint hashes, feature width, probability sign, typed costs, and
+source-cluster bootstrap intervals. It SHALL reject duplicate source groups,
+seeds, or replay views that inflate the independent sample count. It SHALL not
+reuse an upstream aggregate or acceptance decision.
+
+The learning branch SHALL replay predictions, delayed releases, updates, and
+retention in causal order. Evaluation and admission labels SHALL not enter
+optimization. Restarted state SHALL match the authenticated checkpoint bytes.
+Online learning benefit requires both an online effect and retained benefit.
+Static and learning eligibility and benefit SHALL remain separate. Valid nulls
+MAY be reported only after their branch has complete eligible rows.
+
+Private mutations SHALL reject a corrupt group ID, label leakage, a probability
+sign flip, changed checkpoint bytes, a duplicated source group, and identical
+controls. The report SHALL distinguish syntax success, calibration-only change,
+semantic evidence dependence, retained online learning, and historical
+exposure. It SHALL preserve every failed gate.
+
+The artifact SHALL declare planned and actual class `aggregation`,
+`MODEL_SPECS=[]`, no current model invocation, and zero load, forward,
+generation, and token counts. Historical model identity SHALL remain separate.
+It SHALL record the host venue, monotonic duration, disjoint phase spans,
+stochastic seeds, exact source hashes, independent sample budgets, per-unit
+rows, field principles, validation receipts, terminal reader results, and one
+checksum over immutable inputs and reductions.
+
+Validation SHALL freeze the affected-file manifest. It SHALL use worktree-pinned
+imports, focused serial pytest without ambient addopts, a private base temp,
+command-local 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, and affected-test specification coverage. The declared
+entrypoint, fresh-process cold replay, independent reduction, adversarial
+reader, and strict verdict-row reader SHALL accept the exact candidate before
+atomic publication. No model, generator weight, production default, roadmap,
+or research conductor change is authorized.
+
+### SCENARIO-REPORT-7624-CUSTODY: Mixed upstream states remain literal
+
+**Given** V665 terminal producers, conductor pre-gate receipts, and absent paths
+**When** Experiment 7624 inventories Experiment 7616 through 7623
+**Then** each path retains its actual custody class and exact byte hash
+**And** missing scientific producers block only their dependent branch
+**And** the terminal result is blocked rather than partial or a scientific null.
+
+### SCENARIO-REPORT-7624-STATIC: Raw rows control static benefit
+
+**Given** authenticated static rows, role maps, and a frozen checkpoint
+**When** the audit rebuilds features, probabilities, costs, and intervals
+**Then** source groups own the sample count and replay views do not multiply it
+**And** probability sign and control differences must match raw operands
+**And** static eligibility remains separate from measured benefit.
+
+### SCENARIO-REPORT-7624-LEARNING: Released labels control learning benefit
+
+**Given** authenticated delayed events and retention rows
+**When** the audit replays predictions, releases, updates, restarts, and retention
+**Then** no evaluation or admission label enters optimization
+**And** checkpoint bytes and causal order agree after restart
+**And** benefit requires both online improvement and retained usefulness.
+
+### SCENARIO-REPORT-7624-MUTATIONS: Required corruptions fail closed
+
+**Given** compact valid static and learning fixtures
+**When** any required identity, leakage, sign, checkpoint, duplicate, or control mutation occurs
+**Then** the independent reducer reports the exact failed check
+**And** no corrupted fixture bytes enter the terminal artifact.
+
+### SCENARIO-REPORT-7624-TERMINAL: Exact readers control publication
+
+**Given** a frozen validation manifest and one exact terminal candidate
+**When** scoped checks, cold replay, independent reduction, and strict readers run
+**Then** commands, exits, worktree paths, log hashes, and outcomes remain recorded
+**And** the exact validated bytes publish atomically
+**And** administrative readiness never opens static or learning benefit.
+
+### Implementation Status (REQ-REPORT-7624)
+
+Implemented by the reusable Experiment 7624 reducer, thin CLI, independent
+static and learning fixtures, negative mutation panel, and exact terminal
+readers. The conductor owns later status, changelog, and traceability
+reconciliation.
