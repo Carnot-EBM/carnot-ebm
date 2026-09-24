@@ -3459,3 +3459,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 18 | 2026-09-24T09:11:49Z | 2026-09-24T09:12:14Z | Prep v75 READY (save-run complete, parquet OK); Kaggle log confirms vLLM 0.27.1 launched with --reasoning-parser qwen3, server_up=True 445s, round-trip 8/8; not submitted (operator) |
 | 19 | 2026-09-24T11:50:06Z | 2026-09-24T11:50:34Z | Operator ran --submit-only --kver 75 via '!'; output not visible; no new Kaggle submission registered (latest 2026-08-21); running local submission gate to see if it blocked |
 | 20 | 2026-09-24T11:51:06Z | 2026-09-24T11:52:11Z | Gate PASS (7/8, 1739 median); operator's '!' submit did not execute; ran operator's submit command for v75: Kaggle ref 56520500; recorded in arc-daily-prep-status.json |
+| 21 | 2026-09-24T13:18:31Z | 2026-09-24T13:18:50Z | v75 scored: COMPLETE, public 0.09 (last completed vLLM run v37 = 0.02; best 0.12); confounded by a month of other changes; recorded |
