@@ -18540,3 +18540,4 @@ code |
 | 2026-09-24 10:59 UTC | Requalify complete source roles through terminal c | OK | 94 passed, 1 warning in 8.89s |
 | 2026-09-24 11:26 UTC | Qualify delayed evidence updates and one-use admis | OK | 119 passed, 1 warning in 11.14s |
 | 2026-09-24 12:03 UTC | Qualify bounded Qwen evidence pointers and capture | OK | 130 passed, 1 warning in 7.31s |
+| 2026-09-24 12:06 UTC | Capture bounded source links for fitting and polic | GATE_BLOCK | gate-unsat(final): 1 of 7 gate(s) failed; first failure: exp7604-evidence-pilot.evidence_transport_ready_score (actual=0 == expected=1) |
