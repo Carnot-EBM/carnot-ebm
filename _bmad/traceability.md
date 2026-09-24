@@ -1,15 +1,29 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-24
-**Operational Note:** 2026-09-24 REQ-ARC-WMTE-10012 maps the offline cached-engine
-gate-usefulness measurement to `python/carnot/experiment_10012_gate_usefulness.py`,
-its thin entrypoint, and twelve small-fake tests. Amendment 1 preserves the v1
-offline-twin artifact and separates LIVE_SCORED, OFFLINE_TWIN_HALT, and the NOT
-LIVE BUDGET_150K arm. All ten stall inductions replay from their reset roots under
-the primary arm. EXPERT makes three LIVE_SCORED windows label-informative; explicit
-goal-defect, budget, halt-rule, and unresolved codes account for the rest. The
-60-pair CPU artifact retains per-arm control-inclusive and candidate-only count
-tables. No live gate changed.
+**Operational Note:** 2026-09-24 REQ-ARC-WMTE-10012 Amendment 3 supersedes the
+Amendment 2 qualification and table claims immediately below. The nine reused
+Qwen3.8 engines are retained only in `h2h_replay_counterfactual`: all historical
+qualifications fail because four fields were constants and the transition proof
+was fresh-rebuild versus fresh-rebuild. Main tables now contain only the five
+LIVE-informative Experiment 10010 expert-controlled stall windows, with 30 rows
+including controls and 20 without. Zero-scorable-row decisions are null and
+reported as unmeasured. The 22 focused tests cover missingness, cohort isolation,
+qualification provenance, and vc33's 814-node queue exhaustion. Amendment 2 is
+preserved at `v3_amendment2_artifact.json`; no live execution or gate changed.
+**Operational Note:** 2026-09-24 REQ-ARC-WMTE-10012 Amendment 2 maps the CPU-only
+cached-engine measurement to `python/carnot/experiment_10012_gate_usefulness.py`,
+five immutable v2 expert copies, and 19 focused tests. Four real-simulator
+completion predicates pass first-boundary/earlier-frame/frozen-window validation;
+g50t's missing ghost dynamics is repaired and wins LIVE in 17 actions. Nine
+Qwen3.8-27B engines qualify by source SHA, deterministic double window rebuild,
+reset start, recorded offline-stall protocol, model, think mode, and budget. The
+77-pair artifact reports all-pair, candidate-only, Qwen3.8-only, and
+expert-controlled-window tables for LIVE_SCORED, OFFLINE_TWIN_HALT, and NOT-LIVE
+BUDGET_150K. LIVE has 10/18 informative windows: six expert-controlled and four
+registry-solver-controlled. Two of six tabled Qwen3.8 pairs are useful, but no
+tested gate separates useful from not-useful. Amendment 1 is preserved at the
+specified v2 path; no live gate changed.
 **Operational Note:** 2026-09-24 REQ-ARC-WMTE-10011 maps scored vLLM answer-channel
 sanitization, compatible reasoning-field reads, bounded sampling receipts, fail-safe `qwen3`
 parser launch detection, and opt-in vLLM repetition penalties to

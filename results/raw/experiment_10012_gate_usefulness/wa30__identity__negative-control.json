@@ -11,18 +11,19 @@
   },
   "arm_status": {
     "BUDGET_150K": {
-      "reason": "expert_goal_predicate_always_false",
+      "reason": "planner_search_budget_limit",
       "status": "label_uninformative"
     },
     "LIVE_SCORED": {
-      "reason": "expert_goal_predicate_always_false",
+      "reason": "planner_search_budget_limit",
       "status": "label_uninformative"
     },
     "OFFLINE_TWIN_HALT": {
-      "reason": "expert_goal_predicate_always_false",
+      "reason": "planner_search_budget_limit",
       "status": "label_uninformative"
     }
   },
+  "control_category": "expert_live_planner",
   "engine_family": "IDENTITY",
   "engine_run": {
     "child": {
@@ -36,7 +37,7 @@
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages"
       ],
       "audit_hook": true,
-      "cwd": "/tmp/exp10010_row_059i4nbv",
+      "cwd": "/tmp/exp10010_row_t9wij2cc",
       "numpy": "2.5.1",
       "process_per_row": true,
       "python": "3.12.13"
@@ -219,14 +220,17 @@
       "counterfactual_enabled_decision": false,
       "fidelity_threshold": 0.5,
       "max_noop_hallucination_rate": 0.25,
+      "measurement_status": "measured",
       "min_correct_changed_cells": 1,
       "shipped_enabled": false
     },
     "live_selector": {
       "accepted": false,
+      "measurement_status": "measured",
       "metric": "heldout_unmasked_exact_accuracy",
       "shipped_defaults": true,
-      "threshold": 1.0
+      "threshold": 1.0,
+      "would_fail_closed_if_live": false
     },
     "live_unmasked_exact_accuracy": 0.125,
     "live_unmasked_n": 8,
@@ -244,6 +248,7 @@
     "true_changed_cells": 198
   },
   "goal_predicate_status": "constant_false",
+  "is_control": true,
   "labels": {
     "FAITHFUL": false,
     "USEFUL": false
@@ -262,6 +267,7 @@
       "USEFUL": false
     }
   },
+  "model_family": "identity",
   "pair_id": "wa30__identity__negative-control",
   "per_heldout_row": [
     {
@@ -321,9 +327,11 @@
       "row": 24
     }
   ],
+  "provenance_cohort": "stall_window",
   "requirement_id": "REQ-ARC-WMTE-10012",
-  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-usefulness/results/raw/b2_positive_control_2026_09_23/wa30/expert_engine.py",
-  "source_sha256": "08c143ac638ddcc4ad3a83b66ea9af4ebfd12ae625f3defa8929f6edfb8398a7",
+  "scorable_heldout_n": 8,
+  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-expand/results/raw/experiment_10012_gate_usefulness/experts_v2/wa30/expert_engine.py",
+  "source_sha256": "a078e55ecbe51722103e04002602be8602d142ca184aa696227131c58ca5e9f7",
   "source_status": "derived_identity_dynamics_with_constant_false_goal",
   "state_rebuild_by_arm": {
     "BUDGET_150K": {
@@ -361,7 +369,9 @@
       "reset_sent": false
     }
   },
+  "think_mode": "not_applicable",
+  "token_budget": null,
   "variant": "negative-control",
   "window_status": "label_uninformative",
-  "window_status_reason": "expert_goal_predicate_always_false"
+  "window_status_reason": "planner_search_budget_limit"
 }

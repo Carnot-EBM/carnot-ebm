@@ -36263,6 +36263,173 @@ and the corrected artifact SHALL cite that path in its deviations.
 Implementation status: Amendment 1 specified before, then implemented and measured
 on 2026-09-24. The original results remain preserved as the named v1 artifact.
 
+#### AMENDMENT 2 — repaired completion oracles and stored-engine expansion (2026-09-24)
+
+Experiment 10012 SHALL add new, immutable expert copies under
+`results/raw/experiment_10012_gate_usefulness/experts_v2/`; it SHALL NOT alter
+the positive-control evidence. The `sp80`, `dc22`, `wa30`, and `sb26` copies
+SHALL implement grid-only completion predicates derived from their public game
+sources. Each predicate SHALL be true on the real simulator's first level-up
+frame for the registered level-one winning trajectory, false on every earlier
+frame, and false on every row of its frozen Experiment 10010 window. When the
+simulator changes levels atomically, the expert MAY emit a source-derived
+next-level-visible marker only on the verified level-one completion transition,
+so its planner and predicate share the same terminal abstraction. The `g50t`
+expert SHALL also be copied and repaired only if investigation locates its
+failure in expert dynamics; the artifact SHALL distinguish an expert defect,
+goal-cell defect, and action-candidate-cap defect.
+
+The expanded corpus SHALL survey every named stored-engine source and other
+discovered on-disk engine collections. A `(window, engine)` pair qualifies only
+when the source bytes exist or have a recorded byte-exact SHA-256, the exact
+induction and held-out rows can be rebuilt and proved by a row hash or
+row-by-row equality, the LIVE_SCORED reset state can be rebuilt in the offline
+simulator and the recorded induction reason supports that start, and model,
+thinking mode, and token budget are recorded. Every surveyed collection SHALL
+publish qualified and rejected counts with reasons. Main tables SHALL count
+only Qwen3.8-27B pairs; other model families SHALL remain in separate tables.
+
+The initially qualified stored-engine inventory SHALL comprise the nine Qwen3.8-27B
+sources whose full SHA-256 values begin `2bbd3f775cd4` (`tu93`),
+`d08020e4785f` and `f0677d7eea70` (`tr87`), `7a92b937751b` (`sb26`),
+`46a3f1f57925` (`sp80`), `b9ccf3583853` (`ar25`), `392aab9f05a4`
+(`lp85`), `416bf90b75e7` (`sk48`), and `555380ff6347` (`vc33`). They
+come from the recorded Qwen3.8 head-to-head snapshot and archive directories;
+qualification remains contingent on the complete rule above and failed
+contingencies SHALL reject rather than silently retain a pair.
+
+Every added window SHALL have a separately recorded reachability control. When
+an existing expert is available, the control category SHALL be
+`expert_live_planner` and the expert SHALL run through the live planner. When
+none exists, no new expert may be authored: the registered reproducible solver
+trajectory SHALL instead be replayed from reset and the category SHALL be
+`informative_by_registry_solver`. Registry-solver controls SHALL never be
+silently pooled with expert-controlled windows. A new HUD mask SHALL be applied
+only when a simulator-twin comparison proves the row carries hidden state;
+otherwise the window SHALL be explicitly unmasked.
+
+All original gates, thresholds, metric definitions, held-out-row rules,
+level-up exclusions, preregistered row exclusions, and the three execution-arm
+semantics remain unchanged. In particular, LIVE_SCORED SHALL RESET for a stall
+induction and execute the scored agent's complete plan without a divergence
+stop. Each arm SHALL report count-only USEFUL and FAITHFUL tables for all pairs,
+candidates only, Qwen3.8 only, and expert-controlled windows only. Before the
+terminal artifact is replaced, Amendment 1 SHALL be preserved at
+`results/raw/experiment_10012_gate_usefulness/v2_amendment1_artifact.json`.
+
+##### SCENARIO-ARC-WMTE-10012-A2-COMPLETION-PREDICATES
+
+- **GIVEN** a repaired grid-only expert completion predicate and a registered real winning trajectory
+- **WHEN** the trajectory is replayed in the offline simulator
+- **THEN** the predicate is true on the first level-up frame and false on every earlier frame
+- **AND** it is false on every frozen row for that game.
+
+##### SCENARIO-ARC-WMTE-10012-A2-PAIR-QUALIFICATION
+
+- **GIVEN** a stored engine proposed as an added pair
+- **WHEN** source, exact window, reset start, induction reason, model, thinking mode, and budget are audited
+- **THEN** the pair qualifies only if every field has byte- or row-level proof
+- **AND** every rejected collection and reason remain visible in the terminal artifact.
+
+##### SCENARIO-ARC-WMTE-10012-A2-CONTROL-CATEGORIES
+
+- **GIVEN** an added window with or without an existing expert
+- **WHEN** real level-one reachability is established
+- **THEN** an existing expert is tested through the live planner
+- **AND** a missing expert uses only the registered solver category, reported separately.
+
+##### SCENARIO-ARC-WMTE-10012-A2-COHORT-TABLES
+
+- **GIVEN** results from each unchanged execution arm
+- **WHEN** gate tables are reduced
+- **THEN** all-pair, candidate-only, Qwen3.8-only, and expert-controlled-window cohorts are emitted
+- **AND** registry-solver controls cannot enter the expert-controlled cohort.
+
+Implementation status: Amendment 2 was specified before implementation, then
+implemented and measured on 2026-09-24. The terminal CPU artifact contains 77
+pairs across 18 windows, including nine strictly qualified Qwen3.8 sources.
+
+#### AMENDMENT 3 — cohort and missing-measurement correction (2026-09-24)
+
+Amendment 2 overstated the historical qualification and comparability of the
+nine reused Qwen3.8 h2h engines. Their rebuilt windows are registered winning
+routes ending in a level-up, not recorded stall windows, and each engine was
+induced from an earlier part of that same solution. Their RESET execution is a
+counterfactual replay of the h2h harness, not a scored-agent stall induction.
+Moreover, `stall_start_recorded`, `model_recorded`, `think_mode_recorded`, and
+`token_budget_recorded` were populated from constants rather than a complete
+per-engine historical record. The h2h shards contain no induction reason, the
+`sb26` worker ended before emitting a shard row, and one snapshot per game cannot
+be assigned to one of three trial rows. The row-match check compared two fresh
+rebuilds, not a fresh rebuild with persisted historical transition rows.
+
+The harness SHALL retain all nine engine rows and their controls, but SHALL mark
+their provenance cohort `h2h_replay_counterfactual` and exclude every such row
+from every main table. Their qualification report SHALL identify each field as
+historically recorded, current-byte verified, fresh-rebuild-only, or constant;
+constant fields SHALL NOT satisfy Amendment 2's historical qualification rule.
+The appendix SHALL state that usefulness can partly measure replay of a seen
+solution and that RESET does not represent the live scored-agent rule for a
+window whose final transition is a level-up.
+
+A pair with zero scorable held-out rows after level-up exclusions SHALL be
+unmeasured for every gate, never rejected. Every gate table SHALL report
+`unmeasured`, total eligible pairs, and measured pairs, and every pair row SHALL
+report its scorable held-out count. Gate confusion counts SHALL include measured
+pairs only.
+
+Main tables SHALL contain only the original expert-controlled stall-window
+cohort and SHALL be emitted both with EXPERT and IDENTITY controls and with both
+controls removed. Registry-solver-controlled windows SHALL remain outside the
+main tables and SHALL have a separately labelled appendix table because replay
+of a registered solution proves reachability, not planner reachability within
+the measured budget. The h2h counterfactual appendix SHALL likewise be separate
+and MAY be cross-tabulated by expert versus registry-solver control.
+
+The artifact SHALL correct window reason codes without changing any execution
+arm. In particular, `vc33` from RESET SHALL record queue exhaustion after 814
+nodes and an expert dynamics-or-goal gap, not `planner_budget`; its induction-
+state `OFFLINE_TWIN_HALT` solve SHALL remain visible. The `sp80` expert limit
+SHALL record that its colour-8 predicate also fires on real GAME_OVER frames and
+hardcodes the successful bbox rather than simulating the spill. The predicate
+SHALL remain unchanged unless random real play including GAME_OVER frames is
+rerun and both predicate versions are recorded.
+
+The artifact SHALL retain the reviewer's measured planner explanation as
+`reviewer-measured, not re-run` unless independently rerun: binary goal energy
+makes all non-goal heap priorities equal and therefore FIFO/BFS; nodes count
+engine calls with 13–37 candidates per state; HUD step/energy rows participate
+in deduplication; and `sb26` first reaches its depth-9 goal after 260,844 engine
+calls. It SHALL distinguish this search-order and budget result from expert
+dynamics, goal, and candidate-cap failures. Before replacement, the Amendment 2
+artifact SHALL be preserved at
+`results/raw/experiment_10012_gate_usefulness/v3_amendment2_artifact.json`.
+
+##### SCENARIO-ARC-WMTE-10012-A3-UNMEASURED-GATES
+
+- **GIVEN** a pair whose held-out rows are all level-up transitions
+- **WHEN** fixed gate decisions and confusion counts are produced
+- **THEN** every gate decision is null and increments `unmeasured`
+- **AND** the pair increments no accepted or rejected confusion cell.
+
+##### SCENARIO-ARC-WMTE-10012-A3-COHORT-SPLIT
+
+- **GIVEN** original stall windows, reused h2h winning-route windows, and both control categories
+- **WHEN** main and appendix tables are reduced
+- **THEN** main tables contain only original expert-controlled stall windows, with and without controls
+- **AND** h2h replay and registry-solver rows appear only in their separately labelled appendix cohorts.
+
+##### SCENARIO-ARC-WMTE-10012-A3-PROVENANCE-AND-LIMITS
+
+- **GIVEN** the nine reused h2h engines and the unchanged repaired `sp80` expert
+- **WHEN** the terminal artifact is emitted
+- **THEN** historical fields, constants, and fresh-rebuild evidence are distinguished per field
+- **AND** the counterfactual replay, seen-solution, GAME_OVER false-positive, and hardcoded-location limits remain explicit.
+
+Implementation status: specified before Amendment 3 implementation on 2026-09-24.
+Amendment 3 was then implemented and measured on 2026-09-24 without changing
+LIVE_SCORED execution semantics or live gate defaults.
+
 ## V663 ARC output-boundary repair and observable alias audit — 2026-09-24
 
 ### REQ-ARC-WMTE-7589: Keep ARC validation scratch outside immutable evidence

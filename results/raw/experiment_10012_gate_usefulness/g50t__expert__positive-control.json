@@ -11,18 +11,19 @@
   },
   "arm_status": {
     "BUDGET_150K": {
-      "reason": "unresolved",
-      "status": "label_uninformative"
+      "reason": "expert_real_level_up",
+      "status": "label_informative"
     },
     "LIVE_SCORED": {
-      "reason": "unresolved",
-      "status": "label_uninformative"
+      "reason": "expert_real_level_up",
+      "status": "label_informative"
     },
     "OFFLINE_TWIN_HALT": {
-      "reason": "unresolved",
+      "reason": "harness_halt_rule",
       "status": "label_uninformative"
     }
   },
+  "control_category": "expert_live_planner",
   "engine_family": "EXPERT",
   "engine_run": {
     "child": {
@@ -36,7 +37,7 @@
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages"
       ],
       "audit_hook": true,
-      "cwd": "/tmp/exp10010_row_aq1cbqp9",
+      "cwd": "/tmp/exp10010_row_qt0t3sov",
       "numpy": "2.5.1",
       "process_per_row": true,
       "python": "3.12.13"
@@ -51,16 +52,104 @@
   "execution": {
     "arm": "LIVE_SCORED",
     "arm_live_status": "LIVE",
-    "diverged": false,
-    "divergence_reason": null,
-    "executed_actions": [],
-    "execution_termination_reason": "no_plan",
-    "first_divergence_index": null,
+    "diverged": true,
+    "divergence_plan_index": 1,
+    "divergence_reason": "prediction_cell_mismatch",
+    "executed_actions": [
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 0
+      },
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 1
+      },
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 2
+      },
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 3
+      },
+      {
+        "action": 5,
+        "data": null,
+        "plan_index": 4
+      },
+      {
+        "action": 2,
+        "data": null,
+        "plan_index": 5
+      },
+      {
+        "action": 2,
+        "data": null,
+        "plan_index": 6
+      },
+      {
+        "action": 2,
+        "data": null,
+        "plan_index": 7
+      },
+      {
+        "action": 2,
+        "data": null,
+        "plan_index": 8
+      },
+      {
+        "action": 2,
+        "data": null,
+        "plan_index": 9
+      },
+      {
+        "action": 2,
+        "data": null,
+        "plan_index": 10
+      },
+      {
+        "action": 2,
+        "data": null,
+        "plan_index": 11
+      },
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 12
+      },
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 13
+      },
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 14
+      },
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 15
+      },
+      {
+        "action": 4,
+        "data": null,
+        "plan_index": 16
+      }
+    ],
+    "execution_termination_reason": "real_level_up_boundary",
+    "first_divergence_index": 1,
     "halted_on_divergence": false,
-    "matched_steps": 0,
-    "matched_steps_before_divergence": 0,
-    "plan_found": false,
-    "plan_length": 0,
+    "level_after": 1,
+    "matched_steps": 5,
+    "matched_steps_before_divergence": 1,
+    "plan_found": true,
+    "plan_length": 17,
     "planner": {
       "goal_energy_source": "binary_first_contact",
       "goal_guidance_lambda": 1.0,
@@ -73,31 +162,119 @@
       "initial_goal_energy": 1.0,
       "is_level_complete_was_none": false,
       "min_goal_energy_observed": 1.0,
-      "nodes_expanded": 712,
-      "termination_reason": "queue_exhausted",
+      "nodes_expanded": 13931,
+      "termination_reason": "plan_found",
       "used_goal_energy_search": true
     },
-    "real_actions_spent_after_first_divergence": 0,
-    "real_actions_used": 0,
-    "real_level_up": false,
-    "real_state_changed": false,
+    "real_actions_spent_after_first_divergence": 15,
+    "real_actions_used": 17,
+    "real_level_up": true,
+    "real_state_changed": true,
     "start_state": "root_after_reset",
-    "steps_executed_before_divergence": 0
+    "steps_executed_before_divergence": 1
   },
   "executions": {
     "BUDGET_150K": {
       "arm": "BUDGET_150K",
       "arm_live_status": "NOT LIVE",
-      "diverged": false,
-      "divergence_reason": null,
-      "executed_actions": [],
-      "execution_termination_reason": "no_plan",
-      "first_divergence_index": null,
+      "diverged": true,
+      "divergence_plan_index": 1,
+      "divergence_reason": "prediction_cell_mismatch",
+      "executed_actions": [
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 0
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 1
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 2
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 3
+        },
+        {
+          "action": 5,
+          "data": null,
+          "plan_index": 4
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 5
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 6
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 7
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 8
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 9
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 10
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 11
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 12
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 13
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 14
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 15
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 16
+        }
+      ],
+      "execution_termination_reason": "real_level_up_boundary",
+      "first_divergence_index": 1,
       "halted_on_divergence": false,
-      "matched_steps": 0,
-      "matched_steps_before_divergence": 0,
-      "plan_found": false,
-      "plan_length": 0,
+      "level_after": 1,
+      "matched_steps": 5,
+      "matched_steps_before_divergence": 1,
+      "plan_found": true,
+      "plan_length": 17,
       "planner": {
         "goal_energy_source": "binary_first_contact",
         "goal_guidance_lambda": 1.0,
@@ -110,30 +287,118 @@
         "initial_goal_energy": 1.0,
         "is_level_complete_was_none": false,
         "min_goal_energy_observed": 1.0,
-        "nodes_expanded": 712,
-        "termination_reason": "queue_exhausted",
+        "nodes_expanded": 13931,
+        "termination_reason": "plan_found",
         "used_goal_energy_search": true
       },
-      "real_actions_spent_after_first_divergence": 0,
-      "real_actions_used": 0,
-      "real_level_up": false,
-      "real_state_changed": false,
+      "real_actions_spent_after_first_divergence": 15,
+      "real_actions_used": 17,
+      "real_level_up": true,
+      "real_state_changed": true,
       "start_state": "root_after_reset",
-      "steps_executed_before_divergence": 0
+      "steps_executed_before_divergence": 1
     },
     "LIVE_SCORED": {
       "arm": "LIVE_SCORED",
       "arm_live_status": "LIVE",
-      "diverged": false,
-      "divergence_reason": null,
-      "executed_actions": [],
-      "execution_termination_reason": "no_plan",
-      "first_divergence_index": null,
+      "diverged": true,
+      "divergence_plan_index": 1,
+      "divergence_reason": "prediction_cell_mismatch",
+      "executed_actions": [
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 0
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 1
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 2
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 3
+        },
+        {
+          "action": 5,
+          "data": null,
+          "plan_index": 4
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 5
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 6
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 7
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 8
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 9
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 10
+        },
+        {
+          "action": 2,
+          "data": null,
+          "plan_index": 11
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 12
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 13
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 14
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 15
+        },
+        {
+          "action": 4,
+          "data": null,
+          "plan_index": 16
+        }
+      ],
+      "execution_termination_reason": "real_level_up_boundary",
+      "first_divergence_index": 1,
       "halted_on_divergence": false,
-      "matched_steps": 0,
-      "matched_steps_before_divergence": 0,
-      "plan_found": false,
-      "plan_length": 0,
+      "level_after": 1,
+      "matched_steps": 5,
+      "matched_steps_before_divergence": 1,
+      "plan_found": true,
+      "plan_length": 17,
       "planner": {
         "goal_energy_source": "binary_first_contact",
         "goal_guidance_lambda": 1.0,
@@ -146,30 +411,37 @@
         "initial_goal_energy": 1.0,
         "is_level_complete_was_none": false,
         "min_goal_energy_observed": 1.0,
-        "nodes_expanded": 712,
-        "termination_reason": "queue_exhausted",
+        "nodes_expanded": 13931,
+        "termination_reason": "plan_found",
         "used_goal_energy_search": true
       },
-      "real_actions_spent_after_first_divergence": 0,
-      "real_actions_used": 0,
-      "real_level_up": false,
-      "real_state_changed": false,
+      "real_actions_spent_after_first_divergence": 15,
+      "real_actions_used": 17,
+      "real_level_up": true,
+      "real_state_changed": true,
       "start_state": "root_after_reset",
-      "steps_executed_before_divergence": 0
+      "steps_executed_before_divergence": 1
     },
     "OFFLINE_TWIN_HALT": {
       "arm": "OFFLINE_TWIN_HALT",
       "arm_live_status": "NOT LIVE",
-      "diverged": false,
-      "divergence_reason": null,
-      "executed_actions": [],
-      "execution_termination_reason": "no_plan",
-      "first_divergence_index": null,
-      "halted_on_divergence": false,
+      "diverged": true,
+      "divergence_plan_index": 0,
+      "divergence_reason": "prediction_cell_mismatch",
+      "executed_actions": [
+        {
+          "action": 5,
+          "data": null,
+          "plan_index": 0
+        }
+      ],
+      "execution_termination_reason": "divergence_halt",
+      "first_divergence_index": 0,
+      "halted_on_divergence": true,
       "matched_steps": 0,
       "matched_steps_before_divergence": 0,
-      "plan_found": false,
-      "plan_length": 0,
+      "plan_found": true,
+      "plan_length": 18,
       "planner": {
         "goal_energy_source": "binary_first_contact",
         "goal_guidance_lambda": 1.0,
@@ -182,14 +454,14 @@
         "initial_goal_energy": 1.0,
         "is_level_complete_was_none": false,
         "min_goal_energy_observed": 1.0,
-        "nodes_expanded": 758,
-        "termination_reason": "queue_exhausted",
+        "nodes_expanded": 15276,
+        "termination_reason": "plan_found",
         "used_goal_energy_search": true
       },
       "real_actions_spent_after_first_divergence": 0,
-      "real_actions_used": 0,
+      "real_actions_used": 1,
       "real_level_up": false,
-      "real_state_changed": false,
+      "real_state_changed": true,
       "start_state": "induction_state",
       "steps_executed_before_divergence": 0
     }
@@ -219,14 +491,17 @@
       "counterfactual_enabled_decision": true,
       "fidelity_threshold": 0.5,
       "max_noop_hallucination_rate": 0.25,
+      "measurement_status": "measured",
       "min_correct_changed_cells": 1,
       "shipped_enabled": false
     },
     "live_selector": {
       "accepted": false,
+      "measurement_status": "measured",
       "metric": "heldout_unmasked_exact_accuracy",
       "shipped_defaults": true,
-      "threshold": 1.0
+      "threshold": 1.0,
+      "would_fail_closed_if_live": false
     },
     "live_unmasked_exact_accuracy": 0.5,
     "live_unmasked_n": 8,
@@ -244,24 +519,26 @@
     "true_changed_cells": 311
   },
   "goal_predicate_status": "callable",
+  "is_control": true,
   "labels": {
     "FAITHFUL": false,
-    "USEFUL": false
+    "USEFUL": true
   },
   "labels_by_arm": {
     "BUDGET_150K": {
       "FAITHFUL": false,
-      "USEFUL": false
+      "USEFUL": true
     },
     "LIVE_SCORED": {
       "FAITHFUL": false,
-      "USEFUL": false
+      "USEFUL": true
     },
     "OFFLINE_TWIN_HALT": {
       "FAITHFUL": false,
       "USEFUL": false
     }
   },
+  "model_family": "source-derived-expert",
   "pair_id": "g50t__expert__positive-control",
   "per_heldout_row": [
     {
@@ -321,9 +598,11 @@
       "row": 24
     }
   ],
+  "provenance_cohort": "stall_window",
   "requirement_id": "REQ-ARC-WMTE-10012",
-  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-usefulness/results/raw/b2_positive_control_2026_09_23/g50t/expert_engine.py",
-  "source_sha256": "75bb0855a5dec8cd3c1d8bb43dfb3cf3a4550fd0be9665e8c320c96da2ed93ed",
+  "scorable_heldout_n": 8,
+  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-expand/results/raw/experiment_10012_gate_usefulness/experts_v2/g50t/expert_engine.py",
+  "source_sha256": "7ac0bd729f88da373046b95c2eaefd5902e35f79a10142499dc8fec882816830",
   "source_status": "cached",
   "state_rebuild_by_arm": {
     "BUDGET_150K": {
@@ -361,7 +640,9 @@
       "reset_sent": false
     }
   },
+  "think_mode": "not_applicable",
+  "token_budget": null,
   "variant": "positive-control",
-  "window_status": "label_uninformative",
-  "window_status_reason": "unresolved"
+  "window_status": "label_informative",
+  "window_status_reason": "expert_real_level_up"
 }

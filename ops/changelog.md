@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-09-24 — Experiment 10012 amendments 2-3 (operator request: "1", expand the windows)
+
+- codex (CPU, worktree `gate-expand`) wrote validated win conditions for the sp80, dc22, wa30, sb26
+  experts, repaired the g50t expert, and reused 9 stored Qwen3.8 engines (amendment 2). One Claude
+  reviewer (workflow `wf_98cf2bac-ed9`) found the conclusions overstated; codex applied amendment 3
+  (appendix cohorts, unmeasured rule, corrected reason codes, planner-cause record). Merged by patch.
+- Marked the vLLM entry in `ops/known-issues.md` RESOLVED and added the planner finding as an
+  unscheduled FINDING.
+
 ## 2026-09-24 — Experiment 10012 gate-usefulness analysis (operator request: "1", gate analysis)
 
 - codex (gpt-5.6-sol, CPU, worktree `gate-usefulness`) built and ran REQ-ARC-WMTE-10012 with a

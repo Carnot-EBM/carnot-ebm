@@ -23,6 +23,7 @@
       "status": "label_uninformative"
     }
   },
+  "control_category": "expert_live_planner",
   "engine_family": "EXPERT",
   "engine_run": {
     "child": {
@@ -36,7 +37,7 @@
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages"
       ],
       "audit_hook": true,
-      "cwd": "/tmp/exp10010_row_c97rcyym",
+      "cwd": "/tmp/exp10010_row_3v1sp9rv",
       "numpy": "2.5.1",
       "process_per_row": true,
       "python": "3.12.13"
@@ -465,14 +466,17 @@
       "counterfactual_enabled_decision": true,
       "fidelity_threshold": 0.5,
       "max_noop_hallucination_rate": 0.25,
+      "measurement_status": "measured",
       "min_correct_changed_cells": 1,
       "shipped_enabled": false
     },
     "live_selector": {
       "accepted": false,
+      "measurement_status": "measured",
       "metric": "heldout_unmasked_exact_accuracy",
       "shipped_defaults": true,
-      "threshold": 1.0
+      "threshold": 1.0,
+      "would_fail_closed_if_live": false
     },
     "live_unmasked_exact_accuracy": 0.5,
     "live_unmasked_n": 8,
@@ -490,6 +494,7 @@
     "true_changed_cells": 300
   },
   "goal_predicate_status": "callable",
+  "is_control": true,
   "labels": {
     "FAITHFUL": false,
     "USEFUL": true
@@ -508,6 +513,7 @@
       "USEFUL": false
     }
   },
+  "model_family": "source-derived-expert",
   "pair_id": "m0r0__expert__positive-control",
   "per_heldout_row": [
     {
@@ -567,8 +573,10 @@
       "row": 24
     }
   ],
+  "provenance_cohort": "stall_window",
   "requirement_id": "REQ-ARC-WMTE-10012",
-  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-usefulness/results/raw/b2_positive_control_2026_09_23/m0r0/expert_engine.py",
+  "scorable_heldout_n": 8,
+  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-expand/results/raw/b2_positive_control_2026_09_23/m0r0/expert_engine.py",
   "source_sha256": "0a23b8a91e55795c96645db4b7257b1016606f3159b20659cbe63f332c10d3a5",
   "source_status": "cached",
   "state_rebuild_by_arm": {
@@ -607,6 +615,8 @@
       "reset_sent": false
     }
   },
+  "think_mode": "not_applicable",
+  "token_budget": null,
   "variant": "positive-control",
   "window_status": "label_informative",
   "window_status_reason": "expert_real_level_up"

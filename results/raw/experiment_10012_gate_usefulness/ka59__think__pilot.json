@@ -23,6 +23,7 @@
       "status": "label_uninformative"
     }
   },
+  "control_category": "expert_live_planner",
   "engine_family": "THINK",
   "engine_run": {},
   "execution": {
@@ -160,14 +161,17 @@
       "counterfactual_enabled_decision": false,
       "fidelity_threshold": 0.5,
       "max_noop_hallucination_rate": 0.25,
+      "measurement_status": "measured",
       "min_correct_changed_cells": 1,
       "shipped_enabled": false
     },
     "live_selector": {
       "accepted": false,
+      "measurement_status": "measured",
       "metric": "heldout_unmasked_exact_accuracy",
       "shipped_defaults": true,
-      "threshold": 1.0
+      "threshold": 1.0,
+      "would_fail_closed_if_live": false
     },
     "live_unmasked_exact_accuracy": 0.0,
     "live_unmasked_n": 8,
@@ -185,6 +189,7 @@
     "true_changed_cells": 94
   },
   "goal_predicate_status": "source_missing",
+  "is_control": false,
   "labels": {
     "FAITHFUL": false,
     "USEFUL": false
@@ -203,6 +208,7 @@
       "USEFUL": false
     }
   },
+  "model_family": "qwen3.5-9b-mtp",
   "pair_id": "ka59__think__pilot",
   "per_heldout_row": [
     {
@@ -270,8 +276,10 @@
       "row": 24
     }
   ],
+  "provenance_cohort": "stall_window",
   "requirement_id": "REQ-ARC-WMTE-10012",
-  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-usefulness/results/raw/experiment_10010_b2_think_on_pilot/shard.jsonl",
+  "scorable_heldout_n": 8,
+  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-expand/results/raw/experiment_10010_b2_think_on_pilot/shard.jsonl",
   "source_sha256": null,
   "source_status": "missing_no_completed_pilot_engine",
   "state_rebuild_by_arm": {
@@ -310,6 +318,8 @@
       "reset_sent": false
     }
   },
+  "think_mode": "think_on",
+  "token_budget": null,
   "variant": "pilot",
   "window_status": "label_uninformative",
   "window_status_reason": "planner_budget"

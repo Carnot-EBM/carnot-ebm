@@ -11,18 +11,19 @@
   },
   "arm_status": {
     "BUDGET_150K": {
-      "reason": "expert_goal_predicate_always_false",
+      "reason": "planner_search_budget_limit",
       "status": "label_uninformative"
     },
     "LIVE_SCORED": {
-      "reason": "expert_goal_predicate_always_false",
+      "reason": "planner_search_budget_limit",
       "status": "label_uninformative"
     },
     "OFFLINE_TWIN_HALT": {
-      "reason": "expert_goal_predicate_always_false",
+      "reason": "planner_search_budget_limit",
       "status": "label_uninformative"
     }
   },
+  "control_category": "expert_live_planner",
   "engine_family": "CODEONLY",
   "engine_run": {
     "child": {
@@ -36,7 +37,7 @@
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages"
       ],
       "audit_hook": true,
-      "cwd": "/tmp/exp10010_row_xju1hjdc",
+      "cwd": "/tmp/exp10010_row_nafwk85u",
       "numpy": "2.5.1",
       "process_per_row": true,
       "python": "3.12.13"
@@ -219,14 +220,17 @@
       "counterfactual_enabled_decision": false,
       "fidelity_threshold": 0.5,
       "max_noop_hallucination_rate": 0.25,
+      "measurement_status": "measured",
       "min_correct_changed_cells": 1,
       "shipped_enabled": false
     },
     "live_selector": {
       "accepted": false,
+      "measurement_status": "measured",
       "metric": "heldout_unmasked_exact_accuracy",
       "shipped_defaults": true,
-      "threshold": 1.0
+      "threshold": 1.0,
+      "would_fail_closed_if_live": false
     },
     "live_unmasked_exact_accuracy": 0.125,
     "live_unmasked_n": 8,
@@ -244,6 +248,7 @@
     "true_changed_cells": 198
   },
   "goal_predicate_status": "callable",
+  "is_control": false,
   "labels": {
     "FAITHFUL": false,
     "USEFUL": false
@@ -262,6 +267,7 @@
       "USEFUL": false
     }
   },
+  "model_family": "qwen3.5-9b-mtp",
   "pair_id": "wa30__codeonly__seed-7491001",
   "per_heldout_row": [
     {
@@ -321,8 +327,10 @@
       "row": 24
     }
   ],
+  "provenance_cohort": "stall_window",
   "requirement_id": "REQ-ARC-WMTE-10012",
-  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-usefulness/results/raw/experiment_10009_b2_induction_gate_measurement_v3/wa30__seed-7491001/requests/00_response.json",
+  "scorable_heldout_n": 8,
+  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-expand/results/raw/experiment_10009_b2_induction_gate_measurement_v3/wa30__seed-7491001/requests/00_response.json",
   "source_sha256": "8f110a9c9fffe3c98c45876d04e0c9b96f276970222c6d41de3b73de87b00170",
   "source_status": "cached",
   "state_rebuild_by_arm": {
@@ -361,7 +369,9 @@
       "reset_sent": false
     }
   },
+  "think_mode": "code_only",
+  "token_budget": null,
   "variant": "seed-7491001",
   "window_status": "label_uninformative",
-  "window_status_reason": "expert_goal_predicate_always_false"
+  "window_status_reason": "planner_search_budget_limit"
 }

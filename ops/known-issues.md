@@ -4,7 +4,7 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
-### NEW 2026-09-23: the scored vLLM path drops the induce repetition penalty and can read draft code from the reasoning
+### RESOLVED 2026-09-24 (was: NEW 2026-09-23): the scored vLLM path drops the induce repetition penalty and can read draft code from the reasoning
 
 **Found by** the adversarial review of the Experiment 10010 harness (REQ-ARC-WMTE-10010). This is
 a live-path defect. The harness only records it as a deviation; it does not fix the live path.
@@ -86,6 +86,12 @@ launch argv includes `--reasoning-parser qwen3`. vLLM's own log shows `reasoning
 its non-default args and engine v0.27.1. The round-trip probe returned 8/8. Limit: the save-run's
 probe uses raw completions, and the save-run plays no hidden game, so the think-ON chat
 extraction under the parser is exercised only by a scored submission. Not submitted (operator).
+
+**RESOLVED 2026-09-24 (append-only).** Defect 2 is fixed and merged (REQ-ARC-WMTE-10011); the
+Kaggle v75 save-run confirmed the parser; v75 scored 0.09 (the fix is not isolated from a month of
+other changes). Defect 1 is deliberately left opt-in (`CARNOT_ARC_VLLM_REPETITION_PENALTY`): vLLM's
+penalty has no window. Enabling it would be a new, separately measured change, not this issue.
+
 
 ### NEW 2026-09-02: a document/YAML task-count divergence cost 3 of 4 tasks in milestone 602
 
@@ -27689,4 +27695,22 @@ at 7/8. 2 of 10 calls hit the 2,400 s limit. Scored the Kaggle vLLM way, the mea
 engines are lost to the extraction defect in the vLLM entry at the top of this file. Detail:
 `docs/research-notes/b2-think-on-pilot-2026-09-24.md`. B2's codeonly measurement understated the
 live default; the remaining blockers are the vLLM extraction defect and the exact gate.
+
+### 2026-09-24 FINDING (not a scheduled priority): the live in-model planner degenerates to BFS and counts HUD rows as new states
+
+Measured by the independent reviewer of Experiment 10012 amendment 2 (see
+`docs/research-notes/gate-usefulness-2026-09-24.md`, amendment 3). With CORRECT expert engines and
+win conditions, `plan_in_model` finds no plan on dc22, wa30, sb26 within the live 20,000-call budget
+(nor at 150,000):
+
+- The binary goal energy gives every non-goal state 1.0, so heap ties fall back to FIFO and the
+  "best-first" search is plain BFS.
+- `nodes` counts engine calls; each state has 13-37 candidate actions.
+- HUD rows (sb26 row 53; dc22 and wa30 row 63) are part of the dedup key, so the same board at a
+  different step count is a new state.
+- sb26's 9-action win is reached at depth 9 after 260,844 engine calls.
+
+Candidate fixes, NOT started: exclude HUD rows from the planner's state key; give the goal energy a
+real gradient or a tie-breaker. The check for any fix: do the dc22, wa30, sb26 experts win within
+the live 20,000-call budget from the reset board? CPU only, no LLM. Operator decision.
 

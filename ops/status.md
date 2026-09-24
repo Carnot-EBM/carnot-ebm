@@ -2,6 +2,16 @@
 
 **Last Updated:** 2026-09-23
 
+## 2026-09-24 — Gate analysis expanded and corrected; the planner search is a bottleneck
+- Experiment 10012 amendments 2-3: real win conditions for four experts, g50t expert repaired,
+  9 stored Qwen3.8 engines reused (moved to an appendix after review: their windows are winning-route
+  replays). Main result on 5 expert-controlled stall windows: among 20 candidate models one is useful
+  (su15 think-ON) and every tested gate rejects it; looser gates add 1-6 bad accepts.
+- New finding: with correct experts and goals, the live planner cannot find 9-33-action wins within
+  20,000 engine calls (binary goal energy makes it BFS; HUD rows count as new states). Recorded in
+  `ops/known-issues.md` as a finding, not started.
+- The vLLM known-issues entry is now RESOLVED.
+
 ## 2026-09-24 — Kaggle v75 scored 0.09; gate analysis says transition accuracy does not predict usefulness
 - Kernel v75 (vLLM answer-channel fix) submitted on the operator's command: public score 0.09
   (last completed vLLM run 0.02; best 0.12). A month of other changes sits in between, so the fix

@@ -23,6 +23,7 @@
       "status": "label_informative"
     }
   },
+  "control_category": "expert_live_planner",
   "engine_family": "IDENTITY",
   "engine_run": {
     "child": {
@@ -36,7 +37,7 @@
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages"
       ],
       "audit_hook": true,
-      "cwd": "/tmp/exp10010_row_6rkv1thq",
+      "cwd": "/tmp/exp10010_row_k6aco5n3",
       "numpy": "2.5.1",
       "process_per_row": true,
       "python": "3.12.13"
@@ -219,14 +220,17 @@
       "counterfactual_enabled_decision": false,
       "fidelity_threshold": 0.5,
       "max_noop_hallucination_rate": 0.25,
+      "measurement_status": "measured",
       "min_correct_changed_cells": 1,
       "shipped_enabled": false
     },
     "live_selector": {
       "accepted": false,
+      "measurement_status": "measured",
       "metric": "heldout_unmasked_exact_accuracy",
       "shipped_defaults": true,
-      "threshold": 1.0
+      "threshold": 1.0,
+      "would_fail_closed_if_live": false
     },
     "live_unmasked_exact_accuracy": 0.125,
     "live_unmasked_n": 8,
@@ -244,6 +248,7 @@
     "true_changed_cells": 30
   },
   "goal_predicate_status": "constant_false",
+  "is_control": true,
   "labels": {
     "FAITHFUL": false,
     "USEFUL": false
@@ -262,6 +267,7 @@
       "USEFUL": false
     }
   },
+  "model_family": "identity",
   "pair_id": "su15__identity__negative-control",
   "per_heldout_row": [
     {
@@ -321,8 +327,10 @@
       "row": 24
     }
   ],
+  "provenance_cohort": "stall_window",
   "requirement_id": "REQ-ARC-WMTE-10012",
-  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-usefulness/results/raw/b2_positive_control_2026_09_23/su15/expert_engine.py",
+  "scorable_heldout_n": 8,
+  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/gate-expand/results/raw/b2_positive_control_2026_09_23/su15/expert_engine.py",
   "source_sha256": "43b1cce37770091198f3553b331a2933205affa529d122ce98d679f8237abc55",
   "source_status": "derived_identity_dynamics_with_constant_false_goal",
   "state_rebuild_by_arm": {
@@ -361,6 +369,8 @@
       "reset_sent": false
     }
   },
+  "think_mode": "not_applicable",
+  "token_budget": null,
   "variant": "negative-control",
   "window_status": "label_informative",
   "window_status_reason": "expert_real_level_up"

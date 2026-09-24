@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
@@ -51,15 +52,71 @@ def test_gate_table_arithmetic_counts_all_four_cells() -> None:
         "accepted_and_negative": 1,
         "rejected_positive": 1,
         "rejected_negative": 1,
+        "unmeasured": 0,
         "n_pairs": 4,
+        "n_measured_pairs": 4,
     }
     assert exp.build_gate_tables(rows, ["g"], label="FAITHFUL")["g"] == {
         "accepted_and_positive": 1,
         "accepted_and_negative": 1,
         "rejected_positive": 1,
         "rejected_negative": 1,
+        "unmeasured": 0,
         "n_pairs": 4,
+        "n_measured_pairs": 4,
     }
+
+
+def test_zero_scorable_rows_are_unmeasured_not_rejected() -> None:
+    """SCENARIO-ARC-WMTE-10012-A3-UNMEASURED-GATES: null is not rejection."""
+    decisions = exp.candidate_gate_decisions(
+        {
+            "live_unmasked_exact_accuracy": None,
+            "live_unmasked_n": 0,
+            "masked_exact_accuracy": None,
+            "masked_n": 0,
+            "masked_change_fidelity": None,
+            "cell_recall": None,
+            "no_op_rate_for_gate": 0.0,
+        }
+    )
+    assert all(decision is None for decision in decisions.values())
+    row = _pair("zero", accepted=False, useful=True, faithful=False)
+    row["gate_decisions"] = {"g": None}
+    table = exp.build_gate_tables([row], ["g"], label="USEFUL")["g"]
+    assert table["unmeasured"] == 1
+    assert table["n_measured_pairs"] == 0
+    assert table["rejected_positive"] == 0
+
+    levelup = exp.e3.Transition(np.array([[0]]), 1, None, np.array([[1]]), 0, 1)
+    spec = exp.exp10.WindowSpec(
+        game="fake",
+        index=0,
+        window_file=Path("fake.json"),
+        window_sha256="fake",
+        rows=[levelup],
+        n_prefix=0,
+        heldout_indices=(0,),
+        excluded_indices=(),
+        mask_rows=(),
+        cell=1,
+        reported_digest={},
+        report_split_text="fake",
+    )
+    candidate = exp.Candidate(
+        "fake",
+        "fake",
+        "THINK",
+        "fake",
+        "def engine(grid, action, data=None): return grid\n",
+        None,
+        None,
+        "cached",
+    )
+    metrics = exp.score_gate_metrics(candidate, spec)
+    assert metrics["live_selector"]["accepted"] is None
+    assert metrics["live_selector"]["measurement_status"] == "unmeasured"
+    assert metrics["existing_change_gate"]["counterfactual_enabled_decision"] is None
 
 
 class _FakeEnv:
@@ -132,6 +189,43 @@ def test_expert_without_level_up_marks_window_uninformative() -> None:
         "status": "label_uninformative",
         "reason": "expert_no_real_level_up_within_live_planning_budget",
     }
+
+
+def test_queue_exhaustion_is_not_mislabeled_planner_budget() -> None:
+    """SCENARIO-ARC-WMTE-10012-A3-PROVENANCE-AND-LIMITS: vc33 reason is precise."""
+    false_labels = {arm.name: {"USEFUL": False} for arm in exp.EXECUTION_ARMS}
+    false_labels[exp.OFFLINE_TWIN_HALT.name] = {"USEFUL": True}
+    rows = [
+        {
+            "engine_family": "EXPERT",
+            "goal_predicate_status": "callable",
+            "labels_by_arm": false_labels,
+            "executions": {
+                exp.LIVE_SCORED.name: {
+                    "planner_diagnostics": {
+                        "termination_reason": "queue_exhausted",
+                        "nodes_expanded": 814,
+                    }
+                },
+                exp.OFFLINE_TWIN_HALT.name: {"planner_diagnostics": {}},
+                exp.BUDGET_150K.name: {
+                    "planner_diagnostics": {
+                        "termination_reason": "queue_exhausted",
+                        "nodes_expanded": 814,
+                    }
+                },
+            },
+        },
+        {
+            "engine_family": "IDENTITY",
+            "labels_by_arm": {arm.name: {"USEFUL": False} for arm in exp.EXECUTION_ARMS},
+        },
+    ]
+    result = exp.classify_window_arms(rows)
+    assert result[exp.LIVE_SCORED.name]["reason"] == (
+        "expert_dynamics_or_goal_gap_queue_exhausted_814_nodes"
+    )
+    assert result[exp.BUDGET_150K.name]["reason"] != "planner_budget"
 
 
 def test_gate_tables_exclude_unrecoverable_and_uninformative_pairs() -> None:
@@ -292,5 +386,219 @@ def test_gate_table_can_remove_expert_controls() -> None:
         "accepted_and_negative": 0,
         "rejected_positive": 1,
         "rejected_negative": 0,
+        "unmeasured": 0,
         "n_pairs": 1,
+        "n_measured_pairs": 1,
     }
+
+
+def test_completion_predicate_validation_checks_boundary_and_window() -> None:
+    """SCENARIO-ARC-WMTE-10012-A2-COMPLETION-PREDICATES: all checks are explicit."""
+    row = exp.e3.Transition(np.array([[0]]), 1, None, np.array([[1]]), 0, 0)
+    result = exp.validate_completion_predicate(
+        lambda grid: bool(grid[0, 0] == 9),
+        [np.array([[0]]), np.array([[1]]), np.array([[9]])],
+        [row],
+    )
+    assert result["valid"] is True
+    assert result["recorded_window_true_count"] == 0
+
+
+def test_transition_rebuild_proof_hashes_all_fields() -> None:
+    """SCENARIO-ARC-WMTE-10012-A2-PAIR-QUALIFICATION: rebuild proof is row exact."""
+    row = exp.e3.Transition(np.array([[0]]), 6, {"x": 1}, np.array([[2]]), 0, 0)
+    same = exp.e3.Transition(np.array([[0]]), 6, {"x": 1}, np.array([[2]]), 0, 0)
+    changed = exp.e3.Transition(np.array([[0]]), 6, {"x": 2}, np.array([[2]]), 0, 0)
+    assert exp.transition_rows_equal([row], [same])
+    assert exp.canonical_transition_hash([row]) == exp.canonical_transition_hash([same])
+    assert not exp.transition_rows_equal([row], [changed])
+    assert exp.canonical_transition_hash([row]) != exp.canonical_transition_hash([changed])
+
+
+def test_stored_pair_qualification_requires_every_recorded_field() -> None:
+    """SCENARIO-ARC-WMTE-10012-A2-PAIR-QUALIFICATION: one failure rejects the pair."""
+    source = b"def engine(grid, action, data=None): return grid\n"
+    row = exp.e3.Transition(np.array([[0]]), 1, None, np.array([[1]]), 0, 0)
+    qualified = exp.qualify_stored_pair(
+        source=source,
+        recorded_sha256=exp.sha256_bytes(source),
+        rebuilt_rows=[row],
+        comparison_rows=[row],
+        reset_matches=True,
+        induction_reason="offline_stall_window",
+        model="Qwen3.8-27B",
+        think_mode="natural_inline_reasoning",
+        token_budget=102400,
+        field_provenance={
+            "window_row_match": "historical_rows",
+            "stall_start_recorded": "historical_record",
+            "model_recorded": "historical_record",
+            "think_mode_recorded": "historical_record",
+            "token_budget_recorded": "historical_record",
+        },
+    )
+    assert qualified["qualified"] is True
+    constant_claims = exp.qualify_stored_pair(
+        source=source,
+        recorded_sha256=exp.sha256_bytes(source),
+        rebuilt_rows=[row],
+        comparison_rows=[row],
+        reset_matches=True,
+        induction_reason="offline_stall_window",
+        model="Qwen3.8-27B",
+        think_mode="natural_inline_reasoning",
+        token_budget=102400,
+        field_provenance={
+            "window_row_match": "fresh_rebuild_compared_to_fresh_rebuild",
+            "stall_start_recorded": "constant",
+            "model_recorded": "constant",
+            "think_mode_recorded": "constant",
+            "token_budget_recorded": "constant",
+        },
+    )
+    assert constant_claims["qualified"] is False
+    assert set(constant_claims["rejected_reasons"]) == {
+        "window_row_match",
+        "stall_start_recorded",
+        "model_recorded",
+        "think_mode_recorded",
+        "token_budget_recorded",
+    }
+    rejected = exp.qualify_stored_pair(
+        source=source,
+        recorded_sha256="wrong",
+        rebuilt_rows=[row],
+        comparison_rows=[],
+        reset_matches=False,
+        induction_reason="unknown",
+        model="",
+        think_mode="",
+        token_budget=None,
+    )
+    assert rejected["qualified"] is False
+    assert set(rejected["rejected_reasons"]) == set(rejected["checks"])
+
+
+def test_control_categories_are_never_silently_pooled() -> None:
+    """SCENARIO-ARC-WMTE-10012-A2-CONTROL-CATEGORIES: solver is a separate category."""
+    assert exp.control_category(has_expert=True) == "expert_live_planner"
+    assert exp.control_category(has_expert=False) == "informative_by_registry_solver"
+
+
+def test_required_gate_table_cohorts_filter_independently() -> None:
+    """SCENARIO-ARC-WMTE-10012-A2-COHORT-TABLES: all four views have fixed filters."""
+    base = _pair("row", accepted=True, useful=True, faithful=True)
+    rows = [
+        {
+            **base,
+            "pair_id": "qwen",
+            "engine_family": "QWEN38",
+            "model_family": "qwen3.8-27b",
+            "control_category": "informative_by_registry_solver",
+        },
+        {
+            **base,
+            "pair_id": "expert",
+            "engine_family": "EXPERT",
+            "model_family": "source-derived-expert",
+            "is_control": True,
+            "control_category": "expert_live_planner",
+        },
+        {
+            **base,
+            "pair_id": "other",
+            "engine_family": "THINK",
+            "model_family": "qwen3.5-9b-mtp",
+            "control_category": "expert_live_planner",
+        },
+    ]
+    assert exp.build_gate_tables(rows, ["g"], label="USEFUL")["g"]["n_pairs"] == 3
+    assert (
+        exp.build_gate_tables(rows, ["g"], label="USEFUL", cohort="candidates_only")["g"]["n_pairs"]
+        == 2
+    )
+    assert (
+        exp.build_gate_tables(rows, ["g"], label="USEFUL", cohort="qwen38_only")["g"]["n_pairs"]
+        == 1
+    )
+    assert (
+        exp.build_gate_tables(rows, ["g"], label="USEFUL", cohort="expert_controlled_windows")["g"][
+            "n_pairs"
+        ]
+        == 2
+    )
+
+
+def test_amendment3_main_and_appendix_cohorts_do_not_overlap() -> None:
+    """SCENARIO-ARC-WMTE-10012-A3-COHORT-SPLIT: h2h replay stays appendix-only."""
+    base = _pair("row", accepted=True, useful=True, faithful=True)
+    rows = [
+        {
+            **base,
+            "pair_id": "stall-candidate",
+            "engine_family": "THINK",
+            "provenance_cohort": "stall_window",
+            "control_category": "expert_live_planner",
+        },
+        {
+            **base,
+            "pair_id": "stall-control",
+            "engine_family": "EXPERT",
+            "is_control": True,
+            "provenance_cohort": "stall_window",
+            "control_category": "expert_live_planner",
+        },
+        {
+            **base,
+            "pair_id": "h2h-expert",
+            "engine_family": "QWEN38",
+            "provenance_cohort": "h2h_replay_counterfactual",
+            "control_category": "expert_live_planner",
+        },
+        {
+            **base,
+            "pair_id": "h2h-registry",
+            "engine_family": "QWEN38",
+            "provenance_cohort": "h2h_replay_counterfactual",
+            "control_category": "informative_by_registry_solver",
+        },
+    ]
+    kwargs = {"rows": rows, "gate_names": ["g"], "label": "USEFUL"}
+    main = exp.build_gate_tables(**kwargs, cohort="main_with_controls")
+    candidates = exp.build_gate_tables(**kwargs, cohort="main_without_controls")
+    replay = exp.build_gate_tables(**kwargs, cohort="h2h_replay_counterfactual")
+    registry = exp.build_gate_tables(**kwargs, cohort="registry_solver_controlled")
+    assert main["g"]["n_pairs"] == 2
+    assert candidates["g"]["n_pairs"] == 1
+    assert replay["g"]["n_pairs"] == 2
+    assert registry["g"]["n_pairs"] == 1
+
+
+def test_repaired_predicates_validate_on_real_registered_trajectories() -> None:
+    """SCENARIO-ARC-WMTE-10012-A2-COMPLETION-PREDICATES: validate real boundaries."""
+    repo_root = Path(__file__).resolve().parents[2]
+    if not exp.resolve_environment_files(repo_root).is_dir():
+        pytest.skip("public environment_files are unavailable")
+    paths = exp.exp10.EvidencePaths.under(repo_root)
+    reports = exp.exp10.load_control_reports(paths)
+    specs = {
+        game: exp.exp10.load_window(game, index, reports[game], paths)
+        for index, game in enumerate(exp.WINDOWS)
+    }
+    records = exp.validate_repaired_experts(repo_root, specs)
+    assert set(records) == {"sp80", "dc22", "wa30", "sb26"}
+    assert all(row["valid"] for row in records.values())
+
+
+def test_stored_windows_double_rebuild_and_match_historical_counts() -> None:
+    """SCENARIO-ARC-WMTE-10012-A2-PAIR-QUALIFICATION: replay every added window twice."""
+    repo_root = Path(__file__).resolve().parents[2]
+    if not exp.resolve_environment_files(repo_root).is_dir():
+        pytest.skip("public environment_files are unavailable")
+    windows = {
+        game: exp.rebuild_registered_window(repo_root, game, index)
+        for index, game in enumerate(exp.ADDED_WINDOWS)
+    }
+    assert all(window.exact_match for window in windows.values())
+    assert all(window.historical_count_match for window in windows.values())
+    assert all(window.window_sha256 == window.second_rebuild_sha256 for window in windows.values())
