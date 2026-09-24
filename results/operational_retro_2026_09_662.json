@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.662",
+  "generated_at": "2026-09-24T03:23:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 18.3,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure delayed proper-loss learning and durable retained decisions",
+      "duration_minutes": 7.31,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Requalify numerical and ARC runners from reproduced validation failures",
+      "duration_minutes": 2.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Seal descriptive source roles and delayed-feedback decision tests",
+      "duration_minutes": 1.63,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify fail-closed world-model scores and independent transition support",
+      "duration_minutes": 1.45,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify owned Qwen transport and live-panel budget with a bounded canary",
+      "duration_minutes": 1.25,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.662 completed 12 experiments (3 compute-bound and 9 synthesis-only) in 18.3 wall-time minutes. The longest task was the synthesis-only 'Measure delayed proper-loss learning and durable retained decisions' at 7.31 minutes, while the longest compute-bound task was 'Seal descriptive source roles and delayed-feedback decision tests' at 1.63 minutes. Sub-phase timing was not recorded within these runs to separate model inference duration or synthesis computation from validation scaffolding and artifact serialization overhead.",
+  "bottlenecks_identified": [
+    "'Measure delayed proper-loss learning and durable retained decisions' was the longest task at 7.31 minutes out of 18.3 total wall-time minutes (approx. 40% of milestone duration), but as a synthesis-only task without granular sub-phase timers, CPU code generation cannot be isolated from validation scaffolding or artifact serialization.",
+    "Intra-task phase durations were unrecorded for the compute-bound experiments ('Seal descriptive source roles and delayed-feedback decision tests' at 1.63 minutes and 'Qualify owned Qwen transport and live-panel budget with a bounded canary' at 1.25 minutes), preventing isolation of GPU inference latency from verification scaffolding and file serialization.",
+    "The top 5 experiments accounted for 13.74 out of 18.3 total wall-time minutes (approx. 75% of execution time), with milestone timings reconstructed from disk mtimes rather than continuous runtime execution logging.",
+    "The GPU monitor report provides an isolated post-completion snapshot (PID 772157 on GPU 0 with 18054MB allocated at 0% utilization, GPU 1 idle at 4MB), leaving GPU utilization across active compute execution windows unmeasured (with gpu_idle_on_compute_bound_tasks locked to false).",
+    "Task launch records did not log model concurrency or runner dispatch details, although all completed tasks were single-model runs where DualGPURunner multi-model dispatch is not applicable."
+  ],
+  "improvements_suggested": [
+    "Instrument granular sub-phase duration timers and monotonic stage logging inside synthesis-only and compute-bound workflows to isolate code generation and model inference latency from verification scaffolding and disk serialization.",
+    "Deploy continuous, task-aligned accelerator telemetry during compute-bound executions to sample live GPU utilization and VRAM occupancy across active compute windows rather than relying on point-in-time post-run snapshots.",
+    "Record explicit model concurrency and runner dispatch metadata in experiment task receipts to audit DualGPURunner eligibility whenever two or more models run concurrently.",
+    "Implement runtime milestone-scoped execution logging to avoid reliance on post-hoc disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration timers and per-stage progress logging inside the proper-loss learning and runner requalification pipelines.",
+    "Deploy continuous accelerator telemetry during compute-bound task execution to record live GPU utilization and VRAM occupancy across active execution windows.",
+    "Emit explicit model concurrency and runner dispatch metadata in experiment receipts to audit DualGPURunner engagement on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone completed 12 experiments (3 compute-bound and 9 synthesis-only) in 18.3 wall-time minutes, with wall time led by the synthesis-only task 'Measure delayed proper-loss learning and durable retained decisions' (7.31 minutes) and the compute-bound task 'Seal descriptive source roles and delayed-feedback decision tests' (1.63 minutes). The post-run GPU monitor report confirms an idle llama.cpp process on GPU 0 after completion but cannot evaluate active-window compute efficiency, and because only single-model tasks were executed, no DualGPURunner multi-model dispatch opportunity was missed. Sub-phase timing and continuous execution telemetry are necessary next steps to identify actionable latency optimizations."
+}

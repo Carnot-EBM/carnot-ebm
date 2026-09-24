@@ -6941,3 +6941,10 @@ The critical path for milestone .250:
 - theme: source intervention capture on sealed test and fitting policies dominated milestone wall time across an all-compute execution lacking sub-task telemetry
 - key result: honest operational negative — source intervention captures consumed 75.53 of 83.9 total wall-time minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.662
+
+- exp_range: no data available this milestone
+- theme: delayed proper-loss learning and runner requalification led execution across a mixed synthesis and compute milestone lacking sub-task telemetry
+- key result: honest operational negative — the slowest synthesis task consumed 7.31 of 18.3 total wall-time minutes while compute-bound tasks took at most 1.63 minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
+- acceptance: no data available this milestone
