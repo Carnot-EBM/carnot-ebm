@@ -46007,6 +46007,119 @@ SHALL publish atomically at
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+### REQ-VERIFY-7602: V664 Evidence Requalification SHALL Bind The Recovered Selector To Exact Historical Bytes
+
+Experiment 7602 SHALL requalify the exact V662 producer bytes and the declared
+V664 output path. It SHALL authenticate the V662 artifacts and sidecars, the
+preserved V663 terminal failure receipt, the committed V663 module bytes, and
+the commit that contains those bytes. It SHALL not collect replacement groups
+or reinterpret the historical `source_group_incomplete` determination.
+
+The task SHALL reproduce `collect_preconditions` and `select_roles` in a fresh
+process. It SHALL use the unchanged salt `v663-evidence-20260924` and select 80
+fit, 20 tune, 20 policy, 80 online, and 40 evaluation groups. It SHALL also
+select eight disjoint fit-role pilots. Selection SHALL remain independent of
+labels, predictions, and outcomes. Every selected group SHALL keep its original
+source role and historical exposure state.
+
+The task SHALL restore the complete source, question, and answer from each
+authenticated scorer prompt with the shipped lossless parser. It SHALL reject
+an absent byte, delimiter collision, malformed prompt, duplicate group, bad
+label join, role drift, or identity mismatch. It SHALL not alter a label,
+filter on an outcome, replace a group, or repair malformed source text.
+
+The task SHALL freeze the selected contracts at
+`results/raw/experiment_7602_v664_evidence_requalification/protocol.json` and
+role-separated JSONL sidecars. Model-facing sidecars SHALL include complete
+texts, UTF-8 byte offsets, at most six evidence links, and the eight V663
+evidence features with `supports | contradicts | unknown` relations. They
+SHALL contain no labels or raw baseline probabilities. Labels and raw
+probabilities SHALL remain in separate evaluator and fit stores.
+
+The fit role SHALL freeze 64 optimization groups and 16 old-distribution
+anchor groups by source hash. Tune20 SHALL select hyperparameters. Policy20
+SHALL select the strongest comparator. Online80 SHALL use successive
+eight-group blocks whose first four groups are update groups and whose last
+four are admission groups. Labels SHALL release after lag eight. Admission
+and evaluation labels SHALL never train the learner. Evaluation40 SHALL remain
+evaluator-only. All groups SHALL set
+`fresh_confirmatory_claim_allowed=false`.
+
+Experiment 7602 SHALL preserve the original V663 failure receipt and state
+separately whether its terminal bytes and exact process state can be
+reconstructed. It SHALL not assign a historical cause when the old process
+state is unavailable. A repeated unchanged external block SHALL retire only
+the exact requalification scope. A resource block SHALL not retire the
+scientific hypothesis.
+
+Experiment 7602 SHALL load no model and generate no tokens. It SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `no_model_load=true`, planned and actual
+substrate classes, and zero current loads, forwards, generations, and tokens.
+Historical Qwen identity SHALL remain separate. Protocol readiness alone SHALL
+have `verdict_class=null`; exact fixtures SHALL be `circular_positive`; only a
+separate passing empirical gate can establish benefit.
+
+Missing or changed external inputs SHALL produce a schema-complete
+`complete_blocked_*` artifact with `verdict_class=blocked`. Its first failed
+gate SHALL name the check, upstream, absolute artifact path, field, operator,
+expected value, and observed value. An unchanged external block SHALL never be
+reported as partial.
+
+Required controls SHALL cover byte round-trip, empty response, parser delimiter
+collision, qualifier omission, duplicate groups, bad label joins, and
+predictor-label access. Required validation SHALL include scoped serial pytest,
+100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, scoped specification coverage, declared-entrypoint replay,
+fresh-process cold replay, independent row reduction, adversarial verification,
+and strict verdict-row consistency. No model or numbered model E2E applies.
+Only the exact cold-valid candidate and its sidecars SHALL publish atomically at
+`results/experiment_7602_v664_evidence_requalification.json`.
+
+#### SCENARIO-VERIFY-7602-AUTH: Exact Bytes Reproduce The Current Selector
+
+**Given** the preserved V663 failure receipt and authenticated V662 bytes
+**When** a fresh process runs the shipped preconditions and selector
+**Then** all 480 source groups authenticate and 240 scored groups plus eight pilots are selected
+**And** the old failure remains preserved without an invented historical cause.
+
+#### SCENARIO-VERIFY-7602-CUSTODY: Roles And Learning Access Stay Frozen
+
+**Given** the selected source-hash roster
+**When** the task freezes fit, tune, policy, online, admission, and evaluation contracts
+**Then** fit is 64 optimization plus 16 anchors and online is ten ordered four-plus-four blocks
+**And** admission and evaluation labels never enter training or predictor inputs.
+
+#### SCENARIO-VERIFY-7602-PARSER: Lossless Restoration Fails Closed
+
+**Given** an authenticated scorer prompt or selected contract
+**When** bytes are absent, delimiters collide, a qualifier is omitted, or an identity changes
+**Then** the parser or contract validator rejects the group
+**And** no replacement, filtering, or silent repair occurs.
+
+#### SCENARIO-VERIFY-7602-SIDECARS: Model And Evaluator Stores Stay Separate
+
+**Given** 248 selected groups and the frozen evidence schema
+**When** role-separated sidecars and the protocol are written
+**Then** model-facing records contain complete text and no labels or baseline probabilities
+**And** evaluator and fit stores retain labels and raw probabilities under byte receipts.
+
+#### SCENARIO-VERIFY-7602-BLOCKED: External Drift Is Terminal Blocked Work
+
+**Given** a missing or changed producer, sidecar, module, commit, or output contract
+**When** no owned model work starts
+**Then** the verdict is complete blocked with zero current invocations
+**And** the gate summary records every exact expected and observed operand.
+
+#### SCENARIO-VERIFY-7602-E2E: Exact Readers Control Atomic Publication
+
+**Given** the affected-file manifest, terminal candidate, protocol, and sidecars
+**When** scoped checks and fresh terminal readers run
+**Then** cold replay, independent reduction, adversarial verification, and strict row consistency pass
+**And** only that validated candidate publishes at the declared path.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-VERIFY-7598: Explicit Probability-Service Decision Caller
 
 The probability-calibration surface SHALL expose a documented caller for the
