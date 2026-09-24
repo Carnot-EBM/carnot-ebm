@@ -79086,3 +79086,71 @@ include the mechanical retirement flag and a concrete forward difference.
 
 Planning documents only. Proposed experiments are not implemented or run.
 Future behavior changes require their own capability requirements and tests.
+
+## REQ-REPORT-7601: Bind the V664 contract and qualified method limits
+
+Experiment 7601 SHALL select the staged or active roadmap whose milestone is
+`2026.09.664` without activating or rewriting either authority. It SHALL compare
+exactly fourteen ordered tasks, Exp7601 through Exp7614, against the design
+table. Full IDs, titles, phases, deliverables, inference substrate classes and
+complete structured gates SHALL agree. `contract_ready_score` SHALL equal one
+only when the baseline agrees, consumed-staging selection works and private
+removed-row, reordered-row, changed-path and misspelled-field mutations are all
+rejected.
+
+The report SHALL authenticate the V663 capstone and preserve its fourteen
+terminal dispositions as eight actual producer artifacts, one Exp7590 conductor
+pre-gate artifact and five absent producers. The current planning selector check
+SHALL remain a hypothesis about changed executable readiness and SHALL NOT
+replace or correct the saved blocked protocol. The capstone, pre-gate evidence,
+missing producers and planned V664 tasks SHALL remain distinct.
+
+The task SHALL declare `aggregation`, `MODEL_SPECS=[]` and zero current model
+invocations. It SHALL map the EAEV evidence controls, local KAN update method,
+Proper Calibeating and U-Calibration boundaries to V664 work. A guarded delayed
+learner SHALL NOT be described as published U-Calibration. Spintronic Ising and
+sparse-transformer repositories SHALL remain future leads, not current local
+measurements or dependencies.
+
+The selected authority SHALL pass schema, exclusion, prior-failure, gate,
+harness-fit, ARC-floor and overdue-priority guards. E0 SHALL remain
+operator-blocked and E6 resolved. Fixed publication gates G1-G4 SHALL come from
+`scripts/publication_gate.py --json`. Validity, readiness, benefit, retention
+and freshness SHALL remain separate; this administrative task gates no
+scientific branch and has no numbered runtime E2E.
+
+### SCENARIO-REPORT-7601-AUTHORITY: Exact rows and private mutations
+
+**Given** a staged or active V664 authority and its design table
+**When** Experiment 7601 compares the complete ordered contract
+**Then** all fourteen identities, paths, phases, substrates and gate lists match
+**And** removed, reordered, changed-path and misspelled-field copies fail
+**And** selection still works after matching staging has been consumed.
+
+### SCENARIO-REPORT-7601-CUSTODY: Historical dispositions stay literal
+
+**Given** the authenticated V663 capstone and its referenced evidence
+**When** Experiment 7601 reduces the prior milestone
+**Then** fourteen dispositions preserve eight producers, one pre-gate and five absences
+**And** the selector-readiness hypothesis does not rewrite the blocked protocol
+**And** no missing resource retires the unmeasured scientific hypothesis.
+
+### SCENARIO-REPORT-7601-METHODS: Published methods keep their claim limits
+
+**Given** the V664 review and named primary method sections
+**When** Experiment 7601 writes the V664 method map and studying entry
+**Then** evidence perturbation, local update and proper-loss uses name bounded tests
+**And** delayed guarded learning is distinct from U-Calibration
+**And** spintronic and sparse-transformer repositories remain deferred leads.
+
+### SCENARIO-REPORT-7601-VALIDATION: Exact terminal readers control publication
+
+**Given** a frozen affected-file manifest and one exact terminal candidate
+**When** scoped tests, changed-module coverage, static checks, guards and cold replay run
+**Then** every command, exit, worktree and log hash is retained
+**And** independent reduction and both strict readers pass before atomic publication
+**And** the terminal artifact is null, non-oracle and does not open scientific readiness.
+
+### Implementation Status (REQ-REPORT-7601)
+
+Implemented by Experiment 7601 with scoped tests and terminal validation.

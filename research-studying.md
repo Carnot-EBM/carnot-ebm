@@ -6116,3 +6116,10 @@ Applicable (rank 1-2): EAEV evidence dimensions and RT4CHART claim/span hierarch
 Deferred (rank 3-4): U-Calibration FTPL and FPGA KAN placement.
 Evidence-link adaptation is not EAEV replication; delayed guarded SGD is not
 U-Calibration Algorithm 1. Locality and readiness do not establish retention.
+
+<!-- EXP7601-V664-METHOD-INGESTION -->
+## 2026-09-24 Exp7601 — V664 method limits — INGESTED
+
+EAEV controls, local KAN updates, and proper-loss evaluation map to bounded
+V664 tests. The guarded delayed learner is not published U-Calibration.
+The spintronic and sparse-transformer repositories remain future leads.
