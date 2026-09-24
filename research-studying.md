@@ -6108,3 +6108,11 @@ explicit in `docs/research-notes/v661-method-map.md`.
 Proper-loss, local KAN, structured-decoding, and full-service cost methods map
 to V662 tests. Delayed-feedback theorems, FPGA speed, and semantic success
 remain explicit deferrals. Access failures remain in the V662 method map.
+
+<!-- EXP7587-V663-METHOD-INGESTION -->
+## 2026-09-24 Exp7587 — V663 methods — INGESTED
+
+Applicable (rank 1-2): EAEV evidence dimensions and RT4CHART claim/span hierarchy.
+Deferred (rank 3-4): U-Calibration FTPL and FPGA KAN placement.
+Evidence-link adaptation is not EAEV replication; delayed guarded SGD is not
+U-Calibration Algorithm 1. Locality and readiness do not establish retention.

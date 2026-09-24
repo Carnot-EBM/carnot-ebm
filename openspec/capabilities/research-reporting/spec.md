@@ -78760,3 +78760,93 @@ publication. This read-only report has no numbered runtime E2E.
 Implemented by the reusable Exp7586 reducer, thin CLI, requirement-linked
 tests, exact source custody, four independent branch conclusions, and strict
 terminal readers. The conductor owns later ops and traceability reconciliation.
+
+## REQ-REPORT-7587: Bind V663 contract and evidence-alignment method limits
+
+Experiment 7587 SHALL resolve the staged roadmap only when its milestone is
+`2026.09.663`; otherwise it SHALL use the matching active roadmap. It SHALL
+compare that YAML authority with the V663 Markdown table. The comparison SHALL
+cover exactly fourteen ordered task IDs from `exp7587-contract-methods` through
+`exp7600-capstone`, plus each exact title, phase, deliverable, inference
+substrate class, and complete structured-gate list. Private count, order, path,
+and gate-field mutations against either authority SHALL fail closed. A consumed
+staging file SHALL not block a matching active authority.
+
+The report SHALL authenticate all fourteen V662 capstone dispositions and exact
+producer bytes when present. It SHALL preserve the two absent panel producers,
+the 80-group static null with Brier 0.146249673 versus raw 0.145635636, the
+failed delayed-learning retention result, Exp7581's pre-inference ARC output
+path rejection, and Exp7585's host-only complete-service ratios. Missing
+producer evidence SHALL remain authenticated absence, not zero-valued science.
+No V662 task SHALL be reactivated or rewritten.
+
+The method map SHALL record primary sections actually read from EAEV Sections
+3.3 through 3.6, the RT4CHART hierarchical verification method, U-Calibration
+Algorithm 1, and the on-chip KAN locality sections. It SHALL rank applicable and
+deferred uses in `research-studying.md`. It SHALL state that sentence evidence
+links are an adaptation rather than an EAEV replication, and that delayed
+guarded SGD is not U-Calibration Algorithm 1. External results SHALL not become
+local measurements or imported guarantees.
+
+The task SHALL run aggregation only with `MODEL_SPECS=[]`, no current model
+calls, zero invocation counts, and actual and planned substrate class
+`aggregation`. It SHALL record current monotonic duration, explicit seeds,
+source hashes, and command/log validation custody. It SHALL preserve operator E0
+as blocked and E6 as resolved. Stable G1 through G4 SHALL come from
+`scripts/publication_gate.py --json`; no submission or publication is
+authorized, and these administrative gates SHALL not gate independent science.
+
+Acceptance gates SHALL separate validity, readiness, benefit, retention, and
+freshness. `contract_ready_score` SHALL equal one only after exact fourteen-row
+agreement, paired mutation rejection, authenticated V662 custody, lifecycle
+replay, and all scoped guards. Readiness alone SHALL retain a null verdict.
+Oracle-built controls SHALL be `circular_positive`, external absence or failed
+gates SHALL be blocked, and partial SHALL mean only unfinished work owned by
+Exp7587. Every blocked gate summary SHALL name check, upstream, path, field,
+operator, expected value, and observed value.
+
+The affected-file manifest SHALL freeze this requirement, the new reusable
+module, thin CLI, and requirement-linked test. Validation SHALL use private
+directories under `/tmp`, prove worktree imports, run focused pytest, 100
+percent changed-module coverage with a private coverage file, scoped Ruff,
+changed-module mypy, and scoped specification coverage. The declared entrypoint,
+fresh-process cold replay, predict-release-update-persist-reload with duplicate
+rejection, independent reduction, `adversarial_verify.py`, and strict row
+consistency SHALL accept the exact candidate before atomic publication. This
+read-only report has no numbered runtime E2E.
+
+### SCENARIO-REPORT-7587-AUTHORITY: Both activation states fail closed
+
+**Given** staged and active planning paths with independently parsed authorities
+**When** Exp7587 selects and compares the V663 contract
+**Then** only a matching staged milestone precedes the matching active milestone
+**And** a consumed staging path still permits the active authority
+**And** count, order, path, or gate-field corruption is rejected.
+
+### SCENARIO-REPORT-7587-CUSTODY: V662 evidence remains literal
+
+**Given** the immutable V662 capstone and its producer paths
+**When** Exp7587 authenticates all fourteen dispositions
+**Then** per-unit losses, failed retention, ARC pre-gate failure, and host ratios remain exact
+**And** absent panels stay absent with complete blocked custody
+**And** archive lag does not become missing scientific evidence.
+
+### SCENARIO-REPORT-7587-METHODS: Four method families keep claim limits
+
+**Given** the named primary sections
+**When** Exp7587 writes the method map and ranked findings
+**Then** evidence links, hierarchy, calibration, and locality have bounded destinations
+**And** adaptations are not represented as paper replications or guarantees.
+
+### SCENARIO-REPORT-7587-VALIDATION: Exact readers control publication
+
+**Given** a frozen affected manifest and exact terminal candidate
+**When** scoped checks, lifecycle replay, cold reduction, and strict readers run
+**Then** every required receipt passes before atomic publication
+**And** source hashes, row signs, counts, missingness, and censoring remain reproducible.
+
+### Implementation Status (REQ-REPORT-7587)
+
+Implemented by the reusable Exp7587 reducer, thin CLI, requirement-linked
+tests, exact V662 custody, bounded primary-method mapping, and strict terminal
+readers. The conductor owns later ops and traceability reconciliation.
