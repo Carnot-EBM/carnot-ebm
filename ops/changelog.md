@@ -20467,3 +20467,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Qualify owned Qwen transport and live-panel budget with a bounded canary (⚠️ Blocked) — honest_verdict=complete_blocked_arc_e2e; results/experiment_7581_v662_arc_bounded_canary.json
 - 2026-09-24: Reduce live support, plan execution and supervisor evidence independently (⚠️ Blocked) — honest_verdict=complete_blocked_live_panel_producers_missing_or_invalid; results/experiment_7584_v662_arc_independent_audit.json
 - 2026-09-24: Measure Rust recalibration service and preserve all board dispositions (✅ Complete) — honest_verdict=complete_positive_portable_service_improvement; results/experiment_7585_v662_portable_service.json
+- 2026-09-24: Reconcile fourteen outcomes and decide each mechanism continuation (⚠️ Blocked) — honest_verdict=complete_blocked_required_v662_external_evidence; results/experiment_7586_v662_capstone.json
