@@ -36408,6 +36408,92 @@ reader SHALL inspect the exact terminal candidate before atomic publication.
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+### REQ-ARC-WMTE-7612: Measure reusable history support on fresh live-policy episodes
+
+Experiment 7612 SHALL authenticate the Experiment 7611 protocol before it
+collects evidence. It SHALL run twelve fresh adapter-withheld `E3AgentPolicy`
+episodes on the same six-game roster and two frozen seeds. It SHALL disable all
+model calls and per-game adapters. Experiment 7597 and Experiment 7611 outcomes
+SHALL remain historical inputs. They SHALL not count as current prefixes,
+episodes, matched keys, replays, or solves.
+
+The collector SHALL record each public frame, legal action set, selected action,
+level boundary, source stage, and trajectory-supervisor outcome. It SHALL select
+at most 20 different-history keys per game by a hash that does not use the
+future outcome. Each eligible prefix SHALL contain at most 128 actions. It SHALL
+replay each admitted prefix twice from a fresh reset through the generic
+collector. It SHALL preserve all next-frame outcomes and replay mismatches.
+
+The total episode and replay budget SHALL be 1800 seconds. Each episode SHALL
+have a 120-second watchdog. Completed episodes and replay keys SHALL be
+checkpointed. Unstarted, timed-out, over-length, unstable, and unreplayable
+probes SHALL remain explicit. Exact replay repetitions SHALL calibrate
+within-prefix stability. They SHALL not multiply independent keys or games.
+
+The reducer SHALL report natural repeated-key coverage separately from matched
+replay-intervention coverage. It SHALL compute within-prefix instability and
+between-history disagreement on the same admitted key population. It SHALL
+report each game's natural and intervention denominators, witnesses,
+exclusions, time censorship, source hashes, and supervisor counts.
+
+`history_support_score` MAY equal one only when at least 20 stable matched keys
+exist in each of at least three games. A game-cluster rate or interval SHALL be
+absent when this floor is not met. One stable disagreement MAY establish an
+existence witness with exact scope. It SHALL not establish prevalence or prove
+that a public frame is Markov. `arc_measurement_ready_score` MAY equal one when
+all started work has truthful terminal runtime and replay outcomes, independent
+of support.
+
+A fully executed run below the support floor SHALL end as
+`complete_null_insufficient_matched_support`. This terminal null closes the
+unchanged collector construction unless a later task proposes a different
+representation or sampling mechanism. A missing unchanged external input SHALL
+produce `complete_blocked_<reason>`, `verdict_class=blocked`, and exact failed
+gate operands. It SHALL not produce a partial result.
+
+The artifact SHALL declare `no_model_load`, `MODEL_SPECS=[]`, zero current model
+invocations, and separate planned and actual substrate classes. It SHALL retain
+`solve_provenance=live_agent_self_discovery`. Registered public levels SHALL not
+be new solves. An empty supervisor ledger SHALL support no refinement.
+
+The experiment SHALL run cold raw-trajectory reduction, applicable E2E-009
+through E2E-013, a private LLM-off runtime smoke, scoped unit and static checks,
+the declared entrypoint, fresh-process replay, independent row reduction,
+adversarial verification, and strict verdict-row consistency. It SHALL bind
+commands, exits, logs, source hashes, current duration, seeds, and terminal
+reader outcomes before atomic publication.
+
+#### SCENARIO-ARC-WMTE-7612-FRESH-EVIDENCE
+
+- **GIVEN** an authenticated Experiment 7611 protocol and no current model calls
+- **WHEN** the frozen twelve-episode panel runs with adapters withheld
+- **THEN** all current prefixes come only from those new public trajectories
+- **AND** historical Experiment 7597 and Experiment 7611 rows remain non-current evidence.
+
+#### SCENARIO-ARC-WMTE-7612-REPLAY-STABILITY
+
+- **GIVEN** a hash-selected different-history key with prefixes of at most 128 actions
+- **WHEN** each prefix replays twice from a fresh reset
+- **THEN** every public frame, legal action, action, boundary, outcome, and mismatch is retained
+- **AND** only within-prefix-stable keys enter between-history disagreement.
+
+#### SCENARIO-ARC-WMTE-7612-SUPPORT-FLOOR
+
+- **GIVEN** natural coverage and replay coverage with separate denominators
+- **WHEN** fewer than three games each provide at least 20 stable matched keys
+- **THEN** `history_support_score` is zero and no cross-game rate or interval is reported
+- **AND** a completed run terminates as `complete_null_insufficient_matched_support`.
+
+#### SCENARIO-ARC-WMTE-7612-TERMINAL
+
+- **GIVEN** truthful checkpoints, zero model invocations, and completed required readers
+- **WHEN** the exact terminal candidate validates
+- **THEN** `arc_measurement_ready_score` records measurement completeness independently from support
+- **AND** the artifact publishes atomically with per-game rows, receipts, and field principles.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V662 independent ARC live-panel audit — 2026-09-24
 
 ### REQ-ARC-WMTE-7584: Reduce both live panels without substituting missing evidence

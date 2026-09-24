@@ -348,3 +348,7 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 - Sep. 23: The Kaggle public leaderboard changed sharply: Lord Han Solo leads at 19.40, followed by Tufa Labs at 18.81, NVARC3 at 16.07, Yi-Chia Chen at 15.98, and Daniel Franzen at 13.12. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-09-24 13:17 UTC -- NEW
+
+- Sep. 23: Tufa Labs announced it will skip Milestone #2 and will not open-source its current solution on Sep. 30. It still plans to release its final solution after the competition ends. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/742801)
+
