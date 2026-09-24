@@ -18508,3 +18508,4 @@ code |
 | 2026-09-23 22:08 UTC | Seal descriptive source roles and delayed-feedback | OK | 100 passed, 1 warning in 9.54s |
 | 2026-09-23 22:52 UTC | Train an identity-constrained proper-loss energy d | OK | 101 passed, 1 warning in 9.27s |
 | 2026-09-23 23:35 UTC | Measure frozen probability and decision value with | OK | 114 passed, 1 warning in 9.98s |
+| 2026-09-24 00:28 UTC | Measure delayed proper-loss learning and durable r | OK | 102 passed, 1 warning in 22.00s |
