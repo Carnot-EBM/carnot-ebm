@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-09-24 — Planner dedup safety fixes and scored-path measurement (operator request: "1")
+
+- codex (CPU, worktree `dedup-safe`) applied REQ-ARC-WMTE-10013 amendment 1: goal check before the
+  masked dedup skip, truthful mask status, tie-break read moved into the scored wrapper, and a
+  measurement through `E3AgentPolicy._call_plan_in_model` with the live Stage-2 mask replayed from
+  recorded frames. One Claude reviewer (workflow `wf_dfc5f745-d8a`) approved the merge; its flag-on
+  findings and a spec-wording correction are appended as REVIEW RECORD 2. Merged by patch.
+
 ## 2026-09-24 — Planner HUD dedup and tie-break, default off (operator request: "1", planner fix)
 
 - codex (CPU, worktree `planner-fix`) added REQ-ARC-WMTE-10013 with both flags default OFF and

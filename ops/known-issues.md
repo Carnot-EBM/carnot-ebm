@@ -27721,3 +27721,10 @@ wa30 and sb26 do not; no regressions. Independent review: the live-relevant gain
 on a wider mask than the live explorer applies before Stage 2); dedup can drop a win whose goal reads
 a HUD counter (fix: goal check before the dedup skip); the tie-break lengthens plans and should stay
 off. Prerequisites for enabling are in the REQ-ARC-WMTE-10013 review record in the spec.
+
+**UPDATE 2 2026-09-24 (append-only):** amendment 1 merged (flags OFF). Measured through the scored
+wrapper with the live Stage-2 mask: expert wins 5/10 OFF, 6/10 HUD dedup (dc22); ar25 does not win
+with its live 63-cell mask. No longer plans on OFF winners; main wasted actions 118 -> 88; mean wall
+time unchanged, slower on wa30, ka59, ar25. Recommendation: keep both flags off. The real bottleneck
+remains search depth (wa30 needs 33 actions; sb26 has no live HUD mask). Flag-on fixes still needed
+are in the spec's REVIEW RECORD 2.

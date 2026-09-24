@@ -9289,6 +9289,7 @@ def plan_in_model(
     goal_energy=None,
     diagnostics: Optional[dict] = None,
     dedup_mask: Optional[np.ndarray] = None,
+    goal_tiebreak: Optional[str] = None,
 ) -> Optional[list]:
     """BFS a path to an is_level_complete state ENTIRELY INSIDE the induced model
     (engine is pure: grid,action,data -> grid; no environment). Returns the action
@@ -9343,9 +9344,11 @@ def plan_in_model(
 
     HUD DEDUPLICATION AND GOAL TIES (REQ-ARC-WMTE-10013). ``dedup_mask`` is an
     optional logical-coordinate mask used only by duplicate-state keys; the engine
-    and goal predicate keep receiving the full grid. With goal energy and
-    ``CARNOT_ARC_PLAN_GOAL_TIEBREAK=novelty``, equal-energy states prefer more
-    non-masked cells changed from the start, then retain insertion order.
+    and goal predicate keep receiving the full grid. With goal energy and the
+    explicit ``goal_tiebreak="novelty"`` argument, equal-energy states prefer
+    more non-masked cells changed from the start, then retain insertion order.
+    REQ-ARC-WMTE-10013 Amendment 1 keeps the default independent of environment
+    variables so only the scored wrapper can opt in.
 
     ENGINE-CALL GUARD (2026-08-17, REQ-ARC-WMTE-6400). ``engine`` and
     ``is_level_complete`` are LLM-generated. Nothing here bounded ONE call's cost:
@@ -9370,6 +9373,14 @@ def plan_in_model(
             diagnostics["is_level_complete_was_none"] = True
             diagnostics["nodes_expanded"] = 0
             diagnostics["termination_reason"] = "is_level_complete_none"
+            if dedup_mask is not None:
+                proposed_mask = np.asarray(dedup_mask, dtype=bool)
+                diagnostics["hud_dedup_mask_status"] = "not_used"
+                diagnostics["hud_dedup_mask_reason"] = (
+                    "shape_mismatch"
+                    if proposed_mask.shape != np.asarray(start_grid).shape
+                    else "goal_predicate_unavailable"
+                )
         return None
     start = np.asarray(start_grid)
     effective_dedup_mask: Optional[np.ndarray] = None
@@ -9394,11 +9405,20 @@ def plan_in_model(
     nodes = 0
     hud_dedup_states_merged = 0
     goal_tiebreak_states_scored = 0
-    goal_tiebreak_mode = plan_goal_tiebreak_mode() if goal_energy is not None else None
+    goal_tiebreak_mode = (
+        "novelty" if goal_energy is not None and goal_tiebreak == "novelty" else None
+    )
 
     def _record_req_10013_diagnostics() -> None:
         if diagnostics is None:
             return
+        if dedup_mask is not None:
+            diagnostics["hud_dedup_mask_status"] = (
+                "applied" if effective_dedup_mask is not None else "not_used"
+            )
+            diagnostics["hud_dedup_mask_reason"] = (
+                "accepted" if effective_dedup_mask is not None else "shape_mismatch"
+            )
         if effective_dedup_mask is not None:
             diagnostics["hud_dedup_mask_cells"] = int(np.count_nonzero(effective_dedup_mask))
             diagnostics["hud_dedup_states_merged"] = hud_dedup_states_merged
@@ -9470,6 +9490,29 @@ def plan_in_model(
                 nodes += 1
                 if ng.shape != start.shape:
                     continue
+                npath = path + [c]
+                if effective_dedup_mask is not None:
+                    try:
+                        if bool(guarded_call(is_level_complete, ng)):
+                            if diagnostics is not None:
+                                diagnostics["is_level_complete_was_none"] = False
+                                diagnostics["nodes_expanded"] = nodes
+                                diagnostics["termination_reason"] = "plan_found"
+                                diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
+                                diagnostics["used_goal_energy_search"] = True
+                                diagnostics["initial_goal_energy"] = initial_energy
+                                diagnostics["min_goal_energy_observed"] = min_energy
+                                diagnostics["engine_guard_trips"] = engine_guard_trips
+                                _record_req_10013_diagnostics()
+                            return npath
+                    except EngineCallGuardError:
+                        engine_guard_trips += 1
+                        if engine_guard_trips >= engine_guard_trip_limit:
+                            engine_guard_abort = True
+                            break
+                        continue
+                    except Exception:
+                        pass
                 key = _dedup_key(ng)
                 if key in seen:
                     if unmasked_seen is not None:
@@ -9481,31 +9524,29 @@ def plan_in_model(
                 seen.add(key)
                 if unmasked_seen is not None:
                     unmasked_seen.add(_state_key(ng))
-                npath = path + [c]
-                try:
-                    if bool(guarded_call(is_level_complete, ng)):
-                        if diagnostics is not None:
-                            diagnostics["is_level_complete_was_none"] = False
-                            diagnostics["nodes_expanded"] = nodes
-                            diagnostics["termination_reason"] = "plan_found"
-                            diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
-                            diagnostics["used_goal_energy_search"] = True
-                            diagnostics["initial_goal_energy"] = initial_energy
-                            diagnostics["min_goal_energy_observed"] = min_energy
-                            diagnostics["engine_guard_trips"] = engine_guard_trips
-                            _record_req_10013_diagnostics()
-                        return npath
-                except EngineCallGuardError:
-                    # The goal predicate is generated too, so it carries the same
-                    # hang exposure. Unlike the plain-exception `pass`, skip the
-                    # state: pushing it would only re-run the hang on every pop.
-                    engine_guard_trips += 1
-                    if engine_guard_trips >= engine_guard_trip_limit:
-                        engine_guard_abort = True
-                        break
-                    continue
-                except Exception:
-                    pass
+                if effective_dedup_mask is None:
+                    try:
+                        if bool(guarded_call(is_level_complete, ng)):
+                            if diagnostics is not None:
+                                diagnostics["is_level_complete_was_none"] = False
+                                diagnostics["nodes_expanded"] = nodes
+                                diagnostics["termination_reason"] = "plan_found"
+                                diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
+                                diagnostics["used_goal_energy_search"] = True
+                                diagnostics["initial_goal_energy"] = initial_energy
+                                diagnostics["min_goal_energy_observed"] = min_energy
+                                diagnostics["engine_guard_trips"] = engine_guard_trips
+                                _record_req_10013_diagnostics()
+                            return npath
+                    except EngineCallGuardError:
+                        # A hanging goal predicate cannot safely remain in the frontier.
+                        engine_guard_trips += 1
+                        if engine_guard_trips >= engine_guard_trip_limit:
+                            engine_guard_abort = True
+                            break
+                        continue
+                    except Exception:
+                        pass
                 ng_energy = _h(ng)
                 if ng_energy < min_energy:
                     min_energy = ng_energy
@@ -9559,6 +9600,27 @@ def plan_in_model(
             nodes += 1
             if ng.shape != start.shape:
                 continue
+            npath = path + [c]
+            if effective_dedup_mask is not None:
+                try:
+                    if bool(guarded_call(is_level_complete, ng)):
+                        if diagnostics is not None:
+                            diagnostics["is_level_complete_was_none"] = False
+                            diagnostics["nodes_expanded"] = nodes
+                            diagnostics["termination_reason"] = "plan_found"
+                            diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
+                            diagnostics["used_goal_energy_search"] = False
+                            diagnostics["engine_guard_trips"] = engine_guard_trips
+                            _record_req_10013_diagnostics()
+                        return npath
+                except EngineCallGuardError:
+                    engine_guard_trips += 1
+                    if engine_guard_trips >= engine_guard_trip_limit:
+                        engine_guard_abort = True
+                        break
+                    continue
+                except Exception:
+                    pass
             key = _dedup_key(ng)
             if key in seen:
                 if unmasked_seen is not None:
@@ -9570,27 +9632,27 @@ def plan_in_model(
             seen.add(key)
             if unmasked_seen is not None:
                 unmasked_seen.add(_state_key(ng))
-            npath = path + [c]
-            try:
-                if bool(guarded_call(is_level_complete, ng)):
-                    if diagnostics is not None:
-                        diagnostics["is_level_complete_was_none"] = False
-                        diagnostics["nodes_expanded"] = nodes
-                        diagnostics["termination_reason"] = "plan_found"
-                        diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
-                        diagnostics["used_goal_energy_search"] = False
-                        diagnostics["engine_guard_trips"] = engine_guard_trips
-                        _record_req_10013_diagnostics()
-                    return npath
-            except EngineCallGuardError:
-                # Same trip policy as the goal-energy branch above.
-                engine_guard_trips += 1
-                if engine_guard_trips >= engine_guard_trip_limit:
-                    engine_guard_abort = True
-                    break
-                continue
-            except Exception:
-                pass
+            if effective_dedup_mask is None:
+                try:
+                    if bool(guarded_call(is_level_complete, ng)):
+                        if diagnostics is not None:
+                            diagnostics["is_level_complete_was_none"] = False
+                            diagnostics["nodes_expanded"] = nodes
+                            diagnostics["termination_reason"] = "plan_found"
+                            diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
+                            diagnostics["used_goal_energy_search"] = False
+                            diagnostics["engine_guard_trips"] = engine_guard_trips
+                            _record_req_10013_diagnostics()
+                        return npath
+                except EngineCallGuardError:
+                    # Same trip policy as the goal-energy branch above.
+                    engine_guard_trips += 1
+                    if engine_guard_trips >= engine_guard_trip_limit:
+                        engine_guard_abort = True
+                        break
+                    continue
+                except Exception:
+                    pass
             q.append((ng, npath))
         if engine_guard_abort:
             break

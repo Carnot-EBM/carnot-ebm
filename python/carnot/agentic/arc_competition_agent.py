@@ -6443,6 +6443,21 @@ class E3AgentPolicy:
             param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
         )
 
+    @staticmethod
+    def _planner_accepts_goal_tiebreak(plan_in_model) -> bool:
+        """REQ-ARC-WMTE-10013 accepts explicit scored-wrapper tie-breaking."""
+        import inspect
+
+        try:
+            signature = inspect.signature(plan_in_model)
+        except (TypeError, ValueError):
+            return True
+        if "goal_tiebreak" in signature.parameters:
+            return True
+        return any(
+            param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
+        )
+
     def _call_plan_in_model(
         self,
         plan_in_model,
@@ -6483,6 +6498,14 @@ class E3AgentPolicy:
             kwargs["diagnostics"] = diagnostics
         from carnot.agentic import arc_executable_world_model as _e3
 
+        goal_tiebreak = _e3.plan_goal_tiebreak_mode()
+        if (
+            goal_energy is not None
+            and goal_tiebreak is not None
+            and self._planner_accepts_goal_tiebreak(plan_in_model)
+        ):
+            kwargs["goal_tiebreak"] = goal_tiebreak
+        mask_forwarded = False
         if _e3.plan_hud_dedup_enabled():
             mask, mask_reason = self._world_model_hud_mask(enabled=True)
             if diagnostics is not None:
@@ -6500,9 +6523,16 @@ class E3AgentPolicy:
                 clean = _e3.hud_mask_swallow_clean(swallow)
                 if diagnostics is not None:
                     diagnostics["planner_hud_dedup_swallow"] = swallow
-                    diagnostics["planner_hud_dedup_mask_status"] = "applied" if clean else "refused"
-                if clean and self._planner_accepts_dedup_mask(plan_in_model):
-                    kwargs["dedup_mask"] = mask
+                    diagnostics["planner_hud_dedup_mask_status"] = "pending" if clean else "refused"
+                if clean:
+                    if self._planner_accepts_dedup_mask(plan_in_model):
+                        kwargs["dedup_mask"] = mask
+                        mask_forwarded = True
+                    elif diagnostics is not None:
+                        diagnostics["hud_dedup_mask_status"] = "not_used"
+                        diagnostics["hud_dedup_mask_reason"] = "not_accepted"
+                        diagnostics["planner_hud_dedup_mask_status"] = "not_used"
+                        diagnostics["planner_hud_dedup_planner_reason"] = "not_accepted"
         # DEV-ONLY diagnostic override (REQ-ARC-FCP-5699-15 follow-up): unset in production, so
         # this changes nothing by default. Lets an A/B/diagnostic script raise plan_in_model's
         # search budget past its 20000-node default without editing production call sites.
@@ -6515,17 +6545,25 @@ class E3AgentPolicy:
             arc_decision_telemetry.NOOP_RECORDER,
         )
         if not decision_telemetry.enabled:
-            return plan_in_model(engine, is_done, start_grid, **kwargs)
-        import time as _time
+            plan = plan_in_model(engine, is_done, start_grid, **kwargs)
+        else:
+            import time as _time
 
-        started = _time.perf_counter()
-        plan = plan_in_model(engine, is_done, start_grid, **kwargs)
-        decision_telemetry.record_planner_invocation(
-            self,
-            engine,
-            plan,
-            _time.perf_counter() - started,
-        )
+            started = _time.perf_counter()
+            plan = plan_in_model(engine, is_done, start_grid, **kwargs)
+            decision_telemetry.record_planner_invocation(
+                self,
+                engine,
+                plan,
+                _time.perf_counter() - started,
+            )
+        if mask_forwarded and diagnostics is not None:
+            planner_status = str(diagnostics.get("hud_dedup_mask_status") or "not_used")
+            planner_reason = str(diagnostics.get("hud_dedup_mask_reason") or "not_reported")
+            diagnostics["planner_hud_dedup_mask_status"] = (
+                "applied" if planner_status == "applied" else "not_used"
+            )
+            diagnostics["planner_hud_dedup_planner_reason"] = planner_reason
         return plan
 
     def _guided_plan_in_model(self, plan_in_model):

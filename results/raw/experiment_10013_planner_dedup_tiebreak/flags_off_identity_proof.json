@@ -1,11 +1,13 @@
 {
-  "baseline": "git HEAD:python/carnot/agentic/arc_executable_world_model.py",
+  "amendment": 1,
+  "baseline": "git main",
   "byte_identical": true,
   "comparison_fields": [
     "plan",
     "diagnostics",
     "engine_calls",
-    "goal_calls"
+    "goal_calls",
+    "wrapper_kwargs"
   ],
   "environment": {
     "CARNOT_ARC_PLAN_GOAL_TIEBREAK": "unset",
@@ -13,10 +15,15 @@
     "CUDA_VISIBLE_DEVICES": "",
     "JAX_PLATFORMS": "cpu"
   },
-  "fixture_count": 100,
+  "fixture_count": 300,
+  "planner_comparison_count": 300,
+  "planner_mismatches": [],
   "requirement_id": "REQ-ARC-WMTE-10013",
   "search_modes": [
     "blind_fifo",
-    "binary_goal_energy"
-  ]
+    "binary_goal_energy",
+    "graded_goal_energy"
+  ],
+  "wrapper_kwargs_comparison_count": 300,
+  "wrapper_kwargs_mismatches": []
 }

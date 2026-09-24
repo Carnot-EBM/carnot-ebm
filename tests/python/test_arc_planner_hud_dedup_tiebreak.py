@@ -95,6 +95,23 @@ def test_mask_merges_only_mask_cell_variants(monkeypatch) -> None:
     )
     assert masked_diag["hud_dedup_states_merged"] == 1
     assert masked_diag["nodes_expanded"] < unmasked_diag["nodes_expanded"]
+    assert masked_diag["hud_dedup_mask_status"] == "applied"
+    assert masked_diag["hud_dedup_mask_reason"] == "accepted"
+
+
+def test_shape_incompatible_mask_is_truthfully_diagnosed(monkeypatch) -> None:
+    """SCENARIO-ARC-WMTE-10013-AM1-TRUTHFUL-STATUS rejects wrong shapes."""
+    monkeypatch.setattr(e3, "_model_candidates", lambda _grid: [])
+    diagnostics: dict[str, object] = {}
+    e3.plan_in_model(
+        lambda grid, _action, _data: grid,
+        lambda _grid: False,
+        np.zeros((1, 2), dtype=np.int16),
+        diagnostics=diagnostics,
+        dedup_mask=np.zeros((2, 2), dtype=bool),
+    )
+    assert diagnostics["hud_dedup_mask_status"] == "not_used"
+    assert diagnostics["hud_dedup_mask_reason"] == "shape_mismatch"
 
 
 def test_goal_and_engine_still_receive_full_masked_cells(monkeypatch) -> None:
@@ -123,6 +140,34 @@ def test_goal_and_engine_still_receive_full_masked_cells(monkeypatch) -> None:
     assert int(goal_inputs[0][0, 1]) == 7
 
 
+def test_masked_duplicate_goal_is_checked_before_skip(monkeypatch) -> None:
+    """SCENARIO-ARC-WMTE-10013-AM1-GOAL-BEFORE-DEDUP keeps HUD goals."""
+    monkeypatch.setattr(e3, "_model_candidates", lambda _grid: [_candidate(1)])
+
+    def engine(grid, _action, _data):
+        out = np.asarray(grid).copy()
+        out[0, 0] = (int(out[0, 0]) + 1) % 3
+        out[0, 1] += 1
+        return out
+
+    goal = lambda grid: int(grid[0, 1]) == 3
+    root = np.zeros((1, 2), dtype=np.int16)
+    expected = [_candidate(1)] * 3
+    unmasked = e3.plan_in_model(engine, goal, root, goal_energy=lambda _grid: 1.0)
+    diagnostics: dict[str, object] = {}
+    masked = e3.plan_in_model(
+        engine,
+        goal,
+        root,
+        goal_energy=lambda _grid: 1.0,
+        diagnostics=diagnostics,
+        dedup_mask=np.array([[False, True]]),
+    )
+    assert unmasked == expected
+    assert masked == expected
+    assert diagnostics["termination_reason"] == "plan_found"
+
+
 def test_novelty_tiebreak_prefers_more_changed_non_hud_cells(monkeypatch) -> None:
     """SCENARIO-ARC-WMTE-10013-NOVELTY-ORDER prefers greater novelty."""
     monkeypatch.setattr(e3, "_model_candidates", lambda _grid: [_candidate(1), _candidate(2)])
@@ -137,7 +182,6 @@ def test_novelty_tiebreak_prefers_more_changed_non_hud_cells(monkeypatch) -> Non
             return np.array([[9, 1, 0, 0]])
         return np.array([[2, 0, 0, 0]])
 
-    monkeypatch.delenv("CARNOT_ARC_PLAN_GOAL_TIEBREAK", raising=False)
     fifo_plan = e3.plan_in_model(
         engine,
         lambda grid: int(grid[0, 0]) == 9,
@@ -148,7 +192,6 @@ def test_novelty_tiebreak_prefers_more_changed_non_hud_cells(monkeypatch) -> Non
     )
     assert fifo_plan == [_candidate(1), _candidate(1)]
 
-    monkeypatch.setenv("CARNOT_ARC_PLAN_GOAL_TIEBREAK", "novelty")
     diagnostics: dict[str, object] = {}
     plan = e3.plan_in_model(
         engine,
@@ -158,6 +201,7 @@ def test_novelty_tiebreak_prefers_more_changed_non_hud_cells(monkeypatch) -> Non
         goal_energy=lambda _grid: 1.0,
         diagnostics=diagnostics,
         dedup_mask=np.array([[False, False, True, True]]),
+        goal_tiebreak="novelty",
     )
     assert plan == [_candidate(2), _candidate(1)]
     assert diagnostics["goal_tiebreak_mode"] == "novelty"
@@ -166,7 +210,6 @@ def test_novelty_tiebreak_prefers_more_changed_non_hud_cells(monkeypatch) -> Non
 
 def test_novelty_tiebreak_uses_insertion_order_as_tertiary_key(monkeypatch) -> None:
     """SCENARIO-ARC-WMTE-10013-NOVELTY-ORDER is deterministic on equal novelty."""
-    monkeypatch.setenv("CARNOT_ARC_PLAN_GOAL_TIEBREAK", "novelty")
     monkeypatch.setattr(e3, "_model_candidates", lambda _grid: [_candidate(1), _candidate(2)])
 
     def engine(grid, action, _data):
@@ -184,6 +227,7 @@ def test_novelty_tiebreak_uses_insertion_order_as_tertiary_key(monkeypatch) -> N
             np.zeros((1, 2), dtype=np.int16),
             max_nodes=20,
             goal_energy=lambda _grid: 1.0,
+            goal_tiebreak="novelty",
         )
         for _ in range(3)
     ]
@@ -207,10 +251,37 @@ def test_tiebreak_flag_does_not_change_blind_fifo_branch(monkeypatch) -> None:
         np.zeros((1, 1), dtype=np.int16),
         max_nodes=20,
         diagnostics=diagnostics,
+        goal_tiebreak="novelty",
     )
     assert plan == [_candidate(1), _candidate(2)]
     assert diagnostics["used_goal_energy_search"] is False
     assert "goal_tiebreak_mode" not in diagnostics
+
+
+def test_direct_caller_default_ignores_tiebreak_environment(monkeypatch) -> None:
+    """SCENARIO-ARC-WMTE-10013-AM1-TIEBREAK-SCOPE keeps direct defaults."""
+    monkeypatch.setenv("CARNOT_ARC_PLAN_GOAL_TIEBREAK", "novelty")
+    monkeypatch.setattr(e3, "_model_candidates", lambda _grid: [_candidate(1), _candidate(2)])
+
+    def engine(grid, action, _data):
+        state = tuple(int(value) for value in np.asarray(grid).flat)
+        if state == (0, 0, 0, 0):
+            return np.array([[1, 0, 7, 7] if action == 1 else [1, 1, 0, 0]])
+        if state == (1, 0, 7, 7):
+            return np.array([[9, 0, 7, 7]])
+        if state == (1, 1, 0, 0):
+            return np.array([[9, 1, 0, 0]])
+        return np.array([[2, 0, 0, 0]])
+
+    plan = e3.plan_in_model(
+        engine,
+        lambda grid: int(grid[0, 0]) == 9,
+        np.zeros((1, 4), dtype=np.int16),
+        max_nodes=20,
+        goal_energy=lambda _grid: 1.0,
+        dedup_mask=np.array([[False, False, True, True]]),
+    )
+    assert plan == [_candidate(1), _candidate(1)]
 
 
 def _bare_policy(mask: np.ndarray, transitions: list[e3.Transition]):
@@ -251,6 +322,7 @@ def test_wrapper_does_not_read_or_pass_mask_when_flag_is_off(monkeypatch) -> Non
         == []
     )
     assert "dedup_mask" not in captured
+    assert "goal_tiebreak" not in captured
 
 
 def test_wrapper_passes_only_a_swallow_clean_mask(monkeypatch) -> None:
@@ -263,12 +335,58 @@ def test_wrapper_passes_only_a_swallow_clean_mask(monkeypatch) -> None:
     clean_mask = np.zeros((2, 3), dtype=bool)
     clean_mask[1, :] = True
     policy = _bare_policy(clean_mask, [_transition(before, after)])
-    captured: dict[str, object] = {}
+    diagnostics: dict[str, object] = {}
+    monkeypatch.setattr(e3, "_model_candidates", lambda _grid: [])
+
+    policy._call_plan_in_model(
+        e3.plan_in_model,
+        lambda grid, _action, _data: grid,
+        lambda _grid: False,
+        before,
+        diagnostics=diagnostics,
+        goal_energy_override=lambda _grid: 1.0,
+    )
+    assert diagnostics["planner_hud_dedup_mask_status"] == "applied"
+    assert diagnostics["planner_hud_dedup_planner_reason"] == "accepted"
+    assert diagnostics["planner_hud_dedup_swallow"]["reason"] == "ok"
+
+
+def test_wrapper_copies_shape_mismatch_from_planner(monkeypatch) -> None:
+    """SCENARIO-ARC-WMTE-10013-AM1-TRUTHFUL-STATUS copies shape refusal."""
+    monkeypatch.setenv("CARNOT_ARC_PLAN_HUD_DEDUP", "1")
+    before = np.zeros((2, 3), dtype=np.int16)
+    after = before.copy()
+    after[0, 0] = 4
+    clean_mask = np.zeros((2, 3), dtype=bool)
+    clean_mask[1, :] = True
+    policy = _bare_policy(clean_mask, [_transition(before, after)])
+    diagnostics: dict[str, object] = {}
+    monkeypatch.setattr(e3, "_model_candidates", lambda _grid: [])
+
+    policy._call_plan_in_model(
+        e3.plan_in_model,
+        lambda grid, _action, _data: grid,
+        lambda _grid: False,
+        np.zeros((1, 3), dtype=np.int16),
+        diagnostics=diagnostics,
+        goal_energy_override=lambda _grid: 1.0,
+    )
+    assert diagnostics["planner_hud_dedup_mask_status"] == "not_used"
+    assert diagnostics["planner_hud_dedup_planner_reason"] == "shape_mismatch"
+
+
+def test_wrapper_reports_mask_keyword_not_accepted(monkeypatch) -> None:
+    """SCENARIO-ARC-WMTE-10013-AM1-TRUTHFUL-STATUS reports old callees."""
+    monkeypatch.setenv("CARNOT_ARC_PLAN_HUD_DEDUP", "1")
+    before = np.zeros((2, 3), dtype=np.int16)
+    after = before.copy()
+    after[0, 0] = 4
+    clean_mask = np.zeros((2, 3), dtype=bool)
+    clean_mask[1, :] = True
+    policy = _bare_policy(clean_mask, [_transition(before, after)])
     diagnostics: dict[str, object] = {}
 
-    def planner(_engine, _goal, _grid, *, dedup_mask=None, **kwargs):
-        captured["dedup_mask"] = dedup_mask
-        captured.update(kwargs)
+    def planner(_engine, _goal, _grid, *, diagnostics=None, goal_energy=None):
         return []
 
     policy._call_plan_in_model(
@@ -279,9 +397,29 @@ def test_wrapper_passes_only_a_swallow_clean_mask(monkeypatch) -> None:
         diagnostics=diagnostics,
         goal_energy_override=lambda _grid: 1.0,
     )
-    assert np.array_equal(captured["dedup_mask"], clean_mask)
-    assert diagnostics["planner_hud_dedup_mask_status"] == "applied"
-    assert diagnostics["planner_hud_dedup_swallow"]["reason"] == "ok"
+    assert diagnostics["planner_hud_dedup_mask_status"] == "not_used"
+    assert diagnostics["planner_hud_dedup_planner_reason"] == "not_accepted"
+
+
+def test_wrapper_passes_tiebreak_explicitly(monkeypatch) -> None:
+    """SCENARIO-ARC-WMTE-10013-AM1-TIEBREAK-SCOPE passes novelty explicitly."""
+    monkeypatch.setenv("CARNOT_ARC_PLAN_GOAL_TIEBREAK", "novelty")
+    monkeypatch.delenv("CARNOT_ARC_PLAN_HUD_DEDUP", raising=False)
+    policy = _bare_policy(np.zeros((1, 1), dtype=bool), [])
+    captured: dict[str, object] = {}
+
+    def planner(_engine, _goal, _grid, **kwargs):
+        captured.update(kwargs)
+        return []
+
+    policy._call_plan_in_model(
+        planner,
+        object(),
+        lambda _grid: False,
+        np.zeros((1, 1), dtype=np.int16),
+        goal_energy_override=lambda _grid: 1.0,
+    )
+    assert captured["goal_tiebreak"] == "novelty"
 
 
 def test_wrapper_refuses_a_mask_that_swallows_game_cells(monkeypatch) -> None:

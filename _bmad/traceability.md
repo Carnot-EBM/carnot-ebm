@@ -13,13 +13,17 @@ on absent external evidence, and `scripts/research_conductor.py` is unchanged.
 `CARNOT_ARC_PLAN_HUD_DEDUP` and `CARNOT_ARC_PLAN_GOAL_TIEBREAK=novelty`
 planner controls to `arc_executable_world_model.py`, the swallow-guarded live
 wrapper to `arc_competition_agent.py`, and the frozen CPU measurement to
-`experiment_10013_planner_dedup_tiebreak.py` plus 17 focused tests. The 231-row
-artifact reports primary EXPERT wins of 5/10 OFF, 7/10 HUD, and 7/10
-HUD+novelty. `dc22` converts in both enabled arms; `wa30` and `sb26` do not.
-There are zero OFF-to-ON regressions. Main candidate USEFUL/waste results are
-1/118, 2/24, and 2/26. A 100-fixture Git-HEAD differential preserves flags-off
-plans, diagnostics, and call counts exactly, and adversarial verification finds
-zero flags. No live default or 20,000-call configured budget changed.
+`experiment_10013_planner_dedup_tiebreak.py` plus 27 focused tests. Amendment 1
+moves masked goal checks before duplicate rejection, makes mask-use diagnostics
+truthful, and scopes novelty to an explicit scored-wrapper argument. Its 231-row,
+18-window live-mask replay reports primary EXPERT wins/calls of 5/10 and 122,625
+OFF versus 6/10 and 104,873 HUD; the secondary novelty arm is 6/10 and 75,063.
+`dc22` converts only in enabled arms; `wa30`, `sb26`, and live-mask `ar25` do not.
+There are zero OFF-to-ON regressions, and HUD preserves all OFF-winner plan/action
+lengths. Main all-row useful/waste is 6/118 OFF versus 7/88 HUD. A 300-fixture
+main differential preserves flags-off plans, counts, diagnostics, and wrapper
+kwargs exactly; adversarial verification finds zero flags. Both controls remain
+OFF pending a larger held-out set, and novelty remains specifically rejected.
 **Operational Note:** 2026-09-24 REQ-REPORT-7626 maps the shared durable Rust
 recalibration core, thin JSONL binary, and direct PyO3 class to
 `python/carnot/experiment_7626_v665_native_service.py` and its 13 focused tests.

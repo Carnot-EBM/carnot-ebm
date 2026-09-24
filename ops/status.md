@@ -22,6 +22,12 @@
 - No tests were skipped, weakened, deleted, or reverted. Production defaults and
   `scripts/research_conductor.py` are unchanged.
 
+## 2026-09-24 — Planner dedup made safe and measured through the scored wrapper; still off
+- Expert wins 5/10 -> 6/10 (dc22) with HUD dedup through the live path; ar25 does not win with its
+  live mask. No efficiency regression on current winners; mixed wall time. Both flags stay off.
+- Next lever if wanted: deeper search for long wins (wa30 needs 33 actions). Flag-on fixes are in
+  the spec's REVIEW RECORD 2.
+
 ## 2026-09-24 — Planner fix merged default-off; not ready to enable
 - REQ-ARC-WMTE-10013: HUD-masked planner dedup and a goal tie-break, both default OFF. HUD dedup
   converts dc22 (expert wins 5/10 -> 6/10 live-relevant); the tie-break lengthens plans and should

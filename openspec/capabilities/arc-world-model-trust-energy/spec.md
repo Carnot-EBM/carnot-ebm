@@ -36571,6 +36571,124 @@ identical to the parent). Corrections and prerequisites before either flag may b
   mask; plan-length and real-action comparison on OFF winners; harm accounting that includes controls;
   a wall-time check on the scored per-game budget; a larger held-out set than 10 expert windows.
 
+#### AMENDMENT 1 (2026-09-24; pre-registered before corrective implementation and remeasurement)
+
+Before either runtime control may be enabled, HUD-masked search SHALL test every generated candidate
+with `is_level_complete` on the full, unmodified logical grid before rejecting a duplicate masked key.
+When no valid mask is active, the existing duplicate-admission and goal-check order SHALL remain
+unchanged so the flags-off planner path stays byte-identical. Planner diagnostics SHALL report whether
+the supplied mask was actually used and, when it was not, a reason such as `shape_mismatch` or
+`not_accepted`. The scored wrapper SHALL copy this planner result into
+`planner_hud_dedup_mask_status`; it SHALL say `applied` only when the planner used the mask.
+
+The `CARNOT_ARC_PLAN_GOAL_TIEBREAK` environment read SHALL move from `plan_in_model` into
+`E3AgentPolicy._call_plan_in_model`. The wrapper SHALL translate `novelty` into an explicit planner
+argument. The planner argument's default SHALL preserve the current behavior for every non-wrapper
+caller, including when the environment variable is set.
+
+The corrective Experiment 10013 run SHALL reconstruct the mask held by the scored live explorer at
+each induction window in the Experiment 10012 main cohort and all appendices. It SHALL replay the
+recorded live frames and the same action traces used by Experiment 10012 through
+`_compute_hud_mask_from_frame` and the production Stage 2 edge-bar confirmation logic in
+`arc_competition_agent.py`; it SHALL not substitute the earlier one-frame harness recomputation. Each
+window SHALL record live mask size, Stage 2 status, and whether the live mask differs from the original
+10013 harness mask.
+
+Planning SHALL enter through `E3AgentPolicy._call_plan_in_model`, including the wrapper's swallow
+check and diagnostics. If the experiment uses a minimal policy stub, its attributes SHALL be limited to
+those read by that real wrapper, documented in the artifact, and a test SHALL prove that stub and real
+instances pass identical arguments to `plan_in_model`. Execution SHALL retain `LIVE_SCORED`
+semantics: rebuild the reset board after a RESET stall induction, play the complete returned plan, and
+continue after prediction divergence.
+
+The fixed primary comparison SHALL be `OFF` against `HUD_DEDUP`. `HUD_DEDUP+TIEBREAK` MAY remain
+only as a clearly labelled secondary arm and SHALL not support enabling the tie-break. For every main
+and appendix window, the artifact SHALL retain the scored wrapper diagnostics, real plan length, real
+actions, planner engine calls, and planner wall time including the wrapper swallow check. The report
+SHALL name `dc22`, `wa30`, `sb26`, and `ar25`; give expert wins and calls per arm; list every OFF winner
+with its per-arm plan length and real actions; fail the regression guard if any OFF winner loses; include
+controls in harm accounting; and report mean plus worst per-window wall time for each arm. The terminal
+artifact SHALL replace `results/experiment_10013_planner_dedup_tiebreak.json`; the prior artifact SHALL
+first be preserved at
+`results/raw/experiment_10013_planner_dedup_tiebreak/v1_harness_mask_artifact.json` and the replacement
+SHALL pass `scripts/adversarial_verify.py`.
+
+#### SCENARIO-ARC-WMTE-10013-AM1-GOAL-BEFORE-DEDUP
+
+- **GIVEN** a goal predicate that reads a masked HUD counter and a candidate whose masked key was seen
+- **WHEN** unmasked search finds the reviewer's three-step plan and HUD deduplication is active
+- **THEN** the full candidate is checked for completion before the duplicate skip and the same plan wins
+- **AND** a search without an active mask retains its existing operation and diagnostics bytes.
+
+#### SCENARIO-ARC-WMTE-10013-AM1-TRUTHFUL-STATUS
+
+- **GIVEN** an accepted mask, a shape-incompatible mask, or a planner that rejects the mask keyword
+- **WHEN** the scored wrapper completes its planner call
+- **THEN** `planner_hud_dedup_mask_status` is `applied` only for the mask actually used
+- **AND** every refusal copies the planner's diagnostic reason without claiming application.
+
+#### SCENARIO-ARC-WMTE-10013-AM1-TIEBREAK-SCOPE
+
+- **GIVEN** the novelty environment control is set
+- **WHEN** the scored wrapper and a direct non-wrapper caller invoke `plan_in_model`
+- **THEN** only the wrapper passes the explicit novelty argument
+- **AND** the direct caller's default behavior stays unchanged.
+
+#### SCENARIO-ARC-WMTE-10013-AM1-LIVE-MASK-REPLAY
+
+- **GIVEN** a recorded induction trace containing frames before and after Stage 2 confirmation
+- **WHEN** the experiment replays it through the production explorer mask logic
+- **THEN** its recorded mask and Stage 2 status equal the live explorer's values at induction
+- **AND** the artifact compares that mask with the original 10013 harness mask per window.
+
+#### SCENARIO-ARC-WMTE-10013-AM1-SCORED-PATH
+
+- **GIVEN** equivalent real and documented minimal policy instances
+- **WHEN** their inherited scored wrapper invokes a captured planner
+- **THEN** they pass identical planner arguments and expose identical mask diagnostics
+- **AND** measured wall time covers mask guarding and planner invocation together.
+
+Amendment 1 implementation and measurement status: pre-registered, then implemented and measured on
+2026-09-24. The scored-wrapper run contains 231 rows and 18 live-mask replay records. Live masks
+differed from the v1 harness on three windows: main `ar25` was 63 versus 127 cells after Stage 2
+refused the repair-added edge, appendix `ar25` was 63 versus 127 while Stage 2 was pending, and
+appendix `lp85` was unmasked versus 64 cells while Stage 2 was pending. The other 15 masks matched.
+
+Primary EXPERT wins and aggregate calls were 5/10 and 122,625 for `OFF`, versus 6/10 and 104,873
+for `HUD_DEDUP`. The labelled secondary `HUD_DEDUP+TIEBREAK` arm was also 6/10 at 75,063 calls.
+`dc22` changed from no win at 20,017 calls to a HUD win at 4,333 calls; `wa30`, `sb26`, and `ar25`
+remained non-wins under HUD at 20,001, 20,025, and 20,014 calls. No OFF winner regressed, and HUD
+preserved the plan length and real-action count of every OFF winner. In the main cohort including
+controls, useful/wasted-action counts were 6/118, 7/88, and 8/227. Mean and worst scored-wrapper
+wall seconds over 77 calls were 1.724256/44.785852, 1.731759/43.604437, and
+1.656520/47.149030. The terminal artifact passed adversarial verification with zero flags.
+
+Both runtime controls remain default OFF. HUD deduplication has favorable calls, one additional
+expert win, no OFF-winner action regression, and lower main waste, but the ten-window primary set is
+still too small for enablement and three live masks disproved v1 mask parity. Novelty produced no
+additional expert win and lengthened winning plans, so it remains specifically recommended OFF.
+
+#### REVIEW RECORD 2 (2026-09-24, amendment 1 review; append-only)
+
+Merged with both flags OFF; flags-off planner and wrapper behaviour matched main on 400 + 400
+independent fixtures. Flag-on issues to fix before enabling HUD_DEDUP:
+
+- A goal-predicate guard trip on a masked duplicate `continue`s before `seen.add(key)`, so a hanging
+  predicate is re-run on every masked duplicate and can reach the trip limit and abort the search.
+  Fix: add the key to `seen` (or a tripped-keys set) before continuing. The extra goal call per
+  duplicate also fits the measured wa30 slowdown (8.4 to 20.1 s).
+- Goal-before-skip can return a longer plan than main's masked search in best-first mode (5 of 150
+  fuzz seeds); never longer in BFS mode. "HUD preserves every OFF winner's plan length" holds for
+  the measured windows only.
+- CORRECTION to AMENDMENT 1's tie-break paragraph: moving the env read into the wrapper means a
+  non-wrapper caller no longer gets the novelty tie-break when CARNOT_ARC_PLAN_GOAL_TIEBREAK is set
+  (it did on main). SCENARIO-AM1-TIEBREAK-SCOPE and its test describe this behaviour correctly; the
+  paragraph's "including when the environment variable is set" is wrong.
+- Wrapper status: stays 'pending' if the planner raises; a reused diagnostics dict could carry a
+  stale 'applied' (all current call sites pass a fresh dict).
+- The scored-path measurement covered the default binary goal energy only (graded and novelty goal
+  bias, and a non-None two-sided goal contract, were not exercised).
+
 
 ## V663 ARC output-boundary repair and observable alias audit — 2026-09-24
 
