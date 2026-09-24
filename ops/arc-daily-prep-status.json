@@ -55,5 +55,11 @@
       "what_changed_vs_prior_submission": "One fix, commit 1086c7e7cc: the scored kernel now sets CARNOT_ARC_E3_DIR to a writable path. E3_DIR defaulted to REPO/results/arc_e3 with REPO derived from __file__, which on Kaggle resolves inside the read-only dataset mount, so EVERY induction raised OSError(30, 'Read-only file system') at the persist step -- AFTER the LLM had generated the full world model (310k-485k tokens per game, 99.8% of wall clock). The engine was discarded and each game played on with no world model. Measured on the Blackwell card over ar25/tr87/tu93, all three games, every attempt."
     }
   ],
-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 75"
+  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 75",
+  "submitted": true,
+  "submitted_at": "2026-09-24T11:52:11Z",
+  "submission_ref": 56520500,
+  "submission_status_at_check": "submitted (score pending)",
+  "local_gate_result_at_submit": "PASS (IMPROVED): solved 7/8, median actions/solve 1739, equal to baseline; bonus cd82, ft09, su15. Gate runs with induction disabled, so it does not measure the vLLM fix.",
+  "submission_note": "Kernel v75: first submission with REQ-ARC-WMTE-10011 (vLLM answer-channel fix). Save-run confirmed --reasoning-parser qwen3 on vLLM 0.27.1, server_up=True in 445 s. The operator issued the submit command explicitly on 2026-09-24; the command as typed did not execute, so the outer loop ran it on that instruction."
 }
