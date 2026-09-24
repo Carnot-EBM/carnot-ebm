@@ -1,0 +1,87 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7610_v664_evidence_audit.py --root /home/ianblenke/github.com/ianblenke/carnot --date 20260924 --cold-replay /tmp/carnot-exp7610-0g_a8fyv/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7610_v664_evidence_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--date",
+        "20260924",
+        "--cold-replay",
+        "/tmp/carnot-exp7610-0g_a8fyv/terminal_candidate.json"
+      ],
+      "duration_s": 0.44919085400761105,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7610-0g_a8fyv/terminal_logs_exact/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:24740a995444b8e4dfe5a037b79816b8f266e5497eabc04817d91039410eb894",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"mode\": \"cold_replay\", \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7610_v664_evidence_audit.py --root /home/ianblenke/github.com/ianblenke/carnot --date 20260924 --independent-reduce /tmp/carnot-exp7610-0g_a8fyv/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7610_v664_evidence_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--date",
+        "20260924",
+        "--independent-reduce",
+        "/tmp/carnot-exp7610-0g_a8fyv/terminal_candidate.json"
+      ],
+      "duration_s": 0.43101581500377506,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7610-0g_a8fyv/terminal_logs_exact/01_independent_raw_reduction.log",
+      "log_sha256": "sha256:df3d8719824e88e2aae1e64dfc63a1f2880870f2f1d6b599db0c6f9b023dc511",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"mode\": \"independent_reduction\", \"row_count\": 8, \"source_count\": 47, \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7610-0g_a8fyv/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7610-0g_a8fyv/terminal_candidate.json"
+      ],
+      "duration_s": 0.5359217459918,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7610-0g_a8fyv/terminal_logs_exact/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7610-0g_a8fyv/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7610-0g_a8fyv/terminal_candidate.json"
+      ],
+      "duration_s": 0.026595352974254638,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7610-0g_a8fyv/terminal_logs_exact/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    }
+  ]
+}

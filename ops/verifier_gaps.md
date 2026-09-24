@@ -4970,3 +4970,23 @@ Source: `docs/research-notes/b2-positive-control-2026-09-23.md` (workflow `wf_1b
   This control is consistent with that null: the mask is necessary for a correct engine on these
   games, but the induced engines are far from correct (mean masked change fidelity 0.13).
 - open question: how many of the other public games carry a hidden-count HUD bar.
+
+### GAP-V664-EVIDENCE-SCHEMA-TRANSPORT-7610: evidence outputs miss the frozen vocabulary
+
+- **status:** open after the 2026-09-24 independent evidence audit.
+- **evidence:** Exp7604 completed eight pilot calls from authenticated Exp7602
+  inputs. All eight inputs passed exact text and byte-pointer checks. All eight
+  outputs failed with `evidence_output_value_invalid`. Exp7610 retained every
+  failed call in the denominator.
+- **failure mode:** the extractor emitted entity types such as `file_path` and
+  `error_message`. The frozen protocol accepts only `person`, `organization`,
+  `location`, `date`, `numeric`, `code`, `other`, and `none`.
+- **scientific limit:** this is a transport and schema failure. It does not show
+  that the eight evidence features lack incremental information. It also does
+  not show that guarded learning lacks benefit or retention.
+- **missing discriminator:** a schema-conforming semantic extractor that still
+  preserves unknowns and never converts pointer validity into semantic truth.
+- **candidate design:** state the complete entity vocabulary in the frozen
+  request. Re-run the eight-call pilot unchanged. Continue only if at least six
+  outputs pass without a permissive repair that hides invalid values.
+- **priority:** high for the V664 calibrated-decision branch.

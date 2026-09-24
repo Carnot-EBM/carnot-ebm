@@ -79154,3 +79154,103 @@ scientific branch and has no numbered runtime E2E.
 ### Implementation Status (REQ-REPORT-7601)
 
 Implemented by Experiment 7601 with scoped tests and terminal validation.
+
+## REQ-REPORT-7610: Audit V664 evidence and guarded learning independently
+
+Experiment 7610 SHALL run without structured pre-gates. It SHALL authenticate
+the current Experiment 7602 through 7609 producer paths. It SHALL distinguish
+terminal producers, conductor pre-gate records, invalid producers, flagged
+producers, and missing producers. Missing required evidence SHALL produce a
+`complete_blocked_*` verdict with class `blocked`. It SHALL never become a
+partial result or a scientific null.
+
+The audit SHALL retain valid sub-results when a later branch is unavailable.
+It SHALL independently rebuild source identities, text hashes, byte-pointer
+round trips, feature inputs, and evaluator-only label joins from authenticated
+raw sidecars. It SHALL retain every failed or capped row in its denominator.
+Semantic support SHALL remain a learned prediction. It SHALL not become an
+exact oracle claim.
+
+When static evaluation evidence is available, the audit SHALL independently
+recompute all eight evidence features, frozen probabilities, Brier losses,
+typed actions, realized costs, and source-cluster intervals. It SHALL not call
+a producer aggregate helper. Erased and legal deranged controls SHALL differ
+from the factual evidence arm where the protocol requires a difference.
+
+When guarded-learning evidence is available, the audit SHALL rebuild each arm
+from released events only. It SHALL verify prediction before release, disjoint
+update and admission roles, fixed fit-anchor provenance, evaluator denial,
+exactly-once updates, persistence, restart hash equality, and five-order source
+cluster intervals. Factual feedback SHALL beat its legal derangement before
+the audit can report causal learning benefit.
+
+The artifact SHALL keep information value, calibration, decision value,
+learning, retention, exposure, and complete cost conclusions separate. A
+fully measured no-information result SHALL retire only the exact eight-feature
+construction. Failed learning or retention SHALL retire only the exact guarded
+learner. A pre-inference block SHALL retire neither scientific hypothesis.
+
+The task SHALL use `aggregation_from_upstream_artifacts` with planned and
+actual class `aggregation`. It SHALL declare `MODEL_SPECS=[]`, no current model
+work, and separate zero counts for loads, forwards, generations, and tokens.
+It SHALL record monotonic duration, all stochastic seeds, source byte hashes,
+field principles, sample counts, per-unit rows, and exact validation receipts.
+
+Private mutations SHALL reject false metric signs, identical controls,
+excluded failed rows, wrong label roles, future-origin feedback, and a false
+positive verdict class. The affected-file manifest SHALL freeze the test,
+module, thin entrypoint, note, verifier-gap record, and this requirement.
+
+Validation SHALL use private paths below `/tmp`. It SHALL run focused serial
+pytest without ambient addopts, separate 100 percent changed-module coverage,
+scoped Ruff, changed-module mypy, and scoped specification coverage. The
+declared entrypoint, fresh-process cold replay, independent reduction,
+`scripts/adversarial_verify.py`, and strict row consistency SHALL accept the
+exact terminal candidate before atomic publication. Raw-to-report cold replay
+is the applicable read-only E2E. No numbered runtime E2E applies.
+
+### SCENARIO-REPORT-7610-MIXED-CUSTODY: Available rows survive a blocked branch
+
+**Given** authenticated pilot rows, conductor pre-gate records, and absent later producers
+**When** Experiment 7610 inventories and independently reduces the V664 chain
+**Then** the terminal verdict is blocked rather than partial or null
+**And** each available pilot unit retains its own audited row
+**And** every failed source check records both exact operands.
+
+### SCENARIO-REPORT-7610-STATIC: Raw evidence controls static claims
+
+**Given** authenticated complete static sidecars and separate evaluator labels
+**When** the audit rebuilds pointers, features, probabilities, losses, and decisions
+**Then** source groups own the independent count and failed rows remain included
+**And** erased and deranged controls must satisfy their registered differences
+**And** learned semantic support remains non-oracle evidence.
+
+### SCENARIO-REPORT-7610-ONLINE: Released events control learning claims
+
+**Given** authenticated guarded-learning logs across five registered orders
+**When** the audit reconstructs predictions, releases, updates, states, and retention
+**Then** update, admission, anchor, and evaluator roles stay disjoint
+**And** each accepted update occurs once after prediction and release
+**And** factual feedback must beat legal derangement for causal benefit.
+
+### SCENARIO-REPORT-7610-MUTATIONS: Private corruptions fail closed
+
+**Given** compact valid static and online fixtures
+**When** sign, control, denominator, role, future-origin, or verdict corruption occurs
+**Then** the applicable independent reader rejects the changed fixture
+**And** no rejected private bytes enter the published result.
+
+### SCENARIO-REPORT-7610-TERMINAL: Exact readers control publication
+
+**Given** a frozen affected manifest and exact terminal candidate
+**When** scoped checks, cold replay, independent reduction, and strict readers run
+**Then** every command exit and log hash is retained before atomic publication
+**And** worktree imports and 100 percent changed-module coverage pass
+**And** the result reports no current model call or production promotion.
+
+### Implementation Status (REQ-REPORT-7610)
+
+Implemented by the reusable Exp7610 reducer, thin CLI, requirement-linked
+tests, mixed source custody, private mutation panel, and strict terminal
+readers. The conductor owns later status, changelog, and traceability
+reconciliation.
