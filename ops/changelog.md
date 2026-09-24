@@ -20565,3 +20565,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Refine cross-game supervisor selection from actual redirect outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_firings_nothing_to_refine; results/experiment_7625_v665_arc_supervisor_transfer.json
 - 2026-09-24: Expose the durable recalibration core through a direct PyO3 call (⚠️ Research Finding) — honest_verdict=complete_null_native_service_protocol_ready; results/experiment_7626_v665_native_service.json
 - 2026-09-24: Measure direct native service cost and preserve board dispositions (✅ Complete) — honest_verdict=complete_positive_native_total_cost_gate_met; results/experiment_7627_v665_native_cost.json
+- 2026-09-24: Reconcile fourteen dispositions and select the next scientific question (⚠️ Blocked) — honest_verdict=complete_blocked_required_v665_external_evidence; results/experiment_7628_v665_capstone.json
