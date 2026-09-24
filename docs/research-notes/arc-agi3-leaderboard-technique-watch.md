@@ -360,3 +360,11 @@ CHECK_TIMED_OUT
 
 ## 2026-09-23 13:35 UTC -- checked, nothing new
 
+## 2026-09-24 13:38 UTC -- NEW
+
+- **New ARC Prize technique writeup — GPT‑6 Astra, separate from Kaggle:** Astra maintains dense symbolic notes encoding objects, coordinates, inferred rules, and unfinished plans. In PRO‑LONG it dynamically creates per-game parsers, state models, search/planning tools, and small software libraries. Its Provider Adapter preserves reasoning state between requests and compacts long contexts; at equal `max` effort this raised Semi‑Private performance from **62.7% to 98.6%**, while common solved runs were **3.66× faster** and used **49% fewer tokens**. This is not Kaggle-eligible evidence because it uses a proprietary provider harness. [ARC Prize writeup](https://arcprize.org/blog/astra)
+
+  **Classification:** General-purpose. It does not read game source or ship hardcoded game solutions; game-specific code is synthesized online from observations.
+
+  **POSSIBLE CARNOT LEVER:** Maintain a persistent per-game local-model session/KV state with automatic compaction, alongside Carnot’s explicit world-model files—the result suggests reasoning continuity can materially outperform reconstructing context every turn. OpenAI’s documentation confirms Astra supports persisted reasoning, compaction, and prompt caching. [OpenAI model guidance](https://developers.openai.com/api/docs/guides/latest-model)
+

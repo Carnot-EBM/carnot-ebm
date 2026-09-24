@@ -447,7 +447,9 @@ def _python_worker_command(root: Path) -> tuple[str, ...]:  # pragma: no cover
     )
 
 
-def _open_service(root: Path, arm: str, state: Path) -> Any:  # pragma: no cover
+def _open_service(
+    root: Path, arm: str, state: Path, *, telemetry_enabled: bool = False
+) -> Any:  # pragma: no cover
     if arm == "python_inprocess":
         return _InProcessService(state)
     started = time.perf_counter_ns()
@@ -462,6 +464,7 @@ def _open_service(root: Path, arm: str, state: Path) -> Any:  # pragma: no cover
             "PYTHONPATH": f"{root / 'python'}:{root}",
             "PYTHONUNBUFFERED": "1",
         },
+        telemetry_enabled=telemetry_enabled,
     )
     service.setup_ns = time.perf_counter_ns() - started
     return service

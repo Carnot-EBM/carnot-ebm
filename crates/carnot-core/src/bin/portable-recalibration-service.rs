@@ -21,6 +21,8 @@ const SOLVER_MAX_ITERATIONS: usize = 500;
 const RELEASE_BLOCK_SIZE: usize = 8;
 const STATE_SCHEMA: &str = "carnot.recalibration.sufficient_statistics.v1";
 const DURABILITY_POLICY: &str = "atomic_file_fsync_rename_directory_fsync_reload_ack";
+type StageDurations = BTreeMap<String, u64>;
+type DurableWriteReceipt = (usize, StageDurations, StageDurations);
 
 fn knots() -> [f64; KNOT_COUNT] {
     std::array::from_fn(|index| index as f64 / (KNOT_COUNT - 1) as f64)
@@ -145,6 +147,8 @@ struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
     state: Option<State>,
     stage_ns: BTreeMap<String, u64>,
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    exclusive_stage_ns: BTreeMap<String, u64>,
     kernel_ns: u64,
     durability_policy: &'static str,
 }
@@ -404,14 +408,20 @@ fn maybe_test_crash(stage: &str) {
     }
 }
 
-fn durable_write(path: &Path, state: &State) -> Result<(usize, BTreeMap<String, u64>), String> {
+fn durable_write(
+    path: &Path,
+    state: &State,
+    telemetry: bool,
+) -> Result<DurableWriteReceipt, String> {
     let parent = path
         .parent()
         .ok_or_else(|| "state_parent_missing".to_string())?;
     fs::create_dir_all(parent).map_err(|error| format!("state_parent_create_failed:{error}"))?;
+    let encoding_started = Instant::now();
     let mut encoded =
         serde_json::to_vec(state).map_err(|error| format!("state_json_encode_failed:{error}"))?;
     encoded.push(b'\n');
+    let encoding_ns = encoding_started.elapsed().as_nanos() as u64;
     let temporary = path.with_file_name(format!(
         ".{}.tmp-{}",
         path.file_name()
@@ -424,6 +434,10 @@ fn durable_write(path: &Path, state: &State) -> Result<(usize, BTreeMap<String, 
         ("fsync".to_string(), 0u64),
         ("rename".to_string(), 0u64),
     ]);
+    let mut exclusive = exclusive_stages(telemetry);
+    if telemetry {
+        exclusive.insert("encoding".to_string(), encoding_ns);
+    }
     let started = Instant::now();
     let mut file =
         File::create(&temporary).map_err(|error| format!("state_create_failed:{error}"))?;
@@ -436,6 +450,13 @@ fn durable_write(path: &Path, state: &State) -> Result<(usize, BTreeMap<String, 
         "write".to_string(),
         wrote.duration_since(started).as_nanos() as u64,
     );
+    if telemetry {
+        add_stage(
+            &mut exclusive,
+            "journal_write",
+            wrote.duration_since(started).as_nanos() as u64,
+        );
+    }
     file.sync_all()
         .map_err(|error| format!("state_fsync_failed:{error}"))?;
     let synced = Instant::now();
@@ -443,6 +464,13 @@ fn durable_write(path: &Path, state: &State) -> Result<(usize, BTreeMap<String, 
         "fsync".to_string(),
         synced.duration_since(wrote).as_nanos() as u64,
     );
+    if telemetry {
+        add_stage(
+            &mut exclusive,
+            "fsync",
+            synced.duration_since(wrote).as_nanos() as u64,
+        );
+    }
     drop(file);
     maybe_test_crash("before_rename");
     fs::rename(&temporary, path).map_err(|error| format!("state_rename_failed:{error}"))?;
@@ -451,6 +479,13 @@ fn durable_write(path: &Path, state: &State) -> Result<(usize, BTreeMap<String, 
         "rename".to_string(),
         renamed.duration_since(synced).as_nanos() as u64,
     );
+    if telemetry {
+        add_stage(
+            &mut exclusive,
+            "journal_write",
+            renamed.duration_since(synced).as_nanos() as u64,
+        );
+    }
     maybe_test_crash("after_rename");
     File::open(parent)
         .and_then(|directory| directory.sync_all())
@@ -458,7 +493,14 @@ fn durable_write(path: &Path, state: &State) -> Result<(usize, BTreeMap<String, 
     let directory_synced = Instant::now();
     *stages.entry("fsync".to_string()).or_default() +=
         directory_synced.duration_since(renamed).as_nanos() as u64;
-    Ok((encoded.len(), stages))
+    if telemetry {
+        add_stage(
+            &mut exclusive,
+            "fsync",
+            directory_synced.duration_since(renamed).as_nanos() as u64,
+        );
+    }
+    Ok((encoded.len(), stages, exclusive))
 }
 
 fn empty_stages() -> BTreeMap<String, u64> {
@@ -472,6 +514,27 @@ fn empty_stages() -> BTreeMap<String, u64> {
 
 fn add_stage(stages: &mut BTreeMap<String, u64>, name: &str, value: u64) {
     *stages.entry(name.to_string()).or_default() += value;
+}
+
+fn timing_enabled() -> bool {
+    std::env::var("CARNOT_SERVICE_TIMING").ok().as_deref() == Some("1")
+}
+
+fn exclusive_stages(enabled: bool) -> BTreeMap<String, u64> {
+    if !enabled {
+        return BTreeMap::new();
+    }
+    [
+        "encoding",
+        "update_arithmetic",
+        "journal_write",
+        "fsync",
+        "acknowledgement",
+        "reload",
+    ]
+    .into_iter()
+    .map(|name| (name.to_string(), 0))
+    .collect()
 }
 
 fn vectors_close(left: &[f64], right: &[f64]) -> bool {
@@ -530,6 +593,7 @@ fn failure(error: String, stages: BTreeMap<String, u64>) -> Response {
         state_bytes: 0,
         state: None,
         stage_ns: stages,
+        exclusive_stage_ns: BTreeMap::new(),
         kernel_ns: 0,
         durability_policy: DURABILITY_POLICY,
     }
@@ -540,6 +604,8 @@ fn run_trace(request: Request) -> Result<Response, String> {
         .state_path
         .ok_or_else(|| "state_path_required".to_string())?;
     let mut stages = empty_stages();
+    let telemetry = timing_enabled();
+    let mut exclusive = exclusive_stages(telemetry);
     let started = Instant::now();
     let mut state = read_state(&path)?;
     add_stage(&mut stages, "read", started.elapsed().as_nanos() as u64);
@@ -562,20 +628,39 @@ fn run_trace(request: Request) -> Result<Response, String> {
         }
         let started = Instant::now();
         update_batch(&mut state, block)?;
-        add_stage(&mut stages, "solve", started.elapsed().as_nanos() as u64);
-        let (bytes, write_stages) = durable_write(&path, &state)?;
+        let update_ns = started.elapsed().as_nanos() as u64;
+        add_stage(&mut stages, "solve", update_ns);
+        if telemetry {
+            add_stage(&mut exclusive, "update_arithmetic", update_ns);
+        }
+        let (bytes, write_stages, write_exclusive) = durable_write(&path, &state, telemetry)?;
         state_bytes = bytes;
         for (name, duration) in write_stages {
             add_stage(&mut stages, &name, duration);
         }
+        for (name, duration) in write_exclusive {
+            add_stage(&mut exclusive, &name, duration);
+        }
         let started = Instant::now();
         let reloaded = read_state(&path)?;
-        add_stage(&mut stages, "reload", started.elapsed().as_nanos() as u64);
+        let reload_ns = started.elapsed().as_nanos() as u64;
+        add_stage(&mut stages, "reload", reload_ns);
+        if telemetry {
+            add_stage(&mut exclusive, "reload", reload_ns);
+        }
+        let acknowledgment_started = Instant::now();
         if let Some(field) = durable_state_difference(&reloaded, &state) {
             return Err(format!("reloaded_state_mismatch:{field}"));
         }
         state = reloaded;
         acknowledgments.push(release_index);
+        if telemetry {
+            add_stage(
+                &mut exclusive,
+                "acknowledgement",
+                acknowledgment_started.elapsed().as_nanos() as u64,
+            );
+        }
     }
     let kernel_ns =
         stages.get("predict").copied().unwrap_or(0) + stages.get("solve").copied().unwrap_or(0);
@@ -590,6 +675,7 @@ fn run_trace(request: Request) -> Result<Response, String> {
         state_bytes,
         state: Some(state),
         stage_ns: stages,
+        exclusive_stage_ns: exclusive,
         kernel_ns,
         durability_policy: DURABILITY_POLICY,
     })
@@ -600,6 +686,7 @@ fn run_predict(request: Request) -> Result<Response, String> {
         .state_path
         .ok_or_else(|| "state_path_required".to_string())?;
     let mut stages = empty_stages();
+    let exclusive = exclusive_stages(timing_enabled());
     let started = Instant::now();
     let state = read_state(&path)?;
     add_stage(&mut stages, "read", started.elapsed().as_nanos() as u64);
@@ -639,6 +726,7 @@ fn run_predict(request: Request) -> Result<Response, String> {
         state_bytes,
         state: Some(state),
         stage_ns: stages,
+        exclusive_stage_ns: exclusive,
         kernel_ns,
         durability_policy: DURABILITY_POLICY,
     })

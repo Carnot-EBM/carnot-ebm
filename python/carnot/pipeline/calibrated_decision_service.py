@@ -40,6 +40,8 @@ class CalibratedDecision:
     costs: dict[str, float] = field(default_factory=dict)
     service_ns: int = 0
     stage_ns: dict[str, int] = field(default_factory=dict)
+    exclusive_stage_ns: dict[str, int] = field(default_factory=dict)
+    caller_stage_ns: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -55,6 +57,8 @@ class FeedbackAcknowledgment:
     service_ns: int = 0
     kernel_ns: int = 0
     stage_ns: dict[str, int] = field(default_factory=dict)
+    exclusive_stage_ns: dict[str, int] = field(default_factory=dict)
+    caller_stage_ns: dict[str, int] = field(default_factory=dict)
 
 
 def frozen_decision_costs(error_probability: float) -> dict[str, float]:
@@ -92,12 +96,14 @@ class CalibratedDecisionService:
         process_command: Sequence[str] | None = None,
         cwd: str | os.PathLike[str] | None = None,
         extra_env: Mapping[str, str] | None = None,
+        telemetry_enabled: bool = False,
     ) -> None:
         if not math.isfinite(response_timeout_s) or response_timeout_s <= 0.0:
             raise ValueError("positive_response_timeout_required")
         self.state_path = Path(state_path)
         self.binary_path = Path(binary_path)
         self.response_timeout_s = float(response_timeout_s)
+        self.telemetry_enabled = bool(telemetry_enabled)
         if process_command is None and not self.binary_path.is_file():
             raise FileNotFoundError(self.binary_path)
         if not self.state_path.exists():
@@ -113,6 +119,8 @@ class CalibratedDecisionService:
         command = tuple(process_command or (str(self.binary_path),))
         environment = dict(os.environ)
         environment.update(dict(extra_env or {}))
+        environment["CARNOT_SERVICE_TIMING"] = "1" if self.telemetry_enabled else "0"
+        startup_started = time.perf_counter_ns()
         self._owned_process = subprocess.Popen(  # noqa: S603 - explicit caller command.
             command,
             cwd=Path(cwd) if cwd is not None else None,
@@ -123,6 +131,7 @@ class CalibratedDecisionService:
             text=True,
             bufsize=1,
         )
+        self.startup_ns = time.perf_counter_ns() - startup_started
         self.owned_pid = self._owned_process.pid
         self._closed = False
 
@@ -132,34 +141,45 @@ class CalibratedDecisionService:
     def __exit__(self, *_exc: object) -> None:
         self.close()
 
-    def _request(self, request: Mapping[str, Any]) -> tuple[dict[str, Any] | None, str | None, int]:
+    def _request(
+        self, request: Mapping[str, Any]
+    ) -> tuple[dict[str, Any] | None, str | None, int, dict[str, int]]:
         started = time.perf_counter_ns()
+        caller_stages: dict[str, int] = {}
         process = self._owned_process
         if self._closed or process.poll() is not None:
-            return None, "process_exited", time.perf_counter_ns() - started
+            return None, "process_exited", time.perf_counter_ns() - started, caller_stages
         if process.stdin is None or process.stdout is None:
-            return None, "worker_pipe_missing", time.perf_counter_ns() - started
+            return None, "worker_pipe_missing", time.perf_counter_ns() - started, caller_stages
         try:
-            process.stdin.write(
-                json.dumps(dict(request), sort_keys=True, separators=(",", ":")) + "\n"
-            )
+            encode_started = time.perf_counter_ns()
+            encoded = json.dumps(dict(request), sort_keys=True, separators=(",", ":")) + "\n"
+            if self.telemetry_enabled:
+                caller_stages["caller_encode"] = time.perf_counter_ns() - encode_started
+            send_started = time.perf_counter_ns()
+            process.stdin.write(encoded)
             process.stdin.flush()
+            if self.telemetry_enabled:
+                caller_stages["caller_send"] = time.perf_counter_ns() - send_started
         except (BrokenPipeError, OSError, ValueError):
-            return None, "process_exited", time.perf_counter_ns() - started
+            return None, "process_exited", time.perf_counter_ns() - started, caller_stages
+        wait_started = time.perf_counter_ns()
         ready, _writable, _errors = select.select([process.stdout], [], [], self.response_timeout_s)
         if not ready:
-            return None, "response_timeout", time.perf_counter_ns() - started
+            return None, "response_timeout", time.perf_counter_ns() - started, caller_stages
         line = process.stdout.readline()
         elapsed = time.perf_counter_ns() - started
+        if self.telemetry_enabled:
+            caller_stages["caller_wait_decode"] = time.perf_counter_ns() - wait_started
         if not line:
-            return None, "process_exited", elapsed
+            return None, "process_exited", elapsed, caller_stages
         try:
             value = json.loads(line)
         except json.JSONDecodeError:
-            return None, "response_json_invalid", elapsed
+            return None, "response_json_invalid", elapsed, caller_stages
         if not isinstance(value, Mapping):
-            return None, "response_not_object", elapsed
-        return dict(value), None, elapsed
+            return None, "response_not_object", elapsed, caller_stages
+        return dict(value), None, elapsed, caller_stages
 
     def _unavailable_decision(
         self, event_id: str, probability: float, error: str, elapsed_ns: int = 0
@@ -196,7 +216,7 @@ class CalibratedDecisionService:
             return self._unavailable_decision(
                 identifier, error_probability, f"duplicate_prediction:{identifier}"
             )
-        response, transport_error, elapsed = self._request(
+        response, transport_error, elapsed, caller_stages = self._request(
             {
                 "operation": "predict",
                 "state_path": str(self.state_path),
@@ -243,6 +263,7 @@ class CalibratedDecisionService:
             )
         self._pending[identifier] = float(error_probability)
         stage_ns = response.get("stage_ns")
+        exclusive = response.get("exclusive_stage_ns")
         return CalibratedDecision(
             event_id=identifier,
             error_probability=calibrated,
@@ -252,6 +273,10 @@ class CalibratedDecisionService:
             costs=output_costs,
             service_ns=elapsed,
             stage_ns={str(key): int(value) for key, value in dict(stage_ns or {}).items()},
+            exclusive_stage_ns={
+                str(key): int(value) for key, value in dict(exclusive or {}).items()
+            },
+            caller_stage_ns=caller_stages,
         )
 
     def _unavailable_ack(
@@ -276,7 +301,7 @@ class CalibratedDecisionService:
             return self._unavailable_ack(identifier, f"duplicate_feedback:{identifier}")
         if identifier not in self._pending:
             return self._unavailable_ack(identifier, f"unknown_prediction:{identifier}")
-        response, transport_error, elapsed = self._request(
+        response, transport_error, elapsed, caller_stages = self._request(
             {
                 "operation": "trace",
                 "state_path": str(self.state_path),
@@ -295,6 +320,7 @@ class CalibratedDecisionService:
             return self._unavailable_ack(
                 identifier, str(response.get("error") or "service_failed"), elapsed
             )
+        acknowledgment_started = time.perf_counter_ns()
         state = response.get("state")
         processed = state.get("processed_event_ids") if isinstance(state, Mapping) else None
         durable = bool(
@@ -308,9 +334,14 @@ class CalibratedDecisionService:
         )
         if not durable:
             return self._unavailable_ack(identifier, "durable_acknowledgment_invalid", elapsed)
+        if self.telemetry_enabled:
+            caller_stages["caller_acknowledgement"] = (
+                time.perf_counter_ns() - acknowledgment_started
+            )
         self._pending.pop(identifier)
         self._released.add(identifier)
         stage_ns = response.get("stage_ns")
+        exclusive = response.get("exclusive_stage_ns")
         return FeedbackAcknowledgment(
             event_id=identifier,
             available=True,
@@ -320,6 +351,10 @@ class CalibratedDecisionService:
             service_ns=elapsed,
             kernel_ns=int(response.get("kernel_ns") or 0),
             stage_ns={str(key): int(value) for key, value in dict(stage_ns or {}).items()},
+            exclusive_stage_ns={
+                str(key): int(value) for key, value in dict(exclusive or {}).items()
+            },
+            caller_stage_ns=caller_stages,
         )
 
     def close(self) -> None:

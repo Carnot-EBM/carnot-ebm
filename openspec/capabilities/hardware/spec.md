@@ -2386,6 +2386,33 @@ reachability stays unknown without a probe, and no hardware command runs.
 
 ---
 
+### REQ-HW-7613
+
+**Title:** Exp7613 MUST report measured host placement without board execution
+
+Experiment 7613 SHALL authenticate the dated KV260, PolarFire, and GateMate
+dispositions from Experiment 7599. KV260 SHALL retain graduated FPGA-fabric
+scope, future `ssh kria` access, and `k_max<=5`. PolarFire SHALL retain
+graduated Linux CPU dispatch while FPGA sampling remains unmeasured. GateMate
+SHALL remain blocked until a dated cable, port, power, board, JTAG, or
+DirtyJTAG change receipt exists. The experiment SHALL issue no probe or flash.
+
+Measured arithmetic fractions MAY support an Amdahl upper bound for a small
+local update. They SHALL not become projected device latency, a 10x gate, or a
+purchase justification. Extropic Z1T and the September 22 spintronic lead SHALL
+remain research context only.
+
+### SCENARIO-HW-7613-REPORTING
+
+**Given:** Three authenticated board dispositions and current host service spans,
+**When:** Exp7613 reports service placement,
+**Then:** it keeps board scopes separate, preserves the GateMate physical-change
+prerequisite, issues zero hardware operations, and labels Amdahl as an upper bound.
+
+**Implementation status:** Specified (Exp 7613)
+
+---
+
 ### REQ-HW-7599
 
 **Title:** Exp7599 MUST preserve dated board scopes and size only an eligible host service boundary

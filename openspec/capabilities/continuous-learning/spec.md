@@ -19238,6 +19238,65 @@ immutability. This fixture SHALL not claim the older CerCE certificate.
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-CL-7613: Durable Service Stage Attribution
+
+Experiment 7613 SHALL instrument the existing opt-in recalibration client and
+worker with default-off exclusive monotonic duration spans. The spans SHALL
+separate caller startup and transport work from worker encoding, update
+arithmetic, journal write, fsync, reload, and acknowledgment work. It SHALL
+never subtract timestamps from different clocks. IPC and scheduling SHALL stay
+a combined caller remainder unless the transport exposes them separately.
+
+The experiment SHALL reuse the parity and durable-acknowledgment workload from
+Experiment 7598. It SHALL compare the Rust consumer with the strongest
+in-process Python comparator for cold and warm modes at batch sizes one and
+eight. Each stratum SHALL contain 30 paired telemetry-on blocks with arm order
+rotated from seed `7613001`. Ten additional telemetry-off blocks per stratum
+SHALL estimate instrumentation overhead only. All arms SHALL perform identical
+logical events with identical fsync, reload, and acknowledgment semantics.
+
+Each block SHALL retain the whole caller duration and nonnegative exclusive
+worker durations. Their sum plus the measured caller remainder SHALL reconcile
+to within `max(1 microsecond, 1 percent)` of whole service time. Negative,
+overlapping, or double-counted spans SHALL fail attribution. The arithmetic
+fraction SHALL use the whole durable request as its denominator. The Amdahl
+upper bound SHALL equal `1/(1-f)` and SHALL be labeled as a bound, not measured
+accelerator gain. Uncertainty and cold, warm, batch-one, and batch-eight
+differences SHALL remain explicit.
+
+The artifact SHALL preserve Experiment 7598's original aggregate-null verdict,
+all empirical weights, the public client's opt-in default, and all production
+defaults. It SHALL set `MODEL_SPECS=[]`, `model_specs=[]`, `no_model_load=true`,
+and current invocation counts to zero. It SHALL authenticate all three dated
+Experiment 7599 board dispositions and issue no board operation. It SHALL not
+claim a PyO3 crossing, a 10x gate, useful learning, or projected hardware
+latency. Validity, readiness, benefit, retention, and freshness SHALL remain
+separate.
+
+### SCENARIO-CL-7613-ATTRIBUTION: Exclusive Spans Reconcile Per Block
+
+- GIVEN telemetry-on Rust requests with worker-local duration spans
+- WHEN the caller reduces each paired block
+- THEN worker spans plus the combined caller remainder reconcile to whole time
+- AND no timestamp is subtracted across the caller and worker clocks.
+
+### SCENARIO-CL-7613-OVERHEAD: Disabled Telemetry Is A Frozen Control
+
+- GIVEN ten registered telemetry-off blocks in each mode and batch stratum
+- WHEN instrumentation overhead is estimated
+- THEN those blocks affect only the overhead estimate
+- AND post-hoc speed selection cannot replace the telemetry-on report.
+
+### SCENARIO-CL-7613-TERMINAL: Placement Is Not Accelerator Benefit
+
+- GIVEN parity, equal durability, reconciled stages, and measured overhead
+- WHEN arithmetic fractions and Amdahl bounds are reduced
+- THEN stage attribution readiness is separate from empirical benefit
+- AND the bound creates no purchase, hardware latency, or default-promotion claim.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-CL-7598: Opt-In Durable Recalibration Consumer
 
 Experiment 7598 SHALL provide a typed Python client for the qualified Rust
