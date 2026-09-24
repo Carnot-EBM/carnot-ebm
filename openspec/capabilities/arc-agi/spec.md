@@ -3460,3 +3460,99 @@ and strict verdict-row consistency pass on the exact candidate.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7527 and SCENARIO-ARC-7527-* | `python/carnot/experiment_7527_v658_arc_opportunities.py` | `tests/python/test_experiment_7527_v658_arc_opportunities.py` |
+
+## REQ-ARC-7625: Supervisor transfer SHALL use authenticated outcome ledgers without replay
+
+Exp7625 SHALL reduce existing `trajectory_supervisor` receipts from current
+`E3AgentPolicy` or `make_carnot_agent` runs. It SHALL prefer the six-game,
+adapter-withheld V660-V664 panel. It SHALL authenticate each source against a
+producer hash and deduplicate byte-equivalent logical episodes. Seeds, copied
+views, and replayed receipts SHALL not create independent game units.
+
+The reducer SHALL reuse the existing supervisor receipt classifier. It SHALL
+keep proposed, shadow `would_have`, applied, and actual firing counts separate.
+Only an applied receipt with a `redirects` row SHALL count as an actual firing.
+Each actual firing SHALL retain `resolved_by_levelup`, `actions_to_levelup`,
+episode-end censoring, game, arm, seed, and source provenance. A shadow receipt
+SHALL remain control evidence and SHALL never enter actual fired or helped
+counts. A missing or ambiguous outcome schema SHALL close as
+`complete_blocked_*` with `verdict_class=blocked` and an exact failed gate.
+
+An authenticated outcome ledger with zero actual firings SHALL set
+`supervisor_outcome_ledger_ready_score=1` and terminate as
+`complete_null_no_firings_nothing_to_refine`. It SHALL satisfy the reserved ARC
+generalization slot without new gameplay. Exp7625 SHALL not run a collector,
+offline BFS, hidden-source inspection, model load, generation, or per-game
+adapter construction. It SHALL declare aggregation, `MODEL_SPECS=[]`, and zero
+current model invocations.
+
+An arm is statistically eligible only with at least 20 uncensored actual
+firings across at least three games. Eligible arms SHALL report per-game help
+rates, leave-one-game-out stability, and a one-sided binomial upper bound when
+no firing was helped. These summaries are observational associations. They
+SHALL not be described as causal treatment effects. A curated selection change
+may be recommended only when its direction is stable under every leave-one-game-
+out reduction. The reducer SHALL never change live defaults.
+
+When all arms enabled in an applied receipt were used and stagnation continued,
+the reducer MAY emit one general new-arm specification from the recorded
+unredirected-window state. It SHALL not use a model-generated arm or a
+game-specific route. Otherwise the selection recommendation SHALL state
+insufficient support and no change.
+
+The terminal artifact SHALL preserve the Exp7611 zero-matched-key null and the
+Exp7612 historical block. It SHALL include the common identity, timing,
+precondition, invocation, source hash, row, sample budget, gate, validation,
+principle, and verdict fields. It SHALL also include
+`supervisor_outcome_ledger_ready_score`, `per_game_results`,
+`selection_recommendation`, `solve_provenance=live_agent_self_discovery`,
+`solve_claim=false`, and the standing amendment activity name. The solve
+registry SHALL remain unchanged.
+
+### SCENARIO-ARC-7625-AUTH: Producer hashes and logical episodes are frozen
+
+**Given** V660-V664 supervisor receipts and their producer artifacts
+**When** Exp7625 selects the preferred six-game adapter-withheld panel
+**Then** each exact file hash matches its authenticated producer record
+**And** byte-equivalent episodes collapse to one game-level logical unit.
+
+### SCENARIO-ARC-7625-JOIN: Actual redirects keep exact outcomes and censoring
+
+**Given** applied, shadow, malformed, helped, unresolved, and censored receipts
+**When** the supervisor rows are reduced
+**Then** only applied redirect rows count as actual firings
+**And** every firing keeps level-up resolution, action distance, and censoring.
+
+### SCENARIO-ARC-7625-ZERO: A valid empty actual ledger is a terminal null
+
+**Given** authenticated shadow receipts with a complete counterfactual outcome schema
+**When** no redirect was applied or actually fired
+**Then** ledger readiness is 1 and the verdict is `complete_null_no_firings_nothing_to_refine`
+**And** no collector rerun, policy change, or arm efficacy claim occurs.
+
+### SCENARIO-ARC-7625-SUPPORT: Statistical summaries require cross-game support
+
+**Given** actual uncensored firings for one arm
+**When** support reaches 20 firings across three games
+**Then** per-game rates, leave-one-game-out stability, and any zero-help upper bound are reported
+**And** smaller or direction-unstable evidence recommends no change.
+
+### SCENARIO-ARC-7625-EXHAUSTION: New-arm text comes only from exhausted receipts
+
+**Given** an applied receipt with every enabled arm used and later unredirected stagnation
+**When** Exp7625 reduces the recorded window state
+**Then** it may describe one general missing capability from that state
+**And** it does not name a game-specific route or invoke a model.
+
+### SCENARIO-ARC-7625-TERMINAL: Exact readers control atomic publication
+
+**Given** a frozen affected-file manifest and terminal candidate
+**When** scoped validation, cold reduction, independent metrics, adversarial verification, and strict row consistency run
+**Then** their commands, exits, and log hashes are retained
+**And** failed benefit never supports a positive verdict or live-default change.
+
+## Implementation Status (REQ-ARC-7625)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7625 and SCENARIO-ARC-7625-* | `python/carnot/experiment_7625_v665_arc_supervisor_transfer.py` and `scripts/experiments/experiment_7625_v665_arc_supervisor_transfer.py` | `tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py` |
