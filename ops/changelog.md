@@ -20552,3 +20552,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Compare explicit-schema prompting and constrained decoding on eight pilot groups (⚠️ Blocked) — honest_verdict=complete_blocked_exclusive_cuda_capacity; results/experiment_7617_v665_schema_pilot.json
 - 2026-09-24: Independently reduce evidence, decision and learning claims (⚠️ Blocked) — honest_verdict=complete_blocked_v665_scientific_producers_unavailable; results/experiment_7624_v665_evidence_audit.json
 - 2026-09-24: Refine cross-game supervisor selection from actual redirect outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_firings_nothing_to_refine; results/experiment_7625_v665_arc_supervisor_transfer.json
+- 2026-09-24: Expose the durable recalibration core through a direct PyO3 call (⚠️ Research Finding) — honest_verdict=complete_null_native_service_protocol_ready; results/experiment_7626_v665_native_service.json
