@@ -80338,3 +80338,117 @@ research conductor SHALL remain unchanged.
 
 Specification added before tests and implementation. The conductor owns later
 status, changelog and traceability reconciliation.
+
+## REQ-REPORT-7631: Measure the V666 paired schema transport
+
+Experiment 7631 SHALL authenticate the Experiment 7616 schema authority and
+role contract, including the unchanged eight disjoint pilot groups,
+`v663-evidence-20260924` salt, 480 restored groups, 240 selected groups, and
+fit 80, tune 20, policy 20, online 80, and evaluation 40 custody. Canonical
+sentence arrays SHALL remain the only model-visible text authority. All enum
+values and pointers SHALL come from that authority, and saved response bytes
+SHALL pass an independent parser without repair, coercion, reprompting, or
+historical relabeling.
+
+The run SHALL use planned `model_bounded_generation` and
+`MODEL_SPECS=["unsloth/Qwen3.8-27B-GGUF"]`. It SHALL use the Experiment 7630
+ownership launcher, acquire and recheck a cooperative GPU lease, veto foreign
+contexts, resolve only the cached Q4_K_M model, verify its byte hash, qualify
+the embedded tokenizer in a CPU-only child, and retain owned CUDA offload and
+VRAM-delta evidence. If no owned resource is available, it SHALL publish a
+terminal `complete_blocked_*` artifact with actual `no_model_load`, empty
+current `MODEL_SPECS`, the planned model identity, zero invocations, and a
+complete failed gate row. It SHALL not signal or evict foreign work.
+
+The measured pilot SHALL issue exactly sixteen requests: one explicit-schema
+prompt and one schema-constrained decode for each of the eight source groups.
+Both arms SHALL use identical lossless input, temperature zero, seed 7631, and
+at most 512 output tokens. Arm order SHALL be counterbalanced. Each request
+SHALL run once. Rows SHALL retain grammar compilation time, first-token
+latency, request time, token counts, finish reason, exact raw request and
+response bytes and hashes, schema validity, pointer validity, independent
+rejection reasons, direction, censoring, and provenance.
+
+The constrained arm SHALL be selected only when decoder support is
+authenticated, all eight independent pointer validations pass, and no request
+is truncated. Otherwise, the explicit-schema arm SHALL be selected only under
+the same eight-of-eight validity and no-truncation gate. If neither passes,
+scaling SHALL stop with a localized null while all rows and block captures
+remain retained. A valid JSON object alone SHALL not establish semantic
+success, and `semantic_benefit_claim` SHALL remain false.
+
+Projection SHALL use the selected arm's measured load, tokenization, and p90
+request time. It SHALL project the unchanged fit/tune/policy 120, online 80,
+and evaluation 40 rosters separately. Each projection SHALL require capture
+time at most 3000 seconds and total time including validation at most 4500
+seconds. The selected configuration, projections, schema hash, input hashes,
+and model hash SHALL be frozen. Pilot groups SHALL remain excluded from every
+learning and evaluation role.
+
+The terminal record SHALL separate validity, readiness, probability benefit,
+utility, retention, and freshness. It SHALL include the closed verdict class,
+terminal reader flag, diagnostic gate summary, per-arm rows, independent
+sample budget, actual preconditions, planned and actual substrate, planned and
+actual model identities, owned execution venue, disjoint phase spans, current
+invocation counts, seed purposes, reproducibility checksum, source hashes,
+validation receipts, field principles, readiness and roster feasibility
+scores, and the selected-config path. Exact fixtures remain
+`circular_positive`; transport readiness alone remains `null`; failed benefit
+gates forbid a positive verdict.
+
+Validation SHALL freeze the affected files and use worktree-pinned imports,
+serial focused pytest with cleared addopts, a private base temp,
+command-local 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, and affected-test specification coverage. The
+declared entrypoint, owned load-to-cold-replay E2E when capacity exists, fresh
+cold reduction, independent comparison, adversarial reader, and strict
+verdict-row reader SHALL decide exact candidate publication. Old artifacts,
+weights, defaults, roadmap, ops reconciliation files, and the research
+conductor SHALL remain unchanged.
+
+### SCENARIO-REPORT-7631-CUSTODY: Schema and role authority remain exact
+
+**Given** the Experiment 7616 terminal schema and role receipt
+**When** Experiment 7631 authenticates its model-visible pilot inputs
+**Then** eight disjoint groups and all role counts, salt, hashes, enums, and pointers match
+**And** no pilot group enters fit, tune, policy, online, or evaluation custody.
+
+### SCENARIO-REPORT-7631-RESOURCE: Unowned capacity blocks before model work
+
+**Given** the Experiment 7630 launcher and current GPU inventory
+**When** no device passes ownership, foreign-context, and free-memory checks
+**Then** the artifact is terminal blocked with actual no-model-load provenance
+**And** the planned model remains named while current calls and current models stay zero.
+
+### SCENARIO-REPORT-7631-PAIRED: Both arms preserve bytes and fixed budgets
+
+**Given** eight authenticated canonical inputs and decoder support
+**When** explicit and constrained requests execute in counterbalanced order
+**Then** exactly sixteen single-attempt rows retain raw bytes and independent parse evidence
+**And** both arms use seed 7631, temperature zero, and the 512-token ceiling.
+
+### SCENARIO-REPORT-7631-SELECT: Eight independent validations fail closed
+
+**Given** retained rows for both paired arms
+**When** selection independently recomputes pointer validity and truncation
+**Then** constrained decoding wins only at eight of eight with authenticated support
+**And** explicit schema is the fallback only at eight of eight, otherwise scaling stops.
+
+### SCENARIO-REPORT-7631-PROJECT: Fixed rosters use selected-arm timings
+
+**Given** one selected arm with measured load, tokenization, and request times
+**When** fit 120, online 80, and evaluation 40 projections are computed
+**Then** each roster keeps its size and separate feasibility score
+**And** capture and total-task limits are applied without raising a request budget.
+
+### SCENARIO-REPORT-7631-TERMINAL: Exact readers control publication
+
+**Given** a frozen validation manifest and exact terminal candidate
+**When** scoped checks, cold replay, independent reduction, and strict readers run
+**Then** exits, worktree paths, log hashes, and reader outcomes remain recorded
+**And** transport readiness never becomes semantic benefit or default promotion.
+
+### Implementation Status (REQ-REPORT-7631)
+
+Specification added before tests and implementation. The conductor owns later
+status, changelog and traceability reconciliation.
