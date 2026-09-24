@@ -205,3 +205,10 @@ of truth, not this line.)
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_shape_dims | SILENT_NON_FIRING | OPEN | |
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_grid_shape_degenerate_reasons | SILENT_NON_FIRING | OPEN | |
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_scorer_diagnostics_error_reasons | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_zero_lever_delta_reasons | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_lever_exercise_severity | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_has_positive_metric_pair | REAL_BUG | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_has_first_party_qd_result_field | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_qd_energy_fitness_generation_win | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::check_qd_random_mutation_ablation_overclaim | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_value_routing_live_claim | SILENT_NON_FIRING | OPEN | |

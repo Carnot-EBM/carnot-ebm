@@ -20489,3 +20489,16 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Preserve board terminal scopes and size the measured service boundary (⚠️ Research Finding) — honest_verdict=complete_null_board_continuity_placement_unmeasured; results/experiment_7599_v663_board_continuity.json
 - 2026-09-24: Reconcile fourteen dispositions and decide information-source continuation (⚠️ Blocked) — honest_verdict=complete_blocked_required_v663_external_evidence; results/experiment_7600_v663_capstone.json
 - 2026-09-24: Added the milestone 2026.09.663 operational retrospective. All 8 completed experiments were compute-bound and occupied 10.6 minutes. Measure causal history support on adapter-withheld live games was the longest task at 4.53 minutes, followed by Repair private ARC output placement and qualify history telemetry at 2.31 minutes and Ship an opt-in typed consumer for the durable Rust service at 2.28 minutes; no data available this milestone identifies internal phase costs. The locked compute-task GPU-idle field is false. The end-state monitor snapshot does not record active task windows, so GPU efficiency cannot be confirmed. No supplied record identifies a task with two or more models or a missed DualGPURunner dispatch. Recommended tooling adds phase timing, task-scoped accelerator telemetry, and runner-selection receipts. Estimated savings are 0% because no measured counterfactual is available. Artifact: results/operational_retro_2026_09_663.json.
+
+## 2026-09-24 — Plan milestone 2026.09.664 (REQ-REPORT-V664-PLAN)
+
+- Wrote matching fourteen-task design and execution YAML, Exp7601–Exp7614,
+  and preserved the V663 design byte for byte.
+- Recorded the eight-topic research review and secondary-source limitations
+  before design, including the September22 spintronic hardware lead.
+- Kept blocked evidence distinct from scientific nulls; scoped source
+  requalification, bounded Qwen captures, independent decision/learning tests,
+  matched ARC history support and exclusive durable-service costs.
+- Required exact gate fields, complete failure lineage, per-unit rows,
+  progress heartbeats and bounded writes. Reconciled planning specifications
+  and traceability. No experiment execution, activation, conductor edit or push.

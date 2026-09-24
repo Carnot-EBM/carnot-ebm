@@ -3124,3 +3124,14 @@ producer gates, prior failures, exclusions, ARC coverage, priorities and
 harness boundaries. Existing focused guard tests provide regression checks.
 No numbered runtime E2E applies to these planning-only edits. Active roadmap
 and conductor hashes remain protected.
+
+## V664 planning contract (2026-09-24)
+
+REQ-REPORT-V664-PLAN and SCENARIO-REPORT-V664-PLAN map to
+`research-roadmap-next.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md`: fourteen ordered tasks,
+Exp7601–Exp7614. The previous V663 design is preserved in
+`openspec/change-proposals/research-roadmap-v663-preserved-20260924.md`.
+Validation uses the existing roadmap schema/gate/exclusion tests and direct
+private contract mutations. No experiment implementation or empirical result
+is claimed. Each future task names its own capability requirement before code.

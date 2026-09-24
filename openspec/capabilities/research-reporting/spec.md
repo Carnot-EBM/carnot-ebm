@@ -79050,3 +79050,39 @@ Rust consumer readiness stays separate from its speed gate, and board states sta
 ### Implementation Status (REQ-REPORT-7600)
 
 Planned. The conductor owns later status, changelog, and traceability reconciliation.
+
+## REQ-REPORT-V664-PLAN: Qualified and matching next-milestone authorities
+
+The staged V664 plan SHALL contain exactly fourteen ordered tasks, Exp7601
+through Exp7614, across four phases. The design and YAML SHALL agree on full
+IDs, titles, phases, deliverables, substrate classes and conjunctive gates.
+Every upstream gate field SHALL appear in its producer's required artifact
+fields. Planning SHALL preserve the V663 design and SHALL NOT edit the active
+roadmap or research conductor, activate work or push.
+
+The plan SHALL distinguish V663's absent science from its valid ARC support
+null and failed aggregate consumer-speed gate. Current selector readiness
+SHALL be requalified without rewriting the saved blocked artifact. The plan
+SHALL include calibrated small-energy decisions, continuous learning with
+separate update/admission/evaluator roles, adapter-withheld ARC generalization,
+exclusive service cost and three-board continuity. Literature findings SHALL
+be recorded before design. Historical source exposure SHALL remain explicit.
+
+Every prompt SHALL require flushed boundary/operation/loop progress, bounded
+file writes, spec-first implementation, scoped validation and honest terminal
+classification. Current LLM tasks SHALL include Qwen3.8-27B GGUF and declare
+bounded generation for their fixed output budgets. Prior-failure entries SHALL
+include the mechanical retirement flag and a concrete forward difference.
+
+### SCENARIO-REPORT-V664-PLAN: Authorities reject private contract mutations
+
+**Given** the staged fourteen-task YAML and V664 design
+**When** schema, gate, exclusion, prior-failure and independent contract checks run
+**Then** every task and producer field agrees in execution order
+**And** removed/reordered rows, changed paths and misspelled fields fail
+**And** hypothetical unrun experiment paths are not required to exist.
+
+### Implementation Status (REQ-REPORT-V664-PLAN)
+
+Planning documents only. Proposed experiments are not implemented or run.
+Future behavior changes require their own capability requirements and tests.

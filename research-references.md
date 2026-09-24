@@ -46696,3 +46696,65 @@ rechecks. The changed proposal is to add evidence before fitting another map.
 
 Access date: 2026-09-24. No inference, board operation, purchase, contact or
 external publication was performed during this literature review.
+
+## 2026-09-24 — V664 planning review: usable evidence and measured deployment boundaries
+
+Recorded before designing V664. V663's evidence-link and guarded-learning
+branches did not run. Their input selector stopped at `source_group_incomplete`.
+A planning-only read of the current committed selector now authenticates all
+480 groups and selects 240 scored groups plus eight pilot groups. This is a
+changed prerequisite to requalify, not a replacement for the blocked artifact
+or evidence of predictive benefit. Historical exposure remains unchanged.
+
+### Primary research and method choices
+
+| Topic | Source checked | Finding and use |
+|---|---|---|
+| EBM verification/reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4) | Compatibility learning and normalized conditional energies remain relevant. Neither paper establishes that an arbitrary learned energy certifies truth. Rechecked references; no foundation-model training is proposed. |
+| Neural constraint satisfaction | [AS2, March 2026](https://arxiv.org/abs/2603.18436), [Certified Correctness Requires Symbolic Integration, August 2026](https://arxiv.org/abs/2608.14569) | AS2 uses a differentiable soft consequence operator and independent symbolic checking. The position paper distinguishes learned satisfaction from certification. Keep exact pointer-integrity tests separate from predicted semantic support. A new neural solver is deferred. |
+| Ising applications in ML | [Learning-to-sample phase transition, May 2026](https://arxiv.org/abs/2605.24752) | Learning parameters and efficiently sampling their law can have different computational difficulty. A binary policy can normalize exactly; fitting it does not justify a new sampler benchmark. |
+| Hallucination verification | [EAEV, September 8, 2026](https://arxiv.org/html/2609.08267v1), sections 3.3–3.6 | Entity/evidence alignment and counterfactual evidence perturbations motivate lossless sentence links and erased/deranged-evidence controls. Requalify the already-built input mechanism before testing this adaptation. Do not call it an EAEV replication. |
+| Kolmogorov–Arnold Networks | [On-chip online learning, February 2026; v4 June 19](https://arxiv.org/html/2602.02056v4) | Sparse local spline updates provide a concrete fixed-point implementation direction. This supports bounded local updates and full service-cost measurement; locality alone establishes neither retention nor useful decisions. |
+| Guided/constrained generation | [ETS, January 2026; v3 May 19](https://arxiv.org/abs/2601.21484), [CRANE, ICML 2025](https://proceedings.mlr.press/v267/banerjee25a.html) | Energy-guided inference spends additional sampling compute. Restrictive output grammars can also impair reasoning. Use a bounded extraction pilot with explicit truncation/unknown outcomes; do not infer semantic accuracy from JSON validity or reopen capped ARC induction. |
+| Hardware sampling | [FPGA–ASIC co-design, February 2026](https://arxiv.org/abs/2602.15985), [CMOS-integrated spintronic Ising machine, September 22, 2026](https://www.nature.com/articles/s41928-026-01700-6) | Co-design requires a whole-system boundary. The new spintronic article reports fast physical spin updates and optimization applications; only its public abstract and data-availability material were accessible. It does not establish sampling-law fidelity or Carnot access. Track it as a future hardware lead. |
+| Continual/online learning | [Proper Calibeating, May 2026](https://arxiv.org/abs/2605.26703), [U-Calibration, June 2026](https://arxiv.org/abs/2606.18527), [Trust Region Continual Learning, February 2026](https://arxiv.org/abs/2602.02417) | Evaluate proper loss, decision cost and retention separately. The trust-region paper combines replay and bounded updates in other domains. Test delayed evidence-residual learning with separate update, admission and evaluator labels; do not import immediate-feedback or diffusion-domain guarantees. |
+
+The new actionable information is the current selector's recoverable input
+boundary and the need to measure public-client costs by stage. EAEV, the
+calibration papers and spline locality are deliberate rechecks. The spintronic
+hardware article and its public data repository add a recent hardware lead.
+None of these sources warrants reopening PHASE D text/logprob reranking.
+
+### Secondary-source access receipts
+
+- **OpenReview:** searched 2026 EBM submissions. The search index exposed
+  [VFScale](https://openreview.net/pdf?id=8ta0xgtsJK), whose method aligns
+  diffusion energy with sample quality and uses hybrid search. Direct PDF and
+  forum opens returned browser challenges. Retain as a discovery lead; no
+  new implementation depends on inaccessible full text or a review decision.
+- **Extropic:** the [writing index](https://extropic.ai/writing) exposed only
+  navigation. The readable [September 4 Z1T article](https://extropic.ai/writing/z1t)
+  describes sparse models and heterogeneous Z1/FPGA inference estimates. Its
+  linked [sparse-transformers JAX repository](https://github.com/extropic-ai/sparse-transformers)
+  is accessible. Record code availability separately from local device access
+  and measured end-to-end speed; no dependency or model mandate changes.
+- **Semantic Scholar:** searched both seed IDs and attempted
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Searches found no usable citation lists; both API reads failed in the
+  browser tool. No exhaustive or verified citing-paper survey is claimed.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification)
+  and [EBT paper page](https://huggingface.co/papers/2507.02092). These are
+  discovery channels; technical claims above use original papers.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages, which were
+  cached from the preceding week. No relevant new trending dependency was
+  established. The [SpinX author repository](https://github.com/SpinX-Lab/Voltage-controlled-Spintronic-Ising-Machine)
+  provides plotting code and source data, explicitly excluding device
+  fabrication and the Ising-machine implementation.
+- **Logical Intelligence:** rechecked the [Kona architecture page](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  It supplies architectural context, not an established open training recipe
+  or checkpoint that can replace Carnot's local model.
+
+Access date: 2026-09-24. Literature and source-custody checks only; no model
+inference, board operation, purchase, external contact or publication.

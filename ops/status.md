@@ -17035,3 +17035,20 @@ or GPU run occurred. Blackwell evidence remains pending.
 Two static tests pass in this worktree. Three fake-server tests skipped because
 the execution sandbox denies loopback sockets. Run them in a socket-capable
 environment before enabling the probe.
+
+## 2026-09-24 — V664 next research plan staged
+
+Fourteen tasks, exp7601–exp7614, are staged across four phases in the matching
+V664 design and next-roadmap YAML. The plan requalifies the current lossless
+source selector, measures bounded Qwen evidence and calibrated decisions,
+tests delayed guarded learning, measures matched live-agent state support,
+and attributes whole-service costs while preserving board prerequisites.
+All current LLM calls require `unsloth/Qwen3.8-27B-GGUF` and bounded generation.
+
+V663's evidence and learning science remained unmeasured after its protocol
+block. Its ARC support null and failed aggregate Rust speed gate remain valid.
+A read-only planning check now passes source selection, but the new protocol
+task must obtain terminal receipts before capture. All source groups remain
+historically exposed; the plan makes no fresh-confirmatory claim. Literature
+findings were recorded before design. No V664 task has run or been activated;
+the active roadmap and conductor remain unchanged.
