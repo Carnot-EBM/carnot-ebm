@@ -6131,3 +6131,12 @@ JSONSchemaBench coverage, quality and speed; EAEV evidence factors; and Proper
 Calibeating assumptions map to separate V665 tests. The local finite delayed
 learner is not a reproduction of a paper or theorem. Semantic Scholar citation
 endpoints and one OpenReview PDF remained inaccessible secondary sources.
+
+<!-- EXP7629-V666-METHOD-INGESTION -->
+## 2026-09-24 Exp7629 — V666 contract methods — INGESTED
+
+Rechecked JSONSchemaBench, EAEV, Proper Calibeating and spline-local KAN.
+Mapped bounded controls to Exp7631 and Exp7635 through Exp7637. The independent
+goal-check principle maps to Exp7639 and Exp7640. AS2 and ERM remain new leads.
+Semantic Scholar and direct OpenReview access limits remain explicit. No paper
+result or theorem transfers automatically to Carnot.

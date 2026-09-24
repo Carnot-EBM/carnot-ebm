@@ -3476,3 +3476,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 36 | 2026-09-24T21:05:30Z | 2026-09-24T21:52:11Z | Operator chose making dedup safe: codex (CPU, worktree dedup-safe) goal-check-before-skip, truthful mask status, tie-break scope, scored-wrapper measurement with live Stage-2 mask |
 | 37 | 2026-09-24T22:36:22Z | 2026-09-24T22:44:01Z | Dedup-safe done: live mask replay confirms ar25 loses (6/10), no efficiency regression, waste 118->88, mixed wall time; recommendation keep off; committed 2d58a0c5ce in worktree; targeted review wf_dfc5f745-d8a |
 | 38 | 2026-09-24T22:44:01Z | 2026-09-24T22:55:04Z | Dedup-safe review: merge OK (flags-off identical on 400+400); flag-on minors recorded; merged amendment 1 with review record 2 |
+| 39 | 2026-09-24T22:55:03Z | 2026-09-24T23:04:34Z | Merged dedup-safe e7aaaae018 after unstaging 2 conductor files swept by a directory-wide add; worktree removed; memory note added |

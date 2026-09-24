@@ -80095,3 +80095,149 @@ validator tests, scoped lint/spec checks, gate/exclusion checks and independent
 contract mutations provide planning E2E evidence.
 
 Status: staged planning contract; validation is recorded in ops/status.md.
+
+## REQ-REPORT-7629: Bind V666 and preserve V665 terminal evidence
+
+Experiment 7629 SHALL select the staged or activated roadmap whose milestone is
+`2026.09.666` without activating, archiving, or rewriting either authority. It
+SHALL compare exactly fourteen ordered tasks, Exp7629 through Exp7642, with the
+V666 machine contract. IDs, titles, phases, deliverables, substrate classes and
+complete structured gates SHALL match. `contract_ready_score` SHALL equal one
+only when baseline parity passes, consumed staging resolves to the activated
+authority, private deleted-task, reordered-task, altered-path and misspelled-gate
+copies fail, and the declared repository guards pass.
+
+The report SHALL authenticate the V665 capstone and retain all fourteen prior
+dispositions. Terminal producers, conductor pre-gate receipts, missing work and
+the capstone self row SHALL stay distinct. The schema authority and native parity
+remain qualified. The schema pilot made no model call. Missing scientific
+producers remain unavailable evidence, not measured nulls. Conductor completion
+does not become scientific success. Resource or custody blocks SHALL not retire
+an unmeasured hypothesis.
+
+The task SHALL use `aggregation`, `MODEL_SPECS=[]`, and no current model call.
+JSONSchemaBench controls SHALL map to Exp7631. EAEV controls SHALL map to Exp7635
+and Exp7636. Proper Calibeating and spline-local KAN limits SHALL map to Exp7635
+through Exp7637. Independent goal checking SHALL map to Exp7639 and Exp7640. AS2
+and ERM SHALL remain new leads. Inaccessible Semantic Scholar and OpenReview pages
+SHALL remain access outcomes. No paper result or theorem transfers automatically.
+
+Validity, readiness, probability benefit, utility, retention and freshness SHALL
+remain separate. This infrastructure task SHALL open no science gate. Fixed G1
+through G4 SHALL remain unchanged and keep historic FoVer eligibility separate.
+The terminal artifact SHALL keep raw rows, source hashes, command receipts, field
+principles, independent reduction, exact reader outcomes and a checksum.
+
+### SCENARIO-REPORT-7629-AUTHORITY: Exact contract and lifecycle controls
+
+**Given** the V666 design and a matching staged or activated roadmap
+**When** Experiment 7629 compares the complete ordered machine contract
+**Then** all fourteen identities, titles, phases, paths, substrates and gates match
+**And** deleted, reordered, altered-path and misspelled-gate copies fail
+**And** consumed staging selects the activated authority without changing it.
+
+### SCENARIO-REPORT-7629-CUSTODY: V665 dispositions stay literal
+
+**Given** the authenticated V665 terminal capstone
+**When** Experiment 7629 reduces its fourteen dispositions
+**Then** terminal producers, pre-gates, missing work and the self row stay distinct
+**And** the unobserved pilot and missing scientific producers retain their limits
+**And** conductor completion does not become scientific success.
+
+### SCENARIO-REPORT-7629-METHODS: Rechecks and new leads stay bounded
+
+**Given** the named primary method pages and recorded access failures
+**When** Experiment 7629 writes the V666 method map
+**Then** adopted controls map to Exp7631, Exp7635 through Exp7637 and Exp7639 through Exp7640
+**And** AS2 and ERM remain new leads rather than adopted results
+**And** no theorem, paper metric or hardware claim transfers automatically.
+
+### SCENARIO-REPORT-7629-TERMINAL: Exact readers control publication
+
+**Given** a frozen affected-file manifest and one exact terminal candidate
+**When** scoped tests, coverage, static checks, repository guards and cold readers run
+**Then** commands, exits, worktree paths, log hashes and outcomes remain recorded
+**And** independent reduction and strict readers pass before atomic publication
+**And** the complete null advisory opens no scientific benefit gate.
+
+### Implementation Status (REQ-REPORT-7629)
+
+Implemented by Experiment 7629 with exact V666 authority controls, four private
+contract mutations, fourteen authenticated V665 dispositions, bounded primary
+method adoption, 100 percent changed-module coverage and exact terminal readers.
+The conductor owns later status, changelog and traceability reconciliation.
+
+## REQ-REPORT-7629: Bind V666 and preserve V665 terminal evidence
+
+Experiment 7629 SHALL select the staged or activated roadmap whose milestone is
+`2026.09.666` without activating, archiving, or rewriting either authority. It
+SHALL compare exactly fourteen ordered tasks, Exp7629 through Exp7642, with the
+V666 machine contract. IDs, titles, phases, deliverables, substrate classes and
+complete structured gates SHALL match. `contract_ready_score` SHALL equal one
+only when baseline parity passes, consumed staging resolves to the activated
+authority, private deleted-task, reordered-task, altered-path and misspelled-gate
+copies fail, and the declared repository guards pass.
+
+The report SHALL authenticate the V665 capstone and retain all fourteen prior
+dispositions. Terminal producers, conductor pre-gate receipts, missing work and
+the capstone self row SHALL stay distinct. The schema authority and native parity
+remain qualified. The schema pilot made no model call. Missing scientific
+producers remain unavailable evidence, not measured nulls. Conductor completion
+does not become scientific success. Resource or custody blocks SHALL not retire
+an unmeasured hypothesis.
+
+The task SHALL declare planned and actual `aggregation`, `MODEL_SPECS=[]`, no
+current model invocation and typed zero invocation counts. JSONSchemaBench
+coverage, quality and latency controls SHALL map to Exp7631. EAEV evidence
+dimensions and counterfactual controls SHALL map to Exp7635 and Exp7636. Proper
+Calibeating and spline-local KAN limits SHALL map to Exp7635 through Exp7637.
+Independent goal checking SHALL map to Exp7639 and Exp7640. AS2 and ERM SHALL
+remain new leads. Inaccessible Semantic Scholar and OpenReview pages SHALL remain
+access outcomes. No paper result, theorem, hardware estimate, or learned benefit
+transfers automatically to Carnot.
+
+Validity, readiness, probability benefit, utility, retention and freshness SHALL
+remain separate. This infrastructure task SHALL open no science gate. Exact
+fixtures are `circular_positive`; readiness alone is `null`; failed claimed
+benefit gates forbid a positive verdict. Fixed publication gates G1 through G4
+SHALL remain unchanged and keep historic FoVer eligibility separate from V666.
+The terminal artifact SHALL include raw contract rows, prior dispositions, source
+hashes, command receipts, field principles, an independent reduction, exact
+reader outcomes and a checksum before atomic publication.
+
+### SCENARIO-REPORT-7629-AUTHORITY: Exact contract and lifecycle controls
+
+**Given** the V666 design and a matching staged or activated roadmap
+**When** Experiment 7629 compares the complete ordered machine contract
+**Then** all fourteen identities, titles, phases, paths, substrates and gates match
+**And** deleted, reordered, altered-path and misspelled-gate copies fail
+**And** consumed staging selects the activated authority without changing it.
+
+### SCENARIO-REPORT-7629-CUSTODY: V665 dispositions stay literal
+
+**Given** the authenticated V665 terminal capstone
+**When** Experiment 7629 reduces its fourteen dispositions
+**Then** terminal producers, pre-gates, missing work and the self row stay distinct
+**And** the unobserved pilot and missing scientific producers retain their limits
+**And** conductor completion does not become scientific success.
+
+### SCENARIO-REPORT-7629-METHODS: Rechecks and new leads stay bounded
+
+**Given** the named primary method pages and recorded access failures
+**When** Experiment 7629 writes the V666 method map
+**Then** adopted controls map to Exp7631, Exp7635 through Exp7637 and Exp7639 through Exp7640
+**And** AS2 and ERM remain new leads rather than adopted results
+**And** no theorem, paper metric or hardware claim transfers automatically.
+
+### SCENARIO-REPORT-7629-TERMINAL: Exact readers control publication
+
+**Given** a frozen affected-file manifest and one exact terminal candidate
+**When** scoped tests, coverage, static checks, repository guards and cold readers run
+**Then** commands, exits, worktree paths, log hashes and outcomes remain recorded
+**And** independent reduction and strict readers pass before atomic publication
+**And** the complete null advisory opens no scientific benefit gate.
+
+### Implementation Status (REQ-REPORT-7629)
+
+Specification added before tests and implementation. The conductor owns later
+status, changelog and traceability reconciliation.
