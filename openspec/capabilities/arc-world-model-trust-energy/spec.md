@@ -36070,6 +36070,102 @@ Production defaults SHALL remain unchanged.
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## V663 ARC output-boundary repair and observable alias audit — 2026-09-24
+
+### REQ-ARC-WMTE-7589: Keep ARC validation scratch outside immutable evidence
+
+Experiment 7589 SHALL reproduce the E3 output rejection against a temporary
+miniature `results/` tree. It SHALL preserve the production guard. It SHALL run
+the unchanged E2E-009 through E2E-013 scopes and the foreign-current-directory,
+LLM-off E3 smoke with all live outputs and pytest base directories below one
+task-owned `/tmp` directory. It SHALL create parents before each child starts.
+It SHALL copy logs into `results/raw` only after each child exits.
+
+The experiment SHALL install a default-off observer at the final E3
+observation/action boundary. The observer SHALL receive only the current full
+observation, the selected action and coordinates, and the observed level. It
+SHALL form causal keys for prior-history lengths 0, 1, 2, and 4 before the next
+observation exists. The next call MAY finalize those keys with the next full-
+frame hash. A level increase SHALL mark the completed transition as a boundary
+and clear history before keys for the new level are formed.
+
+For each history length, the observer SHALL distinguish a singleton key with
+unknown support, a repeated key with one target, and a repeated key with
+contradictory next-frame targets. Coordinate changes SHALL change key identity.
+It SHALL retain at most 2,000 finalized events. Support counters SHALL contain
+hashes and counts only. Eviction SHALL decrement live support, advance a hash
+chain, and emit a bounded explicit eviction receipt. It SHALL not inspect game
+state, source, adapters, stored routes, expert engines, or future observations.
+
+The enabled and disabled observer paths SHALL return identical actions,
+coordinates, and termination. They SHALL preserve existing model calls,
+provenance, environment work, random state, world-model acceptance, HUD masks,
+and thinking settings. Fixture evidence is observational and cannot support a
+solve or policy-benefit claim.
+
+This task SHALL load no model and make no generation. `MODEL_SPECS` SHALL be an
+empty list. Current load, forward, generation, and token counts SHALL be zero.
+It SHALL exercise predict, delayed release, update, durable persistence, cold
+reload, and duplicate rejection without changing model weights.
+
+The terminal artifact SHALL publish one auditable row per unit and arm. Each
+row SHALL include absolute metrics, numerator, denominator, seed, direction,
+missingness, censoring, and provenance. It SHALL separate validity, readiness,
+benefit, retention, and freshness gates. `arc_output_boundary_ready_score` MAY
+equal one only when the protected-path control, all five unchanged E2E suites,
+and the foreign-CWD smoke pass outside `results/`.
+`history_observer_ready_score` MAY equal one only when action parity, causal
+keys, level clearing, coordinate identity, repeated-key conflicts, singleton
+support, and bounded-memory eviction all pass.
+
+The experiment SHALL freeze its affected-file validation manifest. It SHALL
+run serial scoped pytest without repository addopts, 100 percent changed-module
+coverage with a private coverage database, scoped Ruff check and format,
+changed-module mypy, and scoped spec coverage. The declared entrypoint and a
+fresh-process cold replay SHALL run. Independent reduction, adversarial
+verification, and strict verdict-row consistency SHALL read the terminal
+candidate before atomic publication. Production defaults and acceptance
+thresholds SHALL remain unchanged.
+
+#### SCENARIO-ARC-WMTE-7589-OUTPUT-BOUNDARY
+
+- **GIVEN** an E3 output below a temporary miniature `results/` directory
+- **WHEN** the unchanged production path contract checks it
+- **THEN** it exits with the immutable-evidence rejection and writes no output
+- **AND** the same tests and smoke pass with task-owned paths below `/tmp`.
+
+#### SCENARIO-ARC-WMTE-7589-CAUSAL-HISTORY
+
+- **GIVEN** the same observation and selected action followed by two different next frames
+- **WHEN** independent observers finalize the pending event
+- **THEN** every pre-next-frame key is equal across observers
+- **AND** repeated use of that key records contradictory target hashes.
+
+#### SCENARIO-ARC-WMTE-7589-PARITY-AND-LEVELS
+
+- **GIVEN** deterministic E3 observations with the observer off and on
+- **WHEN** the real final action boundary runs
+- **THEN** every action, coordinate, and termination value is equal
+- **AND** a level increase finalizes the boundary then clears prior history.
+
+#### SCENARIO-ARC-WMTE-7589-BOUNDS
+
+- **GIVEN** more finalized events than the configured ring capacity
+- **WHEN** the observer appends another event
+- **THEN** the oldest event leaves live support and an eviction receipt is emitted
+- **AND** live events and hashed support counters remain bounded.
+
+#### SCENARIO-ARC-WMTE-7589-TERMINAL
+
+- **GIVEN** causal fixtures, corrected private paths, and zero current model calls
+- **WHEN** scoped checks, unchanged ARC E2Es, lifecycle replay, strict readers,
+  and cold replay finish
+- **THEN** readiness remains separate from benefit and exact commands and hashes persist
+- **AND** no default, guard, action, acceptance threshold, or solve claim changes.
+
+Implementation status: specified 2026-09-24. The conductor owns status,
+changelog, and traceability reconciliation.
+
 ## V662 independent ARC live-panel audit — 2026-09-24
 
 ### REQ-ARC-WMTE-7584: Reduce both live panels without substituting missing evidence

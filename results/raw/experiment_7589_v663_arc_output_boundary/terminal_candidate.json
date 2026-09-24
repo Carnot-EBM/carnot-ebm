@@ -1,0 +1,2548 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "benefit": {
+      "expected": "separate_authorized_live_comparison",
+      "observed": "not_run",
+      "passed": false,
+      "principle": "Readiness and oracle-defined fixtures do not measure solve or policy benefit."
+    },
+    "freshness": {
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "principle": "Current source hashes and fresh-process readers prevent inherited evidence."
+    },
+    "readiness": {
+      "expected": {
+        "arc_output_boundary_ready_score": 1,
+        "history_observer_ready_score": 1
+      },
+      "observed": {
+        "arc_output_boundary_ready_score": 1,
+        "history_observer_ready_score": 1
+      },
+      "passed": true,
+      "principle": "Both corrected output custody and causal observer parity are required."
+    },
+    "retention": {
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Delayed updates count only after persistence, reload, and duplicate rejection."
+    },
+    "validity": {
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "principle": "All fixtures, scoped checks, and strict readers must pass exact bytes."
+    }
+  },
+  "applicable_numbered_e2e": [
+    "E2E-009",
+    "E2E-010",
+    "E2E-011",
+    "E2E-012",
+    "E2E-013"
+  ],
+  "arc_output_boundary_ready_score": 1,
+  "default_promotion_authorized": false,
+  "duration_s": 134.28371522997622,
+  "e2e_assertion_and_command_parity": [
+    {
+      "assertions_unchanged": true,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_009",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "name": "e2e_009",
+      "scope_unchanged": true
+    },
+    {
+      "assertions_unchanged": true,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_010",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "name": "e2e_010",
+      "scope_unchanged": true
+    },
+    {
+      "assertions_unchanged": true,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_011",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "name": "e2e_011",
+      "scope_unchanged": true
+    },
+    {
+      "assertions_unchanged": true,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_012",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7492_e6_timed_cost_profile.py",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "name": "e2e_012",
+      "scope_unchanged": true
+    },
+    {
+      "assertions_unchanged": true,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_013",
+        "tests/python/test_arc_decision_telemetry.py",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7531_b2_induction_gate_measurement.py",
+        "tests/python/test_semif_arc_readout_eval.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "name": "e2e_013",
+      "scope_unchanged": true
+    },
+    {
+      "assertions_unchanged": true,
+      "command_argv": [
+        "/usr/bin/env",
+        "-C",
+        "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd",
+        "CARNOT_ARC_DISABLE_INDUCTION=1",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json"
+      ],
+      "exit_code": 0,
+      "name": "foreign_cwd_llm_off_e3_smoke",
+      "scope_unchanged": true
+    }
+  ],
+  "e2e_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_009 tests/python/test_arc_induction_state_persistence.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_009",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 12.379383716004668,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_009/00_e2e_009.log",
+      "log_sha256": "sha256:e5a33f97f61ccb3ef106a729a964db4b4cc98595d4340ddb28364221e3193d55",
+      "name": "e2e_009",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.78s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_009/00_e2e_009.log",
+      "private_log_sha256": "sha256:e5a33f97f61ccb3ef106a729a964db4b4cc98595d4340ddb28364221e3193d55",
+      "scope": "E2E-009",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_010 tests/python/test_arc_tool_grammar_transport.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_010",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 11.298289625003235,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_010/01_e2e_010.log",
+      "log_sha256": "sha256:3c84f74ada3336382fbe5f3104fcd029de97d5a89afdccab719f7fffe5947da9",
+      "name": "e2e_010",
+      "output_tail": "..................................................                       [100%]\n50 passed in 7.64s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_010/00_e2e_010.log",
+      "private_log_sha256": "sha256:3c84f74ada3336382fbe5f3104fcd029de97d5a89afdccab719f7fffe5947da9",
+      "scope": "E2E-010",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_011 tests/python/test_arc_decision_telemetry.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_011",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 6.675432963005733,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_011/02_e2e_011.log",
+      "log_sha256": "sha256:7f1282916598d8dda27337a4d4009be6a9bdee1703b7ad7ff1a94445af162498",
+      "name": "e2e_011",
+      "output_tail": "...............                                                          [100%]\n15 passed in 3.80s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_011/00_e2e_011.log",
+      "private_log_sha256": "sha256:7f1282916598d8dda27337a4d4009be6a9bdee1703b7ad7ff1a94445af162498",
+      "scope": "E2E-011",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_012 tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7492_e6_timed_cost_profile.py tests/python/test_arc_decision_telemetry.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_012",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7492_e6_timed_cost_profile.py",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 8.635633695987053,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_012/03_e2e_012.log",
+      "log_sha256": "sha256:d9c86ebe3860e618710a3289cf3ae50f9cb3cf7dbab61a72f641ac77a1b1a038",
+      "name": "e2e_012",
+      "output_tail": "..............................                                           [100%]\n30 passed in 5.84s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_012/00_e2e_012.log",
+      "private_log_sha256": "sha256:d9c86ebe3860e618710a3289cf3ae50f9cb3cf7dbab61a72f641ac77a1b1a038",
+      "scope": "E2E-012",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_013 tests/python/test_arc_decision_telemetry.py tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7531_b2_induction_gate_measurement.py tests/python/test_semif_arc_readout_eval.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_013",
+        "tests/python/test_arc_decision_telemetry.py",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7531_b2_induction_gate_measurement.py",
+        "tests/python/test_semif_arc_readout_eval.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 8.703343385015614,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_013/04_e2e_013.log",
+      "log_sha256": "sha256:d11b71821ebd53bb0a8555ab043194898ed4787830c0793d613cfce109d2d68b",
+      "name": "e2e_013",
+      "output_tail": "........................................                                 [100%]\n40 passed in 5.86s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_013/00_e2e_013.log",
+      "private_log_sha256": "sha256:d11b71821ebd53bb0a8555ab043194898ed4787830c0793d613cfce109d2d68b",
+      "scope": "E2E-013",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/usr/bin/env -C /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd CARNOT_ARC_DISABLE_INDUCTION=1 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json",
+      "command_argv": [
+        "/usr/bin/env",
+        "-C",
+        "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd",
+        "CARNOT_ARC_DISABLE_INDUCTION=1",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 3.229144118988188,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/foreign_cwd_llm_off_e3_smoke/05_foreign_cwd_llm_off_e3_smoke.log",
+      "log_sha256": "sha256:b15abee8e48b2effc5ca43606238a282406bc94a975a72f18ccf4f1682cbba56",
+      "name": "foreign_cwd_llm_off_e3_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-24 02:24:13 | INFO | Created new scorecard: f121ffa5-95f1-4faa-8ae4-6d48490858ce\n2026-09-24 02:24:13 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-24 02:24:13 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/foreign_cwd_llm_off_e3_smoke/00_foreign_cwd_llm_off_e3_smoke.log",
+      "private_log_sha256": "sha256:b15abee8e48b2effc5ca43606238a282406bc94a975a72f18ccf4f1682cbba56",
+      "scope": "private LLM-off real E3 episode from a foreign cwd",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    }
+  ],
+  "execution_venue": "host",
+  "experiment_id": 7589,
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "An empty list declares that current work made no LLM call.",
+    "acceptance_gate_results": "Validity, readiness, benefit, retention, and freshness remain separate.",
+    "arc_output_boundary_ready_score": "One requires all unchanged ARC E2Es and private smoke to pass outside results.",
+    "duration_s": "Monotonic phase time excludes inherited or padded duration.",
+    "field_principles": "One-line principles preserve field meaning outside the task prompt.",
+    "flagged_adversarial": "Persist the terminal reader outcome because flagged evidence opens no gate.",
+    "gate_check_summary": "A blocked result names every failed comparison operand.",
+    "history_observer_ready_score": "One requires policy parity, causal fixtures, and bounded memory.",
+    "honest_verdict": "Use a complete_ terminal prefix; execution completion does not prove benefit.",
+    "inference_substrate": "The artifact states the real CPU-only execution mode.",
+    "inference_substrate_class": "Actual and planned classes stay separate; this task loads no model.",
+    "invocation_counts": "Loads, forwards, generations, and tokens are counted independently.",
+    "policy_parity_rows": "Each action retains on/off equality, coordinates, and termination.",
+    "private_output_paths": "Actual temporary paths and post-exit copy hashes prove output custody.",
+    "random_seed": "Explicit seeds make deterministic fixtures reproducible.",
+    "reproducibility_checksum": "One digest binds evidence, configuration, and terminal reduction.",
+    "rows": "Raw per-unit operands make every comparison independently reducible.",
+    "sample_size_budget": "Independent units, exclusions, and censoring prevent seed inflation.",
+    "solve_provenance": "Any incidental level is live-agent self-discovery, not a solve improvement.",
+    "source_artifact_hashes": "Authenticated sources stay distinct from missing or pre-gate artifacts.",
+    "validation_receipts": "Commands, worktree, exits, and log hashes bind each validation claim.",
+    "verdict_class": "Use exactly one closed verdict class so readiness cannot masquerade as benefit.",
+    "verifier_is_oracle": "Code-defined fixture labels cannot establish oracle-distinct benefit."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "benefit_gate_intentionally_closed": true,
+    "failed_checks": [
+      "validity",
+      "freshness"
+    ],
+    "failed_count": 2,
+    "passed": false
+  },
+  "generator_weight_change_authorized": false,
+  "historical_model_identity": [],
+  "history_observer_ready_score": 1,
+  "honest_verdict": "complete_disqualified_required_validation_or_fixture_failure",
+  "hud_masks_changed": false,
+  "independent_reduction": {
+    "all_units_passed": true,
+    "by_arm": {
+      "immutable_evidence_guard": {
+        "denominator": 1,
+        "numerator": 1,
+        "row_count": 1
+      },
+      "observable_history_fixture": {
+        "denominator": 6,
+        "numerator": 6,
+        "row_count": 6
+      },
+      "observer_on_vs_off": {
+        "denominator": 10,
+        "numerator": 10,
+        "row_count": 1
+      }
+    },
+    "censored_count": 0,
+    "missing_count": 0,
+    "passed_unit_count": 8,
+    "row_count": 8,
+    "sign_counts": {
+      "negative": 0,
+      "positive": 8,
+      "zero": 0
+    }
+  },
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "forward_calls_attempted": 0,
+    "forward_calls_completed": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "input_tokens": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "output_tokens": 0
+  },
+  "learning_lifecycle": {
+    "duplicate_rejected": true,
+    "model_weights_changed": false,
+    "operations": [
+      "predict",
+      "release",
+      "update",
+      "persist",
+      "reload",
+      "duplicate_rejection"
+    ],
+    "passed": true,
+    "prediction_label_available": false,
+    "reload_equal": true,
+    "state_changed_after_update": true,
+    "state_sha256": "sha256:63115ce3ba36142318e4074a66ff77ab9546b969f6fd7920c1c94a93a95deba7",
+    "state_unchanged_after_duplicate": true
+  },
+  "methodology_note": "Fixture success is circular positive control evidence only. The terminal result is a null because no solve, action-efficiency, or acceptance-threshold benefit was tested.",
+  "milestone": "2026.09.663",
+  "model_invoked": false,
+  "observer_default_enabled": false,
+  "observer_fixture_evidence": {
+    "bounded_memory_evidence": {
+      "enabled": true,
+      "error_count": 0,
+      "events": [
+        {
+          "action": {
+            "action": 1,
+            "coordinates": {
+              "x": 3,
+              "y": 0
+            }
+          },
+          "event_sha256": "sha256:1831369415d7349174f204e504a33779f58fd985f42456620468fba63f82749b",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 3
+          },
+          "keys": {
+            "0": "sha256:6068ea7b234faf4242be00cb70e4c59201a55820230262d9f7609f9b6b25f8de",
+            "1": "sha256:74100ff1d6be693d4dafd26ef289c39262aacaa09be290e21af14c03672e8947",
+            "2": "sha256:2bf17300f116b1d7f3568d5fdb543a8403ba2e3040e955904813a409ca941dcf",
+            "4": "sha256:4fccbef342e22feea0a49bcb24705931fcb3bf8efa2a0107e35284a73110d057"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:739631f6525c38982fcb5e9097ebd69de227117c75d14991facf4bba666c703a",
+          "target_sha256": "sha256:4f6f9c89d4e092d7eb20e98f40a3d6e04e4f401ae38bdaf45bfa79481acabf04"
+        },
+        {
+          "action": {
+            "action": 1,
+            "coordinates": {
+              "x": 4,
+              "y": 0
+            }
+          },
+          "event_sha256": "sha256:fef12d800c32e1be845373a3a2ab851253c162c2fa6f2a75556159dcd5a0d473",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 4
+          },
+          "keys": {
+            "0": "sha256:2797b2ed5b0259a7fa265661a9ac27391fb1d8997977588948f3a9c223cb3d2c",
+            "1": "sha256:99bd546e108b4095a07da276734304cca4a618f0c58e52487f37f4cd67b1b8ca",
+            "2": "sha256:cb0143df36f5be6aa1f14c6f877241c27ba5567cffb01ae9f5af6099a6bcd189",
+            "4": "sha256:3a420d31e2d40808b7b61785dd19a337e134c9b8417c0af5750c88c3afd8db69"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:4f6f9c89d4e092d7eb20e98f40a3d6e04e4f401ae38bdaf45bfa79481acabf04",
+          "target_sha256": "sha256:86037c6ab8963f484145fb011bb434a9ef1ca7238e56f6a84e56fef6b8338c73"
+        },
+        {
+          "action": {
+            "action": 1,
+            "coordinates": {
+              "x": 5,
+              "y": 0
+            }
+          },
+          "event_sha256": "sha256:7611ffb96eba1f7a5916ed6d5893fb11382760246a45c18839c53f4d774db557",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 4
+          },
+          "keys": {
+            "0": "sha256:a09a5c17a22372e38b9b0f26abe97062bf1c40a7425cf6bf11eeee4d83fa994d",
+            "1": "sha256:49d94daa6ba3dbceb094c4e71a1d903db0babbc9411b1943ef3ead0e7aa09287",
+            "2": "sha256:4a12746feea3d1a558743494137eadb1f6450c6eda371ecac458c1bb240af355",
+            "4": "sha256:cd82c45492322fdc0280a7cda0d059ee1812b88cae243a2f776d6b4fa77a2c55"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:86037c6ab8963f484145fb011bb434a9ef1ca7238e56f6a84e56fef6b8338c73",
+          "target_sha256": "sha256:0939de29ec771ef02cdeab7e31f7c40a80751167cdec4c8ce8c6582e948d07b5"
+        }
+      ],
+      "evictions": {
+        "count": 3,
+        "hash_chain": "sha256:2f0abcf7504133152f0cc3913980306668d8d308bfe45be80ceacdb537594cae",
+        "recent": [
+          {
+            "event_sha256": "sha256:eebbc180c1e8382c0ed40501de2fbc62f51aa8460d3be95480ee00ec1c456612",
+            "eviction_index": 1,
+            "hash_chain": "sha256:e35b525d0b78a9157aa1cdf01c227086911463ec5eddfa4bbe5ed1bf25bb25e8"
+          },
+          {
+            "event_sha256": "sha256:abc4b0ade0f71e58f639c68f43bd7e43520431d4319d38f720c1f62d4368d8a7",
+            "eviction_index": 2,
+            "hash_chain": "sha256:cb5c38f1ec2cf921fc264dd1cb7aa8cd384526969f2e4af24bd5f39d94daa20b"
+          },
+          {
+            "event_sha256": "sha256:795c72bb5db696a8099ae807ba8249a500f3cb12e32238b304de0c2b8a94200f",
+            "eviction_index": 3,
+            "hash_chain": "sha256:2f0abcf7504133152f0cc3913980306668d8d308bfe45be80ceacdb537594cae"
+          }
+        ],
+        "recent_capacity": 32
+      },
+      "finalized_event_count": 6,
+      "game_id": "fixture",
+      "history_lengths": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "level_boundary_count": 0,
+      "live_event_count": 3,
+      "max_events": 3,
+      "pending": {
+        "action": {
+          "action": 1,
+          "coordinates": {
+            "x": 6,
+            "y": 0
+          }
+        },
+        "history_items_used": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "4": 4
+        },
+        "keys": {
+          "0": "sha256:98329f20f46d3ed0d337159661909904473e27b675a11ba690fd8cd16c4fe134",
+          "1": "sha256:8fef53e224c9f927309bef923bed93b503aa788fdfc154836eba13059e113062",
+          "2": "sha256:9b66771844802ba38dd713b00e3a7ccabb98df3f7b42b1641eda223b18be81a5",
+          "4": "sha256:f1334acf7d36485f2a1a4a42220371d7829d83aef624ad309b125eb92b4b92fd"
+        },
+        "level_before": 0,
+        "observation_sha256": "sha256:0939de29ec771ef02cdeab7e31f7c40a80751167cdec4c8ce8c6582e948d07b5",
+        "target_sha256": null
+      },
+      "support_summary": {
+        "0": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 3,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 3
+        },
+        "1": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 3,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 3
+        },
+        "2": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 3,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 3
+        },
+        "4": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 3,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 3
+        }
+      }
+    },
+    "checks": {
+      "bounded_memory": {
+        "passed": true
+      },
+      "coordinate_identity": {
+        "passed": true
+      },
+      "history_causality": {
+        "passed": true
+      },
+      "level_reset_clearing": {
+        "passed": true
+      },
+      "repeated_key_conflicts": {
+        "passed": true
+      },
+      "singleton_unknown_support": {
+        "passed": true
+      }
+    },
+    "conflict_evidence": {
+      "enabled": true,
+      "error_count": 0,
+      "events": [
+        {
+          "action": {
+            "action": 6,
+            "coordinates": {
+              "x": 2,
+              "y": 3
+            }
+          },
+          "event_sha256": "sha256:e371ba6a7221840d362d3a01b02957aa458ba652db8b149c1ca29a480922d037",
+          "history_items_used": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "4": 0
+          },
+          "keys": {
+            "0": "sha256:cc0d3bb46f8ba09b8ba5939a07d05fa3431bc06e0c18d90d6eb1cbff6a3bb97e",
+            "1": "sha256:02c21d3cbefb6edef1262c4d63cd8e8e41cc995f447c4c668d8c3928d6e97115",
+            "2": "sha256:3802ef25f3d4407ebd764ca4f1a586e5d0d4da7649ac7f2d647d2c6034bd8817",
+            "4": "sha256:19dbf824c39734393d6d9a65b79cc7b4339858a66677cef19e48b7f262f2c66b"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:383ffbae7fc708dda551bd0cbcaa503bfb1b0868dea36ca814d7b6ede6882ad6",
+          "target_sha256": "sha256:b4cc55ffa99c2fee24ac4cfb0810ce9a8f173f88d232877ccf2722974abfa3d0"
+        },
+        {
+          "action": {
+            "action": 1,
+            "coordinates": {
+              "x": 2,
+              "y": 3
+            }
+          },
+          "event_sha256": "sha256:7d0d82d521d2bdad43bfad5e67e2f9069e9d7af0007a577c440e583b09be938a",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 1,
+            "4": 1
+          },
+          "keys": {
+            "0": "sha256:d8490a2faa03a8531a032026bc6b7c08e997fe333c31e990d28b07eb58839839",
+            "1": "sha256:a104e842f8646fc6450d08e17b2737b833c277b4fe992d8a3f794729402d843b",
+            "2": "sha256:9c72d0ea7dcaad74b0016091be98fedffb8a2ce22545d4a579e2afafdc51a14e",
+            "4": "sha256:80871c00e124f8c78cf7dc84b41558eca19b472191de273a591b6f7a9e043ad2"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:b4cc55ffa99c2fee24ac4cfb0810ce9a8f173f88d232877ccf2722974abfa3d0",
+          "target_sha256": "sha256:383ffbae7fc708dda551bd0cbcaa503bfb1b0868dea36ca814d7b6ede6882ad6"
+        },
+        {
+          "action": {
+            "action": 6,
+            "coordinates": {
+              "x": 2,
+              "y": 3
+            }
+          },
+          "event_sha256": "sha256:2aa85a5d02241c5691969e91d0b2dd03fd290651304fd0e35ffc3c2fd6020072",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 2
+          },
+          "keys": {
+            "0": "sha256:cc0d3bb46f8ba09b8ba5939a07d05fa3431bc06e0c18d90d6eb1cbff6a3bb97e",
+            "1": "sha256:afccd74b319df2411b7ab045ddb4d773da69837378b48c32c8c0651f62a6f1bb",
+            "2": "sha256:ed6c3b533243a78ff481d3dbdc2627520b59ca10787cafbe3afa1d8d184d5319",
+            "4": "sha256:24f3f2e4d2fae740026723c4c8be6e73fe79de3602cba6753a6b7e17a971aeb8"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:383ffbae7fc708dda551bd0cbcaa503bfb1b0868dea36ca814d7b6ede6882ad6",
+          "target_sha256": "sha256:30c8a5d2a97a19ab0134a1992be66af33d01e6fb3826f45f5d224afe96e0b11b"
+        }
+      ],
+      "evictions": {
+        "count": 0,
+        "hash_chain": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "recent": [],
+        "recent_capacity": 32
+      },
+      "finalized_event_count": 3,
+      "game_id": "fixture",
+      "history_lengths": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "level_boundary_count": 0,
+      "live_event_count": 3,
+      "max_events": 2000,
+      "pending": {
+        "action": {
+          "action": 1,
+          "coordinates": {
+            "x": 2,
+            "y": 3
+          }
+        },
+        "history_items_used": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "4": 3
+        },
+        "keys": {
+          "0": "sha256:8a4f9e2174d880c61a778b2bff03960d907743cf7be3a464f028f510d4d15c02",
+          "1": "sha256:ed8aa778ce974d31601c3d6b589be2d35a2176134d4b4ae33c0cb02b23935d49",
+          "2": "sha256:28f75b65b339303dc975387939e841e75593358ac68ff6d863ffc1c64f677773",
+          "4": "sha256:14d7a7fe5393f29eda85f137ca7c374f74a635e290d09111f2146567c7293369"
+        },
+        "level_before": 0,
+        "observation_sha256": "sha256:30c8a5d2a97a19ab0134a1992be66af33d01e6fb3826f45f5d224afe96e0b11b",
+        "target_sha256": null
+      },
+      "support_summary": {
+        "0": {
+          "conflicting_keys": 1,
+          "contradictory_target_count": 2,
+          "live_key_count": 2,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 1
+        },
+        "1": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 3,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 3
+        },
+        "2": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 3,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 3
+        },
+        "4": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 3,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 3
+        }
+      }
+    },
+    "independent_reduction": {
+      "all_units_passed": true,
+      "by_arm": {
+        "observable_history_fixture": {
+          "denominator": 6,
+          "numerator": 6,
+          "row_count": 6
+        }
+      },
+      "censored_count": 0,
+      "missing_count": 0,
+      "passed_unit_count": 6,
+      "row_count": 6,
+      "sign_counts": {
+        "negative": 0,
+        "positive": 6,
+        "zero": 0
+      }
+    },
+    "passed": true,
+    "rows": [
+      {
+        "absolute_metric": 1.0,
+        "arm": "observable_history_fixture",
+        "censored": false,
+        "denominator": 1,
+        "direction": "higher_is_better",
+        "missing": false,
+        "numerator": 1,
+        "provenance": "code_defined_causal_fixture",
+        "seed": 7589001,
+        "unit": "history_causality"
+      },
+      {
+        "absolute_metric": 1.0,
+        "arm": "observable_history_fixture",
+        "censored": false,
+        "denominator": 1,
+        "direction": "higher_is_better",
+        "missing": false,
+        "numerator": 1,
+        "provenance": "code_defined_causal_fixture",
+        "seed": 7589002,
+        "unit": "level_reset_clearing"
+      },
+      {
+        "absolute_metric": 1.0,
+        "arm": "observable_history_fixture",
+        "censored": false,
+        "denominator": 1,
+        "direction": "higher_is_better",
+        "missing": false,
+        "numerator": 1,
+        "provenance": "code_defined_causal_fixture",
+        "seed": 7589003,
+        "unit": "coordinate_identity"
+      },
+      {
+        "absolute_metric": 1.0,
+        "arm": "observable_history_fixture",
+        "censored": false,
+        "denominator": 1,
+        "direction": "higher_is_better",
+        "missing": false,
+        "numerator": 1,
+        "provenance": "code_defined_causal_fixture",
+        "seed": 7589004,
+        "unit": "repeated_key_conflicts"
+      },
+      {
+        "absolute_metric": 1.0,
+        "arm": "observable_history_fixture",
+        "censored": false,
+        "denominator": 1,
+        "direction": "higher_is_better",
+        "missing": false,
+        "numerator": 1,
+        "provenance": "code_defined_causal_fixture",
+        "seed": 7589005,
+        "unit": "singleton_unknown_support"
+      },
+      {
+        "absolute_metric": 1.0,
+        "arm": "observable_history_fixture",
+        "censored": false,
+        "denominator": 1,
+        "direction": "higher_is_better",
+        "missing": false,
+        "numerator": 1,
+        "provenance": "code_defined_causal_fixture",
+        "seed": 7589006,
+        "unit": "bounded_memory"
+      }
+    ]
+  },
+  "phase_spans": [
+    {
+      "duration_s": 0.00540847799857147,
+      "ended_s": 0.005664639000315219,
+      "phase": "preconditions",
+      "started_s": 0.0002562819863669574
+    },
+    {
+      "duration_s": 1.5238569469947834,
+      "ended_s": 1.5317457529890817,
+      "phase": "protected_path",
+      "started_s": 0.00788901699706912
+    },
+    {
+      "duration_s": 0.002535531995818019,
+      "ended_s": 1.5342828779830597,
+      "phase": "observer_fixtures",
+      "started_s": 1.5317473959876224
+    },
+    {
+      "duration_s": 2.2052187439985573,
+      "ended_s": 3.7395021629927214,
+      "phase": "policy_parity",
+      "started_s": 1.5342834689945448
+    },
+    {
+      "duration_s": 0.0002495989901944995,
+      "ended_s": 3.739752753986977,
+      "phase": "learning_lifecycle",
+      "started_s": 3.7395032049971633
+    },
+    {
+      "duration_s": 79.61701092199655,
+      "ended_s": 83.3567640959809,
+      "phase": "scoped_validation",
+      "started_s": 3.739753384987125
+    },
+    {
+      "duration_s": 50.923518266004976,
+      "ended_s": 134.28028406598605,
+      "phase": "arc_e2e",
+      "started_s": 83.35676592998789
+    },
+    {
+      "duration_s": 0.0033907790202647448,
+      "ended_s": 134.28367612700094,
+      "phase": "evidence_copy",
+      "started_s": 134.28028539798106
+    }
+  ],
+  "planned_inference_substrate_class": "no_model_load",
+  "policy_parity_rows": [
+    {
+      "action_index": 0,
+      "equal": true,
+      "off_action": "RESET",
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": "RESET",
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 1,
+      "equal": true,
+      "off_action": 4,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 4,
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 2,
+      "equal": true,
+      "off_action": 5,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 5,
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 3,
+      "equal": true,
+      "off_action": 1,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 1,
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 4,
+      "equal": true,
+      "off_action": 4,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 4,
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 5,
+      "equal": true,
+      "off_action": 4,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 4,
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 6,
+      "equal": true,
+      "off_action": 2,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 2,
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 7,
+      "equal": true,
+      "off_action": 4,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 4,
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 8,
+      "equal": true,
+      "off_action": 2,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 2,
+      "on_coordinates": null,
+      "on_terminated": false
+    },
+    {
+      "action_index": 9,
+      "equal": true,
+      "off_action": 5,
+      "off_coordinates": null,
+      "off_terminated": false,
+      "on_action": 5,
+      "on_coordinates": null,
+      "on_terminated": false
+    }
+  ],
+  "policy_parity_summary": {
+    "action_count": 10,
+    "child_exit_code": 0,
+    "child_stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+    "environment_calls_off": 10,
+    "environment_calls_on": 10,
+    "observer_diagnostics": {
+      "enabled": true,
+      "error_count": 0,
+      "events": [
+        {
+          "action": {
+            "action": 4,
+            "coordinates": null
+          },
+          "event_sha256": "sha256:3f6db381c44a60df3e43840222d5c78df5f87804b27adef696ca7d8647590bfd",
+          "history_items_used": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "4": 0
+          },
+          "keys": {
+            "0": "sha256:6ccdd7d7b6d32a736c223d05934ab3caecadd8c55f838901ea92b46bdb5d373f",
+            "1": "sha256:91674dc7e3792c729ed2136d68057b32cc143aecd29195342b0683798da870d0",
+            "2": "sha256:c235299aa6c72d03b19fe59778c5de5af49457527eeb32ecf7c571f8eb06adc0",
+            "4": "sha256:5526e6f0d15e6b1a4989134f53d126d783a9a5fcbe2884545b764c9683aa662f"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:12b352f7e2dd36e8251daa65d6d3f0e6b1d43599c906e2b999ea487376ce388c",
+          "target_sha256": "sha256:702a46af8b693be1c450089287d199e4b7ea573ee3bd5e83f02bd6d7c73f0636"
+        },
+        {
+          "action": {
+            "action": 5,
+            "coordinates": null
+          },
+          "event_sha256": "sha256:67546e2eefeae67e9f07baf16e4dd0c010bc4c0284abac3e1bc9ba4e98513be5",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 1,
+            "4": 1
+          },
+          "keys": {
+            "0": "sha256:2898725f628649a16df862e8a7644a2d20ceb2779492fc3cc29c3b5c31aa3191",
+            "1": "sha256:446a0891948d34026dc8e44a5f1e2a149675f31eb80ed9a1eb7a5528a41c6fc2",
+            "2": "sha256:7acff54a858d378be719328641f2c0fc39f6a7785c195d3e15102c54eb8bf083",
+            "4": "sha256:88de1a8b8e9a6b2ec16ecd0643ad6a568729dc61f74321d872af9679d9c45d75"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:702a46af8b693be1c450089287d199e4b7ea573ee3bd5e83f02bd6d7c73f0636",
+          "target_sha256": "sha256:58f360a066be129bfed445f0471348d5958ab8df5ef8c2cb20363a0e6591955e"
+        },
+        {
+          "action": {
+            "action": 1,
+            "coordinates": null
+          },
+          "event_sha256": "sha256:4f9837093adf9387ee5c274100ce1ee263e74d8422466c7c4f3491fa4dc5753b",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 2
+          },
+          "keys": {
+            "0": "sha256:42499d968f0c4df4dac8a1c12e506786fd40e40606d08ace057c50dc494ea2ac",
+            "1": "sha256:cc08c252c2830f736670cd58fa3079bd59e4160251c274248996491d8f0403aa",
+            "2": "sha256:818733777a8b6132a4a083dc1ab3392c6e82414e3dd096f80c68186f66097a65",
+            "4": "sha256:18cf9db6ac0982730baf503ceb001386318d1d5e9d254306929cf966bd40ddf7"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:58f360a066be129bfed445f0471348d5958ab8df5ef8c2cb20363a0e6591955e",
+          "target_sha256": "sha256:a09faba16238ccd7065ee9c093ba20ff01094d600661b2e9ac2aab981db3500f"
+        },
+        {
+          "action": {
+            "action": 4,
+            "coordinates": null
+          },
+          "event_sha256": "sha256:57c4c6f2f9e63251fa49f0f484660ab30dac20f49ffe49deada43f3a2f038d4a",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 3
+          },
+          "keys": {
+            "0": "sha256:16d2f9dcbc123794de6ed0fd964d493b0956eb8cf60967c5d5cc6ea03921081e",
+            "1": "sha256:c85d4a0927a8dfc64461cd5bebaf3f7368f926cc7eb3bc929a92e079eb4edac7",
+            "2": "sha256:74f3af3689d38432ff5c04193a5f7e45e9e272ea4501ae6aa45a265cd1f3dbc2",
+            "4": "sha256:497c3ecd8a9eb1b49fcb86ec113e49d0946402131627461f8fd867fae9d9866f"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:a09faba16238ccd7065ee9c093ba20ff01094d600661b2e9ac2aab981db3500f",
+          "target_sha256": "sha256:2b369d0760236a837ff1595ab6e0162dfb77b2fa18424cf814d55da5d74b792d"
+        },
+        {
+          "action": {
+            "action": 4,
+            "coordinates": null
+          },
+          "event_sha256": "sha256:5c89e54b5f363b0ab6eb8fe3672c534e68e65e1e2771b9e4ed807a28019abd55",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 4
+          },
+          "keys": {
+            "0": "sha256:a2114a0694b42029693ad3d4f393b3733b1f607dbc86c5a1190dd2831faf62cf",
+            "1": "sha256:88797fe4e6ea209fd12c8c87fb8b1abb291be1256a9659dec5440cffb34414d1",
+            "2": "sha256:a6d00eca212146b863af1d2a0bde87e50ba77eecd729037f05cec82b01f163b3",
+            "4": "sha256:d20d7bf1aca473085b866a4fd44af22b2234cbbc116b4ad9be0a2d242771ed18"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:2b369d0760236a837ff1595ab6e0162dfb77b2fa18424cf814d55da5d74b792d",
+          "target_sha256": "sha256:15d8c8f0698a86236eadfaaa7670dcb38f9fae7b64dc6bf5268cc323d45f608c"
+        },
+        {
+          "action": {
+            "action": 2,
+            "coordinates": null
+          },
+          "event_sha256": "sha256:48fa0c26effee9d1032bf0478288c8c140b2beb99ef766425d250abb05b3a74e",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 4
+          },
+          "keys": {
+            "0": "sha256:2e332f510eb348df7b5212ddceeb39d40880a49883d6a69ef6b873182d2487a4",
+            "1": "sha256:af4e049d646c3a6bc2e8cd8d1c8cda209fdce18c42f474d28d35f880461da8e8",
+            "2": "sha256:9a0e8f925e49feced545ccf062ada8812a337c44036912f8c5e220edf1b1e128",
+            "4": "sha256:d31d2e9771bcf840c91d34c75195a51c4ba313a71a623176443f91d35fb69abe"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:15d8c8f0698a86236eadfaaa7670dcb38f9fae7b64dc6bf5268cc323d45f608c",
+          "target_sha256": "sha256:7262beb4a8fe39c6fe7fd5d97956b3e72a32365028caccfd2d9c7c3928583e9d"
+        },
+        {
+          "action": {
+            "action": 4,
+            "coordinates": null
+          },
+          "event_sha256": "sha256:b986c7052d68f04118fcbb48fe369ebc5d0b167eccba0d519088e4ca464690e4",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 4
+          },
+          "keys": {
+            "0": "sha256:b869386276802ba50762bef8afa7354a2f2a145aee337425e43f6a06bb24b6cd",
+            "1": "sha256:ea1f9a5f6e7560a416f50e238c8227c40074340ae015d3fe55dcaa1a087759de",
+            "2": "sha256:c083cb2de6d4368c5127f56cb2238870553ef44e62ab619a93ed45a2eb645a82",
+            "4": "sha256:03d3bfbff0caa7c5b1e4874b33bf0490aa9131fafaf5a973ac8ea3582667b939"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:7262beb4a8fe39c6fe7fd5d97956b3e72a32365028caccfd2d9c7c3928583e9d",
+          "target_sha256": "sha256:7b2b45383463130654b9804d2380b84eb3a748b92a6222eb65ec6ce852ff661d"
+        },
+        {
+          "action": {
+            "action": 2,
+            "coordinates": null
+          },
+          "event_sha256": "sha256:eb01a7fac0cdf0de465517bc4b6e43ed27a73976a1d15fd4183a06cac2e9487f",
+          "history_items_used": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "4": 4
+          },
+          "keys": {
+            "0": "sha256:641f786e23cc56aee3b4c340e929b606f9d52e40e29576d26a5ffa8ffbf370fa",
+            "1": "sha256:208640fa37af8ec9f44ef75d8dff057813c15799a0c1c2944b6c851f977b7ade",
+            "2": "sha256:d31736bb9d937405054d8054709da25851d164d39f5a33d3887c6a3b67665e22",
+            "4": "sha256:d3982fd9605e5d3341239a913c313a8eb18582270aaf71cea4a11c94b9b70d9e"
+          },
+          "level_after": 0,
+          "level_before": 0,
+          "level_boundary": false,
+          "observation_sha256": "sha256:7b2b45383463130654b9804d2380b84eb3a748b92a6222eb65ec6ce852ff661d",
+          "target_sha256": "sha256:c0f364daf8af8e5e3e7481b95934c1a2c848104769d2be4f61ae63a5535bf272"
+        }
+      ],
+      "evictions": {
+        "count": 0,
+        "hash_chain": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "recent": [],
+        "recent_capacity": 32
+      },
+      "finalized_event_count": 8,
+      "game_id": "xx11",
+      "history_lengths": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "level_boundary_count": 0,
+      "live_event_count": 8,
+      "max_events": 2000,
+      "pending": {
+        "action": {
+          "action": 5,
+          "coordinates": null
+        },
+        "history_items_used": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "4": 4
+        },
+        "keys": {
+          "0": "sha256:879d289ba563ba104f785f188e489ba8f2896aa06a702083fa3eb2f6970d4d53",
+          "1": "sha256:2b4a03c9c3bdbea678abb8c7b391af3610fa18df970d16a48d3a8f6dd07eccbf",
+          "2": "sha256:0d2e88c4e9b2f1c8b0461de17bd947050d62b2fa4cd2b3fff4e0af0efd78a5a5",
+          "4": "sha256:79a25854838234ff4bc7a8020eca1cf20f3049f81e3ef5f949dd29bad7a9c17e"
+        },
+        "level_before": 0,
+        "observation_sha256": "sha256:c0f364daf8af8e5e3e7481b95934c1a2c848104769d2be4f61ae63a5535bf272",
+        "target_sha256": null
+      },
+      "support_summary": {
+        "0": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 8,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 8
+        },
+        "1": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 8,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 8
+        },
+        "2": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 8,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 8
+        },
+        "4": {
+          "conflicting_keys": 0,
+          "contradictory_target_count": 0,
+          "live_key_count": 8,
+          "repeated_consistent_keys": 0,
+          "singleton_unknown_support": 8
+        }
+      }
+    },
+    "passed": true,
+    "proposer_calls_off": 0,
+    "proposer_calls_on": 0,
+    "rng_equal": true,
+    "rows": [
+      {
+        "action_index": 0,
+        "equal": true,
+        "off_action": "RESET",
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": "RESET",
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 1,
+        "equal": true,
+        "off_action": 4,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 4,
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 2,
+        "equal": true,
+        "off_action": 5,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 5,
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 3,
+        "equal": true,
+        "off_action": 1,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 1,
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 4,
+        "equal": true,
+        "off_action": 4,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 4,
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 5,
+        "equal": true,
+        "off_action": 4,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 4,
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 6,
+        "equal": true,
+        "off_action": 2,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 2,
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 7,
+        "equal": true,
+        "off_action": 4,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 4,
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 8,
+        "equal": true,
+        "off_action": 2,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 2,
+        "on_coordinates": null,
+        "on_terminated": false
+      },
+      {
+        "action_index": 9,
+        "equal": true,
+        "off_action": 5,
+        "off_coordinates": null,
+        "off_terminated": false,
+        "on_action": 5,
+        "on_coordinates": null,
+        "on_terminated": false
+      }
+    ]
+  },
+  "preconditions_checked": [
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "AGENTS.md",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "CLAUDE.md",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "CODEX.md",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "research-program.md",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "scripts/experiment_template.py",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7581_v662_arc_bounded_canary.py",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7581_v662_arc_bounded_canary/validation/e2e/e2e_009/00_e2e_009.log",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7581_v662_arc_bounded_canary/validation/e2e/e2e_010/00_e2e_010.log",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "scripts/arc_loop_solve.py",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7580_v662_arc_verifier_support.py",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_arc_induction_state_persistence.py",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "tests/python/test_arc_tool_grammar_transport.py",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "docs/research-notes/b2-think-on-pilot-2026-09-24.md",
+      "upstream": "worktree"
+    },
+    {
+      "check": "source_custody",
+      "expected": true,
+      "field": "is_file",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "upstream": "worktree"
+    },
+    {
+      "check": "capability_requirement",
+      "expected": true,
+      "field": "REQ-ARC-WMTE-7589",
+      "observed": true,
+      "op": "contains",
+      "passed": true,
+      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "upstream": "OpenSpec"
+    },
+    {
+      "check": "resource_ownership",
+      "expected": true,
+      "field": "task_owned_private_root_outside_results",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/tmp/carnot-exp7589-v663-3o42kq_k",
+      "upstream": "current_exp7589_process"
+    },
+    {
+      "check": "model_call_declaration",
+      "expected": [],
+      "field": "MODEL_SPECS",
+      "observed": [],
+      "op": "==",
+      "passed": true,
+      "path": "python/carnot/experiment_7589_v663_arc_output_boundary.py",
+      "upstream": "current_exp7589_task"
+    }
+  ],
+  "prior_verdict_disposition": {
+    "literal_prior_verdict_repeated": false,
+    "prior_experiment": 7581,
+    "prior_verdict": "complete_blocked_arc_e2e",
+    "retire_if_same_verdict": false,
+    "scientific_hypothesis_retired": false
+  },
+  "private_output_paths": {
+    "coverage_file": "/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage",
+    "foreign_cwd": "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd",
+    "post_exit_evidence_copies": [
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/worktree_imports/00_worktree_imports.log",
+        "evidence_sha256": "sha256:b2a105ef5779d6759779309dfc81b8bf4bfd548b980a2462fffbe96aef0ad19f",
+        "name": "worktree_imports",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/worktree_imports/00_worktree_imports.log",
+        "private_sha256": "sha256:b2a105ef5779d6759779309dfc81b8bf4bfd548b980a2462fffbe96aef0ad19f"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/focused_pytest/01_focused_pytest.log",
+        "evidence_sha256": "sha256:4b7bfffe8d0d08fdcfbf47d94235076b214bf449179ea25394a875905fa766dd",
+        "name": "focused_pytest",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/focused_pytest/00_focused_pytest.log",
+        "private_sha256": "sha256:4b7bfffe8d0d08fdcfbf47d94235076b214bf449179ea25394a875905fa766dd"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_coverage/02_changed_module_coverage.log",
+        "evidence_sha256": "sha256:a5ef3aaffdf4379b5b79d72fe88bfc8b8b3a2b29771b61bba0ab3d5f6e97a55c",
+        "name": "changed_module_coverage",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_coverage/00_changed_module_coverage.log",
+        "private_sha256": "sha256:a5ef3aaffdf4379b5b79d72fe88bfc8b8b3a2b29771b61bba0ab3d5f6e97a55c"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_coverage_report/03_changed_module_coverage_report.log",
+        "evidence_sha256": "sha256:00fc982cdc45be24dc583c097e255f484f8dec32e1a8cc6d30f5ef93e3ce0d95",
+        "name": "changed_module_coverage_report",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_coverage_report/00_changed_module_coverage_report.log",
+        "private_sha256": "sha256:00fc982cdc45be24dc583c097e255f484f8dec32e1a8cc6d30f5ef93e3ce0d95"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/ruff_check/04_ruff_check.log",
+        "evidence_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "name": "ruff_check",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/ruff_check/00_ruff_check.log",
+        "private_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/ruff_format/05_ruff_format.log",
+        "evidence_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+        "name": "ruff_format",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/ruff_format/00_ruff_format.log",
+        "private_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_mypy/06_changed_module_mypy.log",
+        "evidence_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+        "name": "changed_module_mypy",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_mypy/00_changed_module_mypy.log",
+        "private_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/scoped_spec_coverage/07_scoped_spec_coverage.log",
+        "evidence_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+        "name": "scoped_spec_coverage",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/scoped_spec_coverage/00_scoped_spec_coverage.log",
+        "private_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_009/00_e2e_009.log",
+        "evidence_sha256": "sha256:e5a33f97f61ccb3ef106a729a964db4b4cc98595d4340ddb28364221e3193d55",
+        "name": "e2e_009",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_009/00_e2e_009.log",
+        "private_sha256": "sha256:e5a33f97f61ccb3ef106a729a964db4b4cc98595d4340ddb28364221e3193d55"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_010/01_e2e_010.log",
+        "evidence_sha256": "sha256:3c84f74ada3336382fbe5f3104fcd029de97d5a89afdccab719f7fffe5947da9",
+        "name": "e2e_010",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_010/00_e2e_010.log",
+        "private_sha256": "sha256:3c84f74ada3336382fbe5f3104fcd029de97d5a89afdccab719f7fffe5947da9"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_011/02_e2e_011.log",
+        "evidence_sha256": "sha256:7f1282916598d8dda27337a4d4009be6a9bdee1703b7ad7ff1a94445af162498",
+        "name": "e2e_011",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_011/00_e2e_011.log",
+        "private_sha256": "sha256:7f1282916598d8dda27337a4d4009be6a9bdee1703b7ad7ff1a94445af162498"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_012/03_e2e_012.log",
+        "evidence_sha256": "sha256:d9c86ebe3860e618710a3289cf3ae50f9cb3cf7dbab61a72f641ac77a1b1a038",
+        "name": "e2e_012",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_012/00_e2e_012.log",
+        "private_sha256": "sha256:d9c86ebe3860e618710a3289cf3ae50f9cb3cf7dbab61a72f641ac77a1b1a038"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_013/04_e2e_013.log",
+        "evidence_sha256": "sha256:d11b71821ebd53bb0a8555ab043194898ed4787830c0793d613cfce109d2d68b",
+        "name": "e2e_013",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_013/00_e2e_013.log",
+        "private_sha256": "sha256:d11b71821ebd53bb0a8555ab043194898ed4787830c0793d613cfce109d2d68b"
+      },
+      {
+        "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/foreign_cwd_llm_off_e3_smoke/05_foreign_cwd_llm_off_e3_smoke.log",
+        "evidence_sha256": "sha256:b15abee8e48b2effc5ca43606238a282406bc94a975a72f18ccf4f1682cbba56",
+        "name": "foreign_cwd_llm_off_e3_smoke",
+        "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/foreign_cwd_llm_off_e3_smoke/00_foreign_cwd_llm_off_e3_smoke.log",
+        "private_sha256": "sha256:b15abee8e48b2effc5ca43606238a282406bc94a975a72f18ccf4f1682cbba56"
+      }
+    ],
+    "pytest_bases": [
+      "/tmp/carnot-exp7589-v663-3o42kq_k/pytest",
+      "/tmp/carnot-exp7589-v663-3o42kq_k/e2e_009",
+      "/tmp/carnot-exp7589-v663-3o42kq_k/e2e_010",
+      "/tmp/carnot-exp7589-v663-3o42kq_k/e2e_011",
+      "/tmp/carnot-exp7589-v663-3o42kq_k/e2e_012",
+      "/tmp/carnot-exp7589-v663-3o42kq_k/e2e_013"
+    ],
+    "smoke_output": {
+      "copied_after_process_exit": true,
+      "evidence_path": "results/raw/experiment_7589_v663_arc_output_boundary/private_outputs/r11l-smoke.json",
+      "evidence_sha256": "sha256:13190118d5f070d60d12d3a8b6d079682b992869e4afdfa48cb3b40b142472df",
+      "present": true,
+      "private_path": "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json",
+      "private_sha256": "sha256:13190118d5f070d60d12d3a8b6d079682b992869e4afdfa48cb3b40b142472df"
+    },
+    "task_owned_root": "/tmp/carnot-exp7589-v663-3o42kq_k"
+  },
+  "production_defaults_changed": false,
+  "protected_path_reproduction": {
+    "attempted_output": "/tmp/carnot-exp7589-v663-3o42kq_k/path-contract/miniature/results/forbidden.json",
+    "exit_code": 2,
+    "guard_message": "e3 requires --output outside results/ (immutable evidence)",
+    "miniature_root": "/tmp/carnot-exp7589-v663-3o42kq_k/path-contract/miniature",
+    "output_exists": false,
+    "passed": true,
+    "stderr_sha256": "sha256:46ae098b23bdf958d8244746e777f91a0c0faa9dd52f7b053b6732d577292c65"
+  },
+  "random_seed": 7589,
+  "real_smoke_evidence": {
+    "command": "/usr/bin/env -C /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd CARNOT_ARC_DISABLE_INDUCTION=1 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json",
+    "command_argv": [
+      "/usr/bin/env",
+      "-C",
+      "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd",
+      "CARNOT_ARC_DISABLE_INDUCTION=1",
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py",
+      "--mechanism",
+      "e3",
+      "--game",
+      "r11l",
+      "--max-actions",
+      "12",
+      "--output",
+      "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json"
+    ],
+    "copied_after_process_exit": true,
+    "duration_s": 3.229144118988188,
+    "exit_code": 0,
+    "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/foreign_cwd_llm_off_e3_smoke/05_foreign_cwd_llm_off_e3_smoke.log",
+    "log_sha256": "sha256:b15abee8e48b2effc5ca43606238a282406bc94a975a72f18ccf4f1682cbba56",
+    "name": "foreign_cwd_llm_off_e3_smoke",
+    "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-24 02:24:13 | INFO | Created new scorecard: f121ffa5-95f1-4faa-8ae4-6d48490858ce\n2026-09-24 02:24:13 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-24 02:24:13 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json\n",
+    "passed": true,
+    "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/foreign_cwd_llm_off_e3_smoke/00_foreign_cwd_llm_off_e3_smoke.log",
+    "private_log_sha256": "sha256:b15abee8e48b2effc5ca43606238a282406bc94a975a72f18ccf4f1682cbba56",
+    "scope": "private LLM-off real E3 episode from a foreign cwd",
+    "timed_out": false,
+    "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+  },
+  "repository_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "reproducibility_checksum": "sha256:f2e8aaa526c85bfc6d20ba0aea37d6807c2e7cde40906a092eea4059767094c4",
+  "rows": [
+    {
+      "absolute_metric": 1.0,
+      "arm": "observable_history_fixture",
+      "censored": false,
+      "denominator": 1,
+      "direction": "higher_is_better",
+      "missing": false,
+      "numerator": 1,
+      "provenance": "code_defined_causal_fixture",
+      "seed": 7589001,
+      "unit": "history_causality"
+    },
+    {
+      "absolute_metric": 1.0,
+      "arm": "observable_history_fixture",
+      "censored": false,
+      "denominator": 1,
+      "direction": "higher_is_better",
+      "missing": false,
+      "numerator": 1,
+      "provenance": "code_defined_causal_fixture",
+      "seed": 7589002,
+      "unit": "level_reset_clearing"
+    },
+    {
+      "absolute_metric": 1.0,
+      "arm": "observable_history_fixture",
+      "censored": false,
+      "denominator": 1,
+      "direction": "higher_is_better",
+      "missing": false,
+      "numerator": 1,
+      "provenance": "code_defined_causal_fixture",
+      "seed": 7589003,
+      "unit": "coordinate_identity"
+    },
+    {
+      "absolute_metric": 1.0,
+      "arm": "observable_history_fixture",
+      "censored": false,
+      "denominator": 1,
+      "direction": "higher_is_better",
+      "missing": false,
+      "numerator": 1,
+      "provenance": "code_defined_causal_fixture",
+      "seed": 7589004,
+      "unit": "repeated_key_conflicts"
+    },
+    {
+      "absolute_metric": 1.0,
+      "arm": "observable_history_fixture",
+      "censored": false,
+      "denominator": 1,
+      "direction": "higher_is_better",
+      "missing": false,
+      "numerator": 1,
+      "provenance": "code_defined_causal_fixture",
+      "seed": 7589005,
+      "unit": "singleton_unknown_support"
+    },
+    {
+      "absolute_metric": 1.0,
+      "arm": "observable_history_fixture",
+      "censored": false,
+      "denominator": 1,
+      "direction": "higher_is_better",
+      "missing": false,
+      "numerator": 1,
+      "provenance": "code_defined_causal_fixture",
+      "seed": 7589006,
+      "unit": "bounded_memory"
+    },
+    {
+      "absolute_metric": 1.0,
+      "arm": "immutable_evidence_guard",
+      "censored": false,
+      "denominator": 1,
+      "direction": "higher_is_better",
+      "missing": false,
+      "numerator": 1,
+      "provenance": "temporary_miniature_arc_loop_solve_path_contract",
+      "seed": 7589,
+      "unit": "protected_results_output_rejection"
+    },
+    {
+      "absolute_metric": 1.0,
+      "arm": "observer_on_vs_off",
+      "censored": false,
+      "denominator": 10,
+      "direction": "higher_is_better",
+      "missing": false,
+      "numerator": 10,
+      "provenance": "real_E3AgentPolicy_final_action_boundary",
+      "seed": 7589,
+      "unit": "real_e3_policy_parity"
+    }
+  ],
+  "run_date": "20260924",
+  "sample_size_budget": {
+    "censored_independent_units": 0,
+    "excluded_independent_units": 0,
+    "intended_independent_units": 8,
+    "observed_independent_units": 8,
+    "seeds_or_windows_multiply_source_groups": false
+  },
+  "schema": "carnot.experiment_7589_v663_arc_output_boundary.v1",
+  "scoped_validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7589_v663_arc_output_boundary",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7589_v663_arc_output_boundary"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.425038471003063,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:b2a105ef5779d6759779309dfc81b8bf4bfd548b980a2462fffbe96aef0ad19f",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7589_v663_arc_output_boundary\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7589_v663_arc_output_boundary.py\"}}\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/worktree_imports/00_worktree_imports.log",
+      "private_log_sha256": "sha256:b2a105ef5779d6759779309dfc81b8bf4bfd548b980a2462fffbe96aef0ad19f",
+      "resolved_imports": {
+        "carnot.experiment_7589_v663_arc_output_boundary": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7589_v663_arc_output_boundary.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/pytest/focused tests/python/test_experiment_7589_v663_arc_output_boundary.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/pytest/focused",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 38.288797647022875,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/focused_pytest/01_focused_pytest.log",
+      "log_sha256": "sha256:4b7bfffe8d0d08fdcfbf47d94235076b214bf449179ea25394a875905fa766dd",
+      "name": "focused_pytest",
+      "output_tail": "..........................                                               [100%]\n26 passed in 36.12s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/focused_pytest/00_focused_pytest.log",
+      "private_log_sha256": "sha256:4b7bfffe8d0d08fdcfbf47d94235076b214bf449179ea25394a875905fa766dd",
+      "scope": "explicit_tests",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/usr/bin/env COVERAGE_FILE=/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run '--include=*/experiment_7589_v663_arc_output_boundary.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/pytest/coverage tests/python/test_experiment_7589_v663_arc_output_boundary.py -q",
+      "command_argv": [
+        "/usr/bin/env",
+        "COVERAGE_FILE=/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--include=*/experiment_7589_v663_arc_output_boundary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/pytest/coverage",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 40.58672388101695,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_coverage/02_changed_module_coverage.log",
+      "log_sha256": "sha256:a5ef3aaffdf4379b5b79d72fe88bfc8b8b3a2b29771b61bba0ab3d5f6e97a55c",
+      "name": "changed_module_coverage",
+      "output_tail": "..........................                                               [100%]\n26 passed in 37.07s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_coverage/00_changed_module_coverage.log",
+      "private_log_sha256": "sha256:a5ef3aaffdf4379b5b79d72fe88bfc8b8b3a2b29771b61bba0ab3d5f6e97a55c",
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/usr/bin/env COVERAGE_FILE=/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report '--include=*/experiment_7589_v663_arc_output_boundary.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/usr/bin/env",
+        "COVERAGE_FILE=/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7589_v663_arc_output_boundary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.08970685600070283,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_coverage_report/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:00fc982cdc45be24dc583c097e255f484f8dec32e1a8cc6d30f5ef93e3ce0d95",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                        Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------------------------\npython/carnot/experiment_7589_v663_arc_output_boundary.py     503      0   100%\n-----------------------------------------------------------------------------------------\nTOTAL                                                         503      0   100%\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "private_log_sha256": "sha256:00fc982cdc45be24dc583c097e255f484f8dec32e1a8cc6d30f5ef93e3ce0d95",
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7589_v663_arc_output_boundary.py scripts/experiments/experiment_7589_v663_arc_output_boundary.py python/carnot/agentic/arc_competition_agent.py tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7589_v663_arc_output_boundary.py",
+        "scripts/experiments/experiment_7589_v663_arc_output_boundary.py",
+        "python/carnot/agentic/arc_competition_agent.py",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.014742177998414263,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/ruff_check/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/ruff_check/00_ruff_check.log",
+      "private_log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "scope": "changed_files",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7589_v663_arc_output_boundary.py scripts/experiments/experiment_7589_v663_arc_output_boundary.py python/carnot/agentic/arc_competition_agent.py tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7589_v663_arc_output_boundary.py",
+        "scripts/experiments/experiment_7589_v663_arc_output_boundary.py",
+        "python/carnot/agentic/arc_competition_agent.py",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.007618619012646377,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/ruff_format/05_ruff_format.log",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "output_tail": "4 files already formatted\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/ruff_format/00_ruff_format.log",
+      "private_log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "scope": "changed_files",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7589_v663_arc_output_boundary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7589_v663_arc_output_boundary.py"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.1784651890047826,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_mypy/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_mypy/00_changed_module_mypy.log",
+      "private_log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.022655211010714993,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/scoped_spec_coverage/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "private_log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "scope": "explicit_tests",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    }
+  ],
+  "solve_improvement_claimed": false,
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifact_hashes": {
+    "authenticated_sources": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+      "CODEX.md": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+      "docs/research-notes/b2-think-on-pilot-2026-09-24.md": "sha256:c0ac1f2deaddbfbf64ed3af698eb2dbab26acf2dbb49417912dfd47c3146c7a1",
+      "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:f5b28a477ac827c12146439d42c308a52ac49e39674fe1ae4d76464f988adde9",
+      "ops/e2e-test-plan.md": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+      "ops/exclusion_manifest.yaml": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+      "python/carnot/agentic/arc_competition_agent.py": "sha256:3dcb8da2871fad71c2f7a8bcefa6622d0c567f320ea2a502763df374ef5c2581",
+      "python/carnot/experiment_7580_v662_arc_verifier_support.py": "sha256:4e140eb02f49e930f31e68667f69681693eb81ce7babf1c2a2985db0f43c08df",
+      "python/carnot/experiment_7581_v662_arc_bounded_canary.py": "sha256:b3f9163053a97724c7ec897b51d3967ded2ee27fdaf60ea39f01089157353cc4",
+      "python/carnot/experiment_7589_v663_arc_output_boundary.py": "sha256:b27f54d4e48bb897d3d760d72850a7caac3697513185c8461d573738e79c1c52",
+      "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "results/raw/experiment_7581_v662_arc_bounded_canary/validation/e2e/e2e_009/00_e2e_009.log": "sha256:25d0f826b670fcabdc8d4f6d30d82408485cdc2e182d219950d636e17fb8fb40",
+      "results/raw/experiment_7581_v662_arc_bounded_canary/validation/e2e/e2e_010/00_e2e_010.log": "sha256:640b7f12e08fbc17ab92dab1654ac5c79a89b5ab8a2f4e33d5079345b6adf094",
+      "scripts/arc_loop_solve.py": "sha256:c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca",
+      "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "scripts/experiments/experiment_7589_v663_arc_output_boundary.py": "sha256:ca9ef5be40ed899e13424dec25049e1aab4efc7038a3b8b6b694b0cd7eec319b",
+      "tests/python/test_arc_induction_state_persistence.py": "sha256:566dbf6f4f2a2b8b71df4bfa96ac79cb82ffd3fd1053eafc649751f9d0346a64",
+      "tests/python/test_arc_tool_grammar_transport.py": "sha256:1e050874107cfc3f23cd74e4d589f13a377e9c216ab3ee4ffa8cb0eb89a66704",
+      "tests/python/test_experiment_7589_v663_arc_output_boundary.py": "sha256:b742272e4cbf991f1a9288e0b97380c5ca0133dfa37aa07abffa0cba07524253"
+    },
+    "conductor_pre_gate_artifact": {
+      "present": false,
+      "used": false
+    },
+    "missing_producers": []
+  },
+  "terminal_validation_receipts": [],
+  "thinking_settings_changed": false,
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7589_v663_arc_output_boundary",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7589_v663_arc_output_boundary"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.425038471003063,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:b2a105ef5779d6759779309dfc81b8bf4bfd548b980a2462fffbe96aef0ad19f",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7589_v663_arc_output_boundary\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7589_v663_arc_output_boundary.py\"}}\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/worktree_imports/00_worktree_imports.log",
+      "private_log_sha256": "sha256:b2a105ef5779d6759779309dfc81b8bf4bfd548b980a2462fffbe96aef0ad19f",
+      "resolved_imports": {
+        "carnot.experiment_7589_v663_arc_output_boundary": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7589_v663_arc_output_boundary.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/pytest/focused tests/python/test_experiment_7589_v663_arc_output_boundary.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/pytest/focused",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 38.288797647022875,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/focused_pytest/01_focused_pytest.log",
+      "log_sha256": "sha256:4b7bfffe8d0d08fdcfbf47d94235076b214bf449179ea25394a875905fa766dd",
+      "name": "focused_pytest",
+      "output_tail": "..........................                                               [100%]\n26 passed in 36.12s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/focused_pytest/00_focused_pytest.log",
+      "private_log_sha256": "sha256:4b7bfffe8d0d08fdcfbf47d94235076b214bf449179ea25394a875905fa766dd",
+      "scope": "explicit_tests",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/usr/bin/env COVERAGE_FILE=/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run '--include=*/experiment_7589_v663_arc_output_boundary.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/pytest/coverage tests/python/test_experiment_7589_v663_arc_output_boundary.py -q",
+      "command_argv": [
+        "/usr/bin/env",
+        "COVERAGE_FILE=/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--include=*/experiment_7589_v663_arc_output_boundary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/pytest/coverage",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 40.58672388101695,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_coverage/02_changed_module_coverage.log",
+      "log_sha256": "sha256:a5ef3aaffdf4379b5b79d72fe88bfc8b8b3a2b29771b61bba0ab3d5f6e97a55c",
+      "name": "changed_module_coverage",
+      "output_tail": "..........................                                               [100%]\n26 passed in 37.07s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_coverage/00_changed_module_coverage.log",
+      "private_log_sha256": "sha256:a5ef3aaffdf4379b5b79d72fe88bfc8b8b3a2b29771b61bba0ab3d5f6e97a55c",
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/usr/bin/env COVERAGE_FILE=/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report '--include=*/experiment_7589_v663_arc_output_boundary.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/usr/bin/env",
+        "COVERAGE_FILE=/tmp/carnot-exp7589-v663-3o42kq_k/coverage/.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7589_v663_arc_output_boundary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.08970685600070283,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_coverage_report/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:00fc982cdc45be24dc583c097e255f484f8dec32e1a8cc6d30f5ef93e3ce0d95",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                        Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------------------------\npython/carnot/experiment_7589_v663_arc_output_boundary.py     503      0   100%\n-----------------------------------------------------------------------------------------\nTOTAL                                                         503      0   100%\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "private_log_sha256": "sha256:00fc982cdc45be24dc583c097e255f484f8dec32e1a8cc6d30f5ef93e3ce0d95",
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7589_v663_arc_output_boundary.py scripts/experiments/experiment_7589_v663_arc_output_boundary.py python/carnot/agentic/arc_competition_agent.py tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7589_v663_arc_output_boundary.py",
+        "scripts/experiments/experiment_7589_v663_arc_output_boundary.py",
+        "python/carnot/agentic/arc_competition_agent.py",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.014742177998414263,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/ruff_check/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/ruff_check/00_ruff_check.log",
+      "private_log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "scope": "changed_files",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7589_v663_arc_output_boundary.py scripts/experiments/experiment_7589_v663_arc_output_boundary.py python/carnot/agentic/arc_competition_agent.py tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7589_v663_arc_output_boundary.py",
+        "scripts/experiments/experiment_7589_v663_arc_output_boundary.py",
+        "python/carnot/agentic/arc_competition_agent.py",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.007618619012646377,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/ruff_format/05_ruff_format.log",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "output_tail": "4 files already formatted\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/ruff_format/00_ruff_format.log",
+      "private_log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "scope": "changed_files",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7589_v663_arc_output_boundary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7589_v663_arc_output_boundary.py"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.1784651890047826,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/changed_module_mypy/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/changed_module_mypy/00_changed_module_mypy.log",
+      "private_log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "scope": "changed_modules",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7589_v663_arc_output_boundary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7589_v663_arc_output_boundary.py"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 0.022655211010714993,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/affected/scoped_spec_coverage/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/affected/scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "private_log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "scope": "explicit_tests",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_009 tests/python/test_arc_induction_state_persistence.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_009",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 12.379383716004668,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_009/00_e2e_009.log",
+      "log_sha256": "sha256:e5a33f97f61ccb3ef106a729a964db4b4cc98595d4340ddb28364221e3193d55",
+      "name": "e2e_009",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.78s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_009/00_e2e_009.log",
+      "private_log_sha256": "sha256:e5a33f97f61ccb3ef106a729a964db4b4cc98595d4340ddb28364221e3193d55",
+      "scope": "E2E-009",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_010 tests/python/test_arc_tool_grammar_transport.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_010",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 11.298289625003235,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_010/01_e2e_010.log",
+      "log_sha256": "sha256:3c84f74ada3336382fbe5f3104fcd029de97d5a89afdccab719f7fffe5947da9",
+      "name": "e2e_010",
+      "output_tail": "..................................................                       [100%]\n50 passed in 7.64s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_010/00_e2e_010.log",
+      "private_log_sha256": "sha256:3c84f74ada3336382fbe5f3104fcd029de97d5a89afdccab719f7fffe5947da9",
+      "scope": "E2E-010",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_011 tests/python/test_arc_decision_telemetry.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_011",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 6.675432963005733,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_011/02_e2e_011.log",
+      "log_sha256": "sha256:7f1282916598d8dda27337a4d4009be6a9bdee1703b7ad7ff1a94445af162498",
+      "name": "e2e_011",
+      "output_tail": "...............                                                          [100%]\n15 passed in 3.80s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_011/00_e2e_011.log",
+      "private_log_sha256": "sha256:7f1282916598d8dda27337a4d4009be6a9bdee1703b7ad7ff1a94445af162498",
+      "scope": "E2E-011",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_012 tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7492_e6_timed_cost_profile.py tests/python/test_arc_decision_telemetry.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_012",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7492_e6_timed_cost_profile.py",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 8.635633695987053,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_012/03_e2e_012.log",
+      "log_sha256": "sha256:d9c86ebe3860e618710a3289cf3ae50f9cb3cf7dbab61a72f641ac77a1b1a038",
+      "name": "e2e_012",
+      "output_tail": "..............................                                           [100%]\n30 passed in 5.84s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_012/00_e2e_012.log",
+      "private_log_sha256": "sha256:d9c86ebe3860e618710a3289cf3ae50f9cb3cf7dbab61a72f641ac77a1b1a038",
+      "scope": "E2E-012",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_013 tests/python/test_arc_decision_telemetry.py tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7531_b2_induction_gate_measurement.py tests/python/test_semif_arc_readout_eval.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7589-v663-3o42kq_k/e2e_013",
+        "tests/python/test_arc_decision_telemetry.py",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7531_b2_induction_gate_measurement.py",
+        "tests/python/test_semif_arc_readout_eval.py",
+        "-q"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 8.703343385015614,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/e2e_013/04_e2e_013.log",
+      "log_sha256": "sha256:d11b71821ebd53bb0a8555ab043194898ed4787830c0793d613cfce109d2d68b",
+      "name": "e2e_013",
+      "output_tail": "........................................                                 [100%]\n40 passed in 5.86s\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/e2e_013/00_e2e_013.log",
+      "private_log_sha256": "sha256:d11b71821ebd53bb0a8555ab043194898ed4787830c0793d613cfce109d2d68b",
+      "scope": "E2E-013",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "command": "/usr/bin/env -C /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd CARNOT_ARC_DISABLE_INDUCTION=1 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json",
+      "command_argv": [
+        "/usr/bin/env",
+        "-C",
+        "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd",
+        "CARNOT_ARC_DISABLE_INDUCTION=1",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json"
+      ],
+      "copied_after_process_exit": true,
+      "duration_s": 3.229144118988188,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7589_v663_arc_output_boundary/validation/e2e/foreign_cwd_llm_off_e3_smoke/05_foreign_cwd_llm_off_e3_smoke.log",
+      "log_sha256": "sha256:b15abee8e48b2effc5ca43606238a282406bc94a975a72f18ccf4f1682cbba56",
+      "name": "foreign_cwd_llm_off_e3_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-24 02:24:13 | INFO | Created new scorecard: f121ffa5-95f1-4faa-8ae4-6d48490858ce\n2026-09-24 02:24:13 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-24 02:24:13 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/carnot-exp7589-v663-3o42kq_k/foreign-cwd/r11l-smoke.json\n",
+      "passed": true,
+      "private_log_path": "/tmp/carnot-exp7589-v663-3o42kq_k/logs/e2e/foreign_cwd_llm_off_e3_smoke/00_foreign_cwd_llm_off_e3_smoke.log",
+      "private_log_sha256": "sha256:b15abee8e48b2effc5ca43606238a282406bc94a975a72f18ccf4f1682cbba56",
+      "scope": "private LLM-off real E3 episode from a foreign cwd",
+      "timed_out": false,
+      "worktree": "/home/ianblenke/github.com/ianblenke/carnot"
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true,
+  "world_model_acceptance_changed": false
+}

@@ -34,6 +34,7 @@ import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 import carnot.agentic.arc_decision_telemetry as arc_decision_telemetry
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401
+import carnot.experiment_7589_v663_arc_output_boundary as arc_output_boundary
 from carnot.agentic.arc_amortized_exploration import coerce_amortized_first_contact_prior
 from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior, connected_color_blobs
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
@@ -5302,6 +5303,12 @@ class E3AgentPolicy:
                 str(game_id),
             ),
         )
+        # REQ-ARC-WMTE-7589: construction-time, default-off observation only.
+        # The observer receives public frames and final selected actions. It cannot
+        # rank candidates, change an action, or inspect a future frame.
+        self._observable_alias_observer = (
+            arc_output_boundary.maybe_make_observable_aliasing_observer(str(game_id))
+        )
         # REQ-ARC-WMTE-7024: preserve the caller's durable ledger object. The
         # explicit Boolean overrides the exact `=1` environment opt-in.
         self.belief_ledger = belief_ledger
@@ -7006,7 +7013,21 @@ class E3AgentPolicy:
                 level_before=latest_level,
                 provenance=getattr(self, "_prov_top", None),
             )
+        observer = self._observable_alias_observer
+        if observer is not None:
+            try:
+                observer.observe(latest, selected_move, level=latest_level)
+            except Exception:
+                observer.note_error()
         return selected_move
+
+    def observable_aliasing_diagnostics(self) -> dict[str, Any]:
+        """Return bounded observer data, or the explicit default-off state."""
+
+        observer = self._observable_alias_observer
+        if observer is None:
+            return {"enabled": False, "finalized_event_count": 0}
+        return observer.snapshot()
 
     def install_trace_automaton_supervisor(self, supervisor: Any) -> None:
         """Install one pre-frozen supervisor before an isolated evaluation run."""
