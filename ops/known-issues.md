@@ -79,6 +79,14 @@ REQ-ARC-WMTE-10011, merged from branch `vllm-extract-fix` (f8dae78cea + 960e575a
   including the real-evidence replay and a mutation that survived review. A real vLLM response
   was not tested locally; the Kaggle log line above is the check for that.
 
+**KAGGLE SAVE-RUN CHECK, 2026-09-24 09:11 UTC (append-only).** Kernel v75 (dataset re-versioned
+08:54 UTC from main at e404de1c63) ran its save-run on Kaggle. The log line reads:
+`LLM VLLM PROBE: server_up=True in 445s reasoning_parser_decision='registered:qwen3 ...'`, and the
+launch argv includes `--reasoning-parser qwen3`. vLLM's own log shows `reasoning_parser: 'qwen3'` in
+its non-default args and engine v0.27.1. The round-trip probe returned 8/8. Limit: the save-run's
+probe uses raw completions, and the save-run plays no hidden game, so the think-ON chat
+extraction under the parser is exercised only by a scored submission. Not submitted (operator).
+
 ### NEW 2026-09-02: a document/YAML task-count divergence cost 3 of 4 tasks in milestone 602
 
 **What happened.** `experiment_6874_v602_evidence_substrate_manifest_contract` is CLEAN (not
