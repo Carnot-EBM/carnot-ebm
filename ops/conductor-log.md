@@ -18541,3 +18541,7 @@ code |
 | 2026-09-24 11:26 UTC | Qualify delayed evidence updates and one-use admis | OK | 119 passed, 1 warning in 11.14s |
 | 2026-09-24 12:03 UTC | Qualify bounded Qwen evidence pointers and capture | OK | 130 passed, 1 warning in 7.31s |
 | 2026-09-24 12:06 UTC | Capture bounded source links for fitting and polic | GATE_BLOCK | gate-unsat(final): 1 of 7 gate(s) failed; first failure: exp7604-evidence-pilot.evidence_transport_ready_score (actual=0 == expected=1) |
+| 2026-09-24 12:08 UTC | Capture sealed source links for evaluation and del | GATE_BLOCK | gate-unsat(final): 2 of 7 gate(s) failed; first failure: exp7604-evidence-pilot.evidence_transport_ready_score (actual=0 == expected=1) |
+| 2026-09-24 12:10 UTC | Train bounded evidence energies and freeze matched | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7605-fit-evidence, exp7605-fit-evidence, exp7605-fit-evidence) |
+| 2026-09-24 12:10 UTC | Measure incremental evidence value on the fixed ev | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7607-evidence-energy, exp7607-evidence-energy, exp7607-evidence-energy, exp7607-evidence-energy, exp7606-test-online-evidence, exp7606-test-online-evidence, exp7606-test-online-evidence) |
+| 2026-09-24 12:10 UTC | Measure delayed evidence learning and independent | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7607-evidence-energy, exp7607-evidence-energy, exp7607-evidence-energy, exp7607-evidence-energy, exp7606-test-online-evidence, exp7606-test-online-evidence, exp7606-test-online-evidence) |
