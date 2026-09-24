@@ -79254,3 +79254,81 @@ Implemented by the reusable Exp7610 reducer, thin CLI, requirement-linked
 tests, mixed source custody, private mutation panel, and strict terminal
 readers. The conductor owns later status, changelog, and traceability
 reconciliation.
+
+## REQ-REPORT-7614: Reconcile V664 without promoting blocked science
+
+Experiment 7614 SHALL resolve the staged or active authority whose milestone is
+`2026.09.664`, including operation after matching staging has been consumed. It
+SHALL reconcile exactly fourteen ordered full task IDs, Exp7601 through Exp7614.
+Each disposition SHALL keep terminal producers, conductor pre-gate records,
+missing producers, adversarial flags, and the current self row distinct. It
+SHALL preserve the archived V663 design and every original producer artifact.
+
+The capstone SHALL use Experiment 7610 independent conclusions for information,
+probability, action-cost, causal-learning, and retention claims. It SHALL use
+authenticated Experiment 7612 runtime rows for state-support claims and
+Experiment 7613 whole-service spans for placement. An invalid independent
+source SHALL not promote a producer self-report. Missing required external
+evidence SHALL yield a `complete_blocked_*` verdict with class `blocked`, never
+`partial`, while every independently valid branch remains reported.
+
+A valid measured null MAY retire only the exact eight-feature evidence
+construction. Failed causal benefit or evaluator retention MAY retire only the
+exact guarded update construction. A resource or custody block SHALL defer the
+scientific hypothesis. Insufficient matched-prefix support SHALL stop the
+unchanged collector. Service scope and cold-start regression SHALL remain
+visible, with no automatic native binding, accelerator follow-up, purchase, or
+default promotion.
+
+The artifact SHALL declare planned and actual `aggregation`, `MODEL_SPECS=[]`,
+typed zero invocation counts, measured monotonic duration, source byte hashes,
+one row per ordered task, independent sample budgets, separate acceptance gates,
+field principles, stable publication G1-G4, and `submitted_externally=false`.
+It SHALL carry all three board prerequisites and operator-held E0/Kaggle
+confirmation forward. Readiness SHALL be null; fixture positives SHALL remain
+`circular_positive`; empirical benefit requires its own passing gate.
+
+Validation SHALL freeze the affected-file manifest, use private `/tmp` paths,
+and run focused serial pytest, 100 percent changed-module coverage, scoped Ruff,
+changed-module mypy, and scoped specification coverage. The declared entrypoint,
+fresh-process cold replay, independent reduction, adversarial reader, and strict
+row-consistency reader SHALL accept the exact terminal candidate before atomic
+publication. Raw-to-report replay is the applicable reporting E2E; unrelated
+runtime suites do not apply.
+
+### SCENARIO-REPORT-7614-CUSTODY: Fourteen ordered states stay literal
+
+**Given** matching V664 authorities and mixed producer custody
+**When** Experiment 7614 authenticates the thirteen upstream tasks and itself
+**Then** exactly fourteen full IDs remain in authority order
+**And** pre-gate records, missing producers, flags, and the self row stay distinct
+**And** external absence yields blocked rather than partial.
+
+### SCENARIO-REPORT-7614-BRANCHES: Independent reducers bound conclusions
+
+**Given** Experiment 7610, 7612, and 7613 terminal evidence
+**When** the capstone reduces science, ARC support, and service placement
+**Then** each branch cites only its required independent source
+**And** valid bounded rows remain visible beside the aggregate block
+**And** producer headlines never replace a failed independent validity gate.
+
+### SCENARIO-REPORT-7614-RETIREMENT: Absence cannot falsify a construction
+
+**Given** missing static and delayed-learning producers
+**When** the capstone decides continuation and retirement
+**Then** the exact evidence and guarded-update constructions remain deferred
+**And** insufficient matched-prefix support stops the unchanged collector
+**And** service nulls preserve cold-start and board prerequisites.
+
+### SCENARIO-REPORT-7614-TERMINAL: Exact readers control atomic publication
+
+**Given** a frozen affected manifest and one exact terminal candidate
+**When** scoped checks, fresh replay, independent reduction, and strict readers run
+**Then** commands, exits, worktree paths, log hashes, and reader outcomes persist
+**And** the validated bytes are published atomically with no external submission
+**And** no roadmap, conductor, production default, or generator weight changes.
+
+### Implementation Status (REQ-REPORT-7614)
+
+Planned. The conductor owns later status, changelog, and traceability
+reconciliation.

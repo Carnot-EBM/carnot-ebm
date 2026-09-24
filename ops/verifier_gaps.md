@@ -4990,3 +4990,22 @@ Source: `docs/research-notes/b2-positive-control-2026-09-23.md` (workflow `wf_1b
   request. Re-run the eight-call pilot unchanged. Continue only if at least six
   outputs pass without a permissive repair that hides invalid values.
 - **priority:** high for the V664 calibrated-decision branch.
+
+### V664 capstone update: blocked science and bounded placement remain open
+
+- **evidence construction:** GAP-V664-EVIDENCE-SCHEMA-TRANSPORT-7610 remains
+  open. Exp7614 does not reinterpret eight schema-censored pilot outputs as an
+  incremental-information null. Static probability, decision-cost, delayed
+  learning, and evaluator-retention rows remain absent.
+- **ARC support:** Exp7612 retained authenticated runtime rows for one game and
+  one stable matched key, but five games and the cross-game interval are absent.
+  The unchanged matched-prefix collector stops. Reopening needs a materially
+  changed support mechanism, not more seeds under the same collector.
+- **service placement:** Exp7613 measured 120 paired whole-service blocks and
+  40 telemetry-off blocks. Its Amdahl bounds preserve the Exp7598 aggregate
+  null and cold-start regression. A bound does not qualify a native binding,
+  accelerator benchmark, or purchase.
+- **hardware custody:** KV260, PolarFire, and GateMate keep their three separate
+  prerequisites. E0 and Kaggle confirmation remain operator-held. No readiness
+  value, artifact completion, or historical hash satisfies those external
+  conditions.
