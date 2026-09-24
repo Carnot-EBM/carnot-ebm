@@ -19145,6 +19145,99 @@ field, operator, expected value, and observed value.
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-CL-7603: V664 Guarded Update Lifecycle Fixture
+
+Experiment 7603 SHALL provide one pure residual-parameter updater for a
+normalized binary energy head. The head SHALL accept at most eight finite
+evidence features and use at most eight hidden units. Its generator inputs and
+generator weights SHALL remain immutable. One interface SHALL expose frozen,
+unguarded, and guarded arms through predict, release, propose, admit, persist,
+and reload operations.
+
+The empirical protocol SHALL freeze an eight-event feedback lag and ten
+eight-event blocks. Every row SHALL be predicted before its label release.
+After all eight labels in one block are legally released, the first four labels
+SHALL make one Brier-gradient proposal. The last four labels SHALL be used only
+for admission. An accepted proposal SHALL have finite bounded parameters,
+strictly lower admission Brier loss, no admission action-cost increase, and an
+anchor Brier increase of at most `0.002`. The fixed 16 fit-role anchor labels
+MAY be reused. Admission labels and final evaluation labels SHALL never enter a
+proposal or later update.
+
+Each event ID SHALL be accepted exactly once. Prediction receipts SHALL be
+immutable. An admitted state SHALL publish through an atomic snapshot and
+reload with exact parity. Rejected proposals SHALL retain the prior state.
+Inference and update time SHALL be measured separately. A deranged-label
+control MAY permute labels only within one fully released eight-event block.
+It SHALL preserve the block's release times and label counts.
+
+Finite fixtures SHALL force accepted and rejected proposals, harmful-update
+rejection, crash and reload, duplicate rejection, evaluator-read denial, and
+no-update behavior. Oracle-defined positive controls SHALL use
+`circular_positive`. Proposal clipping and the zero-step control SHALL remain
+distinct from the guarded treatment. `guarded_update_ready_score` SHALL equal
+one only when accepted and rejected controls, causal timing, and durable
+restart parity all pass. This readiness SHALL not establish empirical benefit
+or retention.
+
+The artifact SHALL declare `no_model_load`, `MODEL_SPECS=[]`, immutable
+generator weights, CPU operations and memory, and a fixed-point or Rust mapping
+without a measured speed claim. It SHALL include independently reducible rows,
+sample-size accounting, seeds, source hashes, current-work and validation
+receipts, separate validity/readiness/benefit/retention/freshness gates, and
+one-line field principles. Missing external evidence SHALL produce
+`complete_blocked_*`, `verdict_class=blocked`, and an exact gate check with
+upstream, path, field, operator, expected, and observed values.
+
+The affected validation SHALL freeze an explicit manifest. It SHALL run
+focused serial pytest, separate 100 percent changed-module coverage, scoped
+Ruff check and format, changed-module mypy, and exact-test specification
+coverage. The declared entrypoint SHALL run a real predict-release-propose-
+admit-persist-reload integration. Fresh-process cold replay, independent row
+reduction, adversarial verification, and strict row consistency SHALL inspect
+the exact terminal candidate before atomic publication. E2E-007 applies only
+to lifecycle durability, rejected unsafe updates, and generator-weight
+immutability. This fixture SHALL not claim the older CerCE certificate.
+
+### SCENARIO-CL-7603-UPDATE: Fit And Admission Labels Have Disjoint Roles
+
+- GIVEN one fully released eight-event block
+- WHEN the first four labels form one Brier-gradient proposal
+- THEN only the last four labels decide whether the proposal is admitted
+- AND rejected proposals preserve the exact prior parameter hash.
+
+### SCENARIO-CL-7603-CAUSAL: Delayed Feedback Cannot Cross Block Time
+
+- GIVEN ten frozen blocks with lag eight
+- WHEN predictions, releases, and updates run in stream order
+- THEN every prediction precedes its label release by at least eight events
+- AND the deranged control changes no origin, release time, or label count.
+
+### SCENARIO-CL-7603-LIFECYCLE: Accepted State Is Exactly Once And Durable
+
+- GIVEN accepted and rejected proposals, duplicate feedback, and a crash point
+- WHEN state persists and reloads through the public lifecycle interface
+- THEN accepted state reloads exactly once with immutable prediction receipts
+- AND duplicate or evaluator feedback cannot mutate the state.
+
+### SCENARIO-CL-7603-CONTROLS: Fixture Positives Do Not Prove Benefit
+
+- GIVEN finite accepted, rejected, harmful, zero-step, and clipped controls
+- WHEN independently reducible rows are compared
+- THEN only the oracle-defined fixture positive is `circular_positive`
+- AND no-update or clipping cannot silently replace the guarded treatment.
+
+### SCENARIO-CL-7603-TERMINAL: Readers Gate Atomic Publication
+
+- GIVEN a hash-bound candidate, affected manifest, and validation receipts
+- WHEN cold replay, independent reduction, adversarial verification, and the
+  strict row reader inspect the same bytes
+- THEN all terminal readers pass before atomic publication
+- AND lifecycle readiness leaves empirical benefit and retention gates closed.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-CL-7598: Opt-In Durable Recalibration Consumer
 
 Experiment 7598 SHALL provide a typed Python client for the qualified Rust

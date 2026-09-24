@@ -1,0 +1,87 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7603_v664_guarded_update_fixture.py --root /home/ianblenke/github.com/ianblenke/carnot --date 20260924 --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7603_v664_guarded_update_fixture/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7603_v664_guarded_update_fixture.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--date",
+        "20260924",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7603_v664_guarded_update_fixture/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.43190556101035327,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7603_v664_guarded_update_fixture/validation/exact_terminal/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:1aa7ec3733637ab512e7541db3dcbacdefd369393d5e24af05f3f482dd1f28c8",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"arm_summaries\": {\"frozen\": {\"denominator\": 80, \"mean_brier\": 0.1621831657911576, \"numerator\": 12.974653263292609}, \"guarded\": {\"denominator\": 80, \"mean_brier\": 0.16239370222871588, \"numerator\": 12.99149617829727}, \"guarded_deranged\": {\"denominator\": 80, \"mean_brier\": 0.16265866520045802, \"numerator\": 13.012693216036642}, \"unguarded\": {\"denominator\": 80, \"mean_brier\": 0.16254317270320157, \"numerator\": 13.003453816256126}}, \"row_count\": 320}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7603_v664_guarded_update_fixture.py --root /home/ianblenke/github.com/ianblenke/carnot --date 20260924 --independent-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7603_v664_guarded_update_fixture/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7603_v664_guarded_update_fixture.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--date",
+        "20260924",
+        "--independent-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7603_v664_guarded_update_fixture/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.4513749790203292,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7603_v664_guarded_update_fixture/validation/exact_terminal/01_independent_raw_reduction.log",
+      "log_sha256": "sha256:1aa7ec3733637ab512e7541db3dcbacdefd369393d5e24af05f3f482dd1f28c8",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"arm_summaries\": {\"frozen\": {\"denominator\": 80, \"mean_brier\": 0.1621831657911576, \"numerator\": 12.974653263292609}, \"guarded\": {\"denominator\": 80, \"mean_brier\": 0.16239370222871588, \"numerator\": 12.99149617829727}, \"guarded_deranged\": {\"denominator\": 80, \"mean_brier\": 0.16265866520045802, \"numerator\": 13.012693216036642}, \"unguarded\": {\"denominator\": 80, \"mean_brier\": 0.16254317270320157, \"numerator\": 13.003453816256126}}, \"row_count\": 320}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7603_v664_guarded_update_fixture/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7603_v664_guarded_update_fixture/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.5941677569935564,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7603_v664_guarded_update_fixture/validation/exact_terminal/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7603_v664_guarded_update_fixture/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7603_v664_guarded_update_fixture/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.04353645202354528,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7603_v664_guarded_update_fixture/validation/exact_terminal/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    }
+  ]
+}
