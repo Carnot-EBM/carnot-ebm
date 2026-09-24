@@ -20502,3 +20502,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - Required exact gate fields, complete failure lineage, per-unit rows,
   progress heartbeats and bounded writes. Reconciled planning specifications
   and traceability. No experiment execution, activation, conductor edit or push.
+- 2026-09-24: Bind fourteen tasks and ingest qualified evidence methods (⚠️ Research Finding) — honest_verdict=complete_null_v664_contract_methods_ingested; results/experiment_7601_v664_contract_methods.json
