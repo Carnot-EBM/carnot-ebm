@@ -18511,3 +18511,4 @@ code |
 | 2026-09-24 00:28 UTC | Measure delayed proper-loss learning and durable r | OK | 102 passed, 1 warning in 22.00s |
 | 2026-09-24 00:31 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 1: OPEN 13 days: REAL_B |
 | 2026-09-24 00:31 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 1: OPEN 12 da |
+| 2026-09-24 00:55 UTC | Independently reduce probability and feedback-lear | OK | 100 passed, 1 warning in 12.69s |
