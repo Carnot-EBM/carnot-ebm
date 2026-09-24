@@ -18531,3 +18531,4 @@ code |
 | 2026-09-24 06:29 UTC | Measure delayed evidence learning with held-back u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7592-test-online-evidence, exp7592-test-online-evidence, exp7592-test-online-evidence) |
 | 2026-09-24 06:43 UTC | Independently reduce evidence value and delayed up | OK | 90 passed, 1 warning in 7.41s |
 | 2026-09-24 07:15 UTC | Measure causal history support on adapter-withheld | OK | 107 passed, 1 warning in 8.86s |
+| 2026-09-24 07:54 UTC | Ship an opt-in typed consumer for the durable Rust | OK | 112 passed, 1 warning in 13.24s |
