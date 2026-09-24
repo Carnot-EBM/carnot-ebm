@@ -36430,6 +36430,148 @@ Implementation status: specified before Amendment 3 implementation on 2026-09-24
 Amendment 3 was then implemented and measured on 2026-09-24 without changing
 LIVE_SCORED execution semantics or live gate defaults.
 
+### REQ-ARC-WMTE-10013: Measure opt-in planner HUD deduplication and goal tie-breaking
+
+The live in-model planner SHALL add two independent, default-off runtime controls.
+`CARNOT_ARC_PLAN_HUD_DEDUP=1` SHALL allow `plan_in_model` to receive an optional
+logical-coordinate Boolean mask used only to construct duplicate-state keys. The
+engine and `is_level_complete` SHALL continue to receive the full, unmodified
+logical grid, the first state admitted for a masked key SHALL remain the retained
+state, and a missing or shape-incompatible mask SHALL preserve the existing key.
+The live `E3AgentPolicy._call_plan_in_model` wrapper SHALL pass its explorer mask
+only while this flag is enabled and only when `hud_mask_swallow_check` over the
+active transition corpus returns a clean `ok` verdict. A mask that covers game
+dynamics, or whose safety is unmeasurable, SHALL be refused and diagnosed.
+
+`CARNOT_ARC_PLAN_GOAL_TIEBREAK=novelty` SHALL affect only a search that has a
+callable goal energy. Among equal goal-energy priorities it SHALL prefer the state
+with more non-masked logical cells different from the start grid; the existing
+insertion counter SHALL remain the deterministic final ordering key. This
+game-agnostic feature is pre-registered because movement away from the reset state
+is observable without game rules and breaks the all-non-goal binary-energy plateau.
+It is deliberately a start-relative cell count, not a feature fitted to any named
+game or measurement window.
+
+With both controls absent or invalid, `plan_in_model` and the live wrapper SHALL
+preserve plans, engine-call counts, state-admission order, and existing diagnostic
+fields exactly. Enabled diagnostics MAY add mask-merge counts, mask safety records,
+and tie-break scoring counts; no existing field SHALL be removed or redefined. The
+live engine-call budget SHALL remain 20,000 and the live maximum depth SHALL remain
+80.
+
+Before observing Experiment 10013 outcomes, its three arms are frozen as `OFF`
+(both controls absent), `HUD_DEDUP` (only `CARNOT_ARC_PLAN_HUD_DEDUP=1`), and
+`HUD_DEDUP+TIEBREAK` (HUD deduplication plus
+`CARNOT_ARC_PLAN_GOAL_TIEBREAK=novelty`). The harness SHALL import and reuse
+Experiment 10012's sources, state rebuilders, candidates, binary first-contact goal
+energy, `LIVE_SCORED` RESET start, and full-plan real execution without a divergence
+stop. For an enabled HUD arm it SHALL resolve the production edge-bar classifier's
+mask from the rebuilt RESET frame, convert it by `logical_hud_mask`, and admit it
+only when the existing whole-window swallow check is clean; this procedure is fixed
+before inspecting planning outcomes. It SHALL not tune the mask, novelty key,
+candidate order, budget, depth, windows, or cohorts after results are seen.
+
+The primary cohort SHALL contain all ten Experiment 10010 expert-controlled stall
+windows. Per arm, the primary result SHALL be the number of EXPERT controls that
+produce a real level-up, with each expert's planner engine calls; `dc22`, `wa30`,
+and `sb26` SHALL be named individually. The first regression guard SHALL list every
+pair that levels up in `OFF` but fails in either enabled arm. The second harm guard
+SHALL report, for non-control candidate engines per arm and cohort, the USEFUL count
+and real actions executed without level-up; a newly discoverable wrong plan SHALL
+remain charged as waste. The third cost guard SHALL report planner wall time per
+call for each arm. The h2h replay counterfactual, registry-solver-controlled, and
+h2h expert-controlled cohorts SHALL remain separately labelled appendices and SHALL
+not enter the primary count.
+
+The CPU-only run SHALL use no model server, GPU, network, or LLM call. It SHALL
+write raw per-pair evidence below
+`results/raw/experiment_10013_planner_dedup_tiebreak/` and one terminal artifact at
+`results/experiment_10013_planner_dedup_tiebreak.json`. The artifact SHALL contain
+an `honest_verdict` with a terminal prefix, inference substrate
+`verifier_ensemble_against_cached_candidates`, solve provenance
+`development_proxy`, the random seed, reproducibility checksum, checked
+preconditions, duration, every per-pair/per-arm row, the primary result, all three
+guards, separately reduced appendices, and adversarial-verification inputs.
+
+#### SCENARIO-ARC-WMTE-10013-FLAGS-OFF-IDENTITY
+
+- **GIVEN** representative planner fixtures and replays of the existing planner tests
+- **WHEN** both new environment controls are absent
+- **THEN** plans, engine-call counts, node counts, admission order, and diagnostics equal the baseline bytes
+- **AND** the wrapper supplies no new planner keyword or mask lookup side effect.
+
+#### SCENARIO-ARC-WMTE-10013-HUD-DEDUP-SAFETY
+
+- **GIVEN** states differing only in clean masked cells and a separate swallowing-mask corpus
+- **WHEN** HUD deduplication is enabled
+- **THEN** the clean states share one duplicate key while engine and goal calls still observe full grids
+- **AND** the swallowing or unmeasurable mask is refused before it can merge planner states.
+
+#### SCENARIO-ARC-WMTE-10013-NOVELTY-ORDER
+
+- **GIVEN** equal goal-energy successor states with distinct start-relative non-HUD change counts
+- **WHEN** novelty tie-breaking is enabled
+- **THEN** larger novelty is expanded first and equal novelty retains deterministic insertion order
+- **AND** a search without goal energy retains its original FIFO implementation.
+
+#### SCENARIO-ARC-WMTE-10013-LIVE-WRAPPER
+
+- **GIVEN** the live policy's resolved explorer mask and active transition corpus
+- **WHEN** the planner wrapper runs with the HUD flag off, cleanly on, or refused on
+- **THEN** only the cleanly enabled call receives the logical deduplication mask
+- **AND** the engine-call budget and full-grid goal predicate are unchanged.
+
+#### SCENARIO-ARC-WMTE-10013-MEASUREMENT-AND-GUARDS
+
+- **GIVEN** the frozen Experiment 10012 candidates, controls, windows, and three planner arms
+- **WHEN** each arm plans from RESET and executes the complete returned plan
+- **THEN** primary expert wins and calls, OFF-to-ON regressions, candidate usefulness/waste, and wall cost are reduced
+- **AND** counterfactual and registry-controlled appendix evidence remains outside the primary cohort.
+
+#### SCENARIO-ARC-WMTE-10013-ARTIFACT
+
+- **GIVEN** a completed or blocked CPU-only measurement
+- **WHEN** raw rows and the terminal artifact are published
+- **THEN** provenance, seed, checksum, preconditions, duration, arm rows, and all guards remain auditable
+- **AND** `scripts/adversarial_verify.py` can inspect the artifact without a model call.
+
+Implementation status: pre-registered before implementation and measurement on
+2026-09-24. No Experiment 10013 planning outcome had been run when the protocol
+above was written. The completed 231-row CPU run then measured primary EXPERT
+wins of 5/10 (`OFF`), 7/10 (`HUD_DEDUP`), and 7/10
+(`HUD_DEDUP+TIEBREAK`), with aggregate expert engine-call counts 122,625,
+89,363, and 63,751 respectively. `dc22` converted at 4,333 and 2,779 calls;
+`wa30` remained budget-limited at 20,001 and 20,010 calls; and `sb26` remained
+without a real level-up, although novelty found a non-winning 72-action plan at
+10,367 calls after its production mask was unresolved. No OFF winner regressed.
+Main candidate USEFUL/wasted-real-action counts were 1/118, 2/24, and 2/26;
+mean planner wall seconds per invocation over all 77 rows per arm were 1.442918,
+1.069529, and 1.126994. The terminal artifact passed adversarial verification
+with zero flags; both runtime controls remain default OFF.
+
+#### REVIEW RECORD (2026-09-24, independent reviewer; append-only)
+
+Merged with both flags OFF (a 300-fixture differential confirmed flags-off plans and diagnostics are
+identical to the parent). Corrections and prerequisites before either flag may be turned on:
+
+- The ar25 expert win depends on the harness's 127-cell mask. The live explorer applies the shipped
+  63-cell mask until Stage 2 confirms the edge bar; with that mask ar25 finds no plan. The
+  live-relevant expert result is therefore 6/10 under HUD_DEDUP, not 7/10. ar25 seed 7491002 alone
+  accounts for 64 of the 118 OFF wasted actions.
+- A state whose masked key was already seen is dropped before `is_level_complete` runs. A goal that
+  reads a HUD counter can be silently lost (reviewer's constructed case: 3-step plan unmasked,
+  queue_exhausted with dedup; the swallow guard called that mask clean). Required fix before enabling:
+  run the goal check before the dedup skip.
+- GOAL_TIEBREAK=novelty adds no expert win and lengthens winning plans (sp80 4->6, ft09 4->8, dc22
+  20->23, ar25 15->23); it produced a wrong 72-action sb26 plan. It should stay off. The flag is also
+  read inside `plan_in_model`, so it reaches every caller, not only the scored wrapper.
+- The wrapper reports `planner_hud_dedup_mask_status=applied` even when the planner does not use the
+  mask (keyword not accepted, or a shape mismatch that `plan_in_model` drops silently).
+- Still missing: a measurement through `E3AgentPolicy._call_plan_in_model` with the Stage-2-gated
+  mask; plan-length and real-action comparison on OFF winners; harm accounting that includes controls;
+  a wall-time check on the scored per-game budget; a larger held-out set than 10 expert windows.
+
+
 ## V663 ARC output-boundary repair and observable alias audit — 2026-09-24
 
 ### REQ-ARC-WMTE-7589: Keep ARC validation scratch outside immutable evidence

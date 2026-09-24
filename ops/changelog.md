@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-09-24 — Planner HUD dedup and tie-break, default off (operator request: "1", planner fix)
+
+- codex (CPU, worktree `planner-fix`) added REQ-ARC-WMTE-10013 with both flags default OFF and
+  measured them (Experiment 10013). One Claude reviewer (workflow `wf_b1d5afdd-9c9`) approved the
+  merge and recommended keeping both flags off; its corrections are appended to the spec as a review
+  record. Merged by patch; resolved a `_bmad/traceability.md` conflict by keeping both notes.
+- The worktree commit message says 7/10 expert wins; the live-relevant figure is 6/10 (ar25 needs a
+  wider mask than the live explorer applies). Recorded here and in the spec.
+
 ## 2026-09-24 — Experiment 7628 self-source validation repair
 
 - Corrected the V665 capstone source manifest so its current output is a planned
@@ -20566,3 +20575,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Expose the durable recalibration core through a direct PyO3 call (⚠️ Research Finding) — honest_verdict=complete_null_native_service_protocol_ready; results/experiment_7626_v665_native_service.json
 - 2026-09-24: Measure direct native service cost and preserve board dispositions (✅ Complete) — honest_verdict=complete_positive_native_total_cost_gate_met; results/experiment_7627_v665_native_cost.json
 - 2026-09-24: Reconcile fourteen dispositions and select the next scientific question (⚠️ Blocked) — honest_verdict=complete_blocked_required_v665_external_evidence; results/experiment_7628_v665_capstone.json
+- 2026-09-24: Added the milestone 2026.09.665 operational retrospective. All 8 completed experiments were compute-bound and occupied 7.2 minutes. Refine cross-game supervisor selection from actual redirect outcomes was the longest task at 2.39 minutes, followed by Measure direct native service cost and preserve board dispositions at 1.46 minutes and Reconcile fourteen dispositions and select the next scientific question at 1.09 minutes; no data available this milestone identifies internal phase costs. The locked compute-task GPU-idle field is false. The end-state monitor snapshot does not record active task windows, so GPU efficiency cannot be confirmed. No supplied record identifies a task with two or more models or a missed DualGPURunner dispatch. Recommended tooling adds phase timing, task-scoped accelerator telemetry, and runner-selection receipts. Estimated savings are 0% because no measured counterfactual is available. Artifact: results/operational_retro_2026_09_665.json.

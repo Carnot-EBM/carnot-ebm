@@ -3471,3 +3471,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 31 | 2026-09-24T18:30:00Z | 2026-09-24T18:22:05Z | Committed amendments 2-3 merge c7094c5c0f; removed gate-expand worktree |
 | 32 | 2026-09-24T20:04:22Z | 2026-09-24T20:05:21Z | Operator chose planner fix: codex (CPU, worktree planner-fix) REQ-ARC-WMTE-10013 HUD-masked dedup + goal tie-break behind default-off flags, measured via exp10012 harness arms |
 | 33 | 2026-09-24T20:42:01Z | 2026-09-24T20:51:25Z | Planner fix measured: expert wins 5->7/10 (dc22 wins), no regressions, candidate waste 118->24, new wa30 wrong plan; 4 legacy failures pre-existing on main; committed 8890d721a6 in worktree; review wf_b1d5afdd-9c9 |
+| 34 | 2026-09-24T20:57:54Z | 2026-09-24T20:58:25Z | Planner fix review: merge OK, keep flags off (live-relevant 6/10; dedup can drop HUD-reading goals; tie-break lengthens plans); merged with review record |

@@ -1,0 +1,103 @@
+{
+  "arm": "HUD_DEDUP+TIEBREAK",
+  "control_category": "expert_live_planner",
+  "divergence_reason": "prediction_cell_mismatch",
+  "engine_family": "QWEN38",
+  "executed_actions": [
+    {
+      "action": 6,
+      "data": {
+        "x": 61,
+        "y": 25
+      },
+      "plan_index": 0
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 61,
+        "y": 25
+      },
+      "plan_index": 1
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 61,
+        "y": 25
+      },
+      "plan_index": 2
+    }
+  ],
+  "execution_termination_reason": "plan_exhausted",
+  "first_divergence_index": 0,
+  "game": "vc33",
+  "is_control": false,
+  "mask": {
+    "mask_cells": 64,
+    "mask_rows": [
+      0
+    ],
+    "reason": "clean",
+    "status": "applied",
+    "swallow_check": {
+      "changed_cell_overlap": 0.001833,
+      "changing_transition_survival": 1.0,
+      "changing_transitions_deleted": 0,
+      "checked": true,
+      "masked_changing_transitions": 3,
+      "mean_changed_cell_overlap_per_changing_transition": 0.004129,
+      "n_changed_cells_inside_mask": 6,
+      "n_changed_cells_total": 3274,
+      "n_transitions": 3,
+      "n_transitions_shape_matched": 3,
+      "n_transitions_skipped_shape_mismatch": 0,
+      "overlap_threshold": 0.5,
+      "raw_changing_transitions": 3,
+      "reason": "ok",
+      "swallows": false
+    }
+  },
+  "matched_steps": 0,
+  "matched_steps_before_divergence": 0,
+  "model_family": "qwen3.8-27b",
+  "pair_id": "vc33__qwen38__stored-555380ff6347",
+  "plan_found": true,
+  "plan_length": 3,
+  "planner_diagnostics": {
+    "depth_truncated_nodes": 0,
+    "engine_guard_trips": 0,
+    "goal_tiebreak_mode": "novelty",
+    "goal_tiebreak_states_scored": 3,
+    "hud_dedup_mask_cells": 64,
+    "hud_dedup_states_merged": 0,
+    "initial_goal_energy": 1.0,
+    "is_level_complete_was_none": false,
+    "min_goal_energy_observed": 1.0,
+    "nodes_expanded": 43,
+    "termination_reason": "plan_found",
+    "used_goal_energy_search": true
+  },
+  "planner_engine_calls": 43,
+  "planner_wall_s": 0.007252,
+  "provenance_cohort": "h2h_replay_counterfactual",
+  "real_actions_spent_after_first_divergence": 2,
+  "real_actions_used": 3,
+  "real_level_up": false,
+  "source_path": "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/planner-fix/results/arc_qwen38_h2h_stopped_20260817/engine_archive/e3_w1_qwen38_27b__vc33__555380ff6347.py",
+  "source_sha256": "555380ff6347caaba818532b9eaffa78f80f0beca54b716ecedce0f594f64c85",
+  "source_status": "retained_counterfactual_historical_qualification_failed",
+  "state_rebuild": {
+    "actions_replayed": 1,
+    "expected_sha256": "9201cf8f54736cf1e274a3e616fae9fb9fac2ed2fa3ff529328d30c49809388b",
+    "level_from_frame": 0,
+    "mode": "root_after_reset",
+    "observed_sha256": "9201cf8f54736cf1e274a3e616fae9fb9fac2ed2fa3ff529328d30c49809388b",
+    "reason": null,
+    "recoverable": true,
+    "reset_sent": true
+  },
+  "think_mode": "natural_inline_reasoning_neutral_prefix",
+  "token_budget": 102400,
+  "variant": "stored-555380ff6347"
+}

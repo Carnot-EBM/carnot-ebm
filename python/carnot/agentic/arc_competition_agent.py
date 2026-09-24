@@ -6429,6 +6429,20 @@ class E3AgentPolicy:
             param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
         )
 
+    @staticmethod
+    def _planner_accepts_dedup_mask(plan_in_model) -> bool:
+        import inspect
+
+        try:
+            signature = inspect.signature(plan_in_model)
+        except (TypeError, ValueError):
+            return True
+        if "dedup_mask" in signature.parameters:
+            return True
+        return any(
+            param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
+        )
+
     def _call_plan_in_model(
         self,
         plan_in_model,
@@ -6467,6 +6481,28 @@ class E3AgentPolicy:
             diagnostics["goal_energy_source"] = getattr(goal_energy, "energy_source", None)
         if diagnostics is not None and self._planner_accepts_diagnostics(plan_in_model):
             kwargs["diagnostics"] = diagnostics
+        from carnot.agentic import arc_executable_world_model as _e3
+
+        if _e3.plan_hud_dedup_enabled():
+            mask, mask_reason = self._world_model_hud_mask(enabled=True)
+            if diagnostics is not None:
+                diagnostics["planner_hud_dedup_mask_reason"] = mask_reason
+            if mask is None:
+                if diagnostics is not None:
+                    diagnostics["planner_hud_dedup_mask_status"] = "unresolved"
+            else:
+                active_transitions = (
+                    self._active_transitions()
+                    if callable(getattr(self, "_active_transitions", None))
+                    else list(getattr(self, "transitions", ()) or ())
+                )
+                swallow = _e3.hud_mask_swallow_check(active_transitions, mask)
+                clean = _e3.hud_mask_swallow_clean(swallow)
+                if diagnostics is not None:
+                    diagnostics["planner_hud_dedup_swallow"] = swallow
+                    diagnostics["planner_hud_dedup_mask_status"] = "applied" if clean else "refused"
+                if clean and self._planner_accepts_dedup_mask(plan_in_model):
+                    kwargs["dedup_mask"] = mask
         # DEV-ONLY diagnostic override (REQ-ARC-FCP-5699-15 follow-up): unset in production, so
         # this changes nothing by default. Lets an A/B/diagnostic script raise plan_in_model's
         # search budget past its 20000-node default without editing production call sites.
@@ -7710,7 +7746,7 @@ class E3AgentPolicy:
             actions_used=actions_used,
         )
 
-    def _world_model_hud_mask(self):
+    def _world_model_hud_mask(self, *, enabled=None):
         """REQ-ARC-WMTE-6010: the explorer's live HUD mask, in LOGICAL-grid coordinates.
 
         The explorer resolves its mask in FRAME coordinates on the first observed frame and
@@ -7726,7 +7762,9 @@ class E3AgentPolicy:
 
         from carnot.agentic.arc_executable_world_model import world_model_hud_mask_enabled
 
-        if not world_model_hud_mask_enabled():
+        if enabled is None:
+            enabled = world_model_hud_mask_enabled()
+        if not enabled:
             return None, "flag_disabled"
         explorer = getattr(self, "explorer", None)
         if explorer is None:

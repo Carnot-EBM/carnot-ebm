@@ -9266,6 +9266,19 @@ def plan_max_depth_default() -> int:
     return value if value > 0 else _PLAN_DEFAULT_MAX_DEPTH
 
 
+def plan_hud_dedup_enabled() -> bool:
+    """REQ-ARC-WMTE-10013 default-off live-wrapper selector."""
+
+    return _flag_env("CARNOT_ARC_PLAN_HUD_DEDUP", False)
+
+
+def plan_goal_tiebreak_mode() -> Optional[str]:
+    """REQ-ARC-WMTE-10013 accepts only the pre-registered novelty mode."""
+
+    raw = os.environ.get("CARNOT_ARC_PLAN_GOAL_TIEBREAK", "")
+    return "novelty" if raw.strip().lower() == "novelty" else None
+
+
 def plan_in_model(
     engine,
     is_level_complete,
@@ -9275,6 +9288,7 @@ def plan_in_model(
     max_depth: int | None = None,
     goal_energy=None,
     diagnostics: Optional[dict] = None,
+    dedup_mask: Optional[np.ndarray] = None,
 ) -> Optional[list]:
     """BFS a path to an is_level_complete state ENTIRELY INSIDE the induced model
     (engine is pure: grid,action,data -> grid; no environment). Returns the action
@@ -9327,6 +9341,12 @@ def plan_in_model(
     connect toward the goal"). Backward-compatible: ``diagnostics=None`` (the default) changes
     nothing about the search or the return value.
 
+    HUD DEDUPLICATION AND GOAL TIES (REQ-ARC-WMTE-10013). ``dedup_mask`` is an
+    optional logical-coordinate mask used only by duplicate-state keys; the engine
+    and goal predicate keep receiving the full grid. With goal energy and
+    ``CARNOT_ARC_PLAN_GOAL_TIEBREAK=novelty``, equal-energy states prefer more
+    non-masked cells changed from the start, then retain insertion order.
+
     ENGINE-CALL GUARD (2026-08-17, REQ-ARC-WMTE-6400). ``engine`` and
     ``is_level_complete`` are LLM-generated. Nothing here bounded ONE call's cost:
     a generated sb26 engine contained a non-terminating, allocating flood fill, and
@@ -9352,8 +9372,40 @@ def plan_in_model(
             diagnostics["termination_reason"] = "is_level_complete_none"
         return None
     start = np.asarray(start_grid)
-    seen = {_state_key(start)}
+    effective_dedup_mask: Optional[np.ndarray] = None
+    if dedup_mask is not None:
+        proposed_mask = np.asarray(dedup_mask, dtype=bool)
+        if proposed_mask.shape == start.shape:
+            effective_dedup_mask = proposed_mask
+
+    def _dedup_key(grid: np.ndarray) -> bytes | str:
+        if effective_dedup_mask is None:
+            return _state_key(grid)
+        return _state_key(apply_hud_mask(grid, effective_dedup_mask))
+
+    def _novelty(grid: np.ndarray) -> int:
+        changed = np.asarray(grid) != start
+        if effective_dedup_mask is not None:
+            changed = changed & ~effective_dedup_mask
+        return int(np.count_nonzero(changed))
+
+    seen = {_dedup_key(start)}
+    unmasked_seen = {_state_key(start)} if effective_dedup_mask is not None else None
     nodes = 0
+    hud_dedup_states_merged = 0
+    goal_tiebreak_states_scored = 0
+    goal_tiebreak_mode = plan_goal_tiebreak_mode() if goal_energy is not None else None
+
+    def _record_req_10013_diagnostics() -> None:
+        if diagnostics is None:
+            return
+        if effective_dedup_mask is not None:
+            diagnostics["hud_dedup_mask_cells"] = int(np.count_nonzero(effective_dedup_mask))
+            diagnostics["hud_dedup_states_merged"] = hud_dedup_states_merged
+        if goal_tiebreak_mode is not None:
+            diagnostics["goal_tiebreak_mode"] = goal_tiebreak_mode
+            diagnostics["goal_tiebreak_states_scored"] = goal_tiebreak_states_scored
+
     # Counts popped-but-never-expanded nodes -- the depth axis. See the DEPTH AXIS note in the
     # docstring: without this the frontier draining at the cap is indistinguishable from the
     # frontier draining because there was nothing left to search, and those mean opposite things.
@@ -9387,9 +9439,17 @@ def plan_in_model(
         counter = itertools.count()
         initial_energy = _h(start)
         min_energy = initial_energy
-        heap = [(initial_energy, next(counter), start, [])]
+        if goal_tiebreak_mode == "novelty":
+            goal_tiebreak_states_scored += 1
+            heap = [(initial_energy, -_novelty(start), next(counter), start, [])]
+        else:
+            heap = [(initial_energy, next(counter), start, [])]
         while heap and nodes < max_nodes:
-            _, _, grid, path = heapq.heappop(heap)
+            entry = heapq.heappop(heap)
+            if goal_tiebreak_mode == "novelty":
+                _, _, _, grid, path = entry
+            else:
+                _, _, grid, path = entry
             if len(path) >= max_depth:
                 depth_truncated_nodes += 1
                 continue
@@ -9410,10 +9470,17 @@ def plan_in_model(
                 nodes += 1
                 if ng.shape != start.shape:
                     continue
-                key = _state_key(ng)
+                key = _dedup_key(ng)
                 if key in seen:
+                    if unmasked_seen is not None:
+                        raw_key = _state_key(ng)
+                        if raw_key not in unmasked_seen:
+                            hud_dedup_states_merged += 1
+                        unmasked_seen.add(raw_key)
                     continue
                 seen.add(key)
+                if unmasked_seen is not None:
+                    unmasked_seen.add(_state_key(ng))
                 npath = path + [c]
                 try:
                     if bool(guarded_call(is_level_complete, ng)):
@@ -9426,6 +9493,7 @@ def plan_in_model(
                             diagnostics["initial_goal_energy"] = initial_energy
                             diagnostics["min_goal_energy_observed"] = min_energy
                             diagnostics["engine_guard_trips"] = engine_guard_trips
+                            _record_req_10013_diagnostics()
                         return npath
                 except EngineCallGuardError:
                     # The goal predicate is generated too, so it carries the same
@@ -9441,7 +9509,14 @@ def plan_in_model(
                 ng_energy = _h(ng)
                 if ng_energy < min_energy:
                     min_energy = ng_energy
-                heapq.heappush(heap, (ng_energy, next(counter), ng, npath))
+                if goal_tiebreak_mode == "novelty":
+                    goal_tiebreak_states_scored += 1
+                    heapq.heappush(
+                        heap,
+                        (ng_energy, -_novelty(ng), next(counter), ng, npath),
+                    )
+                else:
+                    heapq.heappush(heap, (ng_energy, next(counter), ng, npath))
             if engine_guard_abort:
                 break
         if diagnostics is not None:
@@ -9457,6 +9532,7 @@ def plan_in_model(
                 if engine_guard_abort
                 else _termination_reason(nodes, max_nodes, depth_truncated_nodes)
             )
+            _record_req_10013_diagnostics()
         return None
 
     # ---- original blind FIFO BFS (goal_energy=None; unchanged) ----
@@ -9483,10 +9559,17 @@ def plan_in_model(
             nodes += 1
             if ng.shape != start.shape:
                 continue
-            key = _state_key(ng)
+            key = _dedup_key(ng)
             if key in seen:
+                if unmasked_seen is not None:
+                    raw_key = _state_key(ng)
+                    if raw_key not in unmasked_seen:
+                        hud_dedup_states_merged += 1
+                    unmasked_seen.add(raw_key)
                 continue
             seen.add(key)
+            if unmasked_seen is not None:
+                unmasked_seen.add(_state_key(ng))
             npath = path + [c]
             try:
                 if bool(guarded_call(is_level_complete, ng)):
@@ -9497,6 +9580,7 @@ def plan_in_model(
                         diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
                         diagnostics["used_goal_energy_search"] = False
                         diagnostics["engine_guard_trips"] = engine_guard_trips
+                        _record_req_10013_diagnostics()
                     return npath
             except EngineCallGuardError:
                 # Same trip policy as the goal-energy branch above.
@@ -9521,6 +9605,7 @@ def plan_in_model(
             if engine_guard_abort
             else _termination_reason(nodes, max_nodes, depth_truncated_nodes)
         )
+        _record_req_10013_diagnostics()
     return None
 
 

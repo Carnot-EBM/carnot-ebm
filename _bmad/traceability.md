@@ -9,6 +9,17 @@ already-published output as an immutable source, avoiding a circular hash check.
 The affected suite passes 15/15 with 347/347 statements covered; all eight
 scoped checks and six terminal readers pass. The result remains honestly blocked
 on absent external evidence, and `scripts/research_conductor.py` is unchanged.
+**Operational Note:** 2026-09-24 REQ-ARC-WMTE-10013 maps the default-off
+`CARNOT_ARC_PLAN_HUD_DEDUP` and `CARNOT_ARC_PLAN_GOAL_TIEBREAK=novelty`
+planner controls to `arc_executable_world_model.py`, the swallow-guarded live
+wrapper to `arc_competition_agent.py`, and the frozen CPU measurement to
+`experiment_10013_planner_dedup_tiebreak.py` plus 17 focused tests. The 231-row
+artifact reports primary EXPERT wins of 5/10 OFF, 7/10 HUD, and 7/10
+HUD+novelty. `dc22` converts in both enabled arms; `wa30` and `sb26` do not.
+There are zero OFF-to-ON regressions. Main candidate USEFUL/waste results are
+1/118, 2/24, and 2/26. A 100-fixture Git-HEAD differential preserves flags-off
+plans, diagnostics, and call counts exactly, and adversarial verification finds
+zero flags. No live default or 20,000-call configured budget changed.
 **Operational Note:** 2026-09-24 REQ-REPORT-7626 maps the shared durable Rust
 recalibration core, thin JSONL binary, and direct PyO3 class to
 `python/carnot/experiment_7626_v665_native_service.py` and its 13 focused tests.

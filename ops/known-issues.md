@@ -27714,3 +27714,10 @@ Candidate fixes, NOT started: exclude HUD rows from the planner's state key; giv
 real gradient or a tie-breaker. The check for any fix: do the dc22, wa30, sb26 experts win within
 the live 20,000-call budget from the reset board? CPU only, no LLM. Operator decision.
 
+**UPDATE 2026-09-24 (append-only): default-off fix merged, not enabled.** REQ-ARC-WMTE-10013 adds
+`CARNOT_ARC_PLAN_HUD_DEDUP` and `CARNOT_ARC_PLAN_GOAL_TIEBREAK=novelty`, both default OFF (flags-off
+identical). Measured (Experiment 10013): expert wins 5/10 OFF, 7/10 with HUD dedup; dc22 now wins;
+wa30 and sb26 do not; no regressions. Independent review: the live-relevant gain is 6/10 (ar25 depends
+on a wider mask than the live explorer applies before Stage 2); dedup can drop a win whose goal reads
+a HUD counter (fix: goal check before the dedup skip); the tie-break lengthens plans and should stay
+off. Prerequisites for enabling are in the REQ-ARC-WMTE-10013 review record in the spec.

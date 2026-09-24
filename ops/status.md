@@ -22,6 +22,13 @@
 - No tests were skipped, weakened, deleted, or reverted. Production defaults and
   `scripts/research_conductor.py` are unchanged.
 
+## 2026-09-24 — Planner fix merged default-off; not ready to enable
+- REQ-ARC-WMTE-10013: HUD-masked planner dedup and a goal tie-break, both default OFF. HUD dedup
+  converts dc22 (expert wins 5/10 -> 6/10 live-relevant); the tie-break lengthens plans and should
+  stay off.
+- Before enabling HUD dedup: run the goal check before the dedup skip; measure through the scored
+  wrapper with the live Stage-2 mask; check plan lengths and wall time; use more windows.
+
 ## 2026-09-24 — Gate analysis expanded and corrected; the planner search is a bottleneck
 - Experiment 10012 amendments 2-3: real win conditions for four experts, g50t expert repaired,
   9 stored Qwen3.8 engines reused (moved to an appendix after review: their windows are winning-route
