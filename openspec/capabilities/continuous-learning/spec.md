@@ -19145,6 +19145,115 @@ field, operator, expected value, and observed value.
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-CL-7578: V662 Continuous Proper-Loss Measurement
+
+Experiment 7578 SHALL measure continuous proper-loss learning from the exact
+Experiment 7575 online and evaluator-only roles. Experiment 7574 SHALL be the
+independent numerical prerequisite. The learner SHALL initialize the qualified
+nine-knot map to identity for each order. It SHALL use raw original-source
+forecasts without a static-benefit prerequisite.
+
+The measurement SHALL use Experiment 7575 orders 7578001 through 7578005.
+Predictions SHALL seal the event ID, state hash, probability, and typed action
+before feedback is visible. Feedback SHALL arrive in eight-event blocks after
+an eight-event delay. Each legal block SHALL update sufficient statistics,
+solve the bounded map, persist state, and receive one durable acknowledgment.
+Duplicate, out-of-order, unknown, and future-block feedback SHALL fail closed.
+Crash-before-ack recovery SHALL preserve the applied update and add one
+acknowledgment without applying the block twice.
+
+The same events SHALL run through frozen raw, global-count, local-count, and
+released-block shuffled-feedback controls. The shuffled arm SHALL permute only
+labels in the current released block. It SHALL preserve release time, marginal
+labels, and update count. A nonconstant block SHALL change at least one label
+assignment. A constant-label block SHALL be reported as unshufflable and SHALL
+not supply a shuffled contrast.
+
+At events 40, 80, 120, and 160, a separate evaluator SHALL score all arms on
+the fixed 80-group retention set. It SHALL return metrics and rows but no labels
+or updates to the learner. Working state SHALL reload after events 80 and 120.
+Future predictions and final numerical states SHALL match an uninterrupted twin
+bit for bit. Lifecycle controls SHALL test duplicate release, out-of-order
+release, a future-label sentinel, and crash-before-ack recovery.
+
+Uncertainty SHALL run 1,000 full source-component replays for each fixed order.
+Each resample SHALL reset every learner, preserve complete source components,
+retrain from only legally released labels, and checkpoint its completed unit.
+It SHALL not resample losses produced by an already-adapted learner. The task
+SHALL retain one independently reducible comparison row per replay and arm.
+
+The artifact SHALL report prequential and retention Brier loss, typed-action
+cost, non-escalation coverage, state movement, update latency, and durable
+acknowledgment latency. Exploratory benefit SHALL require the registered Brier
+advantage over raw, global-count, local-count, and informative shuffled
+controls. Retention Brier upper-95 degradation SHALL be at most `0.005`.
+Validity, readiness, benefit, and retention SHALL remain separate. Complete
+causal measurement can therefore produce a valid null.
+
+The task SHALL store learned state plus all main event, release, retention, and
+acknowledgment rows in hash-bound sidecars. It SHALL set
+`fresh_confirmatory_claim_allowed=false`. Historical exposure forbids a fresh
+efficacy claim even if exploratory gates pass. It SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `no_model_load=true`, and zero current
+loads, forwards, generations, and tokens. Historical model identity SHALL be
+source custody only.
+
+Missing external evidence SHALL produce `complete_blocked_*`,
+`verdict_class=blocked`, and a gate summary with check, upstream, path, field,
+operator, expected, and observed values. The affected validation SHALL freeze
+an Exp7358 manifest. It SHALL run focused serial pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+and exact-test specification coverage. The declared entrypoint and a fresh
+process SHALL exercise predict, release, update, persist, and reload. Cold
+replay, independent reduction, adversarial verification, and strict row
+consistency SHALL inspect the exact terminal candidate before atomic
+publication. No numbered runtime E2E applies.
+
+### SCENARIO-CL-7578-CAUSAL: Feedback Cannot Cross Time
+
+- GIVEN one fixed order and an identity learner
+- WHEN predictions and delayed blocks execute
+- THEN every prediction is sealed before its label is released
+- AND duplicate, out-of-order, unknown, or future feedback changes no state.
+
+### SCENARIO-CL-7578-SHUFFLE: The Negative Control Uses Released Labels Only
+
+- GIVEN one legally released eight-event block
+- WHEN the shuffled arm updates
+- THEN timestamps, label marginals, and update counts match the learned arm
+- AND nonconstant labels change assignment while constant blocks are named unshufflable.
+
+### SCENARIO-CL-7578-RETENTION: Evaluation Returns No Training Labels
+
+- GIVEN the fixed evaluator-only set and a sealed learner state
+- WHEN events 40, 80, 120, and 160 trigger retention scoring
+- THEN the evaluator returns proper-loss rows without learner feedback
+- AND all state hashes remain unchanged across evaluation.
+
+### SCENARIO-CL-7578-RESTART: Durable Recovery Is Bit Exact
+
+- GIVEN a working run and an uninterrupted twin
+- WHEN the working run reloads after events 80 and 120 or before an ack
+- THEN all later probabilities, actions, state hashes, releases, and final state match
+- AND every release is applied and acknowledged exactly once.
+
+### SCENARIO-CL-7578-UNCERTAINTY: Every Draw Retrains Causally
+
+- GIVEN 1,000 source-component draws for each of five orders
+- WHEN uncertainty replays complete
+- THEN all 5,000 learners reset and retrain from their own released blocks
+- AND raw numerator, denominator, direction, seed, censoring, and provenance reproduce every contrast.
+
+### SCENARIO-CL-7578-TERMINAL: Completion Does Not Establish Benefit
+
+- GIVEN hash-bound causal rows, learned state, intervals, and validation receipts
+- WHEN independent and adversarial readers inspect the identical candidate
+- THEN measurement, benefit, retention, and historical freshness remain separate
+- AND a valid null stays complete without deployment or fresh-confirmatory promotion.
+
+Implementation status: specified 2026-09-23. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-CL-7577: V662 Frozen Proper-Loss Evaluation
 
 Experiment 7577 SHALL evaluate every immutable Experiment 7576 forecast head
