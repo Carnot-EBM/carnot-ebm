@@ -20509,3 +20509,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Independently reduce evidence decisions and delayed learning (⚠️ Blocked) — honest_verdict=complete_blocked_v664_evidence_chain_unavailable; results/experiment_7610_v664_evidence_audit.json
 - 2026-09-24: Qualify matched-history replay from the live agents own attempts (⚠️ Research Finding) — honest_verdict=complete_null_matched_prefix_fixture_ready_empirical_benefit_not_established; results/experiment_7611_v664_arc_matched_support.json
 - 2026-09-24: Measure cross-game state aliasing with matched runtime histories (⚠️ Blocked) — honest_verdict=complete_blocked_exp7611_protocol; results/experiment_7612_v664_arc_history_measurement.json
+- 2026-09-24: Measure exclusive consumer costs and preserve board prerequisites (⚠️ Research Finding) — honest_verdict=complete_null_service_attribution_preserves_exp7598_null; results/experiment_7613_v664_service_attribution.json
