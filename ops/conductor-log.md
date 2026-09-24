@@ -18513,3 +18513,4 @@ code |
 | 2026-09-24 00:31 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 1: OPEN 12 da |
 | 2026-09-24 00:55 UTC | Independently reduce probability and feedback-lear | OK | 100 passed, 1 warning in 12.69s |
 | 2026-09-24 01:23 UTC | Qualify fail-closed world-model scores and indepen | OK | 138 passed, 1 warning in 14.01s |
+| 2026-09-24 01:54 UTC | Qualify owned Qwen transport and live-panel budget | OK | 106 passed, 1 warning in 9.39s |
