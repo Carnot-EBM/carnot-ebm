@@ -46006,3 +46006,42 @@ SHALL publish atomically at
 
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## REQ-VERIFY-7598: Explicit Probability-Service Decision Caller
+
+The probability-calibration surface SHALL expose a documented caller for the
+Experiment 7598 durable decision client. The caller SHALL require an explicit
+client argument and event ID. Constructing `ProbabilityCalibrationVerifier`
+without that argument SHALL not start a process, create a state file, change a
+score, or alter the existing verify-repair path.
+
+The explicit caller SHALL pass a finite claimed error probability to the
+service and return its typed decision record. Available service output SHALL
+remain a calibrated policy decision, not an exact verification result. Missing,
+timed-out, malformed, or crashed service output SHALL return unavailable and
+`escalate`. The caller SHALL never convert service failure into `pass` or
+`verified=true`. The ARC agent SHALL have no implicit caller or default flag.
+
+### SCENARIO-VERIFY-7598-OPT-IN: Existing Verification Defaults Stay Exact
+
+**Given** a probability verifier with no durable service client
+**When** existing claim parsing, scoring, and verify-repair calls run
+**Then** no process or state path is created
+**And** their verdicts and default ARC behavior remain unchanged.
+
+### SCENARIO-VERIFY-7598-CALL: Explicit Decisions Remain Non-Oracle
+
+**Given** an explicit durable service and a parsed finite probability claim
+**When** the probability surface requests a typed decision
+**Then** it returns the service action and availability fields
+**And** the record never claims exact verification or calibration quality.
+
+### SCENARIO-VERIFY-7598-UNAVAILABLE: Service Failure Fails Closed
+
+**Given** a service timeout, process exit, invalid schema, or malformed reply
+**When** the explicit caller requests a typed decision
+**Then** the returned action is `escalate` and availability is false
+**And** the result cannot open a verification or acceptance gate.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.

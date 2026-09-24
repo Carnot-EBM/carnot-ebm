@@ -19145,6 +19145,109 @@ field, operator, expected value, and observed value.
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-CL-7598: Opt-In Durable Recalibration Consumer
+
+Experiment 7598 SHALL provide a typed Python client for the qualified Rust
+JSON-lines recalibration process. The client SHALL be explicit opt-in. It
+SHALL own only the process that it starts. It SHALL use a caller-supplied
+per-session state path and a bounded response timeout. Construction SHALL
+create the identity state only when the state path does not exist. It SHALL
+never install a historical or empirical probability head.
+
+The client SHALL provide `predict` and `release_feedback`. A prediction SHALL
+accept one finite error probability in `[0, 1]`. It SHALL return a finite
+calibrated error probability and one typed action from `accept`, `reject`, or
+`escalate`. Decision costs SHALL remain frozen at `accept=5*p`,
+`reject=1-p`, and `escalate=0.2`. Feedback SHALL use the probability sealed by
+the matching prediction. Feedback may arrive after other predictions. A
+duplicate ID, unknown ID, non-binary label, malformed response, invalid state
+schema, timeout, or process exit SHALL fail closed.
+
+A successful feedback reply SHALL follow state-file write, file fsync, atomic
+rename, directory fsync, reload, and state comparison. The client SHALL not
+report a durable acknowledgment before all steps pass. A service failure SHALL
+return an unavailable escalation. It SHALL never return a verified result.
+Closing the client SHALL wait for or terminate only its owned child process.
+
+The current Rust source and release binary hashes SHALL be recorded. Experiment
+7585 parity, terminal validation, and equal-durability policy SHALL be
+authenticated before reuse. If the current source or binary cannot be bound to
+the historical measurement, fresh Rust-versus-Python trace parity SHALL run
+before consumer readiness can open. The fresh check SHALL cover numerical
+output, decisions, state, duplicate feedback, restart, and durable
+acknowledgment semantics.
+
+Consumer measurement SHALL use seed `7598001`. It SHALL run 30 randomized
+paired blocks for each cold and warm mode and each batch size in `{1, 8}`.
+Every block SHALL compare the public Rust client, the Python process service,
+and a warm in-process Python reference with the same durable state-write
+policy. Cold rows SHALL include process startup. Warm rows SHALL exclude the
+one-time setup but report it separately. Each row SHALL include serialization,
+queue wait, applicable startup, prediction, feedback, persistence, reload, and
+resumed prediction. Kernel time and whole-consumer time SHALL remain separate.
+
+The fastest eligible Python comparator SHALL be primary for each mode and batch
+size. A speed benefit SHALL require exact decision and reload parity plus a
+paired whole-consumer speed ratio whose lower 95 percent bound is greater than
+one. Consumer readiness and speed benefit SHALL remain separate. Neither score
+establishes calibration quality, policy usefulness, hardware acceleration, or
+end-to-end language-model latency. Production defaults and the ARC agent SHALL
+remain unchanged.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`no_model_load=true`, zero current model invocations, and
+`calibration_quality_claimed=false`. It SHALL retain one auditable row per
+paired block and arm. Rows SHALL include absolute times, numerator,
+denominator, seed, direction, missingness, censoring, provenance, outcome
+parity, source hashes, and durability policy. Missing external prerequisites
+SHALL produce `complete_blocked_*`, `verdict_class=blocked`, and a gate summary
+that names check, upstream, path, field, operator, expected, and observed.
+
+### SCENARIO-CL-7598-LIFECYCLE: Prediction And Feedback Stay Causal
+
+- GIVEN an identity state and an owned Rust process
+- WHEN predictions occur before late authenticated feedback
+- THEN each prediction seals its input probability and typed action
+- AND each accepted feedback updates, persists, reloads, and acknowledges once.
+
+### SCENARIO-CL-7598-FAILURE: Process And State Failures Escalate
+
+- GIVEN an invalid schema, timeout, malformed reply, or child-process exit
+- WHEN the public client requests a prediction or feedback release
+- THEN the result is unavailable with action `escalate`
+- AND no failure is represented as verified or durably acknowledged.
+
+### SCENARIO-CL-7598-CRASH: Rename Boundaries Preserve Honest State
+
+- GIVEN matched Python and Rust durable writers
+- WHEN a controlled crash occurs before or after atomic rename
+- THEN no acknowledgment is emitted before reload and directory fsync
+- AND a fresh client reports only the state that the durable file contains.
+
+### SCENARIO-CL-7598-PARITY: Changed Binaries Require Requalification
+
+- GIVEN authenticated Experiment 7585 evidence and current source and binary hashes
+- WHEN either current executable identity lacks historical qualification
+- THEN fresh process parity runs before consumer readiness can equal one
+- AND a failed parity or durability check blocks reuse.
+
+### SCENARIO-CL-7598-BENCHMARK: Whole Public Calls Select The Comparator
+
+- GIVEN 30 paired blocks for both modes and both batch sizes
+- WHEN all three arms run in randomized order with identical event data
+- THEN absolute p50, p95, paired ratios, intervals, and setup cost are reported
+- AND only the fastest eligible comparator controls the speed-benefit score.
+
+### SCENARIO-CL-7598-TERMINAL: Readiness Does Not Prove Policy Benefit
+
+- GIVEN exact rows, source hashes, and scoped validation receipts
+- WHEN cold replay, independent reduction, adversarial verification, and the strict row reader inspect one candidate
+- THEN validity, readiness, benefit, retention, and freshness remain separate
+- AND calibration quality and production-default claims remain false.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-CL-7585: V662 Portable Recalibration Service
 
 Experiment 7585 SHALL port the qualified nine-knot sufficient-statistic update

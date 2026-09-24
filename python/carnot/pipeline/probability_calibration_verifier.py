@@ -7,9 +7,15 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from carnot.pipeline.verdict_record import VerdictRecord, calibrated_confidence_from_energy
+
+if TYPE_CHECKING:
+    from carnot.pipeline.calibrated_decision_service import (
+        CalibratedDecision,
+        CalibratedDecisionService,
+    )
 
 
 @dataclass(frozen=True)
@@ -218,6 +224,23 @@ class ProbabilityCalibrationVerifier:
     def score_text(self, chain: str) -> list[VerdictRecord]:
         """Score every explicit probability claim found in a response."""
         return [self.score(chain, claim) for claim in self.extract_claims(chain)]
+
+    def decide_with_service(
+        self,
+        *,
+        service: CalibratedDecisionService,
+        event_id: str,
+        error_probability: float,
+    ) -> CalibratedDecision:
+        """Request an explicit opt-in policy decision from a durable service.
+
+        This method does not affect ``score`` or ``score_text``. Its result is
+        a policy action and never an exact verification result.
+
+        Spec: REQ-VERIFY-7598, SCENARIO-VERIFY-7598-CALL/UNAVAILABLE.
+        """
+
+        return service.predict(event_id, error_probability)
 
     @staticmethod
     def _parse_probability(raw_value: str) -> float | None:

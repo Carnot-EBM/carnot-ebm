@@ -107,11 +107,19 @@ struct Event {
 }
 
 #[derive(Clone, Debug, Deserialize)]
+struct Query {
+    event_id: String,
+    probability: f64,
+}
+
+#[derive(Clone, Debug, Deserialize)]
 struct Request {
     operation: String,
     state_path: Option<PathBuf>,
     #[serde(default)]
     events: Vec<Event>,
+    #[serde(default)]
+    queries: Vec<Query>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -385,6 +393,17 @@ fn read_state(path: &Path) -> Result<State, String> {
     Ok(state)
 }
 
+fn maybe_test_crash(stage: &str) {
+    let enabled = std::env::var("CARNOT_RECALIBRATION_TEST_MODE")
+        .ok()
+        .as_deref()
+        == Some("1");
+    let selected = std::env::var("CARNOT_RECALIBRATION_TEST_CRASH_STAGE").unwrap_or_default();
+    if enabled && selected == stage {
+        std::process::exit(86);
+    }
+}
+
 fn durable_write(path: &Path, state: &State) -> Result<(usize, BTreeMap<String, u64>), String> {
     let parent = path
         .parent()
@@ -425,12 +444,14 @@ fn durable_write(path: &Path, state: &State) -> Result<(usize, BTreeMap<String, 
         synced.duration_since(wrote).as_nanos() as u64,
     );
     drop(file);
+    maybe_test_crash("before_rename");
     fs::rename(&temporary, path).map_err(|error| format!("state_rename_failed:{error}"))?;
     let renamed = Instant::now();
     stages.insert(
         "rename".to_string(),
         renamed.duration_since(synced).as_nanos() as u64,
     );
+    maybe_test_crash("after_rename");
     File::open(parent)
         .and_then(|directory| directory.sync_all())
         .map_err(|error| format!("directory_fsync_failed:{error}"))?;
@@ -574,6 +595,55 @@ fn run_trace(request: Request) -> Result<Response, String> {
     })
 }
 
+fn run_predict(request: Request) -> Result<Response, String> {
+    let path = request
+        .state_path
+        .ok_or_else(|| "state_path_required".to_string())?;
+    let mut stages = empty_stages();
+    let started = Instant::now();
+    let state = read_state(&path)?;
+    add_stage(&mut stages, "read", started.elapsed().as_nanos() as u64);
+    let processed: BTreeSet<&str> = state
+        .processed_event_ids
+        .iter()
+        .map(String::as_str)
+        .collect();
+    let mut seen = BTreeSet::new();
+    let mut predictions = Vec::new();
+    for query in request.queries {
+        if !seen.insert(query.event_id.clone()) || processed.contains(query.event_id.as_str()) {
+            return Err(format!("duplicate_feedback:{}", query.event_id));
+        }
+        let started = Instant::now();
+        let probability = predict(query.probability, &state.theta)?;
+        let action = typed_decision(probability)?;
+        add_stage(&mut stages, "predict", started.elapsed().as_nanos() as u64);
+        predictions.push(Prediction {
+            event_id: query.event_id,
+            probability,
+            action,
+        });
+    }
+    let state_bytes = fs::metadata(&path)
+        .map_err(|error| format!("state_metadata_failed:{error}"))?
+        .len() as usize;
+    let kernel_ns = stages.get("predict").copied().unwrap_or(0);
+    Ok(Response {
+        ok: true,
+        error: None,
+        predictions,
+        acknowledgments: Vec::new(),
+        acknowledged_release_count: 0,
+        processed_event_count: 0,
+        reloaded_state_matches: true,
+        state_bytes,
+        state: Some(state),
+        stage_ns: stages,
+        kernel_ns,
+        durability_policy: DURABILITY_POLICY,
+    })
+}
+
 fn handle(request: Request) -> Response {
     if request.operation == "solver_failure" {
         return failure(
@@ -581,10 +651,12 @@ fn handle(request: Request) -> Response {
             empty_stages(),
         );
     }
-    if request.operation != "trace" {
-        return failure("unknown_operation".to_string(), empty_stages());
-    }
-    match run_trace(request) {
+    let result = match request.operation.as_str() {
+        "trace" => run_trace(request),
+        "predict" => run_predict(request),
+        _ => return failure("unknown_operation".to_string(), empty_stages()),
+    };
+    match result {
         Ok(response) => response,
         Err(error) => failure(error, empty_stages()),
     }

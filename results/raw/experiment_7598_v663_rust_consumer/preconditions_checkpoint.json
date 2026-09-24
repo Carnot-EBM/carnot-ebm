@@ -1,0 +1,145 @@
+{
+  "blocker": null,
+  "rows": [
+    {
+      "check": "source_readable:results/experiment_7585_v662_portable_service.json",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7585_v662_portable_service.json",
+      "upstream": "results/experiment_7585_v662_portable_service.json"
+    },
+    {
+      "check": "source_readable:crates/carnot-core/src/bin/portable-recalibration-service.rs",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "crates/carnot-core/src/bin/portable-recalibration-service.rs",
+      "upstream": "crates/carnot-core/src/bin/portable-recalibration-service.rs"
+    },
+    {
+      "check": "source_readable:openspec/capabilities/continuous-learning/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/continuous-learning/spec.md",
+      "upstream": "openspec/capabilities/continuous-learning/spec.md"
+    },
+    {
+      "check": "source_readable:openspec/capabilities/verification/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/verification/spec.md",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "check": "source_readable:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_readable:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed": "readable_nonempty_bytes",
+      "op": "eq",
+      "passed": true,
+      "path": "ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "exp7585_portable_parity_score",
+      "expected": 1,
+      "field": "portable_parity_score",
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7585_v662_portable_service.json",
+      "upstream": "Exp7585"
+    },
+    {
+      "check": "exp7585_service_measurement_complete_score",
+      "expected": 1,
+      "field": "service_measurement_complete_score",
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7585_v662_portable_service.json",
+      "upstream": "Exp7585"
+    },
+    {
+      "check": "exp7585_terminal_validation",
+      "expected": true,
+      "field": "validation_receipts",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7585_v662_portable_service.json",
+      "upstream": "Exp7585"
+    },
+    {
+      "check": "exp7585_not_flagged",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7585_v662_portable_service.json",
+      "upstream": "Exp7585"
+    },
+    {
+      "check": "exp7585_equal_durability",
+      "expected": true,
+      "field": "rows[*].durability_policy",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "results/experiment_7585_v662_portable_service.json",
+      "upstream": "Exp7585"
+    },
+    {
+      "check": "driving_requirement:REQ-CL-7598",
+      "expected": "REQ-CL-7598",
+      "field": "REQ-*",
+      "observed": "REQ-CL-7598",
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/continuous-learning/spec.md",
+      "upstream": "openspec/capabilities/continuous-learning/spec.md"
+    },
+    {
+      "check": "driving_requirement:REQ-VERIFY-7598",
+      "expected": "REQ-VERIFY-7598",
+      "field": "REQ-*",
+      "observed": "REQ-VERIFY-7598",
+      "op": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/verification/spec.md",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "check": "rust_toolchain_owned",
+      "expected": true,
+      "field": "cargo",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "PATH",
+      "upstream": "local toolchain"
+    }
+  ]
+}
