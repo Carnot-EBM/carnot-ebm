@@ -1,0 +1,492 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "check": "selected_role_roster",
+      "expected": "240_scored_plus_8_disjoint_pilot",
+      "field": "salted_selection",
+      "observed": "source_group_incomplete",
+      "op": "eq",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    }
+  ],
+  "claim_scope": "descriptive_reuse",
+  "complete": true,
+  "duration_s": 0.3518039649934508,
+  "evidence_feature_names": [
+    "supported_sentence_fraction",
+    "contradicted_fraction",
+    "unknown_fraction",
+    "valid_link_fraction",
+    "exact_named_entity_overlap",
+    "numeric_value_agreement",
+    "negation_mismatch_indicator",
+    "extraction_censor_indicator"
+  ],
+  "evidence_protocol_ready_score": 0,
+  "experiment_id": "exp7588-v663-evidence-protocol",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "Cached-only work declares no current model and records historical identity separately.",
+    "acceptance_gate_results": "Keep validity, readiness, benefit, retention, and freshness separate with a principle per gate.",
+    "duration_s": "Measure monotonic current work with phase spans; do not pad or inherit time.",
+    "evidence_feature_names": "Exactly eight predeclared features use explicit missingness and fit-only imputation.",
+    "evidence_protocol_ready_score": "One requires complete lossless inputs, all 240 roles, eight pilots, no overlap, and isolated readers.",
+    "field_principles": "Keep these one-line reasons inside the emitted artifact.",
+    "flagged_adversarial": "Persist the terminal reader outcome; flagged evidence cannot open a gate.",
+    "fresh_confirmatory_claim_allowed": "Previously exposed source groups always remain non-fresh.",
+    "gate_check_summary": "A blocked result names check, upstream, path, field, operator, expected, and observed values.",
+    "honest_verdict": "Use a complete_ terminal prefix; execution completion does not prove benefit.",
+    "inference_substrate": "State current execution; inherited GPU evidence is not current inference.",
+    "inference_substrate_class": "Record actual and planned classes separately; blocked_no_run means zero model work.",
+    "invocation_counts": "Count current loads, forwards, generations, and tokens independently from history.",
+    "protocol_path": "The immutable role, schema, control, and cost manifest hash is required downstream.",
+    "random_seed": "Record explicit seeds for each stochastic stage; deterministic salts remain named separately.",
+    "reproducibility_checksum": "Bind immutable raw evidence, configuration, and terminal reduction.",
+    "role_counts": "Freeze 80 fit, 20 tune, 20 policy, 80 online, 40 evaluation, and eight pilots.",
+    "rows": "Each unit and arm retains absolute metrics, numerator, denominator, seed, direction, missingness, and provenance.",
+    "sample_size_budget": "Count independent source groups; seeds, sentences, and arms do not multiply them.",
+    "source_artifact_hashes": "Distinguish authenticated producers, missing producers, and conductor pre-gate sources.",
+    "validation_receipts": "Bind command, worktree, exit code, and raw log hash, including terminal readers.",
+    "verdict_class": "Use exactly one closed class; only unfinished owned work is partial.",
+    "verifier_is_oracle": "Exact labels and constructed controls cannot support an oracle-distinct claim."
+  },
+  "flagged_adversarial": false,
+  "fresh_confirmatory_claim_allowed": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      "selected_role_roster"
+    ],
+    "failed_count": 1,
+    "first_failure": {
+      "check": "selected_role_roster",
+      "expected": "240_scored_plus_8_disjoint_pilot",
+      "field": "salted_selection",
+      "observed": "source_group_incomplete",
+      "op": "eq",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    "passed": false
+  },
+  "historical_model_id": "unsloth/Qwen3.8-27B-GGUF",
+  "honest_verdict": "complete_blocked_selected_role_roster",
+  "inference_substrate": "blocked_before_cached_aggregation",
+  "inference_substrate_class": "blocked_no_run",
+  "invocation_counts": {
+    "forward_calls": {
+      "attempted": 0,
+      "cancelled": 0,
+      "completed": 0,
+      "failed": 0
+    },
+    "generation_calls": {
+      "attempted": 0,
+      "cancelled": 0,
+      "completed": 0,
+      "failed": 0
+    },
+    "model_loads": {
+      "attempted": 0,
+      "cancelled": 0,
+      "completed": 0,
+      "failed": 0
+    },
+    "tokens": {
+      "attempted": 0,
+      "cancelled": 0,
+      "completed": 0,
+      "failed": 0
+    }
+  },
+  "milestone": "2026.09.663",
+  "model_invoked": false,
+  "model_specs": [],
+  "no_model_load": true,
+  "planned_inference_substrate_class": "no_model_load",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "check": "source_exists",
+      "expected": "readable_nonempty_file",
+      "field": "path",
+      "observed": "readable_nonempty_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "v662_terminal"
+    },
+    {
+      "check": "source_exists",
+      "expected": "readable_nonempty_file",
+      "field": "path",
+      "observed": "readable_nonempty_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "upstream": "capability_spec"
+    },
+    {
+      "check": "source_exists",
+      "expected": "readable_nonempty_file",
+      "field": "path",
+      "observed": "readable_nonempty_file",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "exclusion_manifest"
+    },
+    {
+      "check": "driving_requirement",
+      "expected": "REQ-VERIFY-7588",
+      "field": "REQ-*",
+      "observed": "REQ-VERIFY-7588",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "upstream": "verification_spec"
+    },
+    {
+      "check": "resource_ownership",
+      "expected": false,
+      "field": "current_task_quarantined",
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "ops_exclusion_manifest"
+    },
+    {
+      "check": "upstream_verdict",
+      "expected": [
+        "null",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "null",
+      "op": "in",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "upstream_adversarial",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "upstream_cached_roles",
+      "expected": 1,
+      "field": "cached_roles_ready_score",
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "upstream_online_protocol",
+      "expected": 1,
+      "field": "online_protocol_ready_score",
+      "observed": 1,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "historical_exposure",
+      "expected": false,
+      "field": "fresh_confirmatory_claim_allowed",
+      "observed": false,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "source_role_manifest",
+      "expected": {
+        "fit": 160,
+        "online": 160,
+        "policy": 40,
+        "test": 80,
+        "tune": 40
+      },
+      "field": "frozen_protocol.role_counts",
+      "observed": {
+        "fit": 160,
+        "online": 160,
+        "policy": 40,
+        "test": 80,
+        "tune": 40
+      },
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "dataset_revision",
+      "expected": "866a7c5392c3cf87e4fbc2b3808815d524f54331",
+      "field": "exposure_manifest.dataset_revision",
+      "observed": "866a7c5392c3cf87e4fbc2b3808815d524f54331",
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "cached_role_custody",
+      "expected": {
+        "fit": 160,
+        "online": 160,
+        "policy": 40,
+        "test": 80,
+        "tune": 40
+      },
+      "field": "loaded_role_counts",
+      "observed": {
+        "fit": 160,
+        "online": 160,
+        "policy": 40,
+        "test": 80,
+        "tune": 40
+      },
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "original_human_labels",
+      "expected": true,
+      "field": "all_labels_binary_and_joined",
+      "observed": true,
+      "op": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    },
+    {
+      "check": "selected_role_roster",
+      "expected": "240_scored_plus_8_disjoint_pilot",
+      "field": "salted_selection",
+      "observed": "source_group_incomplete",
+      "op": "eq",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7575_v662_cached_learning_protocol.json",
+      "upstream": "exp7575"
+    }
+  ],
+  "protocol_path": null,
+  "protocol_sha256": null,
+  "random_seed": 7588001,
+  "raw_sidecars": {},
+  "reproducibility_checksum": "sha256:dac3eeaef9368f2f5e09c986d82034f27932c98726cbeb2e6093592907b33230",
+  "research_conductor_modified": false,
+  "role_counts": {
+    "evaluation": 0,
+    "fit": 0,
+    "online": 0,
+    "pilot": 0,
+    "policy": 0,
+    "tune": 0
+  },
+  "rows": [],
+  "run_date": "20260924",
+  "sample_size_budget": {
+    "censored_independent_units": 0,
+    "excluded_independent_units": 0,
+    "failed_independent_units": 0,
+    "intended_pilot_independent_units": 8,
+    "intended_scored_independent_units": 240,
+    "intended_source_groups": 480,
+    "observed_independent_units": 0,
+    "unstarted_independent_units": 248
+  },
+  "schema": "carnot.exp7588.v663.evidence_protocol.v1",
+  "selection_salt": "v663-evidence-20260924",
+  "source_artifact_hashes": [
+    {
+      "bytes": 4115949,
+      "path": "results/experiment_7575_v662_cached_learning_protocol.json",
+      "producer": "v662_terminal",
+      "sha256": "sha256:f2f0b06f428310d3ca93205bf771b1d55548656593df15d8eb6810bf453fec13",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2826640,
+      "path": "openspec/capabilities/verification/spec.md",
+      "producer": "capability_spec",
+      "sha256": "sha256:57e23a3514f015ca768783448874b66ab1700b4778a05a2d3ddc999c0215beef",
+      "source_class": "conductor_pre_gate"
+    },
+    {
+      "bytes": 63348,
+      "path": "ops/exclusion_manifest.yaml",
+      "producer": "exclusion_manifest",
+      "sha256": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+      "source_class": "conductor_pre_gate"
+    },
+    {
+      "bytes": 40868,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/fit_labels.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:6f00300898f03d3bb442f9d87d3d132330e90008ebdb2093d7a1c1ce125557bc",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 10235,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/tune_labels.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:121c6bb706b15593744c49360ec188424ab0785cdf3f4eadc28ac542e60d7b3b",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 9978,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7533_v659_tool_protocol/policy_labels.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:c8fddf13d7e04080ac3104b2e79439cc9728a24058b0656764f4969c71ccdc1d",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 54560,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/online_labels.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:4b322d7771a5ee90c4da9f77a2fece1db6f8d94f778bc214a76b0de420ca94cf",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 27120,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/test_labels.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:6a52f773f88d6301ec14512f6413b01e0da2b14b83f6dbc0892826f4dbe637c0",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2716575,
+      "path": "results/raw/experiment_7564_v661_fit_capture/capture/native_rows_000.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:cf79e5c25c47fcbab5c55b961444ab8e10ef6c443970a7a975654d3ed7687a09",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2621855,
+      "path": "results/raw/experiment_7564_v661_fit_capture/capture/native_rows_001.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:10804ce5d030d74a81413fbeb3b0b3f166f9311cc29490fa63292a453d0fccaf",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2434636,
+      "path": "results/raw/experiment_7564_v661_fit_capture/capture/native_rows_002.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:5da844e5b5bb22ecd00266658ad21d8feb6886e3452d4d8ca2a43b201c591e32",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2784803,
+      "path": "results/raw/experiment_7564_v661_fit_capture/capture/native_rows_003.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:541b4ea202a3ee421fb81c542551e583b469d9f7c8971734163d6ff0042e2099",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2647689,
+      "path": "results/raw/experiment_7564_v661_fit_capture/capture/native_rows_004.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:a5b2b5455c1213a2b2a5414ea136cd53df543bde1bbcc39c6ce6f2e4102854d5",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2561465,
+      "path": "results/raw/experiment_7564_v661_fit_capture/capture/native_rows_005.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:256e77414bfa939c9ff89788b0227334c4d2a6f996bdfdb4bd4c9168997464e8",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2544259,
+      "path": "results/raw/experiment_7564_v661_fit_capture/capture/native_rows_006.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:b50c05dc37f666d6db14233a3bfff6844a070a6dcac22d669867305dd395ba2a",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 3492985,
+      "path": "results/raw/experiment_7564_v661_fit_capture/capture/native_rows_007.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:1c2016d8a665127e9a84102f4a691ed4a15d7a60389d37903d3f660ec9384f58",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2785142,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/native_rows_000.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:818c9cf0df0ec02043cf3ccd5f51edf9f38eb8a9b0367eb1dffa7a2c5a0da5f2",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2507419,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/native_rows_001.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:fa4b92b201940cb813f795b15e3e5d1fec9679f739f061d45300087b92a8499a",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2420515,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/native_rows_002.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:fca64aa6c4b9cc3edf80e9bbcf28747b948580949e0947401657c7472a014727",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2249983,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/native_rows_003.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:b3126301cc31d089f02eb2d29e0cc04ed5fb245a83affdedd89fab8e2cd79b10",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 2802484,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/native_rows_004.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:b79b6d0903c2a6db609f69ea65f071cf65fb46fe7c3965007764f651a60db21b",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 3300651,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/native_rows_005.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:71f903fcf2c4796fbe8d669275f87671a2c4ba5a481a3bfb91efd1e1b605244f",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 3457913,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/native_rows_006.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:b2190513020d02f9395a097e67e0a556eb6512bbd3df50e8189a55ba6d7694b7",
+      "source_class": "authenticated_producer"
+    },
+    {
+      "bytes": 4024205,
+      "path": "results/raw/experiment_7565_v661_test_online_capture/capture/native_rows_007.jsonl",
+      "producer": "v661_original_human_labels_and_complete_text",
+      "sha256": "sha256:6ced823c90f9c2f50943ed3fbafdc3d605aec2169fe02b816611f679a14d1d5e",
+      "source_class": "authenticated_producer"
+    }
+  ],
+  "title": "V663 lossless evidence-link protocol",
+  "validation_receipts": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

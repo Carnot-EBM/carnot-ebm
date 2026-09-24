@@ -45897,3 +45897,112 @@ at `results/experiment_7567_v661_source_evaluation.json`.
 **When** the declared entrypoint and fresh-process readers execute
 **Then** scoped validation, cold replay, independent reduction, and positive controls pass
 **And** adversarial verification and strict row consistency pass before atomic publication.
+
+### REQ-VERIFY-7588: V663 Evidence Protocol SHALL Preserve Lossless Text And Fixed Roles
+
+Experiment 7588 SHALL authenticate the existing 480-group V662 role manifest,
+its pinned dataset revision, complete response and source bytes, and original
+human labels. Within each unchanged role it SHALL rank component hashes with
+salt `v663-evidence-20260924`. It SHALL select 80 fit, 20 tune, 20 policy, 80
+online, and 40 evaluation groups. Eight additional fit-role groups SHALL form a
+disjoint pilot. Selection SHALL not use labels, scores, or model output.
+
+Each extraction input SHALL retain the complete response and source. It SHALL
+number whole sentences or ambiguous whole blocks and record immutable UTF-8 byte
+offsets. Ordered segments SHALL reconstruct every original byte, including
+whitespace, qualifiers, code blocks, and tables. Extraction transport SHALL not
+receive labels. It SHALL expose only response sentence IDs, source sentence IDs,
+relations `supports | contradicts | unknown`, entity type, and abstention reason.
+It SHALL reject unknown IDs, unsupported relations, extra generated text, more
+than six proposals, duplicate components, and absent text. Every response
+sentence without a valid link SHALL remain explicitly unknown.
+
+The protocol SHALL freeze exactly eight evidence features: supported-sentence
+fraction, contradicted fraction, unknown fraction, valid-link fraction, exact
+named-entity overlap, numeric-value agreement, negation-mismatch indicator, and
+extraction-censor indicator. The raw historical probability SHALL remain a
+separate offset. Lexical overlap SHALL not certify semantic support. Missing
+entity and numeric values SHALL remain explicit until imputation values are
+learned on the fit role only.
+
+The controls SHALL erase evidence deterministically and derange sources only
+within their unchanged role. Both controls SHALL reduce features over complete
+text. The readers SHALL isolate extraction inputs from human labels. One
+response SHALL be designated per component by hash before extraction. The
+protocol SHALL freeze action costs `accept=5*y`, `reject=1-y`, `escalate=0.2`,
+a non-escalation floor of 0.10, delayed feedback lag eight, and a read-only
+evaluation retention role. Pilot groups SHALL not enter any scored role.
+
+Experiment 7588 SHALL load no model and generate no tokens. It SHALL declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `no_model_load=true`, current invocation
+counts of zero, and historical Qwen identity separately. All selected groups
+remain historically exposed. The artifact SHALL set
+`fresh_confirmatory_claim_allowed=false`. Protocol readiness alone SHALL have
+`verdict_class=null` and SHALL not establish predictive benefit.
+
+The task SHALL write an immutable protocol at
+`results/raw/experiment_7588_v663_evidence_protocol/protocol.json`. Readiness
+SHALL require 240 scored groups, eight disjoint pilot groups, exact role counts,
+lossless inputs, zero overlap, and isolated readers. Missing external evidence
+SHALL yield a schema-complete `complete_blocked_*` result whose gate summary
+names check, upstream, path, field, operator, expected, and observed values.
+
+Required validation SHALL include scoped serial pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+scoped specification coverage, declared-entrypoint replay, independent
+reduction, adversarial verification, and strict verdict-row consistency. This
+read-only protocol has no numbered runtime E2E. Only a cold-valid candidate
+SHALL publish atomically at
+`results/experiment_7588_v663_evidence_protocol.json`.
+
+#### SCENARIO-VERIFY-7588-ROLES: Salted Selection Preserves Custody
+
+**Given** 480 authenticated V662 groups and their original human labels
+**When** the protocol ranks component hashes inside each unchanged role
+**Then** it freezes the exact 80/20/20/80/40 scored roster and eight fit pilots
+**And** no component overlaps, moves role, or changes after scores are observed.
+
+#### SCENARIO-VERIFY-7588-ROUNDTRIP: Sentence Pointers Preserve Every Byte
+
+**Given** complete text with whitespace, qualifiers, code, or tables
+**When** the lossless segmenter assigns IDs and UTF-8 byte offsets
+**Then** ordered slices reconstruct the exact original bytes
+**And** ambiguous blocks remain whole instead of becoming generated text.
+
+#### SCENARIO-VERIFY-7588-OUTPUT: Evidence Output Fails Closed
+
+**Given** one label-free extraction contract
+**When** output omits a qualifier or supplies bad IDs, extra fields, or a bad relation
+**Then** omitted response sentences become explicit unknown rows
+**And** invalid, injected, over-budget, or replacement-text output is rejected.
+
+#### SCENARIO-VERIFY-7588-FEATURES: Eight Features And Controls Stay Frozen
+
+**Given** validated evidence pointers over complete text
+**When** the original, erasure, and within-role derangement arms reduce features
+**Then** exactly eight registered features are produced beside the raw offset
+**And** missing numeric or entity evidence remains explicit before fit-only imputation.
+
+#### SCENARIO-VERIFY-7588-ISOLATION: Labels Never Enter Extraction
+
+**Given** separate label-free inputs and original human-label sidecars
+**When** the role-isolated readers open extraction transport
+**Then** no label field is reachable through that reader
+**And** evaluation labels remain read-only and delayed online labels lag eight events.
+
+#### SCENARIO-VERIFY-7588-BLOCKED: External Absence Is Not Partial Work
+
+**Given** a missing or changed V662 artifact, sidecar, revision, role, or requirement
+**When** no owned model or extraction call has started
+**Then** the result is complete blocked with zero current invocations
+**And** the first failed gate records every expected and observed operand.
+
+#### SCENARIO-VERIFY-7588-E2E: Fresh Readers Control Publication
+
+**Given** the affected manifest, exact candidate, and immutable protocol
+**When** the declared entrypoint and fresh-process readers run
+**Then** scoped checks, cold replay, independent reduction, and duplicate rejection pass
+**And** adversarial and strict row readers pass before atomic publication.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
