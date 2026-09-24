@@ -18539,3 +18539,4 @@ code |
 | 2026-09-24 10:39 UTC | Bind fourteen tasks and ingest qualified evidence  | OK | 108 passed, 1 warning in 15.88s |
 | 2026-09-24 10:59 UTC | Requalify complete source roles through terminal c | OK | 94 passed, 1 warning in 8.89s |
 | 2026-09-24 11:26 UTC | Qualify delayed evidence updates and one-use admis | OK | 119 passed, 1 warning in 11.14s |
+| 2026-09-24 12:03 UTC | Qualify bounded Qwen evidence pointers and capture | OK | 130 passed, 1 warning in 7.31s |
