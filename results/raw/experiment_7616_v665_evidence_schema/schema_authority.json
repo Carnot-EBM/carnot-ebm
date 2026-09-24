@@ -1,0 +1,1454 @@
+{
+  "authorities": [
+    {
+      "authority": {
+        "allowed_response_sentence_ids": [
+          "R001",
+          "R002",
+          "R003"
+        ],
+        "allowed_source_sentence_ids": [
+          "S001"
+        ],
+        "authority_schema": "carnot.evidence_pointer_authority.v1",
+        "entity_types": [
+          "person",
+          "organization",
+          "location",
+          "date",
+          "numeric",
+          "code",
+          "other",
+          "none"
+        ],
+        "independent_validator_required": true,
+        "json_schema": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "const": ""
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "enum": [
+                      "supports",
+                      "contradicts"
+                    ],
+                    "type": "string"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002",
+                      "R003"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "items": {
+                      "enum": [
+                        "S001"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 6,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "pattern": "^.+$",
+                    "type": "string"
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "const": "unknown"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002",
+                      "R003"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 6,
+          "type": "array"
+        },
+        "linked_relations": [
+          "supports",
+          "contradicts"
+        ],
+        "maximum_pointers": 6,
+        "pointer_fields": [
+          "response_sentence_id",
+          "source_sentence_ids",
+          "relation",
+          "entity_type",
+          "abstention_reason"
+        ],
+        "relations": [
+          "supports",
+          "contradicts",
+          "unknown"
+        ],
+        "supported_decoder_keywords": [
+          "additionalProperties",
+          "const",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "oneOf",
+          "pattern",
+          "properties",
+          "required",
+          "type"
+        ],
+        "unknown_relation": "unknown",
+        "unsupported_decoder_keywords": [
+          "uniqueItems"
+        ],
+        "unsupported_keyword_policy": {
+          "uniqueItems": "independent_validator_rejects_duplicate_source_ids"
+        }
+      },
+      "compiled_grammar": "array ::= \"[\" space ( value (\",\" space value)* )? \"]\" space\nboolean ::= (\"true\" | \"false\") space\nchar ::= [^\"\\\\] | \"\\\\\" ([\"\\\\/bfnrt] | \"u\" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])\ndecimal-part ::= [0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\ndot ::= [^\\x0A\\x0D]\nintegral-part ::= [0-9] | [1-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\nitem ::= item-0 | item-1\nitem-0 ::= \"{\" space item-0-abstention-reason-kv \",\" space item-0-entity-type-kv \",\" space item-0-relation-kv \",\" space item-0-response-sentence-id-kv \",\" space item-0-source-sentence-ids-kv \"}\" space\nitem-0-abstention-reason ::= \"\\\"\\\"\"\nitem-0-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-0-abstention-reason\nitem-0-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-0-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-0-entity-type\nitem-0-relation ::= \"\\\"supports\\\"\" | \"\\\"contradicts\\\"\"\nitem-0-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-0-relation\nitem-0-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\" | \"\\\"R003\\\"\"\nitem-0-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-0-response-sentence-id\nitem-0-source-sentence-ids ::= \"[\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item)?)?)?)?)? \"]\" space\nitem-0-source-sentence-ids-item ::= \"\\\"S001\\\"\"\nitem-0-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space item-0-source-sentence-ids\nitem-1 ::= \"{\" space item-1-abstention-reason-kv \",\" space item-1-entity-type-kv \",\" space item-1-relation-kv \",\" space item-1-response-sentence-id-kv \",\" space item-1-source-sentence-ids-kv \"}\" space\nitem-1-abstention-reason ::= \"\\\"\" dot+ \"\\\"\" space\nitem-1-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-1-abstention-reason\nitem-1-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-1-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-1-entity-type\nitem-1-relation ::= \"\\\"unknown\\\"\"\nitem-1-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-1-relation\nitem-1-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\" | \"\\\"R003\\\"\"\nitem-1-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-1-response-sentence-id\nitem-1-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space array\nnull ::= \"null\" space\nnumber ::= (\"-\"? integral-part) (\".\" decimal-part)? ([eE] [-+]? integral-part)? space\nobject ::= \"{\" space ( string \":\" space value (\",\" space string \":\" space value)* )? \"}\" space\nroot ::= \"[\" space (item (\",\" space item (\",\" space item (\",\" space item (\",\" space item (\",\" space item)?)?)?)?)?)? \"]\" space\nspace ::= \" \"?\nstring ::= \"\\\"\" char* \"\\\"\" space\nvalue ::= object | array | string | number | boolean | null",
+      "component_hash": "sha256:7c28304dd46b096e234742e59bbf88b5208548225c427641547e23401e373da4",
+      "system_prompt": "Extract evidence pointers from the supplied canonical sentence arrays. Return one JSON array with at most 6 items and no prose. Every item has exactly these fields: response_sentence_id, source_sentence_ids, relation, entity_type, abstention_reason. relation must be one of: supports, contradicts, unknown. entity_type must be one of: person, organization, location, date, numeric, code, other, none. Use only supplied sentence IDs. supports and contradicts require one or more source IDs and an empty abstention_reason. unknown requires no source IDs and a non-empty abstention_reason. Do not emit replacement text or reasoning. /no_think"
+    },
+    {
+      "authority": {
+        "allowed_response_sentence_ids": [
+          "R001",
+          "R002",
+          "R003"
+        ],
+        "allowed_source_sentence_ids": [
+          "S001"
+        ],
+        "authority_schema": "carnot.evidence_pointer_authority.v1",
+        "entity_types": [
+          "person",
+          "organization",
+          "location",
+          "date",
+          "numeric",
+          "code",
+          "other",
+          "none"
+        ],
+        "independent_validator_required": true,
+        "json_schema": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "const": ""
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "enum": [
+                      "supports",
+                      "contradicts"
+                    ],
+                    "type": "string"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002",
+                      "R003"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "items": {
+                      "enum": [
+                        "S001"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 6,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "pattern": "^.+$",
+                    "type": "string"
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "const": "unknown"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002",
+                      "R003"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 6,
+          "type": "array"
+        },
+        "linked_relations": [
+          "supports",
+          "contradicts"
+        ],
+        "maximum_pointers": 6,
+        "pointer_fields": [
+          "response_sentence_id",
+          "source_sentence_ids",
+          "relation",
+          "entity_type",
+          "abstention_reason"
+        ],
+        "relations": [
+          "supports",
+          "contradicts",
+          "unknown"
+        ],
+        "supported_decoder_keywords": [
+          "additionalProperties",
+          "const",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "oneOf",
+          "pattern",
+          "properties",
+          "required",
+          "type"
+        ],
+        "unknown_relation": "unknown",
+        "unsupported_decoder_keywords": [
+          "uniqueItems"
+        ],
+        "unsupported_keyword_policy": {
+          "uniqueItems": "independent_validator_rejects_duplicate_source_ids"
+        }
+      },
+      "compiled_grammar": "array ::= \"[\" space ( value (\",\" space value)* )? \"]\" space\nboolean ::= (\"true\" | \"false\") space\nchar ::= [^\"\\\\] | \"\\\\\" ([\"\\\\/bfnrt] | \"u\" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])\ndecimal-part ::= [0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\ndot ::= [^\\x0A\\x0D]\nintegral-part ::= [0-9] | [1-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\nitem ::= item-0 | item-1\nitem-0 ::= \"{\" space item-0-abstention-reason-kv \",\" space item-0-entity-type-kv \",\" space item-0-relation-kv \",\" space item-0-response-sentence-id-kv \",\" space item-0-source-sentence-ids-kv \"}\" space\nitem-0-abstention-reason ::= \"\\\"\\\"\"\nitem-0-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-0-abstention-reason\nitem-0-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-0-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-0-entity-type\nitem-0-relation ::= \"\\\"supports\\\"\" | \"\\\"contradicts\\\"\"\nitem-0-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-0-relation\nitem-0-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\" | \"\\\"R003\\\"\"\nitem-0-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-0-response-sentence-id\nitem-0-source-sentence-ids ::= \"[\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item)?)?)?)?)? \"]\" space\nitem-0-source-sentence-ids-item ::= \"\\\"S001\\\"\"\nitem-0-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space item-0-source-sentence-ids\nitem-1 ::= \"{\" space item-1-abstention-reason-kv \",\" space item-1-entity-type-kv \",\" space item-1-relation-kv \",\" space item-1-response-sentence-id-kv \",\" space item-1-source-sentence-ids-kv \"}\" space\nitem-1-abstention-reason ::= \"\\\"\" dot+ \"\\\"\" space\nitem-1-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-1-abstention-reason\nitem-1-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-1-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-1-entity-type\nitem-1-relation ::= \"\\\"unknown\\\"\"\nitem-1-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-1-relation\nitem-1-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\" | \"\\\"R003\\\"\"\nitem-1-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-1-response-sentence-id\nitem-1-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space array\nnull ::= \"null\" space\nnumber ::= (\"-\"? integral-part) (\".\" decimal-part)? ([eE] [-+]? integral-part)? space\nobject ::= \"{\" space ( string \":\" space value (\",\" space string \":\" space value)* )? \"}\" space\nroot ::= \"[\" space (item (\",\" space item (\",\" space item (\",\" space item (\",\" space item (\",\" space item)?)?)?)?)?)? \"]\" space\nspace ::= \" \"?\nstring ::= \"\\\"\" char* \"\\\"\" space\nvalue ::= object | array | string | number | boolean | null",
+      "component_hash": "sha256:5481a5993c4e8488eb9b00d0245cc07cf527a2df9a4c6f2beab5e104afb584be",
+      "system_prompt": "Extract evidence pointers from the supplied canonical sentence arrays. Return one JSON array with at most 6 items and no prose. Every item has exactly these fields: response_sentence_id, source_sentence_ids, relation, entity_type, abstention_reason. relation must be one of: supports, contradicts, unknown. entity_type must be one of: person, organization, location, date, numeric, code, other, none. Use only supplied sentence IDs. supports and contradicts require one or more source IDs and an empty abstention_reason. unknown requires no source IDs and a non-empty abstention_reason. Do not emit replacement text or reasoning. /no_think"
+    },
+    {
+      "authority": {
+        "allowed_response_sentence_ids": [
+          "R001",
+          "R002"
+        ],
+        "allowed_source_sentence_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007",
+          "S008",
+          "S009",
+          "S010",
+          "S011",
+          "S012",
+          "S013",
+          "S014",
+          "S015",
+          "S016",
+          "S017",
+          "S018",
+          "S019",
+          "S020",
+          "S021",
+          "S022",
+          "S023",
+          "S024",
+          "S025",
+          "S026",
+          "S027",
+          "S028",
+          "S029",
+          "S030",
+          "S031",
+          "S032",
+          "S033"
+        ],
+        "authority_schema": "carnot.evidence_pointer_authority.v1",
+        "entity_types": [
+          "person",
+          "organization",
+          "location",
+          "date",
+          "numeric",
+          "code",
+          "other",
+          "none"
+        ],
+        "independent_validator_required": true,
+        "json_schema": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "const": ""
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "enum": [
+                      "supports",
+                      "contradicts"
+                    ],
+                    "type": "string"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "items": {
+                      "enum": [
+                        "S001",
+                        "S002",
+                        "S003",
+                        "S004",
+                        "S005",
+                        "S006",
+                        "S007",
+                        "S008",
+                        "S009",
+                        "S010",
+                        "S011",
+                        "S012",
+                        "S013",
+                        "S014",
+                        "S015",
+                        "S016",
+                        "S017",
+                        "S018",
+                        "S019",
+                        "S020",
+                        "S021",
+                        "S022",
+                        "S023",
+                        "S024",
+                        "S025",
+                        "S026",
+                        "S027",
+                        "S028",
+                        "S029",
+                        "S030",
+                        "S031",
+                        "S032",
+                        "S033"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 6,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "pattern": "^.+$",
+                    "type": "string"
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "const": "unknown"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 6,
+          "type": "array"
+        },
+        "linked_relations": [
+          "supports",
+          "contradicts"
+        ],
+        "maximum_pointers": 6,
+        "pointer_fields": [
+          "response_sentence_id",
+          "source_sentence_ids",
+          "relation",
+          "entity_type",
+          "abstention_reason"
+        ],
+        "relations": [
+          "supports",
+          "contradicts",
+          "unknown"
+        ],
+        "supported_decoder_keywords": [
+          "additionalProperties",
+          "const",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "oneOf",
+          "pattern",
+          "properties",
+          "required",
+          "type"
+        ],
+        "unknown_relation": "unknown",
+        "unsupported_decoder_keywords": [
+          "uniqueItems"
+        ],
+        "unsupported_keyword_policy": {
+          "uniqueItems": "independent_validator_rejects_duplicate_source_ids"
+        }
+      },
+      "compiled_grammar": "array ::= \"[\" space ( value (\",\" space value)* )? \"]\" space\nboolean ::= (\"true\" | \"false\") space\nchar ::= [^\"\\\\] | \"\\\\\" ([\"\\\\/bfnrt] | \"u\" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])\ndecimal-part ::= [0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\ndot ::= [^\\x0A\\x0D]\nintegral-part ::= [0-9] | [1-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\nitem ::= item-0 | item-1\nitem-0 ::= \"{\" space item-0-abstention-reason-kv \",\" space item-0-entity-type-kv \",\" space item-0-relation-kv \",\" space item-0-response-sentence-id-kv \",\" space item-0-source-sentence-ids-kv \"}\" space\nitem-0-abstention-reason ::= \"\\\"\\\"\"\nitem-0-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-0-abstention-reason\nitem-0-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-0-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-0-entity-type\nitem-0-relation ::= \"\\\"supports\\\"\" | \"\\\"contradicts\\\"\"\nitem-0-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-0-relation\nitem-0-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-0-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-0-response-sentence-id\nitem-0-source-sentence-ids ::= \"[\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item)?)?)?)?)? \"]\" space\nitem-0-source-sentence-ids-item ::= \"\\\"S001\\\"\" | \"\\\"S002\\\"\" | \"\\\"S003\\\"\" | \"\\\"S004\\\"\" | \"\\\"S005\\\"\" | \"\\\"S006\\\"\" | \"\\\"S007\\\"\" | \"\\\"S008\\\"\" | \"\\\"S009\\\"\" | \"\\\"S010\\\"\" | \"\\\"S011\\\"\" | \"\\\"S012\\\"\" | \"\\\"S013\\\"\" | \"\\\"S014\\\"\" | \"\\\"S015\\\"\" | \"\\\"S016\\\"\" | \"\\\"S017\\\"\" | \"\\\"S018\\\"\" | \"\\\"S019\\\"\" | \"\\\"S020\\\"\" | \"\\\"S021\\\"\" | \"\\\"S022\\\"\" | \"\\\"S023\\\"\" | \"\\\"S024\\\"\" | \"\\\"S025\\\"\" | \"\\\"S026\\\"\" | \"\\\"S027\\\"\" | \"\\\"S028\\\"\" | \"\\\"S029\\\"\" | \"\\\"S030\\\"\" | \"\\\"S031\\\"\" | \"\\\"S032\\\"\" | \"\\\"S033\\\"\"\nitem-0-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space item-0-source-sentence-ids\nitem-1 ::= \"{\" space item-1-abstention-reason-kv \",\" space item-1-entity-type-kv \",\" space item-1-relation-kv \",\" space item-1-response-sentence-id-kv \",\" space item-1-source-sentence-ids-kv \"}\" space\nitem-1-abstention-reason ::= \"\\\"\" dot+ \"\\\"\" space\nitem-1-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-1-abstention-reason\nitem-1-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-1-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-1-entity-type\nitem-1-relation ::= \"\\\"unknown\\\"\"\nitem-1-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-1-relation\nitem-1-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-1-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-1-response-sentence-id\nitem-1-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space array\nnull ::= \"null\" space\nnumber ::= (\"-\"? integral-part) (\".\" decimal-part)? ([eE] [-+]? integral-part)? space\nobject ::= \"{\" space ( string \":\" space value (\",\" space string \":\" space value)* )? \"}\" space\nroot ::= \"[\" space (item (\",\" space item (\",\" space item (\",\" space item (\",\" space item (\",\" space item)?)?)?)?)?)? \"]\" space\nspace ::= \" \"?\nstring ::= \"\\\"\" char* \"\\\"\" space\nvalue ::= object | array | string | number | boolean | null",
+      "component_hash": "sha256:8250589339bd7bc0dea485aecf136f89966d92ff58fec019e1af9923a2955eb7",
+      "system_prompt": "Extract evidence pointers from the supplied canonical sentence arrays. Return one JSON array with at most 6 items and no prose. Every item has exactly these fields: response_sentence_id, source_sentence_ids, relation, entity_type, abstention_reason. relation must be one of: supports, contradicts, unknown. entity_type must be one of: person, organization, location, date, numeric, code, other, none. Use only supplied sentence IDs. supports and contradicts require one or more source IDs and an empty abstention_reason. unknown requires no source IDs and a non-empty abstention_reason. Do not emit replacement text or reasoning. /no_think"
+    },
+    {
+      "authority": {
+        "allowed_response_sentence_ids": [
+          "R001",
+          "R002"
+        ],
+        "allowed_source_sentence_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005"
+        ],
+        "authority_schema": "carnot.evidence_pointer_authority.v1",
+        "entity_types": [
+          "person",
+          "organization",
+          "location",
+          "date",
+          "numeric",
+          "code",
+          "other",
+          "none"
+        ],
+        "independent_validator_required": true,
+        "json_schema": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "const": ""
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "enum": [
+                      "supports",
+                      "contradicts"
+                    ],
+                    "type": "string"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "items": {
+                      "enum": [
+                        "S001",
+                        "S002",
+                        "S003",
+                        "S004",
+                        "S005"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 6,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "pattern": "^.+$",
+                    "type": "string"
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "const": "unknown"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 6,
+          "type": "array"
+        },
+        "linked_relations": [
+          "supports",
+          "contradicts"
+        ],
+        "maximum_pointers": 6,
+        "pointer_fields": [
+          "response_sentence_id",
+          "source_sentence_ids",
+          "relation",
+          "entity_type",
+          "abstention_reason"
+        ],
+        "relations": [
+          "supports",
+          "contradicts",
+          "unknown"
+        ],
+        "supported_decoder_keywords": [
+          "additionalProperties",
+          "const",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "oneOf",
+          "pattern",
+          "properties",
+          "required",
+          "type"
+        ],
+        "unknown_relation": "unknown",
+        "unsupported_decoder_keywords": [
+          "uniqueItems"
+        ],
+        "unsupported_keyword_policy": {
+          "uniqueItems": "independent_validator_rejects_duplicate_source_ids"
+        }
+      },
+      "compiled_grammar": "array ::= \"[\" space ( value (\",\" space value)* )? \"]\" space\nboolean ::= (\"true\" | \"false\") space\nchar ::= [^\"\\\\] | \"\\\\\" ([\"\\\\/bfnrt] | \"u\" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])\ndecimal-part ::= [0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\ndot ::= [^\\x0A\\x0D]\nintegral-part ::= [0-9] | [1-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\nitem ::= item-0 | item-1\nitem-0 ::= \"{\" space item-0-abstention-reason-kv \",\" space item-0-entity-type-kv \",\" space item-0-relation-kv \",\" space item-0-response-sentence-id-kv \",\" space item-0-source-sentence-ids-kv \"}\" space\nitem-0-abstention-reason ::= \"\\\"\\\"\"\nitem-0-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-0-abstention-reason\nitem-0-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-0-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-0-entity-type\nitem-0-relation ::= \"\\\"supports\\\"\" | \"\\\"contradicts\\\"\"\nitem-0-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-0-relation\nitem-0-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-0-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-0-response-sentence-id\nitem-0-source-sentence-ids ::= \"[\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item)?)?)?)?)? \"]\" space\nitem-0-source-sentence-ids-item ::= \"\\\"S001\\\"\" | \"\\\"S002\\\"\" | \"\\\"S003\\\"\" | \"\\\"S004\\\"\" | \"\\\"S005\\\"\"\nitem-0-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space item-0-source-sentence-ids\nitem-1 ::= \"{\" space item-1-abstention-reason-kv \",\" space item-1-entity-type-kv \",\" space item-1-relation-kv \",\" space item-1-response-sentence-id-kv \",\" space item-1-source-sentence-ids-kv \"}\" space\nitem-1-abstention-reason ::= \"\\\"\" dot+ \"\\\"\" space\nitem-1-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-1-abstention-reason\nitem-1-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-1-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-1-entity-type\nitem-1-relation ::= \"\\\"unknown\\\"\"\nitem-1-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-1-relation\nitem-1-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-1-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-1-response-sentence-id\nitem-1-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space array\nnull ::= \"null\" space\nnumber ::= (\"-\"? integral-part) (\".\" decimal-part)? ([eE] [-+]? integral-part)? space\nobject ::= \"{\" space ( string \":\" space value (\",\" space string \":\" space value)* )? \"}\" space\nroot ::= \"[\" space (item (\",\" space item (\",\" space item (\",\" space item (\",\" space item (\",\" space item)?)?)?)?)?)? \"]\" space\nspace ::= \" \"?\nstring ::= \"\\\"\" char* \"\\\"\" space\nvalue ::= object | array | string | number | boolean | null",
+      "component_hash": "sha256:54e8ef94946cc3f75790d598d3cae106a0a4a9931d2b2f976228bd49c010b6ba",
+      "system_prompt": "Extract evidence pointers from the supplied canonical sentence arrays. Return one JSON array with at most 6 items and no prose. Every item has exactly these fields: response_sentence_id, source_sentence_ids, relation, entity_type, abstention_reason. relation must be one of: supports, contradicts, unknown. entity_type must be one of: person, organization, location, date, numeric, code, other, none. Use only supplied sentence IDs. supports and contradicts require one or more source IDs and an empty abstention_reason. unknown requires no source IDs and a non-empty abstention_reason. Do not emit replacement text or reasoning. /no_think"
+    },
+    {
+      "authority": {
+        "allowed_response_sentence_ids": [
+          "R001",
+          "R002"
+        ],
+        "allowed_source_sentence_ids": [
+          "S001"
+        ],
+        "authority_schema": "carnot.evidence_pointer_authority.v1",
+        "entity_types": [
+          "person",
+          "organization",
+          "location",
+          "date",
+          "numeric",
+          "code",
+          "other",
+          "none"
+        ],
+        "independent_validator_required": true,
+        "json_schema": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "const": ""
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "enum": [
+                      "supports",
+                      "contradicts"
+                    ],
+                    "type": "string"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "items": {
+                      "enum": [
+                        "S001"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 6,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "pattern": "^.+$",
+                    "type": "string"
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "const": "unknown"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 6,
+          "type": "array"
+        },
+        "linked_relations": [
+          "supports",
+          "contradicts"
+        ],
+        "maximum_pointers": 6,
+        "pointer_fields": [
+          "response_sentence_id",
+          "source_sentence_ids",
+          "relation",
+          "entity_type",
+          "abstention_reason"
+        ],
+        "relations": [
+          "supports",
+          "contradicts",
+          "unknown"
+        ],
+        "supported_decoder_keywords": [
+          "additionalProperties",
+          "const",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "oneOf",
+          "pattern",
+          "properties",
+          "required",
+          "type"
+        ],
+        "unknown_relation": "unknown",
+        "unsupported_decoder_keywords": [
+          "uniqueItems"
+        ],
+        "unsupported_keyword_policy": {
+          "uniqueItems": "independent_validator_rejects_duplicate_source_ids"
+        }
+      },
+      "compiled_grammar": "array ::= \"[\" space ( value (\",\" space value)* )? \"]\" space\nboolean ::= (\"true\" | \"false\") space\nchar ::= [^\"\\\\] | \"\\\\\" ([\"\\\\/bfnrt] | \"u\" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])\ndecimal-part ::= [0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\ndot ::= [^\\x0A\\x0D]\nintegral-part ::= [0-9] | [1-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\nitem ::= item-0 | item-1\nitem-0 ::= \"{\" space item-0-abstention-reason-kv \",\" space item-0-entity-type-kv \",\" space item-0-relation-kv \",\" space item-0-response-sentence-id-kv \",\" space item-0-source-sentence-ids-kv \"}\" space\nitem-0-abstention-reason ::= \"\\\"\\\"\"\nitem-0-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-0-abstention-reason\nitem-0-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-0-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-0-entity-type\nitem-0-relation ::= \"\\\"supports\\\"\" | \"\\\"contradicts\\\"\"\nitem-0-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-0-relation\nitem-0-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-0-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-0-response-sentence-id\nitem-0-source-sentence-ids ::= \"[\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item)?)?)?)?)? \"]\" space\nitem-0-source-sentence-ids-item ::= \"\\\"S001\\\"\"\nitem-0-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space item-0-source-sentence-ids\nitem-1 ::= \"{\" space item-1-abstention-reason-kv \",\" space item-1-entity-type-kv \",\" space item-1-relation-kv \",\" space item-1-response-sentence-id-kv \",\" space item-1-source-sentence-ids-kv \"}\" space\nitem-1-abstention-reason ::= \"\\\"\" dot+ \"\\\"\" space\nitem-1-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-1-abstention-reason\nitem-1-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-1-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-1-entity-type\nitem-1-relation ::= \"\\\"unknown\\\"\"\nitem-1-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-1-relation\nitem-1-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-1-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-1-response-sentence-id\nitem-1-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space array\nnull ::= \"null\" space\nnumber ::= (\"-\"? integral-part) (\".\" decimal-part)? ([eE] [-+]? integral-part)? space\nobject ::= \"{\" space ( string \":\" space value (\",\" space string \":\" space value)* )? \"}\" space\nroot ::= \"[\" space (item (\",\" space item (\",\" space item (\",\" space item (\",\" space item (\",\" space item)?)?)?)?)?)? \"]\" space\nspace ::= \" \"?\nstring ::= \"\\\"\" char* \"\\\"\" space\nvalue ::= object | array | string | number | boolean | null",
+      "component_hash": "sha256:72f9446d8704d0371ac9d6ec1231f92f0c00661644499d15be1bbe22d3704642",
+      "system_prompt": "Extract evidence pointers from the supplied canonical sentence arrays. Return one JSON array with at most 6 items and no prose. Every item has exactly these fields: response_sentence_id, source_sentence_ids, relation, entity_type, abstention_reason. relation must be one of: supports, contradicts, unknown. entity_type must be one of: person, organization, location, date, numeric, code, other, none. Use only supplied sentence IDs. supports and contradicts require one or more source IDs and an empty abstention_reason. unknown requires no source IDs and a non-empty abstention_reason. Do not emit replacement text or reasoning. /no_think"
+    },
+    {
+      "authority": {
+        "allowed_response_sentence_ids": [
+          "R001",
+          "R002"
+        ],
+        "allowed_source_sentence_ids": [
+          "S001"
+        ],
+        "authority_schema": "carnot.evidence_pointer_authority.v1",
+        "entity_types": [
+          "person",
+          "organization",
+          "location",
+          "date",
+          "numeric",
+          "code",
+          "other",
+          "none"
+        ],
+        "independent_validator_required": true,
+        "json_schema": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "const": ""
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "enum": [
+                      "supports",
+                      "contradicts"
+                    ],
+                    "type": "string"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "items": {
+                      "enum": [
+                        "S001"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 6,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "pattern": "^.+$",
+                    "type": "string"
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "const": "unknown"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 6,
+          "type": "array"
+        },
+        "linked_relations": [
+          "supports",
+          "contradicts"
+        ],
+        "maximum_pointers": 6,
+        "pointer_fields": [
+          "response_sentence_id",
+          "source_sentence_ids",
+          "relation",
+          "entity_type",
+          "abstention_reason"
+        ],
+        "relations": [
+          "supports",
+          "contradicts",
+          "unknown"
+        ],
+        "supported_decoder_keywords": [
+          "additionalProperties",
+          "const",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "oneOf",
+          "pattern",
+          "properties",
+          "required",
+          "type"
+        ],
+        "unknown_relation": "unknown",
+        "unsupported_decoder_keywords": [
+          "uniqueItems"
+        ],
+        "unsupported_keyword_policy": {
+          "uniqueItems": "independent_validator_rejects_duplicate_source_ids"
+        }
+      },
+      "compiled_grammar": "array ::= \"[\" space ( value (\",\" space value)* )? \"]\" space\nboolean ::= (\"true\" | \"false\") space\nchar ::= [^\"\\\\] | \"\\\\\" ([\"\\\\/bfnrt] | \"u\" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])\ndecimal-part ::= [0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\ndot ::= [^\\x0A\\x0D]\nintegral-part ::= [0-9] | [1-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\nitem ::= item-0 | item-1\nitem-0 ::= \"{\" space item-0-abstention-reason-kv \",\" space item-0-entity-type-kv \",\" space item-0-relation-kv \",\" space item-0-response-sentence-id-kv \",\" space item-0-source-sentence-ids-kv \"}\" space\nitem-0-abstention-reason ::= \"\\\"\\\"\"\nitem-0-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-0-abstention-reason\nitem-0-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-0-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-0-entity-type\nitem-0-relation ::= \"\\\"supports\\\"\" | \"\\\"contradicts\\\"\"\nitem-0-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-0-relation\nitem-0-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-0-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-0-response-sentence-id\nitem-0-source-sentence-ids ::= \"[\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item)?)?)?)?)? \"]\" space\nitem-0-source-sentence-ids-item ::= \"\\\"S001\\\"\"\nitem-0-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space item-0-source-sentence-ids\nitem-1 ::= \"{\" space item-1-abstention-reason-kv \",\" space item-1-entity-type-kv \",\" space item-1-relation-kv \",\" space item-1-response-sentence-id-kv \",\" space item-1-source-sentence-ids-kv \"}\" space\nitem-1-abstention-reason ::= \"\\\"\" dot+ \"\\\"\" space\nitem-1-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-1-abstention-reason\nitem-1-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-1-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-1-entity-type\nitem-1-relation ::= \"\\\"unknown\\\"\"\nitem-1-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-1-relation\nitem-1-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-1-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-1-response-sentence-id\nitem-1-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space array\nnull ::= \"null\" space\nnumber ::= (\"-\"? integral-part) (\".\" decimal-part)? ([eE] [-+]? integral-part)? space\nobject ::= \"{\" space ( string \":\" space value (\",\" space string \":\" space value)* )? \"}\" space\nroot ::= \"[\" space (item (\",\" space item (\",\" space item (\",\" space item (\",\" space item (\",\" space item)?)?)?)?)?)? \"]\" space\nspace ::= \" \"?\nstring ::= \"\\\"\" char* \"\\\"\" space\nvalue ::= object | array | string | number | boolean | null",
+      "component_hash": "sha256:81bd2bdd91a0567437a8e89d33d4b6a697f7f0a199612934a0039f5c2e2bb2d7",
+      "system_prompt": "Extract evidence pointers from the supplied canonical sentence arrays. Return one JSON array with at most 6 items and no prose. Every item has exactly these fields: response_sentence_id, source_sentence_ids, relation, entity_type, abstention_reason. relation must be one of: supports, contradicts, unknown. entity_type must be one of: person, organization, location, date, numeric, code, other, none. Use only supplied sentence IDs. supports and contradicts require one or more source IDs and an empty abstention_reason. unknown requires no source IDs and a non-empty abstention_reason. Do not emit replacement text or reasoning. /no_think"
+    },
+    {
+      "authority": {
+        "allowed_response_sentence_ids": [
+          "R001"
+        ],
+        "allowed_source_sentence_ids": [
+          "S001",
+          "S002",
+          "S003",
+          "S004",
+          "S005",
+          "S006",
+          "S007",
+          "S008",
+          "S009",
+          "S010",
+          "S011",
+          "S012"
+        ],
+        "authority_schema": "carnot.evidence_pointer_authority.v1",
+        "entity_types": [
+          "person",
+          "organization",
+          "location",
+          "date",
+          "numeric",
+          "code",
+          "other",
+          "none"
+        ],
+        "independent_validator_required": true,
+        "json_schema": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "const": ""
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "enum": [
+                      "supports",
+                      "contradicts"
+                    ],
+                    "type": "string"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "items": {
+                      "enum": [
+                        "S001",
+                        "S002",
+                        "S003",
+                        "S004",
+                        "S005",
+                        "S006",
+                        "S007",
+                        "S008",
+                        "S009",
+                        "S010",
+                        "S011",
+                        "S012"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 6,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "pattern": "^.+$",
+                    "type": "string"
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "const": "unknown"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 6,
+          "type": "array"
+        },
+        "linked_relations": [
+          "supports",
+          "contradicts"
+        ],
+        "maximum_pointers": 6,
+        "pointer_fields": [
+          "response_sentence_id",
+          "source_sentence_ids",
+          "relation",
+          "entity_type",
+          "abstention_reason"
+        ],
+        "relations": [
+          "supports",
+          "contradicts",
+          "unknown"
+        ],
+        "supported_decoder_keywords": [
+          "additionalProperties",
+          "const",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "oneOf",
+          "pattern",
+          "properties",
+          "required",
+          "type"
+        ],
+        "unknown_relation": "unknown",
+        "unsupported_decoder_keywords": [
+          "uniqueItems"
+        ],
+        "unsupported_keyword_policy": {
+          "uniqueItems": "independent_validator_rejects_duplicate_source_ids"
+        }
+      },
+      "compiled_grammar": "array ::= \"[\" space ( value (\",\" space value)* )? \"]\" space\nboolean ::= (\"true\" | \"false\") space\nchar ::= [^\"\\\\] | \"\\\\\" ([\"\\\\/bfnrt] | \"u\" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])\ndecimal-part ::= [0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\ndot ::= [^\\x0A\\x0D]\nintegral-part ::= [0-9] | [1-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\nitem ::= item-0 | item-1\nitem-0 ::= \"{\" space item-0-abstention-reason-kv \",\" space item-0-entity-type-kv \",\" space item-0-relation-kv \",\" space item-0-response-sentence-id-kv \",\" space item-0-source-sentence-ids-kv \"}\" space\nitem-0-abstention-reason ::= \"\\\"\\\"\"\nitem-0-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-0-abstention-reason\nitem-0-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-0-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-0-entity-type\nitem-0-relation ::= \"\\\"supports\\\"\" | \"\\\"contradicts\\\"\"\nitem-0-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-0-relation\nitem-0-response-sentence-id ::= \"\\\"R001\\\"\"\nitem-0-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-0-response-sentence-id\nitem-0-source-sentence-ids ::= \"[\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item)?)?)?)?)? \"]\" space\nitem-0-source-sentence-ids-item ::= \"\\\"S001\\\"\" | \"\\\"S002\\\"\" | \"\\\"S003\\\"\" | \"\\\"S004\\\"\" | \"\\\"S005\\\"\" | \"\\\"S006\\\"\" | \"\\\"S007\\\"\" | \"\\\"S008\\\"\" | \"\\\"S009\\\"\" | \"\\\"S010\\\"\" | \"\\\"S011\\\"\" | \"\\\"S012\\\"\"\nitem-0-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space item-0-source-sentence-ids\nitem-1 ::= \"{\" space item-1-abstention-reason-kv \",\" space item-1-entity-type-kv \",\" space item-1-relation-kv \",\" space item-1-response-sentence-id-kv \",\" space item-1-source-sentence-ids-kv \"}\" space\nitem-1-abstention-reason ::= \"\\\"\" dot+ \"\\\"\" space\nitem-1-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-1-abstention-reason\nitem-1-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-1-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-1-entity-type\nitem-1-relation ::= \"\\\"unknown\\\"\"\nitem-1-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-1-relation\nitem-1-response-sentence-id ::= \"\\\"R001\\\"\"\nitem-1-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-1-response-sentence-id\nitem-1-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space array\nnull ::= \"null\" space\nnumber ::= (\"-\"? integral-part) (\".\" decimal-part)? ([eE] [-+]? integral-part)? space\nobject ::= \"{\" space ( string \":\" space value (\",\" space string \":\" space value)* )? \"}\" space\nroot ::= \"[\" space (item (\",\" space item (\",\" space item (\",\" space item (\",\" space item (\",\" space item)?)?)?)?)?)? \"]\" space\nspace ::= \" \"?\nstring ::= \"\\\"\" char* \"\\\"\" space\nvalue ::= object | array | string | number | boolean | null",
+      "component_hash": "sha256:fd0636489092fb1466fd949ad71982104da55b50f215f2bddc434f4d06559e24",
+      "system_prompt": "Extract evidence pointers from the supplied canonical sentence arrays. Return one JSON array with at most 6 items and no prose. Every item has exactly these fields: response_sentence_id, source_sentence_ids, relation, entity_type, abstention_reason. relation must be one of: supports, contradicts, unknown. entity_type must be one of: person, organization, location, date, numeric, code, other, none. Use only supplied sentence IDs. supports and contradicts require one or more source IDs and an empty abstention_reason. unknown requires no source IDs and a non-empty abstention_reason. Do not emit replacement text or reasoning. /no_think"
+    },
+    {
+      "authority": {
+        "allowed_response_sentence_ids": [
+          "R001",
+          "R002"
+        ],
+        "allowed_source_sentence_ids": [
+          "S001"
+        ],
+        "authority_schema": "carnot.evidence_pointer_authority.v1",
+        "entity_types": [
+          "person",
+          "organization",
+          "location",
+          "date",
+          "numeric",
+          "code",
+          "other",
+          "none"
+        ],
+        "independent_validator_required": true,
+        "json_schema": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "const": ""
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "enum": [
+                      "supports",
+                      "contradicts"
+                    ],
+                    "type": "string"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "items": {
+                      "enum": [
+                        "S001"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 6,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "abstention_reason": {
+                    "pattern": "^.+$",
+                    "type": "string"
+                  },
+                  "entity_type": {
+                    "enum": [
+                      "person",
+                      "organization",
+                      "location",
+                      "date",
+                      "numeric",
+                      "code",
+                      "other",
+                      "none"
+                    ],
+                    "type": "string"
+                  },
+                  "relation": {
+                    "const": "unknown"
+                  },
+                  "response_sentence_id": {
+                    "enum": [
+                      "R001",
+                      "R002"
+                    ],
+                    "type": "string"
+                  },
+                  "source_sentence_ids": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "response_sentence_id",
+                  "source_sentence_ids",
+                  "relation",
+                  "entity_type",
+                  "abstention_reason"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 6,
+          "type": "array"
+        },
+        "linked_relations": [
+          "supports",
+          "contradicts"
+        ],
+        "maximum_pointers": 6,
+        "pointer_fields": [
+          "response_sentence_id",
+          "source_sentence_ids",
+          "relation",
+          "entity_type",
+          "abstention_reason"
+        ],
+        "relations": [
+          "supports",
+          "contradicts",
+          "unknown"
+        ],
+        "supported_decoder_keywords": [
+          "additionalProperties",
+          "const",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "oneOf",
+          "pattern",
+          "properties",
+          "required",
+          "type"
+        ],
+        "unknown_relation": "unknown",
+        "unsupported_decoder_keywords": [
+          "uniqueItems"
+        ],
+        "unsupported_keyword_policy": {
+          "uniqueItems": "independent_validator_rejects_duplicate_source_ids"
+        }
+      },
+      "compiled_grammar": "array ::= \"[\" space ( value (\",\" space value)* )? \"]\" space\nboolean ::= (\"true\" | \"false\") space\nchar ::= [^\"\\\\] | \"\\\\\" ([\"\\\\/bfnrt] | \"u\" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])\ndecimal-part ::= [0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\ndot ::= [^\\x0A\\x0D]\nintegral-part ::= [0-9] | [1-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9] ([0-9])?)?)?)?)?)?)?)?)?)?)?)?)?)?)?\nitem ::= item-0 | item-1\nitem-0 ::= \"{\" space item-0-abstention-reason-kv \",\" space item-0-entity-type-kv \",\" space item-0-relation-kv \",\" space item-0-response-sentence-id-kv \",\" space item-0-source-sentence-ids-kv \"}\" space\nitem-0-abstention-reason ::= \"\\\"\\\"\"\nitem-0-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-0-abstention-reason\nitem-0-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-0-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-0-entity-type\nitem-0-relation ::= \"\\\"supports\\\"\" | \"\\\"contradicts\\\"\"\nitem-0-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-0-relation\nitem-0-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-0-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-0-response-sentence-id\nitem-0-source-sentence-ids ::= \"[\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item (\",\" space item-0-source-sentence-ids-item)?)?)?)?)? \"]\" space\nitem-0-source-sentence-ids-item ::= \"\\\"S001\\\"\"\nitem-0-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space item-0-source-sentence-ids\nitem-1 ::= \"{\" space item-1-abstention-reason-kv \",\" space item-1-entity-type-kv \",\" space item-1-relation-kv \",\" space item-1-response-sentence-id-kv \",\" space item-1-source-sentence-ids-kv \"}\" space\nitem-1-abstention-reason ::= \"\\\"\" dot+ \"\\\"\" space\nitem-1-abstention-reason-kv ::= \"\\\"abstention_reason\\\"\" space \":\" space item-1-abstention-reason\nitem-1-entity-type ::= \"\\\"person\\\"\" | \"\\\"organization\\\"\" | \"\\\"location\\\"\" | \"\\\"date\\\"\" | \"\\\"numeric\\\"\" | \"\\\"code\\\"\" | \"\\\"other\\\"\" | \"\\\"none\\\"\"\nitem-1-entity-type-kv ::= \"\\\"entity_type\\\"\" space \":\" space item-1-entity-type\nitem-1-relation ::= \"\\\"unknown\\\"\"\nitem-1-relation-kv ::= \"\\\"relation\\\"\" space \":\" space item-1-relation\nitem-1-response-sentence-id ::= \"\\\"R001\\\"\" | \"\\\"R002\\\"\"\nitem-1-response-sentence-id-kv ::= \"\\\"response_sentence_id\\\"\" space \":\" space item-1-response-sentence-id\nitem-1-source-sentence-ids-kv ::= \"\\\"source_sentence_ids\\\"\" space \":\" space array\nnull ::= \"null\" space\nnumber ::= (\"-\"? integral-part) (\".\" decimal-part)? ([eE] [-+]? integral-part)? space\nobject ::= \"{\" space ( string \":\" space value (\",\" space string \":\" space value)* )? \"}\" space\nroot ::= \"[\" space (item (\",\" space item (\",\" space item (\",\" space item (\",\" space item (\",\" space item)?)?)?)?)?)? \"]\" space\nspace ::= \" \"?\nstring ::= \"\\\"\" char* \"\\\"\" space\nvalue ::= object | array | string | number | boolean | null",
+      "component_hash": "sha256:5f6ca927809e4c23e870f3dbae9630b7095f933f79d6a256142adf247a3ed356",
+      "system_prompt": "Extract evidence pointers from the supplied canonical sentence arrays. Return one JSON array with at most 6 items and no prose. Every item has exactly these fields: response_sentence_id, source_sentence_ids, relation, entity_type, abstention_reason. relation must be one of: supports, contradicts, unknown. entity_type must be one of: person, organization, location, date, numeric, code, other, none. Use only supplied sentence IDs. supports and contradicts require one or more source IDs and an empty abstention_reason. unknown requires no source IDs and a non-empty abstention_reason. Do not emit replacement text or reasoning. /no_think"
+    }
+  ],
+  "schema": "carnot.exp7616.schema_authority.v1"
+}

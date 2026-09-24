@@ -79434,3 +79434,121 @@ checksum before atomic publication.
 Implemented by Experiment 7615 with exact authority controls, authenticated V664
 custody, primary-method limits, scoped validation and terminal readers. The
 conductor owns later status, changelog and traceability reconciliation.
+
+## REQ-REPORT-7616: Freeze one decoder-aligned evidence schema
+
+Experiment 7616 SHALL run with planned and actual `no_model_load`,
+`MODEL_SPECS=[]`, no current model invocation, and zero load, forward,
+generation, and token counts. It SHALL authenticate and replay the exact eight
+saved Experiment 7604 request and response pairs. Each historical row SHALL keep
+its original `evidence_output_value_invalid` rejection and raw byte hashes. A
+schema repair SHALL NOT relabel old output or infer a semantic verdict.
+
+One explicit schema authority SHALL define the complete entity and relation
+enums, five exact pointer fields, no extra keys, at most six pointers, allowed
+source and response sentence IDs, and the linked and unknown branches. The same
+authority SHALL render the system prompt and the installed llama.cpp JSON-schema
+request. Only schema keywords confirmed for the installed runtime may enter the
+decoder schema. Unsupported keywords SHALL be named, delegated to the
+independent validator, and fail closed there instead of weakening validation.
+Decoder acceptance SHALL never replace independent semantic validation.
+
+The model request SHALL contain canonical source, question, and response
+sentence arrays once. It SHALL not also contain duplicate complete texts,
+clipped text, summaries, evaluator labels, or probabilities. Exact ordered
+concatenation SHALL reconstruct every source and response byte. Content hashes
+and reconstruction receipts SHALL be frozen with the configuration, input
+schema, rendered prompt, decoder schema, and compiled grammar under
+`results/raw/experiment_7616_v665_evidence_schema/`.
+
+The experiment SHALL authenticate the Experiment 7602 role manifest and every
+model-input and evaluator sidecar. It SHALL retain the
+`v663-evidence-20260924` salt, 480 restored groups, 240 selected scored groups,
+role counts fit 80, tune 20, policy 20, online 80 and evaluation 40, eight
+disjoint pilots, and the fit split of 64 optimization plus 16 reusable anchors.
+Historical exposure SHALL keep `fresh_confirmatory_claim_allowed=false`.
+
+The experiment SHALL authenticate the existing Experiment 7603 guarded-update
+lifecycle configuration and reproducibility checksum. Its task E2E SHALL carry
+one canonical prompt through valid and invalid independent parser outcomes into
+a hashed feature row, then build, persist, and reload the existing update
+lifecycle without an LLM call. Exact oracle fixtures SHALL report
+`circular_positive`; protocol readiness SHALL report `null`; no empirical
+benefit or production promotion follows.
+
+The terminal artifact SHALL use a `complete_` verdict and the closed verdict
+class enum. It SHALL persist the adversarial reader result, complete gate
+diagnostics, separate validity, readiness, benefit, retention and freshness
+gates, per-case schema rows, per-unit provenance rows, the independent sample
+budget, actual preconditions, host venue, disjoint phase spans, seeds, source
+hashes, validation receipts, field principles, schema path and hash, role
+manifest and sidecar paths, and a reproducibility checksum over immutable
+inputs, configuration and reductions. `evidence_schema_ready_score` requires
+schema, prompt, independent-validator and lossless-reconstruction conformance.
+`role_contract_ready_score` requires every authenticated disjoint role and exact
+sidecar. `guarded_update_ready_score` requires the authenticated lifecycle and
+restart E2E. Benefit remains closed.
+
+Validation SHALL freeze an affected-file manifest and use worktree-pinned
+imports, focused serial pytest without ambient addopts, a private base temp,
+command-local 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, and affected-test specification coverage. The declared
+entrypoint, fresh-process cold replay, independent reduction, adversarial reader
+and strict verdict-row reader SHALL accept the exact candidate before atomic
+publication. The task SHALL preserve old artifacts, generator weights,
+production defaults, the active roadmap, and the research conductor.
+
+### SCENARIO-REPORT-7616-SCHEMA: Prompt, decoder and validator share one authority
+
+**Given** a canonical sentence contract and its allowed IDs
+**When** Experiment 7616 renders a prompt and installed llama.cpp schema request
+**Then** every enum, exact field and six-pointer bound comes from one authority
+**And** unsupported decoder keywords remain enforced by the independent validator
+**And** invalid enum, source ID, response ID, extra key, excess pointers,
+unknown-with-sources, linked-without-sources and truncated JSON all fail closed.
+
+### SCENARIO-REPORT-7616-REPLAY: Historical rejection remains historical
+
+**Given** the eight authenticated Experiment 7604 raw request/response pairs
+**When** the independent parser replays their exact response text
+**Then** all eight retain `evidence_output_value_invalid`
+**And** the new schema does not relabel any row or claim semantic benefit.
+
+### SCENARIO-REPORT-7616-LOSSLESS: Canonical arrays replace duplicate text
+
+**Given** each frozen pilot source, question and response
+**When** canonical model input is rendered
+**Then** each ordered sentence array appears once and no complete-text duplicate appears
+**And** exact reconstruction and hashes preserve every source and response byte
+**And** no clipping, summary, evaluator label or probability enters model-visible input.
+
+### SCENARIO-REPORT-7616-ROLES: Existing role and lifecycle custody is exact
+
+**Given** the Exp7602 role manifest, all role sidecars and Exp7603 lifecycle artifact
+**When** Experiment 7616 authenticates downstream prerequisites
+**Then** salt, group counts, disjoint pilots, fit partitions, sidecar hashes,
+lifecycle configuration and checksum match exactly
+**And** historical exposure keeps the freshness gate closed.
+
+### SCENARIO-REPORT-7616-E2E: Parser output reaches a restarted guarded update
+
+**Given** one canonical prompt and exact fixture outputs
+**When** valid and invalid outputs pass through the independent parser and reducer
+**Then** the valid output produces one hashed feature row and invalid output produces none
+**And** the existing guarded lifecycle persists and reloads the same parameter hash
+**And** no model load or generation occurs.
+
+### SCENARIO-REPORT-7616-TERMINAL: Exact readers control atomic publication
+
+**Given** a frozen affected manifest and exact terminal candidate
+**When** scoped checks, cold replay, independent reduction and strict readers run
+**Then** every command exit, worktree path and log hash is retained
+**And** the terminal bytes publish atomically only after all readers pass
+**And** readiness remains distinct from benefit, retention and freshness.
+
+### Implementation Status (REQ-REPORT-7616)
+
+Implemented by Experiment 7616 with a shared decoder authority, exact historical
+replay, canonical sentence inputs, authenticated role and lifecycle custody,
+scoped validation, and strict terminal readers. The conductor owns later status,
+changelog and traceability reconciliation.
