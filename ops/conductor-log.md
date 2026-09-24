@@ -18515,3 +18515,4 @@ code |
 | 2026-09-24 01:23 UTC | Qualify fail-closed world-model scores and indepen | OK | 138 passed, 1 warning in 14.01s |
 | 2026-09-24 01:54 UTC | Qualify owned Qwen transport and live-panel budget | OK | 106 passed, 1 warning in 9.39s |
 | 2026-09-24 01:56 UTC | Measure adapter-withheld live verifier integrity o | GATE_BLOCK | gate-unsat(final): 3 of 7 gate(s) failed; first failure: exp7581-arc-bounded-canary.arc_transport_ready_score (actual=0 == expected=1) |
+| 2026-09-24 02:18 UTC | Reduce live support, plan execution and supervisor | OK | 115 passed, 1 warning in 9.37s |
