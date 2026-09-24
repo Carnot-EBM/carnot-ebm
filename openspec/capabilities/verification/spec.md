@@ -46120,6 +46120,114 @@ Only the exact cold-valid candidate and its sidecars SHALL publish atomically at
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+### REQ-VERIFY-7604: V664 Evidence Pilot SHALL Measure Eight Frozen Label-Free Extractions
+
+Experiment 7604 SHALL authenticate the complete Experiment 7602 terminal
+artifact, protocol, and pilot model-input sidecar before inference. It SHALL
+consume exactly the eight disjoint pilot records. Each request SHALL retain the
+complete source, question, answer, and numbered sentence IDs. Predictor input
+SHALL contain no label or raw baseline probability.
+
+The pilot SHALL use `unsloth/Qwen3.8-27B-GGUF` through
+`cached_current_model`, its embedded GGUF tokenizer and chat template, and one
+owned CUDA lease. It SHALL authenticate the Q4_K_M bytes, runtime build, GPU
+UUID, owner PID, and observed layer offload before requests. A cache, capacity,
+lease, tokenizer, or offload failure SHALL produce a complete blocked no-run
+artifact. The task SHALL not evict or signal another process.
+
+The task SHALL freeze seed 7604001, temperature 0, a task-local non-thinking
+extraction template, six links at most, and 512 output tokens before the first
+call. It SHALL perform one model load and exactly eight generation requests.
+It SHALL not retry an invalid, empty, unknown, or truncated completion. Every
+completion SHALL emit only numbered IDs and `supports | contradicts | unknown`.
+Unsupported IDs and extra schema fields SHALL remain invalid outcomes.
+
+The runtime SHALL record exact request and response bytes, prompt and output
+token counts, finish reasons, call spans, process and device receipts, complete
+load cost, prefill cost, and decode cost. Any warmup SHALL be separate from the
+eight pilot units. The current substrate SHALL be
+`model_bounded_generation`, with a 10-second plausibility floor. Durations SHALL
+use actual monotonic time and SHALL never be padded.
+
+The cold reducer SHALL use the shipped evidence output normalizer. It SHALL set
+`evidence_transport_ready_score=1` only when transport is authenticated, at
+least six of eight rows have usable schemas, no invalid pointer is accepted,
+and all input bytes are lossless. This score measures transport feasibility.
+It SHALL not claim semantic accuracy or evidence presence.
+
+The task SHALL estimate separate 120-group fitting and evaluation captures.
+The estimator SHALL use conservative measured pilot latency and actual prompt
+lengths. It SHALL reserve validation time and report uncertainty. Each capture
+score SHALL be one only when its projection is at most 3000 seconds. The task
+SHALL not change model settings, the token cap, or the corpus to obtain a pass.
+
+A completed pilot with fewer than six usable rows SHALL be a terminal null.
+External or resource failures before requests SHALL be terminal blocked work
+with `inference_substrate_class=blocked_no_run`. Each blocked gate SHALL retain
+the check, upstream, absolute path, field, operator, expected, and observed
+value. A resource block SHALL not retire the scientific hypothesis.
+
+The artifact SHALL contain the requested field principles, separate validity,
+readiness, benefit, retention, and freshness gates, per-arm rows, sample-size
+budget, current invocation counts, source hashes, seed, checksum, and eight
+pilot outcomes. It SHALL preserve `verifier_is_oracle=true`, because exact
+fixtures cannot establish learned semantic correctness. Completion alone SHALL
+not establish benefit.
+
+Validation SHALL use the frozen affected-file manifest. It SHALL run serial
+scoped pytest, 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, scoped specification coverage, the declared
+entrypoint, a fresh cold replay, independent row reduction, adversarial
+verification, and strict verdict-row consistency. Read-only reporting has no
+numbered model E2E. Only an exact candidate that passes the terminal readers
+SHALL publish atomically at
+`results/experiment_7604_v664_evidence_pilot.json`.
+
+#### SCENARIO-VERIFY-7604-AUTH: Source And Runtime Gates Fail Closed
+
+**Given** the Experiment 7602 bytes, cached GGUF, CUDA inventory, and lease state
+**When** the producer or any runtime identity check differs
+**Then** no pilot request starts and the terminal verdict is complete blocked
+**And** the first failed gate keeps every exact expected and observed operand.
+
+#### SCENARIO-VERIFY-7604-REQUESTS: Eight Frozen Requests Keep Labels Out
+
+**Given** eight authenticated pilot records
+**When** the task builds extraction requests
+**Then** each request keeps complete text and numbered IDs with no labels
+**And** one load and eight fixed 512-token, temperature-zero calls are charged.
+
+#### SCENARIO-VERIFY-7604-PARSER: Bad Output Remains In The Denominator
+
+**Given** empty, truncated, unknown, malformed, or unsupported-ID output
+**When** the cold parser reduces the completion
+**Then** the row remains invalid, unknown, or censored as observed
+**And** no hidden retry or replacement removes it from the eight-row denominator.
+
+#### SCENARIO-VERIFY-7604-COST: Capture Scores Use Conservative Measured Cost
+
+**Given** eight measured call spans and actual prompt lengths
+**When** fitting and evaluation capture costs are projected for 120 groups
+**Then** the estimator includes uncertainty and reserved validation time
+**And** each feasibility score is one only at a projection of 3000 seconds or less.
+
+#### SCENARIO-VERIFY-7604-NULL: Transport Readiness Is Not Semantic Benefit
+
+**Given** a completed and authenticated pilot
+**When** at least six schemas are usable but no oracle-distinct benefit was tested
+**Then** transport readiness can equal one while the verdict remains complete null
+**And** exact fixture positives remain circular and cannot open empirical readiness.
+
+#### SCENARIO-VERIFY-7604-E2E: Fresh Readers Control Atomic Publication
+
+**Given** the frozen manifest and exact unpublished terminal candidate
+**When** scoped checks and fresh readers run
+**Then** cold replay, independent reduction, adversarial review, and strict row lint pass
+**And** only those validated bytes publish to the declared result path.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-VERIFY-7598: Explicit Probability-Service Decision Caller
 
 The probability-calibration surface SHALL expose a documented caller for the
