@@ -3464,3 +3464,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 23 | 2026-09-24T13:39:45Z | 2026-09-24T13:47:06Z | exp10012 done (68 s): 2/10 windows label-informative; relaxing gate adds accepted-not-useful; 2 faithful engines had wrong win predicate; committed 2a911cfa81 in worktree; 1-agent review wf_0e2a4bf5-09f (effort medium) |
 | 25 | 2026-09-24T14:21:35Z | 2026-09-24T14:26:19Z | exp10012 corrected (LIVE_SCORED): useful su15 THINK has accuracy 0.125, every gate rejects it; merged to main + note + ops; retraction recorded |
 | 26 | 2026-09-24T14:30:00Z | 2026-09-24T14:29:50Z | Saved memory: scored agent vs offline twin execution trap |
+| 27 | 2026-09-24T15:56:25Z | 2026-09-24T15:57:19Z | Operator chose window expansion: codex (CPU, worktree gate-expand) writing expert win conditions (sp80, dc22, wa30, sb26; g50t diagnosis) + reusing stored Qwen3.8 engines with rebuildable windows; amendment 2 re-run |
