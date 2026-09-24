@@ -18557,3 +18557,4 @@ code |
 | 2026-09-24 17:25 UTC | Compare explicit-schema prompting and constrained  | OK | 88 passed, 1 warning in 7.84s |
 | 2026-09-24 17:27 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 2365987 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
 | 2026-09-24 17:28 UTC | Capture fixed fit, tune and policy evidence | GATE_BLOCK | gate-unsat(final): 4 of 9 gate(s) failed; first failure: exp7617-schema-pilot.evidence_transport_ready_score (actual=0 == expected=1) |
+| 2026-09-24 17:31 UTC | Capture the fixed delayed-learning evidence stream | GATE_BLOCK | gate-unsat(final): 4 of 9 gate(s) failed; first failure: exp7617-schema-pilot.evidence_transport_ready_score (actual=0 == expected=1) |
