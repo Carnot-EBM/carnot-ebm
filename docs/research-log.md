@@ -6955,3 +6955,10 @@ The critical path for milestone .250:
 - theme: causal history support measurement and private ARC output repair led execution across an all-compute set lacking sub-task telemetry
 - key result: honest operational negative — causal history support measurement consumed 4.53 of 10.6 total wall-time minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.664
+
+- exp_range: no data available this milestone
+- theme: bounded Qwen evidence qualification and matched-history replay led execution across an all-compute set lacking sub-task telemetry
+- key result: honest operational negative — bounded Qwen evidence qualification consumed 1.47 of 5.7 total wall-time minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
+- acceptance: no data available this milestone
