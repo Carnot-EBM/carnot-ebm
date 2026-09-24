@@ -18523,3 +18523,9 @@ code |
 | 2026-09-24 05:26 UTC | Bind fourteen tasks and ingest evidence-alignment  | OK | 105 passed, 1 warning in 11.78s |
 | 2026-09-24 05:50 UTC | Seal lossless evidence links and fixed source-grou | OK | 100 passed, 1 warning in 8.36s |
 | 2026-09-24 06:25 UTC | Repair private ARC output placement and qualify hi | OK | 128 passed, 1 warning in 42.92s |
+| 2026-09-24 06:27 UTC | Qualify bounded Qwen evidence-link extraction and  | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7588-evidence-protocol.evidence_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-24 06:29 UTC | Capture sentence-linked evidence for fitting and p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7590-evidence-pilot, exp7590-evidence-pilot, exp7590-evidence-pilot, exp7590-evidence-pilot) |
+| 2026-09-24 06:29 UTC | Capture sentence-linked evidence for evaluation an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7590-evidence-pilot, exp7590-evidence-pilot, exp7590-evidence-pilot, exp7590-evidence-pilot) |
+| 2026-09-24 06:29 UTC | Train a bounded evidence-residual energy decision | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7591-fit-evidence, exp7591-fit-evidence, exp7591-fit-evidence) |
+| 2026-09-24 06:29 UTC | Measure incremental evidence value and calibrated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7592-test-online-evidence, exp7592-test-online-evidence, exp7592-test-online-evidence) |
+| 2026-09-24 06:29 UTC | Measure delayed evidence learning with held-back u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7593-evidence-energy, exp7592-test-online-evidence, exp7592-test-online-evidence, exp7592-test-online-evidence) |
