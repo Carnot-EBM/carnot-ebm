@@ -78573,3 +78573,90 @@ independent reduction, adversarial verification, and strict row consistency run
 Implemented by `python/carnot/experiment_7579_v662_decision_learning_audit.py`,
 its thin experiment CLI, and requirement-linked focused tests. The terminal
 artifact records the exact scoped and fresh-process validation receipts.
+
+## REQ-REPORT-7585: Report Portable Service Cost And Board Continuity
+
+Experiment 7585 SHALL publish one hash-bound terminal artifact for Rust
+recalibration parity, equal-durability service timing, and preserved board
+continuity. `honest_verdict` SHALL start with `complete_`; completion alone
+SHALL not establish benefit. `verdict_class` SHALL be exactly one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. Partial SHALL describe only unfinished work owned by this task.
+
+The artifact SHALL include `flagged_adversarial`, `acceptance_gate_results`,
+`kernel_branch_disposition`, `portable_parity_score`,
+`service_measurement_complete_score`, `board_continuity_complete_score`,
+`whole_service_speedup`, `rows`, `board_rows`, `source_artifact_hashes`,
+`validation_receipts`, and `field_principles`. Every blocked verdict SHALL
+include `gate_check_summary` with check, upstream, path, field, operator,
+expected value, and observed value.
+
+Each comparative row SHALL name one unit and arm. It SHALL retain raw
+numerator and denominator, metric direction, seed, censoring, provenance,
+mode, and durability policy. Pooled summaries SHALL reproduce from these
+rows. `whole_service_speedup` SHALL use complete process service time. Kernel
+time SHALL remain a separate field. Paired intervals SHALL preserve pairing.
+
+The board rows SHALL copy the dated Experiment 7571 KV260, PolarFire, and
+GateMate dispositions with their original evidence hashes. KV260 SHALL retain
+historical fabric graduation, `ssh kria` future access, and `k_max<=5`.
+PolarFire SHALL retain historical CPU dispatch without an FPGA claim.
+GateMate SHALL remain operator-blocked unless a new documented cable, power,
+port, board, JTAG, or DirtyJTAG change exists. This task SHALL issue no
+unchanged board probe and SHALL assert no current reachability.
+
+The artifact SHALL record actual and planned substrate classes separately.
+A host Rust process SHALL not count as FPGA execution. `MODEL_SPECS` and
+`model_specs` SHALL be empty. Current invocation counts SHALL separately
+record zero loads, forwards, generations, calls, input tokens, and output
+tokens. Historical model identity MAY appear only in source custody.
+`verifier_is_oracle` SHALL prevent analytical controls from supporting an
+oracle-distinct positive claim.
+
+The affected manifest SHALL freeze the exact test, Python module, thin
+entrypoint, Rust source, and both changed capability specs. The task SHALL
+prove imports resolve below this worktree. It SHALL create private pytest base
+parents before each subprocess. Validation SHALL run serial focused pytest
+without ambient addopts or coverage, separate 100 percent changed-module
+coverage with a command-local coverage file, scoped Ruff check and format,
+changed-module mypy, and exact-test specification coverage.
+
+The declared entrypoint and a fresh process SHALL exercise
+predict-release-update-persist-reload. Because the work adds a process CLI and
+not a shared binding, E2E-003 and E2E-004 are not applicable. ARC and sampler
+E2E checks are not applicable. Cold replay, independent reduction,
+`scripts/adversarial_verify.py`, and strict row consistency SHALL accept the
+exact terminal candidate before atomic publication. The task SHALL retain raw
+receipts and hashes and SHALL publish the validated artifact atomically.
+
+### SCENARIO-REPORT-7585-ROWS: Raw Pairs Reproduce Headline Speedups
+
+**Given** complete Python and Rust rows for every paired repeat
+**When** an independent reducer computes cold and warm service summaries
+**Then** p50, p95, paired intervals, state bytes, and stage fractions reproduce
+**And** the whole-service claim does not substitute update-only time.
+
+### SCENARIO-REPORT-7585-BOARDS: Dated Board Meanings Stay Literal
+
+**Given** the exact Experiment 7571 board rows and evidence hashes
+**When** Exp7585 completes or blocks its kernel branch
+**Then** KV260, PolarFire, and GateMate remain separately visible
+**And** no old transcript becomes a current reachability or execution claim.
+
+### SCENARIO-REPORT-7585-GATES: Readiness Does Not Establish Benefit
+
+**Given** valid parity and complete service rows
+**When** the paired lower bound is not greater than one
+**Then** completion remains usable with a null verdict
+**And** no portability or hardware expansion benefit is claimed.
+
+### SCENARIO-REPORT-7585-TERMINAL: Exact Readers Control Publication
+
+**Given** a frozen affected manifest and exact terminal candidate
+**When** scoped checks, fresh replay, independent reduction, and strict readers run
+**Then** every required receipt passes before atomic publication
+**And** source, validation, and raw measurement hashes bind the conclusion.
+
+### Implementation Status (REQ-REPORT-7585)
+
+Planned. The conductor owns later status, changelog, and traceability reconciliation.

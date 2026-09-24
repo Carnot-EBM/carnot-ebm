@@ -19145,6 +19145,73 @@ field, operator, expected value, and observed value.
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-CL-7585: V662 Portable Recalibration Service
+
+Experiment 7585 SHALL port the qualified nine-knot sufficient-statistic update
+and constrained cumulative-Brier solver to a small Rust process boundary. The
+Rust process SHALL use the Experiment 7561 objective, ridge mass, knot bounds,
+movement bound, monotonic constraint, tolerance, iteration cap, event order,
+and serialized state schema. This task SHALL not claim a completed PyO3
+binding or FPGA execution.
+
+The Python and Rust arms SHALL run in fresh processes. Both arms SHALL read,
+predict, solve, write, fsync, reload, and acknowledge the same state meaning.
+Parity SHALL cover 1,000 seeded fixture streams, boundary probabilities,
+duplicate feedback, restart, and solver failure. Probability absolute error
+SHALL be at most `1e-8`. Typed decisions SHALL match except for disclosed exact
+ties. Replay acknowledgments and final sufficient statistics SHALL match.
+
+Service measurement SHALL use 30 paired repeats of one 160-event trace for
+each cold and warm mode. Each arm SHALL use the same event order, release
+blocks, state payload, IPC contract, file and directory fsync policy, and
+reload check. The artifact SHALL report cold and warm p50 and p95 complete
+service time, kernel time, state bytes, paired speedup intervals, measured
+stage fractions, and the Amdahl ideal ceiling. A kernel-only speedup SHALL not
+be presented as complete-service benefit.
+
+The numerical branch SHALL authenticate Experiment 7574 independently. A
+failed `recalibration_ready_score`, disallowed terminal class, or adversarial
+flag SHALL block only that branch with an exact `gate_check_summary`. Board
+continuity SHALL still run. Missing required external bytes SHALL produce a
+`complete_blocked_*` verdict and SHALL not create substitute evidence.
+
+Portability benefit SHALL require complete numerical parity, equal durability,
+and a paired whole-service speedup lower 95 percent bound greater than one.
+Validity, readiness, benefit, and board continuity SHALL remain separate. The
+task SHALL declare `MODEL_SPECS=[]`, `model_specs=[]`, `no_model_load=true`,
+and zero current model loads, forwards, generations, calls, and tokens.
+
+### SCENARIO-CL-7585-PARITY: Fresh Durable Arms Agree
+
+- GIVEN 1,000 seeded streams and the registered edge cases
+- WHEN fresh Python and Rust processes replay the same serialized state
+- THEN probability error is at most `1e-8` and typed decisions agree
+- AND duplicate, restart, convergence, and acknowledgment outcomes agree.
+
+### SCENARIO-CL-7585-SERVICE: Whole Service Uses Equal Durability
+
+- GIVEN 30 paired 160-event repeats in cold and warm modes
+- WHEN each arm performs read, predict, solve, write, fsync, reload, and IPC
+- THEN every complete-service row retains raw duration and stage provenance
+- AND speedup intervals pair identical traces under one durability policy.
+
+### SCENARIO-CL-7585-HEADROOM: Kernel And Service Claims Stay Separate
+
+- GIVEN measured kernel and complete-service durations
+- WHEN stage fractions and the ideal update-only ceiling are reduced
+- THEN kernel speedup and whole-service speedup are reported independently
+- AND small end-to-end headroom produces a no-expansion recommendation.
+
+### SCENARIO-CL-7585-BLOCKED: Numerical Failure Does Not Erase Boards
+
+- GIVEN a failed or absent Experiment 7574 numerical prerequisite
+- WHEN the experiment reduces its independent branches
+- THEN the kernel branch records the exact failed upstream operand
+- AND all three historical board dispositions remain present.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-CL-7578: V662 Continuous Proper-Loss Measurement
 
 Experiment 7578 SHALL measure continuous proper-loss learning from the exact

@@ -1,0 +1,87 @@
+{
+  "receipts": [
+    {
+      "command": ".venv/bin/python -u scripts/experiments/experiment_7585_v662_portable_service.py --date 20260924 --root /home/ianblenke/github.com/ianblenke/carnot --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7585_v662_portable_service/exact_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7585_v662_portable_service.py",
+        "--date",
+        "20260924",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7585_v662_portable_service/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.7670996199885849,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7585_v662_portable_service/validation/terminal_exact/00_fresh_process_cold_replay/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:880e89f6fba06e110656ee8f493a587d1545807e27938463a3a35c5cb2817fb5",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"errors\": [], \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/experiments/experiment_7585_v662_portable_service.py --date 20260924 --root /home/ianblenke/github.com/ianblenke/carnot --independent-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7585_v662_portable_service/exact_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7585_v662_portable_service.py",
+        "--date",
+        "20260924",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--independent-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7585_v662_portable_service/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.8056708759977482,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7585_v662_portable_service/validation/terminal_exact/01_independent_raw_reduction/00_independent_raw_reduction.log",
+      "log_sha256": "sha256:880e89f6fba06e110656ee8f493a587d1545807e27938463a3a35c5cb2817fb5",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"errors\": [], \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7585_v662_portable_service/exact_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7585_v662_portable_service/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.9206208010145929,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7585_v662_portable_service/validation/terminal_exact/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7585_v662_portable_service/exact_terminal_candidate.json",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7585_v662_portable_service/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.08472517100744881,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7585_v662_portable_service/validation/terminal_exact/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    }
+  ]
+}
