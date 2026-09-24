@@ -78942,3 +78942,111 @@ terminal readers run
 
 Planned. Experiment 7596 implementation and terminal receipts will complete
 this requirement.
+
+## REQ-REPORT-7600: Reconcile V663 without promoting unavailable science
+
+Experiment 7600 SHALL resolve the staged roadmap only when its milestone is
+`2026.09.663`; after activation it SHALL accept the matching active roadmap
+without requiring the consumed staging file. It SHALL compare the selected
+authority with the independent V663 Markdown contract. Its ordered inventory
+SHALL contain exactly fourteen dispositions from `exp7587-contract-methods`
+through `exp7600-capstone`. The current row SHALL come from current validation
+and SHALL not read its future artifact.
+
+Each upstream row SHALL distinguish an authenticated producer, a conductor
+pre-gate artifact, a missing producer, and invalid or adversarially flagged
+evidence. A pre-gate artifact SHALL satisfy custody without becoming producer
+science. Missing required external evidence SHALL make the aggregate verdict
+`complete_blocked_required_v663_external_evidence` with class `blocked`, not
+`partial`. Every blocked summary SHALL name check, upstream, path, field,
+operator, expected value, and observed value. Partial SHALL mean only unfinished
+work owned by Experiment 7600.
+
+Scientific conclusions SHALL reduce only from the independent Experiment 7596
+findings, Experiment 7597 raw-backed history reduction, and Experiment 7598
+actual consumer timings. Evidence gain, probability, decision cost, delayed
+learning, retention, ARC observability, consumer speed, and board continuity
+SHALL remain separate. Completion accounting and readiness SHALL not become
+positive science. All source-data findings SHALL remain `descriptive_reuse`.
+Oracle-defined controls SHALL remain circular positive and SHALL not support an
+oracle-distinct claim.
+
+The exact evidence-link feature construction SHALL retire only after an
+independently supported no-gain finding. The exact guarded-update construction
+SHALL retire only after a valid no-benefit or failed-retention finding. Missing
+or gate-blocked inputs SHALL be recorded as resource or transport blockers and
+SHALL not retire either scientific construction. Reopening a fresh-corpus claim
+SHALL require a genuinely unexposed inventory and a new preregistration, not a
+reshuffle of exposed groups. A repeated literal prior verdict SHALL retain the
+roadmap's `retire_if_same_verdict=true` disposition without retiring a missing
+external hypothesis.
+
+The ARC conclusion SHALL report observable history support only as a next-model
+interface finding. It SHALL not claim a solve or that a near-exact acceptance
+gate is safe. The Rust client SHALL remain opt-in. KV260, PolarFire, and GateMate
+SHALL retain three separate dispositions and exact next conditions. Host client
+timing SHALL not become board or TSU speed.
+
+The capstone SHALL perform aggregation only with `MODEL_SPECS=[]`, no current
+model calls, and typed zero load, forward, generation, and token counts. It
+SHALL report actual and planned substrate classes separately, current monotonic
+duration, explicit seeds, exact source hashes, one auditable row per task, and
+intended, observed, excluded, censored, and unstarted unit counts. Historical
+model identity SHALL remain source metadata only.
+
+Acceptance gates SHALL separate validity, readiness, benefit, retention, and
+freshness, with a failure-prevention principle on every gate. The artifact SHALL
+carry one field principle for every top-level field. Its reproducibility checksum
+SHALL bind immutable source evidence, configuration, and terminal reduction.
+Stable publication G1 through G4 SHALL come from
+`scripts/publication_gate.py --json`; the artifact SHALL emit `paper_ready` and
+`unmet_gates`. It SHALL not submit, publish, push, activate a roadmap, change a
+production default, alter generator weights, or modify the conductor.
+
+The affected-file manifest SHALL freeze this requirement, the reusable module,
+thin CLI, requirement-linked tests, and V663 capstone note. Validation SHALL use
+private paths under `/tmp`, prove worktree imports, run focused serial pytest
+without ambient addopts or coverage, separate 100 percent changed-module
+coverage with a command-local coverage file, scoped Ruff check and format,
+changed-module mypy, and exact-test specification coverage. The declared
+entrypoint, fresh-process cold replay, independent reduction,
+`scripts/adversarial_verify.py`, and strict row consistency SHALL accept the
+exact candidate before atomic publication. This read-only report has no
+numbered runtime E2E.
+
+### SCENARIO-REPORT-7600-INVENTORY: Fourteen dispositions preserve custody
+
+**Given** the V663 authority, producer artifacts, conductor diagnostics, and
+missing external producers
+**When** Experiment 7600 authenticates the ordered task inventory
+**Then** exactly fourteen task IDs appear once and in contract order
+**And** producers, pre-gate evidence, missing paths, and the current row stay distinct
+**And** missing external evidence closes the aggregate as blocked rather than partial.
+
+### SCENARIO-REPORT-7600-BRANCHES: Independent reducers bound every claim
+
+**Given** the terminal Experiment 7596, 7597, 7598, and 7599 artifacts
+**When** Experiment 7600 reduces V663 branch conclusions
+**Then** absent evidence science stays blocked, ARC history stays a null interface finding,
+Rust consumer readiness stays separate from its speed gate, and board states stay literal
+**And** no branch promotes another branch or claims fresh confirmation.
+
+### SCENARIO-REPORT-7600-RETIREMENT: Missing evidence does not retire a hypothesis
+
+**Given** unavailable evidence-link and guarded-learning producers
+**When** Experiment 7600 applies the registered stopping rules
+**Then** both constructions defer for named external blockers rather than retire
+**And** a fresh-corpus reopening names a genuinely unexposed inventory and new preregistration
+**And** the repeated prior capstone verdict keeps its narrow retirement disposition.
+
+### SCENARIO-REPORT-7600-VALIDATION: Exact terminal readers control publication
+
+**Given** a frozen affected-file manifest and exact terminal candidate
+**When** scoped checks, entrypoint replay, cold reduction, and strict readers run
+**Then** all required receipts pass before atomic publication
+**And** source hashes, signs, counts, censoring, and field principles reproduce
+**And** stable publication gates are reported without external submission.
+
+### Implementation Status (REQ-REPORT-7600)
+
+Planned. The conductor owns later status, changelog, and traceability reconciliation.
