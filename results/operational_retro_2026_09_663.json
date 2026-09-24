@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.663",
+  "generated_at": "2026-09-24T08:42:44Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 10.6,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure causal history support on adapter-withheld live games",
+      "duration_minutes": 4.53,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Repair private ARC output placement and qualify history telemetry",
+      "duration_minutes": 2.31,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Ship an opt-in typed consumer for the durable Rust service",
+      "duration_minutes": 2.28,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and ingest evidence-alignment methods",
+      "duration_minutes": 0.69,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen dispositions and decide information-source continuation",
+      "duration_minutes": 0.38,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.663 completed 8 experiments, all compute-bound, in 10.6 wall-time minutes. The longest task was 'Measure causal history support on adapter-withheld live games' at 4.53 minutes, followed by 'Repair private ARC output placement and qualify history telemetry' at 2.31 minutes and 'Ship an opt-in typed consumer for the durable Rust service' at 2.28 minutes. Sub-phase timing was not recorded within these runs to separate model inference duration from validation scaffolding or artifact serialization overhead.",
+  "bottlenecks_identified": [
+    "'Measure causal history support on adapter-withheld live games' was the longest task at 4.53 minutes out of 10.6 total wall-time minutes (approx. 43% of milestone duration), but lacks granular sub-phase instrumentation to isolate model inference latency from validation scaffolding and disk serialization.",
+    "'Repair private ARC output placement and qualify history telemetry' (2.31 minutes) and 'Ship an opt-in typed consumer for the durable Rust service' (2.28 minutes) combined with the longest task to account for 9.12 minutes (approx. 86% of total milestone wall time) without recorded intra-task phase durations.",
+    "The top 5 experiments accounted for 10.19 out of 10.6 total wall-time minutes (approx. 96% of execution time), with milestone timings reconstructed from disk mtimes rather than continuous runtime execution logging.",
+    "The GPU monitor report provides an isolated post-completion snapshot (PID 772157 on GPU 0 with 18054MB allocated at 0% utilization, GPU 1 idle at 4MB), leaving GPU utilization across active compute execution windows unmeasured (with gpu_idle_on_compute_bound_tasks locked to false).",
+    "Task launch records did not log model concurrency or runner dispatch details, although all completed tasks were single-model runs where DualGPURunner multi-model dispatch is not applicable."
+  ],
+  "improvements_suggested": [
+    "Instrument granular sub-phase duration timers and monotonic stage logging inside compute-bound workflows to isolate model inference latency from verification scaffolding and disk serialization.",
+    "Deploy continuous, task-aligned accelerator telemetry during compute-bound executions to sample live GPU utilization and VRAM occupancy across active compute windows rather than relying on point-in-time post-run snapshots.",
+    "Record explicit model concurrency and runner dispatch metadata in experiment task receipts to audit DualGPURunner eligibility whenever two or more models run concurrently.",
+    "Implement runtime milestone-scoped execution logging to avoid reliance on post-hoc disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration timers and per-stage progress logging inside the causal history support and ARC output repair pipelines.",
+    "Deploy continuous accelerator telemetry during compute-bound task execution to record live GPU utilization and VRAM occupancy across active execution windows.",
+    "Emit explicit model concurrency and runner dispatch metadata in experiment receipts to audit DualGPURunner engagement on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone completed 8 compute-bound tasks in 10.6 wall-time minutes, with execution concentrated in causal history support measurement (4.53 minutes), private ARC output placement repair (2.31 minutes), and durable Rust service consumer shipping (2.28 minutes). The post-run GPU monitor report confirms an idle llama.cpp process on GPU 0 after completion but cannot evaluate active-window compute efficiency, and because only single-model tasks were executed, no DualGPURunner multi-model dispatch opportunity was missed. Sub-phase timing and continuous execution telemetry are necessary next steps to identify actionable latency optimizations."
+}
