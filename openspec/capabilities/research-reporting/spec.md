@@ -80241,3 +80241,100 @@ reader outcomes and a checksum before atomic publication.
 
 Specification added before tests and implementation. The conductor owns later
 status, changelog and traceability reconciliation.
+
+## REQ-REPORT-7630: Qualify CUDA ownership before model launch
+
+Experiment 7630 SHALL run with planned and actual `no_model_load`,
+`MODEL_SPECS=[]`, no current model invocation, and zero load, forward,
+generation, and token counts. It SHALL reproduce the exact Experiment 7617 GPU
+inventory through the old selector. The historical 256 MiB allocation SHALL
+remain foreign because its exited PID has no authenticated task ownership.
+Memory size, process name, and ancestry alone SHALL never authorize sharing or
+termination.
+
+The reusable launcher SHALL set `JAX_PLATFORMS=cpu` and disable GPU
+preallocation before numerical imports. A future model worker SHALL receive
+only its selected physical GPU UUID through `CUDA_VISIBLE_DEVICES` before
+import. Embedded-tokenizer qualification SHALL be a later spawned CPU-only
+operation with empty `CUDA_VISIBLE_DEVICES` and `n_gpu_layers=0`; this task
+SHALL describe that contract without loading a tokenizer or model.
+
+GPU admission SHALL keep a 20,000 MiB free floor and veto every foreign compute
+context. A cooperative per-device lease SHALL bind PID and kernel start time,
+wait at most 180 seconds, and report progress at most 15 seconds apart. The
+launcher SHALL accept only registered current-task descendants. Ancestry alone
+SHALL not authorize a parent or sibling. It SHALL re-read inventory after lease
+acquisition and immediately before a model launch. A race, new foreign context,
+free-memory failure, or OOM SHALL fail closed without signaling foreign work.
+
+The qualification SHALL exercise a foreign 256 MiB context, an owned child,
+stale lease recovery, PID reuse, free-memory failure, two racing launchers, and
+interrupted cleanup without a real model. Its end-to-end fixture SHALL run fake
+inventory through lease acquisition, isolated child environment, and cleanup.
+Only task-created children may receive a signal. Protocol readiness SHALL stay
+separate from present capacity: `launch_protocol_ready_score` MAY equal one
+while `current_capacity_available` is false. Capacity is a read-only snapshot,
+not a persistent reservation or readiness promise.
+
+Experiment 7630 SHALL independently replay Experiment 7616 role, schema, and
+guarded-lifecycle hashes. It SHALL publish one row per independent qualification
+unit with absolute operands, provenance, direction, and censoring. Exact
+control fixtures SHALL use `circular_positive`; protocol readiness SHALL use
+`null`; this task SHALL claim no probability benefit, utility, retention, or
+freshness.
+
+Validation SHALL freeze an affected-file manifest and use worktree-pinned
+imports, serial focused pytest with cleared addopts, a private base temp,
+command-local 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, and affected-test specification coverage. The declared
+entrypoint, fresh-process cold replay, independent reduction, adversarial
+reader, and strict verdict-row reader SHALL accept the exact terminal candidate
+before atomic publication. Old artifacts, weights, defaults, roadmap, and the
+research conductor SHALL remain unchanged.
+
+### SCENARIO-REPORT-7630-IDENTITY: Foreign contexts fail closed
+
+**Given** the exact Experiment 7617 inventory and an exited historical PID
+**When** the old selector and ownership-aware selector inspect the 256 MiB context
+**Then** both reject GPU 1 because registered PID and start-time ownership is absent
+**And** no memory threshold, process name, or unavailable ancestry changes that result.
+
+### SCENARIO-REPORT-7630-OWNED: Only registered descendants are eligible
+
+**Given** an owned child, an unrelated process, and PID-reuse evidence
+**When** the launcher authenticates PID, start time, ancestry, and registration
+**Then** only the matching registered current-task descendant is accepted
+**And** ancestry alone does not authorize a parent, sibling, or termination target.
+
+### SCENARIO-REPORT-7630-RACE: Lease and inventory races fail closed
+
+**Given** two launchers target one fake device and a competing job ignores locks
+**When** lease acquisition and both required inventory rechecks run
+**Then** at most one launcher owns the cooperative lease
+**And** a new foreign allocation, free-memory failure, or OOM blocks launch.
+
+### SCENARIO-REPORT-7630-ISOLATION: Import environment is fixed before work
+
+**Given** a selected physical GPU UUID and no imported numerical runtime
+**When** the launcher creates CPU preflight and future worker environments
+**Then** preflight sets CPU JAX and disables preallocation
+**And** the model worker sees only the selected UUID
+**And** later tokenizer qualification is CPU-only with zero GPU layers.
+
+### SCENARIO-REPORT-7630-CLEANUP: Interruption releases owned resources only
+
+**Given** a task-created child and an unrelated live process
+**When** the owned operation is interrupted
+**Then** the child exits, the cooperative lease releases, and no foreign signal occurs.
+
+### SCENARIO-REPORT-7630-TERMINAL: Readiness and capacity remain separate
+
+**Given** all protocol fixtures pass and current GPU inventory is read-only
+**When** fresh readers validate the exact terminal candidate
+**Then** protocol readiness may equal one while current capacity is unavailable
+**And** the artifact makes no persistent reservation or scientific benefit claim.
+
+### Implementation Status (REQ-REPORT-7630)
+
+Specification added before tests and implementation. The conductor owns later
+status, changelog and traceability reconciliation.

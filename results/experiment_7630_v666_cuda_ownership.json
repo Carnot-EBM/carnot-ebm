@@ -1,0 +1,1620 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "authenticated_inputs_and_authority",
+      "condition": "authority_and_fixture_validity eq expected value",
+      "expected": true,
+      "field": "authority_and_fixture_validity",
+      "governing_principle": "Infrastructure validity and readiness do not establish learned benefit.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7630_v666_cuda_ownership.json",
+      "upstream": "experiment_7630_v666_cuda_ownership"
+    },
+    {
+      "category": "readiness",
+      "check": "launch_protocol_qualification",
+      "condition": "launch_protocol_ready_score eq expected value",
+      "expected": 1,
+      "field": "launch_protocol_ready_score",
+      "governing_principle": "Readiness covers ownership, races, isolation, rechecks, and cleanup only.",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/raw/experiment_7630_v666_cuda_ownership/launch_config.json",
+      "upstream": "experiment_7630_v666_cuda_ownership"
+    },
+    {
+      "category": "probability_benefit",
+      "check": "probability_benefit",
+      "condition": "empirical_probability_benefit_measured eq expected value",
+      "expected": true,
+      "field": "empirical_probability_benefit_measured",
+      "governing_principle": "Infrastructure validity and readiness do not establish learned benefit.",
+      "observed": false,
+      "operator": "eq",
+      "passed": false,
+      "path": "results/experiment_7630_v666_cuda_ownership.json",
+      "upstream": "experiment_7630_v666_cuda_ownership"
+    },
+    {
+      "category": "utility",
+      "check": "utility_benefit",
+      "condition": "utility_benefit_measured eq expected value",
+      "expected": true,
+      "field": "utility_benefit_measured",
+      "governing_principle": "Infrastructure validity and readiness do not establish learned benefit.",
+      "observed": false,
+      "operator": "eq",
+      "passed": false,
+      "path": "results/experiment_7630_v666_cuda_ownership.json",
+      "upstream": "experiment_7630_v666_cuda_ownership"
+    },
+    {
+      "category": "retention",
+      "check": "retention_benefit",
+      "condition": "retention_benefit_measured eq expected value",
+      "expected": true,
+      "field": "retention_benefit_measured",
+      "governing_principle": "Infrastructure validity and readiness do not establish learned benefit.",
+      "observed": false,
+      "operator": "eq",
+      "passed": false,
+      "path": "results/experiment_7630_v666_cuda_ownership.json",
+      "upstream": "experiment_7630_v666_cuda_ownership"
+    },
+    {
+      "category": "freshness",
+      "check": "fresh_confirmatory_evidence",
+      "condition": "fresh_confirmatory_claim_allowed eq expected value",
+      "expected": true,
+      "field": "fresh_confirmatory_claim_allowed",
+      "governing_principle": "Infrastructure validity and readiness do not establish learned benefit.",
+      "observed": false,
+      "operator": "eq",
+      "passed": false,
+      "path": "results/experiment_7630_v666_cuda_ownership.json",
+      "upstream": "experiment_7630_v666_cuda_ownership"
+    },
+    {
+      "category": "readiness",
+      "check": "current_capacity_snapshot",
+      "condition": "current_capacity_available eq expected value",
+      "expected": true,
+      "field": "current_capacity_available",
+      "governing_principle": "Capacity is a snapshot and every future model task must reacquire and recheck.",
+      "observed": false,
+      "operator": "eq",
+      "passed": false,
+      "path": "results/experiment_7630_v666_cuda_ownership.json",
+      "upstream": "nvidia-smi_read_only"
+    },
+    {
+      "category": "validity",
+      "check": "affected_validation",
+      "condition": "all_scoped_commands_passed eq expected value",
+      "expected": true,
+      "field": "all_scoped_commands_passed",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "tests/python/test_experiment_7630_v666_cuda_ownership.py",
+      "upstream": "experiment_7630_v666_cuda_ownership"
+    }
+  ],
+  "claimed_benefit_gate_passed": false,
+  "current_capacity_available": false,
+  "current_capacity_selected_uuid": null,
+  "default_promotion_authorized": false,
+  "duration_s": 17.77218297898071,
+  "empirical_probability_benefit_measured": false,
+  "evidence_schema_ready_score": 1,
+  "execution_venue": "host",
+  "execution_venue_details": {
+    "fixture_device_uuids": [
+      "GPU-fake-e2e"
+    ],
+    "hostname": "icbfl1",
+    "owner_pid": 2886436,
+    "physical_gpu_inventory_read_only": [
+      {
+        "index": 0,
+        "memory_free_mb": 6286,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 17892,
+        "name": "NVIDIA GeForce RTX 3090",
+        "processes": [
+          {
+            "ancestry": [
+              2365987,
+              1233,
+              1
+            ],
+            "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169 -ngl 999 -c 32768 --port 40271 --host 127.0.0.1 --cache-type-k q8_0 --cache-type-v q8_0 -lv 4",
+            "name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "pid": 2365987,
+            "start_ticks": 27253366,
+            "start_time": "2026-09-24T17:21:55.660000Z",
+            "used_memory_mb": 17882
+          }
+        ],
+        "utilization_pct": 0,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      }
+    ]
+  },
+  "exp7616_authority_replay": {
+    "artifact_checksum_authenticated": true,
+    "artifact_path": "results/experiment_7616_v665_evidence_schema.json",
+    "artifact_sha256": "sha256:d9f34c4d37ba465b6f7a1ef8adfd71903a896a02355a6cf5d4bc93a2c3785806",
+    "guarded_update_expected_sha256": "sha256:f40c11e6bcf5632fcda1ecdd68b27a715811906d6195aa124a73377a85408a6f",
+    "guarded_update_observed_sha256": "sha256:f40c11e6bcf5632fcda1ecdd68b27a715811906d6195aa124a73377a85408a6f",
+    "guarded_update_path": "results/experiment_7603_v664_guarded_update_fixture.json",
+    "guarded_update_ready_score": 1,
+    "role_contract_ready_score": 1,
+    "role_manifest_expected_sha256": "sha256:8c82593d7f8622bdb1c71893e481bdae7f8d583f534f886acad8ab7724ac2cd5",
+    "role_manifest_observed_sha256": "sha256:8c82593d7f8622bdb1c71893e481bdae7f8d583f534f886acad8ab7724ac2cd5",
+    "role_manifest_path": "results/raw/experiment_7602_v664_evidence_requalification/protocol.json",
+    "role_sidecar_rows": [
+      {
+        "expected_rows": 40,
+        "expected_sha256": "sha256:eb8a818faa41a81f42f2b514e0a244c2f7dc080fd0baa6c2cbeac25fb75159d6",
+        "observed_rows": 40,
+        "observed_sha256": "sha256:eb8a818faa41a81f42f2b514e0a244c2f7dc080fd0baa6c2cbeac25fb75159d6",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/evaluation_evaluator_store.jsonl"
+      },
+      {
+        "expected_rows": 80,
+        "expected_sha256": "sha256:962278bfd49aa6e42bde3043b6ce84ac977884d004da0823c6a5c4397d74159d",
+        "observed_rows": 80,
+        "observed_sha256": "sha256:962278bfd49aa6e42bde3043b6ce84ac977884d004da0823c6a5c4397d74159d",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/fit_evaluator_store.jsonl"
+      },
+      {
+        "expected_rows": 80,
+        "expected_sha256": "sha256:eaae1062fb9c26320a74d5b2e7baa4628ab653900dfafb520e54c634834e181b",
+        "observed_rows": 80,
+        "observed_sha256": "sha256:eaae1062fb9c26320a74d5b2e7baa4628ab653900dfafb520e54c634834e181b",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/online_evaluator_store.jsonl"
+      },
+      {
+        "expected_rows": 8,
+        "expected_sha256": "sha256:82ce9d393b4be0de84d0429014446379150775f1963dc5d651906dd83f3afcc9",
+        "observed_rows": 8,
+        "observed_sha256": "sha256:82ce9d393b4be0de84d0429014446379150775f1963dc5d651906dd83f3afcc9",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/pilot_evaluator_store.jsonl"
+      },
+      {
+        "expected_rows": 20,
+        "expected_sha256": "sha256:e7a4eea8e612491f9a81bb3de7001f18b2c0e336525a4595256e5e7afb7d0dbe",
+        "observed_rows": 20,
+        "observed_sha256": "sha256:e7a4eea8e612491f9a81bb3de7001f18b2c0e336525a4595256e5e7afb7d0dbe",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/policy_evaluator_store.jsonl"
+      },
+      {
+        "expected_rows": 20,
+        "expected_sha256": "sha256:4b55a43d0262a1436f7872476867c427a77524b79fad26f702389e78ed0f1c2b",
+        "observed_rows": 20,
+        "observed_sha256": "sha256:4b55a43d0262a1436f7872476867c427a77524b79fad26f702389e78ed0f1c2b",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/tune_evaluator_store.jsonl"
+      },
+      {
+        "expected_rows": 40,
+        "expected_sha256": "sha256:e4f4e0e755b05efc3f4ce5d2f1230220f7bb67ef1ba86543f2bb052aca12ce36",
+        "observed_rows": 40,
+        "observed_sha256": "sha256:e4f4e0e755b05efc3f4ce5d2f1230220f7bb67ef1ba86543f2bb052aca12ce36",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/evaluation_model_inputs.jsonl"
+      },
+      {
+        "expected_rows": 80,
+        "expected_sha256": "sha256:a7e897a451aed839f5be0ce6f2a26b9e2e3564968e7b10d1e169d084032094f7",
+        "observed_rows": 80,
+        "observed_sha256": "sha256:a7e897a451aed839f5be0ce6f2a26b9e2e3564968e7b10d1e169d084032094f7",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/fit_model_inputs.jsonl"
+      },
+      {
+        "expected_rows": 80,
+        "expected_sha256": "sha256:d6015c43d73e13abad2659072a016ace18d702b9a12822941e5ef19fb3ab2149",
+        "observed_rows": 80,
+        "observed_sha256": "sha256:d6015c43d73e13abad2659072a016ace18d702b9a12822941e5ef19fb3ab2149",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/online_model_inputs.jsonl"
+      },
+      {
+        "expected_rows": 8,
+        "expected_sha256": "sha256:51368fff2f49215e7315ce5f43371c1c836cbaa8ad96caa484e34bfc47c98c8e",
+        "observed_rows": 8,
+        "observed_sha256": "sha256:51368fff2f49215e7315ce5f43371c1c836cbaa8ad96caa484e34bfc47c98c8e",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl"
+      },
+      {
+        "expected_rows": 20,
+        "expected_sha256": "sha256:359d6af50b4aef534f115491a3a8e0626ea351862f9b8fcdc6e224a52cc56c49",
+        "observed_rows": 20,
+        "observed_sha256": "sha256:359d6af50b4aef534f115491a3a8e0626ea351862f9b8fcdc6e224a52cc56c49",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/policy_model_inputs.jsonl"
+      },
+      {
+        "expected_rows": 20,
+        "expected_sha256": "sha256:281c429344dc570b2db0cf41f7467b54786e2ce7813b09297ea9e38f82753ca4",
+        "observed_rows": 20,
+        "observed_sha256": "sha256:281c429344dc570b2db0cf41f7467b54786e2ce7813b09297ea9e38f82753ca4",
+        "passed": true,
+        "path": "results/raw/experiment_7602_v664_evidence_requalification/tune_model_inputs.jsonl"
+      }
+    ],
+    "schema_authority_ready_score": 1,
+    "schema_expected_sha256": "sha256:a22ba07539a20d21a7ac0a7f5df218a3e9116c27ab9457c14973c23eecc63047",
+    "schema_observed_sha256": "sha256:a22ba07539a20d21a7ac0a7f5df218a3e9116c27ab9457c14973c23eecc63047",
+    "schema_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7616_v665_evidence_schema/schema_authority.json"
+  },
+  "experiment": 7630,
+  "experiment_id": "experiment_7630_v666_cuda_ownership",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "No-call work uses an empty actual model list.",
+    "acceptance_gate_results": "Validity, readiness, probability, utility, retention, and freshness stay separate.",
+    "claimed_benefit_gate_passed": "Retain this field as literal current-task evidence.",
+    "current_capacity_available": "This read-only snapshot is not a reservation or future promise.",
+    "current_capacity_selected_uuid": "Retain this field as literal current-task evidence.",
+    "default_promotion_authorized": "Retain this field as literal current-task evidence.",
+    "duration_s": "Use measured monotonic elapsed time and never pad it.",
+    "empirical_probability_benefit_measured": "Retain this field as literal current-task evidence.",
+    "evidence_schema_ready_score": "Retain this field as literal current-task evidence.",
+    "execution_venue": "The host venue keeps fake UUIDs separate from read-only physical inventory.",
+    "execution_venue_details": "Retain this field as literal current-task evidence.",
+    "exp7616_authority_replay": "Retain this field as literal current-task evidence.",
+    "experiment": "Retain this field as literal current-task evidence.",
+    "experiment_id": "Retain this field as literal current-task evidence.",
+    "external_publication_authorized": "Retain this field as literal current-task evidence.",
+    "field_principles": "Retain this field as literal current-task evidence.",
+    "flagged_adversarial": "A critical terminal reader finding opens no downstream gate.",
+    "fresh_confirmatory_claim_allowed": "Retain this field as literal current-task evidence.",
+    "gate_check_summary": "Blocked work names the first exact failed operand and every failed check.",
+    "generator_training_authorized": "Retain this field as literal current-task evidence.",
+    "guarded_update_ready_score": "One requires the existing lifecycle bytes and checksum custody.",
+    "historical_models": "Retain this field as literal current-task evidence.",
+    "honest_verdict": "Completion names finished work; it does not imply benefit.",
+    "independent_reduction": "Retain this field as literal current-task evidence.",
+    "inference_substrate": "Current fake-process work cannot inherit historical model activity.",
+    "inference_substrate_class": "No model load or generation occurred in this task.",
+    "invocation_counts": "Current loads, forwards, generations, and tokens are independently zero.",
+    "launch_config_path": "The config freezes a future protocol and reserves no device.",
+    "launch_protocol_ready_score": "One qualifies ownership, races, isolation, rechecks, and cleanup only.",
+    "milestone": "Retain this field as literal current-task evidence.",
+    "model_invoked": "Historical rows do not count as a current invocation.",
+    "model_specs": "Retain this field as literal current-task evidence.",
+    "persistent_resource_ready_promise": "Retain this field as literal current-task evidence.",
+    "phase_spans": "Measured disjoint stages retain completed and pending unit positions.",
+    "planned_MODEL_SPECS": "Retain this field as literal current-task evidence.",
+    "planned_inference_substrate_class": "Retain this field as literal current-task evidence.",
+    "positive_claim": "Retain this field as literal current-task evidence.",
+    "preconditions_checked": "Only actual input and resource observations count as checked.",
+    "process_ownership_rows": "PID, start time, ancestry, and registration all precede authorization.",
+    "purchase_authorized": "Retain this field as literal current-task evidence.",
+    "random_seed": "Deterministic process fixtures require no stochastic seed.",
+    "reproducibility_checksum": "Bind immutable inputs, configuration, rows, and reduction code.",
+    "research_conductor_modified": "Retain this field as literal current-task evidence.",
+    "research_roadmap_modified": "Retain this field as literal current-task evidence.",
+    "retention_benefit_measured": "Retain this field as literal current-task evidence.",
+    "role_contract_ready_score": "One requires the Exp7616 role manifest and every sidecar byte.",
+    "rows": "Each independent unit retains absolute operands and raw provenance.",
+    "run_date": "Retain this field as literal current-task evidence.",
+    "sample_size_budget": "Repeated views, orders, and seeds never multiply independent units.",
+    "schema": "Retain this field as literal current-task evidence.",
+    "source_artifact_hashes": "Inputs, current sidecars, and planned outputs have distinct classes.",
+    "submission_authorized": "Retain this field as literal current-task evidence.",
+    "target_model": "Retain this field as literal current-task evidence.",
+    "terminal_reader_outcomes": "Retain this field as literal current-task evidence.",
+    "title": "Retain this field as literal current-task evidence.",
+    "utility_benefit_measured": "Retain this field as literal current-task evidence.",
+    "validation_receipts": "Only real command exits and exact log hashes establish validation.",
+    "verdict_class": "Use only the closed verdict enum; protocol readiness is null.",
+    "verifier_is_oracle": "Exact control truth cannot establish oracle-distinct learned advantage."
+  },
+  "flagged_adversarial": false,
+  "fresh_confirmatory_claim_allowed": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      "current_capacity_snapshot"
+    ],
+    "failed_count": 1,
+    "first_failure": {
+      "category": "readiness",
+      "check": "current_capacity_snapshot",
+      "condition": "current_capacity_available eq expected value",
+      "expected": true,
+      "field": "current_capacity_available",
+      "governing_principle": "Capacity is a snapshot and every future model task must reacquire and recheck.",
+      "observed": false,
+      "operator": "eq",
+      "passed": false,
+      "path": "results/experiment_7630_v666_cuda_ownership.json",
+      "upstream": "nvidia-smi_read_only"
+    },
+    "passed": false
+  },
+  "generator_training_authorized": false,
+  "guarded_update_ready_score": 1,
+  "historical_models": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "honest_verdict": "complete_null_cuda_ownership_protocol_ready",
+  "independent_reduction": {
+    "censored_units": 0,
+    "errors": [],
+    "failed_units": 0,
+    "intended_units": 8,
+    "observed_units": 8,
+    "passed_units": 8,
+    "protocol_passed": true,
+    "unit_ids": [
+      "historical_256_mib_unknown",
+      "foreign_256_mib_context",
+      "pid_reuse",
+      "free_memory_floor",
+      "two_launchers_racing",
+      "stale_lock_recovery",
+      "interrupted_cleanup",
+      "owned_child_launch_e2e"
+    ]
+  },
+  "inference_substrate": "host_cpu_process_identity_fake_gpu_inventory_and_kernel_lease",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "forward_passes_attempted": 0,
+    "forward_passes_completed": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "input_tokens": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "output_tokens": 0
+  },
+  "launch_config_path": "results/raw/experiment_7630_v666_cuda_ownership/launch_config.json",
+  "launch_protocol_ready_score": 1,
+  "milestone": "2026.09.666",
+  "model_invoked": false,
+  "model_specs": [],
+  "persistent_resource_ready_promise": false,
+  "phase_spans": [
+    {
+      "checkpoint_position": 20,
+      "completed_units": 20,
+      "duration_s": 0.27010882599279284,
+      "ended_offset_s": 0.2702556009753607,
+      "pending_operation": null,
+      "phase": "preconditions",
+      "planned_units": 20,
+      "started_offset_s": 0.00014677498256787658
+    },
+    {
+      "checkpoint_position": 8,
+      "completed_units": 8,
+      "duration_s": 0.38951366097899154,
+      "ended_offset_s": 0.6607023329706863,
+      "pending_operation": null,
+      "phase": "protocol_fixtures",
+      "planned_units": 8,
+      "started_offset_s": 0.2711886719916947
+    },
+    {
+      "checkpoint_position": 1,
+      "completed_units": 1,
+      "duration_s": 0.04616959800478071,
+      "ended_offset_s": 0.7068898949655704,
+      "pending_operation": null,
+      "phase": "current_capacity_snapshot",
+      "planned_units": 1,
+      "started_offset_s": 0.6607202969607897
+    },
+    {
+      "checkpoint_position": 8,
+      "completed_units": 8,
+      "duration_s": 15.291299317032099,
+      "ended_offset_s": 15.999610138998833,
+      "pending_operation": null,
+      "phase": "affected_validation",
+      "planned_units": 8,
+      "started_offset_s": 0.7083108219667338
+    }
+  ],
+  "planned_MODEL_SPECS": [],
+  "planned_inference_substrate_class": "no_model_load",
+  "positive_claim": false,
+  "preconditions_checked": [
+    {
+      "category": "validity",
+      "check": "named_input:AGENTS.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:CODEX.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:CLAUDE.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:research-program.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:exclusion_manifest.yaml",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:e2e-test-plan.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_template.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:current_work_receipt.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7303_validation_scope.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7617_v665_schema_pilot.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7617_v665_schema_pilot.py",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7581_v662_arc_bounded_canary.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7581_v662_arc_bounded_canary.py",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:sota_models.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:gpu_executor.py",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/gpu_executor.py",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7617_v665_schema_pilot.json",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7617_v665_schema_pilot.json",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:experiment_7616_v665_evidence_schema.json",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "named_input:spec.md",
+      "condition": "readable_nonempty_file eq expected value",
+      "expected": true,
+      "field": "readable_nonempty_file",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "declared_task_input"
+    },
+    {
+      "category": "validity",
+      "check": "driving_requirement",
+      "condition": "REQ-* contains expected value",
+      "expected": "REQ-REPORT-7630",
+      "field": "REQ-*",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": "REQ-REPORT-7630",
+      "operator": "contains",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "research_reporting_spec"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_schema_authority_ready_score",
+      "condition": "schema_authority_ready_score eq expected value",
+      "expected": 1,
+      "field": "schema_authority_ready_score",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "upstream": "exp7616_terminal_independent_replay"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_role_contract_ready_score",
+      "condition": "role_contract_ready_score eq expected value",
+      "expected": 1,
+      "field": "role_contract_ready_score",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "upstream": "exp7616_terminal_independent_replay"
+    },
+    {
+      "category": "validity",
+      "check": "exp7616_guarded_update_ready_score",
+      "condition": "guarded_update_ready_score eq expected value",
+      "expected": 1,
+      "field": "guarded_update_ready_score",
+      "governing_principle": "Unavailable or unauthenticated evidence fails closed.",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "upstream": "exp7616_terminal_independent_replay"
+    }
+  ],
+  "process_ownership_rows": [
+    {
+      "ancestry": [],
+      "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "pid": 772157,
+      "registered_ownership": false,
+      "rejection_reason": "process_identity_unavailable",
+      "start_ticks": null,
+      "start_time": null,
+      "task_id": "experiment_7630_v666_cuda_ownership",
+      "used_memory_mb": 18054
+    },
+    {
+      "ancestry": [],
+      "command": ".venv/bin/python",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "pid": 2364911,
+      "registered_ownership": false,
+      "rejection_reason": "process_identity_unavailable",
+      "start_ticks": null,
+      "start_time": null,
+      "task_id": "experiment_7630_v666_cuda_ownership",
+      "used_memory_mb": 256
+    },
+    {
+      "ancestry": [],
+      "command": ".venv/bin/python",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "pid": 2364911,
+      "registered_ownership": false,
+      "rejection_reason": "process_identity_unavailable",
+      "start_ticks": null,
+      "start_time": null,
+      "task_id": "experiment_7630_v666_cuda_ownership",
+      "used_memory_mb": 256
+    },
+    {
+      "ancestry": [
+        700,
+        1
+      ],
+      "command": "unrelated process",
+      "device_uuid": "GPU-fake-foreign",
+      "pid": 700,
+      "registered_ownership": false,
+      "rejection_reason": "unrelated_process",
+      "start_ticks": 70,
+      "start_time": "fixture",
+      "task_id": "experiment_7630_v666_cuda_ownership",
+      "used_memory_mb": 256
+    },
+    {
+      "ancestry": [
+        2886525,
+        2886436,
+        2879455,
+        1337,
+        1233,
+        1
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import json, os, time; print(json.dumps(dict(os.environ)), flush=True); time.sleep(30)",
+      "device_uuid": "GPU-fake-e2e",
+      "pid": 2886525,
+      "registered_ownership": true,
+      "rejection_reason": null,
+      "start_ticks": 29487982,
+      "start_time": "2026-09-24T23:34:21.820000Z",
+      "task_id": "experiment_7630_v666_cuda_ownership",
+      "used_memory_mb": 256
+    },
+    {
+      "ancestry": [
+        2886525,
+        2886436,
+        2879455,
+        1337,
+        1233,
+        1
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import json, os, time; print(json.dumps(dict(os.environ)), flush=True); time.sleep(30)",
+      "device_uuid": "GPU-fake-e2e",
+      "pid": 2886525,
+      "registered_ownership": true,
+      "rejection_reason": null,
+      "start_ticks": 29487982,
+      "start_time": "2026-09-24T23:34:21.820000Z",
+      "task_id": "experiment_7630_v666_cuda_ownership",
+      "used_memory_mb": 256
+    },
+    {
+      "ancestry": [
+        2365987,
+        1233,
+        1
+      ],
+      "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169 -ngl 999 -c 32768 --port 40271 --host 127.0.0.1 --cache-type-k q8_0 --cache-type-v q8_0 -lv 4",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "pid": 2365987,
+      "registered_ownership": false,
+      "rejection_reason": "unrelated_process",
+      "start_ticks": 27253366,
+      "start_time": "2026-09-24T17:21:55.660000Z",
+      "task_id": "experiment_7630_v666_cuda_ownership",
+      "used_memory_mb": 17882
+    }
+  ],
+  "purchase_authorized": false,
+  "random_seed": {
+    "purpose": "deterministic process and lock fixtures",
+    "value": null
+  },
+  "reproducibility_checksum": "sha256:1861be8f71443199f59afbd2fa0e89abaa8d09fb39ce090066b3a19b9b42eaf6",
+  "research_conductor_modified": false,
+  "research_roadmap_modified": false,
+  "retention_benefit_measured": false,
+  "role_contract_ready_score": 1,
+  "rows": [
+    {
+      "absolute_pass_count": 1,
+      "arm": "ownership_protocol",
+      "censored": false,
+      "denominator": 1,
+      "direction": "pass_requires_fail_closed_or_exact_owned_success",
+      "disposition": "complete",
+      "numerator": 1,
+      "passed": true,
+      "raw_provenance": {
+        "inventory": [
+          {
+            "index": 0,
+            "memory_free_mb": 5853,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 18325,
+            "name": "NVIDIA GeForce RTX 3090",
+            "processes": [
+              {
+                "name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+                "pid": 772157,
+                "used_memory_mb": 18054
+              },
+              {
+                "name": ".venv/bin/python",
+                "pid": 2364911,
+                "used_memory_mb": 256
+              }
+            ],
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 23912,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 266,
+            "name": "NVIDIA GeForce RTX 3090",
+            "processes": [
+              {
+                "name": ".venv/bin/python",
+                "pid": 2364911,
+                "used_memory_mb": 256
+              }
+            ],
+            "utilization_pct": 21,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "old_selected": null,
+        "ownership_selected": null,
+        "process_ownership_rows": [
+          {
+            "ancestry": [],
+            "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 772157,
+            "registered_ownership": false,
+            "rejection_reason": "process_identity_unavailable",
+            "start_ticks": null,
+            "start_time": null,
+            "task_id": "experiment_7630_v666_cuda_ownership",
+            "used_memory_mb": 18054
+          },
+          {
+            "ancestry": [],
+            "command": ".venv/bin/python",
+            "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2364911,
+            "registered_ownership": false,
+            "rejection_reason": "process_identity_unavailable",
+            "start_ticks": null,
+            "start_time": null,
+            "task_id": "experiment_7630_v666_cuda_ownership",
+            "used_memory_mb": 256
+          },
+          {
+            "ancestry": [],
+            "command": ".venv/bin/python",
+            "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 2364911,
+            "registered_ownership": false,
+            "rejection_reason": "process_identity_unavailable",
+            "start_ticks": null,
+            "start_time": null,
+            "task_id": "experiment_7630_v666_cuda_ownership",
+            "used_memory_mb": 256
+          }
+        ]
+      },
+      "seed": null,
+      "unit_id": "historical_256_mib_unknown"
+    },
+    {
+      "absolute_pass_count": 1,
+      "arm": "ownership_protocol",
+      "censored": false,
+      "denominator": 1,
+      "direction": "pass_requires_fail_closed_or_exact_owned_success",
+      "disposition": "complete",
+      "numerator": 1,
+      "passed": true,
+      "raw_provenance": {
+        "process_ownership_rows": [
+          {
+            "ancestry": [
+              700,
+              1
+            ],
+            "command": "unrelated process",
+            "device_uuid": "GPU-fake-foreign",
+            "pid": 700,
+            "registered_ownership": false,
+            "rejection_reason": "unrelated_process",
+            "start_ticks": 70,
+            "start_time": "fixture",
+            "task_id": "experiment_7630_v666_cuda_ownership",
+            "used_memory_mb": 256
+          }
+        ],
+        "selected": null
+      },
+      "seed": null,
+      "unit_id": "foreign_256_mib_context"
+    },
+    {
+      "absolute_pass_count": 1,
+      "arm": "ownership_protocol",
+      "censored": false,
+      "denominator": 1,
+      "direction": "pass_requires_fail_closed_or_exact_owned_success",
+      "disposition": "complete",
+      "numerator": 1,
+      "passed": true,
+      "raw_provenance": {
+        "ancestry": [
+          200,
+          100
+        ],
+        "pid": 200,
+        "registered_ownership": false,
+        "rejection_reason": "pid_reuse_start_time_mismatch",
+        "start_ticks": 21,
+        "task_id": "pid-reuse-fixture"
+      },
+      "seed": null,
+      "unit_id": "pid_reuse"
+    },
+    {
+      "absolute_pass_count": 1,
+      "arm": "ownership_protocol",
+      "censored": false,
+      "denominator": 1,
+      "direction": "pass_requires_fail_closed_or_exact_owned_success",
+      "disposition": "complete",
+      "numerator": 1,
+      "passed": true,
+      "raw_provenance": {
+        "device": {
+          "index": 0,
+          "memory_free_mb": 19999,
+          "processes": [],
+          "uuid": "GPU-fake-low-memory"
+        },
+        "floor_mb": 20000,
+        "selected": null
+      },
+      "seed": null,
+      "unit_id": "free_memory_floor"
+    },
+    {
+      "absolute_pass_count": 1,
+      "arm": "ownership_protocol",
+      "censored": false,
+      "denominator": 1,
+      "direction": "pass_requires_fail_closed_or_exact_owned_success",
+      "disposition": "complete",
+      "numerator": 1,
+      "passed": true,
+      "raw_provenance": {
+        "busy_count": 1,
+        "case": "two_launchers_racing",
+        "foreign_signal_count": 0,
+        "outcomes": [
+          {
+            "launcher": 0,
+            "lease_id": "lease:e9b1cab6dfddcfa2f88e1672bbf440b810557b6067ed398a62e067d7d7a20635",
+            "outcome": "acquired"
+          },
+          {
+            "launcher": 1,
+            "lease_id": null,
+            "outcome": "busy"
+          }
+        ],
+        "passed": true,
+        "winner_count": 1
+      },
+      "seed": null,
+      "unit_id": "two_launchers_racing"
+    },
+    {
+      "absolute_pass_count": 1,
+      "arm": "ownership_protocol",
+      "censored": false,
+      "denominator": 1,
+      "direction": "pass_requires_fail_closed_or_exact_owned_success",
+      "disposition": "complete",
+      "numerator": 1,
+      "passed": true,
+      "raw_provenance": {
+        "case": "stale_lease",
+        "foreign_signal_count": 0,
+        "passed": true,
+        "previous_pid": 2886500,
+        "recovery_performed": true,
+        "signals_sent": []
+      },
+      "seed": null,
+      "unit_id": "stale_lock_recovery"
+    },
+    {
+      "absolute_pass_count": 1,
+      "arm": "ownership_protocol",
+      "censored": false,
+      "denominator": 1,
+      "direction": "pass_requires_fail_closed_or_exact_owned_success",
+      "disposition": "complete",
+      "numerator": 1,
+      "passed": true,
+      "raw_provenance": {
+        "case": "interrupted_cleanup",
+        "foreign_signal_count": 0,
+        "lease_released": true,
+        "owned_child_reaped": true,
+        "owned_signals": [
+          {
+            "owned": true,
+            "pid": 2886524,
+            "signal": "SIGTERM"
+          }
+        ],
+        "passed": true
+      },
+      "seed": null,
+      "unit_id": "interrupted_cleanup"
+    },
+    {
+      "absolute_pass_count": 1,
+      "arm": "ownership_protocol",
+      "censored": false,
+      "denominator": 1,
+      "direction": "pass_requires_fail_closed_or_exact_owned_success",
+      "disposition": "complete",
+      "numerator": 1,
+      "passed": true,
+      "raw_provenance": {
+        "case": "fake_inventory_lease_owned_child_cleanup",
+        "child_environment": {
+          "CUDA_VISIBLE_DEVICES": "GPU-fake-e2e",
+          "JAX_PLATFORMS": "cpu",
+          "XLA_PYTHON_CLIENT_PREALLOCATE": "false"
+        },
+        "child_pid": 2886525,
+        "foreign_signal_count": 0,
+        "lease_released": true,
+        "owned_child_reaped": true,
+        "owned_signals": [
+          {
+            "owned": true,
+            "pid": 2886525,
+            "signal": "SIGTERM"
+          }
+        ],
+        "passed": true,
+        "recheck": {
+          "observations": [
+            {
+              "checkpoint": "after_lease_acquisition",
+              "device": {
+                "index": 0,
+                "memory_free_mb": 24320,
+                "memory_total_mb": 24576,
+                "memory_used_mb": 256,
+                "name": "fake device",
+                "processes": [
+                  {
+                    "ancestry": [
+                      2886525,
+                      2886436,
+                      2879455,
+                      1337,
+                      1233,
+                      1
+                    ],
+                    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import json, os, time; print(json.dumps(dict(os.environ)), flush=True); time.sleep(30)",
+                    "name": "owned fake model worker",
+                    "pid": 2886525,
+                    "start_ticks": 29487982,
+                    "start_time": "2026-09-24T23:34:21.820000Z",
+                    "used_memory_mb": 256
+                  }
+                ],
+                "utilization_pct": 0,
+                "uuid": "GPU-fake-e2e"
+              },
+              "process_ownership_rows": [
+                {
+                  "ancestry": [
+                    2886525,
+                    2886436,
+                    2879455,
+                    1337,
+                    1233,
+                    1
+                  ],
+                  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import json, os, time; print(json.dumps(dict(os.environ)), flush=True); time.sleep(30)",
+                  "device_uuid": "GPU-fake-e2e",
+                  "pid": 2886525,
+                  "registered_ownership": true,
+                  "rejection_reason": null,
+                  "start_ticks": 29487982,
+                  "start_time": "2026-09-24T23:34:21.820000Z",
+                  "task_id": "experiment_7630_v666_cuda_ownership",
+                  "used_memory_mb": 256
+                }
+              ],
+              "selected": true
+            },
+            {
+              "checkpoint": "immediately_before_model_launch",
+              "device": {
+                "index": 0,
+                "memory_free_mb": 24320,
+                "memory_total_mb": 24576,
+                "memory_used_mb": 256,
+                "name": "fake device",
+                "processes": [
+                  {
+                    "ancestry": [
+                      2886525,
+                      2886436,
+                      2879455,
+                      1337,
+                      1233,
+                      1
+                    ],
+                    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import json, os, time; print(json.dumps(dict(os.environ)), flush=True); time.sleep(30)",
+                    "name": "owned fake model worker",
+                    "pid": 2886525,
+                    "start_ticks": 29487982,
+                    "start_time": "2026-09-24T23:34:21.820000Z",
+                    "used_memory_mb": 256
+                  }
+                ],
+                "utilization_pct": 0,
+                "uuid": "GPU-fake-e2e"
+              },
+              "process_ownership_rows": [
+                {
+                  "ancestry": [
+                    2886525,
+                    2886436,
+                    2879455,
+                    1337,
+                    1233,
+                    1
+                  ],
+                  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import json, os, time; print(json.dumps(dict(os.environ)), flush=True); time.sleep(30)",
+                  "device_uuid": "GPU-fake-e2e",
+                  "pid": 2886525,
+                  "registered_ownership": true,
+                  "rejection_reason": null,
+                  "start_ticks": 29487982,
+                  "start_time": "2026-09-24T23:34:21.820000Z",
+                  "task_id": "experiment_7630_v666_cuda_ownership",
+                  "used_memory_mb": 256
+                }
+              ],
+              "selected": true
+            }
+          ],
+          "passed": true,
+          "reason": "both_rechecks_passed"
+        },
+        "selected_uuid": "GPU-fake-e2e"
+      },
+      "seed": null,
+      "unit_id": "owned_child_launch_e2e"
+    }
+  ],
+  "run_date": "20260924",
+  "sample_size_budget": {
+    "censored_independent_units": 0,
+    "excluded_independent_units": 0,
+    "intended_independent_units": 8,
+    "observed_independent_units": 8,
+    "repeated_orders_views_or_seeds_added_to_sample_size": 0
+  },
+  "schema": "carnot.exp7630.v666.cuda_ownership.v1",
+  "source_artifact_hashes": [
+    {
+      "bytes": 1165,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 2697,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 318291,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 28560,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 63348,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "producer": "declared_task_input",
+      "sha256": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 10701,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 115811,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 12790,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 13393,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 96655,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7617_v665_schema_pilot.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:fe1b6bf808aabbf705e52da2a1f720a55bbcb19de6c980d7447db16582aed8fc",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 95858,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7581_v662_arc_bounded_canary.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:b3f9163053a97724c7ec897b51d3967ded2ee27fdaf60ea39f01089157353cc4",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 14328,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 12465,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/gpu_executor.py",
+      "producer": "declared_task_input",
+      "sha256": "sha256:6eea2bcae2ea38fd19a1d81bf91dbcd215d06738de1b0588f1dc1679f45bfb6a",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 41089,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7617_v665_schema_pilot.json",
+      "producer": "declared_task_input",
+      "sha256": "sha256:acee363a940a1034c609a6366bab842628476c09f46b399d73560d7cee47e72e",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 4843851,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7616_v665_evidence_schema.json",
+      "producer": "declared_task_input",
+      "sha256": "sha256:d9f34c4d37ba465b6f7a1ef8adfd71903a896a02355a6cf5d4bc93a2c3785806",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 4710374,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "producer": "declared_task_input",
+      "sha256": "sha256:b30431f8e43f5654f0b12ab0d2fadf787b20e186d0a5bf7e7d7baa6697149dfe",
+      "source_class": "pre_gate_input"
+    },
+    {
+      "bytes": 860,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7630_v666_cuda_ownership/launch_config.json",
+      "producer": "experiment_7630_v666_cuda_ownership",
+      "sha256": "sha256:afadb648be83c57a27bbd2119eb4862cfa824d1f6a3b3fbf4cc4ab8bdfbaeb39",
+      "source_class": "current_frozen_output"
+    }
+  ],
+  "submission_authorized": false,
+  "target_model": "not_applicable_no_model_load",
+  "terminal_reader_outcomes": {
+    "adversarial_verify": {
+      "exit_code": 0,
+      "log_sha256": "sha256:2dad735dc0e4cc6087c958b6aee451111d24d805e7860daf7ebc4b7c5721622e",
+      "passed": true
+    },
+    "declared_entrypoint_cold_replay": {
+      "exit_code": 0,
+      "log_sha256": "sha256:8f9b77888363ccf8b465f2311d6a4ea3f18f62009b5aca3d9974a6985ded9086",
+      "passed": true
+    },
+    "independent_cold_reducer": {
+      "exit_code": 0,
+      "log_sha256": "sha256:4abd303ba19bfd48d01b2385bbc87e85f71b6459c66e1343320d99bf0d0f78fd",
+      "passed": true
+    },
+    "verdict_row_consistency_strict": {
+      "exit_code": 0,
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "passed": true
+    }
+  },
+  "title": "CUDA process ownership and isolated preflight qualification",
+  "utility_benefit_measured": false,
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7630_v666_cuda_ownership",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7630_v666_cuda_ownership"
+      ],
+      "duration_s": 0.5116076240083203,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/affected/00_worktree_imports.log",
+      "log_sha256": "sha256:b99136536557cd7552051a1e453fb4abe4f1633d6d61f8b3d1c2b841bc77d90b",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7630_v666_cuda_ownership\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7630_v666_cuda_ownership.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7630_v666_cuda_ownership": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7630_v666_cuda_ownership.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7630-nn_pilg6/pytest/focused tests/python/test_experiment_7630_v666_cuda_ownership.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7630-nn_pilg6/pytest/focused",
+        "tests/python/test_experiment_7630_v666_cuda_ownership.py",
+        "-q"
+      ],
+      "duration_s": 5.782849236973561,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/affected/01_focused_pytest.log",
+      "log_sha256": "sha256:ba2b109f7aad35d21633ba3fbf9e52bfef6bc50529c5e3f42a74f0c19c7c0bb0",
+      "name": "focused_pytest",
+      "output_tail": ".................                                                        [100%]\n17 passed in 3.36s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7630-nn_pilg6/.coverage.exp7630 '--include=*/experiment_7630_v666_cuda_ownership.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7630-nn_pilg6/pytest/coverage tests/python/test_experiment_7630_v666_cuda_ownership.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7630-nn_pilg6/.coverage.exp7630",
+        "--include=*/experiment_7630_v666_cuda_ownership.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7630-nn_pilg6/pytest/coverage",
+        "tests/python/test_experiment_7630_v666_cuda_ownership.py",
+        "-q"
+      ],
+      "duration_s": 8.691166066972073,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/affected/02_changed_module_coverage.log",
+      "log_sha256": "sha256:ccd833c7ae78b37098d142cf28e1bdf59ea3ef7539f0fd1cbd01ff0c2cdcf8b6",
+      "name": "changed_module_coverage",
+      "output_tail": ".................                                                        [100%]\n17 passed in 4.75s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7630-nn_pilg6/.coverage.exp7630 '--include=*/experiment_7630_v666_cuda_ownership.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7630-nn_pilg6/.coverage.exp7630",
+        "--include=*/experiment_7630_v666_cuda_ownership.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.08660577796399593,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/affected/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:10f2506497979a7991cf6713f7a683f642a47fc31c4a9d85c6d0dc7ae2764e6e",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                   Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------\npython/carnot/experiment_7630_v666_cuda_ownership.py     518      0   100%\n------------------------------------------------------------------------------------\nTOTAL                                                    518      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7630_v666_cuda_ownership.py scripts/experiments/experiment_7630_v666_cuda_ownership.py tests/python/test_experiment_7630_v666_cuda_ownership.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7630_v666_cuda_ownership.py",
+        "scripts/experiments/experiment_7630_v666_cuda_ownership.py",
+        "tests/python/test_experiment_7630_v666_cuda_ownership.py"
+      ],
+      "duration_s": 0.0139389070100151,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/affected/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7630_v666_cuda_ownership.py scripts/experiments/experiment_7630_v666_cuda_ownership.py tests/python/test_experiment_7630_v666_cuda_ownership.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7630_v666_cuda_ownership.py",
+        "scripts/experiments/experiment_7630_v666_cuda_ownership.py",
+        "tests/python/test_experiment_7630_v666_cuda_ownership.py"
+      ],
+      "duration_s": 0.014510349952615798,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/affected/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7630_v666_cuda_ownership.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7630_v666_cuda_ownership.py"
+      ],
+      "duration_s": 0.16598418302601203,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/affected/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7630_v666_cuda_ownership.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7630_v666_cuda_ownership.py"
+      ],
+      "duration_s": 0.0232251730049029,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/affected/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7630_v666_cuda_ownership.py --cold-replay /tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7630_v666_cuda_ownership.py",
+        "--cold-replay",
+        "/tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json"
+      ],
+      "duration_s": 0.5538082260172814,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/terminal/00_declared_entrypoint_cold_replay.log",
+      "log_sha256": "sha256:8f9b77888363ccf8b465f2311d6a4ea3f18f62009b5aca3d9974a6985ded9086",
+      "name": "declared_entrypoint_cold_replay",
+      "output_tail": "[exp7630] phase=startup event=before elapsed_s=0.000\n{\"errors\": [], \"independent_reduction\": {\"censored_units\": 0, \"errors\": [], \"failed_units\": 0, \"intended_units\": 8, \"observed_units\": 8, \"passed_units\": 8, \"protocol_passed\": true, \"unit_ids\": [\"historical_256_mib_unknown\", \"foreign_256_mib_context\", \"pid_reuse\", \"free_memory_floor\", \"two_launchers_racing\", \"stale_lock_recovery\", \"interrupted_cleanup\", \"owned_child_launch_e2e\"]}, \"valid\": true}\n[exp7630] phase=cold_replay event=after elapsed_s=0.001 valid=True\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7630_v666_cuda_ownership.py --independent-reduce /tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7630_v666_cuda_ownership.py",
+        "--independent-reduce",
+        "/tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json"
+      ],
+      "duration_s": 0.5376815440249629,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/terminal/01_independent_cold_reducer.log",
+      "log_sha256": "sha256:4abd303ba19bfd48d01b2385bbc87e85f71b6459c66e1343320d99bf0d0f78fd",
+      "name": "independent_cold_reducer",
+      "output_tail": "[exp7630] phase=startup event=before elapsed_s=0.000\n{\"censored_units\": 0, \"errors\": [], \"failed_units\": 0, \"intended_units\": 8, \"observed_units\": 8, \"passed_units\": 8, \"protocol_passed\": true, \"unit_ids\": [\"historical_256_mib_unknown\", \"foreign_256_mib_context\", \"pid_reuse\", \"free_memory_floor\", \"two_launchers_racing\", \"stale_lock_recovery\", \"interrupted_cleanup\", \"owned_child_launch_e2e\"]}\n[exp7630] phase=independent_reduce event=after elapsed_s=0.001 passed=True\n",
+      "passed": true,
+      "scope": "persisted_rows_only",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json"
+      ],
+      "duration_s": 0.6551394470152445,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/terminal/02_adversarial_verify.log",
+      "log_sha256": "sha256:2dad735dc0e4cc6087c958b6aee451111d24d805e7860daf7ebc4b7c5721622e",
+      "name": "adversarial_verify",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7630,\n      \"title\": \"CUDA process ownership and isolated preflight qualification\",\n      \"honest_verdict\": \"complete_null_cuda_ownership_protocol_ready\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7630-nn_pilg6/terminal_candidate.json"
+      ],
+      "duration_s": 0.023625573958270252,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7630-nn_pilg6/logs/terminal/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}

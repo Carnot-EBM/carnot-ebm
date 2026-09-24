@@ -1,0 +1,34 @@
+{
+  "cpu_preflight": {
+    "JAX_PLATFORMS": "cpu",
+    "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
+    "before_numerical_imports": true
+  },
+  "foreign_compute_veto": true,
+  "gpu_required_free_mb": 20000,
+  "lease": {
+    "acquisition_timeout_s": 180.0,
+    "owner_identity": [
+      "pid",
+      "pid_start_ticks"
+    ],
+    "progress_interval_s": 15.0,
+    "recheck_points": [
+      "after_lease_acquisition",
+      "immediately_before_model_launch"
+    ]
+  },
+  "model_worker": {
+    "CUDA_VISIBLE_DEVICES": "selected_physical_gpu_uuid",
+    "before_numerical_imports": true,
+    "physical_uuid_only": true
+  },
+  "persistent_resource_ready_promise": false,
+  "schema": "carnot.exp7630.launch_config.v1",
+  "tokenizer_qualification": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "execute_in_this_task": false,
+    "n_gpu_layers": 0,
+    "spawned_child": true
+  }
+}
