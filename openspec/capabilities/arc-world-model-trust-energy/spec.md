@@ -36290,6 +36290,124 @@ reader SHALL inspect the terminal candidate before atomic publication.
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+### REQ-ARC-WMTE-7611: Measure history on identical replay interventions
+
+Experiment 7611 SHALL provide a generic matched-prefix measurement fixture. It
+SHALL compare two action prefixes that the adapter-withheld live `E3AgentPolicy`
+discovered. The target key SHALL be the game, public level, exact raw current-
+frame hash, and the same legal action including coordinates. The two prefixes
+SHALL have different prior public observation and action histories. A target
+without two such histories SHALL remain a singleton exclusion.
+
+The live collector SHALL seal games `su15`, `sp80`, `ft09`, `sb26`, `g50t`, and
+`dc22`, seeds 7612001 and 7612002, at most 600 policy actions per episode, and at
+most 20 distinct matched keys per game. It SHALL select matched keys by hashes
+computed without reading the target action outcomes. Each replay prefix SHALL
+contain at most 128 actions. Longer prefixes SHALL remain explicit censored
+units. Raw Experiment 7597 traces MAY help test collector logic. They SHALL not
+become Experiment 7611 measurement outcomes.
+
+Before collection, the experiment SHALL registry-precheck every game and record
+that all current public levels are development history. It SHALL read only
+agent-captured public observations, runtime legal actions, public levels,
+termination values, and selected actions. It SHALL not inspect game source or
+hidden state. It SHALL not use adapters, stored routes, per-game masks, offline
+ground-truth search, or model calls. It SHALL keep policy choices, supervisor
+arms, HUD behavior, thinking settings, acceptance thresholds, generator weights,
+and production defaults unchanged.
+
+For each selected key, the fixture SHALL reconstruct each prefix in a fresh
+environment. It SHALL verify each public frame hash, legal action, reset
+boundary, and level boundary before the target action. An unreplayable prefix
+SHALL become an explicit replay exclusion. It SHALL not be repaired with game
+knowledge. It SHALL apply the same legal target action after each prefix.
+
+Each prefix SHALL replay independently twice. The two outcomes for one prefix
+measure within-prefix stability. Outcomes across the two different histories
+measure cross-history next-frame disagreement. A history-disambiguation witness
+requires distinct histories, two stable outcomes for each prefix, and different
+outcomes across prefixes. Repeated identical replays calibrate the intervention.
+They SHALL not multiply games, matched keys, live solve credit, or other
+independent units.
+
+History length zero versus one SHALL be the primary comparison. History lengths
+two and four SHALL be descriptive. The experiment SHALL freeze separate natural-
+trajectory and replay-intervention denominators. It SHALL report prefix-length
+censorship, singleton exclusions, unstable-prefix exclusions, unreplayable
+prefixes, stable cross-history agreements, and stable cross-history
+disagreements without changing denominators after outcomes are read.
+
+The fixture SHALL exercise a stateful reset, a same-action level boundary, a
+coordinate action, a singleton, an unstable prefix, and two stable hidden
+histories with different outcomes. Exact fixture positives are
+`circular_positive`. `matched_support_ready_score=1` means only that matched-key,
+fresh-reset, and provenance fixture checks conform. It does not establish real
+matched support or empirical benefit. Empirical benefit requires a separate
+passing benefit gate. Readiness remains null when that benefit gate does not
+pass.
+
+The result SHALL declare `no_model_load`, `MODEL_SPECS=[]`, zero current loads,
+forwards, generations, and tokens, and the actual no-LLM offline-arcade
+substrate. Historical model identity SHALL remain separate. It SHALL retain
+`solve_provenance=live_agent_self_discovery` without claiming a new game-level
+solve. It SHALL reduce the current supervisor ledger. No firing means there is
+no refinement claim.
+
+The terminal artifact SHALL contain one row per independent game and arm with
+absolute metrics, numerator, denominator, seed, direction, censoring, and
+provenance. It SHALL keep intended, observed, excluded, and censored independent
+units separate. It SHALL provide distinct validity, readiness, benefit,
+retention, and freshness gates. Every required field and gate SHALL retain its
+one-line principle. A blocked verdict SHALL name the failed check, upstream,
+path, exact field, operator, expected value, and observed value.
+
+The experiment SHALL freeze its affected-file validation manifest. It SHALL run
+serial scoped pytest without repository addopts, changed-module 100 percent
+coverage with a private coverage database, scoped Ruff check and format,
+changed-module mypy, and scoped spec coverage. It SHALL run applicable E2E-009
+through E2E-013 plus a foreign-current-directory LLM-off smoke with private
+`/tmp` outputs. The declared entrypoint and fresh-process cold replay SHALL run.
+Independent reduction, adversarial verification, and the strict verdict-row
+reader SHALL inspect the exact terminal candidate before atomic publication.
+
+#### SCENARIO-ARC-WMTE-7611-MATCHED-PREFIX
+
+- **GIVEN** two agent-discovered prefixes with distinct prior public histories
+- **WHEN** their game, level, exact current-frame hash, and coordinate-aware legal action match
+- **THEN** hash-only selection may admit the pair without reading either future outcome
+- **AND** singleton and longer-than-128 prefixes remain explicit exclusions or censorship.
+
+#### SCENARIO-ARC-WMTE-7611-FRESH-REPLAY
+
+- **GIVEN** one admitted pair with reset and level-boundary receipts
+- **WHEN** each prefix is reconstructed twice in an independent fresh environment
+- **THEN** every pre-target frame hash, action, legal-action receipt, reset, and level boundary matches
+- **AND** any mismatch excludes that prefix without a game-specific repair.
+
+#### SCENARIO-ARC-WMTE-7611-STABILITY
+
+- **GIVEN** stable same-prefix controls, an unstable-prefix control, and two hidden histories
+- **WHEN** the same legal target action is applied after every replay
+- **THEN** only stable within-prefix outcomes may enter cross-history disagreement
+- **AND** a witness requires reproducibly different outcomes across the two distinct histories.
+
+#### SCENARIO-ARC-WMTE-7611-DENOMINATORS
+
+- **GIVEN** natural trajectories and replay interventions with different exclusion paths
+- **WHEN** primary h=0 versus h=1 and descriptive h=2/4 rows are reduced
+- **THEN** natural and intervention numerators and denominators remain separate
+- **AND** repeated replays do not multiply independent games or matched keys.
+
+#### SCENARIO-ARC-WMTE-7611-TERMINAL
+
+- **GIVEN** conforming fixtures, authenticated current evidence, and zero model calls
+- **WHEN** scoped checks, ARC E2Es, cold replay, and terminal readers pass
+- **THEN** the artifact publishes atomically with `matched_support_ready_score=1`
+- **AND** the scientific verdict stays null unless a distinct empirical benefit gate passes.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V662 independent ARC live-panel audit — 2026-09-24
 
 ### REQ-ARC-WMTE-7584: Reduce both live panels without substituting missing evidence
