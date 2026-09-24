@@ -35975,6 +35975,99 @@ Production defaults SHALL remain unchanged.
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## V662 independent ARC live-panel audit — 2026-09-24
+
+### REQ-ARC-WMTE-7584: Reduce both live panels without substituting missing evidence
+
+Experiment 7584 SHALL read the exact Experiment 7582 and Experiment 7583
+producer paths. It SHALL authenticate each producer and each declared raw
+request, transition, verifier, plan, and action sidecar by byte hash before it
+uses the evidence. Missing, malformed, censored, or raised episodes SHALL stay
+in their registered panel denominator. A missing producer SHALL give only that
+panel a blocked disposition. It SHALL not remove or replace the other panel.
+
+The audit SHALL independently reconstruct each episode and arm. It SHALL reject
+prompt or refactor transitions that overlap held-out transitions. It SHALL
+reject duplicate held-out transition IDs, wrong current model IDs, order-
+dependent engines, dropped exceptions, and plan progress that no executed
+action supports. Frame motion and executed plan progress SHALL be separate
+metrics. Public reproduction and source-derived controls SHALL remain outside
+the live comparison. They SHALL not create new solve credit or an official-
+score claim.
+
+The audit SHALL reduce paired arms at episode level and cluster descriptive
+contrasts by the six registered games. It SHALL report attempted and completed
+calls, cap hits, cost, acceptance, progress, and broad uncertainty. It SHALL
+not make a pooled independence claim. Analytical controls are
+`circular_positive` only when their own row contrasts support that result.
+Readiness alone is null.
+
+The audit SHALL read actual trajectory-supervisor redirect outcomes. It SHALL
+set `supervisor_refinement_supported=false` when no eligible redirect fired or
+when useful and useless outcomes have no nontrivial contrast. It SHALL not
+change a supervisor arm. It SHALL set `b2_gate_fit_allowed=true` only with at
+least 1,000 gate opportunities, at least 100 real attempts, and useful and
+useless support across games. These two panels cannot waive either floor.
+
+The task is aggregation-only. `MODEL_SPECS` SHALL be empty. Current model load,
+forward, generation, and token counts SHALL be zero. Historical model identity
+stays on its producer receipt. The terminal artifact SHALL preserve both panel
+dispositions, all support comparison rows, exact source hashes, independent
+solve provenance, separate validity, readiness, and benefit gates, and every
+required principle annotation.
+
+The task SHALL freeze its affected-file validation manifest. It SHALL run
+serial scoped pytest, 100 percent changed-module coverage, scoped Ruff check
+and format, changed-module mypy, and scoped spec coverage. It SHALL prove that
+imports resolve below this worktree. The declared entrypoint and a fresh
+process cold replay SHALL exercise artifact validation. Applicable ARC CPU
+E2E checks and the LLM-off real-environment smoke SHALL run. The exact terminal
+candidate SHALL pass independent reduction, adversarial verification, and the
+strict verdict-row consistency reader before atomic publication.
+
+#### SCENARIO-ARC-WMTE-7584-INDEPENDENT-PANELS
+
+- **GIVEN** one missing producer and one complete producer
+- **WHEN** preflight evaluates both exact paths
+- **THEN** the missing panel is blocked and the complete panel is still reduced
+- **AND** the overall blocked summary names the upstream, path, field, operator,
+  expected value, and observed value.
+
+#### SCENARIO-ARC-WMTE-7584-ROW-INTEGRITY
+
+- **GIVEN** a raised episode, a capped response, and a censored episode
+- **WHEN** the audit rebuilds panel support
+- **THEN** every registered episode and both arms stay in the denominator
+- **AND** exceptions and caps cannot disappear from acceptance or progress rows.
+
+#### SCENARIO-ARC-WMTE-7584-PRIVATE-MUTATIONS
+
+- **GIVEN** dropped-exception, duplicate-held-out, wrong-model, unexecuted-plan,
+  and capped-response mutations
+- **WHEN** the independent reducer reads each mutation
+- **THEN** every mutation closes validity or benefit as applicable
+- **AND** an acceptance change is attributed only to the registered guard.
+
+#### SCENARIO-ARC-WMTE-7584-SUPERVISOR-AND-B2
+
+- **GIVEN** recorded redirect outcomes and B2 attempt telemetry
+- **WHEN** support is below either fitting floor or lacks cross-game outcomes
+- **THEN** no supervisor refinement is supported and no arm changes
+- **AND** B2 fitting remains disallowed.
+
+#### SCENARIO-ARC-WMTE-7584-TERMINAL
+
+- **GIVEN** an aggregation-only candidate with both panel dispositions
+- **WHEN** scoped checks, ARC CPU E2E, cold replay, independent reduction, and
+  both strict readers run
+- **THEN** current invocation counts stay zero and exact candidate bytes publish
+- **AND** completion establishes neither live benefit nor official solve credit.
+
+Implementation status: implemented and verified 2026-09-24. Both exact panel
+producer paths were absent. The audit retained all 24 registered arm rows as
+censored and blocked without substituting the present pre-gate diagnostic.
+The conductor owns status, changelog, and traceability reconciliation.
+
 ## V662 bounded ARC transport canary — 2026-09-24
 
 ### REQ-ARC-WMTE-7581: Qualify owned bounded generation before live panels
