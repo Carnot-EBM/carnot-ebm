@@ -1,0 +1,394 @@
+[exp10010 17:30:01] start mode=real run_id=20260923T213001Z_pid1738688 windows=10 out=/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/wf_166c6939-336-1/results/raw/experiment_10010_b2_think_on_pilot
+[exp10010 17:30:01] phase preconditions: begin
+[exp10010 17:30:01] phase preconditions: end failed=[]
+[exp10010 17:30:01] phase windows: begin
+[exp10010 17:30:01] window su15: rows=25 sha256=74854c82cd225293
+[exp10010 17:30:01] window sp80: rows=25 sha256=508cd17e3b73ca83
+[exp10010 17:30:01] window ft09: rows=25 sha256=898133646dd777a4
+[exp10010 17:30:01] window g50t: rows=25 sha256=b47e1d347c76b82e
+[exp10010 17:30:01] window m0r0: rows=25 sha256=93203a1dda5cd348
+[exp10010 17:30:01] window dc22: rows=25 sha256=64ab97aeefff8170
+[exp10010 17:30:01] window wa30: rows=25 sha256=d01f7dbb064cb139
+[exp10010 17:30:01] window ka59: rows=25 sha256=ead28ff3d19f5b5f
+[exp10010 17:30:01] window sb26: rows=25 sha256=3f9eb0047cb0b217
+[exp10010 17:30:01] window ar25: rows=25 sha256=682e82d59856bbaf
+[exp10010 17:30:01] phase windows: end
+[exp10010 17:30:01] phase prompt fidelity: begin
+WINDOW VOCABULARY VIOLATION: actions [7] appear in this window and the in-model planner cannot emit them. The induced engine will model transitions the planner never asks for, and may be inert at the planning root even at cell_recall 1.0. Inducing anyway -- see ops/verifier_gaps.md GAP-6260.
+[exp10010 17:30:01] fidelity su15: match=True usable=True
+[exp10010 17:30:01] fidelity sp80: match=True usable=True
+[exp10010 17:30:01] fidelity ft09: match=True usable=True
+[exp10010 17:30:01] fidelity g50t: match=True usable=True
+[exp10010 17:30:01] fidelity m0r0: match=True usable=True
+[exp10010 17:30:01] fidelity dc22: match=True usable=True
+[exp10010 17:30:01] fidelity wa30: match=True usable=True
+[exp10010 17:30:01] fidelity ka59: match=True usable=True
+WINDOW VOCABULARY VIOLATION: actions [7] appear in this window and the in-model planner cannot emit them. The induced engine will model transitions the planner never asks for, and may be inert at the planning root even at cell_recall 1.0. Inducing anyway -- see ops/verifier_gaps.md GAP-6260.
+[exp10010 17:30:01] fidelity sb26: match=True usable=True
+WINDOW VOCABULARY VIOLATION: actions [7] appear in this window and the in-model planner cannot emit them. The induced engine will model transitions the planner never asks for, and may be inert at the planning root even at cell_recall 1.0. Inducing anyway -- see ops/verifier_gaps.md GAP-6260.
+[exp10010 17:30:02] fidelity ar25: match=True usable=True
+[exp10010 17:30:02] phase prompt fidelity: end usable=10/10
+[exp10010 17:30:02] phase controls: begin (identity, expert, recorded codeonly first shots)
+[exp10010 17:30:02] controls su15: identity=0.0 expert=1.0 codeonly_mean=0.582
+[exp10010 17:30:03] controls sp80: identity=0.0 expert=1.0 codeonly_mean=0.030
+[exp10010 17:30:04] controls ft09: identity=0.0 expert=1.0 codeonly_mean=0.156
+[exp10010 17:30:05] controls g50t: identity=0.0 expert=1.0 codeonly_mean=0.122
+[exp10010 17:30:06] controls m0r0: identity=0.0 expert=1.0 codeonly_mean=0.000
+[exp10010 17:30:07] controls dc22: identity=0.0 expert=1.0 codeonly_mean=0.104
+[exp10010 17:30:08] controls wa30: identity=0.0 expert=1.0 codeonly_mean=0.065
+[exp10010 17:30:08] controls ka59: identity=0.0 expert=1.0 codeonly_mean=0.118
+[exp10010 17:30:09] controls sb26: identity=0.0 expert=1.0 codeonly_mean=0.000
+[exp10010 17:30:10] controls ar25: identity=0.0 expert=1.0 codeonly_mean=0.098
+[exp10010 17:30:10] phase controls: end passed=True baseline=0.12753842112150332 failures=[]
+[exp10010 17:30:10] phase rescore resumed: begin n=0
+[exp10010 17:30:10] phase rescore resumed: end
+[exp10010 17:30:10] phase generation: begin mode=real finished=0 pending=10
+[exp10010 17:30:10] server launch: CUDA_VISIBLE_DEVICES=GPU-7971baff-9583-eaa6-2292-393f930a28f9 /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf -ngl 999 -c 131072 --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0 -fit off --ctx-checkpoints 2 --port 8996 --host 127.0.0.1
+[exp10010 17:30:21] server ready pid=1739293 gpu1=21150 MiB health 10.1s
+[exp10010 17:31:00] window su15: generation begin seed_base=1001000
+[exp10010 17:31:40] model call BEFORE game=su15 call=0 attempt=0 seed=1001000000 max_tokens=108720
+[exp10010 17:32:40] heartbeat game=su15 call=0 elapsed=60s decoded=2200
+[exp10010 17:33:40] heartbeat game=su15 call=0 elapsed=120s decoded=4501
+[exp10010 17:34:40] heartbeat game=su15 call=0 elapsed=180s decoded=6769
+[exp10010 17:35:40] heartbeat game=su15 call=0 elapsed=240s decoded=9004
+[exp10010 17:36:40] heartbeat game=su15 call=0 elapsed=300s decoded=11216
+[exp10010 17:37:40] heartbeat game=su15 call=0 elapsed=360s decoded=13403
+[exp10010 17:38:40] heartbeat game=su15 call=0 elapsed=420s decoded=15566
+[exp10010 17:39:40] heartbeat game=su15 call=0 elapsed=480s decoded=17710
+[exp10010 17:40:40] heartbeat game=su15 call=0 elapsed=540s decoded=19822
+[exp10010 17:41:40] heartbeat game=su15 call=0 elapsed=600s decoded=21915
+[exp10010 17:42:40] heartbeat game=su15 call=0 elapsed=660s decoded=23991
+[exp10010 17:43:40] heartbeat game=su15 call=0 elapsed=720s decoded=26030
+[exp10010 17:44:40] heartbeat game=su15 call=0 elapsed=780s decoded=28047
+[exp10010 17:45:40] heartbeat game=su15 call=0 elapsed=840s decoded=30038
+[exp10010 17:46:40] heartbeat game=su15 call=0 elapsed=900s decoded=32001
+[exp10010 17:47:40] heartbeat game=su15 call=0 elapsed=960s decoded=33974
+[exp10010 17:48:40] heartbeat game=su15 call=0 elapsed=1020s decoded=35853
+[exp10010 17:49:40] heartbeat game=su15 call=0 elapsed=1080s decoded=37768
+[exp10010 17:50:40] heartbeat game=su15 call=0 elapsed=1140s decoded=39679
+[exp10010 17:51:41] heartbeat game=su15 call=0 elapsed=1200s decoded=41577
+[exp10010 17:52:41] heartbeat game=su15 call=0 elapsed=1260s decoded=43463
+[exp10010 17:53:41] heartbeat game=su15 call=0 elapsed=1320s decoded=45333
+[exp10010 17:54:41] heartbeat game=su15 call=0 elapsed=1380s decoded=47196
+[exp10010 17:55:41] heartbeat game=su15 call=0 elapsed=1440s decoded=49040
+[exp10010 17:56:41] heartbeat game=su15 call=0 elapsed=1500s decoded=50867
+[exp10010 17:57:41] heartbeat game=su15 call=0 elapsed=1560s decoded=52656
+[exp10010 17:58:41] heartbeat game=su15 call=0 elapsed=1620s decoded=54390
+[exp10010 17:59:41] heartbeat game=su15 call=0 elapsed=1680s decoded=56166
+[exp10010 18:00:41] heartbeat game=su15 call=0 elapsed=1740s decoded=57927
+[exp10010 18:01:41] heartbeat game=su15 call=0 elapsed=1801s decoded=59676
+[exp10010 18:02:41] heartbeat game=su15 call=0 elapsed=1861s decoded=61413
+[exp10010 18:03:41] heartbeat game=su15 call=0 elapsed=1921s decoded=63138
+[exp10010 18:04:41] heartbeat game=su15 call=0 elapsed=1981s decoded=64855
+[exp10010 18:05:41] heartbeat game=su15 call=0 elapsed=2041s decoded=66560
+[exp10010 18:06:41] heartbeat game=su15 call=0 elapsed=2101s decoded=68246
+[exp10010 18:07:41] heartbeat game=su15 call=0 elapsed=2161s decoded=69925
+[exp10010 18:08:41] heartbeat game=su15 call=0 elapsed=2221s decoded=71593
+[exp10010 18:09:41] heartbeat game=su15 call=0 elapsed=2281s decoded=73253
+[exp10010 18:10:41] heartbeat game=su15 call=0 elapsed=2341s decoded=74904
+[exp10010 18:11:03] model call AFTER game=su15 call=0 stop=eos tokens=75503 wall=2362.57s
+[exp10010 18:11:03] window su15: done status=generated primary=0.07142857142857142
+[exp10010 18:11:05] window sp80: generation begin seed_base=1001001
+[exp10010 18:11:47] model call BEFORE game=sp80 call=0 attempt=0 seed=1001001000 max_tokens=108720
+[exp10010 18:12:47] heartbeat game=sp80 call=0 elapsed=60s decoded=2216
+[exp10010 18:13:47] heartbeat game=sp80 call=0 elapsed=120s decoded=4517
+[exp10010 18:14:47] heartbeat game=sp80 call=0 elapsed=180s decoded=6780
+[exp10010 18:15:47] heartbeat game=sp80 call=0 elapsed=240s decoded=8976
+[exp10010 18:16:47] heartbeat game=sp80 call=0 elapsed=300s decoded=11186
+[exp10010 18:17:47] heartbeat game=sp80 call=0 elapsed=360s decoded=13380
+[exp10010 18:18:47] heartbeat game=sp80 call=0 elapsed=420s decoded=15552
+[exp10010 18:19:47] heartbeat game=sp80 call=0 elapsed=480s decoded=17700
+[exp10010 18:20:47] heartbeat game=sp80 call=0 elapsed=540s decoded=19823
+[exp10010 18:21:47] heartbeat game=sp80 call=0 elapsed=600s decoded=21923
+[exp10010 18:22:47] heartbeat game=sp80 call=0 elapsed=660s decoded=24000
+[exp10010 18:23:47] heartbeat game=sp80 call=0 elapsed=720s decoded=26057
+[exp10010 18:24:47] heartbeat game=sp80 call=0 elapsed=780s decoded=28095
+[exp10010 18:25:47] heartbeat game=sp80 call=0 elapsed=840s decoded=30114
+[exp10010 18:26:47] heartbeat game=sp80 call=0 elapsed=900s decoded=32114
+[exp10010 18:27:47] heartbeat game=sp80 call=0 elapsed=960s decoded=34094
+[exp10010 18:28:47] heartbeat game=sp80 call=0 elapsed=1020s decoded=36058
+[exp10010 18:29:47] heartbeat game=sp80 call=0 elapsed=1080s decoded=38003
+[exp10010 18:30:47] heartbeat game=sp80 call=0 elapsed=1140s decoded=39930
+[exp10010 18:31:47] heartbeat game=sp80 call=0 elapsed=1200s decoded=41842
+[exp10010 18:32:47] heartbeat game=sp80 call=0 elapsed=1260s decoded=43735
+[exp10010 18:32:51] model call AFTER game=sp80 call=0 stop=eos tokens=43839 wall=1263.65s
+[exp10010 18:32:51] window sp80: done status=generated primary=0.9583333333333333
+[exp10010 18:32:52] window ft09: generation begin seed_base=1001002
+[exp10010 18:33:33] model call BEFORE game=ft09 call=0 attempt=0 seed=1001002000 max_tokens=108720
+[exp10010 18:34:33] heartbeat game=ft09 call=0 elapsed=60s decoded=2033
+[exp10010 18:35:33] heartbeat game=ft09 call=0 elapsed=120s decoded=4283
+[exp10010 18:36:33] heartbeat game=ft09 call=0 elapsed=180s decoded=6505
+[exp10010 18:37:33] heartbeat game=ft09 call=0 elapsed=240s decoded=8698
+[exp10010 18:38:33] heartbeat game=ft09 call=0 elapsed=300s decoded=10867
+[exp10010 18:39:33] heartbeat game=ft09 call=0 elapsed=360s decoded=13016
+[exp10010 18:40:33] heartbeat game=ft09 call=0 elapsed=420s decoded=15138
+[exp10010 18:41:33] heartbeat game=ft09 call=0 elapsed=480s decoded=17242
+[exp10010 18:42:33] heartbeat game=ft09 call=0 elapsed=540s decoded=19321
+[exp10010 18:43:33] heartbeat game=ft09 call=0 elapsed=600s decoded=21380
+[exp10010 18:44:33] heartbeat game=ft09 call=0 elapsed=660s decoded=23419
+[exp10010 18:45:33] heartbeat game=ft09 call=0 elapsed=720s decoded=25440
+[exp10010 18:46:33] heartbeat game=ft09 call=0 elapsed=780s decoded=27438
+[exp10010 18:47:33] heartbeat game=ft09 call=0 elapsed=840s decoded=29417
+[exp10010 18:48:33] heartbeat game=ft09 call=0 elapsed=900s decoded=31377
+[exp10010 18:49:33] heartbeat game=ft09 call=0 elapsed=960s decoded=33322
+[exp10010 18:50:33] heartbeat game=ft09 call=0 elapsed=1020s decoded=35247
+[exp10010 18:50:56] model call AFTER game=ft09 call=0 stop=eos tokens=35974 wall=1042.97s
+[exp10010 18:50:56] window ft09: done status=generated primary=0.5
+[exp10010 18:50:58] window g50t: generation begin seed_base=1001003
+[exp10010 18:51:42] model call BEFORE game=g50t call=0 attempt=0 seed=1001003000 max_tokens=108720
+[exp10010 18:52:42] heartbeat game=g50t call=0 elapsed=60s decoded=2164
+[exp10010 18:53:42] heartbeat game=g50t call=0 elapsed=120s decoded=4449
+[exp10010 18:54:42] heartbeat game=g50t call=0 elapsed=180s decoded=6706
+[exp10010 18:55:42] heartbeat game=g50t call=0 elapsed=240s decoded=8938
+[exp10010 18:56:42] heartbeat game=g50t call=0 elapsed=300s decoded=11145
+[exp10010 18:57:42] heartbeat game=g50t call=0 elapsed=360s decoded=13326
+[exp10010 18:58:42] heartbeat game=g50t call=0 elapsed=420s decoded=15485
+[exp10010 18:59:42] heartbeat game=g50t call=0 elapsed=480s decoded=17618
+[exp10010 19:00:42] heartbeat game=g50t call=0 elapsed=540s decoded=19727
+[exp10010 19:01:42] heartbeat game=g50t call=0 elapsed=600s decoded=21814
+[exp10010 19:02:42] heartbeat game=g50t call=0 elapsed=660s decoded=23882
+[exp10010 19:03:42] heartbeat game=g50t call=0 elapsed=720s decoded=25929
+[exp10010 19:04:42] heartbeat game=g50t call=0 elapsed=780s decoded=27957
+[exp10010 19:05:42] heartbeat game=g50t call=0 elapsed=840s decoded=29966
+[exp10010 19:06:42] heartbeat game=g50t call=0 elapsed=900s decoded=31957
+[exp10010 19:07:42] heartbeat game=g50t call=0 elapsed=960s decoded=33928
+[exp10010 19:08:42] heartbeat game=g50t call=0 elapsed=1020s decoded=35880
+[exp10010 19:09:42] heartbeat game=g50t call=0 elapsed=1080s decoded=37817
+[exp10010 19:10:42] heartbeat game=g50t call=0 elapsed=1140s decoded=39737
+[exp10010 19:11:42] heartbeat game=g50t call=0 elapsed=1200s decoded=41639
+[exp10010 19:12:42] heartbeat game=g50t call=0 elapsed=1260s decoded=43527
+[exp10010 19:13:42] heartbeat game=g50t call=0 elapsed=1320s decoded=45394
+[exp10010 19:14:42] heartbeat game=g50t call=0 elapsed=1380s decoded=47248
+[exp10010 19:15:42] heartbeat game=g50t call=0 elapsed=1440s decoded=49088
+[exp10010 19:16:42] heartbeat game=g50t call=0 elapsed=1500s decoded=50911
+[exp10010 19:17:42] heartbeat game=g50t call=0 elapsed=1560s decoded=52721
+[exp10010 19:18:07] model call AFTER game=g50t call=0 stop=eos tokens=53471 wall=1585.35s
+[exp10010 19:18:08] window g50t: done status=generated primary=0.8571428571428571
+[exp10010 19:18:09] window m0r0: generation begin seed_base=1001004
+[exp10010 19:18:50] model call BEFORE game=m0r0 call=0 attempt=0 seed=1001004000 max_tokens=108720
+[exp10010 19:19:50] heartbeat game=m0r0 call=0 elapsed=60s decoded=2172
+[exp10010 19:20:50] heartbeat game=m0r0 call=0 elapsed=120s decoded=4458
+[exp10010 19:21:50] heartbeat game=m0r0 call=0 elapsed=180s decoded=6714
+[exp10010 19:22:50] heartbeat game=m0r0 call=0 elapsed=240s decoded=8943
+[exp10010 19:23:50] heartbeat game=m0r0 call=0 elapsed=300s decoded=11147
+[exp10010 19:24:50] heartbeat game=m0r0 call=0 elapsed=360s decoded=13329
+[exp10010 19:25:50] heartbeat game=m0r0 call=0 elapsed=420s decoded=15487
+[exp10010 19:26:50] heartbeat game=m0r0 call=0 elapsed=480s decoded=17623
+[exp10010 19:27:50] heartbeat game=m0r0 call=0 elapsed=540s decoded=19733
+[exp10010 19:28:50] heartbeat game=m0r0 call=0 elapsed=600s decoded=21824
+[exp10010 19:29:50] heartbeat game=m0r0 call=0 elapsed=660s decoded=23893
+[exp10010 19:30:50] heartbeat game=m0r0 call=0 elapsed=720s decoded=25940
+[exp10010 19:31:50] heartbeat game=m0r0 call=0 elapsed=780s decoded=27965
+[exp10010 19:32:50] heartbeat game=m0r0 call=0 elapsed=840s decoded=29973
+[exp10010 19:33:50] heartbeat game=m0r0 call=0 elapsed=900s decoded=31958
+[exp10010 19:34:50] heartbeat game=m0r0 call=0 elapsed=960s decoded=33916
+[exp10010 19:35:51] heartbeat game=m0r0 call=0 elapsed=1020s decoded=35865
+[exp10010 19:36:51] heartbeat game=m0r0 call=0 elapsed=1080s decoded=37799
+[exp10010 19:37:51] heartbeat game=m0r0 call=0 elapsed=1140s decoded=39720
+[exp10010 19:38:51] heartbeat game=m0r0 call=0 elapsed=1200s decoded=41620
+[exp10010 19:39:51] heartbeat game=m0r0 call=0 elapsed=1260s decoded=43505
+[exp10010 19:40:51] heartbeat game=m0r0 call=0 elapsed=1320s decoded=45373
+[exp10010 19:41:51] heartbeat game=m0r0 call=0 elapsed=1380s decoded=47227
+[exp10010 19:42:51] heartbeat game=m0r0 call=0 elapsed=1440s decoded=49066
+[exp10010 19:43:51] heartbeat game=m0r0 call=0 elapsed=1500s decoded=50890
+[exp10010 19:44:51] heartbeat game=m0r0 call=0 elapsed=1560s decoded=52701
+[exp10010 19:45:51] heartbeat game=m0r0 call=0 elapsed=1620s decoded=54497
+[exp10010 19:46:04] model call AFTER game=m0r0 call=0 stop=eos tokens=54908 wall=1634.23s
+[exp10010 19:46:05] window m0r0: done status=generated primary=1.0
+[exp10010 19:46:06] window dc22: generation begin seed_base=1001005
+[exp10010 19:46:47] model call BEFORE game=dc22 call=0 attempt=0 seed=1001005000 max_tokens=108720
+[exp10010 19:47:47] heartbeat game=dc22 call=0 elapsed=60s decoded=2117
+[exp10010 19:48:47] heartbeat game=dc22 call=0 elapsed=120s decoded=4389
+[exp10010 19:49:47] heartbeat game=dc22 call=0 elapsed=180s decoded=6634
+[exp10010 19:50:47] heartbeat game=dc22 call=0 elapsed=240s decoded=8855
+[exp10010 19:51:47] heartbeat game=dc22 call=0 elapsed=300s decoded=11044
+[exp10010 19:52:47] heartbeat game=dc22 call=0 elapsed=360s decoded=13211
+[exp10010 19:53:47] heartbeat game=dc22 call=0 elapsed=420s decoded=15356
+[exp10010 19:54:47] heartbeat game=dc22 call=0 elapsed=480s decoded=17475
+[exp10010 19:55:47] heartbeat game=dc22 call=0 elapsed=540s decoded=19574
+[exp10010 19:56:47] heartbeat game=dc22 call=0 elapsed=600s decoded=21653
+[exp10010 19:57:47] heartbeat game=dc22 call=0 elapsed=660s decoded=23713
+[exp10010 19:58:47] heartbeat game=dc22 call=0 elapsed=720s decoded=25750
+[exp10010 19:59:47] heartbeat game=dc22 call=0 elapsed=780s decoded=27766
+[exp10010 20:00:47] heartbeat game=dc22 call=0 elapsed=840s decoded=29764
+[exp10010 20:01:47] heartbeat game=dc22 call=0 elapsed=900s decoded=31743
+[exp10010 20:02:47] heartbeat game=dc22 call=0 elapsed=960s decoded=33706
+[exp10010 20:03:47] heartbeat game=dc22 call=0 elapsed=1020s decoded=35650
+[exp10010 20:04:47] heartbeat game=dc22 call=0 elapsed=1080s decoded=37575
+[exp10010 20:05:47] heartbeat game=dc22 call=0 elapsed=1140s decoded=39479
+[exp10010 20:06:47] heartbeat game=dc22 call=0 elapsed=1200s decoded=41370
+[exp10010 20:07:47] heartbeat game=dc22 call=0 elapsed=1260s decoded=43245
+[exp10010 20:08:47] heartbeat game=dc22 call=0 elapsed=1320s decoded=45099
+[exp10010 20:09:47] heartbeat game=dc22 call=0 elapsed=1380s decoded=46940
+[exp10010 20:10:47] heartbeat game=dc22 call=0 elapsed=1440s decoded=48767
+[exp10010 20:11:47] heartbeat game=dc22 call=0 elapsed=1500s decoded=50580
+[exp10010 20:12:47] heartbeat game=dc22 call=0 elapsed=1560s decoded=52381
+[exp10010 20:13:47] heartbeat game=dc22 call=0 elapsed=1620s decoded=54165
+[exp10010 20:14:47] heartbeat game=dc22 call=0 elapsed=1680s decoded=55935
+[exp10010 20:15:47] heartbeat game=dc22 call=0 elapsed=1740s decoded=57694
+[exp10010 20:16:47] heartbeat game=dc22 call=0 elapsed=1800s decoded=59438
+[exp10010 20:17:47] heartbeat game=dc22 call=0 elapsed=1861s decoded=61166
+[exp10010 20:18:47] heartbeat game=dc22 call=0 elapsed=1921s decoded=62883
+[exp10010 20:19:48] heartbeat game=dc22 call=0 elapsed=1981s decoded=64588
+[exp10010 20:20:48] heartbeat game=dc22 call=0 elapsed=2041s decoded=66277
+[exp10010 20:21:48] heartbeat game=dc22 call=0 elapsed=2101s decoded=67952
+[exp10010 20:22:48] heartbeat game=dc22 call=0 elapsed=2161s decoded=69616
+[exp10010 20:23:48] heartbeat game=dc22 call=0 elapsed=2221s decoded=71270
+[exp10010 20:24:48] heartbeat game=dc22 call=0 elapsed=2281s decoded=72911
+[exp10010 20:25:48] heartbeat game=dc22 call=0 elapsed=2341s decoded=74541
+[exp10010 20:26:47] model call AFTER game=dc22 call=0 wall_timeout wall=2400.1s
+[exp10010 20:26:49] window dc22: done status=generation_failed primary=0.0
+[exp10010 20:26:50] window wa30: generation begin seed_base=1001006
+[exp10010 20:27:37] model call BEFORE game=wa30 call=0 attempt=0 seed=1001006000 max_tokens=108720
+[exp10010 20:28:37] heartbeat game=wa30 call=0 elapsed=60s decoded=2192
+[exp10010 20:29:37] heartbeat game=wa30 call=0 elapsed=120s decoded=4484
+[exp10010 20:30:37] heartbeat game=wa30 call=0 elapsed=180s decoded=6744
+[exp10010 20:31:37] heartbeat game=wa30 call=0 elapsed=240s decoded=8976
+[exp10010 20:32:37] heartbeat game=wa30 call=0 elapsed=300s decoded=11189
+[exp10010 20:33:37] heartbeat game=wa30 call=0 elapsed=360s decoded=13376
+[exp10010 20:34:37] heartbeat game=wa30 call=0 elapsed=420s decoded=15538
+[exp10010 20:35:37] heartbeat game=wa30 call=0 elapsed=480s decoded=17679
+[exp10010 20:36:37] heartbeat game=wa30 call=0 elapsed=540s decoded=19798
+[exp10010 20:37:37] heartbeat game=wa30 call=0 elapsed=600s decoded=21893
+[exp10010 20:38:37] heartbeat game=wa30 call=0 elapsed=660s decoded=23964
+[exp10010 20:39:37] heartbeat game=wa30 call=0 elapsed=720s decoded=26014
+[exp10010 20:40:37] heartbeat game=wa30 call=0 elapsed=780s decoded=28045
+[exp10010 20:41:37] heartbeat game=wa30 call=0 elapsed=840s decoded=30055
+[exp10010 20:42:37] heartbeat game=wa30 call=0 elapsed=900s decoded=32048
+[exp10010 20:43:37] heartbeat game=wa30 call=0 elapsed=960s decoded=34023
+[exp10010 20:44:37] heartbeat game=wa30 call=0 elapsed=1020s decoded=35979
+[exp10010 20:45:37] heartbeat game=wa30 call=0 elapsed=1080s decoded=37926
+[exp10010 20:46:37] heartbeat game=wa30 call=0 elapsed=1140s decoded=39851
+[exp10010 20:47:37] heartbeat game=wa30 call=0 elapsed=1200s decoded=41761
+[exp10010 20:48:37] heartbeat game=wa30 call=0 elapsed=1260s decoded=43649
+[exp10010 20:49:37] heartbeat game=wa30 call=0 elapsed=1320s decoded=45521
+[exp10010 20:50:37] heartbeat game=wa30 call=0 elapsed=1380s decoded=47375
+[exp10010 20:51:37] heartbeat game=wa30 call=0 elapsed=1440s decoded=49214
+[exp10010 20:52:37] heartbeat game=wa30 call=0 elapsed=1500s decoded=51037
+[exp10010 20:53:37] heartbeat game=wa30 call=0 elapsed=1560s decoded=52844
+[exp10010 20:54:37] heartbeat game=wa30 call=0 elapsed=1621s decoded=54631
+[exp10010 20:55:38] heartbeat game=wa30 call=0 elapsed=1681s decoded=56410
+[exp10010 20:56:38] heartbeat game=wa30 call=0 elapsed=1741s decoded=58177
+[exp10010 20:57:38] heartbeat game=wa30 call=0 elapsed=1801s decoded=59932
+[exp10010 20:58:38] heartbeat game=wa30 call=0 elapsed=1861s decoded=61672
+[exp10010 20:59:38] heartbeat game=wa30 call=0 elapsed=1921s decoded=63400
+[exp10010 21:00:38] heartbeat game=wa30 call=0 elapsed=1981s decoded=65117
+[exp10010 21:01:38] heartbeat game=wa30 call=0 elapsed=2041s decoded=66820
+[exp10010 21:02:38] heartbeat game=wa30 call=0 elapsed=2101s decoded=68514
+[exp10010 21:03:38] heartbeat game=wa30 call=0 elapsed=2161s decoded=70194
+[exp10010 21:04:38] heartbeat game=wa30 call=0 elapsed=2221s decoded=71864
+[exp10010 21:05:38] heartbeat game=wa30 call=0 elapsed=2281s decoded=73522
+[exp10010 21:06:38] heartbeat game=wa30 call=0 elapsed=2341s decoded=75170
+[exp10010 21:07:15] model call AFTER game=wa30 call=0 stop=eos tokens=76203 wall=2378.47s
+[exp10010 21:07:16] window wa30: done status=generated primary=0.8571428571428571
+[exp10010 21:07:17] window ka59: generation begin seed_base=1001007
+[exp10010 21:07:59] model call BEFORE game=ka59 call=0 attempt=0 seed=1001007000 max_tokens=108720
+[exp10010 21:08:59] heartbeat game=ka59 call=0 elapsed=60s decoded=2206
+[exp10010 21:09:59] heartbeat game=ka59 call=0 elapsed=120s decoded=4501
+[exp10010 21:10:59] heartbeat game=ka59 call=0 elapsed=180s decoded=6766
+[exp10010 21:11:59] heartbeat game=ka59 call=0 elapsed=240s decoded=9006
+[exp10010 21:12:59] heartbeat game=ka59 call=0 elapsed=300s decoded=11218
+[exp10010 21:13:59] heartbeat game=ka59 call=0 elapsed=360s decoded=13405
+[exp10010 21:14:59] heartbeat game=ka59 call=0 elapsed=420s decoded=15570
+[exp10010 21:15:59] heartbeat game=ka59 call=0 elapsed=480s decoded=17709
+[exp10010 21:16:59] heartbeat game=ka59 call=0 elapsed=540s decoded=19827
+[exp10010 21:17:59] heartbeat game=ka59 call=0 elapsed=600s decoded=21924
+[exp10010 21:18:59] heartbeat game=ka59 call=0 elapsed=660s decoded=23997
+[exp10010 21:19:59] heartbeat game=ka59 call=0 elapsed=720s decoded=26050
+[exp10010 21:20:59] heartbeat game=ka59 call=0 elapsed=780s decoded=28085
+[exp10010 21:21:59] heartbeat game=ka59 call=0 elapsed=840s decoded=30096
+[exp10010 21:22:59] heartbeat game=ka59 call=0 elapsed=900s decoded=32080
+[exp10010 21:23:59] heartbeat game=ka59 call=0 elapsed=960s decoded=34051
+[exp10010 21:24:59] heartbeat game=ka59 call=0 elapsed=1020s decoded=36009
+[exp10010 21:25:59] heartbeat game=ka59 call=0 elapsed=1080s decoded=37948
+[exp10010 21:26:59] heartbeat game=ka59 call=0 elapsed=1140s decoded=39870
+[exp10010 21:27:59] heartbeat game=ka59 call=0 elapsed=1200s decoded=41778
+[exp10010 21:28:59] heartbeat game=ka59 call=0 elapsed=1260s decoded=43671
+[exp10010 21:29:59] heartbeat game=ka59 call=0 elapsed=1320s decoded=45549
+[exp10010 21:30:59] heartbeat game=ka59 call=0 elapsed=1380s decoded=47412
+[exp10010 21:31:59] heartbeat game=ka59 call=0 elapsed=1440s decoded=49253
+[exp10010 21:32:59] heartbeat game=ka59 call=0 elapsed=1500s decoded=51081
+[exp10010 21:33:59] heartbeat game=ka59 call=0 elapsed=1560s decoded=52897
+[exp10010 21:34:59] heartbeat game=ka59 call=0 elapsed=1620s decoded=54696
+[exp10010 21:35:59] heartbeat game=ka59 call=0 elapsed=1680s decoded=56481
+[exp10010 21:36:59] heartbeat game=ka59 call=0 elapsed=1740s decoded=58253
+[exp10010 21:37:59] heartbeat game=ka59 call=0 elapsed=1800s decoded=60012
+[exp10010 21:38:59] heartbeat game=ka59 call=0 elapsed=1860s decoded=61757
+[exp10010 21:39:59] heartbeat game=ka59 call=0 elapsed=1921s decoded=63488
+[exp10010 21:40:59] heartbeat game=ka59 call=0 elapsed=1981s decoded=65207
+[exp10010 21:41:59] heartbeat game=ka59 call=0 elapsed=2041s decoded=66914
+[exp10010 21:42:59] heartbeat game=ka59 call=0 elapsed=2101s decoded=68607
+[exp10010 21:43:59] heartbeat game=ka59 call=0 elapsed=2161s decoded=70289
+[exp10010 21:44:59] heartbeat game=ka59 call=0 elapsed=2221s decoded=71960
+[exp10010 21:45:59] heartbeat game=ka59 call=0 elapsed=2281s decoded=73621
+[exp10010 21:46:59] heartbeat game=ka59 call=0 elapsed=2341s decoded=75269
+[exp10010 21:47:59] model call AFTER game=ka59 call=0 wall_timeout wall=2400.07s
+[exp10010 21:48:01] window ka59: done status=generation_failed primary=0.0
+[exp10010 21:48:01] window sb26: generation begin seed_base=1001008
+[exp10010 21:48:43] model call BEFORE game=sb26 call=0 attempt=0 seed=1001008000 max_tokens=108720
+[exp10010 21:49:43] heartbeat game=sb26 call=0 elapsed=60s decoded=2126
+[exp10010 21:50:43] heartbeat game=sb26 call=0 elapsed=120s decoded=4395
+[exp10010 21:51:43] heartbeat game=sb26 call=0 elapsed=180s decoded=6628
+[exp10010 21:52:43] heartbeat game=sb26 call=0 elapsed=240s decoded=8841
+[exp10010 21:53:43] heartbeat game=sb26 call=0 elapsed=300s decoded=11022
+[exp10010 21:54:43] heartbeat game=sb26 call=0 elapsed=360s decoded=13183
+[exp10010 21:55:43] heartbeat game=sb26 call=0 elapsed=420s decoded=15325
+[exp10010 21:56:43] heartbeat game=sb26 call=0 elapsed=480s decoded=17449
+[exp10010 21:57:43] heartbeat game=sb26 call=0 elapsed=540s decoded=19545
+[exp10010 21:58:43] heartbeat game=sb26 call=0 elapsed=600s decoded=21622
+[exp10010 21:59:43] heartbeat game=sb26 call=0 elapsed=660s decoded=23676
+[exp10010 22:00:43] heartbeat game=sb26 call=0 elapsed=720s decoded=25713
+[exp10010 22:01:43] heartbeat game=sb26 call=0 elapsed=780s decoded=27727
+[exp10010 22:02:43] heartbeat game=sb26 call=0 elapsed=840s decoded=29722
+[exp10010 22:03:43] heartbeat game=sb26 call=0 elapsed=900s decoded=31701
+[exp10010 22:04:43] heartbeat game=sb26 call=0 elapsed=960s decoded=33661
+[exp10010 22:05:43] heartbeat game=sb26 call=0 elapsed=1020s decoded=35604
+[exp10010 22:06:43] heartbeat game=sb26 call=0 elapsed=1080s decoded=37531
+[exp10010 22:07:43] heartbeat game=sb26 call=0 elapsed=1140s decoded=39437
+[exp10010 22:08:43] heartbeat game=sb26 call=0 elapsed=1200s decoded=41332
+[exp10010 22:09:43] heartbeat game=sb26 call=0 elapsed=1260s decoded=43212
+[exp10010 22:10:04] model call AFTER game=sb26 call=0 stop=eos tokens=43882 wall=1281.85s
+[exp10010 22:10:05] window sb26: done status=generated primary=0.5
+[exp10010 22:10:06] window ar25: generation begin seed_base=1001009
+[exp10010 22:10:47] model call BEFORE game=ar25 call=0 attempt=0 seed=1001009000 max_tokens=108720
+[exp10010 22:11:47] heartbeat game=ar25 call=0 elapsed=60s decoded=2110
+[exp10010 22:12:47] heartbeat game=ar25 call=0 elapsed=120s decoded=4379
+[exp10010 22:13:47] heartbeat game=ar25 call=0 elapsed=180s decoded=6619
+[exp10010 22:14:48] heartbeat game=ar25 call=0 elapsed=240s decoded=8829
+[exp10010 22:15:48] heartbeat game=ar25 call=0 elapsed=300s decoded=11012
+[exp10010 22:16:48] heartbeat game=ar25 call=0 elapsed=360s decoded=13173
+[exp10010 22:17:48] heartbeat game=ar25 call=0 elapsed=420s decoded=15312
+[exp10010 22:18:48] heartbeat game=ar25 call=0 elapsed=480s decoded=17429
+[exp10010 22:19:48] heartbeat game=ar25 call=0 elapsed=540s decoded=19527
+[exp10010 22:20:48] heartbeat game=ar25 call=0 elapsed=600s decoded=21601
+[exp10010 22:21:48] heartbeat game=ar25 call=0 elapsed=660s decoded=23656
+[exp10010 22:22:48] heartbeat game=ar25 call=0 elapsed=720s decoded=25695
+[exp10010 22:23:48] heartbeat game=ar25 call=0 elapsed=780s decoded=27712
+[exp10010 22:24:48] heartbeat game=ar25 call=0 elapsed=840s decoded=29709
+[exp10010 22:25:48] heartbeat game=ar25 call=0 elapsed=900s decoded=31687
+[exp10010 22:26:48] heartbeat game=ar25 call=0 elapsed=960s decoded=33647
+[exp10010 22:27:48] heartbeat game=ar25 call=0 elapsed=1020s decoded=35592
+[exp10010 22:28:48] heartbeat game=ar25 call=0 elapsed=1080s decoded=37515
+[exp10010 22:29:48] heartbeat game=ar25 call=0 elapsed=1140s decoded=39427
+[exp10010 22:30:48] heartbeat game=ar25 call=0 elapsed=1200s decoded=41324
+[exp10010 22:31:48] heartbeat game=ar25 call=0 elapsed=1260s decoded=43197
+[exp10010 22:32:48] heartbeat game=ar25 call=0 elapsed=1320s decoded=45054
+[exp10010 22:33:48] heartbeat game=ar25 call=0 elapsed=1380s decoded=46895
+[exp10010 22:34:48] heartbeat game=ar25 call=0 elapsed=1440s decoded=48722
+[exp10010 22:35:48] heartbeat game=ar25 call=0 elapsed=1500s decoded=50535
+[exp10010 22:36:48] heartbeat game=ar25 call=0 elapsed=1560s decoded=52330
+[exp10010 22:37:48] heartbeat game=ar25 call=0 elapsed=1620s decoded=54113
+[exp10010 22:38:48] heartbeat game=ar25 call=0 elapsed=1680s decoded=55883
+[exp10010 22:39:48] heartbeat game=ar25 call=0 elapsed=1741s decoded=57641
+[exp10010 22:40:48] heartbeat game=ar25 call=0 elapsed=1801s decoded=59385
+[exp10010 22:41:48] heartbeat game=ar25 call=0 elapsed=1861s decoded=61119
+[exp10010 22:42:48] heartbeat game=ar25 call=0 elapsed=1921s decoded=62837
+[exp10010 22:43:48] heartbeat game=ar25 call=0 elapsed=1981s decoded=64541
+[exp10010 22:44:48] heartbeat game=ar25 call=0 elapsed=2041s decoded=66235
+[exp10010 22:45:48] heartbeat game=ar25 call=0 elapsed=2101s decoded=67915
+[exp10010 22:46:48] heartbeat game=ar25 call=0 elapsed=2161s decoded=69590
+[exp10010 22:46:55] model call AFTER game=ar25 call=0 stop=eos tokens=69782 wall=2167.56s
+[exp10010 22:46:55] window ar25: done status=generated primary=1.0
+[exp10010 22:46:56] server teardown: {'terminated': True, 'pid': 1739293, 'method': 'terminate', 'returncode': 0}
+[exp10010 22:46:56] phase generation: end finished=10/10
+[exp10010 22:46:56] artifact /home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/wf_166c6939-336-1/results/experiment_10010_b2_think_on_pilot.json: complete_think_on_pilot_10_windows_mean_change_fidelity_0.574_vs_codeonly_0.128
