@@ -7722,6 +7722,20 @@ class E3AgentPolicy:
             return None, "logical_downsample_empty"
         return mask, "resolved"
 
+    def _apply_world_model_integrity_guard(self, attempt, outcome, **kwargs):
+        """REQ-ARC-WMTE-7580: post-qualify an E3 engine on independent support.
+
+        The imported helper returns immediately when its research flag is off.
+        When on, it can only clear an accepted plan; it cannot admit an engine
+        or lower the existing exact held-out threshold.
+        """
+
+        from carnot.experiment_7580_v662_arc_verifier_support import (
+            apply_e3_integrity_guard,
+        )
+
+        return apply_e3_integrity_guard(attempt, outcome, **kwargs)
+
     def _execute_bounded_llm_reinduction_with_arm_fallback(self, attempt, **kwargs):
         """REQ-ARC-WMTE-6243. Wraps `execute_bounded_llm_reinduction` (imported at module level)
         with a single conditional retry: if the CURRENTLY-CONFIGURED think/no_think arm produces
@@ -7764,14 +7778,28 @@ class E3AgentPolicy:
         outcome = execute_bounded_llm_reinduction(**kwargs)
         if not self.think_arm_fallback_enabled:
             attempt["think_arm_fallback"] = {"enabled": False}
-            return outcome
+            return self._apply_world_model_integrity_guard(
+                attempt,
+                outcome,
+                game=str(kwargs.get("game") or self.short),
+                transitions=list(kwargs.get("transitions") or ()),
+                load_engine=kwargs.get("load_engine"),
+                proposal_transitions=kwargs.get("proposal_transitions"),
+            )
         if outcome.heldout_accuracy is not None:
             attempt["think_arm_fallback"] = {
                 "enabled": True,
                 "fired": False,
                 "reason": "primary_arm_produced_a_scored_engine",
             }
-            return outcome
+            return self._apply_world_model_integrity_guard(
+                attempt,
+                outcome,
+                game=str(kwargs.get("game") or self.short),
+                transitions=list(kwargs.get("transitions") or ()),
+                load_engine=kwargs.get("load_engine"),
+                proposal_transitions=kwargs.get("proposal_transitions"),
+            )
 
         primary_arm_think = e3.induce_think_on()
         fallback_arm_think = not primary_arm_think
@@ -7794,7 +7822,15 @@ class E3AgentPolicy:
             "primary_produced_engine": False,
             "fallback_produced_engine": fallback_produced_engine,
         }
-        return fallback_outcome if fallback_produced_engine else outcome
+        selected_outcome = fallback_outcome if fallback_produced_engine else outcome
+        return self._apply_world_model_integrity_guard(
+            attempt,
+            selected_outcome,
+            game=str(kwargs.get("game") or self.short),
+            transitions=list(kwargs.get("transitions") or ()),
+            load_engine=kwargs.get("load_engine"),
+            proposal_transitions=kwargs.get("proposal_transitions"),
+        )
 
     def _retain_cross_level_engine(self, outcome: Any) -> None:
         """REQ-ARC-XLEVEL-CARRY-1: keep the just-induced engine + goal for the next level.

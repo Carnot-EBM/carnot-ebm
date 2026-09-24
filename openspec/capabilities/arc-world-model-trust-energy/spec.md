@@ -35872,3 +35872,105 @@ fork-based scoring.
 Implementation status (amendment 2): implemented and tested 2026-09-23 on branch
 `exp10010-isolation-fix`. A shard from a run on the earlier code can be rescored
 on CPU with the fixed code, because each shard row stores its engine source.
+
+## V662 fail-closed verifier support qualification — 2026-09-24
+
+### REQ-ARC-WMTE-7580: Qualify independent transition support before E3 accepts a world model
+
+Experiment 7580 SHALL reproduce three reported verifier defects on small,
+independently constructed fixtures through `WorldModelVerifier`: raised rows
+leaving graded denominators, mutable engine state changing an order-dependent
+score, and a one-row prefix that is also its held-out row. The experiment SHALL
+also retain one exception-free positive engine and at least two genuinely
+independent held-out transitions. If current code no longer reproduces a defect,
+the artifact SHALL record the current source hash and the observed behavior.
+
+The scored `E3AgentPolicy` path SHALL expose one opt-in integrity guard. The
+guard SHALL be off by default and SHALL only reject a candidate that the current
+path could otherwise accept. It SHALL keep exact held-out acceptance at 1.0.
+Every attempted held-out row SHALL stay in the exact, changing, or no-op
+denominator. A raised changing row SHALL have zero change fidelity. A raised
+no-op row SHALL count as a hallucination. The guard SHALL evaluate each row with
+a fresh engine instance. It SHALL call each instance twice on the same copied
+input and reject output drift, exception drift, or disagreement with a second
+fresh instance.
+
+Acceptance SHALL require at least two distinct held-out transition IDs. Every
+held-out ID SHALL be disjoint from all prompt and refactor IDs. Duplicate rows,
+contradictory next states for the same input, missing fresh-engine factories,
+or fewer than two supported rows SHALL produce `insufficient_support`. Such a
+candidate SHALL never pass through an empty or reduced denominator. The receipt
+SHALL retain split hashes, exact/change/no-op counts, exception kinds, row-level
+purity evidence, effective flags, and the fixed threshold.
+
+The experiment SHALL exercise the disabled and enabled branches through real
+`E3AgentPolicy` methods with scripted observations and generated-code fixtures.
+With the guard disabled, actions, calls, provenance, environment work, and RNG
+state SHALL match the pre-feature path. With the guard enabled, exception,
+mutable-state, overlap, duplicate, and contradictory fixtures SHALL be rejected
+at the E3 call site. Fixture success is `circular_positive` and carries
+`solve_provenance=development_proxy`; it gives no game-level solve credit.
+
+The experiment SHALL freeze a later live protocol at
+`results/raw/experiment_7580_v662_arc_verifier_support/live_panel_protocol.json`.
+Panel A SHALL be `su15`, `sp80`, and `ft09`. Panel B SHALL be `sb26`, `g50t`,
+and `dc22`. Both current-verifier and integrity-guard arms SHALL use seeds
+7582001 and 7582002, 600 actions, at most one induction per episode, and one
+32-action plan-outcome window. Generator settings and adapter withholding SHALL
+match between arms. No source-derived mask, source-derived dynamics, stored
+solution, or registry solve credit may enter either arm. Registry checks only
+prevent duplicate solve claims.
+
+This task SHALL use no model load and no generation. `MODEL_SPECS` SHALL be an
+empty list and current invocation counts SHALL be zero. It SHALL publish one row
+per fixture or frozen live comparison unit, independently reduce those rows,
+run scoped validation and applicable ARC CPU E2E checks, then run adversarial
+and strict verdict-row readers on the measured candidate before atomic publish.
+Production defaults SHALL remain unchanged.
+
+#### SCENARIO-ARC-WMTE-7580-DEFECTS
+
+- **GIVEN** independent exception, mutable-state, and one-row fixtures
+- **WHEN** the current `WorldModelVerifier` scores their engines
+- **THEN** the artifact records whether each reported defect reproduces
+- **AND** it binds that observation to the exact verifier source hash.
+
+#### SCENARIO-ARC-WMTE-7580-DENOMINATORS
+
+- **GIVEN** eight changing held-out rows and an engine that raises on seven
+- **WHEN** the integrity guard scores it with a fresh engine per row
+- **THEN** all eight rows remain in the changing and exact denominators
+- **AND** each raised changing row contributes zero fidelity and cannot pass.
+
+#### SCENARIO-ARC-WMTE-7580-PURITY
+
+- **GIVEN** a counter engine or any engine whose same-input output is unstable
+- **WHEN** the guard repeats one input and reloads a fresh instance
+- **THEN** the receipt records the drift and rejects the candidate
+- **AND** trajectory order cannot improve the guarded score.
+
+#### SCENARIO-ARC-WMTE-7580-INDEPENDENT-SUPPORT
+
+- **GIVEN** held-out rows that overlap prompt or refactor rows, duplicate one
+  transition, or contradict one input with different next states
+- **WHEN** support is reduced
+- **THEN** the reason is `insufficient_support` and acceptance is false
+- **AND** two disjoint, distinct, consistent held-out IDs are the minimum pass.
+
+#### SCENARIO-ARC-WMTE-7580-E3-PARITY-AND-REJECTION
+
+- **GIVEN** deterministic scripted observations and generated engine fixtures
+- **WHEN** real `E3AgentPolicy` methods run with the guard unset and explicitly off
+- **THEN** actions, calls, provenance, environment work, and RNG state match
+- **AND** the enabled method rejects adversarial fixtures before their plans apply.
+
+#### SCENARIO-ARC-WMTE-7580-PROTOCOL-AND-TERMINAL
+
+- **GIVEN** registry-prechecked panel games and a valid measured candidate
+- **WHEN** the protocol and terminal artifact are published
+- **THEN** both panels, both seeds, both arms, budgets, settings, and withholding are frozen
+- **AND** independent reduction, scoped checks, cold replay, adversarial verification,
+  and strict row consistency pass without changing production defaults.
+
+Implementation status: specified 2026-09-24. The conductor owns later status,
+changelog, and traceability reconciliation.
