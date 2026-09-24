@@ -20485,3 +20485,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Repair private ARC output placement and qualify history telemetry (⚠️ Research Finding) — honest_verdict=complete_null_output_boundary_and_history_observer_ready_no_benefit_claim; results/experiment_7589_v663_arc_output_boundary.json
 - 2026-09-24: Independently reduce evidence value and delayed update effects (⚠️ Blocked) — honest_verdict=complete_blocked_missing_v663_evidence_producers; results/experiment_7596_v663_evidence_audit.json
 - 2026-09-24: Measure causal history support on adapter-withheld live games (⚠️ Research Finding) — honest_verdict=complete_null_insufficient_history_support; results/experiment_7597_v663_arc_history_generalization.json
+- 2026-09-24: Ship an opt-in typed consumer for the durable Rust service (⚠️ Research Finding) — honest_verdict=complete_null_rust_consumer_ready_speed_gate_failed; results/experiment_7598_v663_rust_consumer.json
