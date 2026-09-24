@@ -18546,3 +18546,4 @@ code |
 | 2026-09-24 12:10 UTC | Measure incremental evidence value on the fixed ev | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7607-evidence-energy, exp7607-evidence-energy, exp7607-evidence-energy, exp7607-evidence-energy, exp7606-test-online-evidence, exp7606-test-online-evidence, exp7606-test-online-evidence) |
 | 2026-09-24 12:10 UTC | Measure delayed evidence learning and independent | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7607-evidence-energy, exp7607-evidence-energy, exp7607-evidence-energy, exp7607-evidence-energy, exp7606-test-online-evidence, exp7606-test-online-evidence, exp7606-test-online-evidence) |
 | 2026-09-24 12:31 UTC | Independently reduce evidence decisions and delaye | OK | 101 passed, 1 warning in 7.33s |
+| 2026-09-24 13:07 UTC | Qualify matched-history replay from the live agent | OK | 101 passed, 1 warning in 7.77s |
