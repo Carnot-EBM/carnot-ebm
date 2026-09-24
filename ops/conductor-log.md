@@ -18563,3 +18563,4 @@ code |
 | 2026-09-24 17:36 UTC | Measure evidence discrimination and typed decision | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7620-evaluation-evidence, exp7620-evaluation-evidence, exp7620-evaluation-evidence, exp7621-evidence-energy, exp7621-evidence-energy, exp7621-evidence-energy) |
 | 2026-09-24 17:36 UTC | Test delayed evidence learning with restart and re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7619-online-evidence, exp7619-online-evidence, exp7619-online-evidence, exp7621-evidence-energy, exp7621-evidence-energy, exp7621-evidence-energy) |
 | 2026-09-24 17:58 UTC | Independently reduce evidence, decision and learni | OK | 147 passed, 1 warning in 9.26s |
+| 2026-09-24 18:40 UTC | Refine cross-game supervisor selection from actual | OK | 121 passed, 1 warning in 14.10s |
