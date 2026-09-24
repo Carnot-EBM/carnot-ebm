@@ -213,3 +213,9 @@ of truth, not this line.)
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::check_qd_random_mutation_ablation_overclaim | SILENT_NON_FIRING | OPEN | |
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_value_routing_live_claim | SILENT_NON_FIRING | OPEN | |
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_real_field_has_true | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_harness_target_levels | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_harness_break_at_first_win | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_has_fixed_multilevel_metric_harness | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_nontrivial_subgoal_decomposition | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_has_nontrivial_subgoal_decomposition | SILENT_NON_FIRING | OPEN | |
+| 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::check_subgoal_search_decomposition_overclaim | SILENT_NON_FIRING | OPEN | |

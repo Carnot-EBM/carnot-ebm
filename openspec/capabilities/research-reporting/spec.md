@@ -80058,3 +80058,40 @@ branch reductions, closed terminal classification, non-circular self-source
 accounting, scoped 100 percent coverage, and six cold terminal readers. The
 published artifact is terminal blocked because required external evidence is
 absent; no model, GPU, board, publication, or roadmap action occurred.
+
+## V666 planning contract — 2026-09-24
+
+### REQ-REPORT-V666-PLAN: Bind the next research milestone to executable tasks
+
+The staged milestone 2026.09.666 SHALL contain exactly fourteen ordered tasks,
+exp7629 through exp7642, in four phases. The vNEXT design SHALL name the same
+IDs, titles, phases, deliverables, substrate classes and structured gates as
+research-roadmap-next.yaml. Preserve the V665 design before replacing vNEXT.
+Record the literature review before designing experiments. Reserve evidence
+calibration, causal retained learning, reusable ARC planner hardening, native
+consumer integration and two infrastructure tasks. Current LLM calls SHALL use
+unsloth/Qwen3.8-27B-GGUF with truthful planned and actual substrate classes.
+
+Every prompt SHALL include the four required sections, concrete file paths,
+numbered flushed-progress and bounded-write steps, scoped validation, artifact
+claim classes, row evidence, exact upstream fields, a run command and the two
+prohibitions. Matching failed scopes SHALL carry all four prior-failure fields.
+Only current-milestone tasks may be structured upstream gates. No task may
+require its own output before execution. External blocks use blocked, not partial.
+
+### SCENARIO-REPORT-V666-PLAN-PARITY
+
+Given the staged V666 YAML and its design contract, schema loading and exact
+ordered comparison pass. Removing, reordering, renaming, changing a deliverable,
+or changing a gate field causes the comparison to fail. Consuming the staging
+file after activation permits authority selection only by matching milestone.
+
+### SCENARIO-REPORT-V666-PLAN-SCOPE
+
+Planning changes documents and YAML only. The active roadmap and research
+conductor retain their pre-plan checksums. Future model runs, native integration,
+ARC checks, board work and claimed benefits remain unexecuted. Existing planning
+validator tests, scoped lint/spec checks, gate/exclusion checks and independent
+contract mutations provide planning E2E evidence.
+
+Status: staged planning contract; validation is recorded in ops/status.md.

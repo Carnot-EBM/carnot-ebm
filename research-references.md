@@ -46833,3 +46833,68 @@ Promote schema agreement and source-dependent counterfactual controls into the
 next design. Retain the new span-alignment, constraint-acquisition and parallel
 sampling leads for future work. Preserve the generator mandate and all retired
 mechanism boundaries. No external contact or publication occurred.
+
+## 2026-09-24 — V666 planning review: measure evidence and protect planner goals
+
+Recorded before designing V666. Search date and publication date are distinct.
+The sweep covered all eight requested topics and all six secondary channels.
+Rechecks remain labelled; a new search does not make an old method new.
+
+### Findings and candidate use
+
+| Topic | Primary source | Finding and planning implication |
+|---|---|---|
+| Energy-based reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092) and [ARM–EBM, December 2025; v4 May 2026](https://arxiv.org/abs/2512.15605) | Rechecks. Conditional compatibility and exact normalization motivate the small decision energy. Neither establishes factual correctness by itself. Keep the generator frozen. |
+| Neural constraint satisfaction | [AS2, March 2026](https://arxiv.org/abs/2603.18436) | New lead in this review. Differentiable soft answer-set operators feed constraint residuals back into perception. Abstract reviewed; defer a new solver until the present extraction experiment has evidence. |
+| Neural constraint acquisition | [Learning Symbolic Constraint Representations, September 2026](https://arxiv.org/abs/2609.12267) | Recheck. Candidate direction for learning reusable constraints from examples. Do not substitute learned satisfaction for an independent exact check. |
+| Ising applications | [Parallel Sampling from the Ising p-Spin Model, July 2026](https://arxiv.org/abs/2607.12348) | Recheck. A possible large sampler direction. The current binary decision energy can normalize exactly, so no sampling benchmark is justified here. |
+| Hallucination verification | [EAEV, September 8, 2026](https://arxiv.org/html/2609.08267v1) | Rechecked alignment and counterfactual sections. Distinguish lexical match, semantic support and contradiction. Test evidence erasure and source-group permutation against scalar calibration. This is a local adaptation, not an EAEV reproduction. |
+| Evidence localization | [Input-side evidence alignment, August 2026](https://arxiv.org/abs/2608.15804) | Recheck. Joint detection and evidence alignment is a useful future alternative. Keep lossless sentence links for the first measurable comparison. |
+| KAN and online learning | [Spline-local on-chip learning, February 2026; v4](https://arxiv.org/html/2602.02056v4) and [KAC, March 2025](https://arxiv.org/abs/2503.21076) | Local support permits sparse coefficient updates; KAC studies continual classifiers. Retain as future compact-head alternatives. FPGA synthesis estimates are not a Carnot device measurement. |
+| Constrained generation | [JSONSchemaBench, January 2025](https://arxiv.org/html/2501.10868v1) | Rechecked coverage and efficiency sections. Separate grammar compilation, time to first token, output speed, schema compliance and semantic quality. Use an independent parser after constrained generation. |
+| Energy-guided generation | [ETS, January 2026](https://arxiv.org/abs/2601.21484), [Energy-Based Decoding, May 2026](https://arxiv.org/abs/2605.28020), and [Energy-guided Recursive Model, July 2026](https://arxiv.org/abs/2607.10128) | EBD and ERM are new leads in this review. Frozen-generator reward tilting and Hopfield trajectory selection merit later study. They do not reopen retired external-text rankers or establish a hidden-game heuristic. |
+| Hardware sampling | [FPGA–ASIC co-design, February 2026; v2 September 4](https://arxiv.org/abs/2602.15985) | Recheck with verified revision date. Orchestration and memory movement can dominate a fast Ising core. Carry total consumer costs into deployment decisions. |
+| Continuous learning | [Proper Calibeating, May 2026](https://arxiv.org/html/2605.26703v2) and [Trust Region Continual Learning, February 2026](https://arxiv.org/abs/2602.02417) | Rechecks. Measure proper losses and decision utility separately; constrain updates and test retention. The paper's forecasting guarantees do not establish guarantees for Carnot's delayed, selectively admitted updates. |
+
+### Secondary-source checks
+
+- **OpenReview:** searches for ICLR/ICML/NeurIPS EBM work found the
+  [EBT proceedings PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) and an
+  [ICLR 2026 World Models workshop submission](https://openreview.net/pdf?id=fnLHZcXZUW).
+  The indexed workshop method uses temporal latent geometry and composed
+  transition energies. Its direct forum, and the EBT forum, returned browser
+  challenges. Treat the workshop as a lead; no acceptance or replication claim.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  [September 4 Z1T article](https://extropic.ai/writing/z1t). The index returned
+  navigation only. The article describes sparse transformer models for Z1;
+  vendor efficiency estimates and code availability do not establish local
+  hardware access. No acquisition or vendor contact is part of this plan.
+- **Semantic Scholar:** searched both seed titles and attempted the
+  [EBT citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both API reads failed. No verified citing-paper census was obtained.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  It was cached from the prior week. Use the original papers for methods.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending. Both were
+  cached. No new relevant trending dependency was established.
+- **Logical Intelligence:** checked the [Kona architecture page](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  It remains architectural context. This review verified no open checkpoint
+  or reproducible training recipe suitable for the next milestone.
+
+### Local evidence that governs adoption
+
+Exp7616 qualified the shared schema. Exp7617 made no model call: its selector
+required every visible GPU process to equal the current PID. GPU 1 had 23,912
+MiB free, but a separate 256 MiB Python allocation caused rejection. Its size
+alone does not establish ownership or safety. A changed launch method must
+identify process ownership, isolate CPU preflight, and retain the foreign-work
+veto. A free-memory-only bypass would not diagnose the failure.
+
+Exp7627 measured a 7.8270x total consumer speed ratio, CI95 7.2843–8.3826,
+through direct native calls; its separate 10x NFR failed. Exp7625 found no actual
+supervisor firings. Do not repeat the empty-ledger refinement. The independent
+Exp10013 review found that masked duplicate rejection can suppress a goal check
+and that its harness used a wider mask than the live wrapper for one game.
+These findings motivate reusable planner goal protection and wrapper-level
+measurement, with all expert controls labelled development proxies.
