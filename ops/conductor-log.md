@@ -18624,3 +18624,4 @@ code |
 | 2026-09-25 14:25 UTC | Bind fourteen tasks and source-witness method limi | OK | 89 passed, 1 warning in 21.86s |
 | 2026-09-25 14:46 UTC | Qualify abstaining structural witnesses from suppl | OK | 90 passed, 2 warnings in 11.24s |
 | 2026-09-25 15:00 UTC | Requalify goal-safe planner checks with valid exec | OK | 93 passed, 1 warning in 8.27s |
+| 2026-09-25 15:16 UTC | Measure structural coverage on every frozen source | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 85 passed, 1 warning in 7.38s |

@@ -1,0 +1,80 @@
+{
+  "experiment": 7647,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-25",
+  "started_at": "2026-09-25T15:18:54.637688+00:00",
+  "finished_at": "2026-09-25T15:18:54.637688+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Train a normalized source-witness decision energy",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=True == expected=False",
+  "failed_upstream": "exp7646-source-feature-corpus",
+  "failed_field": "flagged_adversarial",
+  "failed_operator": "==",
+  "failed_expected": false,
+  "failed_expected_type": "bool",
+  "failed_observed": true,
+  "failed_observed_type": "bool",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7646_v667_source_feature_corpus.json",
+  "failed_evidence_sha256": "sha256:64403bf92247668e14502ca14c36b20e1862bc76ced260f86662c296ce35c27a",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=True == expected=False",
+    "failed_upstream": "exp7646-source-feature-corpus",
+    "failed_field": "flagged_adversarial",
+    "failed_operator": "==",
+    "failed_expected": false,
+    "failed_expected_type": "bool",
+    "failed_observed": true,
+    "failed_observed_type": "bool",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7646_v667_source_feature_corpus.json",
+    "failed_evidence_sha256": "sha256:64403bf92247668e14502ca14c36b20e1862bc76ced260f86662c296ce35c27a"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7646-source-feature-corpus.flagged_adversarial (actual=True == expected=False)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7646-source-feature-corpus",
+      "artifact_field": "source_features_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 1,
+      "actual_type": "int",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7646_v667_source_feature_corpus.json",
+      "artifact_sha256": "sha256:64403bf92247668e14502ca14c36b20e1862bc76ced260f86662c296ce35c27a"
+    },
+    {
+      "upstream": "exp7646-source-feature-corpus",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": true,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=True == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7646_v667_source_feature_corpus.json",
+      "artifact_sha256": "sha256:64403bf92247668e14502ca14c36b20e1862bc76ced260f86662c296ce35c27a"
+    },
+    {
+      "upstream": "exp7646-source-feature-corpus",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "null",
+        "positive"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['null', 'positive']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7646_v667_source_feature_corpus.json",
+      "artifact_sha256": "sha256:64403bf92247668e14502ca14c36b20e1862bc76ced260f86662c296ce35c27a"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
