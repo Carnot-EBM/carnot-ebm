@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## V668 inherited atom corpus — 2026-09-25
+
+### REQ-REPORT-7659: Extract scoped atoms across the inherited roster
+
+Exp7659 SHALL authenticate the Exp7602 protocol and isolated predictor stores. It SHALL keep all 248 source groups, their roles, exact source and answer bytes, hashes, sentence spans, partitions, prior exposure, and injection provenance. It SHALL use the qualified Exp7658 atom parser and schema. A corpus-specific line claim MAY check a visible structural proposition only when the quoted symbol and line identify a local Python definition or raise statement. Lexical presence SHALL remain separate from structural truth. No unsupported span, malformed record, partial search result, or ambiguous claim SHALL certify a whole answer or file absence.
+
+The worker SHALL receive no evaluator store or labels. It SHALL produce one row per group for original source, source erasure, and fixed within-role source derangement. Pilots SHALL use a fixed within-pilot derangement. No label or extraction result may select groups. Source duplicates, repeated claims, and arms SHALL not enlarge the independent sample. Fit readiness requires complete authenticated rows, nonconstant fit features, checked evidence in at least sixteen fit groups, and passing affected validation and exact-candidate readers. Invalid validation SHALL be disqualified; scientific readiness without measured benefit SHALL be complete null. Current work SHALL use no model.
+
+#### SCENARIO-REPORT-7659-ROSTER: Exact groups remain in all arms
+
+**Given** the Exp7602 roster and isolated predictor stores
+**When** extraction runs across every role and source arm
+**Then** 248 distinct groups and 744 rows retain source identity, role, hashes, original sentences, and exposure
+**And** unknown or malformed claims remain explicit denominator rows.
+
+#### SCENARIO-REPORT-7659-SCOPE: A line witness has narrow meaning
+
+**Given** native numbered Python with a quoted symbol and line claim
+**When** the visible line contains a matching definition or raise statement
+**Then** only that structural proposition is checked with a byte span
+**And** lexical membership, contradiction, ambiguity, and unsupported prose stay separate.
+
+#### SCENARIO-REPORT-7659-ISOLATION: Labels cannot reach the worker
+
+**Given** a predictor record or a changed source, role, or hash
+**When** the worker or independent cold reducer reads it
+**Then** label access and custody drift fail closed before readiness is scored.
+
+#### SCENARIO-REPORT-7659-TERMINAL: Validation governs the verdict
+
+**Given** frozen affected commands and complete corpus rows
+**When** validation, cold reduction, adversarial verification, and strict row lint finish
+**Then** exact exits and log hashes precede atomic publication
+**And** failed required checks zero readiness while benefit and freshness remain separate.
+
 ## V668 evidence atoms — 2026-09-25
 
 ### REQ-REPORT-7658: Preserve native source and narrow claim scope

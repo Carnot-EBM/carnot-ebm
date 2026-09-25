@@ -1,0 +1,61 @@
+{
+  "outcomes": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m carnot.experiment_7659_v668_atom_corpus --cold-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7659_v668_atom_corpus/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-m",
+        "carnot.experiment_7659_v668_atom_corpus",
+        "--cold-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7659_v668_atom_corpus/exact_terminal_candidate.json"
+      ],
+      "duration_s": 1.7572608070004208,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7659_v668_atom_corpus/validation/exact/00_cold_reduce.log",
+      "log_sha256": "sha256:38e4d44b02c8b53408fb2690b755826d0e5aa8c43e723f4074d33dc1b7355426",
+      "name": "cold_reduce",
+      "output_tail": "[exp7659] startup flushed\n{\"groups\": 248, \"passed\": true, \"rows\": 744}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7659_v668_atom_corpus/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7659_v668_atom_corpus/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.9638944850012194,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7659_v668_atom_corpus/validation/exact/01_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7659_v668_atom_corpus/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7659_v668_atom_corpus/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.08294309799748589,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7659_v668_atom_corpus/validation/exact/02_verdict_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    }
+  ]
+}
