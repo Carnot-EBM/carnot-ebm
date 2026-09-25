@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.667",
+  "generated_at": "2026-09-25T17:14:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 25.6,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Test goal-safe planning on adapter-withheld live attempts",
+      "duration_minutes": 13.58,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure goal-safe search through the scored ARC wrapper",
+      "duration_minutes": 6.05,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Compare bounded Qwen evidence against structural witnesses",
+      "duration_minutes": 1.95,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and source-witness method limits",
+      "duration_minutes": 1.41,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Requalify goal-safe planner checks with valid execution receipts",
+      "duration_minutes": 0.86,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.667 completed 9 experiments, all compute-bound, totaling 25.6 wall-time minutes. The longest experiment was 'Test goal-safe planning on adapter-withheld live attempts' at 13.58 minutes, followed by 'Measure goal-safe search through the scored ARC wrapper' at 6.05 minutes and 'Compare bounded Qwen evidence against structural witnesses' at 1.95 minutes. Intra-experiment sub-phase profiling was not recorded, so granular internal execution costs could not be isolated.",
+  "bottlenecks_identified": [
+    "The slowest experiment 'Test goal-safe planning on adapter-withheld live attempts' consumed 13.58 minutes (53.0% of the 25.6 total milestone wall-time minutes), but the lack of sub-phase profiling prevents isolating how much time was spent in model evaluation versus planning search or verification.",
+    "The top two compute-bound experiments ('Test goal-safe planning on adapter-withheld live attempts' at 13.58 minutes and 'Measure goal-safe search through the scored ARC wrapper' at 6.05 minutes) together accounted for 19.63 of the 25.6 total wall-time minutes (76.7%) without stage-level execution traces.",
+    "The 5 slowest experiments collectively accounted for 23.85 of the 25.6 total wall-time minutes (93.2%), with task durations reconstructed from disk mtime rather than live interval event logs.",
+    "The GPU monitor report provides an isolated post-execution snapshot (both RTX 3090 GPUs at 4MB allocated, 0% utilization) and does not capture active-window accelerator utilization while gpu_idle_on_compute_bound_tasks is false.",
+    "No experiment records indicate concurrent multi-model execution, making DualGPURunner dispatch inapplicable for the tasks completed this milestone."
+  ],
+  "improvements_suggested": [
+    "Introduce monotonic sub-phase timers inside compute-bound experiments—especially live planning and scored wrapper paths—to separate model inference time from planner search and verification checks.",
+    "Capture continuous in-run GPU telemetry during compute-bound executions to evaluate accelerator utilization and VRAM dynamics across active task windows.",
+    "Record model inventory and concurrency metadata in experiment execution manifests to verify DualGPURunner eligibility when multiple models are executed.",
+    "Persist structured milestone run logs with exact start and end timestamps to avoid falling back to disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration counters in the ARC live planning and scored wrapper execution paths to decompose compute overhead.",
+    "Implement continuous GPU utilization logging during compute-bound task runs to record active-window accelerator metrics.",
+    "Log model concurrency and runner dispatch decisions in experiment receipts to audit DualGPURunner usage on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 25.6 wall-time minutes, milestone 2026.09.667 completed 9 compute-bound experiments dominated by live goal-safe planning (13.58 minutes) and scored wrapper measurement (6.05 minutes). While the point-in-time GPU monitor snapshot showed both GPUs idle with 4MB allocated, gpu_idle_on_compute_bound_tasks is false and in-run accelerator metrics were unmeasured, with no multi-model tasks present to engage DualGPURunner. Implementing sub-phase profiling and continuous accelerator telemetry represents the highest-leverage path to isolating operational bottlenecks in subsequent milestones."
+}
