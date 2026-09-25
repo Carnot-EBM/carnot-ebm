@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.09.666",
-  "generated_at": "2026-09-25T01:57:18Z",
+  "generated_at": "2026-09-25T12:27:53Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 6.0,
   "experiments_completed": 7,
@@ -36,25 +36,25 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "Milestone 2026.09.666 completed 7 experiments, all compute-bound, in 6.0 wall-time minutes. The longest task was 'Protect goal checks in reusable ARC planner deduplication' at 2.68 minutes, followed by 'Reconcile fourteen outcomes and decide evidence and planner scope' at 0.90 minutes and 'Expose the measured native service as an opt-in typed consumer' at 0.82 minutes. Sub-phase timing was not captured within these runs, leaving internal inference duration, validation scaffolding, and serialization costs unseparated.",
+  "summary": "Milestone 2026.09.666 executed 7 experiments, all compute-bound, totaling 6.0 wall-time minutes. The longest experiment was 'Protect goal checks in reusable ARC planner deduplication' at 2.68 minutes, followed by 'Reconcile fourteen outcomes and decide evidence and planner scope' at 0.9 minutes and 'Expose the measured native service as an opt-in typed consumer' at 0.82 minutes. Intra-experiment phase durations were not recorded, so internal execution stages could not be individually assessed.",
   "bottlenecks_identified": [
-    "'Protect goal checks in reusable ARC planner deduplication' consumed 2.68 minutes out of 6.0 total wall-time minutes (approx. 45% of milestone time), but lacks sub-phase instrumentation to separate planner traversal, model execution, and validation guard checks.",
-    "'Reconcile fourteen outcomes and decide evidence and planner scope' (0.90 minutes) and 'Expose the measured native service as an opt-in typed consumer' (0.82 minutes) together with the longest experiment account for 4.40 minutes (approx. 73% of total milestone wall time) without recorded breakdown of intra-task phase timings.",
-    "The top 5 experiments accounted for 5.47 out of 6.0 total wall-time minutes (approx. 91% of milestone duration), with task durations derived via disk-mtime reconstruction rather than continuous execution logging.",
-    "The GPU monitor report provides an isolated post-completion snapshot (GPU 0 with 2MB allocated at 0% utilization and 54C), meaning active-window accelerator efficiency was not sampled while gpu_idle_on_compute_bound_tasks is false.",
-    "Experiment receipts did not record model concurrency or harness dispatch selection, though no completed task involved 2+ parallel models where DualGPURunner dispatch would be applicable."
+    "The top-ranking experiment 'Protect goal checks in reusable ARC planner deduplication' took 2.68 minutes (approximately 44.7% of the 6.0 total wall-time minutes), but absence of sub-stage profiling prevents determining whether planner search, model execution, or goal-guard verification dominated.",
+    "The three slowest compute-bound tasks ('Protect goal checks in reusable ARC planner deduplication' at 2.68 minutes, 'Reconcile fourteen outcomes and decide evidence and planner scope' at 0.9 minutes, and 'Expose the measured native service as an opt-in typed consumer' at 0.82 minutes) consumed 4.40 out of 6.0 total wall-time minutes (73.3%) without intra-task stage timing.",
+    "The 5 slowest experiments together accounted for 5.47 of the 6.0 total wall-time minutes (91.2%), with experiment runtimes reconstructed from disk mtime rather than active wall-clock interval traces.",
+    "The GPU monitor report provides an isolated post-execution state (both GPU 0 and GPU 1 at 4MB allocated, 0% utilization, 49C and 43C), giving no visibility into live accelerator duty cycles during task execution while gpu_idle_on_compute_bound_tasks is false.",
+    "No experiment execution records indicate running two or more models concurrently, rendering DualGPURunner dispatch inapplicable for this milestone's tasks."
   ],
   "improvements_suggested": [
-    "Add granular phase duration timers and monotonic stage logging inside compute-bound experiments (particularly ARC planner deduplication and native service consumer tasks) to differentiate model execution from validation scaffolding and serialization.",
-    "Incorporate continuous accelerator telemetry during compute-bound execution to record live GPU utilization and memory footprint across active task windows rather than relying on post-run snapshots.",
-    "Emit explicit model concurrency and runner dispatch telemetry in task execution receipts to verify whether DualGPURunner is eligible when multiple models run in parallel.",
-    "Implement persistent milestone-scoped execution logging to eliminate the need for post-hoc disk-mtime timing reconstruction."
+    "Introduce monotonic sub-phase timers inside compute-bound pipelines—particularly planner deduplication and native consumer wrappers—to quantify time spent in model evaluation versus validation checks.",
+    "Capture continuous in-run GPU telemetry during compute-bound executions to evaluate accelerator utilization and VRAM dynamics across active task windows.",
+    "Include model inventory and concurrency metadata in experiment execution manifests to verify DualGPURunner eligibility when multiple models are executed.",
+    "Persist structured milestone run logs with exact start and end timestamps to avoid falling back to disk-mtime timing reconstruction."
   ],
   "top_3_highest_leverage_actions": [
-    "Instrument sub-phase duration profiling and per-stage progress checkpoints inside the ARC planner deduplication and native service consumer pipelines.",
-    "Deploy continuous, in-flight accelerator utilization logging during compute-bound runs to measure active-window GPU performance and memory pressure.",
-    "Include explicit model concurrency and runner dispatch verification in experiment receipts to audit DualGPURunner utilization on multi-model workloads."
+    "Instrument sub-phase duration counters in the ARC planner deduplication and native consumer paths to break down compute overhead.",
+    "Implement continuous GPU utilization logging during compute-bound task runs to record active-window accelerator metrics.",
+    "Log model concurrency and runner dispatch decisions in experiment receipts to audit DualGPURunner usage on multi-model workloads."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "Milestone 2026.09.666 ran 7 compute-bound experiments across 6.0 wall-time minutes, dominated by planner deduplication goal protection (2.68 minutes), capstone scope reconciliation (0.90 minutes), and native service exposure (0.82 minutes). The post-execution GPU monitor report indicates GPU 0 was at 0% utilization with 2MB allocated at snapshot time, but active-window execution efficiency remains unmeasured, and no multi-model tasks were present to warrant DualGPURunner dispatch. Fine-grained intra-task phase timers and active telemetry collection represent the most valuable operational enhancements for future milestones."
+  "meta_reflection": "Across 6.0 wall-time minutes, milestone 2026.09.666 completed 7 compute-bound experiments led by planner deduplication (2.68 minutes) and capstone outcome reconciliation (0.9 minutes). Although the point-in-time GPU snapshot showed both GPUs idle with 4MB allocated, gpu_idle_on_compute_bound_tasks is false and in-run accelerator utilization was unmeasured, with no multi-model tasks present to engage DualGPURunner. Implementing fine-grained intra-task phase instrumentation and continuous accelerator monitoring provides the clearest operational path to diagnosing bottlenecks in subsequent milestones."
 }
