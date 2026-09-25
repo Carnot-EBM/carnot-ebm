@@ -37415,3 +37415,10 @@ Completion alone SHALL establish neither transport readiness nor benefit.
 
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
+### REQ-ARC-WMTE-7652: Count direct planner goal checks in scored replay
+
+The scored development wrapper SHALL count direct calls to the induced goal
+predicate during `plan_in_model` without changing the predicate, the binary
+goal-energy evaluation, action choice, call budget, or production flags. Each
+execution row SHALL expose this count so a fresh reader can reject an applied
+HUD mask that skipped the full-grid goal check.

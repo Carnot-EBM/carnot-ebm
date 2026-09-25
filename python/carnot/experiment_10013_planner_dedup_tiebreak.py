@@ -581,6 +581,18 @@ def build_artifact(
     return artifact
 
 
+def count_direct_goal_checks(predicate):
+    """REQ-ARC-WMTE-7652 count direct planner goal calls without changing results."""
+
+    counter = {"goal_checks": 0}
+
+    def counted(grid):
+        counter["goal_checks"] += 1
+        return predicate(grid)
+
+    return counted, counter
+
+
 def plan_and_execute(
     candidate: exp12.Candidate,
     rebuilt: exp12.RebuiltState,
@@ -619,6 +631,7 @@ def plan_and_execute(
         return base
     engine = namespace["engine"]
     is_done = namespace["is_level_complete"]
+    counted_goal, goal_counter = count_direct_goal_checks(is_done)
 
     def binary_goal_energy(grid: np.ndarray) -> float:
         try:
@@ -635,7 +648,7 @@ def plan_and_execute(
             plan = policy._call_plan_in_model(
                 e3.plan_in_model,
                 engine,
-                is_done,
+                counted_goal,
                 rebuilt.grid.copy(),
                 diagnostics=diagnostics,
                 goal_energy_override=binary_goal_energy,
@@ -644,6 +657,7 @@ def plan_and_execute(
         base["planner_error"] = f"{type(exc).__name__}: {exc}"[:300]
         plan = None
     base["planner_wall_s"] = round(time.perf_counter() - started, 6)
+    diagnostics["goal_evaluations"] = goal_counter["goal_checks"]
     base["planner_diagnostics"] = diagnostics
     base["planner_engine_calls"] = int(diagnostics.get("nodes_expanded") or 0)
     if "CARNOT_ARC_PLAN_HUD_DEDUP" in arm.environment:

@@ -80984,3 +80984,50 @@ with zero model invocations and exact gate operands.
 **Given** a terminal candidate and a frozen changed-file manifest
 **When** fresh reduction and strict readers finish
 **Then** their actual commands, exits, and log hashes precede atomic publication.
+## REQ-REPORT-7652: Measure the V667 ARC wrapper on the complete source census
+
+Experiment 7652 SHALL authenticate the Exp7645 goal guard and Exp10013 source
+identities before execution. It SHALL freeze every eligible Exp7639 stall-window
+identity without selecting on outcomes. Runtime-induced engines and hand-built
+EXPERT or IDENTITY controls SHALL have separate denominators. The CPU-only run
+SHALL use no model, preserve production flags, disable per-game adapter routes,
+and compare shipped flags with opt-in HUD dedup using the actual Stage-2 mask,
+identical starts and actions, a 20000 engine-call limit, and no novelty tie-break.
+
+Rows SHALL retain actual goal checks, duplicate skips, engine calls, plan length,
+action replay, elapsed wall time, outcomes, provenance, exclusions, and censoring.
+One window counts once and game clusters govern uncertainty. A development-proxy
+benefit requires one additional induced-engine success with no lost prior success;
+expert plans grant no new live solve credit. Fresh readers SHALL cold-reduce rows,
+check mask mismatch and goal-skip mutations, and bind validation logs before
+atomic terminal publication. Missing upstream evidence SHALL be complete blocked;
+invalid required validation SHALL be disqualified; zero usable induced windows
+SHALL be a measured null.
+
+### SCENARIO-REPORT-7652-CENSUS: Selection cannot use outcomes
+
+**Given** repeated arm rows for source stall windows
+**When** the identity manifest is frozen
+**Then** every eligible induced window appears once, controls remain separate,
+and outcome fields cannot alter selection or sample size.
+
+### SCENARIO-REPORT-7652-GUARD: Current goal guard is an exact precondition
+
+**Given** Exp7645 has a nonterminal verdict, a failed guard, or adversarial flag
+**When** the precheck runs
+**Then** the terminal blocked gate names the exact artifact field and operand.
+
+### SCENARIO-REPORT-7652-REPLAY: Wrapper operands survive cold reduction
+
+**Given** paired measured rows and a frozen mask
+**When** a fresh reader recomputes the result or mutates mask shape or goal order
+**Then** it rejects a mismatched mask or skipped full-grid goal evaluation and
+reports induced-engine gain, loss, cost, and game-cluster uncertainty separately.
+
+### SCENARIO-REPORT-7652-TERMINAL: Readers govern publication
+
+**Given** affected validation and E2E command receipts
+**When** the exact private candidate is read by cold, independent, adversarial,
+and strict row-consistency readers
+**Then** exits and log hashes determine validity before atomic publication,
+without changing production defaults or granting live solve credit.
