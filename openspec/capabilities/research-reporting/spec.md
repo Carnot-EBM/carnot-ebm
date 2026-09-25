@@ -1,5 +1,59 @@
 # Research Reporting Capability Specification
 
+## V668 grounded Qwen claims — 2026-09-25
+
+### REQ-REPORT-7665: Compare native source pointers with typed atom hints
+
+Exp7665 SHALL freeze eight inherited V664 pilots and sixteen independent Exp7658 fixture sources before model work. Independent narrow proposition truth SHALL be computed before either response. It SHALL compare source-only and label-free typed-index prompts with the same schema, seed, original source and answer, and 256-token limit using only the cached unsloth/Qwen3.8-27B-GGUF Q4_K_M on an Exp7630-owned CUDA lease. Forty-eight calls and 12288 output tokens are ceilings. Raw requests, responses, truncation, pointers, and per-source cost SHALL be retained. Exact byte-grounded propositions may be checked; lexical overlap SHALL not certify causality or a whole answer. Pilots and oracle fixtures SHALL remain separate populations. External resource absence SHALL block before load; invalid required validation SHALL disqualify and zero readiness. The artifact SHALL retain exact-candidate readers, cold reduction, custody, and a complete-prefix verdict.
+
+#### SCENARIO-REPORT-7665-PANEL: Truth precedes model output
+
+**Given** eight inherited pilots and Exp7658 fixture families
+**When** the paired panel is frozen
+**Then** it has twenty-four independent sources, two arms per source, precomputed narrow truth, and no evaluator labels in either request.
+
+#### SCENARIO-REPORT-7665-POINTER: Certification is byte scoped
+
+**Given** a generated answer span and source pointer
+**When** the independent checker reduces it
+**Then** only an exact typed proposition and replayable source bytes count as grounded; invalid pointers and unsupported certification remain errors.
+
+#### SCENARIO-REPORT-7665-RESOURCE: Ownership precedes loading
+
+**Given** unavailable owned CUDA capacity or model bytes
+**When** preconditions run
+**Then** the complete blocked artifact names the exact failed operand and records zero current model invocations.
+
+#### SCENARIO-REPORT-7665-TERMINAL: Exact readers govern publication
+
+**Given** paired raw rows and a frozen affected-file manifest
+**When** focused validation, cold reduction, adversarial verification, and strict row lint run
+**Then** their exact exits and log hashes govern the terminal verdict; fixture oracle success has circular-positive scope only.
+
+## V668 independent evidence audit — 2026-09-25
+
+### REQ-REPORT-7664: Rebuild source evidence without producer reductions
+
+Exp7664 SHALL authenticate the terminal Exp7659–7663 producers and their raw rows. It SHALL recompute source atom coverage, paired probability and decision costs, group effective sample size, delayed release order, one-use admission, and retention from raw operands without trusting producer summaries. Unknown propositions SHALL remain in denominators. Whole-answer labels from the isolated evaluator SHALL remain distinct from the partial atom verifier. Previously exposed groups SHALL not support a fresh confirmatory claim. Missing external producers SHALL produce a complete blocked verdict with exact check operands; a failed required validation SHALL disqualify the artifact and zero readiness scores. Current work SHALL be CPU aggregation with no model invocation.
+
+#### SCENARIO-REPORT-7664-CUSTODY: Producer bytes bind the audit
+
+**Given** five terminal producers and their raw files
+**When** a source hash changes or a producer is missing
+**Then** the audit rejects the changed bytes or reports the exact blocked operand.
+
+#### SCENARIO-REPORT-7664-REDUCTION: Independent groups govern claims
+
+**Given** paired arms, unknown source claims, and delayed labels
+**When** raw rows are reduced
+**Then** each source group counts once, every arm cost is recomputed, and release order and admission reuse are checked.
+
+#### SCENARIO-REPORT-7664-TERMINAL: Exact readers govern publication
+
+**Given** a frozen affected validation manifest and candidate bytes
+**When** focused checks, cold reduction, adversarial verification, and strict row lint run
+**Then** their exits and log hashes are stored before atomic publication, and invalid receipts disqualify readiness.
+
 ## V668 inherited atom corpus — 2026-09-25
 
 ### REQ-REPORT-7659: Extract scoped atoms across the inherited roster

@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one JSON object with a pointers array. Each pointer has integer claim_index, integer source_byte_start, integer source_byte_end, and relation supports, contradicts, or unknown. Copy exact UTF-8 source byte offsets. Cite only visible structural claims. Do not certify causal or whole-answer meaning. Use an empty array when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"Tool output:\\n```\\npkg9/mod.py:7: alpha_9 = 'caf\u00e9'\\nother9/mod.py:7: sentinel = 1\\n```\", \"complete_answer\": \"`pkg9/mod.py` at line 9.\", \"claims\": [{\"kind\": \"path_line\", \"text\": \"`pkg9/mod.py` at line 9\", \"byte_start\": 0, \"byte_end\": 23}], \"typed_atom_index\": [{\"dialect\": \"grep\", \"source_id\": \"pkg9/mod.py\", \"line\": 7, \"byte_start\": 31, \"byte_end\": 49, \"text\": \" alpha_9 = 'caf\u00e9'\", \"definitions\": [], \"scopes\": []}, {\"dialect\": \"grep\", \"source_id\": \"other9/mod.py\", \"line\": 7, \"byte_start\": 66, \"byte_end\": 79, \"text\": \" sentinel = 1\", \"definitions\": [], \"scopes\": []}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7665,
+  "temperature": 0
+}

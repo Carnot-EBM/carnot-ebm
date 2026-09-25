@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one JSON object with a pointers array. Each pointer has integer claim_index, integer source_byte_start, integer source_byte_end, and relation supports, contradicts, or unknown. Copy exact UTF-8 source byte offsets. Cite only visible structural claims. Do not certify causal or whole-answer meaning. Use an empty array when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"Tool output:\\n```\\nError: caf\u00e9 0\\n    at handler (pkg0/mod.py:5:2)\\n```\", \"complete_answer\": \"The frame is at `pkg0/mod.py:5:2`.\", \"claims\": [{\"kind\": \"path_line\", \"text\": \"`pkg0/mod.py:5:2`\", \"byte_start\": 16, \"byte_end\": 33}], \"typed_atom_index\": [{\"dialect\": \"stack\", \"source_id\": \"pkg0/mod.py\", \"line\": 5, \"byte_start\": 32, \"byte_end\": 64, \"text\": \"    at handler (pkg0/mod.py:5:2)\", \"definitions\": [], \"scopes\": []}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7665,
+  "temperature": 0
+}

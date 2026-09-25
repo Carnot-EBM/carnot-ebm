@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one JSON object with a pointers array. Each pointer has integer claim_index, integer source_byte_start, integer source_byte_end, and relation supports, contradicts, or unknown. Copy exact UTF-8 source byte offsets. Cite only visible structural claims. Do not certify causal or whole-answer meaning. Use an empty array when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"Tool output:\\n```\\ndef alpha_0():\\n    return \\\"caf\u00e9 0\\\"\\n```\", \"complete_answer\": \"`alpha_0` is defined at line 1.\", \"claims\": [{\"kind\": \"definition\", \"text\": \"`alpha_0` is defined at line 1\", \"byte_start\": 0, \"byte_end\": 30}], \"typed_atom_index\": [{\"dialect\": \"plain\", \"source_id\": \"anonymous:sha256:10c6ffc822c9bc97deff487964eb8cae820dbb561e32f6fcc53389208ee89675\", \"line\": 1, \"byte_start\": 17, \"byte_end\": 31, \"text\": \"def alpha_0():\", \"definitions\": [\"alpha_0\"], \"scopes\": [\"alpha_0\"]}, {\"dialect\": \"plain\", \"source_id\": \"anonymous:sha256:10c6ffc822c9bc97deff487964eb8cae820dbb561e32f6fcc53389208ee89675\", \"line\": 2, \"byte_start\": 32, \"byte_end\": 52, \"text\": \"    return \\\"caf\u00e9 0\\\"\", \"definitions\": [], \"scopes\": [\"alpha_0\"]}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7665,
+  "temperature": 0
+}

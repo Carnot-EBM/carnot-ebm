@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one JSON object with a pointers array. Each pointer has integer claim_index, integer source_byte_start, integer source_byte_end, and relation supports, contradicts, or unknown. Copy exact UTF-8 source byte offsets. Cite only visible structural claims. Do not certify causal or whole-answer meaning. Use an empty array when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"Tool output:\\n```\\n1: def alpha_8():\\n2:     return \\\"caf\u00e9 8\\\"\\n```\", \"complete_answer\": \"`alpha_8` is defined at line 9.\", \"claims\": [{\"kind\": \"definition\", \"text\": \"`alpha_8` is defined at line 9\", \"byte_start\": 0, \"byte_end\": 30}], \"typed_atom_index\": [{\"dialect\": \"numbered\", \"source_id\": \"anonymous:sha256:2a5a5372aef70b92c3700570e8e5833c0373265b25667bdc44e176fa25e03537\", \"line\": 1, \"byte_start\": 20, \"byte_end\": 34, \"text\": \"def alpha_8():\", \"definitions\": [\"alpha_8\"], \"scopes\": [\"alpha_8\"]}, {\"dialect\": \"numbered\", \"source_id\": \"anonymous:sha256:2a5a5372aef70b92c3700570e8e5833c0373265b25667bdc44e176fa25e03537\", \"line\": 2, \"byte_start\": 38, \"byte_end\": 58, \"text\": \"    return \\\"caf\u00e9 8\\\"\", \"definitions\": [], \"scopes\": [\"alpha_8\"]}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7665,
+  "temperature": 0
+}
