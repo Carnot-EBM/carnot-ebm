@@ -18610,3 +18610,4 @@ code |
 | 2026-09-25 01:05 UTC | Protect goal checks in reusable ARC planner dedupl | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 152 passed, 1 warning in 13.13s |
 | 2026-09-25 01:07 UTC | Measure goal-safe planning through the scored ARC  | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7639-arc-goal-dedup.planner_goal_guard_ready_score (actual=0 == expected=1) |
 | 2026-09-25 01:35 UTC | Expose the measured native service as an opt-in ty | OK | 110 passed, 1 warning in 43.36s |
+| 2026-09-25 01:52 UTC | Reconcile fourteen outcomes and decide evidence an | OK | 89 passed, 1 warning in 17.21s |
