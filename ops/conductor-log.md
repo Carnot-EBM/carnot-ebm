@@ -18622,3 +18622,4 @@ code |
 | 2026-09-25 13:50 UTC | Plan milestone 2026.09.667 | OK | 14 tasks proposed |
 | 2026-09-25 14:06 UTC | Milestone 2026.09.667 activated | OK | 14 tasks queued |
 | 2026-09-25 14:25 UTC | Bind fourteen tasks and source-witness method limi | OK | 89 passed, 1 warning in 21.86s |
+| 2026-09-25 14:46 UTC | Qualify abstaining structural witnesses from suppl | OK | 90 passed, 2 warnings in 11.24s |
