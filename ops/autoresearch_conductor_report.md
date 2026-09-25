@@ -1,26 +1,19 @@
 # Autoresearch conductor round
 
-- started: 2026-09-25T13:20:23.351982+00:00
+- started: 2026-09-25T13:52:01.991492+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
-- iterations: 5
-- accepted: 0
-- rejected: 5
+- iterations: 4
+- accepted: 1
+- rejected: 3
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 135
-- breaker_historical_tail_at_start: 40
+- breaker_invocation_start_position: 140
+- breaker_historical_tail_at_start: 45
 - breaker_invocation_local_tail_at_start: 0
-- breaker_invocation_local_tail_at_end: 5
+- breaker_invocation_local_tail_at_end: 0
 - generator_exhausted: False
-- fallback_iterations: none
+- fallback_iterations: [2]
 
-
-## Generator failure reasons
-- Implementation: Energy regression on: verifier_auroc
-- ---: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7fedb29ae3c0>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
-- Implementation: Energy regression on: verifier_auroc
-- ---: Energy regression on: verifier_auroc
-- ---: Energy regression on: verifier_auroc
 No hypothesis both won this round and committed cleanly.
