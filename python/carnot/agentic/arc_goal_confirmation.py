@@ -5,6 +5,20 @@ from __future__ import annotations
 from typing import Any
 
 
+def shadow_goal_only_decision(predicted_goal: bool, sdk_status: str) -> dict[str, str]:
+    """Compare old and guarded decisions from one executed endpoint observation.
+
+    The shadow is a decision comparison. It does not replay a second episode or
+    turn a public-game action trace into a counterfactual solve rate.
+    """
+    old = "accept_goal" if predicted_goal else "no_assertion"
+    guarded = {
+        "confirmed": "accept_goal",
+        "contradiction": "reject_goal" if predicted_goal else "defer",
+    }.get(sdk_status, "defer")
+    return {"old_goal_only": old, "observed_guard": guarded}
+
+
 class GoalConfirmation:
     """Keep one pending endpoint and bounded, serializable observation receipts."""
 

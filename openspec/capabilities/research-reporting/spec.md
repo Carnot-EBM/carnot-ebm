@@ -1,5 +1,45 @@
 # Research Reporting Capability Specification
 
+## V668 live ARC goal observation — 2026-09-25
+
+### REQ-REPORT-7667: Observe executed model goals on one adapter-withheld game
+
+Exp7667 SHALL select one available SDK game by a fixed salted identity hash before
+reading outcomes, inspect the registry, and withhold adapters, stored engines,
+known routes, and game source. It SHALL use the current Qwen GGUF generator on
+an Exp7630-owned CUDA lease and the scored E3 policy with only the qualified
+goal-confirmation opt-in. One episode is bounded by 3000 seconds, 256 actions,
+one induction of at most 2400 seconds, and 20000 engine calls. The generator's
+current token budget SHALL be recorded without an experiment-specific raise or
+4096-token cap. Each request and action SHALL be checkpointed. The artifact
+SHALL cold-join request identities, frame hashes, goal predictions, SDK
+observations, guard decisions, and recovery events. The old goal-only decision
+SHALL be computed in shadow from the same observations. A public game is one
+case study, never hidden-game evidence. No registry credit is granted without
+fresh trace reproduction. Missing external resources SHALL block with exact
+operands; failed required validation SHALL disqualify and zero readiness.
+
+#### SCENARIO-REPORT-7667-SELECTION: Outcome-blind game choice
+
+Given the SDK roster in any order, salted identity hashing selects the same
+one game. The registry precheck is recorded before launch and never feeds the
+policy.
+
+#### SCENARIO-REPORT-7667-GOAL: Shared-observation decision comparison
+
+Given an executed predicted goal and a fresh settled SDK frame, the opt-in
+guard reports confirmation or contradiction and the old goal-only decision is
+reduced from those same signals. Unknown or absent assertions remain censored;
+zero guard opportunities cannot claim benefit or failed science.
+
+#### SCENARIO-REPORT-7667-TERMINAL: Scoped validation governs publication
+
+Given frozen affected files and raw rows, serial focused tests, full new-code
+coverage, Ruff, mypy, scoped spec coverage, applicable E2E-013, cold reduction,
+adversarial verification, and strict row lint SHALL record exits and log hashes
+before atomic publication. A failed required check yields disqualification,
+separate from a scientific null.
+
 ## V668 ARC executed-goal confirmation — 2026-09-25
 
 ### REQ-REPORT-7666: Confirm an induced goal against the SDK after execution

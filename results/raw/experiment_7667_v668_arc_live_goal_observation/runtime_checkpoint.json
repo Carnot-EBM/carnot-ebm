@@ -1,0 +1,70 @@
+{
+  "actual_token_budget": 131072,
+  "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+  "load_attempted": true,
+  "model_loaded": true,
+  "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+  "offload_layers": {
+    "evidence": "stderr_no_match",
+    "loaded_layers": null,
+    "total_layers": null
+  },
+  "owned_server_vram_mb": 20214,
+  "prelaunch_recheck": {
+    "observations": [
+      {
+        "checkpoint": "after_lease_acquisition",
+        "device": {
+          "index": 0,
+          "memory_free_mb": 24174,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "processes": [],
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "process_ownership_rows": [],
+        "selected": true
+      },
+      {
+        "checkpoint": "immediately_before_model_launch",
+        "device": {
+          "index": 0,
+          "memory_free_mb": 24174,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "processes": [],
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        "process_ownership_rows": [],
+        "selected": true
+      }
+    ],
+    "passed": true,
+    "reason": "both_rechecks_passed"
+  },
+  "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+  "server_command": [
+    "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "-m",
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "-ngl",
+    "999",
+    "-c",
+    "106496",
+    "--port",
+    "59905",
+    "--host",
+    "127.0.0.1",
+    "--parallel",
+    "1",
+    "--cache-type-k",
+    "q8_0",
+    "--cache-type-v",
+    "q8_0"
+  ],
+  "server_pid": 284123
+}

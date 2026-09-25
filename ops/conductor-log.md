@@ -18647,3 +18647,4 @@ code |
 | 2026-09-25 21:16 UTC | Independently audit grounded decisions and delayed | OK | 106 passed, 1 warning in 19.53s |
 | 2026-09-25 21:37 UTC | Test Qwen grounded claim proposals against indepen | OK | 113 passed, 1 warning in 18.27s |
 | 2026-09-25 21:54 UTC | Qualify observed-goal confirmation in the live ARC | OK | 156 passed, 1 warning in 12.79s |
+| 2026-09-25 22:28 UTC | Measure goal confirmation during adapter-withheld  | FAIL | Codex CLI error: da root, schedule, raw: 8) + monkeypatch.setattr(exp, "ru |
