@@ -1,5 +1,53 @@
 # Research Reporting Capability Specification
 
+## V666 capstone reconciliation — 2026-09-25
+
+**Status:** In progress. This is a current CPU aggregation; no model or board work is authorized.
+
+### REQ-REPORT-7642: Close the fourteen-task V666 evidence ledger
+
+Exp7642 SHALL select the V666 roadmap by milestone identity after staging consumption and compare its fourteen ordered task identities, titles, phases, paths, substrates, and structured gates with the frozen design contract. It SHALL inventory every declared producer and actual conductor pre-gate receipt. Missing planned outputs SHALL remain missing work. Its own destination SHALL never be an input or source hash. Every blocked result SHALL have a diagnostic with check, upstream, path, exact field, operator, expected, and observed.
+
+The capstone SHALL independently cold-reduce eligible static and causal evidence and scored-wrapper comparisons from authenticated raw rows. It SHALL keep source-group exposure, fixtures, expert controls, and historical replay limits visible. Schema readiness, probability benefit, utility, retention, ARC method correctness, native packaging, and freshness SHALL be separate gates. An exact oracle fixture SHALL have circular-positive scope only. The prior 7.8270x direct-native measurement SHALL remain historical and SHALL not become a new 10x claim.
+
+The artifact SHALL preserve all fourteen ordered dispositions and evidence hashes, immutable source identity, per-unit rows, independent-unit budgets, measured current timing, zero current model invocations, source and validation receipts, field principles, stable G1–G4, hardware/operator blocks, and three PRD gap decisions. Full custody with unavailable external science SHALL be `complete_blocked_required_v666_external_evidence` with `verdict_class=blocked` and completion score one. `partial` SHALL mean unfinished capstone-owned work only. No publication, activation, purchase, generator training, or default promotion follows.
+
+Affected validation SHALL require focused tests, 100 percent changed-behavior coverage, scoped Ruff check/format, changed-module mypy, and scoped spec coverage. Fresh-process replay SHALL reject deleted or reordered tasks, wrong fields, changed source bytes, and self-hash. Independent reduction, adversarial verification, and strict verdict-row consistency SHALL run against the exact terminal candidate before atomic publication.
+
+#### SCENARIO-REPORT-7642-CUSTODY: Consumed staging retains exact authority
+
+**Given** the V666 design and active roadmap after staging consumption
+**When** the capstone inventories the ordered contract and actual outputs
+**Then** it records exactly fourteen dispositions, including pre-gate and missing-work rows
+**And** it excludes its destination from input hashes.
+
+#### SCENARIO-REPORT-7642-BLOCK: External absence is complete blocked work
+
+**Given** absent required evidence producers and complete capstone accounting
+**When** terminal class is assigned
+**Then** it is blocked with exact failed operands and completion score one
+**And** missing science does not become a null result or an unfinished-owned-work partial.
+
+#### SCENARIO-REPORT-7642-REDUCE: Claims retain independent denominators
+
+**Given** saved producer rows and conductor diagnostics
+**When** the capstone reduces evidence and planning branches
+**Then** it separates static probability and utility, causal retention, live wrapper results, method validity, and packaging
+**And** historical models and repeated views do not count as current inference or independent units.
+
+#### SCENARIO-REPORT-7642-MUTATIONS: Cold replay rejects custody drift
+
+**Given** an exact terminal candidate
+**When** a task is deleted or reordered, a gate field is changed, or a self hash is inserted
+**Then** a fresh reducer rejects the mutation before any positive claim can open a gate.
+
+#### SCENARIO-REPORT-7642-TERMINAL: Readers govern publication of the record
+
+**Given** a fully accounted candidate and passing affected checks
+**When** independent reduction and the two terminal reader scripts finish
+**Then** their actual exits and log hashes remain in the atomic artifact
+**And** the record makes no external publication or roadmap activation.
+
 ## V646 archived acquisition adjudication — 2026-09-17
 
 **Status:** Implemented. The cold adjudication copied all archived bytes,
