@@ -81370,3 +81370,51 @@ Given a frozen affected-file manifest, serial focused tests, full changed-code
 coverage, Ruff, mypy, scoped spec coverage, cold reduction, adversarial reader,
 and strict row reader must pass before readiness. Any failed required check
 produces a terminal disqualified artifact with scores zero.
+
+## REQ-REPORT-7663: Measure continuous source-atom learning on the frozen roster
+
+Exp7663 SHALL authenticate Exp7602 labels, Exp7659 immutable source features,
+Exp7660 frozen head, and Exp7662 protocol before scoring online80. It SHALL
+score each prediction before its label release through the durable event service.
+The source, matched-capacity scalar, frozen, eligible-past-label permutation,
+and every-fourth-feedback omission arms SHALL use five released update labels
+per proposal and the next five unused admission labels. Admission SHALL require
+lower paired mean Brier and no higher realized decision cost; rejected state
+SHALL roll back, and admission labels SHALL never train. Updates stop when
+admission blocks are exhausted. Event-forty restart SHALL exactly match an
+uninterrupted twin. Final state SHALL be scored once on exposed evaluation40
+and fit16 anchors without tuning.
+
+The artifact SHALL retain group-level raw operands, causal releases, admission
+decisions, checkpoints, source hashes, exposure and censoring, actual timing,
+block-eight paired bootstrap intervals, and separate validity, readiness,
+coverage, benefit, utility, retention, and freshness gates. Probability benefit
+requires both lower 95 percent Brier improvement bounds above 0.01. Utility
+requires a separate lower cost improvement bound above 0.01 and coverage at
+least 0.20. Retention requires both upper Brier degradation bounds at most
+0.01. Exposed groups support exploratory claims only. Required validation
+failure SHALL disqualify and zero readiness; missing qualified upstream bytes
+SHALL block with exact operands. A valid causal null is terminal.
+
+### SCENARIO-REPORT-7663-CAUSAL
+
+Given online80 and isolated labels, every arm predicts before release; only
+eligible past released update labels can feed its proposal. Omissions stay
+missing, and permuted labels cannot come from the future.
+
+### SCENARIO-REPORT-7663-ADMISSION
+
+Given a pending five-update proposal and five fresh admission labels, Brier
+improvement with non-increasing cost accepts exactly once; any other result
+rolls back. Admission IDs cannot enter subsequent gradients.
+
+### SCENARIO-REPORT-7663-RESTART
+
+Given a durable checkpoint after event forty, resumed predictions and state
+equal an uninterrupted replay. Exposed anchors are read only after learning.
+
+### SCENARIO-REPORT-7663-TERMINAL
+
+Given frozen affected scope, focused checks, full changed-code coverage, cold
+reduction, adversarial reader, and strict row reader govern atomic publication.
+Reader failure is disqualification, never a scientific null.
