@@ -20603,3 +20603,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-25: Requalify goal-safe planner checks with valid execution receipts (⚠️ Research Finding) — honest_verdict=complete_null_arc_goal_guard_ready_no_hidden_game_benefit; results/experiment_7645_v667_arc_validation_requalification.json
 - 2026-09-25: Measure structural coverage on every frozen source group (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7646_v667_source_feature_corpus.json
 - 2026-09-25: Independently audit structural decisions and feedback causality (⚠️ Blocked) — honest_verdict=complete_blocked_source_producers_unavailable; results/experiment_7650_v667_independent_source_audit.json
+- 2026-09-25: Compare bounded Qwen evidence against structural witnesses (⚠️ Research Finding) — honest_verdict=complete_null_bounded_witness_pilot; results/experiment_7651_v667_qwen_witness_challenge.json
