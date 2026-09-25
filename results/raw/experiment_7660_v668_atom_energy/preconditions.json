@@ -1,0 +1,140 @@
+{
+  "checks": [
+    {
+      "check": "cpu_available",
+      "expected": true,
+      "field": "cpu_count_positive",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/proc/self",
+      "upstream": "host"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/protocol.json",
+      "upstream": "Exp7602"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7659_v668_atom_corpus/manifest.json",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7659_v668_atom_corpus.json",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "qualified_corpus",
+      "expected": 1,
+      "field": "atom_features_ready_score",
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7659_v668_atom_corpus.json",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "unflagged_corpus",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7659_v668_atom_corpus.json",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:51ec216258f53266f1f660d4af2d8e7fd400a11feb26faa428eca827886b749b",
+      "field": "feature_sha256",
+      "observed": "sha256:51ec216258f53266f1f660d4af2d8e7fd400a11feb26faa428eca827886b749b",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7659_v668_atom_corpus/fit_features.jsonl",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:962278bfd49aa6e42bde3043b6ce84ac977884d004da0823c6a5c4397d74159d",
+      "field": "evaluator_sha256",
+      "observed": "sha256:962278bfd49aa6e42bde3043b6ce84ac977884d004da0823c6a5c4397d74159d",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/fit_evaluator_store.jsonl",
+      "upstream": "Exp7602"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:7f5c9181cd2d0870048c6506db4fc08abb6d54db6f498359b7d9871e11dd62e0",
+      "field": "feature_sha256",
+      "observed": "sha256:7f5c9181cd2d0870048c6506db4fc08abb6d54db6f498359b7d9871e11dd62e0",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7659_v668_atom_corpus/tune_features.jsonl",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:4b55a43d0262a1436f7872476867c427a77524b79fad26f702389e78ed0f1c2b",
+      "field": "evaluator_sha256",
+      "observed": "sha256:4b55a43d0262a1436f7872476867c427a77524b79fad26f702389e78ed0f1c2b",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/tune_evaluator_store.jsonl",
+      "upstream": "Exp7602"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:0d5c681df1262d2cee90fba7b46edc45c6038fa2c0351b96c3080f9f72962991",
+      "field": "feature_sha256",
+      "observed": "sha256:0d5c681df1262d2cee90fba7b46edc45c6038fa2c0351b96c3080f9f72962991",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7659_v668_atom_corpus/policy_features.jsonl",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:e7a4eea8e612491f9a81bb3de7001f18b2c0e336525a4595256e5e7afb7d0dbe",
+      "field": "evaluator_sha256",
+      "observed": "sha256:e7a4eea8e612491f9a81bb3de7001f18b2c0e336525a4595256e5e7afb7d0dbe",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/policy_evaluator_store.jsonl",
+      "upstream": "Exp7602"
+    }
+  ],
+  "hashes": {
+    "missing_inputs": [],
+    "pre_gate_receipts": {
+      "results/raw/experiment_7602_v664_evidence_requalification/fit_evaluator_store.jsonl": "sha256:962278bfd49aa6e42bde3043b6ce84ac977884d004da0823c6a5c4397d74159d",
+      "results/raw/experiment_7602_v664_evidence_requalification/policy_evaluator_store.jsonl": "sha256:e7a4eea8e612491f9a81bb3de7001f18b2c0e336525a4595256e5e7afb7d0dbe",
+      "results/raw/experiment_7602_v664_evidence_requalification/tune_evaluator_store.jsonl": "sha256:4b55a43d0262a1436f7872476867c427a77524b79fad26f702389e78ed0f1c2b"
+    },
+    "producers": {
+      "results/experiment_7659_v668_atom_corpus.json": "sha256:5cb2333cf775505cc02b7c8d3f49eebf34329cdd796ea79478cb74191aa9cfce",
+      "results/raw/experiment_7602_v664_evidence_requalification/protocol.json": "sha256:8c82593d7f8622bdb1c71893e481bdae7f8d583f534f886acad8ab7724ac2cd5",
+      "results/raw/experiment_7659_v668_atom_corpus/fit_features.jsonl": "sha256:51ec216258f53266f1f660d4af2d8e7fd400a11feb26faa428eca827886b749b",
+      "results/raw/experiment_7659_v668_atom_corpus/manifest.json": "sha256:dceafa968e313c1a4e109e264ce92052c25fc6e4594613bf61ba51a78e7248e0",
+      "results/raw/experiment_7659_v668_atom_corpus/policy_features.jsonl": "sha256:0d5c681df1262d2cee90fba7b46edc45c6038fa2c0351b96c3080f9f72962991",
+      "results/raw/experiment_7659_v668_atom_corpus/tune_features.jsonl": "sha256:7f5c9181cd2d0870048c6506db4fc08abb6d54db6f498359b7d9871e11dd62e0"
+    }
+  }
+}

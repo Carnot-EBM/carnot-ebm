@@ -81255,3 +81255,38 @@ ordered dispositions with producer, pre-gate and absent-path authentication.
 Given a frozen affected-file manifest and terminal candidate, cold-reduce raw
 rows and run required validation and terminal readers. A failed required check
 zeros readiness and produces a disqualified artifact with exact receipt evidence.
+
+## REQ-REPORT-7660: Freeze a source-atom conditional energy head
+
+Exp7660 SHALL authenticate Exp7659 feature bytes and Exp7602 isolated evaluator
+labels before fitting. It SHALL use only fit optimization groups to train a
+bounded residual around the inherited probability. Fit anchors SHALL remain
+untouched. At most six fixed settings SHALL be compared on tune groups; policy
+groups SHALL freeze typed action costs and thresholds. Evaluation and online
+labels SHALL remain unopened. Identity, scalar calibration, cheap atom, and
+matched-capacity source-erased controls SHALL be persisted with feature order,
+clipping, normalization, and a scoring-time fixed source derangement.
+
+A valid identity fallback SHALL remain evaluation-ready when fitting brings no
+tune improvement. Readiness SHALL not assert held-out benefit. Required validation
+failure SHALL disqualify and zero readiness; absent immutable evidence SHALL
+block with exact failed operands. The terminal artifact SHALL distinguish each
+independent group from paired arms and record cold replay and terminal readers.
+
+### SCENARIO-REPORT-7660-CUSTODY
+
+Given qualified fit, tune, and policy sidecars, changing a source hash, role,
+label custody field, partition, or feature schema fails before fitting. A witness
+status cannot replace the original independent dataset label.
+
+### SCENARIO-REPORT-7660-ENERGY
+
+Given finite inherited probabilities including extreme values, the two energies
+normalize to finite probabilities. Identity initialization reproduces the scalar
+forecast. Irrelevant metadata changes leave the probability and action unchanged.
+
+### SCENARIO-REPORT-7660-REPLAY
+
+Given frozen heads and a serialized candidate, a fresh reader reproduces every
+training-row probability and typed action. A failed required receipt yields a
+disqualified record with zero readiness, while training null remains measurable.
