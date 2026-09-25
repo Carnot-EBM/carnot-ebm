@@ -18651,3 +18651,4 @@ code |
 | 2026-09-25 23:01 UTC | Measure goal confirmation during adapter-withheld  | FAIL | Codex CLI error: 64a-1f08-465b-929e-86b75b2e9cfb ERROR: unexpected status 401 |
 | 2026-09-25 23:04 UTC | Measure goal confirmation during adapter-withheld  | FAIL | Codex CLI error: A, request id: bed47815-d894-4c97-af5f-ffe0ab4721f1 ERROR: u |
 | 2026-09-25 23:07 UTC | Expose frozen evidence energy through the existing | FAIL | Codex CLI error: A, request id: 6993f9b5-9660-4b6e-adc9-ff7a19bc109a ERROR: u |
+| 2026-09-25 23:10 UTC | Expose frozen evidence energy through the existing | FAIL | Codex CLI error: A, request id: e7776e23-5a40-41a0-96ca-39ce7763a9f2 ERROR: u |
