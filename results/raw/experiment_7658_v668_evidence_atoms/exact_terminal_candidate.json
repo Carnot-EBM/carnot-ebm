@@ -1,0 +1,5542 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "gate": "validity",
+      "measured_operands": {
+        "failed_inputs": 0,
+        "required_checks_passed": true
+      },
+      "passed": true,
+      "principle": "Authenticated inputs and required checks govern validity."
+    },
+    {
+      "gate": "readiness",
+      "measured_operands": {
+        "covered_pilot_groups": 4,
+        "false_certified": 0,
+        "fixture_groups": 72
+      },
+      "passed": true,
+      "principle": "Fixture soundness and four covered pilots permit narrow protocol readiness."
+    },
+    {
+      "gate": "coverage",
+      "measured_operands": {
+        "covered_pilot_groups": 4,
+        "intended": 8
+      },
+      "passed": true,
+      "principle": "Only original pilot groups count toward coverage."
+    },
+    {
+      "gate": "probability_benefit",
+      "measured_operands": {
+        "paired_probabilities": 0
+      },
+      "passed": null,
+      "principle": "Proper loss needs independent labels and paired probabilities."
+    },
+    {
+      "gate": "utility",
+      "measured_operands": {
+        "typed_decisions": 0
+      },
+      "passed": null,
+      "principle": "Utility needs actions, costs, and outcomes."
+    },
+    {
+      "gate": "retention",
+      "measured_operands": {
+        "delayed_feedback_events": 0
+      },
+      "passed": null,
+      "principle": "Retention needs delayed feedback and later replay."
+    },
+    {
+      "gate": "freshness",
+      "measured_operands": {
+        "fresh_independent_groups": 0
+      },
+      "passed": null,
+      "principle": "Previously exposed pilots and fixtures are not fresh confirmation."
+    }
+  ],
+  "atom_protocol_ready_score": 1,
+  "atom_schema_path": "results/raw/experiment_7658_v668_evidence_atoms/schema.json",
+  "duration_s": 29.81347482899946,
+  "execution_venue": "host",
+  "execution_venue_details": {
+    "gpu_uuid": null,
+    "hostname": "icbfl1",
+    "owned_pid": 203510
+  },
+  "experiment_id": "exp7658-v668-evidence-atoms",
+  "field_principles": {
+    "atom_protocol_ready_score": "Sound fixtures, replay, pilot coverage and readers govern readiness.",
+    "duration_s": "Measured current CPU time only.",
+    "flagged_adversarial": "A flagged reader cannot open a gate.",
+    "honest_verdict": "Completion does not imply scientific benefit.",
+    "inference_substrate_class": "No model is loaded in current work.",
+    "rows": "One original-source row per independent group; no repeated views enlarge the sample.",
+    "sample_size_budget": "Pilot and fixture units are distinct but oracle fixtures do not measure natural accuracy.",
+    "verdict_class": "Required validation and terminal readers govern class."
+  },
+  "fixture_rows": [
+    {
+      "answer_sha256": "sha256:bfdc851f9315baba6cb1f4b78b49c15034281bd8163a0bddb787a24ed94747bb",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_0` is defined at line 1.",
+      "source_sha256": "sha256:508288d9b801fd7ce9a74a3c50faedfa8d2510f53818238781802c5c2f65efb6",
+      "truth": "observed",
+      "unit_id": "plain-00"
+    },
+    {
+      "answer_sha256": "sha256:4d8c6f4a400dc0efdae4f341d14df1a392a5485627c1e2077192823ff774041c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_1` is defined at line 1.",
+      "source_sha256": "sha256:a7be1069563e4d93c64245300597bca1c302b2ed55c0ac01bb308098c602edab",
+      "truth": "observed",
+      "unit_id": "plain-01"
+    },
+    {
+      "answer_sha256": "sha256:7b12909e2f10308966f3a315be8f46381d56e3c8722d44a6e6d2ce2f9669edf2",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_2` is defined at line 1.",
+      "source_sha256": "sha256:8bcba2edb5078510220429d89a5cc4d8725a2b2dddaaa38163eea57d77ed80b1",
+      "truth": "observed",
+      "unit_id": "plain-02"
+    },
+    {
+      "answer_sha256": "sha256:792821b70a41cd1281355dcc6d68b414c1987131e5d235b96152dcbdd5be3524",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_3` is defined at line 1.",
+      "source_sha256": "sha256:e8e744893fc8f0817207183a4bb07bcab48633c3ce583bfad2dfaa5254454805",
+      "truth": "observed",
+      "unit_id": "plain-03"
+    },
+    {
+      "answer_sha256": "sha256:fe28cd5e72c6318e8d00698a93b5dc53fc9e3bb97b476fd49e97eaea2b1c8737",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_4` is defined at line 1.",
+      "source_sha256": "sha256:780538ece2d3ad9fb67faa82eed9825654fba594d15afd52a2d1e2b2c8541804",
+      "truth": "observed",
+      "unit_id": "plain-04"
+    },
+    {
+      "answer_sha256": "sha256:330696ef6dd6967182d964eda536bf1a5a7b1aaca12495c485e1dbd926275e17",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_5` is defined at line 1.",
+      "source_sha256": "sha256:3578e5dd3126f43e2470c7fde3d32ca3f096f6f6ff28c54450ffd19645920082",
+      "truth": "observed",
+      "unit_id": "plain-05"
+    },
+    {
+      "answer_sha256": "sha256:eaa25c7e104e0a528a5b80df6efa990d178b0feafb1d0cca066eeadecfa3f526",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_6` is defined at line 1.",
+      "source_sha256": "sha256:47165291ef2d8f1b504afe82b675e69f2432a6744107b2260cd5113790760800",
+      "truth": "observed",
+      "unit_id": "plain-06"
+    },
+    {
+      "answer_sha256": "sha256:fea21cf017e5469be43f22bfef1207216d9339525d4cb0a0d31ffac1a116166a",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_7` is defined at line 1.",
+      "source_sha256": "sha256:a4eab1a7e79a66d7e96a4642376e48740cd9d04b464d901066fe7a46afb491bc",
+      "truth": "observed",
+      "unit_id": "plain-07"
+    },
+    {
+      "answer_sha256": "sha256:5f3189334958b0e74155247297e7cfce8cf7f09639298482a98b9dd74f6011f4",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_8` is defined at line 9.",
+      "source_sha256": "sha256:4642407c39fc4396c1c238cfbfca05b79e7b849dad4592e4b3f85c5f2ec4596f",
+      "truth": "unknown",
+      "unit_id": "plain-08"
+    },
+    {
+      "answer_sha256": "sha256:9112b545748e39df27eac66c8d40adb5379b613be895b61b5ad4c127ead74ec0",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_9` is defined at line 9.",
+      "source_sha256": "sha256:6f25ff4ded80f71b93da99ba4832833dc6e0503689909d87936f5365e2428398",
+      "truth": "unknown",
+      "unit_id": "plain-09"
+    },
+    {
+      "answer_sha256": "sha256:a520638bb34b708b6b7cde9fd8f25d47c9f745c8c2176eef213f16db9d53c424",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_10` is defined at line 9.",
+      "source_sha256": "sha256:e3dc1a7ad9802f76685da8442497dbe221ab52c818df3052f0ccab3260939d9a",
+      "truth": "unknown",
+      "unit_id": "plain-10"
+    },
+    {
+      "answer_sha256": "sha256:93b784d5082de363ac6d1b9015ef1c8a87461485c67804376c3fac1dcdadbac0",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_11` is defined at line 9.",
+      "source_sha256": "sha256:97a46896f20a9667bccc1e9e720c23b599d2774143138caf1890a2a4e6083b41",
+      "truth": "unknown",
+      "unit_id": "plain-11"
+    },
+    {
+      "answer_sha256": "sha256:fedad2135f797f004475ace04e92995d5a7a5acd45328ad6175552d900b02dde",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_12` is defined at line 9.",
+      "source_sha256": "sha256:5f83afd872e60ba3e9785fe9d24f2ae8e09f59de6a9a61dce3470ee18fdae3e8",
+      "truth": "unknown",
+      "unit_id": "plain-12"
+    },
+    {
+      "answer_sha256": "sha256:619a08e91dd67a873972ebbf1ce2403f500add5d79d0b55c35f0df45ef5d54a6",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_13` is defined at line 9.",
+      "source_sha256": "sha256:cd11eafb0d54c645d2f4ff94d0b5d06855b7f7c0aa0a8387ea10efaf82556bae",
+      "truth": "unknown",
+      "unit_id": "plain-13"
+    },
+    {
+      "answer_sha256": "sha256:49f20624f101cb5fd2a3a2e357ee4c7f17dbf2831b249e1ad2387fc3b8bd8874",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_14` is defined at line 9.",
+      "source_sha256": "sha256:e45b3b7038bf6a496d7a6ec6105e66e36ecb0cc0f782adc59f31f95938dc70db",
+      "truth": "unknown",
+      "unit_id": "plain-14"
+    },
+    {
+      "answer_sha256": "sha256:70097caf78f3add68dd491b6dfafdf67dd50b357e3f2435125000231398b12b2",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_15` is defined at line 9.",
+      "source_sha256": "sha256:df9f082e133adc3f5a0b0ff32aabeb3d44f2034b965d81a85111895c3d6ec219",
+      "truth": "unknown",
+      "unit_id": "plain-15"
+    },
+    {
+      "answer_sha256": "sha256:bfdc851f9315baba6cb1f4b78b49c15034281bd8163a0bddb787a24ed94747bb",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_0` is defined at line 1.",
+      "source_sha256": "sha256:8253ecf260b27650db02ee6f5a313111bf0338b278d4d3f0ca8e59f84ba4f6b3",
+      "truth": "observed",
+      "unit_id": "numbered-00"
+    },
+    {
+      "answer_sha256": "sha256:4d8c6f4a400dc0efdae4f341d14df1a392a5485627c1e2077192823ff774041c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_1` is defined at line 1.",
+      "source_sha256": "sha256:7c4383c2af50163c92a6071232c8517903130d60c3e2924b1538ee3f7a1faa77",
+      "truth": "observed",
+      "unit_id": "numbered-01"
+    },
+    {
+      "answer_sha256": "sha256:7b12909e2f10308966f3a315be8f46381d56e3c8722d44a6e6d2ce2f9669edf2",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_2` is defined at line 1.",
+      "source_sha256": "sha256:fca5dde394fd6386e3c9295531902d8b44749680ec5c43459748d015b8bbfb70",
+      "truth": "observed",
+      "unit_id": "numbered-02"
+    },
+    {
+      "answer_sha256": "sha256:792821b70a41cd1281355dcc6d68b414c1987131e5d235b96152dcbdd5be3524",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_3` is defined at line 1.",
+      "source_sha256": "sha256:427b82f71e2b9b29c932176405cdcfbafbab2f8988bde7f280d987e099fc9dca",
+      "truth": "observed",
+      "unit_id": "numbered-03"
+    },
+    {
+      "answer_sha256": "sha256:fe28cd5e72c6318e8d00698a93b5dc53fc9e3bb97b476fd49e97eaea2b1c8737",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_4` is defined at line 1.",
+      "source_sha256": "sha256:d001096c65353b0c02542f7df2b0c5c8eeda22bf5413bd444e1687a55273163a",
+      "truth": "observed",
+      "unit_id": "numbered-04"
+    },
+    {
+      "answer_sha256": "sha256:330696ef6dd6967182d964eda536bf1a5a7b1aaca12495c485e1dbd926275e17",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_5` is defined at line 1.",
+      "source_sha256": "sha256:895edf90364f08e18779c84aee47d00edfb808533e59e75012a98e2372adfa15",
+      "truth": "observed",
+      "unit_id": "numbered-05"
+    },
+    {
+      "answer_sha256": "sha256:eaa25c7e104e0a528a5b80df6efa990d178b0feafb1d0cca066eeadecfa3f526",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_6` is defined at line 1.",
+      "source_sha256": "sha256:02f33eddc703aa1dbdacc60fc5bf55e3f305e9cc2fcd111719c25b32f9dab92c",
+      "truth": "observed",
+      "unit_id": "numbered-06"
+    },
+    {
+      "answer_sha256": "sha256:fea21cf017e5469be43f22bfef1207216d9339525d4cb0a0d31ffac1a116166a",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_7` is defined at line 1.",
+      "source_sha256": "sha256:72adc5fe22608d002db19eae9e7096e0d6f0c08514d7c6df9021e9e88c4d10a6",
+      "truth": "observed",
+      "unit_id": "numbered-07"
+    },
+    {
+      "answer_sha256": "sha256:5f3189334958b0e74155247297e7cfce8cf7f09639298482a98b9dd74f6011f4",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_8` is defined at line 9.",
+      "source_sha256": "sha256:0ed3617f1e1da07fcde0f9406e527f8b25fcdb21d9ba74c2333efb449f8f9928",
+      "truth": "unknown",
+      "unit_id": "numbered-08"
+    },
+    {
+      "answer_sha256": "sha256:9112b545748e39df27eac66c8d40adb5379b613be895b61b5ad4c127ead74ec0",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_9` is defined at line 9.",
+      "source_sha256": "sha256:b35832d9b60bb96be8b2ac23a1246aad49afad437d6dab7f9f2efb1fc5c43b47",
+      "truth": "unknown",
+      "unit_id": "numbered-09"
+    },
+    {
+      "answer_sha256": "sha256:a520638bb34b708b6b7cde9fd8f25d47c9f745c8c2176eef213f16db9d53c424",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_10` is defined at line 9.",
+      "source_sha256": "sha256:4cfb1cc80e49338f2ab9b9f4193eef7ffa7cbe4cdf67064ebc8b6d88f0b49e25",
+      "truth": "unknown",
+      "unit_id": "numbered-10"
+    },
+    {
+      "answer_sha256": "sha256:93b784d5082de363ac6d1b9015ef1c8a87461485c67804376c3fac1dcdadbac0",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_11` is defined at line 9.",
+      "source_sha256": "sha256:b2b90529763f7b744dd147c76c2e4ed5d9d5da15fb99d70a58c47ed7a0d036c4",
+      "truth": "unknown",
+      "unit_id": "numbered-11"
+    },
+    {
+      "answer_sha256": "sha256:fedad2135f797f004475ace04e92995d5a7a5acd45328ad6175552d900b02dde",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_12` is defined at line 9.",
+      "source_sha256": "sha256:0a645089d87ab928a600c562191bfb1f14ab6e86d4947873b42f3db8a7a19c8c",
+      "truth": "unknown",
+      "unit_id": "numbered-12"
+    },
+    {
+      "answer_sha256": "sha256:619a08e91dd67a873972ebbf1ce2403f500add5d79d0b55c35f0df45ef5d54a6",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_13` is defined at line 9.",
+      "source_sha256": "sha256:3b985ec1d2f5c9c1d7d11840c3da0d46e8e3a67a57e1b5a918bed71d5a4b4ac4",
+      "truth": "unknown",
+      "unit_id": "numbered-13"
+    },
+    {
+      "answer_sha256": "sha256:49f20624f101cb5fd2a3a2e357ee4c7f17dbf2831b249e1ad2387fc3b8bd8874",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_14` is defined at line 9.",
+      "source_sha256": "sha256:3ab1c0426ef3d38b00c78c5048712f1a88072a14588a5d4e0f17ebce46ecca83",
+      "truth": "unknown",
+      "unit_id": "numbered-14"
+    },
+    {
+      "answer_sha256": "sha256:70097caf78f3add68dd491b6dfafdf67dd50b357e3f2435125000231398b12b2",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_15` is defined at line 9.",
+      "source_sha256": "sha256:600e7db4e920eb522b29516efb191f082935e07c6e5314c3fd6c4d2dba11155d",
+      "truth": "unknown",
+      "unit_id": "numbered-15"
+    },
+    {
+      "answer_sha256": "sha256:fb672d71283fc66b35128c8f5b59b0bffe9b6073463a025ee85c19eefcc2d9a3",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg0/mod.py` at line 7.",
+      "source_sha256": "sha256:36b13aaae1b20aa6bc2f69f7bb9d8db986aabfea7f54d97054cf5160889c8903",
+      "truth": "observed",
+      "unit_id": "grep-00"
+    },
+    {
+      "answer_sha256": "sha256:180206070cbe5704584dd7c4a9a3dd8f5731f72c03ebcb7faec8b57bf6605fd6",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg1/mod.py` at line 7.",
+      "source_sha256": "sha256:41cd93fe98f36aecc0fea8ff1b5c598c92d70c6e877e793edf039c867f2942ad",
+      "truth": "observed",
+      "unit_id": "grep-01"
+    },
+    {
+      "answer_sha256": "sha256:139b3dfd6ad91666fffcb87c31ee688780b4d7a90d2b3ed5972cb080d68e9f13",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg2/mod.py` at line 7.",
+      "source_sha256": "sha256:d8cfa0564d311c8545176cc991f127459186f51d16664f8462aaba58c3debaeb",
+      "truth": "observed",
+      "unit_id": "grep-02"
+    },
+    {
+      "answer_sha256": "sha256:f2442dfbbc0055973978a0bb68dedc1c48ac5e2b3af411a43e2d807f6a9e4f84",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg3/mod.py` at line 7.",
+      "source_sha256": "sha256:10bb60803e0855ae9353818c598e50ea75c1782eb7d1bb2f70ac09beb26d33e4",
+      "truth": "observed",
+      "unit_id": "grep-03"
+    },
+    {
+      "answer_sha256": "sha256:8213938f470a47d864c7c99aa0c895e6852d80efca55b3b9f109a681e13fba45",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg4/mod.py` at line 7.",
+      "source_sha256": "sha256:2b6dc64e0ee28962a715e776647ede597b57fa5b4f0b25125b0427ad984b113c",
+      "truth": "observed",
+      "unit_id": "grep-04"
+    },
+    {
+      "answer_sha256": "sha256:43121206db0d9939d090d1637b017c9dad5aa860f93aa5434fe9b0f6618cda03",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg5/mod.py` at line 7.",
+      "source_sha256": "sha256:47fac0751327d07270ae308dbc2f59be4af5f7414a7eaefacc70407e8a1bf24b",
+      "truth": "observed",
+      "unit_id": "grep-05"
+    },
+    {
+      "answer_sha256": "sha256:0aa0b2287137a1579f362aa27a78976f0bc413e610e674a94b94ad805644f870",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg6/mod.py` at line 7.",
+      "source_sha256": "sha256:b6ac84f0b4b85fa1f255fd596c6b6ce6dd6af13d3c7fc284c3fc09ba53f0b477",
+      "truth": "observed",
+      "unit_id": "grep-06"
+    },
+    {
+      "answer_sha256": "sha256:ee00cf4ed81057c13a192141156e3312343e97af36bd09a99ca25a6f5e4b67e7",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg7/mod.py` at line 7.",
+      "source_sha256": "sha256:2659a3b517da7c70cfd96a2efdea9cb15539ed1626eb9b1b136b79b4df4fe3e3",
+      "truth": "observed",
+      "unit_id": "grep-07"
+    },
+    {
+      "answer_sha256": "sha256:533a11878d43ffee335b75bc15e6bb01d4de2861640b654e9e769fc85c374245",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg8/mod.py` at line 9.",
+      "source_sha256": "sha256:5a793bd11ae0399513e6ff4f2cdbdf1e5256379929da5433cde760f0b7ddf8fc",
+      "truth": "unknown",
+      "unit_id": "grep-08"
+    },
+    {
+      "answer_sha256": "sha256:c6349ac7e2904b50aa7d23f906c9849712dbd667cc7d85347e1a934500a78c35",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg9/mod.py` at line 9.",
+      "source_sha256": "sha256:e49d7c6100d2bab445494f951a70fa4515432354b2707d348f298dc22f0cb0a6",
+      "truth": "unknown",
+      "unit_id": "grep-09"
+    },
+    {
+      "answer_sha256": "sha256:00dd895547bf50938da1d5972425548a5db6a349f16d7dd03857d4ec4b497942",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg10/mod.py` at line 9.",
+      "source_sha256": "sha256:d184a18ae3829eb733ef3000c84166a0c47c33b8383d30b133af25a6de0561e1",
+      "truth": "unknown",
+      "unit_id": "grep-10"
+    },
+    {
+      "answer_sha256": "sha256:3a500c2aecd6d3db536e4f306bd047916186ab9d8789af45018d06691bfb8458",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg11/mod.py` at line 9.",
+      "source_sha256": "sha256:e0c903bbf31d3ca8ebf9d85fdb78baaa7edb4d274e12ba6e20d98d725bf38e83",
+      "truth": "unknown",
+      "unit_id": "grep-11"
+    },
+    {
+      "answer_sha256": "sha256:89b6563a50c806e48bcc53e83f7eceb71c97418bc16d3e5c19e6b3e9b6b19f22",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg12/mod.py` at line 9.",
+      "source_sha256": "sha256:2699bb13f1c98b6c8b783d4580da6d8945a1fd4d6ac8c3e2360f373b1d152b1a",
+      "truth": "unknown",
+      "unit_id": "grep-12"
+    },
+    {
+      "answer_sha256": "sha256:c8b38f5810f43ecdcfdaeabb709b083a02806ee5e48dc7a7cc87f2a2cc865f99",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg13/mod.py` at line 9.",
+      "source_sha256": "sha256:dd97bf4d57226198d820f418bc6f0260f762d7ec9800668acbe6410a52c0c8f8",
+      "truth": "unknown",
+      "unit_id": "grep-13"
+    },
+    {
+      "answer_sha256": "sha256:7c4c1ca9364798989f381e30c8eb9208158fc866ce5e470a8beafe7750d28510",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg14/mod.py` at line 9.",
+      "source_sha256": "sha256:4ae3fb666e8e5b84a2ede7517c3f4ebb7496293d3c6d53fe0a4640e06a6e3c05",
+      "truth": "unknown",
+      "unit_id": "grep-14"
+    },
+    {
+      "answer_sha256": "sha256:7266b10b0b6a89422b0a294228a679d6b4cf5ec8a35e6424908c071ba6776775",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg15/mod.py` at line 9.",
+      "source_sha256": "sha256:a623c2bb303eb0b99076135e5aec92c34ba95f8aa76b9a404d79589c1f52257e",
+      "truth": "unknown",
+      "unit_id": "grep-15"
+    },
+    {
+      "answer_sha256": "sha256:346def80cf1be2ff1dedbc64f4ff4e70d5096730311bdfee73c008a6df710bac",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg0/mod.py:5:2`.",
+      "source_sha256": "sha256:abd51227abc573cfca7924ceb988d3d2f4542da60c91a02c1fa20c32e49d5587",
+      "truth": "observed",
+      "unit_id": "stack-00"
+    },
+    {
+      "answer_sha256": "sha256:03c53d90d327c7e33969f54335f00d7d977cd66974a20c4932b3234d1234013c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg1/mod.py:5:2`.",
+      "source_sha256": "sha256:b0fedeb67f87afdb421eecc0309fa9e05e705b349939c2546a7fa3b3ea2cae2e",
+      "truth": "observed",
+      "unit_id": "stack-01"
+    },
+    {
+      "answer_sha256": "sha256:58bfb48042e10f9515e5a80c62fd9ecffcf6deb82eff93cf1a30dc0b502d80ab",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg2/mod.py:5:2`.",
+      "source_sha256": "sha256:ab8f09769c68cafeaee4f047e9fb4d73479e6649e48be15b7f5549e66b165ba9",
+      "truth": "observed",
+      "unit_id": "stack-02"
+    },
+    {
+      "answer_sha256": "sha256:1a4952f6b8586f4348eab82be13edba719df8602c991a142b1a4a1c80a998890",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg3/mod.py:5:2`.",
+      "source_sha256": "sha256:d0d410caec640b975ab8963604367623910c3521adb7551b3ebaa147028d8476",
+      "truth": "observed",
+      "unit_id": "stack-03"
+    },
+    {
+      "answer_sha256": "sha256:028c0b7fc730b2dc4253075607bec0eb06aa40f97279347fa30a614e003c2de3",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg4/mod.py:5:2`.",
+      "source_sha256": "sha256:855b733ae26d4d68932a0917050437e9612f71685a4ca62c3e4a917def8283a6",
+      "truth": "observed",
+      "unit_id": "stack-04"
+    },
+    {
+      "answer_sha256": "sha256:09c3668fb2f03bb85a00de87824f2cb4691489bc78e2b0115981b07ca15ce17e",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg5/mod.py:5:2`.",
+      "source_sha256": "sha256:c7a06cfda737fba80b254859f70e0bec067440da4dcb4bf5791448d332bbd0a9",
+      "truth": "observed",
+      "unit_id": "stack-05"
+    },
+    {
+      "answer_sha256": "sha256:7d5853f134379f49ce7679d6389ceb07177ced7f2f60ac61351d7b01bb342d9c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg6/mod.py:5:2`.",
+      "source_sha256": "sha256:0cc88e9aa2b75fa6ae36d0268def87fe678cd063fa41a8f6aa5fd239082a80b2",
+      "truth": "observed",
+      "unit_id": "stack-06"
+    },
+    {
+      "answer_sha256": "sha256:46812a83f0e36828cc2cca2fb5bde2d1d3ed6887f875c1e7be445501773eed1a",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg7/mod.py:5:2`.",
+      "source_sha256": "sha256:6357315524a0cb446af98a76f11d7ae26d10f1d4df7d731190b33408804e989d",
+      "truth": "observed",
+      "unit_id": "stack-07"
+    },
+    {
+      "answer_sha256": "sha256:df953801c57d45fe1c13417832d3b8a19c96465e028aa8227c02a0b51ce14521",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg8/mod.py:9:2`.",
+      "source_sha256": "sha256:0fdbedf154b092822b169d93ff5a4b444b6f5d1dd079693d167d521b73e5e923",
+      "truth": "unknown",
+      "unit_id": "stack-08"
+    },
+    {
+      "answer_sha256": "sha256:5bfb5471188c2b943707e2c90e1374212360506938a901f230f60c608ced462f",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg9/mod.py:9:2`.",
+      "source_sha256": "sha256:3db56fae1449e963279d0209baf28cccb4e03fe20aeb47325c61aa4eb6aa30c7",
+      "truth": "unknown",
+      "unit_id": "stack-09"
+    },
+    {
+      "answer_sha256": "sha256:8891cd72b1d8bdcd6985290dc30a2164061d5d7d012fb0e257d5bdf6189075ba",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg10/mod.py:9:2`.",
+      "source_sha256": "sha256:9008b82760f3f06d62141ff18568fdd050e6b9b8447243a57c3a03ea1a9f3c1d",
+      "truth": "unknown",
+      "unit_id": "stack-10"
+    },
+    {
+      "answer_sha256": "sha256:ce7382985d374b428db912719a08b2694fa2f0bc0f628127822554261b0a115e",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg11/mod.py:9:2`.",
+      "source_sha256": "sha256:6f9630b0d0851409309935b07b8870bf3ded0a1224885b7df6fceb82533ade01",
+      "truth": "unknown",
+      "unit_id": "stack-11"
+    },
+    {
+      "answer_sha256": "sha256:7e3156ed646edc5d27d2df25b336bbff0ffd436b4cbd89af2d09c66fa086b63c",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg12/mod.py:9:2`.",
+      "source_sha256": "sha256:63c806149e98c29fafac1f1ac22905118f40fb296a5793e11494513cc7b8e198",
+      "truth": "unknown",
+      "unit_id": "stack-12"
+    },
+    {
+      "answer_sha256": "sha256:6986377384425b1f746c6cec281f281ec1bde93bc5eaf359a4880f4150b675ca",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg13/mod.py:9:2`.",
+      "source_sha256": "sha256:17273de748fb45795fdcbc8e96fdb0088733a4c75de44db7002cdefc4ac1add8",
+      "truth": "unknown",
+      "unit_id": "stack-13"
+    },
+    {
+      "answer_sha256": "sha256:81fe975029420a4013162629166cec3eb134f8a035c67b71846d554e4767bc31",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg14/mod.py:9:2`.",
+      "source_sha256": "sha256:88b394093c53975caf532869c1ad9284ee7c6b529ec279b26458ccc5ebbae969",
+      "truth": "unknown",
+      "unit_id": "stack-14"
+    },
+    {
+      "answer_sha256": "sha256:5bfe8a6078cadcc4554b6f608244ede55a1846c2b0b1298a335683c284c5450c",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg15/mod.py:9:2`.",
+      "source_sha256": "sha256:905db43fb0c9e695a33c7c9b0750688bc91885eb47c9dd89a325ed0e26b7c1f0",
+      "truth": "unknown",
+      "unit_id": "stack-15"
+    },
+    {
+      "answer_sha256": "sha256:bbf0ffd6f42dd8039ab577d450462d90c15667a4e6cb3b38b9979dcbcb6313d2",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          37
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          28
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`inner` is defined at line 2.",
+      "source_sha256": "sha256:6f18adbc66242ceff94d3da31fef7924cf9e1f7c52b3a88ab939cbbb9720d6fc",
+      "truth": "observed",
+      "unit_id": "plain-nested-scope"
+    },
+    {
+      "answer_sha256": "sha256:8a7b72da09e1f99caa0d49596d0d71253931c2218bd527ea7fc3ec9fc0c74b3a",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [],
+      "completeness": [],
+      "dialect": "plain",
+      "evidence_spans": [],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha` is not defined at line 1.",
+      "source_sha256": "sha256:39b53b0a1cce7fcc586ec59ac6fcb0a607f135b15b80ac76a0a8a88e90f5e9bc",
+      "truth": "unknown",
+      "unit_id": "plain-negation"
+    },
+    {
+      "answer_sha256": "sha256:1a4b4c35f5ac04f95d7da2cc9f2cb0d07e0b5db6b45acdaa6bd2dc922f15b330",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          23,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "scoped_contradiction",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha` is defined at lines 2-3.",
+      "source_sha256": "sha256:1b176924f51d5defe49dec356eafe4b0a6552673028ee4b66d5b33282bb4c8e5",
+      "truth": "scoped_contradiction",
+      "unit_id": "numbered-wrong-range"
+    },
+    {
+      "answer_sha256": "sha256:233cab0707ce245ad03f5f8cd08c228dc5341b551e08c516cc0ae9fd4d2d66c7",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          18
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`mod.py` at line 7.",
+      "source_sha256": "sha256:cab005718e4b4fd1e32ee0e67e3616e262bd1b24326fe491506a2727ec25af20",
+      "truth": "unknown",
+      "unit_id": "grep-duplicate-basename"
+    },
+    {
+      "answer_sha256": "sha256:dc2569c43a74426d37f08cf2c2bb6792008b45e26116be8faf508a5d103c73f3",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          20
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`a/mod.py` at line 7.",
+      "source_sha256": "sha256:8aab22718f09132244a20a734ab82b357a377604b755585fd2abdde09f6b688f",
+      "truth": "unknown",
+      "unit_id": "grep-source-swap"
+    },
+    {
+      "answer_sha256": "sha256:65dabf537a506d650b38e7411acf8a229fceb9ec85ffd3017fad3ebdc2580a0b",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          20
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`a/mod.py` at line 9.",
+      "source_sha256": "sha256:29a79284042318667d32d2d246efcaf8c6ed76f0b364d68bab6e9657627ad1ca",
+      "truth": "unknown",
+      "unit_id": "grep-omitted-record"
+    },
+    {
+      "answer_sha256": "sha256:e5906d2f78108dd34bb47d14701e9f354996c8296ca4254a23faf32df4c5e682",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          14
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`b/mod.js:9:2`",
+      "source_sha256": "sha256:64b76668c00890e747f2909140b3ef638235f218f6ba6ccd7ef4f5a720fdd7f3",
+      "truth": "unknown",
+      "unit_id": "stack-duplicate-response"
+    },
+    {
+      "answer_sha256": "sha256:f030b51b5fa17747381e924fad2b25ab885dd877a67a8beb2ca1735b2b797b78",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          14
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`a/mod.js:5:2`",
+      "source_sha256": "sha256:8e3d6eaee0dcd10cfe6b6a67277fb1be87211b441c8644197d5b0a5833408f93",
+      "truth": "unknown",
+      "unit_id": "stack-truncated-source"
+    }
+  ],
+  "flagged_adversarial": false,
+  "gate_check_summary": [],
+  "historical_model_id": "unsloth/Qwen3.8-27B-GGUF",
+  "honest_verdict": "complete_circular_positive_fixture_protocol_ready",
+  "inference_substrate": "deterministic_tool_source_atoms_no_llm",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "attempted": 0,
+    "cancelled": 0,
+    "forwards": 0,
+    "generations": 0,
+    "loads": 0,
+    "tokens": 0
+  },
+  "milestone": "2026.09.668",
+  "model_invoked": false,
+  "model_specs": [],
+  "model_specs_declaration": "no model used or planned for current CPU work",
+  "phase_spans": [
+    {
+      "checkpoint": "results/raw/experiment_7658_v668_evidence_atoms/preconditions.json",
+      "completed_units": 4,
+      "duration_s": 0.005921233001572546,
+      "end_offset_s": 0.006104807998781325,
+      "heartbeat_times_s": [
+        0.00018357499720877968,
+        0.006104807998781325
+      ],
+      "phase": "preconditions",
+      "start_offset_s": 0.00018357499720877968
+    },
+    {
+      "checkpoint": "results/raw/experiment_7658_v668_evidence_atoms/rows.json",
+      "completed_units": 80,
+      "duration_s": 0.23513602700040792,
+      "end_offset_s": 0.24300784499791916,
+      "heartbeat_times_s": [
+        0.007871817997511243,
+        0.24300784499791916
+      ],
+      "phase": "source_atoms",
+      "start_offset_s": 0.007871817997511243
+    },
+    {
+      "checkpoint": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected",
+      "completed_units": 8,
+      "duration_s": 29.567816434002452,
+      "end_offset_s": 29.81118817300012,
+      "heartbeat_times_s": [
+        0.2433717389976664,
+        29.81118817300012
+      ],
+      "phase": "affected_validation",
+      "start_offset_s": 0.2433717389976664
+    },
+    {
+      "checkpoint": "results/raw/experiment_7658_v668_evidence_atoms/validation/terminal",
+      "completed_units": 3,
+      "duration_s": 4.976737257002242,
+      "end_offset_s": 34.79603866199977,
+      "heartbeat_times_s": [
+        29.819301404997532,
+        34.79603866199977
+      ],
+      "phase": "terminal_readers",
+      "start_offset_s": 29.819301404997532
+    }
+  ],
+  "pilot_coverage": [
+    {
+      "checked_atom_count": 0,
+      "dialect": "stack",
+      "unit_id": "sha256:7c28304dd46b096e234742e59bbf88b5208548225c427641547e23401e373da4"
+    },
+    {
+      "checked_atom_count": 1,
+      "dialect": "numbered",
+      "unit_id": "sha256:5481a5993c4e8488eb9b00d0245cc07cf527a2df9a4c6f2beab5e104afb584be"
+    },
+    {
+      "checked_atom_count": 0,
+      "dialect": "plain",
+      "unit_id": "sha256:8250589339bd7bc0dea485aecf136f89966d92ff58fec019e1af9923a2955eb7"
+    },
+    {
+      "checked_atom_count": 2,
+      "dialect": "grep",
+      "unit_id": "sha256:54e8ef94946cc3f75790d598d3cae106a0a4a9931d2b2f976228bd49c010b6ba"
+    },
+    {
+      "checked_atom_count": 1,
+      "dialect": "numbered",
+      "unit_id": "sha256:72f9446d8704d0371ac9d6ec1231f92f0c00661644499d15be1bbe22d3704642"
+    },
+    {
+      "checked_atom_count": 0,
+      "dialect": "unknown",
+      "unit_id": "sha256:81bd2bdd91a0567437a8e89d33d4b6a697f7f0a199612934a0039f5c2e2bb2d7"
+    },
+    {
+      "checked_atom_count": 0,
+      "dialect": "grep",
+      "unit_id": "sha256:fd0636489092fb1466fd949ad71982104da55b50f215f2bddc434f4d06559e24"
+    },
+    {
+      "checked_atom_count": 1,
+      "dialect": "numbered",
+      "unit_id": "sha256:5f6ca927809e4c23e870f3dbae9630b7095f933f79d6a256142adf247a3ed356"
+    }
+  ],
+  "planned_MODEL_SPECS": [],
+  "planned_inference_substrate_class": "no_model_load",
+  "preconditions_checked": [
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "upstream": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7644_v667_source_witness_prototype.json",
+      "upstream": "results/experiment_7644_v667_source_witness_prototype.json"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7646_v667_source_feature_corpus.json",
+      "upstream": "results/experiment_7646_v667_source_feature_corpus.json"
+    },
+    {
+      "check": "host_cpu_available",
+      "expected": 1,
+      "field": "cpu_count",
+      "observed": 24,
+      "operator": ">=",
+      "passed": true,
+      "path": "/proc/self",
+      "upstream": "local"
+    }
+  ],
+  "random_seed": {
+    "fixture_generation": "deterministic indexed cases; no random sampling"
+  },
+  "reproducibility_checksum": "sha256:d052c85d21b323fcca7eedd464aacf2195be534e9a76c0835395321c84a81a98",
+  "retirement": "Retire unchanged V667 In-file grammar; native tool-source atoms are the new mechanism.",
+  "rows": [
+    {
+      "answer_sha256": "sha256:e187e8d7dea663eebf03b31b8c9f80ba9687d878bc5df504f9075bd44f379c55",
+      "arm": "original_source",
+      "censored": true,
+      "checked_atoms": 0,
+      "dialect": "stack",
+      "excluded": false,
+      "old_checked": 0,
+      "pilot_index": 0,
+      "provenance": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "source_atom_count": 14,
+      "source_sha256": "sha256:3af21abef99389583e254ad12d5d530b3ba43068b6383f30b2a9ecb998c8bfd2",
+      "unit_id": "sha256:7c28304dd46b096e234742e59bbf88b5208548225c427641547e23401e373da4",
+      "whole_answer_certified": false,
+      "witnesses": [
+        {
+          "byte_end": 111,
+          "byte_start": 70,
+          "completeness": false,
+          "evidence_span": null,
+          "kind": "path_line",
+          "line": 120,
+          "source_id": "node_modules/stripe/lib/charge.js",
+          "status": "unknown",
+          "text": "`node_modules/stripe/lib/charge.js:120:5`"
+        }
+      ]
+    },
+    {
+      "answer_sha256": "sha256:41c68b777055c55ae1d561e120b2fce932214b7b5ab10a8f98b6f48819c13efd",
+      "arm": "original_source",
+      "censored": false,
+      "checked_atoms": 1,
+      "dialect": "numbered",
+      "excluded": false,
+      "old_checked": 0,
+      "pilot_index": 1,
+      "provenance": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "source_atom_count": 116,
+      "source_sha256": "sha256:7bc98a86f45f7ed26298044c126f7be7c0b87743d10ff2c9ce94fb2b7bbb6692",
+      "unit_id": "sha256:5481a5993c4e8488eb9b00d0245cc07cf527a2df9a4c6f2beab5e104afb584be",
+      "whole_answer_certified": false,
+      "witnesses": [
+        {
+          "byte_end": 95,
+          "byte_start": 4,
+          "completeness": true,
+          "evidence_span": [
+            2127,
+            2164
+          ],
+          "kind": "definition",
+          "line": 66,
+          "name": "serialize",
+          "status": "scoped_contradiction",
+          "text": "`serialize` method is defined as a static method in the `JSONReporter` class at lines 66-74"
+        }
+      ]
+    },
+    {
+      "answer_sha256": "sha256:ec5c76b509eaa2c2ea840f0b38f1cf1b7d1e06237dfe68c5ce54139cd620691f",
+      "arm": "original_source",
+      "censored": true,
+      "checked_atoms": 0,
+      "dialect": "plain",
+      "excluded": false,
+      "old_checked": 0,
+      "pilot_index": 2,
+      "provenance": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "source_atom_count": 204,
+      "source_sha256": "sha256:2c3b40426d4b4889e18c09dcebae5335d03f85209cf5b612d65e1b4935b2d4de",
+      "unit_id": "sha256:8250589339bd7bc0dea485aecf136f89966d92ff58fec019e1af9923a2955eb7",
+      "whole_answer_certified": false,
+      "witnesses": []
+    },
+    {
+      "answer_sha256": "sha256:e4549be2972f77cddbb3924501fa863c8c72355f51185f90a03efd1f53c10604",
+      "arm": "original_source",
+      "censored": false,
+      "checked_atoms": 2,
+      "dialect": "grep",
+      "excluded": false,
+      "old_checked": 0,
+      "pilot_index": 3,
+      "provenance": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "raw_metrics": {
+        "checked_propositions": 2
+      },
+      "source_atom_count": 16,
+      "source_sha256": "sha256:3d90e4494473ac0b0f3a3186b5296249680202182e01afc8044e2241f4e7fd44",
+      "unit_id": "sha256:54e8ef94946cc3f75790d598d3cae106a0a4a9931d2b2f976228bd49c010b6ba",
+      "whole_answer_certified": false,
+      "witnesses": [
+        {
+          "byte_end": 73,
+          "byte_start": 3,
+          "completeness": false,
+          "evidence_span": [
+            1061,
+            1078
+          ],
+          "kind": "path_line",
+          "line": 63,
+          "source_id": "sympy/physics/matrices.py",
+          "status": "observed",
+          "text": "`sympy/physics/matrices.py`, the variable `dxdy` is defined at line 63"
+        },
+        {
+          "byte_end": 73,
+          "byte_start": 45,
+          "completeness": false,
+          "evidence_span": null,
+          "kind": "definition",
+          "line": 63,
+          "name": "dxdy",
+          "status": "unknown",
+          "text": "`dxdy` is defined at line 63"
+        },
+        {
+          "byte_end": 351,
+          "byte_start": 249,
+          "completeness": false,
+          "evidence_span": [
+            759,
+            787
+          ],
+          "kind": "path_line",
+          "line": 161,
+          "source_id": "sympy/diffgeom/tests/test_diffgeom.py",
+          "status": "observed",
+          "text": "`sympy/diffgeom/tests/test_diffgeom.py`, `dxdy` is instantiated as a `Differential` object at line 161"
+        }
+      ]
+    },
+    {
+      "answer_sha256": "sha256:6134ca22e6f9b0d2883f93c15055df65a0f214940bea5191df418a551769549c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_atoms": 1,
+      "dialect": "numbered",
+      "excluded": false,
+      "old_checked": 0,
+      "pilot_index": 4,
+      "provenance": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "source_atom_count": 167,
+      "source_sha256": "sha256:a95aa05bc01cb6931a9e14584150e52c215a7d9cf8e8e33605260e9e4a0ab75d",
+      "unit_id": "sha256:72f9446d8704d0371ac9d6ec1231f92f0c00661644499d15be1bbe22d3704642",
+      "whole_answer_certified": false,
+      "witnesses": [
+        {
+          "byte_end": 92,
+          "byte_start": 32,
+          "completeness": true,
+          "evidence_span": [
+            5334,
+            5359
+          ],
+          "kind": "scope_line",
+          "line": 129,
+          "name": "check_models_permissions",
+          "status": "observed",
+          "text": "lines 129-164 within the `check_models_permissions` function"
+        }
+      ]
+    },
+    {
+      "answer_sha256": "sha256:181abda0f46da94dd936eb61eec7f21f841cdbd71dfcb30d2c963b87ace73c72",
+      "arm": "original_source",
+      "censored": true,
+      "checked_atoms": 0,
+      "dialect": "unknown",
+      "excluded": false,
+      "old_checked": 0,
+      "pilot_index": 5,
+      "provenance": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "source_atom_count": 0,
+      "source_sha256": "sha256:59256bc9a13c99e407956a0c3aa8865eeb49b1d4c73154db2a52f14283a56359",
+      "unit_id": "sha256:81bd2bdd91a0567437a8e89d33d4b6a697f7f0a199612934a0039f5c2e2bb2d7",
+      "whole_answer_certified": false,
+      "witnesses": [
+        {
+          "byte_end": 121,
+          "byte_start": 72,
+          "completeness": false,
+          "evidence_span": null,
+          "kind": "path_line",
+          "line": 1990,
+          "source_id": "django/template/backends/django.py",
+          "status": "unknown",
+          "text": "`django/template/backends/django.py` at line 1990"
+        }
+      ]
+    },
+    {
+      "answer_sha256": "sha256:f299174cd98ca32175f9bd0bd651e872b71a590e83e8db8d808d9f85323346c4",
+      "arm": "original_source",
+      "censored": true,
+      "checked_atoms": 0,
+      "dialect": "grep",
+      "excluded": false,
+      "old_checked": 0,
+      "pilot_index": 6,
+      "provenance": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "source_atom_count": 21,
+      "source_sha256": "sha256:906f6b4fff33836def96c12c0d479d6400ce85c26b3a47c67cc11b15ea984bd5",
+      "unit_id": "sha256:fd0636489092fb1466fd949ad71982104da55b50f215f2bddc434f4d06559e24",
+      "whole_answer_certified": false,
+      "witnesses": [
+        {
+          "byte_end": 132,
+          "byte_start": 67,
+          "completeness": false,
+          "evidence_span": null,
+          "kind": "path_line",
+          "line": 17,
+          "source_id": "django/contrib/gis/db/backends/postgis/operations.py",
+          "status": "unknown",
+          "text": "`django/contrib/gis/db/backends/postgis/operations.py` at line 17"
+        }
+      ]
+    },
+    {
+      "answer_sha256": "sha256:f407a22795a5232389f129e91492cd429c1527a7c37817a9f5cea12035487cc0",
+      "arm": "original_source",
+      "censored": false,
+      "checked_atoms": 1,
+      "dialect": "numbered",
+      "excluded": false,
+      "old_checked": 0,
+      "pilot_index": 7,
+      "provenance": "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "source_atom_count": 19,
+      "source_sha256": "sha256:af03ca7172cb2f5d8ba5a1d5009fa97bf3d7b1ca204b025e8aa226668808dde7",
+      "unit_id": "sha256:5f6ca927809e4c23e870f3dbae9630b7095f933f79d6a256142adf247a3ed356",
+      "whole_answer_certified": false,
+      "witnesses": [
+        {
+          "byte_end": 75,
+          "byte_start": 4,
+          "completeness": true,
+          "evidence_span": [
+            328,
+            355
+          ],
+          "kind": "definition",
+          "line": 10,
+          "name": "_entry",
+          "status": "observed",
+          "text": "`_entry` method of the `DiagonalMatrix` class is defined at lines 10-11"
+        }
+      ]
+    },
+    {
+      "answer_sha256": "sha256:bfdc851f9315baba6cb1f4b78b49c15034281bd8163a0bddb787a24ed94747bb",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_0` is defined at line 1.",
+      "source_sha256": "sha256:508288d9b801fd7ce9a74a3c50faedfa8d2510f53818238781802c5c2f65efb6",
+      "truth": "observed",
+      "unit_id": "plain-00"
+    },
+    {
+      "answer_sha256": "sha256:4d8c6f4a400dc0efdae4f341d14df1a392a5485627c1e2077192823ff774041c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_1` is defined at line 1.",
+      "source_sha256": "sha256:a7be1069563e4d93c64245300597bca1c302b2ed55c0ac01bb308098c602edab",
+      "truth": "observed",
+      "unit_id": "plain-01"
+    },
+    {
+      "answer_sha256": "sha256:7b12909e2f10308966f3a315be8f46381d56e3c8722d44a6e6d2ce2f9669edf2",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_2` is defined at line 1.",
+      "source_sha256": "sha256:8bcba2edb5078510220429d89a5cc4d8725a2b2dddaaa38163eea57d77ed80b1",
+      "truth": "observed",
+      "unit_id": "plain-02"
+    },
+    {
+      "answer_sha256": "sha256:792821b70a41cd1281355dcc6d68b414c1987131e5d235b96152dcbdd5be3524",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_3` is defined at line 1.",
+      "source_sha256": "sha256:e8e744893fc8f0817207183a4bb07bcab48633c3ce583bfad2dfaa5254454805",
+      "truth": "observed",
+      "unit_id": "plain-03"
+    },
+    {
+      "answer_sha256": "sha256:fe28cd5e72c6318e8d00698a93b5dc53fc9e3bb97b476fd49e97eaea2b1c8737",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_4` is defined at line 1.",
+      "source_sha256": "sha256:780538ece2d3ad9fb67faa82eed9825654fba594d15afd52a2d1e2b2c8541804",
+      "truth": "observed",
+      "unit_id": "plain-04"
+    },
+    {
+      "answer_sha256": "sha256:330696ef6dd6967182d964eda536bf1a5a7b1aaca12495c485e1dbd926275e17",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_5` is defined at line 1.",
+      "source_sha256": "sha256:3578e5dd3126f43e2470c7fde3d32ca3f096f6f6ff28c54450ffd19645920082",
+      "truth": "observed",
+      "unit_id": "plain-05"
+    },
+    {
+      "answer_sha256": "sha256:eaa25c7e104e0a528a5b80df6efa990d178b0feafb1d0cca066eeadecfa3f526",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_6` is defined at line 1.",
+      "source_sha256": "sha256:47165291ef2d8f1b504afe82b675e69f2432a6744107b2260cd5113790760800",
+      "truth": "observed",
+      "unit_id": "plain-06"
+    },
+    {
+      "answer_sha256": "sha256:fea21cf017e5469be43f22bfef1207216d9339525d4cb0a0d31ffac1a116166a",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_7` is defined at line 1.",
+      "source_sha256": "sha256:a4eab1a7e79a66d7e96a4642376e48740cd9d04b464d901066fe7a46afb491bc",
+      "truth": "observed",
+      "unit_id": "plain-07"
+    },
+    {
+      "answer_sha256": "sha256:5f3189334958b0e74155247297e7cfce8cf7f09639298482a98b9dd74f6011f4",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_8` is defined at line 9.",
+      "source_sha256": "sha256:4642407c39fc4396c1c238cfbfca05b79e7b849dad4592e4b3f85c5f2ec4596f",
+      "truth": "unknown",
+      "unit_id": "plain-08"
+    },
+    {
+      "answer_sha256": "sha256:9112b545748e39df27eac66c8d40adb5379b613be895b61b5ad4c127ead74ec0",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_9` is defined at line 9.",
+      "source_sha256": "sha256:6f25ff4ded80f71b93da99ba4832833dc6e0503689909d87936f5365e2428398",
+      "truth": "unknown",
+      "unit_id": "plain-09"
+    },
+    {
+      "answer_sha256": "sha256:a520638bb34b708b6b7cde9fd8f25d47c9f745c8c2176eef213f16db9d53c424",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_10` is defined at line 9.",
+      "source_sha256": "sha256:e3dc1a7ad9802f76685da8442497dbe221ab52c818df3052f0ccab3260939d9a",
+      "truth": "unknown",
+      "unit_id": "plain-10"
+    },
+    {
+      "answer_sha256": "sha256:93b784d5082de363ac6d1b9015ef1c8a87461485c67804376c3fac1dcdadbac0",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_11` is defined at line 9.",
+      "source_sha256": "sha256:97a46896f20a9667bccc1e9e720c23b599d2774143138caf1890a2a4e6083b41",
+      "truth": "unknown",
+      "unit_id": "plain-11"
+    },
+    {
+      "answer_sha256": "sha256:fedad2135f797f004475ace04e92995d5a7a5acd45328ad6175552d900b02dde",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_12` is defined at line 9.",
+      "source_sha256": "sha256:5f83afd872e60ba3e9785fe9d24f2ae8e09f59de6a9a61dce3470ee18fdae3e8",
+      "truth": "unknown",
+      "unit_id": "plain-12"
+    },
+    {
+      "answer_sha256": "sha256:619a08e91dd67a873972ebbf1ce2403f500add5d79d0b55c35f0df45ef5d54a6",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_13` is defined at line 9.",
+      "source_sha256": "sha256:cd11eafb0d54c645d2f4ff94d0b5d06855b7f7c0aa0a8387ea10efaf82556bae",
+      "truth": "unknown",
+      "unit_id": "plain-13"
+    },
+    {
+      "answer_sha256": "sha256:49f20624f101cb5fd2a3a2e357ee4c7f17dbf2831b249e1ad2387fc3b8bd8874",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_14` is defined at line 9.",
+      "source_sha256": "sha256:e45b3b7038bf6a496d7a6ec6105e66e36ecb0cc0f782adc59f31f95938dc70db",
+      "truth": "unknown",
+      "unit_id": "plain-14"
+    },
+    {
+      "answer_sha256": "sha256:70097caf78f3add68dd491b6dfafdf67dd50b357e3f2435125000231398b12b2",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_15` is defined at line 9.",
+      "source_sha256": "sha256:df9f082e133adc3f5a0b0ff32aabeb3d44f2034b965d81a85111895c3d6ec219",
+      "truth": "unknown",
+      "unit_id": "plain-15"
+    },
+    {
+      "answer_sha256": "sha256:bfdc851f9315baba6cb1f4b78b49c15034281bd8163a0bddb787a24ed94747bb",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_0` is defined at line 1.",
+      "source_sha256": "sha256:8253ecf260b27650db02ee6f5a313111bf0338b278d4d3f0ca8e59f84ba4f6b3",
+      "truth": "observed",
+      "unit_id": "numbered-00"
+    },
+    {
+      "answer_sha256": "sha256:4d8c6f4a400dc0efdae4f341d14df1a392a5485627c1e2077192823ff774041c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_1` is defined at line 1.",
+      "source_sha256": "sha256:7c4383c2af50163c92a6071232c8517903130d60c3e2924b1538ee3f7a1faa77",
+      "truth": "observed",
+      "unit_id": "numbered-01"
+    },
+    {
+      "answer_sha256": "sha256:7b12909e2f10308966f3a315be8f46381d56e3c8722d44a6e6d2ce2f9669edf2",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_2` is defined at line 1.",
+      "source_sha256": "sha256:fca5dde394fd6386e3c9295531902d8b44749680ec5c43459748d015b8bbfb70",
+      "truth": "observed",
+      "unit_id": "numbered-02"
+    },
+    {
+      "answer_sha256": "sha256:792821b70a41cd1281355dcc6d68b414c1987131e5d235b96152dcbdd5be3524",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_3` is defined at line 1.",
+      "source_sha256": "sha256:427b82f71e2b9b29c932176405cdcfbafbab2f8988bde7f280d987e099fc9dca",
+      "truth": "observed",
+      "unit_id": "numbered-03"
+    },
+    {
+      "answer_sha256": "sha256:fe28cd5e72c6318e8d00698a93b5dc53fc9e3bb97b476fd49e97eaea2b1c8737",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_4` is defined at line 1.",
+      "source_sha256": "sha256:d001096c65353b0c02542f7df2b0c5c8eeda22bf5413bd444e1687a55273163a",
+      "truth": "observed",
+      "unit_id": "numbered-04"
+    },
+    {
+      "answer_sha256": "sha256:330696ef6dd6967182d964eda536bf1a5a7b1aaca12495c485e1dbd926275e17",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_5` is defined at line 1.",
+      "source_sha256": "sha256:895edf90364f08e18779c84aee47d00edfb808533e59e75012a98e2372adfa15",
+      "truth": "observed",
+      "unit_id": "numbered-05"
+    },
+    {
+      "answer_sha256": "sha256:eaa25c7e104e0a528a5b80df6efa990d178b0feafb1d0cca066eeadecfa3f526",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_6` is defined at line 1.",
+      "source_sha256": "sha256:02f33eddc703aa1dbdacc60fc5bf55e3f305e9cc2fcd111719c25b32f9dab92c",
+      "truth": "observed",
+      "unit_id": "numbered-06"
+    },
+    {
+      "answer_sha256": "sha256:fea21cf017e5469be43f22bfef1207216d9339525d4cb0a0d31ffac1a116166a",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          20,
+          34
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha_7` is defined at line 1.",
+      "source_sha256": "sha256:72adc5fe22608d002db19eae9e7096e0d6f0c08514d7c6df9021e9e88c4d10a6",
+      "truth": "observed",
+      "unit_id": "numbered-07"
+    },
+    {
+      "answer_sha256": "sha256:5f3189334958b0e74155247297e7cfce8cf7f09639298482a98b9dd74f6011f4",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_8` is defined at line 9.",
+      "source_sha256": "sha256:0ed3617f1e1da07fcde0f9406e527f8b25fcdb21d9ba74c2333efb449f8f9928",
+      "truth": "unknown",
+      "unit_id": "numbered-08"
+    },
+    {
+      "answer_sha256": "sha256:9112b545748e39df27eac66c8d40adb5379b613be895b61b5ad4c127ead74ec0",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          30
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_9` is defined at line 9.",
+      "source_sha256": "sha256:b35832d9b60bb96be8b2ac23a1246aad49afad437d6dab7f9f2efb1fc5c43b47",
+      "truth": "unknown",
+      "unit_id": "numbered-09"
+    },
+    {
+      "answer_sha256": "sha256:a520638bb34b708b6b7cde9fd8f25d47c9f745c8c2176eef213f16db9d53c424",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_10` is defined at line 9.",
+      "source_sha256": "sha256:4cfb1cc80e49338f2ab9b9f4193eef7ffa7cbe4cdf67064ebc8b6d88f0b49e25",
+      "truth": "unknown",
+      "unit_id": "numbered-10"
+    },
+    {
+      "answer_sha256": "sha256:93b784d5082de363ac6d1b9015ef1c8a87461485c67804376c3fac1dcdadbac0",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_11` is defined at line 9.",
+      "source_sha256": "sha256:b2b90529763f7b744dd147c76c2e4ed5d9d5da15fb99d70a58c47ed7a0d036c4",
+      "truth": "unknown",
+      "unit_id": "numbered-11"
+    },
+    {
+      "answer_sha256": "sha256:fedad2135f797f004475ace04e92995d5a7a5acd45328ad6175552d900b02dde",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_12` is defined at line 9.",
+      "source_sha256": "sha256:0a645089d87ab928a600c562191bfb1f14ab6e86d4947873b42f3db8a7a19c8c",
+      "truth": "unknown",
+      "unit_id": "numbered-12"
+    },
+    {
+      "answer_sha256": "sha256:619a08e91dd67a873972ebbf1ce2403f500add5d79d0b55c35f0df45ef5d54a6",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_13` is defined at line 9.",
+      "source_sha256": "sha256:3b985ec1d2f5c9c1d7d11840c3da0d46e8e3a67a57e1b5a918bed71d5a4b4ac4",
+      "truth": "unknown",
+      "unit_id": "numbered-13"
+    },
+    {
+      "answer_sha256": "sha256:49f20624f101cb5fd2a3a2e357ee4c7f17dbf2831b249e1ad2387fc3b8bd8874",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_14` is defined at line 9.",
+      "source_sha256": "sha256:3ab1c0426ef3d38b00c78c5048712f1a88072a14588a5d4e0f17ebce46ecca83",
+      "truth": "unknown",
+      "unit_id": "numbered-14"
+    },
+    {
+      "answer_sha256": "sha256:70097caf78f3add68dd491b6dfafdf67dd50b357e3f2435125000231398b12b2",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha_15` is defined at line 9.",
+      "source_sha256": "sha256:600e7db4e920eb522b29516efb191f082935e07c6e5314c3fd6c4d2dba11155d",
+      "truth": "unknown",
+      "unit_id": "numbered-15"
+    },
+    {
+      "answer_sha256": "sha256:fb672d71283fc66b35128c8f5b59b0bffe9b6073463a025ee85c19eefcc2d9a3",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg0/mod.py` at line 7.",
+      "source_sha256": "sha256:36b13aaae1b20aa6bc2f69f7bb9d8db986aabfea7f54d97054cf5160889c8903",
+      "truth": "observed",
+      "unit_id": "grep-00"
+    },
+    {
+      "answer_sha256": "sha256:180206070cbe5704584dd7c4a9a3dd8f5731f72c03ebcb7faec8b57bf6605fd6",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg1/mod.py` at line 7.",
+      "source_sha256": "sha256:41cd93fe98f36aecc0fea8ff1b5c598c92d70c6e877e793edf039c867f2942ad",
+      "truth": "observed",
+      "unit_id": "grep-01"
+    },
+    {
+      "answer_sha256": "sha256:139b3dfd6ad91666fffcb87c31ee688780b4d7a90d2b3ed5972cb080d68e9f13",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg2/mod.py` at line 7.",
+      "source_sha256": "sha256:d8cfa0564d311c8545176cc991f127459186f51d16664f8462aaba58c3debaeb",
+      "truth": "observed",
+      "unit_id": "grep-02"
+    },
+    {
+      "answer_sha256": "sha256:f2442dfbbc0055973978a0bb68dedc1c48ac5e2b3af411a43e2d807f6a9e4f84",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg3/mod.py` at line 7.",
+      "source_sha256": "sha256:10bb60803e0855ae9353818c598e50ea75c1782eb7d1bb2f70ac09beb26d33e4",
+      "truth": "observed",
+      "unit_id": "grep-03"
+    },
+    {
+      "answer_sha256": "sha256:8213938f470a47d864c7c99aa0c895e6852d80efca55b3b9f109a681e13fba45",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg4/mod.py` at line 7.",
+      "source_sha256": "sha256:2b6dc64e0ee28962a715e776647ede597b57fa5b4f0b25125b0427ad984b113c",
+      "truth": "observed",
+      "unit_id": "grep-04"
+    },
+    {
+      "answer_sha256": "sha256:43121206db0d9939d090d1637b017c9dad5aa860f93aa5434fe9b0f6618cda03",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg5/mod.py` at line 7.",
+      "source_sha256": "sha256:47fac0751327d07270ae308dbc2f59be4af5f7414a7eaefacc70407e8a1bf24b",
+      "truth": "observed",
+      "unit_id": "grep-05"
+    },
+    {
+      "answer_sha256": "sha256:0aa0b2287137a1579f362aa27a78976f0bc413e610e674a94b94ad805644f870",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg6/mod.py` at line 7.",
+      "source_sha256": "sha256:b6ac84f0b4b85fa1f255fd596c6b6ce6dd6af13d3c7fc284c3fc09ba53f0b477",
+      "truth": "observed",
+      "unit_id": "grep-06"
+    },
+    {
+      "answer_sha256": "sha256:ee00cf4ed81057c13a192141156e3312343e97af36bd09a99ca25a6f5e4b67e7",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        [
+          31,
+          49
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`pkg7/mod.py` at line 7.",
+      "source_sha256": "sha256:2659a3b517da7c70cfd96a2efdea9cb15539ed1626eb9b1b136b79b4df4fe3e3",
+      "truth": "observed",
+      "unit_id": "grep-07"
+    },
+    {
+      "answer_sha256": "sha256:533a11878d43ffee335b75bc15e6bb01d4de2861640b654e9e769fc85c374245",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg8/mod.py` at line 9.",
+      "source_sha256": "sha256:5a793bd11ae0399513e6ff4f2cdbdf1e5256379929da5433cde760f0b7ddf8fc",
+      "truth": "unknown",
+      "unit_id": "grep-08"
+    },
+    {
+      "answer_sha256": "sha256:c6349ac7e2904b50aa7d23f906c9849712dbd667cc7d85347e1a934500a78c35",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          23
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg9/mod.py` at line 9.",
+      "source_sha256": "sha256:e49d7c6100d2bab445494f951a70fa4515432354b2707d348f298dc22f0cb0a6",
+      "truth": "unknown",
+      "unit_id": "grep-09"
+    },
+    {
+      "answer_sha256": "sha256:00dd895547bf50938da1d5972425548a5db6a349f16d7dd03857d4ec4b497942",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg10/mod.py` at line 9.",
+      "source_sha256": "sha256:d184a18ae3829eb733ef3000c84166a0c47c33b8383d30b133af25a6de0561e1",
+      "truth": "unknown",
+      "unit_id": "grep-10"
+    },
+    {
+      "answer_sha256": "sha256:3a500c2aecd6d3db536e4f306bd047916186ab9d8789af45018d06691bfb8458",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg11/mod.py` at line 9.",
+      "source_sha256": "sha256:e0c903bbf31d3ca8ebf9d85fdb78baaa7edb4d274e12ba6e20d98d725bf38e83",
+      "truth": "unknown",
+      "unit_id": "grep-11"
+    },
+    {
+      "answer_sha256": "sha256:89b6563a50c806e48bcc53e83f7eceb71c97418bc16d3e5c19e6b3e9b6b19f22",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg12/mod.py` at line 9.",
+      "source_sha256": "sha256:2699bb13f1c98b6c8b783d4580da6d8945a1fd4d6ac8c3e2360f373b1d152b1a",
+      "truth": "unknown",
+      "unit_id": "grep-12"
+    },
+    {
+      "answer_sha256": "sha256:c8b38f5810f43ecdcfdaeabb709b083a02806ee5e48dc7a7cc87f2a2cc865f99",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg13/mod.py` at line 9.",
+      "source_sha256": "sha256:dd97bf4d57226198d820f418bc6f0260f762d7ec9800668acbe6410a52c0c8f8",
+      "truth": "unknown",
+      "unit_id": "grep-13"
+    },
+    {
+      "answer_sha256": "sha256:7c4c1ca9364798989f381e30c8eb9208158fc866ce5e470a8beafe7750d28510",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg14/mod.py` at line 9.",
+      "source_sha256": "sha256:4ae3fb666e8e5b84a2ede7517c3f4ebb7496293d3c6d53fe0a4640e06a6e3c05",
+      "truth": "unknown",
+      "unit_id": "grep-14"
+    },
+    {
+      "answer_sha256": "sha256:7266b10b0b6a89422b0a294228a679d6b4cf5ec8a35e6424908c071ba6776775",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          24
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`pkg15/mod.py` at line 9.",
+      "source_sha256": "sha256:a623c2bb303eb0b99076135e5aec92c34ba95f8aa76b9a404d79589c1f52257e",
+      "truth": "unknown",
+      "unit_id": "grep-15"
+    },
+    {
+      "answer_sha256": "sha256:346def80cf1be2ff1dedbc64f4ff4e70d5096730311bdfee73c008a6df710bac",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg0/mod.py:5:2`.",
+      "source_sha256": "sha256:abd51227abc573cfca7924ceb988d3d2f4542da60c91a02c1fa20c32e49d5587",
+      "truth": "observed",
+      "unit_id": "stack-00"
+    },
+    {
+      "answer_sha256": "sha256:03c53d90d327c7e33969f54335f00d7d977cd66974a20c4932b3234d1234013c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg1/mod.py:5:2`.",
+      "source_sha256": "sha256:b0fedeb67f87afdb421eecc0309fa9e05e705b349939c2546a7fa3b3ea2cae2e",
+      "truth": "observed",
+      "unit_id": "stack-01"
+    },
+    {
+      "answer_sha256": "sha256:58bfb48042e10f9515e5a80c62fd9ecffcf6deb82eff93cf1a30dc0b502d80ab",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg2/mod.py:5:2`.",
+      "source_sha256": "sha256:ab8f09769c68cafeaee4f047e9fb4d73479e6649e48be15b7f5549e66b165ba9",
+      "truth": "observed",
+      "unit_id": "stack-02"
+    },
+    {
+      "answer_sha256": "sha256:1a4952f6b8586f4348eab82be13edba719df8602c991a142b1a4a1c80a998890",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg3/mod.py:5:2`.",
+      "source_sha256": "sha256:d0d410caec640b975ab8963604367623910c3521adb7551b3ebaa147028d8476",
+      "truth": "observed",
+      "unit_id": "stack-03"
+    },
+    {
+      "answer_sha256": "sha256:028c0b7fc730b2dc4253075607bec0eb06aa40f97279347fa30a614e003c2de3",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg4/mod.py:5:2`.",
+      "source_sha256": "sha256:855b733ae26d4d68932a0917050437e9612f71685a4ca62c3e4a917def8283a6",
+      "truth": "observed",
+      "unit_id": "stack-04"
+    },
+    {
+      "answer_sha256": "sha256:09c3668fb2f03bb85a00de87824f2cb4691489bc78e2b0115981b07ca15ce17e",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg5/mod.py:5:2`.",
+      "source_sha256": "sha256:c7a06cfda737fba80b254859f70e0bec067440da4dcb4bf5791448d332bbd0a9",
+      "truth": "observed",
+      "unit_id": "stack-05"
+    },
+    {
+      "answer_sha256": "sha256:7d5853f134379f49ce7679d6389ceb07177ced7f2f60ac61351d7b01bb342d9c",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg6/mod.py:5:2`.",
+      "source_sha256": "sha256:0cc88e9aa2b75fa6ae36d0268def87fe678cd063fa41a8f6aa5fd239082a80b2",
+      "truth": "observed",
+      "unit_id": "stack-06"
+    },
+    {
+      "answer_sha256": "sha256:46812a83f0e36828cc2cca2fb5bde2d1d3ed6887f875c1e7be445501773eed1a",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        [
+          32,
+          64
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "The frame is at `pkg7/mod.py:5:2`.",
+      "source_sha256": "sha256:6357315524a0cb446af98a76f11d7ae26d10f1d4df7d731190b33408804e989d",
+      "truth": "observed",
+      "unit_id": "stack-07"
+    },
+    {
+      "answer_sha256": "sha256:df953801c57d45fe1c13417832d3b8a19c96465e028aa8227c02a0b51ce14521",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg8/mod.py:9:2`.",
+      "source_sha256": "sha256:0fdbedf154b092822b169d93ff5a4b444b6f5d1dd079693d167d521b73e5e923",
+      "truth": "unknown",
+      "unit_id": "stack-08"
+    },
+    {
+      "answer_sha256": "sha256:5bfb5471188c2b943707e2c90e1374212360506938a901f230f60c608ced462f",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          33
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg9/mod.py:9:2`.",
+      "source_sha256": "sha256:3db56fae1449e963279d0209baf28cccb4e03fe20aeb47325c61aa4eb6aa30c7",
+      "truth": "unknown",
+      "unit_id": "stack-09"
+    },
+    {
+      "answer_sha256": "sha256:8891cd72b1d8bdcd6985290dc30a2164061d5d7d012fb0e257d5bdf6189075ba",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg10/mod.py:9:2`.",
+      "source_sha256": "sha256:9008b82760f3f06d62141ff18568fdd050e6b9b8447243a57c3a03ea1a9f3c1d",
+      "truth": "unknown",
+      "unit_id": "stack-10"
+    },
+    {
+      "answer_sha256": "sha256:ce7382985d374b428db912719a08b2694fa2f0bc0f628127822554261b0a115e",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg11/mod.py:9:2`.",
+      "source_sha256": "sha256:6f9630b0d0851409309935b07b8870bf3ded0a1224885b7df6fceb82533ade01",
+      "truth": "unknown",
+      "unit_id": "stack-11"
+    },
+    {
+      "answer_sha256": "sha256:7e3156ed646edc5d27d2df25b336bbff0ffd436b4cbd89af2d09c66fa086b63c",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg12/mod.py:9:2`.",
+      "source_sha256": "sha256:63c806149e98c29fafac1f1ac22905118f40fb296a5793e11494513cc7b8e198",
+      "truth": "unknown",
+      "unit_id": "stack-12"
+    },
+    {
+      "answer_sha256": "sha256:6986377384425b1f746c6cec281f281ec1bde93bc5eaf359a4880f4150b675ca",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg13/mod.py:9:2`.",
+      "source_sha256": "sha256:17273de748fb45795fdcbc8e96fdb0088733a4c75de44db7002cdefc4ac1add8",
+      "truth": "unknown",
+      "unit_id": "stack-13"
+    },
+    {
+      "answer_sha256": "sha256:81fe975029420a4013162629166cec3eb134f8a035c67b71846d554e4767bc31",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg14/mod.py:9:2`.",
+      "source_sha256": "sha256:88b394093c53975caf532869c1ad9284ee7c6b529ec279b26458ccc5ebbae969",
+      "truth": "unknown",
+      "unit_id": "stack-14"
+    },
+    {
+      "answer_sha256": "sha256:5bfe8a6078cadcc4554b6f608244ede55a1846c2b0b1298a335683c284c5450c",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          16,
+          34
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "The frame is at `pkg15/mod.py:9:2`.",
+      "source_sha256": "sha256:905db43fb0c9e695a33c7c9b0750688bc91885eb47c9dd89a325ed0e26b7c1f0",
+      "truth": "unknown",
+      "unit_id": "stack-15"
+    },
+    {
+      "answer_sha256": "sha256:bbf0ffd6f42dd8039ab577d450462d90c15667a4e6cb3b38b9979dcbcb6313d2",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "plain",
+      "evidence_spans": [
+        [
+          17,
+          37
+        ]
+      ],
+      "excluded": false,
+      "observed": "observed",
+      "original_claim_spans": [
+        [
+          0,
+          28
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`inner` is defined at line 2.",
+      "source_sha256": "sha256:6f18adbc66242ceff94d3da31fef7924cf9e1f7c52b3a88ab939cbbb9720d6fc",
+      "truth": "observed",
+      "unit_id": "plain-nested-scope"
+    },
+    {
+      "answer_sha256": "sha256:8a7b72da09e1f99caa0d49596d0d71253931c2218bd527ea7fc3ec9fc0c74b3a",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [],
+      "completeness": [],
+      "dialect": "plain",
+      "evidence_spans": [],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`alpha` is not defined at line 1.",
+      "source_sha256": "sha256:39b53b0a1cce7fcc586ec59ac6fcb0a607f135b15b80ac76a0a8a88e90f5e9bc",
+      "truth": "unknown",
+      "unit_id": "plain-negation"
+    },
+    {
+      "answer_sha256": "sha256:1a4b4c35f5ac04f95d7da2cc9f2cb0d07e0b5db6b45acdaa6bd2dc922f15b330",
+      "arm": "original_source",
+      "censored": false,
+      "checked_proposition": [
+        "definition"
+      ],
+      "completeness": [
+        true
+      ],
+      "dialect": "numbered",
+      "evidence_spans": [
+        [
+          23,
+          31
+        ]
+      ],
+      "excluded": false,
+      "observed": "scoped_contradiction",
+      "original_claim_spans": [
+        [
+          0,
+          31
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 1
+      },
+      "residual_unverified_text": "`alpha` is defined at lines 2-3.",
+      "source_sha256": "sha256:1b176924f51d5defe49dec356eafe4b0a6552673028ee4b66d5b33282bb4c8e5",
+      "truth": "scoped_contradiction",
+      "unit_id": "numbered-wrong-range"
+    },
+    {
+      "answer_sha256": "sha256:233cab0707ce245ad03f5f8cd08c228dc5341b551e08c516cc0ae9fd4d2d66c7",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          18
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`mod.py` at line 7.",
+      "source_sha256": "sha256:cab005718e4b4fd1e32ee0e67e3616e262bd1b24326fe491506a2727ec25af20",
+      "truth": "unknown",
+      "unit_id": "grep-duplicate-basename"
+    },
+    {
+      "answer_sha256": "sha256:dc2569c43a74426d37f08cf2c2bb6792008b45e26116be8faf508a5d103c73f3",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          20
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`a/mod.py` at line 7.",
+      "source_sha256": "sha256:8aab22718f09132244a20a734ab82b357a377604b755585fd2abdde09f6b688f",
+      "truth": "unknown",
+      "unit_id": "grep-source-swap"
+    },
+    {
+      "answer_sha256": "sha256:65dabf537a506d650b38e7411acf8a229fceb9ec85ffd3017fad3ebdc2580a0b",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "grep",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          20
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`a/mod.py` at line 9.",
+      "source_sha256": "sha256:29a79284042318667d32d2d246efcaf8c6ed76f0b364d68bab6e9657627ad1ca",
+      "truth": "unknown",
+      "unit_id": "grep-omitted-record"
+    },
+    {
+      "answer_sha256": "sha256:e5906d2f78108dd34bb47d14701e9f354996c8296ca4254a23faf32df4c5e682",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          14
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`b/mod.js:9:2`",
+      "source_sha256": "sha256:64b76668c00890e747f2909140b3ef638235f218f6ba6ccd7ef4f5a720fdd7f3",
+      "truth": "unknown",
+      "unit_id": "stack-duplicate-response"
+    },
+    {
+      "answer_sha256": "sha256:f030b51b5fa17747381e924fad2b25ab885dd877a67a8beb2ca1735b2b797b78",
+      "arm": "original_source",
+      "censored": true,
+      "checked_proposition": [
+        "path_line"
+      ],
+      "completeness": [
+        false
+      ],
+      "dialect": "stack",
+      "evidence_spans": [
+        null
+      ],
+      "excluded": false,
+      "observed": "unknown",
+      "original_claim_spans": [
+        [
+          0,
+          14
+        ]
+      ],
+      "provenance": "independent_fixture_truth_v1",
+      "raw_metrics": {
+        "checked_propositions": 0
+      },
+      "residual_unverified_text": "`a/mod.js:5:2`",
+      "source_sha256": "sha256:8e3d6eaee0dcd10cfe6b6a67277fb1be87211b441c8644197d5b0a5833408f93",
+      "truth": "unknown",
+      "unit_id": "stack-truncated-source"
+    }
+  ],
+  "run_date": "20260925",
+  "sample_size_budget": {
+    "censored": 42,
+    "claim_limits": "No natural-answer accuracy, probability, utility, retention, or freshness inference.",
+    "eligible": 80,
+    "excluded": 0,
+    "intended_independent_groups": 80,
+    "observed_independent_groups": 80,
+    "prior_exposure": "Eight pilots were previously exposed; fixture truth is an exact oracle."
+  },
+  "schema": "carnot.exp7658.v668.evidence_atoms.v1",
+  "source_artifact_hashes": {
+    "missing_inputs": [],
+    "pre_gate_receipts": {},
+    "producers": {
+      "results/experiment_7644_v667_source_witness_prototype.json": "sha256:dddd7a78500b691bf1a3fdca1ebbdcc8ee32bdd2d38c923f2e750ce9ce6435e6",
+      "results/experiment_7646_v667_source_feature_corpus.json": "sha256:64403bf92247668e14502ca14c36b20e1862bc76ced260f86662c296ce35c27a",
+      "results/raw/experiment_7602_v664_evidence_requalification/pilot_model_inputs.jsonl": "sha256:51368fff2f49215e7315ce5f43371c1c836cbaa8ad96caa484e34bfc47c98c8e"
+    }
+  },
+  "validation_receipts": {
+    "duplicate_required_commands": [],
+    "failed_required_commands": [],
+    "frozen_affected_scope": {
+      "changed_modules": [
+        "python/carnot/verify/tool_source_atoms.py",
+        "python/carnot/experiment_7658_v668_evidence_atoms.py"
+      ],
+      "commands": [
+        {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-u",
+            "-c",
+            "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+            "--exp7303-resolve-imports",
+            "/home/ianblenke/github.com/ianblenke/carnot",
+            "carnot.verify.tool_source_atoms",
+            "carnot.experiment_7658_v668_evidence_atoms"
+          ],
+          "name": "worktree_imports"
+        },
+        {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "-n",
+            "0",
+            "-o",
+            "addopts=",
+            "--no-cov",
+            "--basetemp=/tmp/exp7658-5hx_vtn8/basetemp/focused",
+            "tests/python/test_experiment_7658_v668_evidence_atoms.py",
+            "-q"
+          ],
+          "name": "focused_pytest"
+        },
+        {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+            "run",
+            "--data-file=/tmp/exp7658-5hx_vtn8/.coverage",
+            "--include=*/verify/tool_source_atoms.py,*/experiment_7658_v668_evidence_atoms.py",
+            "-m",
+            "pytest",
+            "-n",
+            "0",
+            "-o",
+            "addopts=",
+            "--no-cov",
+            "--basetemp=/tmp/exp7658-5hx_vtn8/basetemp/coverage",
+            "tests/python/test_experiment_7658_v668_evidence_atoms.py",
+            "-q"
+          ],
+          "name": "changed_module_coverage"
+        },
+        {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+            "report",
+            "--data-file=/tmp/exp7658-5hx_vtn8/.coverage",
+            "--include=*/verify/tool_source_atoms.py,*/experiment_7658_v668_evidence_atoms.py",
+            "--show-missing",
+            "--fail-under=100"
+          ],
+          "name": "changed_module_coverage_report"
+        },
+        {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+            "check",
+            "python/carnot/verify/tool_source_atoms.py",
+            "python/carnot/experiment_7658_v668_evidence_atoms.py",
+            "scripts/experiments/experiment_7658_v668_evidence_atoms.py",
+            "tests/python/test_experiment_7658_v668_evidence_atoms.py"
+          ],
+          "name": "ruff_check"
+        },
+        {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+            "format",
+            "--check",
+            "python/carnot/verify/tool_source_atoms.py",
+            "python/carnot/experiment_7658_v668_evidence_atoms.py",
+            "scripts/experiments/experiment_7658_v668_evidence_atoms.py",
+            "tests/python/test_experiment_7658_v668_evidence_atoms.py"
+          ],
+          "name": "ruff_format"
+        },
+        {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+            "python/carnot/verify/tool_source_atoms.py",
+            "python/carnot/experiment_7658_v668_evidence_atoms.py"
+          ],
+          "name": "changed_module_mypy"
+        },
+        {
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-u",
+            "scripts/check_spec_coverage.py",
+            "tests/python/test_experiment_7658_v668_evidence_atoms.py"
+          ],
+          "name": "scoped_spec_coverage"
+        }
+      ],
+      "static_paths": [
+        "scripts/experiments/experiment_7658_v668_evidence_atoms.py"
+      ],
+      "tests": [
+        "tests/python/test_experiment_7658_v668_evidence_atoms.py"
+      ]
+    },
+    "missing_required_commands": [],
+    "required_checks_passed": true,
+    "required_commands": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.verify.tool_source_atoms carnot.experiment_7658_v668_evidence_atoms",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+          "--exp7303-resolve-imports",
+          "/home/ianblenke/github.com/ianblenke/carnot",
+          "carnot.verify.tool_source_atoms",
+          "carnot.experiment_7658_v668_evidence_atoms"
+        ],
+        "duration_s": 2.7417554200001177,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected/00_worktree_imports.log",
+        "log_sha256": "sha256:14f17e09598cadc06094902773eaa32109a01246831f1ce0c0018f4cb4eeb021",
+        "name": "worktree_imports",
+        "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7658_v668_evidence_atoms\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7658_v668_evidence_atoms.py\", \"carnot.verify.tool_source_atoms\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/tool_source_atoms.py\"}}\n",
+        "passed": true,
+        "resolved_imports": {
+          "carnot.experiment_7658_v668_evidence_atoms": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7658_v668_evidence_atoms.py",
+          "carnot.verify.tool_source_atoms": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/tool_source_atoms.py"
+        },
+        "scope": "changed_modules",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7658-5hx_vtn8/basetemp/focused tests/python/test_experiment_7658_v668_evidence_atoms.py -q",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/exp7658-5hx_vtn8/basetemp/focused",
+          "tests/python/test_experiment_7658_v668_evidence_atoms.py",
+          "-q"
+        ],
+        "duration_s": 8.738852163001866,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected/01_focused_pytest.log",
+        "log_sha256": "sha256:3215a6944ce205503f942e5dac6cb165997ede45bed9e4e82fbcd63444811062",
+        "name": "focused_pytest",
+        "output_tail": "......                                                                   [100%]\n6 passed in 4.15s\n",
+        "passed": true,
+        "scope": "explicit_tests",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7658-5hx_vtn8/.coverage '--include=*/verify/tool_source_atoms.py,*/experiment_7658_v668_evidence_atoms.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7658-5hx_vtn8/basetemp/coverage tests/python/test_experiment_7658_v668_evidence_atoms.py -q",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "run",
+          "--data-file=/tmp/exp7658-5hx_vtn8/.coverage",
+          "--include=*/verify/tool_source_atoms.py,*/experiment_7658_v668_evidence_atoms.py",
+          "-m",
+          "pytest",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/exp7658-5hx_vtn8/basetemp/coverage",
+          "tests/python/test_experiment_7658_v668_evidence_atoms.py",
+          "-q"
+        ],
+        "duration_s": 17.5683107320001,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected/02_changed_module_coverage.log",
+        "log_sha256": "sha256:af03a3ecd4eb7ed030bbfd6dafc3db7376c893a270e269a20a690b8e1c6b2d65",
+        "name": "changed_module_coverage",
+        "output_tail": "......                                                                   [100%]\n6 passed in 8.68s\n",
+        "passed": true,
+        "scope": "explicit_tests_and_changed_modules",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7658-5hx_vtn8/.coverage '--include=*/verify/tool_source_atoms.py,*/experiment_7658_v668_evidence_atoms.py' --show-missing --fail-under=100",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "report",
+          "--data-file=/tmp/exp7658-5hx_vtn8/.coverage",
+          "--include=*/verify/tool_source_atoms.py,*/experiment_7658_v668_evidence_atoms.py",
+          "--show-missing",
+          "--fail-under=100"
+        ],
+        "duration_s": 0.12241328500022064,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected/03_changed_module_coverage_report.log",
+        "log_sha256": "sha256:f46cf769f255bb274b30c9f4d2feee844ab1e4f9beb440bca6efed68b474f0ed",
+        "name": "changed_module_coverage_report",
+        "output_tail": "Name                                                   Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------\npython/carnot/experiment_7658_v668_evidence_atoms.py      95      0   100%\npython/carnot/verify/tool_source_atoms.py                126      0   100%\n------------------------------------------------------------------------------------\nTOTAL                                                    221      0   100%\n",
+        "passed": true,
+        "scope": "changed_modules",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/verify/tool_source_atoms.py python/carnot/experiment_7658_v668_evidence_atoms.py scripts/experiments/experiment_7658_v668_evidence_atoms.py tests/python/test_experiment_7658_v668_evidence_atoms.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+          "check",
+          "python/carnot/verify/tool_source_atoms.py",
+          "python/carnot/experiment_7658_v668_evidence_atoms.py",
+          "scripts/experiments/experiment_7658_v668_evidence_atoms.py",
+          "tests/python/test_experiment_7658_v668_evidence_atoms.py"
+        ],
+        "duration_s": 0.013321916998393135,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected/04_ruff_check.log",
+        "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "name": "ruff_check",
+        "output_tail": "All checks passed!\n",
+        "passed": true,
+        "scope": "changed_files",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/verify/tool_source_atoms.py python/carnot/experiment_7658_v668_evidence_atoms.py scripts/experiments/experiment_7658_v668_evidence_atoms.py tests/python/test_experiment_7658_v668_evidence_atoms.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+          "format",
+          "--check",
+          "python/carnot/verify/tool_source_atoms.py",
+          "python/carnot/experiment_7658_v668_evidence_atoms.py",
+          "scripts/experiments/experiment_7658_v668_evidence_atoms.py",
+          "tests/python/test_experiment_7658_v668_evidence_atoms.py"
+        ],
+        "duration_s": 0.010976571000355761,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected/05_ruff_format.log",
+        "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+        "name": "ruff_format",
+        "output_tail": "4 files already formatted\n",
+        "passed": true,
+        "scope": "changed_files",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/verify/tool_source_atoms.py python/carnot/experiment_7658_v668_evidence_atoms.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+          "python/carnot/verify/tool_source_atoms.py",
+          "python/carnot/experiment_7658_v668_evidence_atoms.py"
+        ],
+        "duration_s": 0.3426256650018331,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected/06_changed_module_mypy.log",
+        "log_sha256": "sha256:5c0e9403142555d05cc1959eb978548f7737c00539a0f33070641f0860916e35",
+        "name": "changed_module_mypy",
+        "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl']\nSuccess: no issues found in 2 source files\n",
+        "passed": true,
+        "scope": "changed_modules",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7658_v668_evidence_atoms.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/check_spec_coverage.py",
+          "tests/python/test_experiment_7658_v668_evidence_atoms.py"
+        ],
+        "duration_s": 0.027260541002760874,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/affected/07_scoped_spec_coverage.log",
+        "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+        "name": "scoped_spec_coverage",
+        "output_tail": "OK: All tests reference specification requirements.\n",
+        "passed": true,
+        "scope": "explicit_tests",
+        "timed_out": false
+      }
+    ],
+    "terminal_readers": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m carnot.experiment_7658_v668_evidence_atoms --cold-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-m",
+          "carnot.experiment_7658_v668_evidence_atoms",
+          "--cold-reduce",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json"
+        ],
+        "duration_s": 3.389321315000416,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/terminal/00_cold_reduce.log",
+        "log_sha256": "sha256:a46ffe4c60fa7f2dc40d0c61bed81c07b45c1b438e215e4ca1d073c6cd477d72",
+        "name": "cold_reduce",
+        "output_tail": "[exp7658] startup flushed\n[exp7658] pilot_unit=1/8 checked=0\n[exp7658] pilot_unit=2/8 checked=1\n[exp7658] pilot_unit=3/8 checked=0\n[exp7658] pilot_unit=4/8 checked=2\n[exp7658] pilot_unit=5/8 checked=1\n[exp7658] pilot_unit=6/8 checked=0\n[exp7658] pilot_unit=7/8 checked=0\n[exp7658] pilot_unit=8/8 checked=1\n[exp7658] fixture_unit=8/72\n[exp7658] fixture_unit=16/72\n[exp7658] fixture_unit=24/72\n[exp7658] fixture_unit=32/72\n[exp7658] fixture_unit=40/72\n[exp7658] fixture_unit=48/72\n[exp7658] fixture_unit=56/72\n[exp7658] fixture_unit=64/72\n[exp7658] fixture_unit=72/72\n{\"fixture_groups\": 72, \"passed\": true, \"pilot_groups\": 8}\n",
+        "passed": true,
+        "scope": "exact_candidate",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json"
+        ],
+        "duration_s": 1.5323451360018225,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/terminal/01_adversarial_verify.log",
+        "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "name": "adversarial_verify",
+        "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+        "passed": true,
+        "scope": "exact_candidate",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json"
+        ],
+        "duration_s": 0.054002438999305014,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/terminal/02_verdict_row_consistency.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "verdict_row_consistency",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "exact_candidate",
+        "timed_out": false
+      }
+    ],
+    "unrelated_repository_suite_debt": []
+  },
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true,
+  "whole_answer_certified": false
+}

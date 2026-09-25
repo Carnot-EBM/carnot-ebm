@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## V668 evidence atoms — 2026-09-25
+
+### REQ-REPORT-7658: Preserve native source and narrow claim scope
+
+Exp7658 SHALL authenticate the eight V664 pilot predictor inputs without reading evaluator labels. It SHALL reproduce the V667 zero-check grammar miss, then parse plain fenced output, colon-numbered Python, filename:line search rows, and explicit stack frames into typed atoms with exact UTF-8 byte spans, source identities, and honest completeness. Listings and unsupported dialects SHALL remain unknown. It SHALL extract only explicit original-answer path, quoted identifier, quoted literal, and numeric line claims. AST facts may support numbered Python; path/line membership may support search or stack rows. A partial search SHALL never certify absence, and neither causality nor negation SHALL be certified by identifier occurrence.
+
+Exp7658 SHALL freeze supported claim forms, test at least 64 independently labeled adversarial fixtures across the four dialects, and retain all eight pilot groups. The E2E replay SHALL reject source hash drift, invalid byte offsets, and evaluator sidecar access. Zero false certified fixture propositions and checked propositions in at least four pilots are required for narrow protocol readiness. Oracle fixture success is circular-positive only; probability benefit, utility, retention, and freshness remain separate and unproved. Required affected validation, cold reduction, and terminal readers govern validity and disqualification. Current CPU work SHALL declare no model load and zero model invocations.
+
+#### SCENARIO-REPORT-7658-DIALECTS: Native output keeps exact bytes
+
+**Given** one source from each supported dialect and an unsupported listing
+**When** the atom parser runs
+**Then** supported atoms replay exact UTF-8 source spans and preserve source identity
+**And** the listing remains unknown rather than a complete empty file.
+
+#### SCENARIO-REPORT-7658-SCOPE: A checked atom is narrower than prose
+
+**Given** an original answer with a path/line or explicit definition claim
+**When** evidence membership is checked
+**Then** only that typed proposition can be observed or contradicted in a complete scope
+**And** causal, negated, and ambiguous surrounding text remains unverified.
+
+#### SCENARIO-REPORT-7658-MUTATIONS: Replay fails closed
+
+**Given** source bytes, answer bytes, and their claimed hashes and offsets
+**When** a source hash changes, an offset is invalid, or evaluator data is exposed
+**Then** independent replay rejects the record before readiness is scored.
+
+#### SCENARIO-REPORT-7658-TERMINAL: Validation controls the verdict
+
+**Given** eight retained pilot groups and independently labeled fixtures
+**When** affected checks and exact-candidate readers complete
+**Then** the terminal artifact records their exits and hashes, separate gate operands, and a complete-prefix verdict
+**And** failed required checks zero all readiness scores.
+
 ## V666 capstone reconciliation — 2026-09-25
 
 **Status:** In progress. This is a current CPU aggregation; no model or board work is authorized.

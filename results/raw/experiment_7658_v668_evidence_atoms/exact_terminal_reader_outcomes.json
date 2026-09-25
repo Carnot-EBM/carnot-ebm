@@ -1,0 +1,61 @@
+{
+  "outcomes": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m carnot.experiment_7658_v668_evidence_atoms --cold-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-m",
+        "carnot.experiment_7658_v668_evidence_atoms",
+        "--cold-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json"
+      ],
+      "duration_s": 3.6700269829998433,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/exact/00_cold_reduce.log",
+      "log_sha256": "sha256:a46ffe4c60fa7f2dc40d0c61bed81c07b45c1b438e215e4ca1d073c6cd477d72",
+      "name": "cold_reduce",
+      "output_tail": "[exp7658] startup flushed\n[exp7658] pilot_unit=1/8 checked=0\n[exp7658] pilot_unit=2/8 checked=1\n[exp7658] pilot_unit=3/8 checked=0\n[exp7658] pilot_unit=4/8 checked=2\n[exp7658] pilot_unit=5/8 checked=1\n[exp7658] pilot_unit=6/8 checked=0\n[exp7658] pilot_unit=7/8 checked=0\n[exp7658] pilot_unit=8/8 checked=1\n[exp7658] fixture_unit=8/72\n[exp7658] fixture_unit=16/72\n[exp7658] fixture_unit=24/72\n[exp7658] fixture_unit=32/72\n[exp7658] fixture_unit=40/72\n[exp7658] fixture_unit=48/72\n[exp7658] fixture_unit=56/72\n[exp7658] fixture_unit=64/72\n[exp7658] fixture_unit=72/72\n{\"fixture_groups\": 72, \"passed\": true, \"pilot_groups\": 8}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json"
+      ],
+      "duration_s": 1.1337974349989963,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/exact/01_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7658_v668_evidence_atoms/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.04698987500160001,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7658_v668_evidence_atoms/validation/exact/02_verdict_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    }
+  ]
+}
