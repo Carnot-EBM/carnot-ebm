@@ -20588,3 +20588,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-24: Qualify isolated preflight and process-owned CUDA launch (⚠️ Research Finding) — honest_verdict=complete_null_cuda_ownership_protocol_ready; results/experiment_7630_v666_cuda_ownership.json
 - 2026-09-25: Measure paired schema generation through the owned launch path (⚠️ Blocked) — honest_verdict=complete_blocked_owned_cuda_capacity; results/experiment_7631_v666_schema_pilot.json
 - 2026-09-25: Independently reduce source evidence and retained-learning claims (⚠️ Blocked) — honest_verdict=complete_blocked_v666_scientific_producers_unavailable; results/experiment_7638_v666_evidence_audit.json
+- 2026-09-25: Protect goal checks in reusable ARC planner deduplication (⚠️ Research Finding) — honest_verdict=complete_disqualified_planner_goal_guard_validation_failed; results/experiment_7639_v666_arc_goal_dedup.json
