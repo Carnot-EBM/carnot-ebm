@@ -81154,3 +81154,34 @@ checks SHALL be assigned to future tasks; planning uses cold contract replay.
 
 Planned documents only. Experiments, scientific benefits and deployments remain
 unexecuted. Validation results are recorded in the planning status entry.
+
+## REQ-REPORT-7657: Authenticate the V668 contract and preserve V667 failure lineage
+
+Exp7657 SHALL select staged V668 authority when present, otherwise activated
+V668 authority. It SHALL compare all fourteen ordered tasks against both the
+design table and machine contract, including identity, title, phase, output,
+substrate class, model list and exact gates. It SHALL reject mutations without
+requiring a consumed staging alias or treating its own output as an input.
+
+The result SHALL authenticate fourteen V667 dispositions, distinguishing
+producers, conductor pre-gate receipts and absent work. It SHALL report source
+grammar mismatch, 39 percent coverage, full-suite contamination and six rejected
+ARC inductions as separate observations. Unrun learning is not a scientific null.
+Required validation failure disqualifies the result; unchanged external absence
+blocks it. Contract readiness is administrative and supplies no science gate.
+
+### SCENARIO-REPORT-7657-AUTHORITY
+
+Given staged and consumed-authority copies, select the matching V668 milestone.
+Deletion, reorder, altered gate, stale milestone and self-input mutations fail.
+
+### SCENARIO-REPORT-7657-CUSTODY
+
+Given the preserved V667 capstone and actual file bytes, retain exactly fourteen
+ordered dispositions with producer, pre-gate and absent-path authentication.
+
+### SCENARIO-REPORT-7657-TERMINAL
+
+Given a frozen affected-file manifest and terminal candidate, cold-reduce raw
+rows and run required validation and terminal readers. A failed required check
+zeros readiness and produces a disqualified artifact with exact receipt evidence.

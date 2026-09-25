@@ -6150,3 +6150,19 @@ delayed admission and post-restart retention need separate local tests. The
 full mapping and claim limits are in `docs/research-notes/v667-method-map.md`.
 Publication gates G1-G4 remain unchanged. The V666 CUDA resource block and ARC
 validation failure remain distinct findings.
+
+<!-- EXP7657-V668-METHOD-INGESTION -->
+## 2026-09-25 Exp7657 — V668 evidence-format methods — INGESTED
+
+The dated V668 review in `research-references.md` is mapped in `docs/research-notes/v668-method-map.md`. Ranked by relevance, novelty, feasibility and urgency for the actual local failure:
+
+| Rank | Idea | Relevance | Novelty | Feasibility | Urgency | Decision |
+|---|---|---|---|---|---|---|
+| 1 | EAEV-style typed evidence atoms over original spans | high | high | high | immediate | Test real source formats and counterfactual source effects in Exps7658–7661; source identity alone does not prove meaning. |
+| 2 | Predict-before-delayed-feedback calibration and retention | high | medium | medium | high | Use explicit delayed and missing-label controls in Exps7662–7664; no immediate-feedback theorem transfer. |
+| 3 | Exactly normalized small typed-decision energy | high | medium | medium | high | Train only after qualified real features; freeze the generator. |
+| 4 | Schema-valid versus semantically grounded Qwen claims | high | medium | medium | medium | Keep fixture-oracle agreement circular and require independent labels. |
+| 5 | Observed ARC goal confirmation | medium | medium | medium | medium | Extend the existing live path and cycle verifier; require SDK-observed terminal outcomes. |
+| 6 | Whole-consumer cost and bounded hardware claims | medium | low | high | medium | Include transfer and final-output costs excluded from Z1T vendor estimates; make no access claim. |
+
+T-SKM-Net, KAC/KAN-CL, Ising sampling limits, VFScale and WorldCycle remain context. No new sampler, unchanged anchoring rerun or generator-weight training is adopted. V667's zero checked predicates, 39 percent coverage failure, global-suite gate contamination and six rejected inductions are distinct diagnostics. Absent head and learning producers are not measured nulls.
