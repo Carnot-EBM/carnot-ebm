@@ -18611,3 +18611,11 @@ code |
 | 2026-09-25 01:07 UTC | Measure goal-safe planning through the scored ARC  | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7639-arc-goal-dedup.planner_goal_guard_ready_score (actual=0 == expected=1) |
 | 2026-09-25 01:35 UTC | Expose the measured native service as an opt-in ty | OK | 110 passed, 1 warning in 43.36s |
 | 2026-09-25 01:52 UTC | Reconcile fourteen outcomes and decide evidence an | OK | 89 passed, 1 warning in 17.21s |
+| 2026-09-25 02:53 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 2400s |
+| 2026-09-25 03:08 UTC | Audit receipt STALE: artifact-convention-audit | BLOCK | timeout after 900s |
+| 2026-09-25 03:31 UTC | Audit receipt STALE: experiment-claim-audit | BLOCK | timeout after 1350s |
+| 2026-09-25 03:48 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-09-25 04:48 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
+| 2026-09-25 05:09 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-09-25 05:14 UTC | Audit receipt STALE: run-sentinel | BLOCK | timeout after 180s |
+| 2026-09-25 05:14 UTC | Stop-authority receipt STALE | WARN | receipt 186 min old (janitor cadence is 30) |
