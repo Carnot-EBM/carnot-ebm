@@ -20626,3 +20626,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   mutations passed. Fixed one stale module path and new-document whitespace.
   Active roadmap/conductor hashes remain unchanged. No execution or push.
 - 2026-09-25: Bind fourteen tasks and distinguish evidence-format failure from scientific nulls (⚠️ Research Finding) — honest_verdict=complete_null_v668_contract_methods; results/experiment_7657_v668_contract_methods.json
+- 2026-09-25: Qualify source atoms on actual tool-output formats and original claims (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_protocol_ready; results/experiment_7658_v668_evidence_atoms.json
