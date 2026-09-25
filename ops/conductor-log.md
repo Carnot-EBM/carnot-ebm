@@ -18641,3 +18641,4 @@ code |
 | 2026-09-25 19:40 UTC | Qualify source atoms on actual tool-output formats | OK | 87 passed, 1 warning in 8.37s |
 | 2026-09-25 19:54 UTC | Measure grounded atom coverage across the complete | OK | 91 passed, 1 warning in 7.68s |
 | 2026-09-25 20:07 UTC | Train a normalized evidence-conditioned policy for | OK | 86 passed, 1 warning in 7.75s |
+| 2026-09-25 20:22 UTC | Measure incremental source evidence in probabiliti | OK | 96 passed, 1 warning in 7.66s |
