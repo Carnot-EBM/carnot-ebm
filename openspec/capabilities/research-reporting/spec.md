@@ -80883,3 +80883,57 @@ hashes precede atomic publication without modifying V666 evidence.
 **When** the artifact is cold-reduced
 **Then** the verdict is complete null, probability and utility stay closed,
 and repeated masks, arms, and orderings do not increase sample size.
+
+## REQ-REPORT-7650: Audit V667 source evidence without promoting readiness
+
+Experiment 7650 SHALL authenticate the literal 7644, 7646, 7647, 7648,
+and 7649 producer paths and actual pre-gate receipts. It SHALL run without
+upstream pre-gates. Missing external producers SHALL yield one terminal
+`complete_blocked_source_producers_unavailable` with exact check operands.
+Disqualified or flagged evidence SHALL not open benefit gates.
+
+Available witness and feature rows SHALL be reduced by independent source
+group. The audit SHALL recompute fixture agreement, checked-predicate coverage,
+and unknown-prose counts from rows. Views and arms SHALL not multiply groups.
+Probability, typed utility, source dependence, update chronology, and retention
+SHALL remain unavailable unless authenticated raw operands permit independent
+reduction. Exact structural fixtures SHALL remain oracle truth, not learned
+benefit. Private controls SHALL reject label leakage, wrong-file references,
+wrong symbol scope, semantic overclaim, future labels, duplicate admission,
+permuted roles, and aggregate disagreement.
+
+The audit SHALL freeze affected files and run serial focused tests, full-suite
+pytest once, changed-code 100 percent coverage, scoped Ruff, mypy, and spec
+coverage. Fresh-process replay and strict terminal readers SHALL inspect the
+exact candidate. It SHALL retain commands, exits, and log hashes before atomic
+publication. Current inference SHALL be aggregation with no model invocation.
+
+### SCENARIO-REPORT-7650-CUSTODY: Literal producer states control benefit
+
+**Given** a valid fixture producer, a disqualified corpus, a pre-gate block,
+and absent downstream producers
+**When** the audit reads their exact bytes and rows
+**Then** each independent finding keeps its literal disposition and hash
+**And** missing science yields one complete blocked verdict with exact operands.
+
+### SCENARIO-REPORT-7650-REDUCTION: Source groups own denominators
+
+**Given** repeated source views and witness rows with unsupported prose
+**When** the audit rebuilds coverage and fixture agreement
+**Then** source IDs count once and unknown prose remains in the denominator
+**And** producer aggregate headlines do not substitute for row arithmetic.
+
+### SCENARIO-REPORT-7650-MUTATIONS: Causal and source overclaims fail
+
+**Given** private source and feedback controls
+**When** any registered leakage, scope, semantic, chronology, admission,
+role, or aggregate mutation changes an operand
+**Then** the reader reports the changed bytes and rejects the claim.
+
+### SCENARIO-REPORT-7650-TERMINAL: Exact readers precede publication
+
+**Given** a frozen validation scope and exact terminal candidate
+**When** fresh reduction and adversarial readers finish
+**Then** valid audit completion remains separate from scientific benefit
+**And** only the exact checked bytes publish atomically.
+
