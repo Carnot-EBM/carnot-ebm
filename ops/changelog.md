@@ -20629,3 +20629,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-25: Qualify source atoms on actual tool-output formats and original claims (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_protocol_ready; results/experiment_7658_v668_evidence_atoms.json
 - 2026-09-25: Measure grounded atom coverage across the complete frozen source roster (⚠️ Research Finding) — honest_verdict=complete_null_atom_corpus_ready; results/experiment_7659_v668_atom_corpus.json
 - 2026-09-25: Train a normalized evidence-conditioned policy for typed decisions (⚠️ Research Finding) — honest_verdict=complete_null_energy_head_ready; results/experiment_7660_v668_atom_energy.json
+- 2026-09-25: Measure incremental source evidence in probabilities and decision costs (⚠️ Research Finding) — honest_verdict=complete_null_no_registered_decision_benefit; results/experiment_7661_v668_decision_evaluation.json
