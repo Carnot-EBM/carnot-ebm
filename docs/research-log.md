@@ -6969,3 +6969,10 @@ The critical path for milestone .250:
 - theme: cross-game supervisor selection refinement and direct native service cost measurement led execution across an all-compute set lacking sub-task telemetry
 - key result: honest operational negative — cross-game supervisor selection refinement consumed 2.39 of 7.2 total wall-time minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.666
+
+- exp_range: no data available this milestone
+- theme: ARC planner goal-check deduplication, capstone outcome reconciliation, and native consumer exposure dominated wall time in an all-compute milestone without sub-phase metrics
+- key result: honest operational negative — ARC planner deduplication goal protection accounted for 2.68 of 6.0 total wall-time minutes, while available records lack intra-task phase profiling, continuous active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
