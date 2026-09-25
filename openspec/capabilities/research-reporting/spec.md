@@ -1,5 +1,35 @@
 # Research Reporting Capability Specification
 
+## V668 ARC executed-goal confirmation — 2026-09-25
+
+### REQ-REPORT-7666: Confirm an induced goal against the SDK after execution
+
+Exp7666 SHALL add a default-off goal-confirmation receipt to E3AgentPolicy and its scored factory. At the endpoint of an executed induced-goal plan, the receipt SHALL compare the model's asserted goal with a fresh SDK level-progress or terminal observation. The induced predicate and predicted grid alone SHALL never count as a solve. The reader SHALL use the SDK's settled final animation layer, distinguish stale and unresolved observations from a confirmed contradiction, and preserve the existing generic explorer recovery route. A confirmed contradiction SHALL invalidate the plan and its model goal for that episode without changing model acceptance thresholds, action masks, budgets, or generator settings. No game-specific rule SHALL enter the live route. The experiment SHALL run without a current model load, retain at least 48 independent scripted fixtures, and report fixture oracle success only as circular-positive. Invalid required validation SHALL disqualify and zero readiness; exact-candidate terminal readers and cold reduction SHALL precede atomic publication.
+
+#### SCENARIO-REPORT-7666-CONTRADICTION: Dynamics can be right while the goal is wrong
+
+**Given** a real E3 plan whose induced goal is true at its predicted endpoint
+**When** the last action is executed and a fresh settled SDK frame still shows the same level and active play
+**Then** the plan and induced goal are invalidated, a contradiction receipt names both signals, and the next action uses generic explorer recovery.
+
+#### SCENARIO-REPORT-7666-OBSERVATION: SDK progress governs confirmation
+
+**Given** a level change, terminal win, animation stack, stale frame, hidden-state alias, unknown state, or timeout
+**When** the endpoint is observed
+**Then** only independent SDK progress confirms success; unresolved evidence remains unknown, and animation or stale frames cannot create a false contradiction.
+
+#### SCENARIO-REPORT-7666-PARITY: The opt-in has a scored path
+
+**Given** the current scored factory with the flag off or on
+**When** scripted frames reach planning, execution, endpoint observation, and recovery
+**Then** the on path reaches the guard and the off path preserves actions, calls, masks, budgets, and random state.
+
+#### SCENARIO-REPORT-7666-TERMINAL: Scoped validation governs the artifact
+
+**Given** a frozen affected-file manifest and independent fixture rows
+**When** focused tests, changed-code coverage, lint, type check, spec coverage, E2E parity, cold reduction, and exact-candidate readers run
+**Then** exits and log hashes govern a terminal complete-prefix verdict; missing external evidence blocks with exact operands and failed required validation disqualifies readiness.
+
 ## V668 grounded Qwen claims — 2026-09-25
 
 ### REQ-REPORT-7665: Compare native source pointers with typed atom hints

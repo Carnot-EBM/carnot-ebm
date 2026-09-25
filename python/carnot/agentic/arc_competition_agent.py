@@ -5290,6 +5290,7 @@ class E3AgentPolicy:
         invariant_projection_config: Any | None = None,
         belief_ledger: Any | None = None,
         belief_aware_selector: bool | None = None,
+        goal_confirmation: bool | None = None,
     ) -> None:
         import os
 
@@ -5531,6 +5532,16 @@ class E3AgentPolicy:
         self.phase = "explore"
         self.plan: list = []
         self.pi = 0
+        from carnot.agentic.arc_goal_confirmation import GoalConfirmation
+
+        goal_confirmation_on = (
+            os.environ.get("CARNOT_ARC_GOAL_CONFIRMATION") == "1"
+            if goal_confirmation is None
+            else goal_confirmation
+        )
+        self._goal_confirmation = GoalConfirmation() if goal_confirmation_on else None
+        self._goal_confirmation_predicate = None
+        self._goal_confirmation_model_invalid = False
         self._prev = None  # last (grid, action_id, data) for transition pairing
         self._prev_level = 0  # real level AT THE TIME self._prev was captured (see next_move)
         self.cell = 1
@@ -6631,6 +6642,25 @@ class E3AgentPolicy:
                 pass
         return move
 
+    def _arm_executed_goal(self, latest: Any, frames_seen: int) -> None:
+        """REQ-REPORT-7666: arm after the final action of an induced goal plan."""
+        if (
+            self._goal_confirmation is not None
+            and self.pi == len(self.plan)
+            and callable(self._goal_confirmation_predicate)
+        ):
+            self._goal_confirmation.arm(
+                latest,
+                frames_seen=frames_seen,
+                level=_level_of(latest),
+                predicted_goal=True,
+                plan_length=len(self.plan),
+            )
+
+    def goal_confirmation_receipts(self) -> list[dict[str, Any]]:
+        """Return the SDK observations made by the opt-in guard."""
+        return [] if self._goal_confirmation is None else list(self._goal_confirmation.receipts)
+
     def _remember_active_probe_origin(self, move: tuple, latest: Any) -> None:
         if self._active_probe_pending is None or latest is None:
             return
@@ -7674,6 +7704,18 @@ class E3AgentPolicy:
                 # reason; this mirrors it for consistency.
                 pass
         boundary_events = self._observe_level_boundary(latest, frames_seen=len(frames))
+        if self._goal_confirmation is not None and self._goal_confirmation.pending is not None:
+            goal_receipt = self._goal_confirmation.observe(latest, frames_seen=len(frames))
+            if goal_receipt["contradiction"]:
+                self.plan = []
+                self.pi = 0
+                self._goal_confirmation_predicate = None
+                self._goal_confirmation_model_invalid = True
+                self.induced = False
+                self._execute_plan_from_current = False
+                self.explorer.set_goal_bias(None, label="")
+                # The existing exhausted-plan branch below owns generic recovery.
+                self.phase = "execute"
         if boundary_events and latest is not None:
             try:
                 from carnot.agentic.arc_agi3_world_model import grid_of
@@ -7780,6 +7822,7 @@ class E3AgentPolicy:
                     self._remember_active_probe_origin(mv, latest)
                     self._remember_reward_machine_origin(mv, latest)
                     self._track_prev_for_transition(mv, latest)
+                    self._arm_executed_goal(latest, len(frames))
                     self._prov_top = "induce.plan_from_current"
                     return mv
                 self._prov_top = "induce.plan_needs_reset"
@@ -7791,6 +7834,7 @@ class E3AgentPolicy:
             self._remember_active_probe_origin(mv, latest)
             self._remember_reward_machine_origin(mv, latest)
             self._track_prev_for_transition(mv, latest)
+            self._arm_executed_goal(latest, len(frames))
             self._prov_top = "execute.plan_step"
             return mv
         # plan exhausted / no model -> keep exploring
@@ -8185,6 +8229,7 @@ class E3AgentPolicy:
         # return, makes every branch below start from a clean pi=0 for whatever plan it installs.
         self.plan = []
         self.pi = 0
+        self._goal_confirmation_predicate = None
 
         active_transitions = self._active_transitions()
         attempt = {
@@ -8591,6 +8636,7 @@ class E3AgentPolicy:
                     self._install_goal_bias(outcome.goal_predicate)
                 if outcome.planned:
                     self.plan = list(outcome.plan)
+                    self._goal_confirmation_predicate = outcome.goal_predicate
                 return
             self._fit_dsl_model()
             # `_plan_start_grid`, not `self.root_grid`, is the start point for every planner call
@@ -8726,6 +8772,7 @@ class E3AgentPolicy:
                         self._install_goal_bias(stall_outcome.goal_predicate)
                     if stall_outcome.planned:
                         self.plan = list(stall_outcome.plan)
+                        self._goal_confirmation_predicate = stall_outcome.goal_predicate
                         return
                 # else: fall through to active_probe_controller / plain single-shot path below
             if _plan_start_grid is not None and self._maybe_plan_reward_machine_probe(
@@ -9181,6 +9228,7 @@ class E3AgentPolicy:
             attempt["plan_diagnostics"] = _plan_diag2
             if plan:
                 self.plan = plan
+                self._goal_confirmation_predicate = is_done
                 attempt["planned"] = True
                 attempt["plan_length"] = len(plan)
                 return
@@ -9976,6 +10024,7 @@ def make_carnot_agent(
     invariant_projection_config=None,
     belief_ledger=None,
     belief_aware_selector: bool | None = None,
+    goal_confirmation: bool | None = None,
 ):
     """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
@@ -10020,6 +10069,7 @@ def make_carnot_agent(
                     invariant_projection_config=invariant_projection_config,
                     belief_ledger=belief_ledger,
                     belief_aware_selector=belief_aware_selector,
+                    goal_confirmation=goal_confirmation,
                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
                     early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
