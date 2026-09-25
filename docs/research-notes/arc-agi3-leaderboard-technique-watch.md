@@ -368,3 +368,9 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Maintain a persistent per-game local-model session/KV state with automatic compaction, alongside Carnot’s explicit world-model files—the result suggests reasoning continuity can materially outperform reconstructing context every turn. OpenAI’s documentation confirms Astra supports persisted reasoning, compaction, and prompt caching. [OpenAI model guidance](https://developers.openai.com/api/docs/guides/latest-model)
 
+## 2026-09-25 13:34 UTC -- NEW
+
+**New top-five entrants:** At 13:33 UTC on September 25, Kaggle’s live leaderboard placed Lord Han Solo **#1 (19.45)**, Yi-Chia Chen **#3 (18.63)**, Daniel Franzen **#4 (16.68)**, and NVARC3 **#5 (16.07)**. Tufa Labs was #2 (18.81). These entrants were absent from the July 14 top five. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+I found no public code or writeup that verifies the method behind those **current submissions**. Their game-source or per-game hardcoding status is therefore **unknown**, and there is no verified new Carnot lever to flag. The [ARC Prize blog](https://arcprize.org/blog) has no newer milestone or technique post beyond the Astra finding already reported.
+

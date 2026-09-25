@@ -219,3 +219,7 @@ of truth, not this line.)
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_nontrivial_subgoal_decomposition | SILENT_NON_FIRING | OPEN | |
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::_has_nontrivial_subgoal_decomposition | SILENT_NON_FIRING | OPEN | |
 | 2026-09-24 | qa_layer_authenticity_audit | adversarial_verify.py::check_subgoal_search_decomposition_overclaim | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::check_novelty_proposal_ablation_overclaim | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_proposal_filter_coverage_up | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::check_perception_overclaim | SILENT_NON_FIRING | OPEN | |

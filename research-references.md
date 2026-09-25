@@ -46898,3 +46898,66 @@ Exp10013 review found that masked duplicate rejection can suppress a goal check
 and that its harness used a wider mask than the live wrapper for one game.
 These findings motivate reusable planner goal protection and wrapper-level
 measurement, with all expert controls labelled development proxies.
+
+## 2026-09-25 — V667 planning review: source structure and delayed learning
+
+Recorded before the V667 experiment design. Search date is 2026-09-25;
+publication dates below identify the papers, not the search. The current
+mandate remains `unsloth/Qwen3.8-27B-GGUF`; research does not change it.
+
+### Primary-source findings
+
+| Area | Source and date | Finding and use boundary |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025, revised May 2026 | Rechecks. Conditional compatibility and normalized energies inform small decision heads. Low learned energy alone is not proof of factual correctness. No generator training. |
+| Neural constraints | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025; [PAL](https://arxiv.org/abs/2503.19466), March 2025 | Abstracts reviewed. Learned feasibility layers address specified algebraic constraints, not extraction of a correct specification from prose. Defer solver expansion until extraction has measured coverage. |
+| Ising and ML | [A computational phase transition for learning-to-sample from Ising models](https://arxiv.org/abs/2605.24752), May 2026 | New lead in this review. Parameter learning need not make sampling easy. Defer a sampling project; normalize the two-state decision energy exactly. Do not generalize tractability from a small fixture. |
+| Code hallucinations | [Static-analysis detection and mitigation study](https://arxiv.org/abs/2604.07755), April 9, 2026 | New lead; abstract reviewed. Static tools catch only a subset of library hallucinations. This motivates a measured partial-coverage verifier, explicit unknowns, and a strongest-cheap-control comparison. No broad accuracy claim follows. |
+| Source-backed verification | [Hallucination Inspector](https://arxiv.org/abs/2604.20202), April 22, 2026 | New lead; abstract reviewed. AST symbols checked against API evidence motivate source-derived structural witnesses. Carnot's proposed check concerns claims about supplied Python source; this is not an Android migration reproduction. |
+| Hallucination and evidence | [Beyond Document Grounding](https://arxiv.org/abs/2607.00895), July 2026; [EAEV](https://arxiv.org/html/2609.08267v1), September 8, 2026 | Rechecks; EAEV alignment/counterfactual sections reviewed. Keep source bytes, evidence references and source interventions. Surface identity is not semantic entailment. The existing code/tool corpus has injected-error labels and prior exposure; retain both limitations. |
+| KAN | [KAC](https://arxiv.org/abs/2503.21076), March 2025; [spline-local on-chip learning](https://arxiv.org/abs/2602.02056), February 2026 | Rechecks. Local coefficients offer a sparse-update hardware path. Do not spend another architecture slot before the source signal has value; no KAN retention or local hardware advantage is assumed. |
+| Constrained/energy-guided decoding | [JSONSchemaBench](https://arxiv.org/abs/2501.10868), January 2025; [reward-guided decoding](https://arxiv.org/abs/2605.28020), May 2026 | Rechecks. Grammar compliance, generation cost and semantic validity are separate metrics. An optional bounded Qwen comparison may test schema-complete evidence, but CPU source verification must not depend on its availability. |
+| Hardware sampling | [FPGA–ASIC decomposition co-design](https://arxiv.org/abs/2602.15985), February 2026 | Recheck. Count host, dispatch, persistence and device costs together. No new FPGA synthesis or TSU purchase is justified by an arithmetic-only kernel speed. |
+| Continuous learning | [Calibeating Made Simple](https://arxiv.org/html/2603.22167v1), March 2026; [Proper Calibeating](https://arxiv.org/abs/2605.26703), May 2026 | Rechecks; the bin-wise predict-then-update algorithm was read. Add a source-witness-conditioned proper-loss learner and compare it with scalar-only updates. Delayed feedback, sparse strata and finite exposed data fall outside an automatic theorem transfer. |
+
+### Secondary-source receipts
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS 2025–2026 EBM submissions. The
+  [EBT proceedings PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) and
+  [Energy Matching](https://openreview.net/pdf?id=WYSCCw7mCe) were indexed.
+  [OptiVer](https://openreview.net/forum?id=w696Vhv5B2) is a dual-side
+  verification lead. Submission labels are not acceptance evidence; these
+  searches do not justify a new architecture branch.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing)
+  and [Z1T](https://extropic.ai/writing/z1t), dated September 4, 2026.
+  The index exposed navigation only. Sparse transformer hardware claims
+  remain vendor claims and do not establish authenticated local TSU access.
+- **Semantic Scholar:** searched both seed identifiers and attempted the
+  [EBT citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both returned browser internal errors. No citing-paper census was verified.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification),
+  which was cached from the prior week. Use author papers for technical claims.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending pages.
+  Both were cached; no new relevant trending dependency was established.
+- **Logical Intelligence:** the [old Kona URL](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  redirects to [Kona](https://logicalintelligence.com/kona). This check verified
+  no open checkpoint or executable training recipe for the next milestone.
+
+### Local evidence constraining adoption
+
+V666's owned launcher correctly rejected a foreign llama-server using roughly
+17.9 GiB of the visible card. Rewriting ownership checks again would not free
+that resource. Exp7639's actual failures were a missing pytest base-directory
+parent and a dictionary-valued execution venue; the required venue is `host`
+with details in another field. These are reproducible validation defects.
+
+The qualified Exp7602 store contains complete numbered Python source and
+natural-language claims about symbols and line locations. A source-derived
+AST witness path can run on CPU without another evidence-generation capture.
+It must abstain on absent files, partial snippets, dynamic lookup and unsupported
+semantic assertions. This is a new discriminator, not renewed scalar-only
+calibration or a claim that regular expressions solve general extraction.
+Any optional current Qwen test remains separately resource-gated. Record
+counterfactual source effects and evaluator-only labels before claiming value.

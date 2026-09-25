@@ -80680,3 +80680,36 @@ duplicate feedback, mismatched returned identity, or a request after close
 
 Specification added before tests and implementation. The conductor owns later
 ops, changelog, and traceability reconciliation.
+
+## REQ-REPORT-V667-PLAN: Source-witness research planning contract
+
+The staged milestone SHALL be `2026.09.667` with exactly fourteen ordered
+experiments, Exp7643 through Exp7656, in four phases. Its Markdown task contract
+SHALL equal `research-roadmap-next.yaml` in IDs, order, titles, phases,
+deliverables, substrates, model specifications and structured gates. The V666
+design SHALL remain preserved. Planning SHALL not activate a roadmap or edit
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The design SHALL identify three PRD gaps and distinguish V666's resource blocks,
+validation defects, readiness and unavailable science. It SHALL cite the dated
+literature review recorded before design. The CPU source-witness, calibrated
+energy and delayed-learning branch SHALL not depend on GPU availability.
+Current LLM work SHALL require `unsloth/Qwen3.8-27B-GGUF` and a substrate class
+that describes the actual invocation. Every prompt SHALL require numbered
+progress/heartbeat and bounded-file-write steps, exact gate fields, terminal
+verdict classes, failure lineage, per-unit evidence and appropriate validation.
+ARC work SHALL preserve live-agent provenance and registry discipline.
+
+### SCENARIO-REPORT-V667-PLAN: Staged design can be checked before activation
+
+**Given** the design document and staged YAML
+**When** independent contract extraction, schema, gates, exclusions, failure
+lineage, prompt paths and scoped existing guard tests run
+**Then** the fourteen task authorities agree and dependencies point backward
+**And** deleted, reordered or changed-field contracts fail private mutations
+**And** protected active-roadmap and conductor hashes remain unchanged.
+
+### Implementation status (REQ-REPORT-V667-PLAN)
+
+Planning-only requirement. The numbered experiments remain proposed work;
+no empirical result, model execution or hardware execution is claimed.

@@ -1,387 +1,373 @@
-# Carnot Research Roadmap v666: Owned evidence and goal-safe planning
+# Carnot Research Roadmap v667: Source witnesses and retained decisions
 
-**Created:** 2026-09-24  
-**Milestone:** 2026.09.666  
-**Title:** Owned evidence capture, retained decision learning, and goal-safe ARC planning  
-**Status:** Staged plan; experiments not run or activated  
-**Supersedes:** 2026.09.665, exp7615–exp7628  
-**Execution authority:** `research-roadmap-next.yaml`, or the activated authority with milestone 2026.09.666  
-**Previous design:** `research-roadmap-v665-preserved-20260924.md`, preserved byte-for-byte  
-**Contract:** exactly **14 tasks, exp7629 through exp7642**, in the order below, across four phases.
+**Created:** 2026-09-25  
+**Milestone:** 2026.09.667  
+**Title:** Source-backed constraint witnesses, retained decision learning, and live planner validation  
+**Status:** Staged design; experiments not executed or activated  
+**Supersedes:** 2026.09.666, exp7629–exp7642  
+**Previous design:** `research-roadmap-v666-preserved-20260925.md`, preserved byte for byte  
+**Execution authority:** `research-roadmap-next.yaml`, or the activated roadmap with this milestone  
+**Contract:** exactly **14 tasks, exp7643 through exp7656**, in the order below, across **four phases**.
 
-## What v665 proved
+## What v666 proved
 
-Completion means the conductor handled every task. It does not mean each task
-ran or established a positive result. The archive currently ends at V664;
-V665's artifacts, conductor log and capstone establish its terminal state.
+The conductor handled all fourteen tasks. Seven ran to terminal artifacts;
+seven were pre-gated or cascade-skipped. The completed-history file currently
+ends at V665; V666's active roadmap, artifacts, conductor log and capstone are
+the authority for its terminal state. Conductor `OK` does not mean scientific
+success.
 
-| Work | Evidence | Established result and limit |
+| Work | Evidence | Established finding and boundary |
 |---|---|---|
-| Contract and schema | Exp7615–7616 | Fourteen-task contract and shared enum/decoder/parser schema qualified. Source-role custody and the guarded-update fixture passed. |
-| Paired schema pilot | Exp7617 | `complete_blocked_exclusive_cuda_capacity`; zero model calls and zero pilot groups. No schema-quality or semantic result exists. |
-| Captures | Exp7618–7620 | Actual pre-gate receipts at `results/experiment_7618_fit_evidence.json`, `experiment_7619_online_evidence.json`, and `experiment_7620_evaluation_evidence.json`; planned V665 producer files are absent. |
-| Decision and learning science | Exp7621–7624 | No head, decision or learning producers; audit reports `complete_blocked_v665_scientific_producers_unavailable`. Unavailable evidence is not a measured null. |
-| ARC supervisor | Exp7625 | Six games, 24 receipts, 20 proposed/shadow redirects, zero actual firings. No outcome-based selection change is justified. |
-| Native service | Exp7626 | Real PyO3, JSONL and Python parity plus durable restart qualified; standalone native-test setup was subsequently repaired. |
-| Total native cost | Exp7627 | 120 paired three-arm blocks. Python/direct-native ratio 7.8270, CI95 [7.2843, 8.3826]; JSONL/direct-native 2.6493. The 1.10 benefit gate passed; separate 10x NFR failed. |
-| Closure | Exp7628 | `complete_blocked_required_v665_external_evidence`; fourteen dispositions preserved. Circular self-input hashing was repaired. |
+| Contract | Exp7629 | Contract and method ingestion completed. This is readiness, not measured model quality. |
+| Owned launch | Exp7630 | Ownership, CPU-isolated preflight and launch protocol passed. Current capacity was unavailable. |
+| Schema pilot | Exp7631 | `complete_blocked_owned_cuda_capacity`; zero current model calls. An unrelated llama-server occupied about 17.9 GiB on the visible card. The foreign-process veto worked. |
+| Capture and learning | Exp7632–7637 | Three pre-gate receipts exist under names without `v666`; head, evaluation and learning producers are absent. There is no measured new evidence or learning null. |
+| Independent audit | Exp7638 | `complete_blocked_v666_scientific_producers_unavailable`; it preserved the missing evidence. |
+| ARC goal guard | Exp7639 | `complete_disqualified_planner_goal_guard_validation_failed`. Focused validation had three setup errors from missing pytest parent directories; coverage was 72%; a dictionary-valued execution venue triggered a critical reader finding. |
+| ARC wrapper | Exp7640 | Pre-gated on invalid Exp7639 evidence; no current wrapper result. |
+| Native consumer | Exp7641 | `complete_null_native_consumer_ready`; an opt-in typed client passed package/native and durability checks. No new speed claim. |
+| Closure | Exp7642 | `complete_blocked_required_v666_external_evidence`; fourteen dispositions accounted. |
 
-The pilot selector requires every GPU process to have the current PID. Its
-recorded GPU 1 had 23,912 MiB free but another PID held 256 MiB. That process
-may have been related to the task; the artifact does not establish ownership.
-This plan requires proof of ownership and CPU-isolated preflight, while keeping
-the foreign-work veto. Free memory alone cannot justify sharing or eviction.
-The new launch test is a changed mechanism, not an assertion that capacity
-will be available when a later task runs.
+Exp7627's earlier total-cost ratio remains 7.8270x, CI95 [7.2843, 8.3826], on
+its dated workload. Its separate 10x requirement failed. It cannot establish
+the speed of a new source-verification pipeline.
 
-The latest independent ARC review adds a separate measured gap. Exp10013's HUD
-mask can drop a state before evaluating its full-grid goal. Its direct harness
-also used a wider mask than the live wrapper on ar25: the live-relevant expert
-count is 6/10, not 7/10. Novelty tie-breaking lengthened plans without adding
-expert wins. Both flags remain off. These findings justify method repair and
-wrapper measurement, not an unchanged supervisor-ledger audit or new public
-level-solving task.
+The natural next step is to measure an available new discriminator. Exp7602
+already provides complete numbered source code, questions and responses in
+separate predictor/evaluator stores. An AST-based witness can test a narrow
+claim about a symbol or line without another model call. It cannot prove
+arbitrary prose. That boundary is part of the experiment, not an omission to
+hide with a general verifier label.
 
 ## Three largest gaps to the PRD vision
 
-1. **Evidence-dependent decisions (FR-01, FR-12).** The framework can enforce
-   exact constraints, but its new semantic evidence path has not been measured.
-   Qualify transport, then ask whether source-linked features improve proper
-   losses and accept/reject/escalate decisions beyond scalar calibration.
-2. **Causal, retained self-learning (FR-06, FR-11).** Fixture updates work; the
-   new real-evidence stream has no learning result. Test prediction before
-   feedback, one-use admission, immutable anchors, persistence and retained
-   utility. A no-update result remains useful evidence.
-3. **Useful live search under bounded compute (FR-07, FR-12; ARC north star).**
-   World-model transition fidelity does not reliably predict plan usefulness.
-   A verified goal can also be lost through state merging. Repair the reusable
-   planner and test the actual scored wrapper, preserving its masks and costs.
+1. **Extracted constraints must refer to the supplied evidence (FR-01,
+   FR-12).** Existing scalar calibration has valid nulls; generated evidence
+   has repeatedly failed before measurement. Test source-derived structural
+   witnesses, preserve unknowns, then measure incremental decision value
+   against scalar-only and cheap structural controls.
+2. **Learning must improve future decisions and survive restart (FR-06,
+   FR-11).** A state update is not evidence of learning. Test prediction before
+   delayed feedback, source-conditioned updates, independent admission,
+   held-back retention and a matched scalar-only learner.
+3. **Verified models must lead to useful live search (FR-07, FR-12; ARC
+   north star).** Goal-safe dedup has not passed this milestone's terminal
+   validation. Requalify its concrete defects, measure the actual wrapper,
+   then run a small adapter-withheld live case series with current induction.
 
-FR-05/FR-08 deployment is an enabling branch: ship an explicit native client for
-the already-measured Rust core. This does not reopen the 10x benchmark without a
-changed performance mechanism or claim that a learned head has been ported.
+FR-05/FR-08 and NFR-01 support these goals: port the small normalized energy
+kernel, test real PyO3 parity and measure total consumer costs. A faster exact
+kernel cannot establish a learned-verifier advantage.
 
 ## Research adopted before design
 
-The dated V666 review was appended to `research-references.md` before this
-contract was designed. It records all eight topics and six secondary channels.
+The dated V667 review was appended to `research-references.md` before these
+experiments were designed. It covers the eight requested topics and all six
+secondary channels. It distinguishes abstracts, methods read, rechecks and
+unavailable citation endpoints.
 
-| Source | Adopted method or deferral | Tasks |
+| Source | Concrete adoption | Experiments |
 |---|---|---|
-| [JSONSchemaBench](https://arxiv.org/html/2501.10868v1), 2025 | Separate grammar coverage, generation cost and output quality; independently validate pointers. | 7631–7634 |
-| [EAEV](https://arxiv.org/html/2609.08267v1), September 2026 | Compare semantic evidence with erasure and source-group permutation. Local adaptation, not replication. | 7635–7636 |
-| [Proper Calibeating](https://arxiv.org/html/2605.26703v2), May 2026; [trust-region continual learning](https://arxiv.org/abs/2602.02417), February 2026 | Proper-loss and decision tests plus bounded retained updates. No theorem claim for delayed admission. | 7635–7637 |
-| [Spline-local KAN learning](https://arxiv.org/html/2602.02056v4), 2026 | Sparse update path for future hardware; defer another head architecture until evidence value is known. | Hardware-path accounting, 7637 |
-| [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985), revised September 2026 | Full consumer cost governs deployment; carry prior measured native cost into integration. | 7641 |
-| [EBT](https://arxiv.org/abs/2507.02092), 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), 2025/2026 | Keep conditional energy and exact binary normalization; generator stays frozen. | 7629, 7635 |
-| [AS2](https://arxiv.org/abs/2603.18436), [ERM](https://arxiv.org/abs/2607.10128), [EBD](https://arxiv.org/abs/2605.28020), 2026 | New leads for soft constraints, recursive selection and reward tilting. Defer architecture expansion and retired scorer families. | Method map |
+| [Static-analysis study](https://arxiv.org/abs/2604.07755), April 2026; [Hallucination Inspector](https://arxiv.org/abs/2604.20202), April 2026 | New leads. AST/symbol witnesses with explicit coverage and unknowns. Supplied Python source is a local adaptation, not API-migration replication. | 7644, 7646, 7648 |
+| [EAEV](https://arxiv.org/html/2609.08267v1), September 2026; [Beyond Document Grounding](https://arxiv.org/abs/2607.00895), July 2026 | Preserve source offsets, injected-label provenance and exposure limits; test erasure and source derangement. | 7646–7650 |
+| [Calibeating Made Simple](https://arxiv.org/html/2603.22167v1), March 2026; [Proper Calibeating](https://arxiv.org/abs/2605.26703), May 2026 | Source-conditioned proper-loss updates and scalar-only controls; no theorem claim for delayed admission. | 7647–7650 |
+| [JSONSchemaBench](https://arxiv.org/abs/2501.10868), January 2025 | Separate grammar validity, structural correctness, cost and unsupported semantics. | 7651 |
+| [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025/May 2026 | Small conditional energy, exact binary normalization; generator stays frozen. | 7647, 7654 |
+| [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985), February 2026 | Include source parsing, calls and persistence in the cost denominator. | 7655 |
 
-The source log also covers constraint acquisition, parallel Ising sampling,
-input-side alignment and ETS. OpenReview exposed indexed EBT/workshop methods,
-but direct forums challenged the browser. Semantic Scholar citation endpoints
-failed. Hugging Face and GitHub trending were cached. Extropic Z1T and Kona
-pages were readable; vendor statements establish no local hardware or open
-training capability. No exhaustive citing-paper census is claimed.
+T-SKM-Net/PAL feasibility layers, KAC/spline-local KAN updates, reward-guided
+decoding and the Ising learning-to-sample complexity result stay in the method
+map. None justifies a new architecture before source-signal value is measured.
+Extropic's September Z1T release remains a vendor claim without local access.
+Kona's page redirected; no reproducible checkpoint was verified. Semantic
+Scholar citation endpoints failed, and trending/feed pages were cached. No
+exhaustive literature or citing-paper census is claimed.
 
-## v666 architecture
+## v667 architecture
 
 ```mermaid
 flowchart TD
-    C[7629: exact contract and method ingestion]
-    R[7630: CPU preflight and owned CUDA launcher]
-    Q[7631: eight paired schema pilot groups]
-    F[7632: fit80 / tune20 / policy20]
-    O[7633: online80 evidence]
-    E[7634: evaluation40 evidence]
-    H[7635: normalized decision energy and controls]
-    D[7636: proper loss and typed utility]
-    L[7637: delayed updates, restart, retention]
-    A[7638: independent raw-row audit]
-    P[7639: protect goals and actual mask telemetry]
-    W[7640: scored-wrapper replay generalization proxy]
-    N[7641: opt-in native consumer]
-    Z[7642: fourteen dispositions and scope decisions]
-    R --> Q
-    Q --> F
-    Q --> O
-    Q --> E
-    R --> F
-    R --> O
-    R --> E
-    F --> H
-    H --> D
-    E --> D
+    C[7643: contract and method limits]
+    S[Existing complete source / question / response]
+    W[7644: abstaining AST witness]
+    F[7646: fixed role features and source controls]
+    H[7647: normalized decision energy]
+    E[7648: probability and decision evaluation]
+    L[7649: delayed source-conditioned learning]
+    A[7650: independent source and causality audit]
+    Q[7651: bounded Qwen comparison]
+    G[7645: goal-guard validation repair]
+    P[7652: scored-wrapper development measurement]
+    V[7653: current live adapter-withheld attempts]
+    R[7654: Rust / PyO3 energy kernel]
+    T[7655: total consumer costs and board boundaries]
+    Z[7656: fourteen outcomes and continuation decisions]
+    S --> W --> F --> H
+    H --> E
     H --> L
-    O --> L
-    R --> L
-    E -. optional retained evaluation .-> L
-    D -. audit input, no pre-gate .-> A
-    L -. audit input, no pre-gate .-> A
-    P --> W
+    E -. audit input .-> A
+    L -. audit input .-> A
+    W --> Q
+    G --> P
+    G --> V
+    H --> R --> T
     C -. accounting .-> Z
     A -. accounting .-> Z
-    W -. accounting .-> Z
-    N -. accounting .-> Z
+    Q -. accounting .-> Z
+    P -. accounting .-> Z
+    V -. accounting .-> Z
+    T -. accounting .-> Z
 ```
 
-The launcher qualifies code, not durable GPU availability. Each model task
-acquires and rechecks its lease. Audit/capstone inputs do not pre-gate those
-tasks. ARC and native integration remain independent of evidence transport.
+Solid arrows are readiness dependencies. Dotted arrows are evidence collection,
+not pre-gates. No CPU training, evaluation or learning task depends on Qwen or
+GPU availability. The two model tasks each recheck current exclusive capacity;
+a historical launch receipt is not a reservation. Neither model task gates any
+other experiment.
 
-## Phase 1: Qualify the launch and extraction protocol — exp7629–exp7631
+## Phase 1: Qualify the two reusable methods — exp7643–exp7645
 
-**Exp7629** binds the contract and ingests methods. It preserves the distinction
-between missing producers and measured results. Negative contract mutations are
-part of its E2E. It does not gate the scientific branches.
+**Exp7643** binds the complete task contract and ingests the source-analysis
+methods. It preserves V666's external blocks and validation defects and tests
+contract mutations. It is not an upstream science gate.
 
-**Exp7630** reproduces the recorded selector rejection and introduces CPU-only
-preflight, explicit child ownership and a per-device lease. PID/start-time
-identity, foreign contexts, stale locks and race checks are tested without a
-model. A 180-second acquisition limit prevents an indefinite resource wait.
-Readiness means the launch mechanism is tested, not that a GPU is reserved.
+**Exp7644** builds a narrow source-claim witness. At least 48 independently
+annotated adversarial fixtures test lossless numbered-code extraction, scoped
+AST symbols, explicit line/raise/call assertions and quoted-code membership.
+Comments, strings, duplicate names, partial files, aliases, Unicode and dynamic
+lookup must not produce false proof. Only a complete, unambiguous closed scope
+permits absence to count as contradiction. Unchecked sentence content remains
+unknown. This is exact fixture qualification, so positive fixture evidence is
+`circular_positive`.
 
-**Exp7631** runs the first eight paired groups through explicit-schema and
-constrained-decoding arms: sixteen fixed requests, at most 512 output tokens
-each. Select an arm only if all eight independent validations pass without
-truncation. Derive separate fit120/online80/evaluation40 time projections and
-freeze the chosen configuration. Failure localizes transport; it says nothing
-about downstream evidence quality.
+**Exp7645** reproduces and fixes the two recorded Exp7639 validation defects.
+It validates the current goal-before-dedup behavior through the live mask and
+cold-directory runner. The old disqualified artifact remains unchanged.
+Passing fixture tests enables wrapper and live experiments, not solve credit.
 
-## Phase 2: Capture complete evidence and train decisions — exp7632–exp7635
+## Phase 2: Measure source information and static decisions — exp7646–exp7648
 
-**Exp7632, Exp7633 and Exp7634** capture the unchanged fit80/tune20/policy20,
-online80 and evaluation40 rosters, respectively. The role salt remains
-`v663-evidence-20260924`: 480 restored groups, 240 selected groups, and eight
-pilot groups outside every measured role. Send complete canonical sentence
-arrays exactly once. Model processes never receive evaluator labels. Attempt
-every scheduled row; invalid evidence retains a frozen baseline fallback and
-explicit missingness. No invalid-row retries or outcome-dependent replacement.
+**Exp7646** uses the existing Exp7602 roster: fit80, tune20, policy20, online80
+and evaluation40, plus eight disjoint pilot groups. Fit remains split into 64
+optimization and 16 anchor groups. It computes source witnesses on every group
+with original-source, erased-source and fixed within-role deranged-source
+controls. Unknown or unparsable groups remain in the denominator. Completeness
+of rows is readiness; zero structural coverage is a valid scientific null.
 
-Each capture makes at most one 512-token call per group. Stop generation by
-3000 seconds and the task by 4500 seconds. Feasibility is gated per roster;
-one role's availability does not prove another role can finish. Resume only
-unattempted rows with matching hashes. Missing/censored work is explicit.
+**Exp7647** fits a small normalized two-state energy using independent dataset
+labels. Its residual is bounded around the inherited probability offset.
+Fit64 trains it; tune20 selects at most six prespecified configurations;
+policy20 fixes decision thresholds. Identity probability, scalar calibration,
+a cheap structural rule and a matched-capacity source-erased head are controls.
+No full-answer text ranker or generator update is included. A head with no
+useful source feature becomes an explicit identity fallback.
 
-**Exp7635** fits the existing eight-feature/eight-hidden-unit residual energy on
-64 optimization groups with 16 held-out anchors. Four configurations cross
-learning rates 0.01/0.03 and regularization 0/0.001, with 200 steps and seed
-7635. Tune20 selects configurations; policy20 freezes deployment choices.
-Raw, temperature and scalar-logistic baselines compete with semantic, erased
-and source-permuted evidence heads. Readiness never requires a tune-set win.
-The generator has no trainable parameters in this milestone.
+**Exp7648** scores all evaluation40 groups with frozen heads and thresholds.
+It reports proper losses, AUROC where defined, cost, coverage and selective
+errors. Per-source paired bootstrap intervals use 10,000 fixed-seed resamples.
+Probability benefit needs lower CI95 of Brier(control) minus Brier(head)>0.01.
+Utility separately needs lower CI95 of cost(control) minus cost(head)>0.01,
+at non-escalation coverage>=0.20. Source dependence also requires improvement
+over erased and deranged controls. The hierarchy is Brier, then utility;
+remaining comparisons are exploratory. Forty previously exposed groups cannot
+establish broad or fresh-confirmatory generalization.
 
-## Phase 3: Test learning and live-planner correctness — exp7636–exp7640
+## Phase 3: Test retention and real execution — exp7649–exp7653
 
-**Exp7636** measures Brier, log loss, AUROC and typed decisions on forty frozen
-evaluation groups. Primary gains over raw and strongest scalar require at
-least 0.005 Brier improvement and simultaneous 95% lower bounds above zero.
-Use 2000 paired group resamples and Bonferroni-adjusted individual intervals.
-Evidence attribution also requires that erasure and permutation change
-predictions and worsen mean Brier. The typed policy minimizes accept=5p,
-reject=1-p, escalate=0.2, with fixed tie order. Utility requires positive
-lower-bound cost savings, coverage at least 0.10 and no extra false accepts.
-Probability, semantic attribution and utility have separate gate fields.
+**Exp7649** is the required continuous self-learning experiment. It conditions
+proper-loss updates on source-witness states and compares equal-state-budget
+scalar-only learning, a frozen head and a past-released-label control. The
+online80 stream preserves the existing 40 update / 40 one-use admission split
+and eight-event delay. Admission labels never train. Prediction, release,
+candidate, admission, commit and rollback are separately recorded. Frozen
+static benefit is not a prerequisite.
 
-**Exp7637** is the continuous self-learning experiment. Five orders over the
-same online80 compare frozen, guarded and legally deranged-feedback arms.
-Predict before lag-eight feedback. Each block has four gradient examples and
-four one-use admission examples; anchors never train. Require improved
-admission Brier, no higher admission cost and anchor Brier rise at most 0.002.
-Restart at positions 32 and 64 and release the tail through tick 88. Average
-orders within source group before inference. Benefit requires improvement
-against both controls and a nonzero admitted update. Retention separately
-requires upper95 on evaluation Brier deterioration at most 0.002 and no extra
-cost or false accepts. Missing retention evidence blocks only the joint claim;
-online measurements remain. Report actual CPU update/lookup cost and memory.
+The causal Brier gate requires lower CI95 delta>0.01 against both frozen and
+scalar-only controls, using blocks of eight events. Utility is a separate
+cost/coverage test. Retention requires upper CI95 Brier degradation<=0.01 on
+both evaluation40 and fit16 anchors. Restart midway, duplicate feedback and
+interrupted writes must preserve acknowledged state. These are descriptive
+finite-stream tests, not a calibeating theorem or a new prospective corpus.
+Sparse CPU updates have a bounded Rust path; <1 microsecond arithmetic update
+and <1 millisecond lookup are measured targets, not promised achievements.
 
-**Exp7638** independently reconstructs both branches, with role, denominator,
-future-label, no-op-control and checkpoint mutations. Missing evidence yields
-one blocked disposition, not a partial retry loop.
+**Exp7650** independently reduces new structural and learning evidence. It
+runs even if producers fail, records exact missing evidence once, and attacks
+label leakage, wrong-file witnesses, semantic overclaim, future-origin feedback,
+role changes and inconsistent aggregate headlines. It does not rerun models.
 
-**Exp7639** hardens a reusable live primitive from the Exp10013 review. Run the
-full-grid goal check before duplicate rejection and make mask telemetry reflect
-actual planner use. Preserve flags-off behavior. Test intermediate counter
-states too: earlier terminal checks alone do not prove masked-state equivalence.
-Preserve goal-relevant state or refuse unsupported merges; document limits.
-The task freezes a larger existing-window census without reading arm outcomes.
+**Exp7651** is an optional bounded Qwen challenge on eight disjoint pilots:
+16 requests, each at most 512 output tokens. Compare explicit-schema prompting,
+grammar-constrained generation and CPU structural witnesses. The full source
+is retained; overflow is a recorded failure, not truncated evidence. Semantic
+relations without independent truth remain unadjudicated. A new available
+exclusive-capacity snapshot is mandatory after Exp7631's foreign-server block.
+This task opens no downstream gate.
 
-**Exp7640** compares OFF with guarded HUD_DEDUP through
-`E3AgentPolicy._call_plan_in_model`, using the real Stage-2 mask and scored
-start/execute semantics. The target is at least 20 additional windows across
-8 games, separate from ten exposed expert controls. If the eligible census is
-smaller, preserve it and withhold the breadth claim. Keep 20,000 engine calls,
-depth80 and novelty off. Count failed plans as waste. Benefit needs no lost OFF
-wins, no extra waste, no longer shared-win plans, wall-ratio upper95 <=1.10,
-and a positive game-clustered bound on useful-plan gain or engine-call savings.
-Stop measurement by 2400 seconds and total work by 4500 seconds.
+**Exp7652** measures goal-safe search on the complete eligible stall-window
+census through E3AgentPolicy with actual live masks and disabled per-game
+adapters. Baseline and HUD-dedup arms share start states and 20,000 engine-call
+budgets; tie-breaking stays off. Separate runtime-induced engines from expert
+controls. Additional induced-engine success without losing a previous success
+supports only a development-proxy observation; report game-clustered intervals,
+plan lengths, engine calls and costs. No live solve credit follows.
 
-ARC uses saved generator outputs; it performs no current LLM invocation and
-claims no new game-level solve. `solve_provenance=development_proxy` applies to
-these fixtures/replays. The reusable live-primitive repair satisfies the ARC
-standing floor; a replay benefit is not hidden-game generalization evidence.
+**Exp7653** runs a small current live case series: three identity-selected
+games, two planner arms, one matched seed, six episodes. Per-game adapters and
+source access are disabled. Each episode allows 128 actions, one actual Qwen
+world-model induction up to 4096 output tokens, 20,000 planner calls and 400
+seconds. Total episode budget is 2400 seconds plus at most 1200 seconds for
+validation. Current induction-to-plan-to-action lineage is required. No
+accepted/executed engine means a reachability null, not planner effectiveness.
+Only the agent's own runtime discoveries use `live_agent_self_discovery`.
+Three games support exploratory evidence, not a leaderboard claim. No current
+CUDA capacity means a terminal resource block before loading.
 
-## Phase 4: Ship measured native capability and close scope — exp7641–exp7642
+## Phase 4: Measure the deployment boundary and reconcile — exp7654–exp7656
 
-**Exp7641** moves the qualified native client from experiment code into an
-explicit package API. Preserve typed decisions, feedback custody, exact-once
-release, durable acknowledgements, error escalation and existing defaults.
-Exercise a real extension, cold reload and interrupted writes. A missing
-extension remains unavailable, never a silent Python-native substitute. Add a
-small usage example. This is production integration of a proven boundary, not
-a repeat benchmark or a claim that the 10x NFR has been met.
+**Exp7654** ports the small normalized energy/decision kernel to Rust/PyO3.
+Python retains AST extraction; the Rust input is the canonical numeric witness
+vector. At least 64 boundary/random fixtures and 240 corpus rows test actual
+extension parity, error behavior and cold head reload. Integer metadata matches
+exactly; energy/probability tolerance is 1e-10. A null scientific head can still
+qualify functional parity. No speed claim is made here.
 
-**Exp7642** accounts for every task, cold-reduces eligible claims and makes
-keep/change/retire decisions. The capstone never hashes its own output as input.
-Absent external science yields `blocked`, not `partial`. Stable publication
-G1–G4 remains separate from new milestone results.
+**Exp7655** compares whole Python and native consumers at batches 1/8/32,
+30 randomized paired process blocks per batch. It measures source parsing,
+indexing, lookup, scoring, decisions and persistence as exclusive phases.
+Cold and warm caches stay separate; keys bind source bytes, schema, parser and
+file scope. Total speed benefit needs lower CI95>1.10; NFR-01 separately needs
+lower CI95>=10. A kernel-only ratio cannot meet either consumer gate. Hardware
+continuity records all board scopes without repeating unchanged physical work.
 
-## Hardware requirements and acceleration path
+**Exp7656** accounts for all fourteen dispositions and independently reduces
+eligible results. External missing science is `blocked`, never `partial`.
+It gives each mechanism a keep/change/retire decision and a falsifiable reopen
+condition. Publication G1–G4 remain unchanged. The capstone neither activates
+a new roadmap nor publishes anything externally.
 
-| Resource | Planned use | Availability and claim boundary |
+## Hardware requirements and execution budget
+
+| Tasks | Required substrate | Resource and runtime boundary |
 |---|---|---|
-| CPU and system RAM | Schema/ownership tests, compact training, replay, reduction and native integration | Required. Fixed-count CPU work is the immediate learning path; measure update/lookup cost. |
-| One RTX 3090, 24 GiB | Tasks 7631–7634, serial Qwen3.8-27B Q4_K_M calls | The host has two cards. Require an owned lease and >=20,000 MiB free on the selected UUID; do not infer that combined 48 GiB is a single device. |
-| Native Rust/PyO3 toolchain | Task 7641 package integration | Reuse the tested service core and actual extension. Include startup and persistence in any later speed claim. |
-| KV260 | Preserve graduated FPGA-fabric scope | No new board experiment; k_max<=5. Later warranted work uses SSH/scp/xmutil, not a host SD-card prerequisite. |
-| PolarFire | Preserve Linux CPU-dispatch scope | No FPGA-fabric speed claim and no repeat continuity probe. |
-| GateMate | Preserve the physical-chain block | Reopen only after a dated cable/port/power change and authenticated IDCODE evidence. |
-| AMD NPU / Extropic TSU | Future compact prediction/sampling | No qualified current task or assumed device access. SDK/device evidence must precede measurement. |
+| 7643–7650, 7652 | Host CPU and existing source/ARC artifacts | No LLM load; JAX CPU for small head fitting. About 25–45 minutes per task including scoped validation. |
+| 7651 | One exclusive RTX 3090-class CUDA device and cached Qwen3.8-27B GGUF | At least the qualified launcher's 20,000 MiB free-memory floor and no foreign process; <=180-second lease wait. `model_bounded_generation`, 10-second floor; at most 8192 total output tokens. |
+| 7653 | Same owned CUDA runtime plus local ARC SDK | `model_full_generation`, 60-second floor for real generative discovery; six bounded live episodes. No public submission. |
+| 7654 | Host Rust toolchain and actual CPython/PyO3 extension | Real extension and serialized-head round trip; no board. |
+| 7655 | Host CPU, actual extension and existing durable service | Whole-consumer process-block measurements; no GPU or board execution required. |
+| 7656 | Host CPU | Aggregation and unchanged publication gate only. |
 
-The hardware wishlist is historical and contains superseded availability notes.
-Current terminal board dispositions and authenticated task receipts govern.
-No purchase is needed. The compact learner uses CPU counters/small gradients;
-local sparse updates offer a future FPGA path, while batch training can use GPU
-or NPU after qualification. The requested 100x hardware goal is a target, not a
-result. The native measurement is 7.8270x on its own complete workload.
+The inventory lists two RTX 3090 cards, but visibility and exclusive capacity
+are per-task observations. Never infer a usable second device from inventory.
+One model is mandated; DualGPURunner is not automatically applicable. Every
+LLM task includes `unsloth/Qwen3.8-27B-GGUF` in `MODEL_SPECS`. No legacy model
+supplies headline evidence. The model stays frozen.
 
-All four LLM tasks declare `model_bounded_generation` and include
-`unsloth/Qwen3.8-27B-GGUF` in `MODEL_SPECS`. Each emits a fixed small structured
-response, so the 10-second floor applies even when the roster takes minutes.
-A future real unbounded reasoning run would use `model_full_generation` (60s);
-a load-only probe would use `model_load_no_generation` (2s). Record actual class
-separately when blocked before loading. Never pad runtime. CPU reduction uses
-`aggregation` or `no_model_load` with `MODEL_SPECS=[]`, naming historical model
-identity separately. Legacy small models cannot replace the headline model.
+The classifier follows actual work: small fixed-token probes are bounded;
+actual live world-model generation is full generation. Embedding or load-only
+probes, if separately proposed later, require `model_load_no_generation` with
+its 2-second floor. A task blocked before load reports its actual no-load class
+and keeps planned class/models separately. Never sleep to satisfy a floor.
 
-## Dependency and execution rules
+KV260 retains its graduated FPGA-fabric scope and k_max<=5. PolarFire retains
+Linux CPU dispatch only. GateMate retains the physical/JTAG `0xffffffff` block
+until a dated operator physical-chain change. NPU and TSU remain unqualified.
+The wishlist informs placement bounds, but no acquisition, SDK branch or new
+bitstream is part of this milestone. FPGA matching is future work conditional
+on measured workload size and end-to-end cost; no 100x acceleration is claimed.
 
-Conductor order is the exact contract order. The science chain is
-7630→7631→{7632,7633,7634}; 7632→7635; {7634,7635}→7636;
-{7630,7633,7635}→7637. Evaluation40 is optional input for the online run but
-required for its joint retention claim. ARC is 7639→7640. Tasks 7629, 7638,
-7641 and 7642 have no conductor pre-gates. Exact readiness predicates, class
-allowlists and adversarial flags are in the machine block below.
+## Evidence, retirement and execution rules
 
-Every gate field is declared verbatim in its upstream task's REQUIRED ARTIFACT
-FIELDS. Every upstream is earlier in this roadmap. Prior artifacts can be
-read-only scientific inputs, but no `requires` chain revives a retired ID.
+- Exact structural predicates are deterministic truth within their declared
+  source scope. Dataset hallucination labels are separate evaluator evidence.
+  A positive fixture is `circular_positive`. Learned utility cannot be credited
+  by relabeling the same witness as both predictor and target.
+- Every comparison emits rows for all independent units and arms, absolute
+  losses/costs, missingness and provenance. Repeated arms, seeds and timings
+  cannot inflate scientific sample size. Unknowns remain in aggregate costs.
+- Every blocked result includes `gate_check_summary` with exact operands.
+  `partial` is reserved for unfinished owned work. Every producer declares
+  each consumed gate field verbatim. Gates admit valid null readiness and
+  qualified fixture evidence, never flagged or disqualified artifacts.
+- All failed-scope continuations carry four-field `prior_failures`, including
+  `retire_if_same_verdict: true`. Standing 2026-05-29 overrides apply only to
+  named forward differences or routine transition work. Unchanged importance
+  anchoring, external text rankers, four-expert mixtures, empty supervisor
+  refinement and retired GPU transport mechanisms remain closed.
+- Emit flushed progress at each phase and before/after loads, generations,
+  benchmarks and subprocesses. Long loops/waits report at least every 60
+  seconds. Keep every gap below 600 seconds. Checkpoint completed units; no
+  process except an owned child may be terminated.
+- Write files over about 200 lines in multiple bounded tool calls with progress
+  between them. Scratch stays in `/tmp`. No root scratch scripts, full-suite
+  launch prerequisite, unchanged historical artifact rewrite or default flip.
 
-Agent budget ceilings total **740 minutes**, about **12.3 hours** serially.
-They are upper planning allowances, not minimum runtimes or measured estimates.
-The four model tasks have 50/75/65/55-minute allowances. The 3000/4500-second
-capture limits and measured pilot projections remain stricter execution gates.
-Ownership qualification and schema/method infrastructure route to Claude Opus
-with 100 turns. Formulaic planner/native work routes to Codex/gpt-5.6-sol.
-Routine research uses the requested default backend; audits use 30 turns.
-Runtime backend coercion may apply independently of this requested routing.
+## Validation and completion criteria
 
-Every task has numbered steps requiring flushed output at every phase boundary,
-before/after long operations and every 60 seconds inside loops or synchronous
-waits. Keep all gaps under 600 seconds; a silent task can die at 1200 seconds
-regardless of its nominal cap. Files over about 200 lines must be written in
-100–150-line tool calls with progress between calls. No root scratch scripts.
+This planning change updates documents and task metadata only. Applicable
+planning E2E is a cold read of staged YAML, Markdown table and machine block,
+independent contract comparison and private mutation rejection. Numbered
+runtime E2Es in `ops/e2e-test-plan.md` execute later: source verification maps
+to E2E-005's verification boundary without claiming its generate/repair result;
+portable energy maps to E2E-003/004. ARC uses the actual scored entrypoint;
+learning tests predict/release/commit/restart through real reusable modules.
 
-## Failure discipline, priorities and claim limits
+Before planning completion, run schema, prior-failure, gate, exclusion,
+harness-fit, prompt-path, ARC and overdue-priority checks, scoped existing unit
+tests, lint and affected-test spec coverage. Check protected active-roadmap and
+conductor hashes. Exp7643 later owns runtime contract checks after activation.
 
-Every task carries complete prior-failure metadata: actual experiment ID,
-literal artifact verdict, changed premise and `retire_if_same_verdict: true`.
-Reviewed Exp10013 defects are cited despite its completed measurement verdict.
-Captures/head/evaluation name the actual failed upstream where no old producer
-exists. V665 source-evidence hypotheses remain unmeasured; repeat resource
-blocks do not retire them. Preserve old artifacts without relabeling them.
+Before each experiment can be accepted, spec-first tests, scoped lint/types,
+100 percent changed-behavior coverage, the declared run command, fresh-process
+reduction, adversarial verification and strict row consistency must pass.
+The private pytest parent must exist. `execution_venue` is one of `host`,
+`kv260`, `polarfire`, `gatemate`; details belong in a separate field. These
+explicit checks address V666's observed failures.
 
-Standing 2026-05-29 continuation authorization applies only to routine
-transition/closure and stated mechanism changes. The full exclusion manifest
-was read. No retired experiment ID is reused. Retired external-text ranking,
-unchanged importance anchoring, empty supervisor refinement, inert-click
-pruning, completion-budget increases and board-probe churn remain closed.
+Completion means fourteen faithfully accounted outcomes. Source benefit,
+retained learning, live search usefulness and total speed have independent
+acceptance gates. Missing one cannot be hidden by a positive result elsewhere.
 
-The infrastructure reservation is met by 7629 and 7630, with 7638/7642 adding
-independent accounting. Exact contract checks and bounded writes address the
-filed roadmap-loss and planner-silence priorities. The ARC standing floor is
-met by reusable planner hardening grounded in an observed live-method defect.
-The separate calibrated-decision floor is met by 7635–7636; FR-11 by 7637.
-Current vLLM answer extraction is resolved in ops; no duplicate repair is queued.
-Kaggle/E0 execution and GateMate physical intervention remain operator-held.
+## Exact Task Contract
 
-Exact truth fixtures use `circular_positive`; protocol readiness uses `null`.
-A positive class requires all gates relevant to that claimed benefit. Closed
-external prerequisites use `blocked` and exact `gate_check_summary` operands.
-Only recoverable unfinished work owned by the task is `partial`. Every
-comparison records independent-unit rows; seeds/views are not extra samples.
-The existing exposed source groups forbid fresh-confirmatory claims regardless
-of a small confidence interval. No publication, push or default promotion.
-
-## Verification and exit criteria
-
-Planning changes documents and YAML only. Run existing schema/gate/exclusion
-unit tests, scoped lint/spec coverage, harness-fit, ARC-floor and overdue-priority
-guards. Compare the Markdown table, machine contract and staged YAML separately;
-mutate task count, order, path and gate spelling in private copies and require
-rejection. Verify active roadmap/conductor checksums and preserve the V665 design.
-No numbered runtime E2E is applicable to this planning-only change.
-
-Future tasks require spec-first/tests-first changes, scoped 100% changed-code
-coverage, Ruff, mypy, applicable Cargo checks, cold reduction and adversarial/row
-consistency checks. ARC uses affected E2E-009/011/013 and private CPU smoke;
-native integration uses real PyO3 E2E-003 and applicable serialization checks.
-Evidence tasks use their own raw-request/parser and durable-learning end-to-end
-paths. Record commands and exits, including unrelated repository debt.
-
-The milestone succeeds as research when it produces reproducible benefit or a
-localized null, not when every gate turns positive. Blocked branches stay
-visible. The capstone must account for all fourteen tasks, preserve the evidence
-limits and identify the next changed premise rather than repeat the same block.
-
-## Exact task contract
-
-The table and machine block below are generated from the same task definitions
-as the staged YAML. They specify executable scope, not an aspirational list.
+Exactly fourteen tasks, exp7643 through exp7656. Every task remains part of
+the contract even when resources or prerequisites block its execution.
 
 | Order | Task ID | Exact title | Phase | Deliverable | Substrate class | Structured gate |
 |---|---|---|---|---|---|---|
-| 1 | exp7629-contract-methods | Bind fourteen tasks and ingest evidence and planner methods | 1 | results/experiment_7629_v666_contract_methods.json | aggregation | none |
-| 2 | exp7630-cuda-ownership | Qualify isolated preflight and process-owned CUDA launch | 1 | results/experiment_7630_v666_cuda_ownership.json | no_model_load | none |
-| 3 | exp7631-schema-pilot | Measure paired schema generation through the owned launch path | 1 | results/experiment_7631_v666_schema_pilot.json | model_bounded_generation | exp7630-cuda-ownership.launch_protocol_ready_score == 1; exp7630-cuda-ownership.verdict_class in ["null", "positive"]; exp7630-cuda-ownership.flagged_adversarial == false |
-| 4 | exp7632-fit-evidence | Capture complete fitting and policy evidence | 2 | results/experiment_7632_v666_fit_evidence.json | model_bounded_generation | exp7630-cuda-ownership.role_contract_ready_score == 1; exp7630-cuda-ownership.verdict_class in ["null", "positive"]; exp7630-cuda-ownership.flagged_adversarial == false; exp7631-schema-pilot.evidence_transport_ready_score == 1; exp7631-schema-pilot.verdict_class in ["null", "positive"]; exp7631-schema-pilot.flagged_adversarial == false; exp7631-schema-pilot.fit_capture_feasible_score == 1; exp7631-schema-pilot.verdict_class in ["null", "positive"]; exp7631-schema-pilot.flagged_adversarial == false |
-| 5 | exp7633-online-evidence | Capture the delayed-learning evidence stream | 2 | results/experiment_7633_v666_online_evidence.json | model_bounded_generation | exp7630-cuda-ownership.role_contract_ready_score == 1; exp7630-cuda-ownership.verdict_class in ["null", "positive"]; exp7630-cuda-ownership.flagged_adversarial == false; exp7631-schema-pilot.evidence_transport_ready_score == 1; exp7631-schema-pilot.verdict_class in ["null", "positive"]; exp7631-schema-pilot.flagged_adversarial == false; exp7631-schema-pilot.online_capture_feasible_score == 1; exp7631-schema-pilot.verdict_class in ["null", "positive"]; exp7631-schema-pilot.flagged_adversarial == false |
-| 6 | exp7634-evaluation-evidence | Capture isolated evaluation evidence | 2 | results/experiment_7634_v666_evaluation_evidence.json | model_bounded_generation | exp7630-cuda-ownership.role_contract_ready_score == 1; exp7630-cuda-ownership.verdict_class in ["null", "positive"]; exp7630-cuda-ownership.flagged_adversarial == false; exp7631-schema-pilot.evidence_transport_ready_score == 1; exp7631-schema-pilot.verdict_class in ["null", "positive"]; exp7631-schema-pilot.flagged_adversarial == false; exp7631-schema-pilot.evaluation_capture_feasible_score == 1; exp7631-schema-pilot.verdict_class in ["null", "positive"]; exp7631-schema-pilot.flagged_adversarial == false |
-| 7 | exp7635-evidence-energy | Train source-dependent decision energy against matched controls | 2 | results/experiment_7635_v666_evidence_energy.json | no_model_load | exp7632-fit-evidence.fit_evidence_ready_score == 1; exp7632-fit-evidence.verdict_class in ["null", "positive"]; exp7632-fit-evidence.flagged_adversarial == false |
-| 8 | exp7636-decision-evaluation | Measure probability improvement and typed decision utility | 3 | results/experiment_7636_v666_decision_evaluation.json | no_model_load | exp7634-evaluation-evidence.evaluation_evidence_ready_score == 1; exp7634-evaluation-evidence.verdict_class in ["null", "positive"]; exp7634-evaluation-evidence.flagged_adversarial == false; exp7635-evidence-energy.evidence_head_ready_score == 1; exp7635-evidence-energy.verdict_class in ["null", "positive"]; exp7635-evidence-energy.flagged_adversarial == false |
-| 9 | exp7637-guarded-learning | Measure causal delayed updates and retained decision quality | 3 | results/experiment_7637_v666_guarded_learning.json | no_model_load | exp7630-cuda-ownership.guarded_update_ready_score == 1; exp7630-cuda-ownership.verdict_class in ["null", "positive"]; exp7630-cuda-ownership.flagged_adversarial == false; exp7633-online-evidence.online_evidence_ready_score == 1; exp7633-online-evidence.verdict_class in ["null", "positive"]; exp7633-online-evidence.flagged_adversarial == false; exp7635-evidence-energy.evidence_head_ready_score == 1; exp7635-evidence-energy.verdict_class in ["null", "positive"]; exp7635-evidence-energy.flagged_adversarial == false |
-| 10 | exp7638-evidence-audit | Independently reduce source evidence and retained-learning claims | 3 | results/experiment_7638_v666_evidence_audit.json | aggregation | none |
-| 11 | exp7639-arc-goal-dedup | Protect goal checks in reusable ARC planner deduplication | 3 | results/experiment_7639_v666_arc_goal_dedup.json | no_model_load | none |
-| 12 | exp7640-arc-wrapper-generalization | Measure goal-safe planning through the scored ARC wrapper | 3 | results/experiment_7640_v666_arc_wrapper_generalization.json | no_model_load | exp7639-arc-goal-dedup.planner_goal_guard_ready_score == 1; exp7639-arc-goal-dedup.verdict_class in ["null", "positive"]; exp7639-arc-goal-dedup.flagged_adversarial == false |
-| 13 | exp7641-native-consumer | Expose the measured native service as an opt-in typed consumer | 4 | results/experiment_7641_v666_native_consumer.json | no_model_load | none |
-| 14 | exp7642-capstone | Reconcile fourteen outcomes and decide evidence and planner scope | 4 | results/experiment_7642_v666_capstone.json | aggregation | none |
+| 1 | exp7643-contract-methods | Bind fourteen tasks and source-witness method limits | 1 | results/experiment_7643_v667_contract_methods.json | aggregation | none |
+| 2 | exp7644-source-witness-prototype | Qualify abstaining structural witnesses from supplied Python source | 1 | results/experiment_7644_v667_source_witness_prototype.json | no_model_load | none |
+| 3 | exp7645-arc-validation-requalification | Requalify goal-safe planner checks with valid execution receipts | 1 | results/experiment_7645_v667_arc_validation_requalification.json | no_model_load | none |
+| 4 | exp7646-source-feature-corpus | Measure structural coverage on every frozen source group | 2 | results/experiment_7646_v667_source_feature_corpus.json | no_model_load | exp7644-source-witness-prototype.witness_ready_score == 1; exp7644-source-witness-prototype.flagged_adversarial == false; exp7644-source-witness-prototype.verdict_class in ["null", "positive", "circular_positive"] |
+| 5 | exp7647-witness-energy | Train a normalized source-witness decision energy | 2 | results/experiment_7647_v667_witness_energy.json | no_model_load | exp7646-source-feature-corpus.source_features_ready_score == 1; exp7646-source-feature-corpus.flagged_adversarial == false; exp7646-source-feature-corpus.verdict_class in ["null", "positive"] |
+| 6 | exp7648-decision-evaluation | Measure source-witness probability and decision value | 2 | results/experiment_7648_v667_decision_evaluation.json | no_model_load | exp7647-witness-energy.energy_ready_score == 1; exp7647-witness-energy.flagged_adversarial == false; exp7647-witness-energy.verdict_class in ["null", "positive"] |
+| 7 | exp7649-continuous-witness-learning | Measure delayed source-conditioned learning and retained decisions | 3 | results/experiment_7649_v667_continuous_witness_learning.json | no_model_load | exp7647-witness-energy.energy_ready_score == 1; exp7647-witness-energy.flagged_adversarial == false; exp7647-witness-energy.verdict_class in ["null", "positive"] |
+| 8 | exp7650-independent-source-audit | Independently audit structural decisions and feedback causality | 3 | results/experiment_7650_v667_independent_source_audit.json | aggregation | none |
+| 9 | exp7651-qwen-witness-challenge | Compare bounded Qwen evidence against structural witnesses | 3 | results/experiment_7651_v667_qwen_witness_challenge.json | model_bounded_generation | exp7644-source-witness-prototype.witness_ready_score == 1; exp7644-source-witness-prototype.flagged_adversarial == false; exp7644-source-witness-prototype.verdict_class in ["null", "positive", "circular_positive"] |
+| 10 | exp7652-arc-wrapper-measurement | Measure goal-safe search through the scored ARC wrapper | 3 | results/experiment_7652_v667_arc_wrapper_measurement.json | no_model_load | exp7645-arc-validation-requalification.planner_goal_guard_ready_score == 1; exp7645-arc-validation-requalification.flagged_adversarial == false; exp7645-arc-validation-requalification.verdict_class in ["null", "positive", "circular_positive"] |
+| 11 | exp7653-arc-live-generalization | Test goal-safe planning on adapter-withheld live attempts | 3 | results/experiment_7653_v667_arc_live_generalization.json | model_full_generation | exp7645-arc-validation-requalification.planner_goal_guard_ready_score == 1; exp7645-arc-validation-requalification.flagged_adversarial == false; exp7645-arc-validation-requalification.verdict_class in ["null", "positive", "circular_positive"] |
+| 12 | exp7654-portable-witness-energy | Qualify a portable normalized witness-energy kernel | 4 | results/experiment_7654_v667_portable_witness_energy.json | no_model_load | exp7647-witness-energy.energy_ready_score == 1; exp7647-witness-energy.flagged_adversarial == false; exp7647-witness-energy.verdict_class in ["null", "positive"] |
+| 13 | exp7655-consumer-cost-continuity | Measure whole-consumer costs and preserve board boundaries | 4 | results/experiment_7655_v667_consumer_cost_continuity.json | no_model_load | exp7654-portable-witness-energy.portable_kernel_ready_score == 1; exp7654-portable-witness-energy.flagged_adversarial == false; exp7654-portable-witness-energy.verdict_class in ["null", "positive"] |
+| 14 | exp7656-capstone | Reconcile fourteen outcomes and decide each research continuation | 4 | results/experiment_7656_v667_capstone.json | aggregation | none |
 
-<!-- V666-TASK-CONTRACT-BEGIN -->
+<!-- V667-TASK-CONTRACT-BEGIN -->
 ```json
 [
-{"id": "exp7629-contract-methods", "title": "Bind fourteen tasks and ingest evidence and planner methods", "phase": 1, "deliverable": "results/experiment_7629_v666_contract_methods.json", "inference_substrate_class": "aggregation", "gated_on": []},
-{"id": "exp7630-cuda-ownership", "title": "Qualify isolated preflight and process-owned CUDA launch", "phase": 1, "deliverable": "results/experiment_7630_v666_cuda_ownership.json", "inference_substrate_class": "no_model_load", "gated_on": []},
-{"id": "exp7631-schema-pilot", "title": "Measure paired schema generation through the owned launch path", "phase": 1, "deliverable": "results/experiment_7631_v666_schema_pilot.json", "inference_substrate_class": "model_bounded_generation", "gated_on": [{"upstream": "exp7630-cuda-ownership", "artifact_field": "launch_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "flagged_adversarial", "op": "==", "value": false}]},
-{"id": "exp7632-fit-evidence", "title": "Capture complete fitting and policy evidence", "phase": 2, "deliverable": "results/experiment_7632_v666_fit_evidence.json", "inference_substrate_class": "model_bounded_generation", "gated_on": [{"upstream": "exp7630-cuda-ownership", "artifact_field": "role_contract_ready_score", "op": "==", "value": 1}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7631-schema-pilot", "artifact_field": "evidence_transport_ready_score", "op": "==", "value": 1}, {"upstream": "exp7631-schema-pilot", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7631-schema-pilot", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7631-schema-pilot", "artifact_field": "fit_capture_feasible_score", "op": "==", "value": 1}, {"upstream": "exp7631-schema-pilot", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7631-schema-pilot", "artifact_field": "flagged_adversarial", "op": "==", "value": false}]},
-{"id": "exp7633-online-evidence", "title": "Capture the delayed-learning evidence stream", "phase": 2, "deliverable": "results/experiment_7633_v666_online_evidence.json", "inference_substrate_class": "model_bounded_generation", "gated_on": [{"upstream": "exp7630-cuda-ownership", "artifact_field": "role_contract_ready_score", "op": "==", "value": 1}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7631-schema-pilot", "artifact_field": "evidence_transport_ready_score", "op": "==", "value": 1}, {"upstream": "exp7631-schema-pilot", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7631-schema-pilot", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7631-schema-pilot", "artifact_field": "online_capture_feasible_score", "op": "==", "value": 1}, {"upstream": "exp7631-schema-pilot", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7631-schema-pilot", "artifact_field": "flagged_adversarial", "op": "==", "value": false}]},
-{"id": "exp7634-evaluation-evidence", "title": "Capture isolated evaluation evidence", "phase": 2, "deliverable": "results/experiment_7634_v666_evaluation_evidence.json", "inference_substrate_class": "model_bounded_generation", "gated_on": [{"upstream": "exp7630-cuda-ownership", "artifact_field": "role_contract_ready_score", "op": "==", "value": 1}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7631-schema-pilot", "artifact_field": "evidence_transport_ready_score", "op": "==", "value": 1}, {"upstream": "exp7631-schema-pilot", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7631-schema-pilot", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7631-schema-pilot", "artifact_field": "evaluation_capture_feasible_score", "op": "==", "value": 1}, {"upstream": "exp7631-schema-pilot", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7631-schema-pilot", "artifact_field": "flagged_adversarial", "op": "==", "value": false}]},
-{"id": "exp7635-evidence-energy", "title": "Train source-dependent decision energy against matched controls", "phase": 2, "deliverable": "results/experiment_7635_v666_evidence_energy.json", "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7632-fit-evidence", "artifact_field": "fit_evidence_ready_score", "op": "==", "value": 1}, {"upstream": "exp7632-fit-evidence", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7632-fit-evidence", "artifact_field": "flagged_adversarial", "op": "==", "value": false}]},
-{"id": "exp7636-decision-evaluation", "title": "Measure probability improvement and typed decision utility", "phase": 3, "deliverable": "results/experiment_7636_v666_decision_evaluation.json", "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7634-evaluation-evidence", "artifact_field": "evaluation_evidence_ready_score", "op": "==", "value": 1}, {"upstream": "exp7634-evaluation-evidence", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7634-evaluation-evidence", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7635-evidence-energy", "artifact_field": "evidence_head_ready_score", "op": "==", "value": 1}, {"upstream": "exp7635-evidence-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7635-evidence-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}]},
-{"id": "exp7637-guarded-learning", "title": "Measure causal delayed updates and retained decision quality", "phase": 3, "deliverable": "results/experiment_7637_v666_guarded_learning.json", "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7630-cuda-ownership", "artifact_field": "guarded_update_ready_score", "op": "==", "value": 1}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7630-cuda-ownership", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7633-online-evidence", "artifact_field": "online_evidence_ready_score", "op": "==", "value": 1}, {"upstream": "exp7633-online-evidence", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7633-online-evidence", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7635-evidence-energy", "artifact_field": "evidence_head_ready_score", "op": "==", "value": 1}, {"upstream": "exp7635-evidence-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7635-evidence-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}]},
-{"id": "exp7638-evidence-audit", "title": "Independently reduce source evidence and retained-learning claims", "phase": 3, "deliverable": "results/experiment_7638_v666_evidence_audit.json", "inference_substrate_class": "aggregation", "gated_on": []},
-{"id": "exp7639-arc-goal-dedup", "title": "Protect goal checks in reusable ARC planner deduplication", "phase": 3, "deliverable": "results/experiment_7639_v666_arc_goal_dedup.json", "inference_substrate_class": "no_model_load", "gated_on": []},
-{"id": "exp7640-arc-wrapper-generalization", "title": "Measure goal-safe planning through the scored ARC wrapper", "phase": 3, "deliverable": "results/experiment_7640_v666_arc_wrapper_generalization.json", "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7639-arc-goal-dedup", "artifact_field": "planner_goal_guard_ready_score", "op": "==", "value": 1}, {"upstream": "exp7639-arc-goal-dedup", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}, {"upstream": "exp7639-arc-goal-dedup", "artifact_field": "flagged_adversarial", "op": "==", "value": false}]},
-{"id": "exp7641-native-consumer", "title": "Expose the measured native service as an opt-in typed consumer", "phase": 4, "deliverable": "results/experiment_7641_v666_native_consumer.json", "inference_substrate_class": "no_model_load", "gated_on": []},
-{"id": "exp7642-capstone", "title": "Reconcile fourteen outcomes and decide evidence and planner scope", "phase": 4, "deliverable": "results/experiment_7642_v666_capstone.json", "inference_substrate_class": "aggregation", "gated_on": []}
+{"id": "exp7643-contract-methods", "title": "Bind fourteen tasks and source-witness method limits", "phase": 1, "deliverable": "results/experiment_7643_v667_contract_methods.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7644-source-witness-prototype", "title": "Qualify abstaining structural witnesses from supplied Python source", "phase": 1, "deliverable": "results/experiment_7644_v667_source_witness_prototype.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7645-arc-validation-requalification", "title": "Requalify goal-safe planner checks with valid execution receipts", "phase": 1, "deliverable": "results/experiment_7645_v667_arc_validation_requalification.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7646-source-feature-corpus", "title": "Measure structural coverage on every frozen source group", "phase": 2, "deliverable": "results/experiment_7646_v667_source_feature_corpus.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7644-source-witness-prototype", "artifact_field": "witness_ready_score", "op": "==", "value": 1}, {"upstream": "exp7644-source-witness-prototype", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7644-source-witness-prototype", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive", "circular_positive"]}]},
+{"id": "exp7647-witness-energy", "title": "Train a normalized source-witness decision energy", "phase": 2, "deliverable": "results/experiment_7647_v667_witness_energy.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7646-source-feature-corpus", "artifact_field": "source_features_ready_score", "op": "==", "value": 1}, {"upstream": "exp7646-source-feature-corpus", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7646-source-feature-corpus", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}]},
+{"id": "exp7648-decision-evaluation", "title": "Measure source-witness probability and decision value", "phase": 2, "deliverable": "results/experiment_7648_v667_decision_evaluation.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7647-witness-energy", "artifact_field": "energy_ready_score", "op": "==", "value": 1}, {"upstream": "exp7647-witness-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7647-witness-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}]},
+{"id": "exp7649-continuous-witness-learning", "title": "Measure delayed source-conditioned learning and retained decisions", "phase": 3, "deliverable": "results/experiment_7649_v667_continuous_witness_learning.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7647-witness-energy", "artifact_field": "energy_ready_score", "op": "==", "value": 1}, {"upstream": "exp7647-witness-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7647-witness-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}]},
+{"id": "exp7650-independent-source-audit", "title": "Independently audit structural decisions and feedback causality", "phase": 3, "deliverable": "results/experiment_7650_v667_independent_source_audit.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7651-qwen-witness-challenge", "title": "Compare bounded Qwen evidence against structural witnesses", "phase": 3, "deliverable": "results/experiment_7651_v667_qwen_witness_challenge.json", "inference_substrate_class": "model_bounded_generation", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "gated_on": [{"upstream": "exp7644-source-witness-prototype", "artifact_field": "witness_ready_score", "op": "==", "value": 1}, {"upstream": "exp7644-source-witness-prototype", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7644-source-witness-prototype", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive", "circular_positive"]}]},
+{"id": "exp7652-arc-wrapper-measurement", "title": "Measure goal-safe search through the scored ARC wrapper", "phase": 3, "deliverable": "results/experiment_7652_v667_arc_wrapper_measurement.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7645-arc-validation-requalification", "artifact_field": "planner_goal_guard_ready_score", "op": "==", "value": 1}, {"upstream": "exp7645-arc-validation-requalification", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7645-arc-validation-requalification", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive", "circular_positive"]}]},
+{"id": "exp7653-arc-live-generalization", "title": "Test goal-safe planning on adapter-withheld live attempts", "phase": 3, "deliverable": "results/experiment_7653_v667_arc_live_generalization.json", "inference_substrate_class": "model_full_generation", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "gated_on": [{"upstream": "exp7645-arc-validation-requalification", "artifact_field": "planner_goal_guard_ready_score", "op": "==", "value": 1}, {"upstream": "exp7645-arc-validation-requalification", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7645-arc-validation-requalification", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive", "circular_positive"]}]},
+{"id": "exp7654-portable-witness-energy", "title": "Qualify a portable normalized witness-energy kernel", "phase": 4, "deliverable": "results/experiment_7654_v667_portable_witness_energy.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7647-witness-energy", "artifact_field": "energy_ready_score", "op": "==", "value": 1}, {"upstream": "exp7647-witness-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7647-witness-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}]},
+{"id": "exp7655-consumer-cost-continuity", "title": "Measure whole-consumer costs and preserve board boundaries", "phase": 4, "deliverable": "results/experiment_7655_v667_consumer_cost_continuity.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7654-portable-witness-energy", "artifact_field": "portable_kernel_ready_score", "op": "==", "value": 1}, {"upstream": "exp7654-portable-witness-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7654-portable-witness-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null", "positive"]}]},
+{"id": "exp7656-capstone", "title": "Reconcile fourteen outcomes and decide each research continuation", "phase": 4, "deliverable": "results/experiment_7656_v667_capstone.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []}
 ]
 ```
-<!-- V666-TASK-CONTRACT-END -->
+<!-- V667-TASK-CONTRACT-END -->

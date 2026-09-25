@@ -352,3 +352,8 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 - Sep. 23: Tufa Labs announced it will skip Milestone #2 and will not open-source its current solution on Sep. 30. It still plans to release its final solution after the competition ends. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/742801)
 
+## 2026-09-25 13:12 UTC -- NEW
+
+- **Kaggle leaderboard shift:** As of September 25 at 13:12 UTC, Lord Han Solo leads the public leaderboard with 19.45, followed by Tufa Labs at 18.81 and Yi-Chia Chen at 18.63. These are provisional public scores. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+- **September 3 ARC Prize announcement:** GPT-6 Astra scored 62.7% on the semi-private benchmark with the Standard harness and 99.9% with the Provider Adapter harness. ARC Prize says it will label the two evaluation conditions separately on its leaderboard; these are separate from Kaggle prize submissions. [ARC Prize blog](https://arcprize.org/blog/astra)
+
