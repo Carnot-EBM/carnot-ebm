@@ -63,3 +63,60 @@ This passes the route-monotonicity pre-check for **expert-code proxies**. It doe
 - Does the relaxed score rank *off-route* successors well enough to cut calls by an order of magnitude, while preserving the short plans? Route monotonicity alone cannot answer that.
 - What FIFO reserve and depth penalty retain existing wins under one 20,000-call budget? The current novelty tie-break already showed longer control plans (`results/experiment_10013_planner_dedup_tiebreak.json:300-332`).
 - How often is the model's own goal wrong or reachable only through an inaccurate transition? This scored test uses experts to isolate search; hidden-game performance still depends on induction quality (`docs/research-notes/gate-usefulness-2026-09-24.md:74-95`, `docs/research-notes/gate-usefulness-2026-09-24.md:114-132`).
+## Induced-model check (2026-09-25)
+
+I tested the section 4 extractor on the agent-written 10010 think-ON engines and the three 10009 codeonly first-shot engines per window. The scratch AST compiler accepts only pure `and`/`or`, equality, `>=`, `<=`, scalar counts, fixed tuple/set position equality, and a direct one-step marker-producing guard. It caps clauses and distance at 32. Unsupported code contributes zero distance. Parsing reads only the induced source; route labels, game IDs, expert code, and win frames enter only the later diagnostic replay. The two missing 10010 sources (dc22, ka59) are shown below but excluded from the THINK denominator. All 30 cached 10009 sources stay in the CODEONLY denominator, including invalid or incomplete code.
+
+The probe used `rebuild_registered_trajectory` and logical real grids from the offline simulator. For ka59, the scratch replay passed the adapter’s registered click-payload resolver to `build_window_from_labels`, because the 10012 convenience wrapper omits it. Each induced predicate ran in a separate audited subprocess with a 30-second outer timeout and a 0.2-second per-grid timer. The extractor received no expert source. Observed variance uses the recorded visible window grids (`grid` plus each `next_grid`); route scores include the start and the real level-up frame. Exact scores, predicate truth values, source hashes, and full unsupported reasons are in `results/raw/goal_gradient_induced_check_2026_09_25/per_engine.json`.
+
+`v×n` means score `v` repeated for `n` frames. The sequence runs from route start to win. `↓/=/↑` counts adjacent strict drops, flats, and rises. `Win min` allows ties. `Goal win/pre` reports whether the induced `is_level_complete` is true on the real win frame and false on *every* earlier route frame; `—` means the source or callable predicate could not be loaded. Unsupported scores are flat by design.
+
+| Population | Window / seed | Extracted clauses; unsupported reason | Observed varies | Route distance sequence | ↓/=/↑ | Win min | Goal win/pre |
+|---|---|---|---|---|---:|---|---|
+| THINK | su15 pilot | 1/2 partial; shape/size guard | N | `9×8` | 0/7/0 | Y | N/Y |
+| CODEONLY | su15 7491001 | 1/1 supported | N | `32×8` | 0/7/0 | Y | N/Y |
+| CODEONLY | su15 7491002 | 1/1 supported | N | `32×8` | 0/7/0 | Y | N/Y |
+| CODEONLY | su15 7491003 | 1/1 supported | N | `32×8` | 0/7/0 | Y | N/Y |
+| THINK | sp80 pilot | 1/3 partial; shape/size guard | Y | `32×4, 0` | 1/3/0 | Y | Y/Y |
+| CODEONLY | sp80 7491001 | 0/0 missing_predicate; no predicate | N | `0×5` | 0/4/0 | Y | —/— |
+| CODEONLY | sp80 7491002 | 0/0 invalid_source; syntax error | N | `0×5` | 0/4/0 | Y | —/— |
+| CODEONLY | sp80 7491003 | 1/1 supported | N | `32×5` | 0/4/0 | Y | N/Y |
+| THINK | ft09 pilot | 0/1 unsupported; computed component, computed flow | N | `0×5` | 0/4/0 | Y | N/Y |
+| CODEONLY | ft09 7491001 | 1/1 supported | N | `32×5` | 0/4/0 | Y | N/Y |
+| CODEONLY | ft09 7491002 | 1/1 supported | N | `32×5` | 0/4/0 | Y | N/Y |
+| CODEONLY | ft09 7491003 | 0/0 constant_false | N | `0×5` | 0/4/0 | Y | N/Y |
+| THINK | g50t pilot | 0/1 unsupported; shape/size guard | N | `0×18` | 0/17/0 | Y | N/Y |
+| CODEONLY | g50t 7491001 | 0/0 constant_false | N | `0×18` | 0/17/0 | Y | N/Y |
+| CODEONLY | g50t 7491002 | 0/0 constant_false | N | `0×18` | 0/17/0 | Y | N/Y |
+| CODEONLY | g50t 7491003 | 0/0 constant_false | N | `0×18` | 0/17/0 | Y | N/Y |
+| THINK | m0r0 pilot | 3/5 partial; shape/size guard | N | `32×16` | 0/15/0 | Y | N/Y |
+| CODEONLY | m0r0 7491001 | 0/0 missing_predicate; no predicate | N | `0×16` | 0/15/0 | Y | —/— |
+| CODEONLY | m0r0 7491002 | 0/0 constant_false | N | `0×16` | 0/15/0 | Y | N/Y |
+| CODEONLY | m0r0 7491003 | 1/1 supported | N | `32×16` | 0/15/0 | Y | N/Y |
+| THINK | dc22 pilot | 0/0 missing_source; no source | N | `0×24` | 0/23/0 | Y | —/— |
+| CODEONLY | dc22 7491001 | 0/0 constant_false | N | `0×24` | 0/23/0 | Y | N/Y |
+| CODEONLY | dc22 7491002 | 0/0 constant_false | N | `0×24` | 0/23/0 | Y | N/Y |
+| CODEONLY | dc22 7491003 | 0/0 missing_predicate; no predicate | N | `0×24` | 0/23/0 | Y | —/— |
+| THINK | wa30 pilot | 0/1 unsupported; computed flow | N | `0×34` | 0/33/0 | Y | N/Y |
+| CODEONLY | wa30 7491001 | 1/1 supported | Y | `32×17, 22×15, 12, 32` | 2/30/1 | N | N/Y |
+| CODEONLY | wa30 7491002 | 1/1 supported | Y | `32×17, 22×15, 12, 32` | 2/30/1 | N | N/Y |
+| CODEONLY | wa30 7491003 | 2/3 partial; conditional call | N | `32×34` | 0/33/0 | Y | N/Y |
+| THINK | ka59 pilot | 0/0 missing_source; no source | N | `0×12` | 0/11/0 | Y | —/— |
+| CODEONLY | ka59 7491001 | 0/1 unsupported; no return | N | `0×12` | 0/11/0 | Y | N/Y |
+| CODEONLY | ka59 7491002 | 0/0 constant_false | N | `0×12` | 0/11/0 | Y | N/Y |
+| CODEONLY | ka59 7491003 | 0/0 constant_false | N | `0×12` | 0/11/0 | Y | N/Y |
+| THINK | sb26 pilot | 0/1 unsupported; shape/size guard, cap 64>32 | N | `0×10` | 0/9/0 | Y | N/N |
+| CODEONLY | sb26 7491001 | 0/0 invalid_source; syntax error | N | `0×10` | 0/9/0 | Y | —/— |
+| CODEONLY | sb26 7491002 | 4/4 supported | Y | `0×2, 1×2, 2×2, 3×2, 4×2` | 0/5/4 | N | N/N |
+| CODEONLY | sb26 7491003 | 0/1 unsupported; cap 56>32 | N | `0×10` | 0/9/0 | Y | N/Y |
+| THINK | ar25 pilot | 0/1 unsupported; cap 45>32 | N | `0×16` | 0/15/0 | Y | N/Y |
+| CODEONLY | ar25 7491001 | 0/0 constant_false | N | `0×16` | 0/15/0 | Y | N/Y |
+| CODEONLY | ar25 7491002 | 0/1 unsupported; cap 64>32 | N | `0×16` | 0/15/0 | Y | N/Y |
+| CODEONLY | ar25 7491003 | 1/1 supported | N | `32×16` | 0/15/0 | Y | N/Y |
+
+| Population | Sources | Nonconstant on observed grids | Monotone non-increasing route | Win at route minimum | Correct goal on route | Correct goal with a pre-win strict drop |
+|---|---:|---:|---:|---:|---:|---:|
+| THINK | 8 | 1/8 | 8/8 | 8/8 | 1/8 | 0/8 |
+| CODEONLY | 30 | 3/30 | 27/30 | 27/30 | 0/30 | 0/30 |
+
+**Verdict.** Approach C has no validated pre-win goal gradient on these induced models. THINK varies on observed grids only for sp80 (1/8); its goal is correct, but its registered route stays at distance 32 through all four pre-win frames and drops to 0 only at the win. CODEONLY varies in 3/30: both wa30 sources fall before the win then rise on the win frame and never recognize that win; sb26 seed 7491002 rises 0→4 and calls the initial frames complete. No direct pure marker guard was extractable from the two marker-only predicates inspected. The large monotonicity and win-minimum fractions mostly count flat scores, so they do not establish useful search guidance. The expert-code proxy result above does not transfer to this induced sample. An actual planner A/B would still be needed to measure off-route ranking and call-budget effects; these results do not justify enabling C for induced hidden-game models.
