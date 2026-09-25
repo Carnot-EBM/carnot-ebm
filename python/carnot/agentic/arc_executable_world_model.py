@@ -1673,6 +1673,44 @@ def hud_mask_swallow_check(transitions: Sequence["Transition"], mask: Optional[n
     return rec
 
 
+def hud_mask_dedup_equivalence_check(
+    transitions: Sequence["Transition"],
+    mask: Optional[np.ndarray],
+    *,
+    swallow: Optional[dict] = None,
+) -> dict:
+    """Refuse dedup when observed state changes inside the proposed mask.
+
+    A terminal goal check protects a terminal successor, but it does not prove
+    that two non-terminal masked states have the same future. A changed masked
+    cell can be a counter that controls a later goal. The generic safe choice is
+    to retain it by refusing the mask. This check covers observed transitions
+    only; unseen masked values and hidden state remain an explicit limitation.
+    """
+
+    checked = swallow if swallow is not None else hud_mask_swallow_check(transitions, mask)
+    inside = int(checked.get("n_changed_cells_inside_mask") or 0)
+    record = {
+        "checked": bool(hud_mask_swallow_clean(checked)),
+        "observed_equivalent": False,
+        "reason": str(checked.get("reason") or "unmeasurable"),
+        "changed_cells_inside_mask": inside,
+        "observed_transition_count": int(checked.get("n_transitions") or 0),
+        "scope_limit": (
+            "Observed transitions only; unseen masked values and hidden state are not proven "
+            "equivalent."
+        ),
+    }
+    if not hud_mask_swallow_clean(checked):
+        return record
+    if inside:
+        record["reason"] = "observed_mask_cell_change"
+        return record
+    record["observed_equivalent"] = True
+    record["reason"] = "observed_mask_cells_stable"
+    return record
+
+
 def apply_hud_mask(grid: np.ndarray, mask: Optional[np.ndarray]) -> np.ndarray:
     """Collapse HUD cells to a constant so they cannot decide an exact-match test.
 

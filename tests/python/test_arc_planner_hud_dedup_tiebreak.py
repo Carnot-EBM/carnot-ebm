@@ -331,7 +331,6 @@ def test_wrapper_passes_only_a_swallow_clean_mask(monkeypatch) -> None:
     before = np.zeros((2, 3), dtype=np.int16)
     after = before.copy()
     after[0, 0:2] = 4
-    after[1, 0] = 9
     clean_mask = np.zeros((2, 3), dtype=bool)
     clean_mask[1, :] = True
     policy = _bare_policy(clean_mask, [_transition(before, after)])
@@ -398,7 +397,7 @@ def test_wrapper_reports_mask_keyword_not_accepted(monkeypatch) -> None:
         goal_energy_override=lambda _grid: 1.0,
     )
     assert diagnostics["planner_hud_dedup_mask_status"] == "not_used"
-    assert diagnostics["planner_hud_dedup_planner_reason"] == "not_accepted"
+    assert diagnostics["planner_hud_dedup_planner_reason"] == "callable_signature_rejected"
 
 
 def test_wrapper_passes_tiebreak_explicitly(monkeypatch) -> None:

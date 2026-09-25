@@ -36689,6 +36689,87 @@ independent fixtures. Flag-on issues to fix before enabling HUD_DEDUP:
 - The scored-path measurement covered the default binary goal energy only (graded and novelty goal
   bias, and a non-None two-sided goal contract, were not exercised).
 
+### REQ-ARC-WMTE-7639: Guard goal-sensitive planner deduplication
+
+The opt-in planner HUD mask SHALL never prevent a full-grid goal check on a
+generated successor. The engine and goal predicate SHALL receive the original
+grid. The planner SHALL keep the first state admitted for each accepted key.
+The existing engine-call, depth, and generated-call guard limits SHALL not
+change. The planner SHALL retain the flags-off ordering, counts, and diagnostics.
+
+The scored wrapper SHALL apply a HUD deduplication mask only after the existing
+swallow check is clean and the active transition corpus shows no changed cell
+inside that mask. A changed masked cell is observable state whose future goal
+or transition effect is not established by a terminal check. The wrapper SHALL
+refuse that mask rather than claim all masked states are equivalent. This guard
+is limited to observed transitions. It does not prove equivalence for unseen
+masked values or hidden state, and it SHALL not invent a game-specific mask.
+
+Mask telemetry SHALL describe use by the called planner, not wrapper intent.
+A missing mask, a mask with the wrong start-grid shape, an unmeasurable or unsafe
+mask, and a planner callable that cannot accept `dedup_mask` SHALL each have a
+distinct non-applied status and reason. Each invocation SHALL clear prior
+mask-use results before the planner runs. A caller that accepts the keyword but
+does not report actual use SHALL not be reported as applied.
+
+Experiment 7639 SHALL freeze only `OFF` and guarded `HUD_DEDUP` arms. Novelty
+tie-breaking SHALL remain off. It SHALL reproduce the terminal-duplicate and
+intermediate-counter cases through the real `plan_in_model` entrypoint and
+exercise mask telemetry through `E3AgentPolicy._call_plan_in_model`. It SHALL
+write a deterministic, outcome-blind selection manifest for Experiment 7640 at
+`results/raw/experiment_7639_v666_arc_goal_dedup/windows.json`. The manifest
+SHALL separate the ten exposed expert controls from a target of at least twenty
+additional existing attempt windows across at least eight games. If the eligible
+census is smaller, it SHALL retain the complete census and declare insufficient
+breadth before measuring either arm.
+
+The CPU-only task SHALL load no model and make no generation. `MODEL_SPECS`
+SHALL be empty. Rows SHALL keep absolute numerators, denominators, seeds,
+direction, censoring, and raw provenance per independent unit and arm. Exact
+execution fixtures SHALL be labelled `development_proxy`; they SHALL not claim
+a hidden-game solve. The terminal artifact SHALL separate validity, readiness,
+probability benefit, utility, retention, and freshness gates. The planner guard
+readiness score MAY equal one only after fail-first regressions, flags-off parity,
+and truthful wrapper telemetry pass.
+
+#### SCENARIO-ARC-WMTE-7639-TERMINAL-BEFORE-DUPLICATE
+
+- **GIVEN** a full-grid goal successor whose accepted masked key was seen
+- **WHEN** `plan_in_model` considers that successor in FIFO or goal-energy search
+- **THEN** the full-grid predicate runs before duplicate rejection and returns the plan
+- **AND** neither the engine nor the goal predicate receives a masked grid.
+
+#### SCENARIO-ARC-WMTE-7639-INTERMEDIATE-GOAL-STATE
+
+- **GIVEN** an intermediate counter changes inside the proposed mask and later controls the goal
+- **WHEN** the active corpus exposes that masked-cell change
+- **THEN** the wrapper refuses the mask and the planner retains the intermediate state
+- **AND** a terminal-successor check alone is not treated as an equivalence proof.
+
+#### SCENARIO-ARC-WMTE-7639-TRUTHFUL-TELEMETRY
+
+- **GIVEN** no mask, an invalid shape, an unsafe or unmeasurable mask, or a rejecting callable
+- **WHEN** the scored wrapper invokes or restarts planning
+- **THEN** telemetry records the actual non-use reason and never a stale `applied`
+- **AND** `applied` requires the called planner to report that it used the mask.
+
+#### SCENARIO-ARC-WMTE-7639-FLAGS-OFF-PARITY
+
+- **GIVEN** the HUD and novelty controls are absent
+- **WHEN** the planner and scored wrapper run deterministic fixtures
+- **THEN** plans, ordering, counts, and existing diagnostics equal the parent behavior
+- **AND** no mask inspection or equivalence check occurs.
+
+#### SCENARIO-ARC-WMTE-7639-MANIFEST-AND-ARTIFACT
+
+- **GIVEN** the authenticated Experiment 10013 sources and solve registry
+- **WHEN** Experiment 7639 freezes its replay census and terminal evidence
+- **THEN** selection uses identity and provenance fields without arm outcomes
+- **AND** the artifact records two arms, sample budgets, gates, receipts, and mask limits.
+
+Implementation status: specified before Experiment 7639 tests and implementation
+on 2026-09-25. Both production controls remain default off.
+
 
 ## V663 ARC output-boundary repair and observable alias audit — 2026-09-24
 

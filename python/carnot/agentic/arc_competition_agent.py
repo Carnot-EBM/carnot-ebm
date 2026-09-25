@@ -6507,12 +6507,33 @@ class E3AgentPolicy:
             kwargs["goal_tiebreak"] = goal_tiebreak
         mask_forwarded = False
         if _e3.plan_hud_dedup_enabled():
+            import numpy as np
+
+            if diagnostics is not None:
+                # A diagnostics object can be reused after a planner restart. Clear only
+                # flag-on mask results so an earlier "applied" cannot describe this call.
+                for key in (
+                    "hud_dedup_mask_status",
+                    "hud_dedup_mask_reason",
+                    "hud_dedup_mask_cells",
+                    "hud_dedup_states_merged",
+                    "planner_hud_dedup_equivalence",
+                    "planner_hud_dedup_mask_status",
+                    "planner_hud_dedup_planner_reason",
+                    "planner_hud_dedup_swallow",
+                ):
+                    diagnostics.pop(key, None)
             mask, mask_reason = self._world_model_hud_mask(enabled=True)
             if diagnostics is not None:
                 diagnostics["planner_hud_dedup_mask_reason"] = mask_reason
             if mask is None:
                 if diagnostics is not None:
                     diagnostics["planner_hud_dedup_mask_status"] = "unresolved"
+                    diagnostics["planner_hud_dedup_planner_reason"] = mask_reason
+            elif np.asarray(mask).shape != np.asarray(start_grid).shape:
+                if diagnostics is not None:
+                    diagnostics["planner_hud_dedup_mask_status"] = "not_used"
+                    diagnostics["planner_hud_dedup_planner_reason"] = "shape_mismatch"
             else:
                 active_transitions = (
                     self._active_transitions()
@@ -6521,18 +6542,29 @@ class E3AgentPolicy:
                 )
                 swallow = _e3.hud_mask_swallow_check(active_transitions, mask)
                 clean = _e3.hud_mask_swallow_clean(swallow)
+                equivalence = _e3.hud_mask_dedup_equivalence_check(
+                    active_transitions,
+                    mask,
+                    swallow=swallow,
+                )
                 if diagnostics is not None:
                     diagnostics["planner_hud_dedup_swallow"] = swallow
-                    diagnostics["planner_hud_dedup_mask_status"] = "pending" if clean else "refused"
-                if clean:
+                    diagnostics["planner_hud_dedup_equivalence"] = equivalence
+                if not clean or not equivalence["observed_equivalent"]:
+                    if diagnostics is not None:
+                        diagnostics["planner_hud_dedup_mask_status"] = "refused"
+                        diagnostics["planner_hud_dedup_planner_reason"] = str(equivalence["reason"])
+                else:
                     if self._planner_accepts_dedup_mask(plan_in_model):
                         kwargs["dedup_mask"] = mask
                         mask_forwarded = True
+                        if diagnostics is not None:
+                            diagnostics["planner_hud_dedup_mask_status"] = "pending"
                     elif diagnostics is not None:
-                        diagnostics["hud_dedup_mask_status"] = "not_used"
-                        diagnostics["hud_dedup_mask_reason"] = "not_accepted"
                         diagnostics["planner_hud_dedup_mask_status"] = "not_used"
-                        diagnostics["planner_hud_dedup_planner_reason"] = "not_accepted"
+                        diagnostics["planner_hud_dedup_planner_reason"] = (
+                            "callable_signature_rejected"
+                        )
         # DEV-ONLY diagnostic override (REQ-ARC-FCP-5699-15 follow-up): unset in production, so
         # this changes nothing by default. Lets an A/B/diagnostic script raise plan_in_model's
         # search budget past its 20000-node default without editing production call sites.
@@ -6559,7 +6591,9 @@ class E3AgentPolicy:
             )
         if mask_forwarded and diagnostics is not None:
             planner_status = str(diagnostics.get("hud_dedup_mask_status") or "not_used")
-            planner_reason = str(diagnostics.get("hud_dedup_mask_reason") or "not_reported")
+            planner_reason = str(
+                diagnostics.get("hud_dedup_mask_reason") or "planner_did_not_report_use"
+            )
             diagnostics["planner_hud_dedup_mask_status"] = (
                 "applied" if planner_status == "applied" else "not_used"
             )
