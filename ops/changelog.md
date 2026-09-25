@@ -20606,3 +20606,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-25: Compare bounded Qwen evidence against structural witnesses (⚠️ Research Finding) — honest_verdict=complete_null_bounded_witness_pilot; results/experiment_7651_v667_qwen_witness_challenge.json
 - 2026-09-25: Measure goal-safe search through the scored ARC wrapper (⚠️ Research Finding) — honest_verdict=complete_disqualified_wrapper_validation_failed; results/experiment_7652_v667_arc_wrapper_measurement.json
 - 2026-09-25: Test goal-safe planning on adapter-withheld live attempts (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7653_v667_arc_live_generalization.json
+- 2026-09-25: Reconcile fourteen outcomes and decide each research continuation (⚠️ Blocked) — honest_verdict=complete_blocked_required_v667_external_evidence; results/experiment_7656_v667_capstone.json
