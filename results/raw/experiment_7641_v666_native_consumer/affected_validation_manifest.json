@@ -1,0 +1,232 @@
+{
+  "PYTHONPATH": "/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot",
+  "affected_files": [
+    {
+      "path": "python/carnot/experiment_7641_v666_native_consumer.py",
+      "sha256": "sha256:fc6b089db8e33b5eb9c34da541084bca8ef896aafe0ed79077603f686ac18074"
+    },
+    {
+      "path": "python/carnot/pipeline/native_calibrated_decision_service.py",
+      "sha256": "sha256:cd168f60406cebb6768553a923094235fa82ed665aa31fb52d166be4a823ca5e"
+    },
+    {
+      "path": "python/carnot/experiment_7626_v665_native_service.py",
+      "sha256": "sha256:6adb733d1763ddd4ae3827f353ed3407b7aacf88cb9da3bca7d3335c1cce5e48"
+    },
+    {
+      "path": "scripts/experiments/experiment_7641_v666_native_consumer.py",
+      "sha256": "sha256:62894009f058e58f96e0b5f9e03586a124c201923fe4bff35d20325562a51782"
+    },
+    {
+      "path": "tests/python/test_experiment_7641_v666_native_consumer.py",
+      "sha256": "sha256:0041714ce872825150835a15671ec28f9a7d29c9ee5d7f7cfe5b7f03ad838442"
+    },
+    {
+      "path": "tests/python/test_experiment_7626_v665_native_service.py",
+      "sha256": "sha256:614cb075bed2aed992c58cd343c958466f375585d9bdc18143f9b6ebb8c5adbe"
+    },
+    {
+      "path": "examples/native_calibrated_decision.py",
+      "sha256": "sha256:994c1eb3f21c4c7628c6ddfff07e48fe6e7d69f01e4a60ce3807ba097dc403cf"
+    },
+    {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:2ffee6a8fe084223899cd465711661ea013feac6a88ef6ea199c9d6df09d1599"
+    },
+    {
+      "path": "openspec/capabilities/pipeline/spec.md",
+      "sha256": "sha256:5eedff8b07b00d222b7ff3b02113f727ee041862c9fa5813c3a74ba2a994d499"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7641_v666_native_consumer",
+        "carnot.pipeline.native_calibrated_decision_service"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/focused",
+        "tests/python/test_experiment_7641_v666_native_consumer.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7641-private-25k9vrsy/validation/.coverage-exp7641",
+        "--include=*/experiment_7641_v666_native_consumer.py,*/pipeline/native_calibrated_decision_service.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/coverage",
+        "tests/python/test_experiment_7641_v666_native_consumer.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7641-private-25k9vrsy/validation/.coverage-exp7641",
+        "--include=*/experiment_7641_v666_native_consumer.py,*/pipeline/native_calibrated_decision_service.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7641_v666_native_consumer.py",
+        "python/carnot/pipeline/native_calibrated_decision_service.py",
+        "python/carnot/experiment_7626_v665_native_service.py",
+        "tests/python/test_experiment_7626_v665_native_service.py",
+        "scripts/experiments/experiment_7641_v666_native_consumer.py",
+        "examples/native_calibrated_decision.py",
+        "tests/python/test_experiment_7641_v666_native_consumer.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7641_v666_native_consumer.py",
+        "python/carnot/pipeline/native_calibrated_decision_service.py",
+        "python/carnot/experiment_7626_v665_native_service.py",
+        "tests/python/test_experiment_7626_v665_native_service.py",
+        "scripts/experiments/experiment_7641_v666_native_consumer.py",
+        "examples/native_calibrated_decision.py",
+        "tests/python/test_experiment_7641_v666_native_consumer.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7641_v666_native_consumer.py",
+        "python/carnot/pipeline/native_calibrated_decision_service.py"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7641_v666_native_consumer.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--no-deps",
+        "--no-build-isolation",
+        "--target",
+        "/tmp/carnot-exp7641-private-25k9vrsy/validation/installed",
+        "."
+      ],
+      "name": "private_package_install",
+      "scope": "private installed-style package tree",
+      "timeout_s": 300.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-u",
+        "-c",
+        "\nfrom pathlib import Path\nimport sys\ntarget, extension, state = sys.argv[1:]\nsys.path.insert(0, target)\nfrom carnot.pipeline.native_calibrated_decision_service import NativeServiceClient\nclient = NativeServiceClient.from_extension(state_path=Path(state), extension_path=Path(extension))\ndecision = client.predict('installed-event', 0.33)\nack = client.release_feedback('installed-event', 1)\nraise SystemExit(not (decision.available and ack.durable))\n",
+        "/tmp/carnot-exp7641-private-25k9vrsy/validation/installed",
+        "/tmp/carnot-exp7626-private-dn39lkig/extension/_rust.cpython-312-x86_64-linux-gnu.so",
+        "/tmp/carnot-exp7641-private-25k9vrsy/validation/installed-state.json"
+      ],
+      "name": "installed_style_native_import",
+      "scope": "private installed package plus exact PyO3 extension",
+      "timeout_s": 120.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/e2e003",
+        "tests/python/test_experiment_7641_v666_native_consumer.py::test_scenario_pipeline_7641_native_lifecycle_is_durable",
+        "-q"
+      ],
+      "name": "e2e_003_real_pyo3",
+      "scope": "E2E-003 package-to-PyO3 round trip",
+      "timeout_s": 300.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/e2e004",
+        "tests/python/test_experiment_7641_v666_native_consumer.py::test_scenario_report_7641_interrupted_write_preserves_state",
+        "-q"
+      ],
+      "name": "e2e_004_json_interrupt_reload",
+      "scope": "E2E-004 JSON state interruption and reload",
+      "timeout_s": 300.0
+    }
+  ],
+  "coverage_file": "/tmp/carnot-exp7641-private-25k9vrsy/validation/.coverage-exp7641",
+  "extension": "/tmp/carnot-exp7626-private-dn39lkig/extension/_rust.cpython-312-x86_64-linux-gnu.so",
+  "frozen_before_validation": true,
+  "private_basetemp": "/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp",
+  "schema": "carnot.exp7641.affected_manifest.v1",
+  "worktree": "/home/ianblenke/github.com/ianblenke/carnot",
+  "worktree_status_sha256": "sha256:e5d817b8849a5df88e40259709390768c50a27ac13a16a9643995ee550606348"
+}

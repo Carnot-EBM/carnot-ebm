@@ -80551,3 +80551,84 @@ unchanged.
 Implemented by Experiment 7638 with literal producer custody, independent raw
 reducers, six negative mutations, scoped validation, and exact terminal readers.
 The conductor owns later ops, changelog, and traceability reconciliation.
+
+## REQ-REPORT-7641: Expose the qualified native service to package consumers
+
+Experiment 7641 SHALL expose the Experiment 7626 direct PyO3 client through a
+reusable package module. Construction SHALL remain explicit opt-in. Existing
+JSON-lines callers and production defaults SHALL remain unchanged. The package
+client SHALL use the same Rust core and JSON state policy as Experiment 7626.
+It SHALL never answer through a Python substitute when the extension is absent
+or incompatible.
+
+The client SHALL return the existing `CalibratedDecision` and
+`FeedbackAcknowledgment` types. It SHALL validate finite probabilities, event
+identity, actions, labels, pending predictions, duplicate feedback, durable
+acknowledgments, state summaries, close behavior, and cold reopen behavior.
+Native construction and call failures SHALL become typed unavailable results.
+Unavailable decisions SHALL escalate and SHALL never claim verification.
+
+The experiment SHALL authenticate the Experiment 7626 parity and durability
+receipt, the Experiment 7627 dated workload result, the native extension, the
+shared Rust sources, and this requirement. Missing external evidence SHALL
+produce a terminal `complete_blocked_*` result with class `blocked` and exact
+gate operands. It SHALL not treat its planned output as an input. A cold focused
+test SHALL build the real extension when no authenticated producer path exists.
+
+The artifact SHALL report integration readiness as `null`. It SHALL set
+`native_consumer_ready_score=1` only after real package/PyO3 parity, durable
+restart, interrupted-write safety, and explicit unavailable behavior pass.
+It SHALL set `new_speed_claim=false`. The Experiment 7627 ratios SHALL remain
+historical evidence tied to its 2026-09-24 workload. The 10x NFR SHALL remain
+failed. Exact control fixtures MAY use `circular_positive`; they SHALL not prove
+an oracle-distinct learned benefit.
+
+The artifact SHALL retain integration rows, independent-unit budgets, hardware
+dispositions, source hashes, actual preconditions, host venue, disjoint phase
+spans, zero model invocations, seeds, field principles, separate validity,
+readiness, probability-benefit, utility, retention, and freshness gates, command
+receipts, final reader results, and one checksum over immutable inputs and
+reductions. KV260 SHALL retain `k_max<=5`. PolarFire SHALL retain Linux CPU-only
+graduation. GateMate SHALL remain blocked until a dated physical-chain change.
+NPU and TSU SHALL remain unqualified. No board probe is authorized.
+
+Validation SHALL freeze the affected-file manifest. It SHALL run focused serial
+pytest with cleared addopts, a private base temp, pinned imports, and 100 percent
+coverage of changed behavior. It SHALL run scoped Ruff, changed-module mypy,
+affected-test specification coverage, the declared entrypoint, an installed-style
+private import, real PyO3 prediction, feedback, cold reload, interruption checks,
+fresh reduction, adversarial verification, and strict verdict-row consistency.
+Only exact validated bytes SHALL publish atomically.
+
+### SCENARIO-REPORT-7641-PACKAGE: Package calls preserve the qualified types
+
+**Given** the real Experiment 7626 extension and a private JSON state path
+**When** a package consumer predicts, releases feedback, closes, and reopens
+**Then** decisions and acknowledgments use the existing public dataclasses
+**And** the acknowledged update survives a fresh native instance.
+
+### SCENARIO-REPORT-7641-UNAVAILABLE: Native failure cannot become a fallback answer
+
+**Given** an absent or incompatible extension, corrupt state, or contract drift
+**When** the package consumer receives a request
+**Then** it returns an unavailable escalation or unavailable acknowledgment
+**And** it does not invoke a Python substitute or claim durable success.
+
+### SCENARIO-REPORT-7641-LIFECYCLE: Pending and released identities stay bounded
+
+**Given** one explicitly constructed native consumer
+**When** callers send duplicate prediction, unknown feedback, invalid label,
+duplicate feedback, mismatched returned identity, or a request after close
+**Then** each result names the typed error and no false acknowledgment occurs.
+
+### SCENARIO-REPORT-7641-TERMINAL: Exact readers control publication
+
+**Given** a frozen affected-file manifest and one exact terminal candidate
+**When** scoped validation, cold reduction, and strict readers run
+**Then** commands, exits, log hashes, and outcomes remain recorded
+**And** readiness does not become a new speed or learned-benefit claim.
+
+### Implementation Status (REQ-REPORT-7641)
+
+Specification added before tests and implementation. The conductor owns later
+ops, changelog, and traceability reconciliation.

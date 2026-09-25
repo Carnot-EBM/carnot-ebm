@@ -5137,3 +5137,32 @@ the expected and observed values for a localized check.
 **Then** it equals their typed union without a missing or extra row.
 
 **Spec traces:** REQ-PIPELINE-6716
+
+### REQ-PIPELINE-7641: Native calibrated decisions MUST remain explicit opt-in
+
+The pipeline MUST provide an explicitly constructed native calibrated-decision
+client. Importing the package MUST NOT load an extension, create state, start a
+process, or change the JSON-lines default. The client MUST call
+`RustPortableRecalibrationService` from the qualified extension and MUST use the
+existing `CalibratedDecision` and `FeedbackAcknowledgment` result types.
+
+The client MUST reject non-finite or out-of-range probabilities before a native
+call. It MUST enforce non-empty event IDs, one pending prediction per event,
+binary non-Boolean labels, one feedback release, returned event identity, the
+registered action-cost minimum, and a durable native acknowledgment. Construction
+or call failure MUST return explicit unavailable results. It MUST NOT use a
+Python numerical fallback. Closing a client MUST make later calls unavailable.
+
+### SCENARIO-PIPELINE-7641-NATIVE: Real native lifecycle is durable
+
+**Given** an explicit extension path and a private state path
+**When** a caller predicts, releases feedback, and opens a fresh client
+**Then** the typed acknowledgment is durable and the state summary retains the event.
+
+### SCENARIO-PIPELINE-7641-FAILURE: Native absence escalates safely
+
+**Given** no loadable extension or an incompatible native response
+**When** a caller requests a decision or feedback release
+**Then** the typed result is unavailable, unverified, unacknowledged, and not durable.
+
+**Spec traces:** REQ-PIPELINE-7641, REQ-REPORT-7641

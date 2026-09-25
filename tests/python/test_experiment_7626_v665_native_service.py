@@ -277,7 +277,7 @@ def test_req_report_7626_client_rejects_native_contract_drift(tmp_path: Path) ->
     client = exp.NativeServiceClient(BadBinding, tmp_path / "unused.json")
     assert client.predict("drift", 0.2).error == "prediction_contract_invalid"
     assert client.predict("error", float("nan")).available is False
-    assert client.release_feedback("event", 1).error == "durable_acknowledgment_invalid"
+    assert client.release_feedback("event", 1).error == "unknown_prediction:event"
     assert client.state_summary()["sample_count"] == 0
 
 

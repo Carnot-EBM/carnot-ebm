@@ -13,7 +13,6 @@ from collections.abc import Mapping, Sequence
 from copy import deepcopy
 from dataclasses import asdict
 from datetime import UTC, datetime
-import importlib.util
 import json
 import os
 from pathlib import Path
@@ -25,7 +24,6 @@ import sys
 import sysconfig
 import tempfile
 import time
-from types import ModuleType
 from typing import Any
 
 from carnot import experiment_7585_v662_portable_service as python_service
@@ -35,6 +33,10 @@ from carnot.pipeline.calibrated_decision_service import (
     CalibratedDecisionService,
     FeedbackAcknowledgment,
     frozen_decision_costs,
+)
+from carnot.pipeline.native_calibrated_decision_service import (
+    NativeServiceClient,
+    load_native_extension,
 )
 from carnot.reporting import experiment_7303_validation_scope as validation_scope
 from carnot.reporting.current_work_receipt import atomic_json, canonical_hash, sha256_file
@@ -100,70 +102,6 @@ def workload_checksum(workload: Sequence[Mapping[str, Any]]) -> str:
     """Bind every fixed event and seed to one stable workload identity."""
 
     return canonical_hash(list(workload))
-
-
-def load_native_extension(extension: Path) -> ModuleType:  # pragma: no cover
-    """Load only the exact private extension that contains the new Rust class."""
-
-    resolved = extension.resolve()
-    sys.modules.pop("carnot._rust", None)
-    spec = importlib.util.spec_from_file_location("carnot._rust", resolved)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"native_loader_unavailable:{resolved}")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    if not hasattr(module, "RustPortableRecalibrationService"):
-        raise RuntimeError("native_service_class_missing")
-    return module
-
-
-class NativeServiceClient:
-    """Adapt the typed PyO3 tuples to the existing opt-in client result types."""
-
-    def __init__(self, binding: object, state_path: Path) -> None:
-        self.state_path = state_path
-        self._inner = binding.RustPortableRecalibrationService(str(state_path))
-
-    def predict(self, event_id: str, probability: float) -> CalibratedDecision:
-        try:
-            returned_id, calibrated, action = self._inner.predict(event_id, probability)
-            costs = frozen_decision_costs(float(calibrated))
-            if returned_id != event_id or action != min(costs, key=costs.__getitem__):
-                raise ValueError("prediction_contract_invalid")
-            return CalibratedDecision(event_id, float(calibrated), action, True, costs=costs)
-        except (TypeError, ValueError) as error:
-            safe = (
-                probability if isinstance(probability, float) and 0.0 <= probability <= 1.0 else 1.0
-            )
-            return CalibratedDecision(
-                event_id,
-                safe,
-                "escalate",
-                False,
-                error=str(error),
-                costs=frozen_decision_costs(safe),
-            )
-
-    def release_feedback(self, event_id: str, label: int) -> FeedbackAcknowledgment:
-        returned_id, acknowledged, durable, error = self._inner.release_feedback(event_id, label)
-        valid = returned_id == event_id and bool(acknowledged) and bool(durable) and error is None
-        return FeedbackAcknowledgment(
-            event_id,
-            valid,
-            valid,
-            valid,
-            None if valid else str(error or "durable_acknowledgment_invalid"),
-            DURABILITY_POLICY if valid else None,
-        )
-
-    def state_summary(self) -> JsonDict:
-        sample_count, event_ids, schema = self._inner.state_summary()
-        return {
-            "sample_count": int(sample_count),
-            "processed_event_ids": list(event_ids),
-            "schema": str(schema),
-        }
 
 
 def synthetic_parity_rows() -> list[JsonDict]:

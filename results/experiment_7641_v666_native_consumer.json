@@ -1,0 +1,1357 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "validity",
+      "check": "integration_rows_complete",
+      "condition": "integration_rows_complete must preserve its declared claim boundary",
+      "expected": true,
+      "field": "integration_rows_complete",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "integration_rows",
+      "principle": "Validity, readiness, benefit, retention, and freshness are separate claims.",
+      "upstream": "current Exp7641 evidence"
+    },
+    {
+      "category": "readiness",
+      "check": "native_consumer_ready_score",
+      "condition": "native_consumer_ready_score must preserve its declared claim boundary",
+      "expected": 1,
+      "field": "native_consumer_ready_score",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "integration_rows",
+      "principle": "Validity, readiness, benefit, retention, and freshness are separate claims.",
+      "upstream": "current Exp7641 evidence"
+    },
+    {
+      "category": "probability_benefit",
+      "check": "new_probability_benefit_measured",
+      "condition": "new_probability_benefit_measured must preserve its declared claim boundary",
+      "expected": true,
+      "field": "new_probability_benefit_measured",
+      "observed": false,
+      "operator": "eq",
+      "passed": false,
+      "path": "integration_rows",
+      "principle": "Validity, readiness, benefit, retention, and freshness are separate claims.",
+      "upstream": "current Exp7641 evidence"
+    },
+    {
+      "category": "utility",
+      "check": "new_total_cost_benefit_measured",
+      "condition": "new_total_cost_benefit_measured must preserve its declared claim boundary",
+      "expected": true,
+      "field": "new_total_cost_benefit_measured",
+      "observed": false,
+      "operator": "eq",
+      "passed": false,
+      "path": "integration_rows",
+      "principle": "Validity, readiness, benefit, retention, and freshness are separate claims.",
+      "upstream": "current Exp7641 evidence"
+    },
+    {
+      "category": "retention",
+      "check": "production_defaults_changed",
+      "condition": "production_defaults_changed must preserve its declared claim boundary",
+      "expected": false,
+      "field": "production_defaults_changed",
+      "observed": false,
+      "operator": "eq",
+      "passed": true,
+      "path": "integration_rows",
+      "principle": "Validity, readiness, benefit, retention, and freshness are separate claims.",
+      "upstream": "current Exp7641 evidence"
+    },
+    {
+      "category": "freshness",
+      "check": "current_model_or_board_execution",
+      "condition": "current_model_or_board_execution must preserve its declared claim boundary",
+      "expected": false,
+      "field": "current_model_or_board_execution",
+      "observed": false,
+      "operator": "eq",
+      "passed": true,
+      "path": "integration_rows",
+      "principle": "Validity, readiness, benefit, retention, and freshness are separate claims.",
+      "upstream": "current Exp7641 evidence"
+    }
+  ],
+  "affected_validation_manifest_path": "results/raw/experiment_7641_v666_native_consumer/affected_validation_manifest.json",
+  "affected_validation_manifest_sha256": "sha256:3b71bb9e9e0a37fb8dac5d86ee91a5c61f55126a71696c47d0ecbe75bcdf080c",
+  "completed_at_utc": "2026-09-25T01:31:06.510854+00:00",
+  "duration_s": 49.393715716025326,
+  "execution_venue": "host",
+  "execution_venue_details": {
+    "device_uuid": null,
+    "host": "icbfl1",
+    "native_device": "host_cpu",
+    "owned_pid": 2936499
+  },
+  "experiment": 7641,
+  "experiment_id": "exp7641-v666-native-consumer",
+  "field_principles": {
+    "MODEL_SPECS": "Retain MODEL_SPECS so its terminal scope stays auditable.",
+    "acceptance_gate_results": "Retain acceptance_gate_results so its terminal scope stays auditable.",
+    "affected_validation_manifest_path": "Retain affected_validation_manifest_path so its terminal scope stays auditable.",
+    "affected_validation_manifest_sha256": "Retain affected_validation_manifest_sha256 so its terminal scope stays auditable.",
+    "completed_at_utc": "Retain completed_at_utc so its terminal scope stays auditable.",
+    "duration_s": "Duration is current monotonic wall time without padding.",
+    "execution_venue": "Retain execution_venue so its terminal scope stays auditable.",
+    "execution_venue_details": "Retain execution_venue_details so its terminal scope stays auditable.",
+    "experiment": "Retain experiment so its terminal scope stays auditable.",
+    "experiment_id": "Retain experiment_id so its terminal scope stays auditable.",
+    "field_principles": "Retain field_principles so its terminal scope stays auditable.",
+    "flagged_adversarial": "A flagged result opens no downstream gate.",
+    "gate_check_summary": "Every block retains all exact comparison operands.",
+    "hardware_dispositions": "Retain hardware_dispositions so its terminal scope stays auditable.",
+    "historical_models": "Retain historical_models so its terminal scope stays auditable.",
+    "historical_speed_evidence": "Retain historical_speed_evidence so its terminal scope stays auditable.",
+    "honest_verdict": "Completion and benefit are different outcomes.",
+    "inference_substrate": "This work loads native code but no model.",
+    "inference_substrate_class": "Retain inference_substrate_class so its terminal scope stays auditable.",
+    "integration_reduction": "Retain integration_reduction so its terminal scope stays auditable.",
+    "integration_rows": "Retain integration_rows so its terminal scope stays auditable.",
+    "invocation_counts": "Retain invocation_counts so its terminal scope stays auditable.",
+    "jsonl_default_preserved": "Retain jsonl_default_preserved so its terminal scope stays auditable.",
+    "milestone": "Retain milestone so its terminal scope stays auditable.",
+    "model_invoked": "Retain model_invoked so its terminal scope stays auditable.",
+    "native_consumer_ready_score": "One requires real PyO3, restart, and failure behavior.",
+    "new_speed_claim": "Historical ratios do not become a new benchmark.",
+    "phase_spans": "Retain phase_spans so its terminal scope stays auditable.",
+    "planned_MODEL_SPECS": "Retain planned_MODEL_SPECS so its terminal scope stays auditable.",
+    "planned_inference_substrate_class": "Retain planned_inference_substrate_class so its terminal scope stays auditable.",
+    "preconditions_checked": "Unavailable evidence cannot become fabricated execution.",
+    "production_defaults_changed": "The JSON-lines production default remains unchanged.",
+    "random_seed": "Retain random_seed so its terminal scope stays auditable.",
+    "reproducibility_checksum": "Retain reproducibility_checksum so its terminal scope stays auditable.",
+    "rows": "Each independent integration condition counts once.",
+    "run_date": "Retain run_date so its terminal scope stays auditable.",
+    "safetensors_scope_changed": "Retain safetensors_scope_changed so its terminal scope stays auditable.",
+    "sample_size_budget": "Views and replays do not multiply independent units.",
+    "schema": "Retain schema so its terminal scope stays auditable.",
+    "source_artifact_hashes": "Inputs, receipts, and planned outputs keep separate roles.",
+    "started_at_utc": "Retain started_at_utc so its terminal scope stays auditable.",
+    "state_format": "Retain state_format so its terminal scope stays auditable.",
+    "validation_receipts": "Retain validation_receipts so its terminal scope stays auditable.",
+    "verdict_class": "Package readiness alone uses null; external absence uses blocked.",
+    "verifier_is_oracle": "Retain verifier_is_oracle so its terminal scope stays auditable."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": null,
+  "hardware_dispositions": [
+    {
+      "claim_scope": "fpga_fabric_k_max_at_most_5",
+      "current_execution": false,
+      "disposition": "graduated_fpga_fabric_scope_preserved",
+      "hardware": "KV260",
+      "k_max": 5,
+      "reopen_condition": "separately scoped FPGA-fabric task",
+      "source_receipt": "results/experiment_7627_v665_native_cost.json#hardware_dispositions"
+    },
+    {
+      "claim_scope": "linux_cpu_dispatch_only",
+      "current_execution": false,
+      "disposition": "graduated_linux_cpu_dispatch_scope_preserved",
+      "fpga_sampling_measured": false,
+      "hardware": "PolarFire",
+      "reopen_condition": "separate measured FPGA-sampling task",
+      "source_receipt": "results/experiment_7627_v665_native_cost.json#hardware_dispositions"
+    },
+    {
+      "claim_scope": "physical_jtag_unexecuted",
+      "current_execution": false,
+      "disposition": "blocked_unchanged_physical_prerequisite",
+      "hardware": "GateMate",
+      "last_observed": "0xffffffff",
+      "reopen_condition": "dated operator cable, port, power, board, JTAG, or DirtyJTAG change after Exp6559",
+      "source_receipt": "results/experiment_7627_v665_native_cost.json#hardware_dispositions"
+    },
+    {
+      "claim_scope": "historical_input_only",
+      "current_execution": false,
+      "disposition": "historical_two_rtx3090_scope_not_current_execution",
+      "hardware": "CUDA",
+      "reopen_condition": "separately authorized GPU task",
+      "source_receipt": "research-hardware-wishlist.md"
+    },
+    {
+      "current_execution": false,
+      "disposition": "unqualified_runtime_unavailable",
+      "hardware": "NPU",
+      "qualified": false,
+      "reopen_condition": "installed runtime plus measured local benchmark",
+      "source_receipt": "research-hardware-wishlist.md#AMD-XDNA-NPU-Status"
+    },
+    {
+      "current_execution": false,
+      "disposition": "unqualified_no_authenticated_access",
+      "hardware": "TSU",
+      "qualified": false,
+      "reopen_condition": "authenticated hardware or SDK access",
+      "source_receipt": "research-hardware-wishlist.md#Extropic-TSU"
+    }
+  ],
+  "historical_models": [],
+  "historical_speed_evidence": {
+    "current_measurement": false,
+    "jsonl_over_native": 2.6492877005903535,
+    "measurement_date": "2026-09-24",
+    "nfr_10x_met": false,
+    "python_over_native": 7.827002746229495,
+    "source": "results/experiment_7627_v665_native_cost.json",
+    "workload": "Exp7627 120 paired durable consumer blocks across four strata"
+  },
+  "honest_verdict": "complete_null_native_consumer_ready",
+  "inference_substrate": "host_cpu_direct_pyo3_package_integration_no_model",
+  "inference_substrate_class": "no_model_load",
+  "integration_reduction": {
+    "complete": true,
+    "durability_units": 4,
+    "failed_units": 0,
+    "independent_units": 12,
+    "passed_units": 12,
+    "real_native_units": 4,
+    "unavailable_units": 4
+  },
+  "integration_rows": [
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": {
+        "available": true,
+        "verified": false
+      },
+      "group": "real_native",
+      "input_or_error_condition": "real_predict",
+      "numerator": 1,
+      "observed_typed_value": {
+        "available": true,
+        "verified": false
+      },
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "real_predict"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": {
+        "acknowledged": true,
+        "durable": true
+      },
+      "group": "real_native",
+      "input_or_error_condition": "real_feedback",
+      "numerator": 1,
+      "observed_typed_value": {
+        "acknowledged": true,
+        "durable": true
+      },
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "real_feedback"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": {
+        "processed": [
+          "event-one"
+        ],
+        "sample_count": 1
+      },
+      "group": "real_native",
+      "input_or_error_condition": "state_summary",
+      "numerator": 1,
+      "observed_typed_value": {
+        "processed": [
+          "event-one"
+        ],
+        "sample_count": 1
+      },
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "state_summary"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": 1,
+      "group": "real_native",
+      "input_or_error_condition": "cold_reload",
+      "numerator": 1,
+      "observed_typed_value": 1,
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "cold_reload"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "finite_probability_required",
+      "group": "unavailable",
+      "input_or_error_condition": "invalid_probability",
+      "numerator": 1,
+      "observed_typed_value": "finite_probability_required",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "invalid_probability"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "native_extension_unavailable",
+      "group": "unavailable",
+      "input_or_error_condition": "missing_extension",
+      "numerator": 1,
+      "observed_typed_value": "native_extension_unavailable:/tmp/carnot-exp7641-private-25k9vrsy/integration/missing.so",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "missing_extension"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "native_service_unavailable",
+      "group": "unavailable",
+      "input_or_error_condition": "corrupt_state",
+      "numerator": 1,
+      "observed_typed_value": "native_service_unavailable:state_json_invalid:expected ident at line 1 column 2",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "corrupt_state"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "native_client_closed",
+      "group": "unavailable",
+      "input_or_error_condition": "closed_client",
+      "numerator": 1,
+      "observed_typed_value": "native_client_closed",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "closed_client"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "duplicate_feedback:event-one",
+      "group": "durability",
+      "input_or_error_condition": "duplicate_feedback",
+      "numerator": 1,
+      "observed_typed_value": "duplicate_feedback:event-one",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "duplicate_feedback"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "unknown_prediction:unknown",
+      "group": "durability",
+      "input_or_error_condition": "unknown_feedback",
+      "numerator": 1,
+      "observed_typed_value": "unknown_prediction:unknown",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "unknown_feedback"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "binary_label_required",
+      "group": "durability",
+      "input_or_error_condition": "invalid_label",
+      "numerator": 1,
+      "observed_typed_value": "binary_label_required",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "invalid_label"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": {
+        "acknowledged": false,
+        "prior_state_survived": true
+      },
+      "group": "durability",
+      "input_or_error_condition": "interrupted_write",
+      "numerator": 1,
+      "observed_typed_value": {
+        "acknowledged": false,
+        "prior_state_survived": true
+      },
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "interrupted_write"
+    }
+  ],
+  "invocation_counts": {
+    "forward_calls": 0,
+    "generation_calls": 0,
+    "input_tokens": 0,
+    "model_loads": 0,
+    "output_tokens": 0
+  },
+  "jsonl_default_preserved": true,
+  "milestone": "2026.09.666",
+  "model_invoked": false,
+  "native_consumer_ready_score": 1,
+  "new_speed_claim": false,
+  "phase_spans": [
+    {
+      "checkpoint_position": 12,
+      "completed_units": 12,
+      "duration_s": 0.014539351977873594,
+      "end_offset_s": 0.025764771969988942,
+      "pending_operations": 0,
+      "phase": "integration",
+      "start_offset_s": 0.011225419992115349
+    },
+    {
+      "checkpoint_position": 12,
+      "completed_units": 12,
+      "duration_s": 45.19157436594833,
+      "end_offset_s": 45.3838077649707,
+      "pending_operations": 0,
+      "phase": "validation",
+      "start_offset_s": 0.19223339902237058
+    },
+    {
+      "checkpoint_position": 4,
+      "completed_units": 4,
+      "duration_s": 4.008653676020913,
+      "end_offset_s": 49.39370161900297,
+      "pending_operations": 0,
+      "phase": "terminal_readers",
+      "start_offset_s": 45.385047942982055
+    }
+  ],
+  "planned_MODEL_SPECS": [],
+  "planned_inference_substrate_class": "no_model_load",
+  "preconditions_checked": [
+    {
+      "check": "named_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7626_v665_native_service.json",
+      "upstream": "task prompt"
+    },
+    {
+      "check": "named_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7627_v665_native_cost.json",
+      "upstream": "task prompt"
+    },
+    {
+      "check": "named_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "crates/carnot-core/src/portable_recalibration.rs",
+      "upstream": "task prompt"
+    },
+    {
+      "check": "named_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "crates/carnot-python/src/portable_recalibration.rs",
+      "upstream": "task prompt"
+    },
+    {
+      "check": "named_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "python/carnot/experiment_7626_v665_native_service.py",
+      "upstream": "task prompt"
+    },
+    {
+      "check": "named_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "upstream": "task prompt"
+    },
+    {
+      "check": "named_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "openspec/capabilities/pipeline/spec.md",
+      "upstream": "task prompt"
+    },
+    {
+      "check": "named_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "research-hardware-wishlist.md",
+      "upstream": "task prompt"
+    },
+    {
+      "check": "native_service_ready",
+      "expected": 1,
+      "field": "native_service_ready_score",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7626_v665_native_service.json",
+      "upstream": "Exp7626"
+    },
+    {
+      "check": "native_parity",
+      "expected": true,
+      "field": "parity_reduction.complete",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7626_v665_native_service.json",
+      "upstream": "Exp7626"
+    },
+    {
+      "check": "native_durability",
+      "expected": true,
+      "field": "durability_reduction.complete",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7626_v665_native_service.json",
+      "upstream": "Exp7626"
+    },
+    {
+      "check": "native_reader",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7626_v665_native_service.json",
+      "upstream": "Exp7626"
+    },
+    {
+      "check": "historical_speed_valid",
+      "expected": 1,
+      "field": "native_speed_benefit_score",
+      "observed": 1,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7627_v665_native_cost.json",
+      "upstream": "Exp7627"
+    },
+    {
+      "check": "historical_reader",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "operator": "eq",
+      "passed": true,
+      "path": "results/experiment_7627_v665_native_cost.json",
+      "upstream": "Exp7627"
+    },
+    {
+      "check": "native_extension_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "eq",
+      "passed": true,
+      "path": "/tmp/carnot-exp7626-private-dn39lkig/extension/_rust.cpython-312-x86_64-linux-gnu.so",
+      "upstream": "Exp7626"
+    },
+    {
+      "check": "native_extension_hash",
+      "expected": "sha256:eaa6b87aa475e5693e83488246362e79e586d7ac7a2b99bee74fb401f1885282",
+      "field": "sha256",
+      "observed": "sha256:eaa6b87aa475e5693e83488246362e79e586d7ac7a2b99bee74fb401f1885282",
+      "operator": "eq",
+      "passed": true,
+      "path": "/tmp/carnot-exp7626-private-dn39lkig/extension/_rust.cpython-312-x86_64-linux-gnu.so",
+      "upstream": "Exp7626"
+    }
+  ],
+  "production_defaults_changed": false,
+  "random_seed": {
+    "integration": null,
+    "reason": "deterministic exact contract"
+  },
+  "reproducibility_checksum": "sha256:77358583fbdaf011b024a05e25ec8d400b470d190a3236a03c4d914d5d83517a",
+  "rows": [
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": {
+        "available": true,
+        "verified": false
+      },
+      "group": "real_native",
+      "input_or_error_condition": "real_predict",
+      "numerator": 1,
+      "observed_typed_value": {
+        "available": true,
+        "verified": false
+      },
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "real_predict"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": {
+        "acknowledged": true,
+        "durable": true
+      },
+      "group": "real_native",
+      "input_or_error_condition": "real_feedback",
+      "numerator": 1,
+      "observed_typed_value": {
+        "acknowledged": true,
+        "durable": true
+      },
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "real_feedback"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": {
+        "processed": [
+          "event-one"
+        ],
+        "sample_count": 1
+      },
+      "group": "real_native",
+      "input_or_error_condition": "state_summary",
+      "numerator": 1,
+      "observed_typed_value": {
+        "processed": [
+          "event-one"
+        ],
+        "sample_count": 1
+      },
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "state_summary"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": 1,
+      "group": "real_native",
+      "input_or_error_condition": "cold_reload",
+      "numerator": 1,
+      "observed_typed_value": 1,
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "cold_reload"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "finite_probability_required",
+      "group": "unavailable",
+      "input_or_error_condition": "invalid_probability",
+      "numerator": 1,
+      "observed_typed_value": "finite_probability_required",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "invalid_probability"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "native_extension_unavailable",
+      "group": "unavailable",
+      "input_or_error_condition": "missing_extension",
+      "numerator": 1,
+      "observed_typed_value": "native_extension_unavailable:/tmp/carnot-exp7641-private-25k9vrsy/integration/missing.so",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "missing_extension"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "native_service_unavailable",
+      "group": "unavailable",
+      "input_or_error_condition": "corrupt_state",
+      "numerator": 1,
+      "observed_typed_value": "native_service_unavailable:state_json_invalid:expected ident at line 1 column 2",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "corrupt_state"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "native_client_closed",
+      "group": "unavailable",
+      "input_or_error_condition": "closed_client",
+      "numerator": 1,
+      "observed_typed_value": "native_client_closed",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "closed_client"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "duplicate_feedback:event-one",
+      "group": "durability",
+      "input_or_error_condition": "duplicate_feedback",
+      "numerator": 1,
+      "observed_typed_value": "duplicate_feedback:event-one",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "duplicate_feedback"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "unknown_prediction:unknown",
+      "group": "durability",
+      "input_or_error_condition": "unknown_feedback",
+      "numerator": 1,
+      "observed_typed_value": "unknown_prediction:unknown",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "unknown_feedback"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": "binary_label_required",
+      "group": "durability",
+      "input_or_error_condition": "invalid_label",
+      "numerator": 1,
+      "observed_typed_value": "binary_label_required",
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "invalid_label"
+    },
+    {
+      "absolute_metric": 1,
+      "arm": "package_direct_pyo3",
+      "censored": false,
+      "denominator": 1,
+      "direction": "exact_contract",
+      "expected_typed_value": {
+        "acknowledged": false,
+        "prior_state_survived": true
+      },
+      "group": "durability",
+      "input_or_error_condition": "interrupted_write",
+      "numerator": 1,
+      "observed_typed_value": {
+        "acknowledged": false,
+        "prior_state_survived": true
+      },
+      "passed": true,
+      "raw_provenance": "current_exp7641_package_integration",
+      "seed": null,
+      "unit_id": "interrupted_write"
+    }
+  ],
+  "run_date": "20260925",
+  "safetensors_scope_changed": false,
+  "sample_size_budget": {
+    "censored": 0,
+    "excluded": 0,
+    "intended": 12,
+    "observed": 12,
+    "views_per_unit": "not_counted_as_independent_units"
+  },
+  "schema": "carnot.exp7641.v666.native_consumer.v1",
+  "source_artifact_hashes": {
+    "crates/carnot-core/src/portable_recalibration.rs": {
+      "bytes": 29634,
+      "exists": true,
+      "path": "crates/carnot-core/src/portable_recalibration.rs",
+      "role": "producer",
+      "sha256": "sha256:c68ec0c485dce186da316f728fd8000d95318eb260ad608bef5abbca937cec21"
+    },
+    "crates/carnot-python/src/portable_recalibration.rs": {
+      "bytes": 1982,
+      "exists": true,
+      "path": "crates/carnot-python/src/portable_recalibration.rs",
+      "role": "producer",
+      "sha256": "sha256:49ce62a5573360b3cade44edff9099cee048ad058080b57b3f0cf317c46a02cb"
+    },
+    "examples/native_calibrated_decision.py": {
+      "bytes": 603,
+      "exists": true,
+      "path": "examples/native_calibrated_decision.py",
+      "role": "package_usage_example",
+      "sha256": "sha256:994c1eb3f21c4c7628c6ddfff07e48fe6e7d69f01e4a60ce3807ba097dc403cf"
+    },
+    "native_extension": {
+      "bytes": 6100584,
+      "exists": true,
+      "path": "/tmp/carnot-exp7626-private-dn39lkig/extension/_rust.cpython-312-x86_64-linux-gnu.so",
+      "role": "authenticated_exp7626_native_module",
+      "sha256": "sha256:eaa6b87aa475e5693e83488246362e79e586d7ac7a2b99bee74fb401f1885282"
+    },
+    "openspec/capabilities/pipeline/spec.md": {
+      "bytes": 269282,
+      "exists": true,
+      "path": "openspec/capabilities/pipeline/spec.md",
+      "role": "producer",
+      "sha256": "sha256:5eedff8b07b00d222b7ff3b02113f727ee041862c9fa5813c3a74ba2a994d499"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "bytes": 4727603,
+      "exists": true,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "role": "producer",
+      "sha256": "sha256:2ffee6a8fe084223899cd465711661ea013feac6a88ef6ea199c9d6df09d1599"
+    },
+    "python/carnot/experiment_7626_v665_native_service.py": {
+      "bytes": 58873,
+      "exists": true,
+      "path": "python/carnot/experiment_7626_v665_native_service.py",
+      "role": "producer",
+      "sha256": "sha256:6adb733d1763ddd4ae3827f353ed3407b7aacf88cb9da3bca7d3335c1cce5e48"
+    },
+    "python/carnot/experiment_7641_v666_native_consumer.py": {
+      "bytes": 47549,
+      "exists": true,
+      "path": "python/carnot/experiment_7641_v666_native_consumer.py",
+      "role": "current_producer",
+      "sha256": "sha256:fc6b089db8e33b5eb9c34da541084bca8ef896aafe0ed79077603f686ac18074"
+    },
+    "python/carnot/pipeline/native_calibrated_decision_service.py": {
+      "bytes": 9916,
+      "exists": true,
+      "path": "python/carnot/pipeline/native_calibrated_decision_service.py",
+      "role": "package_producer",
+      "sha256": "sha256:cd168f60406cebb6768553a923094235fa82ed665aa31fb52d166be4a823ca5e"
+    },
+    "research-hardware-wishlist.md": {
+      "bytes": 29009,
+      "exists": true,
+      "path": "research-hardware-wishlist.md",
+      "role": "producer",
+      "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+    },
+    "results/experiment_7626_v665_native_service.json": {
+      "bytes": 99873,
+      "exists": true,
+      "path": "results/experiment_7626_v665_native_service.json",
+      "role": "pre_gate_receipt",
+      "sha256": "sha256:8b3aa042066f87b1987d127c745f6d25e11bc68259d3b5c675f0bec9c8b652ab"
+    },
+    "results/experiment_7627_v665_native_cost.json": {
+      "bytes": 1392138,
+      "exists": true,
+      "path": "results/experiment_7627_v665_native_cost.json",
+      "role": "pre_gate_receipt",
+      "sha256": "sha256:5afdcc505e103a9424e81cb91ece58c66d3f32a8e41c9913d5c5452016c0a86a"
+    },
+    "results/experiment_7641_v666_native_consumer.json": {
+      "bytes": null,
+      "exists": false,
+      "path": "results/experiment_7641_v666_native_consumer.json",
+      "role": "planned_output_not_input",
+      "sha256": null
+    },
+    "results/raw/experiment_7641_v666_native_consumer/affected_validation_manifest.json": {
+      "bytes": 9515,
+      "exists": true,
+      "path": "results/raw/experiment_7641_v666_native_consumer/affected_validation_manifest.json",
+      "role": "affected_validation_manifest",
+      "sha256": "sha256:3b71bb9e9e0a37fb8dac5d86ee91a5c61f55126a71696c47d0ecbe75bcdf080c"
+    },
+    "results/raw/experiment_7641_v666_native_consumer/integration_rows.json": {
+      "bytes": 6750,
+      "exists": true,
+      "path": "results/raw/experiment_7641_v666_native_consumer/integration_rows.json",
+      "role": "current_raw_rows",
+      "sha256": "sha256:aa5209c1204537d5bd858de239cc3cac1c835340f1e8578ab10d3c6ad8bcadf7"
+    },
+    "scripts/experiments/experiment_7641_v666_native_consumer.py": {
+      "bytes": 206,
+      "exists": true,
+      "path": "scripts/experiments/experiment_7641_v666_native_consumer.py",
+      "role": "current_entrypoint",
+      "sha256": "sha256:62894009f058e58f96e0b5f9e03586a124c201923fe4bff35d20325562a51782"
+    },
+    "tests/python/test_experiment_7641_v666_native_consumer.py": {
+      "bytes": 20970,
+      "exists": true,
+      "path": "tests/python/test_experiment_7641_v666_native_consumer.py",
+      "role": "current_tests",
+      "sha256": "sha256:0041714ce872825150835a15671ec28f9a7d29c9ee5d7f7cfe5b7f03ad838442"
+    }
+  },
+  "started_at_utc": "2026-09-25T01:30:17.116672+00:00",
+  "state_format": "JSON sufficient statistics; separate from unchanged safetensors",
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7641_v666_native_consumer carnot.pipeline.native_calibrated_decision_service",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7641_v666_native_consumer",
+        "carnot.pipeline.native_calibrated_decision_service"
+      ],
+      "duration_s": 1.556217388017103,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/00_worktree_imports.log",
+      "log_sha256": "sha256:6b2df2f63ec60c9ef34439f5638f5e64ddea9a830b1c59fc9c48e2bfd5c10be7",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7641_v666_native_consumer\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7641_v666_native_consumer.py\", \"carnot.pipeline.native_calibrated_decision_service\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/pipeline/native_calibrated_decision_service.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7641_v666_native_consumer": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7641_v666_native_consumer.py",
+        "carnot.pipeline.native_calibrated_decision_service": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/pipeline/native_calibrated_decision_service.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/focused tests/python/test_experiment_7641_v666_native_consumer.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/focused",
+        "tests/python/test_experiment_7641_v666_native_consumer.py",
+        "-q"
+      ],
+      "duration_s": 4.914624408003874,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/01_focused_pytest.log",
+      "log_sha256": "sha256:fb1fcdfbd51247eeca2af09eb2d6f875f787d02fc916a0fa8c88c5665cc1f647",
+      "name": "focused_pytest",
+      "output_tail": "................                                                         [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n16 passed, 1 warning in 1.95s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7641-private-25k9vrsy/validation/.coverage-exp7641 '--include=*/experiment_7641_v666_native_consumer.py,*/pipeline/native_calibrated_decision_service.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/coverage tests/python/test_experiment_7641_v666_native_consumer.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7641-private-25k9vrsy/validation/.coverage-exp7641",
+        "--include=*/experiment_7641_v666_native_consumer.py,*/pipeline/native_calibrated_decision_service.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/coverage",
+        "tests/python/test_experiment_7641_v666_native_consumer.py",
+        "-q"
+      ],
+      "duration_s": 8.412202795036137,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/02_changed_module_coverage.log",
+      "log_sha256": "sha256:d11228e453b7cf2f483ce9f61775646d6c27a89e3b4345cc7a26d9d127b9e3bd",
+      "name": "changed_module_coverage",
+      "output_tail": "................                                                         [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n16 passed, 1 warning in 3.87s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7641-private-25k9vrsy/validation/.coverage-exp7641 '--include=*/experiment_7641_v666_native_consumer.py,*/pipeline/native_calibrated_decision_service.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7641-private-25k9vrsy/validation/.coverage-exp7641",
+        "--include=*/experiment_7641_v666_native_consumer.py,*/pipeline/native_calibrated_decision_service.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.07658958499087021,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:1a04e1dd86176d056e2f5c9329ccd8bf6633474baa3f76c2293837a04c74af43",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                           Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------------\npython/carnot/experiment_7641_v666_native_consumer.py            258      0   100%\npython/carnot/pipeline/native_calibrated_decision_service.py     130      0   100%\n--------------------------------------------------------------------------------------------\nTOTAL                                                            388      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7641_v666_native_consumer.py python/carnot/pipeline/native_calibrated_decision_service.py python/carnot/experiment_7626_v665_native_service.py tests/python/test_experiment_7626_v665_native_service.py scripts/experiments/experiment_7641_v666_native_consumer.py examples/native_calibrated_decision.py tests/python/test_experiment_7641_v666_native_consumer.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7641_v666_native_consumer.py",
+        "python/carnot/pipeline/native_calibrated_decision_service.py",
+        "python/carnot/experiment_7626_v665_native_service.py",
+        "tests/python/test_experiment_7626_v665_native_service.py",
+        "scripts/experiments/experiment_7641_v666_native_consumer.py",
+        "examples/native_calibrated_decision.py",
+        "tests/python/test_experiment_7641_v666_native_consumer.py"
+      ],
+      "duration_s": 0.01291962101822719,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7641_v666_native_consumer.py python/carnot/pipeline/native_calibrated_decision_service.py python/carnot/experiment_7626_v665_native_service.py tests/python/test_experiment_7626_v665_native_service.py scripts/experiments/experiment_7641_v666_native_consumer.py examples/native_calibrated_decision.py tests/python/test_experiment_7641_v666_native_consumer.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7641_v666_native_consumer.py",
+        "python/carnot/pipeline/native_calibrated_decision_service.py",
+        "python/carnot/experiment_7626_v665_native_service.py",
+        "tests/python/test_experiment_7626_v665_native_service.py",
+        "scripts/experiments/experiment_7641_v666_native_consumer.py",
+        "examples/native_calibrated_decision.py",
+        "tests/python/test_experiment_7641_v666_native_consumer.py"
+      ],
+      "duration_s": 0.011402653995901346,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/05_ruff_format.log",
+      "log_sha256": "sha256:0321fffcb91606a42c0a19d8c1121d5c544379d663821fce616c71a7bb62f6b5",
+      "name": "ruff_format",
+      "output_tail": "7 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7641_v666_native_consumer.py python/carnot/pipeline/native_calibrated_decision_service.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7641_v666_native_consumer.py",
+        "python/carnot/pipeline/native_calibrated_decision_service.py"
+      ],
+      "duration_s": 0.14208984497236088,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/06_changed_module_mypy.log",
+      "log_sha256": "sha256:c88446672f44114bce9cd0020eff2133b433eb24a69c302cd39efce30cf3d74a",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7641_v666_native_consumer.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7641_v666_native_consumer.py"
+      ],
+      "duration_s": 0.021345496992580593,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pip install --no-deps --no-build-isolation --target /tmp/carnot-exp7641-private-25k9vrsy/validation/installed .",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--no-deps",
+        "--no-build-isolation",
+        "--target",
+        "/tmp/carnot-exp7641-private-25k9vrsy/validation/installed",
+        "."
+      ],
+      "duration_s": 18.13344823900843,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/08_private_package_install.log",
+      "log_sha256": "sha256:534d394ff3d0849074358558d2bd5cb470f3609492fcc575f35b385fa5d5b5be",
+      "name": "private_package_install",
+      "output_tail": "Processing /home/ianblenke/github.com/ianblenke/carnot\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: carnot-ebm\n  Building wheel for carnot-ebm (pyproject.toml): started\n  Building wheel for carnot-ebm (pyproject.toml): finished with status 'done'\n  Created wheel for carnot-ebm: filename=carnot_ebm-0.1.0b1-py3-none-any.whl size=41193516 sha256=7593eb512c1364e13a2f82ab8281ed71bde5acb7784a28704cc65d885eb2d69c\n  Stored in directory: /tmp/pip-ephem-wheel-cache-axaf4xl6/wheels/31/86/1d/acee451121ea7887118f003a24604eb84cda350ae80c7319c9\nSuccessfully built carnot-ebm\nInstalling collected packages: carnot-ebm\nSuccessfully installed carnot-ebm-0.1.0b1\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: python -m pip install --upgrade pip\n",
+      "passed": true,
+      "scope": "private installed-style package tree",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -I -u -c '\nfrom pathlib import Path\nimport sys\ntarget, extension, state = sys.argv[1:]\nsys.path.insert(0, target)\nfrom carnot.pipeline.native_calibrated_decision_service import NativeServiceClient\nclient = NativeServiceClient.from_extension(state_path=Path(state), extension_path=Path(extension))\ndecision = client.predict('\"'\"'installed-event'\"'\"', 0.33)\nack = client.release_feedback('\"'\"'installed-event'\"'\"', 1)\nraise SystemExit(not (decision.available and ack.durable))\n' /tmp/carnot-exp7641-private-25k9vrsy/validation/installed /tmp/carnot-exp7626-private-dn39lkig/extension/_rust.cpython-312-x86_64-linux-gnu.so /tmp/carnot-exp7641-private-25k9vrsy/validation/installed-state.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-u",
+        "-c",
+        "\nfrom pathlib import Path\nimport sys\ntarget, extension, state = sys.argv[1:]\nsys.path.insert(0, target)\nfrom carnot.pipeline.native_calibrated_decision_service import NativeServiceClient\nclient = NativeServiceClient.from_extension(state_path=Path(state), extension_path=Path(extension))\ndecision = client.predict('installed-event', 0.33)\nack = client.release_feedback('installed-event', 1)\nraise SystemExit(not (decision.available and ack.durable))\n",
+        "/tmp/carnot-exp7641-private-25k9vrsy/validation/installed",
+        "/tmp/carnot-exp7626-private-dn39lkig/extension/_rust.cpython-312-x86_64-linux-gnu.so",
+        "/tmp/carnot-exp7641-private-25k9vrsy/validation/installed-state.json"
+      ],
+      "duration_s": 1.601667610986624,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/09_installed_style_native_import.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "installed_style_native_import",
+      "output_tail": "",
+      "passed": true,
+      "scope": "private installed package plus exact PyO3 extension",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/e2e003 tests/python/test_experiment_7641_v666_native_consumer.py::test_scenario_pipeline_7641_native_lifecycle_is_durable -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/e2e003",
+        "tests/python/test_experiment_7641_v666_native_consumer.py::test_scenario_pipeline_7641_native_lifecycle_is_durable",
+        "-q"
+      ],
+      "duration_s": 5.147603204008192,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/10_e2e_003_real_pyo3.log",
+      "log_sha256": "sha256:df7810fe84de7223fc10a39372a5f66be0d7d4ca8e9cc57d588d31187e91b178",
+      "name": "e2e_003_real_pyo3",
+      "output_tail": ".                                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1 passed, 1 warning in 2.02s\n",
+      "passed": true,
+      "scope": "E2E-003 package-to-PyO3 round trip",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/e2e004 tests/python/test_experiment_7641_v666_native_consumer.py::test_scenario_report_7641_interrupted_write_preserves_state -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7641-private-25k9vrsy/validation/basetemp/e2e004",
+        "tests/python/test_experiment_7641_v666_native_consumer.py::test_scenario_report_7641_interrupted_write_preserves_state",
+        "-q"
+      ],
+      "duration_s": 5.159025675035082,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/scoped/11_e2e_004_json_interrupt_reload.log",
+      "log_sha256": "sha256:6226e90e0a9edee6aef25132b7850f4359144fda58d8338f552cd4ae7c4377e0",
+      "name": "e2e_004_json_interrupt_reload",
+      "output_tail": ".                                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1 passed, 1 warning in 2.08s\n",
+      "passed": true,
+      "scope": "E2E-004 JSON state interruption and reload",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7641_v666_native_consumer.py --cold-replay /tmp/carnot-exp7641-private-25k9vrsy/terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7641_v666_native_consumer.py",
+        "--cold-replay",
+        "/tmp/carnot-exp7641-private-25k9vrsy/terminal-candidate.json"
+      ],
+      "duration_s": 1.647994622006081,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/terminal_candidate/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:687349446b01de3e06e7736d902950d7d577717a18d131af5702ea4473f7a378",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"artifact_sha256\": \"sha256:35175e9c2bc808beb54b431e75aef3e70743ec1cde5f80ad58785f5c0d61969b\", \"errors\": [], \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact terminal candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7641_v666_native_consumer.py --independent-replay /tmp/carnot-exp7641-private-25k9vrsy/terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7641_v666_native_consumer.py",
+        "--independent-replay",
+        "/tmp/carnot-exp7641-private-25k9vrsy/terminal-candidate.json"
+      ],
+      "duration_s": 1.6672684900113381,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/terminal_candidate/01_independent_raw_reduction.log",
+      "log_sha256": "sha256:8e9dd13140cbe0b601fba0223fdfd555433c6b831ae80e0720e73e5f9126a34e",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"artifact_sha256\": \"sha256:35175e9c2bc808beb54b431e75aef3e70743ec1cde5f80ad58785f5c0d61969b\", \"historical_comparison_recomputed\": true, \"integration_reduction\": {\"complete\": true, \"durability_units\": 4, \"failed_units\": 0, \"independent_units\": 12, \"passed_units\": 12, \"real_native_units\": 4, \"unavailable_units\": 4}, \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact terminal candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7641-private-25k9vrsy/terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7641-private-25k9vrsy/terminal-candidate.json"
+      ],
+      "duration_s": 0.6660876640235074,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/terminal_candidate/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact terminal candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7641-private-25k9vrsy/terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7641-private-25k9vrsy/terminal-candidate.json"
+      ],
+      "duration_s": 0.02662852400681004,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7641_v666_native_consumer/validation/terminal_candidate/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact terminal candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}
