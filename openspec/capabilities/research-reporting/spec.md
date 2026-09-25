@@ -81031,3 +81031,58 @@ reports induced-engine gain, loss, cost, and game-cluster uncertainty separately
 and strict row-consistency readers
 **Then** exits and log hashes determine validity before atomic publication,
 without changing production defaults or granting live solve credit.
+
+## REQ-REPORT-7653: Measure live adapter-withheld ARC HUD dedup
+
+Experiment 7653 SHALL select three distinct games by salted hash of identities
+from the supported offline SDK roster before observing outcomes. Registry solves
+remain historical, and the policy SHALL receive no game adapters, banked actions,
+stored engines, game-specific imports, or hidden game source. One matched seed
+per game SHALL run the shipped baseline and a treatment that enables only the
+requalified goal-safe HUD planner dedup. Both arms SHALL use the same current
+Qwen3.8-27B GGUF weights and induction settings through
+`make_carnot_agent` and `E3AgentPolicy.choose_action`.
+
+Each of six episodes SHALL be bounded to 400 seconds, 128 actions, one current
+induction of at most 4096 output tokens, and 20000 planner engine calls. The
+declared episode and validation budgets SHALL be at most 2400 and 1200 seconds.
+Action and induction checkpoints SHALL preserve censored rows and the six-row
+denominator. An Exp7630 exclusive CUDA lease, actual model and runtime hashes,
+owned server identity, and measured offload SHALL precede generation. Absent
+exclusive capacity SHALL block before load with zero current calls.
+
+Rows SHALL expose observed levels, actions, induction and verifier outcomes,
+selected and executed plans, supervisor firings, cost, censoring, and raw
+provenance. At least one accepted and executed current induced engine is needed
+to evaluate the planner lever; otherwise the result is a reachability null.
+Three public games are an exploratory paired case series with no hidden-game
+significance or registry credit. Scoped validation, complete coverage of changed
+behavior, task E2E, fresh reduction, adversarial verification, and strict row
+consistency SHALL govern atomic terminal publication.
+
+### SCENARIO-REPORT-7653-BLOCKED: Missing capacity cannot become inference
+
+**Given** an unavailable exclusive GPU lease or required external input
+**When** the preflight compares actual operands
+**Then** a terminal blocked artifact names check, upstream, path, field,
+operator, expected, and observed values, with zero current model calls.
+
+### SCENARIO-REPORT-7653-PAIRED: Identity selection and arm isolation
+
+**Given** the SDK roster, historical registry, and one declared salt
+**When** six episodes are scheduled
+**Then** three distinct games each have one baseline and one treatment seed
+**And** only goal-safe HUD dedup differs between arms.
+
+### SCENARIO-REPORT-7653-REACHABILITY: No plan is an observed null
+
+**Given** action, induction, verifier, planner, and execution receipts
+**When** cold reduction compares paired rows
+**Then** unexecuted or rejected engines cannot imply planner benefit
+**And** censored episodes remain in the six-row denominator.
+
+### SCENARIO-REPORT-7653-TERMINAL: Exact candidate governs publication
+
+**Given** a frozen affected-file manifest and a completed candidate
+**When** fresh reduction and both strict readers run on its exact bytes
+**Then** exits and log hashes determine validity before atomic publication.
