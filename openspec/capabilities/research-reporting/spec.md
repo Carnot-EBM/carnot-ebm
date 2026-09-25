@@ -81086,3 +81086,34 @@ operator, expected, and observed values, with zero current model calls.
 **Given** a frozen affected-file manifest and a completed candidate
 **When** fresh reduction and both strict readers run on its exact bytes
 **Then** exits and log hashes determine validity before atomic publication.
+## REQ-REPORT-7656: Reconcile V667 without promoting invalid evidence
+
+The V667 capstone SHALL authenticate the selected fourteen-task authority and
+read exactly fourteen dispositions in order, using actual producer files and
+distinct conductor pre-gate receipts. Its own output SHALL never be an input.
+It SHALL cold-reduce source witness, audit, Qwen, ARC wrapper, ARC live, and
+consumer branches separately. It SHALL retain measured CPU nulls even when
+downstream artifacts are absent, and preserve invalid ARC results without
+crediting them as hidden-game benefit. External absence SHALL produce a
+`complete_blocked_*` verdict with exact gate operands, never `partial`.
+
+### SCENARIO-REPORT-7656-ORDER
+
+Given the selected V667 authority and source files, when the capstone runs,
+then each ordered task has a declared path, actual path, source hash, honest
+verdict, and custody kind; missing producers and pre-gate receipts are distinct.
+
+### SCENARIO-REPORT-7656-REDUCTION
+
+Given the raw source rows, when the capstone reduces them, then independent
+source groups are counted once across arms and a zero witness coverage result
+cannot become probability or decision benefit. Invalid ARC validation cannot
+become a planning benefit; fixture agreement remains circular.
+
+### SCENARIO-REPORT-7656-COLD-REPLAY
+
+Given a terminal candidate, when a fresh process reloads the source files,
+then deletion, reordering, a wrong gate field, and self-input mutations fail.
+The published file SHALL contain current validation exits and log hashes,
+terminal reader outcomes, six separate acceptance gates, stable G1-G4, and
+scope-specific decisions with falsifiable changed premises.
