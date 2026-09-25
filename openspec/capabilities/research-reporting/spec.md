@@ -80796,6 +80796,54 @@ the contrary, and source swapping changes the bound hash.
 **Then** raw rows and validation receipts precede atomic publication
 **And** fixture agreement cannot open a corpus benefit gate.
 
+## REQ-REPORT-7646: Freeze a source-feature corpus from authenticated V664 roles
+
+Experiment 7646 SHALL authenticate the V664 protocol, model-input stores and
+separate evaluator stores before CPU feature extraction. It SHALL preserve all
+240 scored groups, eight disjoint pilots, five exact scored role counts, the
+64/16 fit partition and the frozen within-role source derangement. Predictor
+text SHALL be read in a process without access to evaluator stores. Source
+hashes, answer offsets and group identities SHALL be derived before any future
+training. No group may be filtered by labels or parser success.
+
+The frozen V667 structural verifier SHALL run on every answer sentence in the
+original, evidence-erased and source-deranged arms. Every unsupported group
+SHALL remain an explicit unknown row. Parse coverage, checked predicate
+coverage and unchecked prose SHALL be separate measures. Structural status
+SHALL remain distinct from the dataset label. Immutable JSONL and a role
+manifest SHALL support cold reconstruction and mutation rejection. Complete
+honest rows can establish feature readiness, even at zero structural coverage;
+they cannot establish probability benefit, utility, retention or freshness.
+The terminal artifact SHALL retain exact validation and reader receipts before
+atomic publication, with no model load or default promotion.
+
+### SCENARIO-REPORT-7646-CUSTODY: Exact inherited groups survive extraction
+
+**Given** authenticated V664 protocol and separated role stores
+**When** source features are frozen
+**Then** every scored group and disjoint pilot retains its role and source hash
+**And** duplicate groups, altered roles and wrong source hashes fail cold replay.
+
+### SCENARIO-REPORT-7646-ISOLATION: Labels cannot reach the predictor
+
+**Given** a feature worker with only predictor input and frozen protocol data
+**When** it attempts evaluator-store access or receives a label field
+**Then** access is rejected and the attempt is recorded as a failed check.
+
+### SCENARIO-REPORT-7646-COVERAGE: Unsupported prose remains visible
+
+**Given** numbered Python scopes and unsupported natural-language evidence
+**When** all three frozen source arms are evaluated
+**Then** exact structural witnesses and byte offsets are recorded where valid
+**And** unknown groups, parser gaps and unchecked prose remain in the denominator.
+
+### SCENARIO-REPORT-7646-TERMINAL: Readiness is separate from benefit
+
+**Given** complete immutable feature rows and scoped validation
+**When** fresh readers reconstruct the candidate and run strict checks
+**Then** the terminal record distinguishes accounting readiness from benefit
+**And** a missing external prerequisite is complete blocked with exact operands.
+
 ## REQ-REPORT-7645: Requalify live ARC goal validation on CPU
 
 Experiment 7645 SHALL reproduce the V666 private pytest-parent and venue-schema
