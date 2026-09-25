@@ -18572,3 +18572,4 @@ code |
 | 2026-09-24 23:12 UTC | Bind fourteen tasks and ingest evidence and planne | OK | 146 passed, 1 warning in 17.77s |
 | 2026-09-24 23:39 UTC | Qualify isolated preflight and process-owned CUDA  | OK | 98 passed, 1 warning in 11.81s |
 | 2026-09-25 00:01 UTC | Measure paired schema generation through the owned | OK | 91 passed, 1 warning in 9.28s |
+| 2026-09-25 00:04 UTC | Capture complete fitting and policy evidence | GATE_BLOCK | gate-unsat(final): 4 of 9 gate(s) failed; first failure: exp7631-schema-pilot.evidence_transport_ready_score (actual=0 == expected=1) |
