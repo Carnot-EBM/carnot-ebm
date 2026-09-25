@@ -6140,3 +6140,13 @@ Mapped bounded controls to Exp7631 and Exp7635 through Exp7637. The independent
 goal-check principle maps to Exp7639 and Exp7640. AS2 and ERM remain new leads.
 Semantic Scholar and direct OpenReview access limits remain explicit. No paper
 result or theorem transfers automatically to Carnot.
+<!-- EXP7643-V667-METHOD-INGESTION -->
+## 2026-09-25 Exp7643 — V667 source-witness methods — INGESTED
+
+The static-analysis study and Hallucination Inspector motivate narrow AST and
+symbol witnesses with explicit unknowns; neither establishes general prose
+truth. Calibeating Made Simple informs predict-then-update controls, while
+delayed admission and post-restart retention need separate local tests. The
+full mapping and claim limits are in `docs/research-notes/v667-method-map.md`.
+Publication gates G1-G4 remain unchanged. The V666 CUDA resource block and ARC
+validation failure remain distinct findings.

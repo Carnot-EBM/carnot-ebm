@@ -80713,3 +80713,43 @@ lineage, prompt paths and scoped existing guard tests run
 
 Planning-only requirement. The numbered experiments remain proposed work;
 no empirical result, model execution or hardware execution is claimed.
+## REQ-REPORT-7643: Bind V667 source-witness contract without promoting readiness
+
+Experiment 7643 SHALL compare the staged or activated V667 roadmap against the
+independently parsed Markdown machine contract. All fourteen ordered tasks SHALL
+match in ID, title, phase, deliverable, substrate, model identities, and complete
+structured gates. Private mutation controls SHALL reject missing or reordered
+tasks, changed producers, self-inputs, stale staging, and changed gates. The
+current aggregation SHALL make no model call. It SHALL preserve all fourteen
+V666 dispositions, distinguishing seven terminal producers from pre-gate and
+cascade records, and retain CUDA capacity and ARC validation as separate findings.
+
+The terminal artifact SHALL separate administrative readiness from proper-loss
+benefit, typed utility, retained learning, and freshness. Actual missing external
+evidence SHALL yield a complete blocked verdict with exact gate operands. Invalid
+owned validation SHALL disqualify the result. Exact oracle witness truth SHALL
+never establish an oracle-distinct learned advantage. The artifact SHALL retain
+raw rows, source hashes, sample-size custody, measured phase spans, a checksum,
+scoped validation receipts, independent reduction, and terminal reader outcomes
+before atomic publication. Publication gates G1-G4 SHALL remain unchanged.
+
+### SCENARIO-REPORT-7643-AUTHORITY: Compare complete machine authorities
+
+**Given** a matching staged or consumed-staging V667 authority
+**When** the independent Markdown and YAML task contracts are compared
+**Then** fourteen ordered rows match every producer, model, and gate field
+**And** private missing, reordered, stale, self-input, producer, and gate mutations fail.
+
+### SCENARIO-REPORT-7643-CUSTODY: Preserve literal V666 outcomes
+
+**Given** the immutable V666 capstone and producer or pre-gate bytes
+**When** prior dispositions are authenticated
+**Then** fourteen rows retain their exact custody and verdicts
+**And** an absent producer remains distinct from an existing pre-gate receipt.
+
+### SCENARIO-REPORT-7643-TERMINAL: Only validated aggregation publishes
+
+**Given** scoped checks, task-specific readers, and an exact candidate
+**When** the terminal reduction and strict readers finish
+**Then** passing receipts and reader outcomes precede atomic publication
+**And** readiness alone yields a complete null with unopened science gates.
