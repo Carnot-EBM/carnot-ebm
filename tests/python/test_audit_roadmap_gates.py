@@ -252,6 +252,27 @@ def test_model_agent_coherence_rejects_bad_codex_model_and_gemini(tmp_path: Path
     assert any("agent_type=gemini" in line for line in artifact["failure_details"])
 
 
+def test_model_agent_coherence_accepts_gpt_6_sol_for_codex(tmp_path: Path) -> None:
+    """SCENARIO-INFRA-086: gpt-6-sol is the codex model from 2026-09-25; gpt-5.6-sol still drains."""
+    roadmap_path = _write_yaml(
+        tmp_path / "research-roadmap.yaml",
+        _roadmap(
+            [
+                _task("exp1-new", "Fresh New Codex Task", agent_type="codex", model="gpt-6-sol"),
+                _task("exp2-old", "Fresh Old Codex Task", agent_type="codex", model="gpt-5.6-sol"),
+                _task("exp3-luna", "Fresh Luna Codex Task", agent_type="codex", model="gpt-6-luna"),
+            ]
+        ),
+    )
+    complete_path = _write_yaml(tmp_path / "research-complete.yaml", _complete([]))
+
+    artifact = audit_mod.audit_roadmap(roadmap_path, complete_path=complete_path).to_artifact()
+
+    assert artifact["n_model_agent_coherence_failures"] == 1
+    assert any("exp3-luna" in line for line in artifact["failure_details"])
+    assert not any("exp1-new" in line for line in artifact["failure_details"])
+
+
 def test_experiment_wrapper_writes_required_json_artifact(tmp_path: Path) -> None:
     """REQ-INFRA-075: Exp 1140 runner writes the required artifact schema."""
     project_root = tmp_path

@@ -25,7 +25,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 
 from research_conductor import coerced_model  # noqa: E402
 
-DEFAULT = "gpt-5.6-sol"
+DEFAULT = "gpt-6-sol"
 
 
 def test_the_incident_shape_gets_the_new_agents_model() -> None:

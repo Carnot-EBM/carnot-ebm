@@ -47,6 +47,9 @@ _STOPWORDS = {
 }
 
 
+CODEX_MODELS_ACCEPTED = frozenset({"gpt-6-sol", "gpt-5.6-sol"})
+
+
 @dataclass
 class AuditResult:
     """Structured result matching the Exp 1140 required artifact fields."""
@@ -195,11 +198,13 @@ def audit_roadmap(roadmap_path: Path, complete_path: Path = DEFAULT_COMPLETE_PAT
         task_id = str(task.get("id") or "<missing-id>")
         agent_type = str(task.get("agent_type") or "").strip().lower()
         model = str(task.get("model") or "").strip()
-        if agent_type == "codex" and model != "gpt-5.6-sol":
+        # 2026-09-25: gpt-6-sol is the codex model. gpt-5.6-sol stays accepted while
+        # tasks planned before the switch drain from the live roadmap.
+        if agent_type == "codex" and model not in CODEX_MODELS_ACCEPTED:
             result.n_model_agent_coherence_failures += 1
             result.failure_details.append(
                 f"MODEL_AGENT_COHERENCE {task_id}: agent_type=codex requires "
-                f"model=gpt-5.6-sol, got {model or '<missing>'}"
+                f"model in {sorted(CODEX_MODELS_ACCEPTED)}, got {model or '<missing>'}"
             )
         if agent_type == "gemini":
             result.n_model_agent_coherence_failures += 1

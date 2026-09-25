@@ -41,7 +41,7 @@ LOG_PATH = REPO_ROOT / "docs" / "research-notes" / "arc-agi3-news-watch.md"
 # successful checks took 4-8 minutes wall. 900s covers the slow tail of the
 # codex web-search runs; a daily oneshot can afford the wait.
 CODEX_TIMEOUT_S = 900
-CODEX_MODEL = "gpt-5.6-sol"
+CODEX_MODEL = "gpt-6-sol"
 
 KNOWN_BASELINE = """\
 Known baseline as of 2026-07-11 (do not re-report these as new):
