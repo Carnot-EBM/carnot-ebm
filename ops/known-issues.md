@@ -27729,6 +27729,16 @@ time unchanged, slower on wa30, ka59, ar25. Recommendation: keep both flags off.
 remains search depth (wa30 needs 33 actions; sb26 has no live HUD mask). Flag-on fixes still needed
 are in the spec's REVIEW RECORD 2.
 
+**UPDATE 3 2026-09-25 (append-only): search pruning is a null result, not merged.** REQ-ARC-WMTE-10014
+tried no-op pruning, a per-call transition cache, and equivalent-action collapse behind a default-off
+flag (branch `deep-search`, commit cdc1d9d905, flag-off identical to main on 320+320 fixtures).
+Measured through the scored wrapper: expert wins stay 5/10; aggregate expert calls fall only 2%
+(122,625 -> 120,319); planner time rises (mean 1.7 -> 2.8 s). PRUNE+HUD_DEDUP did not reproduce
+HUD_DEDUP's dc22 win. NOT-LIVE: the sb26 expert needs 219,500 calls; wa30 finds no goal by 400,000.
+So the calls are not wasted on no-ops or duplicate moves; the state space itself is too large for
+blind search at this budget. The next lever would be a real goal gradient (guided search), not more
+pruning. Branch kept for the record; the planner code is not merged.
+
 ### RESOLVED 2026-09-25 (was: FINDING): the conductor's eGPU fell off the Thunderbolt bus
 
 At 2026-09-24 20:25:17 UTC the RTX 3090 GPU-b52387a2 (PCI 03:00, the conductor's GPU 0, in a Razer

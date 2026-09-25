@@ -2,6 +2,11 @@
 
 **Last Updated:** 2026-09-24
 
+## 2026-09-25 — Planner search pruning measured: null result, not merged
+- REQ-ARC-WMTE-10014 (branch `deep-search`, cdc1d9d905): no-op pruning, caching, and duplicate-move
+  collapse add no expert win and slow the planner. Kept on the branch only. Blind search is out of
+  budget on wa30/sb26 by 10-20x; the next lever is a real goal gradient.
+
 ## 2026-09-24 — Experiment 7628 V665 capstone repaired and terminal
 - Fixed circular source validation: the capstone's planned output remains in
   the self disposition but is no longer treated as its own immutable input.

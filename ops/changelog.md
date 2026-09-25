@@ -1,5 +1,11 @@
 # Carnot — Changelog
 
+## 2026-09-25 — Planner search pruning (operator request: "1", deeper search) — null, not merged
+
+- codex (gpt-6-sol, CPU, worktree `deep-search`) built and measured REQ-ARC-WMTE-10014. No live expert
+  win gained; planner slower. Branch preserved at cdc1d9d905; code not merged. Recorded in
+  known-issues (UPDATE 3) and status. No reviewer run: nothing ships.
+
 ## 2026-09-24 — Planner dedup safety fixes and scored-path measurement (operator request: "1")
 
 - codex (CPU, worktree `dedup-safe`) applied REQ-ARC-WMTE-10013 amendment 1: goal check before the
