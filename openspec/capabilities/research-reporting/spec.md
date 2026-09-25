@@ -80452,3 +80452,102 @@ conductor SHALL remain unchanged.
 
 Specification added before tests and implementation. The conductor owns later
 status, changelog and traceability reconciliation.
+
+## REQ-REPORT-7638: Audit V666 evidence and retained learning independently
+
+Experiment 7638 SHALL inventory the exact Experiment 7632 through 7637 V666
+producer paths. It SHALL classify authenticated producers, actual conductor
+pre-gate receipts, invalid or flagged producers, and missing outputs separately.
+The audit SHALL run without a global pre-gate. Missing external producers SHALL
+produce `complete_blocked_v666_scientific_producers_unavailable` with class
+`blocked`, not `partial` or a successful null. Every blocking gate SHALL retain
+the check, upstream, path, exact field, operator, expected value, and observed
+value. Planned output bytes SHALL never be an input precondition.
+
+Available raw rows SHALL replay the frozen model, schema, configuration,
+checkpoint, role membership, and attempted denominators. The static audit SHALL
+independently rebuild probabilities, Brier score, log loss, typed costs, false
+accepts, evidence-control differences, and source-group bootstrap intervals.
+Malformed and censored rows SHALL remain in their declared denominators. Views,
+arms, orders, and seeds SHALL not multiply the independent sample size. Producer
+aggregate values and LLM extraction SHALL not enter the reduction.
+
+The learning audit SHALL reconstruct prediction-time label custody, delayed
+label releases, gradients, admission use, checkpoint changes, restarts, and
+retention from event rows. Evaluation and admission labels SHALL not enter
+gradients. Every feedback and admission example SHALL be used at most once.
+Checkpoint bytes and restart state SHALL match. Joint learning benefit SHALL
+require both prequential benefit and retention. Missing external retention rows
+SHALL block only the joint claim while preserving any valid online reduction.
+
+Private mutations SHALL reject shuffled future labels, duplicated source groups,
+dropped malformed rows, unchanged evidence controls, swapped fit and evaluation
+roles, and checkpoint reuse. Each mutation SHALL change authenticated fixture
+bytes and retain the exact observed rejection. Tolerances SHALL remain unchanged.
+Exact fixture success SHALL remain `circular_positive` and SHALL not establish an
+oracle-distinct learned advantage.
+
+The artifact SHALL declare planned and actual class `aggregation`,
+`MODEL_SPECS=[]`, no current model invocation, and zero current loads, forwards,
+generations, or tokens. Historical model identity SHALL remain separate. It
+SHALL preserve validity, readiness, probability benefit, utility, retention,
+and freshness as separate gates. It SHALL include branch rows and unavailable
+reasons, sample budgets, actual preconditions, the host venue, disjoint phase
+spans, seed purposes, source hashes, field principles, validation receipts,
+terminal reader outcomes, and one reproducibility checksum over immutable inputs
+and reductions.
+
+Validation SHALL freeze the affected-file manifest. It SHALL use worktree-pinned
+imports, focused serial pytest with cleared ambient addopts, a private base temp,
+command-local 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, and affected-test specification coverage. The declared
+entrypoint, fresh-process cold replay, independent raw reduction, all six negative
+mutations, adversarial reader, and strict verdict-row reader SHALL accept the
+exact candidate before atomic publication. Old artifacts, weights, defaults,
+ops reconciliation files, the roadmap, and the research conductor SHALL remain
+unchanged.
+
+### SCENARIO-REPORT-7638-CUSTODY: Producer and pre-gate states remain literal
+
+**Given** expected V666 producers, actual conductor receipts, and absent paths
+**When** Experiment 7638 inventories Experiments 7632 through 7637
+**Then** every path retains its actual disposition and exact byte hash
+**And** missing external evidence yields a terminal blocked result
+**And** no pre-gate receipt is promoted into scientific rows or a successful null.
+
+### SCENARIO-REPORT-7638-STATIC: Raw arm rows control static claims
+
+**Given** authenticated evaluation rows and frozen model inputs
+**When** the audit reduces each source group and evidence arm
+**Then** Brier, log loss, cost, false accepts, controls, and intervals recompute
+**And** the source group owns the denominator regardless of arms or seeds
+**And** producer aggregates cannot determine eligibility or benefit.
+
+### SCENARIO-REPORT-7638-LEARNING: Event chronology controls joint benefit
+
+**Given** authenticated online and retention event rows
+**When** the audit replays release, gradient, admission, checkpoint, and restart events
+**Then** no future, admission, or evaluation label enters a gradient
+**And** admission examples are used once and checkpoint transitions match
+**And** joint benefit requires both prequential improvement and retention.
+
+### SCENARIO-REPORT-7638-MUTATIONS: Six registered corruptions fail closed
+
+**Given** compact valid static and learning fixtures
+**When** any registered future-label, duplicate, malformed-row, control, role, or checkpoint mutation occurs
+**Then** exact changed bytes produce the registered rejection
+**And** no tolerance changes and no corrupted fixture bytes enter the artifact.
+
+### SCENARIO-REPORT-7638-TERMINAL: Exact readers control publication
+
+**Given** a frozen validation manifest and one exact terminal candidate
+**When** scoped checks, fresh reduction, mutations, and strict readers run
+**Then** commands, exits, worktree paths, log hashes, and outcomes remain recorded
+**And** only the exact validated bytes publish atomically
+**And** unavailable benefit remains null without becoming a scientific null result.
+
+### Implementation Status (REQ-REPORT-7638)
+
+Implemented by Experiment 7638 with literal producer custody, independent raw
+reducers, six negative mutations, scoped validation, and exact terminal readers.
+The conductor owns later ops, changelog, and traceability reconciliation.

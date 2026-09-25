@@ -1,0 +1,88 @@
+{
+  "candidate_sha256": "sha256:c98dbea855edef549bb59c0118364cd08cfecc6cbb912b804ee57fd0cf081dbf",
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7638_v666_evidence_audit.py --root /home/ianblenke/github.com/ianblenke/carnot --date 20260925 --cold-replay /tmp/carnot-exp7638-xe6cjqbx/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7638_v666_evidence_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--date",
+        "20260925",
+        "--cold-replay",
+        "/tmp/carnot-exp7638-xe6cjqbx/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.5854015900404193,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7638-xe6cjqbx/terminal_logs_exact/00_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:24740a995444b8e4dfe5a037b79816b8f266e5497eabc04817d91039410eb894",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "{\"mode\": \"cold_replay\", \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7638_v666_evidence_audit.py --root /home/ianblenke/github.com/ianblenke/carnot --date 20260925 --independent-reduce /tmp/carnot-exp7638-xe6cjqbx/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7638_v666_evidence_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--date",
+        "20260925",
+        "--independent-reduce",
+        "/tmp/carnot-exp7638-xe6cjqbx/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.6028545789886266,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7638-xe6cjqbx/terminal_logs_exact/01_independent_raw_reduction.log",
+      "log_sha256": "sha256:d4240536a59ba0f19e61cf9de8e0a5a8e05f8ecc9e4a0a2441d89e8a21ffcba7",
+      "name": "independent_raw_reduction",
+      "output_tail": "{\"mode\": \"independent_reduction\", \"mutation_count\": 6, \"row_count\": 0, \"source_count\": 6, \"valid\": true}\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7638-xe6cjqbx/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7638-xe6cjqbx/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.6972137719858438,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7638-xe6cjqbx/terminal_logs_exact/02_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7638-xe6cjqbx/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7638-xe6cjqbx/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.024992451013531536,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7638-xe6cjqbx/terminal_logs_exact/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+      "passed": true,
+      "scope": "exact_terminal_candidate",
+      "timed_out": false
+    }
+  ]
+}
