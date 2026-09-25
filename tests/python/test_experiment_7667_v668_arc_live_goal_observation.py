@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import signal
 import time
 from pathlib import Path
 
@@ -20,6 +21,38 @@ def test_selection_is_outcome_blind() -> None:
     assert selected in roster
     with pytest.raises(ValueError, match="sdk_roster_empty"):
         exp.select_game([])
+
+
+def test_new_attempt_keeps_old_raw_evidence(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7667-TERMINAL: request IDs belong to one run only."""
+    first = exp.raw_for_run(tmp_path, "first")
+    second = exp.raw_for_run(tmp_path, "second")
+    assert first != second
+    assert first.parent == second.parent == tmp_path
+    with pytest.raises(ValueError, match="invalid_run_id"):
+        exp.raw_for_run(tmp_path, "../escape")
+
+
+def test_current_invocations_use_attempt_local_ledger(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7667-TERMINAL: inherited telemetry cannot absorb prior calls."""
+    from carnot.agentic.arc_inference_boundary import BOUNDARY_LEDGER_ENV
+
+    env = exp.isolated_session_environment({}, gpu_index=0, port=12345, raw_dir=tmp_path)
+    assert env[BOUNDARY_LEDGER_ENV] == str(tmp_path / "current_invocation_events.jsonl")
+
+
+def test_induction_has_one_wall_deadline() -> None:
+    """SCENARIO-REPORT-7667-GOAL: several requests share one induction limit."""
+    assert exp.bounded_induction_call(lambda: "done", 0.1) == "done"
+    with pytest.raises(TimeoutError, match="induction_wall_limit"):
+        exp.bounded_induction_call(lambda: time.sleep(0.1), 0.01)
+    assert signal.getitimer(signal.ITIMER_REAL)[0] == 0
+    signal.setitimer(signal.ITIMER_REAL, 1.0)
+    try:
+        assert exp.bounded_induction_call(lambda: "done", 0.1) == "done"
+        assert signal.getitimer(signal.ITIMER_REAL)[0] > 0
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
 
 
 @pytest.mark.parametrize(
@@ -145,6 +178,24 @@ def test_terminal_artifact_distinguishes_blocked_null_and_invalid(capsys) -> Non
     assert failed["inference_substrate_class"] == "model_load_no_generation"
 
 
+def test_interrupted_episode_cannot_be_scientific_null() -> None:
+    """SCENARIO-REPORT-7667-TERMINAL: an owned episode error disqualifies."""
+    schedule = exp.make_schedule("aa11")
+    row = {
+        **schedule,
+        "actions": [{"action_index": 1}],
+        "request_rows": [{"request_dispatched": True}],
+        "induction_events": [],
+        "goal_observations": [],
+        "censored": True,
+        "exclusion": None,
+        "error": "RuntimeError: induction handler crashed",
+    }
+    artifact = exp._artifact([], {}, schedule, [row], {"load_attempted": True}, 61)
+    assert artifact["verdict_class"] == "disqualified"
+    assert artifact["live_goal_observation_complete_score"] == 0
+
+
 def test_cold_reader_checks_block_operands(tmp_path: Path, capsys) -> None:
     """SCENARIO-REPORT-7667-TERMINAL: blocks require exact operands."""
     candidate = tmp_path / "candidate.json"
@@ -196,7 +247,12 @@ def test_cli_modes_use_reader_and_owned_child(monkeypatch, tmp_path: Path) -> No
     candidate = tmp_path / "candidate.json"
     candidate.write_text(json.dumps({"schedule": exp.make_schedule("aa11")}))
     monkeypatch.setattr(exp, "_reader", lambda path: 7)
-    monkeypatch.setattr(exp, "_child_measure", lambda root, schedule, raw: 8)
+
+    def child(root, schedule, raw):
+        assert raw == candidate.parent
+        return 8
+
+    monkeypatch.setattr(exp, "_child_measure", child)
     monkeypatch.setattr(exp, "run_experiment", lambda root, date, output: 9)
     assert exp.main(["--cold-reduce", str(candidate)]) == 7
     assert exp.main(["--independent-reduce", str(candidate)]) == 7

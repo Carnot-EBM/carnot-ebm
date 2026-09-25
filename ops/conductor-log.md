@@ -18648,3 +18648,4 @@ code |
 | 2026-09-25 21:37 UTC | Test Qwen grounded claim proposals against indepen | OK | 113 passed, 1 warning in 18.27s |
 | 2026-09-25 21:54 UTC | Qualify observed-goal confirmation in the live ARC | OK | 156 passed, 1 warning in 12.79s |
 | 2026-09-25 22:28 UTC | Measure goal confirmation during adapter-withheld  | FAIL | Codex CLI error: da root, schedule, raw: 8) + monkeypatch.setattr(exp, "ru |
+| 2026-09-25 23:01 UTC | Measure goal confirmation during adapter-withheld  | FAIL | Codex CLI error: 64a-1f08-465b-929e-86b75b2e9cfb ERROR: unexpected status 401 |

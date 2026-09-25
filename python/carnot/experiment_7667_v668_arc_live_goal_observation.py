@@ -7,11 +7,12 @@ leaderboard evidence or a counterfactual solve-rate experiment.
 from __future__ import annotations
 
 import argparse
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
 import json
 import os
 from pathlib import Path
+import signal
 import socket
 import subprocess
 import sys
@@ -56,6 +57,50 @@ def select_game(roster: Sequence[str], *, salt: str = SALT) -> str:
     if not identities:
         raise ValueError("sdk_roster_empty")
     return min(identities, key=lambda game: (canonical_hash([salt, game]), game))
+
+
+def raw_for_run(base: Path, run_id: str) -> Path:
+    """Keep each attempt's request and action IDs in its own durable directory."""
+    if not run_id or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for char in run_id):
+        raise ValueError("invalid_run_id")
+    return base / run_id
+
+
+def isolated_session_environment(
+    base: Mapping[str, str], *, gpu_index: int, port: int, raw_dir: Path
+) -> dict[str, str]:
+    """Keep the inherited boundary ledger with this attempt's other raw evidence."""
+    from carnot import experiment_7471_v654_arc_seam_observation as live
+    from carnot.agentic.arc_inference_boundary import BOUNDARY_LEDGER_ENV
+
+    environment = live.session_environment(base, gpu_index=gpu_index, port=port, raw_dir=raw_dir)
+    environment[BOUNDARY_LEDGER_ENV] = str(raw_dir / "current_invocation_events.jsonl")
+    return environment
+
+
+def bounded_induction_call(call: Callable[[], Any], limit_s: float) -> Any:
+    """Enforce one wall limit while preserving the enclosing episode alarm."""
+    previous_handler = signal.getsignal(signal.SIGALRM)
+    previous_remaining, previous_interval = signal.getitimer(signal.ITIMER_REAL)
+    started = time.monotonic()
+
+    def expired(_signum: int, _frame: Any) -> None:
+        raise TimeoutError("induction_wall_limit")
+
+    signal.signal(signal.SIGALRM, expired)
+    signal.setitimer(
+        signal.ITIMER_REAL,
+        min(limit_s, previous_remaining) if previous_remaining > 0 else limit_s,
+    )
+    try:
+        return call()
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous_handler)
+        if previous_remaining > 0:
+            remaining = previous_remaining - (time.monotonic() - started)
+            if remaining > 0:
+                signal.setitimer(signal.ITIMER_REAL, remaining, previous_interval)
 
 
 def make_schedule(game: str) -> Json:
@@ -213,7 +258,7 @@ def _child_measure(root: Path, schedule: Mapping[str, Any], raw: Path) -> int:  
             raise RuntimeError("foreign_or_capacity_recheck_failed")
         port = _free_port()
         os.environ.update(
-            live.session_environment(
+            isolated_session_environment(
                 os.environ, gpu_index=int(gpu["index"]), port=port, raw_dir=raw
             )
         )
@@ -366,7 +411,7 @@ def _one_episode(
             return None
         progress(started, "induction", "before", attempt=induction_count)
         try:
-            return original_induce(self, *args, **kwargs)
+            return bounded_induction_call(lambda: original_induce(self, *args, **kwargs), 2400.0)
         finally:
             progress(started, "induction", "after", attempt=induction_count)
 
@@ -422,6 +467,7 @@ def _one_episode(
             tokens += int(usage.get("completion_tokens") or response.get("tokens_predicted") or 0)
     accepted = any(event.get("gate_decision") == "accept" for event in hypothesis)
     attempted = any(event.get("event") == "stage_start" for event in hypothesis)
+    induction_timeout = bool(source["error"] and "induction_wall_limit" in source["error"])
     return {
         **dict(schedule),
         "start_level": source["start_level"],
@@ -445,8 +491,10 @@ def _one_episode(
             event for event in seams if event.get("seam") == "supervisor_arm_selection"
         ],
         "recovery_events": [event for event in seams if event.get("event") == "redirect"],
-        "censored": source["disposition"].startswith("censored"),
-        "censor_reason": source["disposition"]
+        "censored": source["disposition"].startswith("censored") or induction_timeout,
+        "censor_reason": "censored_induction_wall_limit"
+        if induction_timeout
+        else source["disposition"]
         if source["disposition"].startswith("censored")
         else None,
         "exclusion": None,
@@ -480,10 +528,20 @@ def _artifact(
     generations = sum(bool(request.get("request_dispatched")) for request in requests)
     tokens = sum(int(row.get("current_output_tokens") or 0) for row in rows)
     reduction = reduce_rows(rows, schedule) if len(rows) == 1 else None
-    valid_live = bool(reduction and not runtime.get("error") and generations and duration_s >= 60)
+    expected_censors = {"censored_timeout", "censored_induction_wall_limit"}
+    episode_error = any(
+        row.get("error") and row.get("censor_reason") not in expected_censors for row in rows
+    )
+    valid_live = bool(
+        reduction
+        and not runtime.get("error")
+        and not episode_error
+        and generations
+        and duration_s >= 60
+    )
     if failed:
         verdict, verdict_class = f"complete_blocked_{failed[0]['check']}", "blocked"
-    elif runtime.get("error") or not rows or not generations:
+    elif runtime.get("error") or episode_error or not rows or not generations:
         verdict, verdict_class = "complete_disqualified_live_execution", "disqualified"
     else:
         verdict, verdict_class = "complete_null_public_goal_opportunity", "null"
@@ -786,7 +844,7 @@ def run_experiment(root: Path, run_date: str, output: Path) -> int:  # pragma: n
             "consulted_before_launch": True,
             "outcome_used_for_selection": False,
         }
-        raw = root / RAW
+        raw = root / raw_for_run(RAW, f"{run_date}-{os.getpid()}-{time.monotonic_ns()}")
         raw.mkdir(parents=True, exist_ok=True)
         atomic_json(
             raw / "schedule.json",
@@ -950,5 +1008,5 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _reader(args.cold_reduce or args.independent_reduce)
     if args.live_child:
         schedule = json.loads(args.live_child.read_text())["schedule"]
-        return _child_measure(ROOT, schedule, ROOT / RAW)
+        return _child_measure(ROOT, schedule, args.live_child.resolve().parent)
     return run_experiment(ROOT.resolve(), args.date, (ROOT / args.output).resolve())
