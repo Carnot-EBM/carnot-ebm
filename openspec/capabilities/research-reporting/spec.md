@@ -80795,3 +80795,43 @@ the contrary, and source swapping changes the bound hash.
 **When** scoped validation and exact cold readers finish
 **Then** raw rows and validation receipts precede atomic publication
 **And** fixture agreement cannot open a corpus benefit gate.
+
+## REQ-REPORT-7645: Requalify live ARC goal validation on CPU
+
+Experiment 7645 SHALL reproduce the V666 private pytest-parent and venue-schema
+failures while preserving its disqualified artifact. It SHALL measure the
+current `plan_in_model` goal check before masked duplicate suppression through
+the live E3 planner wrapper. Cases SHALL include a terminal state sharing a
+masked key with a nonterminal state, empty and full masks, true state aliasing,
+ordinary duplicates, and the actual Stage-2 explorer mask dimensions. Fixture
+replay SHALL remain a development proxy with no new game-level solve credit.
+
+The CPU-only, no-model terminal artifact SHALL bind absolute per-case operands,
+source hashes, independent sample size, validation commands and exits, cold
+reduction, and exact candidate reader outcomes. Validity, readiness, probability
+benefit, utility, retention and freshness SHALL remain separate gates. Readiness
+alone SHALL yield a complete null; invalid owned validation SHALL disqualify;
+missing external evidence SHALL yield complete blocked with exact operands.
+`execution_venue` SHALL be `host`, with host and PID in
+`execution_venue_details`. The test base-temp parent SHALL exist before pytest.
+
+### SCENARIO-REPORT-7645-REGRESSION: Goal check survives duplicate key
+
+**Given** terminal and nonterminal states sharing one masked dedup key
+**When** the current planner runs with the production tie-break defaults
+**Then** the full-grid goal is evaluated before the duplicate is skipped
+**And** Stage-2 mask shape and alias refusals remain visible in E3 diagnostics.
+
+### SCENARIO-REPORT-7645-VALIDATION: Private failure becomes valid receipt
+
+**Given** a clean private directory and an absent pytest base-temp child
+**When** scoped tests and terminal readers run
+**Then** the parent is created, the venue is a closed enum, and exits and log
+hashes precede atomic publication without modifying V666 evidence.
+
+### SCENARIO-REPORT-7645-CUSTODY: Readiness does not imply benefit
+
+**Given** passing exact fixtures and no independent hidden-game result
+**When** the artifact is cold-reduced
+**Then** the verdict is complete null, probability and utility stay closed,
+and repeated masks, arms, and orderings do not increase sample size.
