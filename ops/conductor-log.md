@@ -18602,3 +18602,7 @@ code |
 | 2026-09-25 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_nontrivial_subgoal_decomposition age-week 0: OPEN 1 days |
 | 2026-09-25 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nontrivial_subgoal_decomposition age-week 0: OPEN 1  |
 | 2026-09-25 00:08 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_subgoal_search_decomposition_overclaim age-week 0:  |
+| 2026-09-25 00:10 UTC | Capture isolated evaluation evidence | GATE_BLOCK | gate-unsat(final): 4 of 9 gate(s) failed; first failure: exp7631-schema-pilot.evidence_transport_ready_score (actual=0 == expected=1) |
+| 2026-09-25 00:12 UTC | Train source-dependent decision energy against mat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7632-fit-evidence, exp7632-fit-evidence, exp7632-fit-evidence) |
+| 2026-09-25 00:12 UTC | Measure probability improvement and typed decision | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7634-evaluation-evidence, exp7634-evaluation-evidence, exp7634-evaluation-evidence, exp7635-evidence-energy, exp7635-evidence-energy, exp7635-evidence-energy) |
+| 2026-09-25 00:12 UTC | Measure causal delayed updates and retained decisi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7633-online-evidence, exp7633-online-evidence, exp7633-online-evidence, exp7635-evidence-energy, exp7635-evidence-energy, exp7635-evidence-energy) |
