@@ -18628,3 +18628,4 @@ code |
 | 2026-09-25 15:19 UTC | Train a normalized source-witness decision energy | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7646-source-feature-corpus.flagged_adversarial (actual=True == expected=False) |
 | 2026-09-25 15:21 UTC | Measure source-witness probability and decision va | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7647-witness-energy, exp7647-witness-energy, exp7647-witness-energy) |
 | 2026-09-25 15:21 UTC | Measure delayed source-conditioned learning and re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7647-witness-energy, exp7647-witness-energy, exp7647-witness-energy) |
+| 2026-09-25 15:37 UTC | Independently audit structural decisions and feedb | OK | 92 passed, 2 warnings in 8.45s |
