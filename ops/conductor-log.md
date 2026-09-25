@@ -18631,3 +18631,6 @@ code |
 | 2026-09-25 15:37 UTC | Independently audit structural decisions and feedb | OK | 92 passed, 2 warnings in 8.45s |
 | 2026-09-25 15:54 UTC | Compare bounded Qwen evidence against structural w | OK | 87 passed, 1 warning in 7.90s |
 | 2026-09-25 16:18 UTC | Measure goal-safe search through the scored ARC wr | OK | 107 passed, 1 warning in 10.50s |
+| 2026-09-25 16:52 UTC | Test goal-safe planning on adapter-withheld live a | OK | 91 passed, 1 warning in 7.98s |
+| 2026-09-25 16:54 UTC | Qualify a portable normalized witness-energy kerne | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7647-witness-energy, exp7647-witness-energy, exp7647-witness-energy) |
+| 2026-09-25 16:54 UTC | Measure whole-consumer costs and preserve board bo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7654-portable-witness-energy, exp7654-portable-witness-energy, exp7654-portable-witness-energy) |
