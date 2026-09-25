@@ -20631,3 +20631,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-25: Train a normalized evidence-conditioned policy for typed decisions (⚠️ Research Finding) — honest_verdict=complete_null_energy_head_ready; results/experiment_7660_v668_atom_energy.json
 - 2026-09-25: Measure incremental source evidence in probabilities and decision costs (⚠️ Research Finding) — honest_verdict=complete_null_no_registered_decision_benefit; results/experiment_7661_v668_decision_evaluation.json
 - 2026-09-25: Qualify causal source-conditioned updates and durable feedback handling (⚠️ Research Finding) — honest_verdict=complete_null_delayed_update_no_fresh_benefit; results/experiment_7662_v668_delayed_update_protocol.json
+- 2026-09-25: Measure delayed evidence learning and retention after restart (⚠️ Research Finding) — honest_verdict=complete_null_continuous_learning_no_registered_benefit; results/experiment_7663_v668_continuous_atom_learning.json
