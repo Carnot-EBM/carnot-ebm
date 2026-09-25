@@ -1,0 +1,127 @@
+{
+  "checks": [
+    {
+      "check": "cpu_available",
+      "expected": true,
+      "field": "cpu_count_positive",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/proc/self",
+      "upstream": "host"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/protocol.json",
+      "upstream": "Exp7602"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7659_v668_atom_corpus/manifest.json",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7660_v668_atom_energy/heads.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7660_v668_atom_energy.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "upstream_gate",
+      "expected": 1,
+      "field": "energy_ready_score",
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7660_v668_atom_energy.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "upstream_gate",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7660_v668_atom_energy.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "online80",
+      "expected": 80,
+      "field": "role_counts.online",
+      "observed": 80,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/protocol.json",
+      "upstream": "Exp7602"
+    },
+    {
+      "check": "delay",
+      "expected": 8,
+      "field": "delayed_feedback_lag",
+      "observed": 8,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/protocol.json",
+      "upstream": "Exp7602"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:32b0e68451f99fd908f0a13a0d2d15f8209329d42f4d8e8dba4896231d2ac569",
+      "field": "sha256",
+      "observed": "sha256:32b0e68451f99fd908f0a13a0d2d15f8209329d42f4d8e8dba4896231d2ac569",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7659_v668_atom_corpus/online_features.jsonl",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:eaae1062fb9c26320a74d5b2e7baa4628ab653900dfafb520e54c634834e181b",
+      "field": "sha256",
+      "observed": "sha256:eaae1062fb9c26320a74d5b2e7baa4628ab653900dfafb520e54c634834e181b",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/online_evaluator_store.jsonl",
+      "upstream": "Exp7602"
+    }
+  ],
+  "hashes": {
+    "missing_inputs": [],
+    "pre_gate_receipts": {
+      "results/experiment_7660_v668_atom_energy.json": "sha256:5e63f7a41beca8ad38dc351d01d963094141445524381cfb8bb62f88945e96d8",
+      "results/raw/experiment_7602_v664_evidence_requalification/online_evaluator_store.jsonl": "sha256:eaae1062fb9c26320a74d5b2e7baa4628ab653900dfafb520e54c634834e181b"
+    },
+    "producers": {
+      "results/raw/experiment_7602_v664_evidence_requalification/protocol.json": "sha256:8c82593d7f8622bdb1c71893e481bdae7f8d583f534f886acad8ab7724ac2cd5",
+      "results/raw/experiment_7659_v668_atom_corpus/manifest.json": "sha256:dceafa968e313c1a4e109e264ce92052c25fc6e4594613bf61ba51a78e7248e0",
+      "results/raw/experiment_7659_v668_atom_corpus/online_features.jsonl": "sha256:32b0e68451f99fd908f0a13a0d2d15f8209329d42f4d8e8dba4896231d2ac569",
+      "results/raw/experiment_7660_v668_atom_energy/heads.json": "sha256:5be9d41e9ed7b4f71a44f84882086deda3ebd4e98cf1cc4bd12a920314c88f62"
+    }
+  }
+}

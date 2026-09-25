@@ -81326,3 +81326,47 @@ Given a frozen validation scope and candidate, a fresh process SHALL replay
 raw features through frozen heads and actions, then cold-reduce the same rows.
 Erasure, derangement, and label-sidecar tampering controls SHALL run. Required
 terminal readers SHALL record exits and log hashes before atomic publication.
+
+## REQ-REPORT-7662: Measure a durable delayed source update
+
+Exp7662 SHALL authenticate the frozen online80 feature and isolated label bytes
+before measurement. It SHALL preserve forty update and forty one-use admission
+groups, predict before release, enforce an eight-origin delay, and train only on
+released update labels. Five released updates SHALL propose one bounded
+proper-loss count/residual candidate; the next five untouched admission labels
+SHALL admit or reject it once. The source arm SHALL use at most eight fixed
+evidence strata and the scalar control SHALL have the same state capacity.
+Missing feedback SHALL remain missing, with no inferred label or update.
+
+Durable acknowledgments SHALL follow atomic persistence and reload. Independent
+event sequences SHALL test replay, duplicate IDs, premature and reordered
+feedback, dropped labels, admission exhaustion, crash boundaries, and rollback.
+Rows SHALL expose independent group operands, censoring, and provenance. Failed
+required validation SHALL disqualify and zero readiness. Fixture truth SHALL be
+reported only as circular positive. Exact terminal readers SHALL govern atomic
+publication, and exposed groups SHALL not support a fresh confirmatory claim.
+
+### SCENARIO-REPORT-7662-CAUSAL
+
+Given a predicted event, releasing before origin plus eight, reusing its ID,
+training on admission or evaluation labels, or guessing a missing label fails
+without changing the acknowledged state.
+
+### SCENARIO-REPORT-7662-ADMISSION
+
+Given five released update labels, the candidate is frozen until the next five
+untouched admission labels are released. Admission consumes each once, uses
+neither as a gradient, and rolls back a rejected candidate.
+
+### SCENARIO-REPORT-7662-DURABLE
+
+Given a crash before or after acknowledgment, restart recovers exactly the last
+acknowledged state. Independent arms share no mutable state. Fixed scalar state
+capacity, update cost, state bytes, and CPU-only hardware path are recorded.
+
+### SCENARIO-REPORT-7662-TERMINAL
+
+Given a frozen affected-file manifest, serial focused tests, full changed-code
+coverage, Ruff, mypy, scoped spec coverage, cold reduction, adversarial reader,
+and strict row reader must pass before readiness. Any failed required check
+produces a terminal disqualified artifact with scores zero.
