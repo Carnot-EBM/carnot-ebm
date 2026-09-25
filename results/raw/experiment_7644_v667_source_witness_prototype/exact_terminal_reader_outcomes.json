@@ -1,0 +1,78 @@
+{
+  "outcomes": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m carnot.experiment_7644_v667_source_witness_prototype --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.experiment_7644_v667_source_witness_prototype",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json"
+      ],
+      "duration_s": 1.4691392160002579,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7644_v667_source_witness_prototype/validation/terminal_exact/00_cold_replay.log",
+      "log_sha256": "sha256:b0086fc9dbb4235536a3db9ea11dc27c9a18c543c03542c4ba7ed4d3095bef7e",
+      "name": "cold_replay",
+      "output_tail": "[exp7644] startup flushed\n{\"checksum_valid\": true, \"fixture_reduction\": {\"denominator\": 48, \"matched\": 48, \"passed\": true}, \"input_hashes_valid\": true, \"passed\": true}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m carnot.experiment_7644_v667_source_witness_prototype --independent-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.experiment_7644_v667_source_witness_prototype",
+        "--independent-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json"
+      ],
+      "duration_s": 1.4285755649998464,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7644_v667_source_witness_prototype/validation/terminal_exact/01_independent_reduce.log",
+      "log_sha256": "sha256:d324570d6243ab364a2b04e9d313e3728f6cf714553d920c54063571901469ae",
+      "name": "independent_reduce",
+      "output_tail": "[exp7644] startup flushed\n{\"fixture_denominator\": 48, \"fixture_matches\": 48, \"passed\": true, \"pilot_coverage_denominator\": 8, \"pilot_coverage_numerator\": 0}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.7118088609986444,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7644_v667_source_witness_prototype/validation/terminal_exact/02_adversarial_verify.log",
+      "log_sha256": "sha256:4c04b093de9242f2ab9016256bb28dcef092ab3523ce7862c27486d1c9b2ade1",
+      "name": "adversarial_verify",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": \"exp7644-source-witness-prototype\",\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_circular_positive_fixture_witness\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7644_v667_source_witness_prototype/exact_terminal_candidate.json"
+      ],
+      "duration_s": 0.030056847999730962,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7644_v667_source_witness_prototype/validation/terminal_exact/03_verdict_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    }
+  ]
+}

@@ -80753,3 +80753,45 @@ before atomic publication. Publication gates G1-G4 SHALL remain unchanged.
 **When** the terminal reduction and strict readers finish
 **Then** passing receipts and reader outcomes precede atomic publication
 **And** readiness alone yields a complete null with unopened science gates.
+
+## REQ-REPORT-7644: Qualify source-bound structural witnesses
+
+Experiment 7644 SHALL freeze a versioned source-witness schema and feature list
+before reading pilot corpus labels. It SHALL use a CPU-only, no-model verifier
+that parses numbered Python blocks without executing supplied code, preserving
+their exact UTF-8 byte offsets and file scope. Only explicit quoted qualified
+symbol existence, definition, raise and call locations, and literal code
+membership can receive structural statuses. Prose entailment remains unknown.
+An absent declaration contradicts only in an authenticated complete closed
+scope; parse failure, missing files and ambiguous scopes abstain.
+
+The experiment SHALL test at least 48 independently annotated adversarial
+fixtures and source/hash mutations, persist each fixture and pilot row with raw
+provenance, and cold-reduce an unpublished candidate in another process.
+Fixture agreement is circular positive and SHALL NOT establish corpus
+probability, utility, retention, freshness or semantic benefit. Scoped tests,
+100 percent changed-behavior coverage, lint, typing, spec coverage and exact
+terminal readers SHALL precede atomic publication.
+
+### SCENARIO-REPORT-7644-STRUCTURE: Exact proposition and byte location
+
+**Given** numbered blocks with file names, Unicode, duplicate symbols and
+quoted symbols in comments or strings
+**When** the verifier checks an explicit structural claim
+**Then** its witness identifies the exact proposition, source byte offset,
+parser completeness and any residual unverified prose
+**And** source code is never imported or executed.
+
+### SCENARIO-REPORT-7644-ABSTAIN: Incomplete authority stays unknown
+
+**Given** a missing file, truncated syntax, ambiguous scope or unclosed input
+**When** an existence or line claim is checked
+**Then** the result is unknown unless an authenticated complete scope proves
+the contrary, and source swapping changes the bound hash.
+
+### SCENARIO-REPORT-7644-TERMINAL: Fixture truth stays distinct from benefit
+
+**Given** independent fixture annotations and frozen pilot inputs
+**When** scoped validation and exact cold readers finish
+**Then** raw rows and validation receipts precede atomic publication
+**And** fixture agreement cannot open a corpus benefit gate.

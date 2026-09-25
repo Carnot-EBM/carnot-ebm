@@ -46007,6 +46007,29 @@ SHALL publish atomically at
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-VERIFY-7644: Abstaining source-claim witness
+
+The reusable verifier SHALL parse numbered Python blocks without running them,
+bind AST facts to file-qualified UTF-8 byte offsets, and return supported,
+contradicted or unknown only for explicit quoted structural propositions.
+Contradiction from absence SHALL require a complete parse and caller-declared
+closed file scope. Aliases, missing files, malformed blocks and unsupported
+prose SHALL abstain. Every witness SHALL carry the exact checked proposition,
+source hash, parser completeness, reason and residual prose indicator.
+
+### SCENARIO-VERIFY-7644-EXACT: Structural facts retain source location
+
+**Given** a complete numbered block with a definition, call or raise
+**When** a file-qualified claim states a matching or wrong line
+**Then** the verifier uses AST structure and the original UTF-8 byte offset
+**And** quoted text in comments cannot create a declaration witness.
+
+### SCENARIO-VERIFY-7644-OPEN: Missing authority abstains
+
+**Given** an open scope, import alias, missing file or incomplete parse
+**When** a structural claim cannot be proved from supplied source
+**Then** the verifier returns unknown with an explicit reason.
+
 ### REQ-VERIFY-7602: V664 Evidence Requalification SHALL Bind The Recovered Selector To Exact Historical Bytes
 
 Experiment 7602 SHALL requalify the exact V662 producer bytes and the declared
