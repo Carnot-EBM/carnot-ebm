@@ -80937,3 +80937,50 @@ role, or aggregate mutation changes an operand
 **Then** valid audit completion remains separate from scientific benefit
 **And** only the exact checked bytes publish atomically.
 
+## REQ-REPORT-7651: Compare bounded Qwen pointers with source witnesses
+
+Experiment 7651 SHALL authenticate the eight disjoint pilot inputs, the Exp7616
+schema, the Exp7644 witness authority, cached Qwen3.8-27B GGUF bytes, and a
+changed exclusive GPU capacity snapshot before model work. It SHALL acquire
+an Exp7630 style owned lease, veto foreign compute contexts, confirm actual
+CUDA offload, and retain exact model and runtime hashes. It SHALL issue one
+explicit-schema and one grammar-constrained request per group. Both requests
+SHALL contain the same complete source and response, use one fixed seed, and
+limit output to 512 tokens. Input overflow SHALL fail without truncation.
+
+The experiment SHALL retain raw request and response bytes, independently
+validate pointers against Exp7616, and compare model relations with Exp7644
+structural predicates. Only the structural predicate can have independent
+truth. Unsupported prose SHALL stay unknown. Eight groups SHALL establish
+feasibility and limits only. No downstream science gate depends on this pilot.
+Scoped tests, complete changed-behavior coverage, static checks, fresh cold
+reduction, adversarial verification, and strict row consistency SHALL precede
+atomic publication. Missing capacity SHALL publish a complete blocked artifact
+with zero model invocations and exact gate operands.
+
+### SCENARIO-REPORT-7651-BLOCKED: Capacity cannot become fabricated inference
+
+**Given** no exclusive CUDA device or unchanged occupied capacity
+**When** the preflight runs
+**Then** one complete blocked result records the exact failed operand
+**And** no model load, forward call, or generation is recorded.
+
+### SCENARIO-REPORT-7651-PAIRED: Complete inputs and bounded requests
+
+**Given** eight disjoint source groups selected without labels
+**When** paired requests are built
+**Then** both arms preserve the same complete source and response bytes
+**And** each uses the fixed seed and at most 512 output tokens.
+
+### SCENARIO-REPORT-7651-PREDICATE: Structural truth has a narrow scope
+
+**Given** a pointer and an exact source witness
+**When** the cold reducer compares relations
+**Then** exact offsets and checkable false support are counted per group
+**And** arbitrary semantic prose remains unadjudicated and unknown.
+
+### SCENARIO-REPORT-7651-TERMINAL: Raw rows control publication
+
+**Given** a terminal candidate and a frozen changed-file manifest
+**When** fresh reduction and strict readers finish
+**Then** their actual commands, exits, and log hashes precede atomic publication.
