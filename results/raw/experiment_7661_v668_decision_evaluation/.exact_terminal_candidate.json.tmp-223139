@@ -1,0 +1,322 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "gate": "validity",
+      "measured_operands": {
+        "authenticated": true,
+        "paired_rows": 240,
+        "required_checks_passed": true
+      },
+      "passed": true,
+      "principle": "Immutable inputs and all required receipts must authenticate."
+    },
+    {
+      "gate": "readiness",
+      "measured_operands": {
+        "evaluated_groups": 40
+      },
+      "passed": true,
+      "principle": "Readiness means replayable evaluation, not benefit."
+    },
+    {
+      "gate": "coverage",
+      "measured_operands": {
+        "independent_groups": 40,
+        "unknown_claims": 51
+      },
+      "passed": true,
+      "principle": "Unknown propositions remain in all denominators."
+    },
+    {
+      "gate": "probability_benefit",
+      "measured_operands": {
+        "paired_brier_intervals": {
+          "best_prespecified_control": {
+            "bootstrap_seed": 7661,
+            "ci95": [
+              -0.011074405974452384,
+              0.009060886357545343
+            ],
+            "draws": 10000,
+            "estimate": -0.0010338017975771076,
+            "independent_groups": 40
+          },
+          "cheap_atom": {
+            "bootstrap_seed": 7661,
+            "ci95": [
+              -0.011074405974452384,
+              0.009060886357545343
+            ],
+            "draws": 10000,
+            "estimate": -0.0010338017975771076,
+            "independent_groups": 40
+          },
+          "identity": {
+            "bootstrap_seed": 7661,
+            "ci95": [
+              -0.01317087117670144,
+              0.011640587747824815
+            ],
+            "draws": 10000,
+            "estimate": -0.0007793784152241802,
+            "independent_groups": 40
+          },
+          "scalar": {
+            "bootstrap_seed": 7661,
+            "ci95": [
+              -0.011074411243500715,
+              0.009060891947807553
+            ],
+            "draws": 10000,
+            "estimate": -0.0010338014315616653,
+            "independent_groups": 40
+          },
+          "source_deranged": {
+            "bootstrap_seed": 7661,
+            "ci95": [
+              -0.0003422722681294244,
+              0.0009070410122941453
+            ],
+            "draws": 10000,
+            "estimate": 0.00020472754229867751,
+            "independent_groups": 40
+          },
+          "source_erased": {
+            "bootstrap_seed": 7661,
+            "ci95": [
+              -0.01107441124350078,
+              0.009060891947807629
+            ],
+            "draws": 10000,
+            "estimate": -0.001033801431561653,
+            "independent_groups": 40
+          }
+        },
+        "threshold": 0.01
+      },
+      "passed": false,
+      "principle": "Every registered control requires lower paired Brier CI95 above 0.01."
+    },
+    {
+      "gate": "utility",
+      "measured_operands": {
+        "cost_threshold": 0.01,
+        "coverage_floor": 0.2,
+        "non_escalation_coverage": 0.125,
+        "paired_cost_interval": {
+          "bootstrap_seed": 7661,
+          "ci95": [
+            -0.01,
+            0.030000000000000006
+          ],
+          "draws": 10000,
+          "estimate": 0.01,
+          "independent_groups": 40
+        }
+      },
+      "passed": false,
+      "principle": "Cost improvement and non-escalation support are separate."
+    },
+    {
+      "gate": "retention",
+      "measured_operands": {
+        "delayed_feedback_events": 0
+      },
+      "passed": false,
+      "principle": "Static evaluation does not measure delayed retention."
+    },
+    {
+      "gate": "freshness",
+      "measured_operands": {
+        "fresh_confirmatory_groups": 0
+      },
+      "passed": false,
+      "principle": "These forty groups were previously exposed."
+    }
+  ],
+  "confidence_intervals": {
+    "brier": {
+      "best_prespecified_control": {
+        "bootstrap_seed": 7661,
+        "ci95": [
+          -0.011074405974452384,
+          0.009060886357545343
+        ],
+        "draws": 10000,
+        "estimate": -0.0010338017975771076,
+        "independent_groups": 40
+      },
+      "cheap_atom": {
+        "bootstrap_seed": 7661,
+        "ci95": [
+          -0.011074405974452384,
+          0.009060886357545343
+        ],
+        "draws": 10000,
+        "estimate": -0.0010338017975771076,
+        "independent_groups": 40
+      },
+      "identity": {
+        "bootstrap_seed": 7661,
+        "ci95": [
+          -0.01317087117670144,
+          0.011640587747824815
+        ],
+        "draws": 10000,
+        "estimate": -0.0007793784152241802,
+        "independent_groups": 40
+      },
+      "scalar": {
+        "bootstrap_seed": 7661,
+        "ci95": [
+          -0.011074411243500715,
+          0.009060891947807553
+        ],
+        "draws": 10000,
+        "estimate": -0.0010338014315616653,
+        "independent_groups": 40
+      },
+      "source_deranged": {
+        "bootstrap_seed": 7661,
+        "ci95": [
+          -0.0003422722681294244,
+          0.0009070410122941453
+        ],
+        "draws": 10000,
+        "estimate": 0.00020472754229867751,
+        "independent_groups": 40
+      },
+      "source_erased": {
+        "bootstrap_seed": 7661,
+        "ci95": [
+          -0.01107441124350078,
+          0.009060891947807629
+        ],
+        "draws": 10000,
+        "estimate": -0.001033801431561653,
+        "independent_groups": 40
+      }
+    },
+    "utility": {
+      "bootstrap_seed": 7661,
+      "ci95": [
+        -0.01,
+        0.030000000000000006
+      ],
+      "draws": 10000,
+      "estimate": 0.01,
+      "independent_groups": 40
+    }
+  },
+  "decision_evaluation_complete_score": 1,
+  "duration_s": 10.351837565998721,
+  "execution_venue": "host",
+  "execution_venue_details": {
+    "gpu_uuid": null,
+    "hostname": "icbfl1",
+    "owned_pid": 223139
+  },
+  "experiment_id": "exp7661-v668-decision-evaluation",
+  "field_principles": {
+    "MODEL_SPECS": "Empty because this task only scores frozen CPU heads.",
+    "acceptance_gate_results": "Validity, readiness, probability, utility, retention and freshness differ.",
+    "confidence_intervals": "Only 10000 fixed-seed paired source-group draws count.",
+    "duration_s": "Measured current CPU work without padding.",
+    "flagged_adversarial": "Flagged evidence cannot open a gate.",
+    "honest_verdict": "Completion and scientific benefit are separate.",
+    "inference_substrate_class": "No current model load or generation.",
+    "metrics": "Proper losses and decisions recompute from probability and isolated label.",
+    "rows": "One independent source group; six paired views do not enlarge N.",
+    "sample_size_budget": "Unknown evidence and repeated views remain in the denominator.",
+    "source_artifact_hashes": "Only immutable upstream bytes enter the checksum.",
+    "verifier_is_oracle": "Isolated dataset labels are not exact fixture truth."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [],
+  "historical_model_id": "unsloth/Qwen3.8-27B-GGUF",
+  "honest_verdict": "complete_null_no_registered_decision_benefit",
+  "independent_reduction": {
+    "best_prespecified_control": "cheap_atom",
+    "confidence_intervals": {
+      "brier": {
+        "best_prespecified_control": {
+          "bootstrap_seed": 7661,
+          "ci95": [
+            -0.011074405974452384,
+            0.009060886357545343
+          ],
+          "draws": 10000,
+          "estimate": -0.0010338017975771076,
+          "independent_groups": 40
+        },
+        "cheap_atom": {
+          "bootstrap_seed": 7661,
+          "ci95": [
+            -0.011074405974452384,
+            0.009060886357545343
+          ],
+          "draws": 10000,
+          "estimate": -0.0010338017975771076,
+          "independent_groups": 40
+        },
+        "identity": {
+          "bootstrap_seed": 7661,
+          "ci95": [
+            -0.01317087117670144,
+            0.011640587747824815
+          ],
+          "draws": 10000,
+          "estimate": -0.0007793784152241802,
+          "independent_groups": 40
+        },
+        "scalar": {
+          "bootstrap_seed": 7661,
+          "ci95": [
+            -0.011074411243500715,
+            0.009060891947807553
+          ],
+          "draws": 10000,
+          "estimate": -0.0010338014315616653,
+          "independent_groups": 40
+        },
+        "source_deranged": {
+          "bootstrap_seed": 7661,
+          "ci95": [
+            -0.0003422722681294244,
+            0.0009070410122941453
+          ],
+          "draws": 10000,
+          "estimate": 0.00020472754229867751,
+          "independent_groups": 40
+        },
+        "source_erased": {
+          "bootstrap_seed": 7661,
+          "ci95": [
+            -0.01107441124350078,
+            0.009060891947807629
+          ],
+          "draws": 10000,
+          "estimate": -0.001033801431561653,
+          "independent_groups": 40
+        }
+      },
+      "utility": {
+        "bootstrap_seed": 7661,
+        "ci95": [
+          -0.01,
+          0.030000000000000006
+        ],
+        "draws": 10000,
+        "estimate": 0.01,
+        "independent_groups": 40
+      }
+    },
+    "metrics": {
+      "atom": {
+        "accepted_error_rate": 0.0,
+        "auroc": 0.9223057644110275,
+        "brier": 0.1291249216798282,
+        "clipped_log_loss": 0.4176078897741825,
+        "counts": {
+          "accepted_errors": 

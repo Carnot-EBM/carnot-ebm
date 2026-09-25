@@ -81290,3 +81290,39 @@ forecast. Irrelevant metadata changes leave the probability and action unchanged
 Given frozen heads and a serialized candidate, a fresh reader reproduces every
 training-row probability and typed action. A failed required receipt yields a
 disqualified record with zero readiness, while training null remains measurable.
+
+## REQ-REPORT-7661: Evaluate frozen source-atom decisions on exposed groups
+
+Exp7661 SHALL authenticate Exp7660 heads, thresholds, Exp7659 evaluation
+features, and Exp7602 isolated evaluator bytes before opening forty fixed
+groups. It SHALL score identity, scalar, cheap-atom, selected atom,
+source-erased, and frozen within-role deranged views from the same rows. It
+SHALL preserve unknown evidence and count each source group once. It SHALL
+report Brier, clipped log loss, AUROC when defined, typed-decision cost,
+accepted errors, rejected correct answers, escalation, and coverage.
+
+The registered 10000-draw paired group bootstrap SHALL require a Brier
+improvement lower 95 percent bound above 0.01 against every prespecified
+control. Utility SHALL require cost improvement above 0.01 and coverage at
+least 0.20. Source dependence SHALL require positive paired improvement
+against derangement. Exposed groups support exploratory evidence only.
+Validation failure SHALL disqualify and zero readiness; unavailable immutable
+inputs SHALL block with exact failed operands. Readiness SHALL not imply benefit.
+
+### SCENARIO-REPORT-7661-CUSTODY
+
+Given frozen head and sidecar hashes, any changed feature, label, head, role,
+roster, or derangement SHALL fail before a benefit claim.
+
+### SCENARIO-REPORT-7661-METRICS
+
+Given equal paired groups, losses, costs, abstention counts, and intervals
+SHALL recompute from retained per-group probabilities and isolated labels.
+Unknown propositions remain censored and in the denominator.
+
+### SCENARIO-REPORT-7661-TERMINAL
+
+Given a frozen validation scope and candidate, a fresh process SHALL replay
+raw features through frozen heads and actions, then cold-reduce the same rows.
+Erasure, derangement, and label-sidecar tampering controls SHALL run. Required
+terminal readers SHALL record exits and log hashes before atomic publication.

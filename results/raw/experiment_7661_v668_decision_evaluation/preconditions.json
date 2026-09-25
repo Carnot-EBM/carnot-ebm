@@ -1,0 +1,147 @@
+{
+  "checks": [
+    {
+      "check": "cpu_available",
+      "expected": true,
+      "field": "cpu_count_positive",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/proc/self",
+      "upstream": "host"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7660_v668_atom_energy.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7660_v668_atom_energy/heads.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7659_v668_atom_corpus/manifest.json",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/protocol.json",
+      "upstream": "Exp7602"
+    },
+    {
+      "check": "upstream_gate",
+      "expected": 1,
+      "field": "energy_ready_score",
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7660_v668_atom_energy.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "upstream_gate",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7660_v668_atom_energy.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "upstream_gate",
+      "expected": "null",
+      "field": "verdict_class",
+      "observed": "null",
+      "operator": "==",
+      "passed": true,
+      "path": "results/experiment_7660_v668_atom_energy.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "head_hash",
+      "expected": "sha256:5be9d41e9ed7b4f71a44f84882086deda3ebd4e98cf1cc4bd12a920314c88f62",
+      "field": "head_manifest_sha256",
+      "observed": "sha256:5be9d41e9ed7b4f71a44f84882086deda3ebd4e98cf1cc4bd12a920314c88f62",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7660_v668_atom_energy/heads.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "fixed_evaluation_roster",
+      "expected": 40,
+      "field": "role_counts.evaluation",
+      "observed": 40,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/protocol.json",
+      "upstream": "Exp7602"
+    },
+    {
+      "check": "frozen_thresholds",
+      "expected": 2,
+      "field": "thresholds_count",
+      "observed": 2,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7660_v668_atom_energy/heads.json",
+      "upstream": "Exp7660"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:b56ccf7b164e02d12fe53a4a57394190a4c44e58de11952eaaff604e55cfb2ed",
+      "field": "sha256",
+      "observed": "sha256:b56ccf7b164e02d12fe53a4a57394190a4c44e58de11952eaaff604e55cfb2ed",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7659_v668_atom_corpus/evaluation_features.jsonl",
+      "upstream": "Exp7659"
+    },
+    {
+      "check": "input_hash",
+      "expected": "sha256:eb8a818faa41a81f42f2b514e0a244c2f7dc080fd0baa6c2cbeac25fb75159d6",
+      "field": "sha256",
+      "observed": "sha256:eb8a818faa41a81f42f2b514e0a244c2f7dc080fd0baa6c2cbeac25fb75159d6",
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7602_v664_evidence_requalification/evaluation_evaluator_store.jsonl",
+      "upstream": "Exp7602"
+    }
+  ],
+  "hashes": {
+    "missing_inputs": [],
+    "pre_gate_receipts": {
+      "results/experiment_7660_v668_atom_energy.json": "sha256:5e63f7a41beca8ad38dc351d01d963094141445524381cfb8bb62f88945e96d8",
+      "results/raw/experiment_7602_v664_evidence_requalification/evaluation_evaluator_store.jsonl": "sha256:eb8a818faa41a81f42f2b514e0a244c2f7dc080fd0baa6c2cbeac25fb75159d6"
+    },
+    "producers": {
+      "results/raw/experiment_7602_v664_evidence_requalification/protocol.json": "sha256:8c82593d7f8622bdb1c71893e481bdae7f8d583f534f886acad8ab7724ac2cd5",
+      "results/raw/experiment_7659_v668_atom_corpus/evaluation_features.jsonl": "sha256:b56ccf7b164e02d12fe53a4a57394190a4c44e58de11952eaaff604e55cfb2ed",
+      "results/raw/experiment_7659_v668_atom_corpus/manifest.json": "sha256:dceafa968e313c1a4e109e264ce92052c25fc6e4594613bf61ba51a78e7248e0",
+      "results/raw/experiment_7660_v668_atom_energy/heads.json": "sha256:5be9d41e9ed7b4f71a44f84882086deda3ebd4e98cf1cc4bd12a920314c88f62"
+    }
+  }
+}
