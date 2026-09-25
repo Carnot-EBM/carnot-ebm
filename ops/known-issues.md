@@ -27729,7 +27729,7 @@ time unchanged, slower on wa30, ka59, ar25. Recommendation: keep both flags off.
 remains search depth (wa30 needs 33 actions; sb26 has no live HUD mask). Flag-on fixes still needed
 are in the spec's REVIEW RECORD 2.
 
-### 2026-09-25 FINDING (not a scheduled priority): the conductor's eGPU fell off the Thunderbolt bus
+### RESOLVED 2026-09-25 (was: FINDING): the conductor's eGPU fell off the Thunderbolt bus
 
 At 2026-09-24 20:25:17 UTC the RTX 3090 GPU-b52387a2 (PCI 03:00, the conductor's GPU 0, in a Razer
 Core X enclosure) dropped: `pciehp: Slot(0): Link Down ... Card not present`, then
@@ -27744,3 +27744,5 @@ progress` every 5 s.
 - Recovery needs the operator: reseat or power-cycle the enclosure, then a driver reload or a
   reboot. Check with `journalctl -k | grep -E 'Xid|pciehp|fallen off'` and `nvidia-smi -L`.
 
+
+**RESOLVED 2026-09-25 12:26 UTC:** operator power-cycled; after reboot (kernel 7.2.7) `nvidia-smi -L` lists both cards with their original indices (GPU 0 = b52387a2, GPU 1 = 7971baff), no Xid or nvidia-modeset errors this boot; conductor active with AGENT_MODEL=gpt-6-sol.
