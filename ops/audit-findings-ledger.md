@@ -223,3 +223,9 @@ of truth, not this line.)
 | 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_proposal_filter_coverage_up | SILENT_NON_FIRING | OPEN | |
 | 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim | SILENT_NON_FIRING | OPEN | |
 | 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::check_perception_overclaim | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_world_model_trust_pass | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_grid_changing_correct_evidence | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_has_s2_schema_signal | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_engine_selection_game_rows | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_candidate_outcome_values | SILENT_NON_FIRING | OPEN | |
+| 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_count_effective_selection_games | SILENT_NON_FIRING | OPEN | |

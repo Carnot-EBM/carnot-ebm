@@ -20608,3 +20608,20 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-25: Test goal-safe planning on adapter-withheld live attempts (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7653_v667_arc_live_generalization.json
 - 2026-09-25: Reconcile fourteen outcomes and decide each research continuation (⚠️ Blocked) — honest_verdict=complete_blocked_required_v667_external_evidence; results/experiment_7656_v667_capstone.json
 - 2026-09-25: Added the milestone 2026.09.667 operational retrospective. All 9 completed experiments were compute-bound and ran for 25.6 wall-time minutes. The longest-running task was Test goal-safe planning on adapter-withheld live attempts (13.58 minutes), followed by Measure goal-safe search through the scored ARC wrapper (6.05 minutes) and Compare bounded Qwen evidence against structural witnesses (1.95 minutes); internal phase durations were not recorded. The locked compute-task GPU-idle indicator is false. Because the monitor report reflects an end-state snapshot rather than an active-window trace, live GPU efficiency cannot be evaluated. No task records indicate concurrent execution of two or more models, meaning DualGPURunner dispatch was not applicable. Recommended operational tooling additions include intra-task phase timers, active-window GPU metrics collection, and runner dispatch receipts. Estimated time savings are 0% in the absence of measured counterfactuals. Artifact: results/operational_retro_2026_09_667.json.
+
+## 2026-09-25 — Plan milestone 2026.09.668 (REQ-REPORT-V668-PLAN)
+
+- Created the matching fourteen-task design and staged execution YAML for
+  Exp7657–Exp7670. Preserved the prior V667 design byte for byte.
+- Logged the eight-topic literature scan and all requested secondary channels
+  before design. Recorded incomplete source access without claiming a census.
+- Diagnosed the real source/claim-format mismatch and separated it from V667's
+  validation defects, valid bounded transport and absent learning evidence.
+- Planned real-format evidence, normalized typed decisions, delayed causal
+  learning, observed-goal confirmation and measured native consumer costs.
+  Required exact producer gates, failure lineage, per-unit rows, correct Qwen
+  substrates, flushed heartbeats and bounded writes in every task prompt.
+- Validation: 63 focused guard tests, affected-test spec coverage and all planning
+  readers passed. Independent table/JSON/YAML replay and four private contract
+  mutations passed. Fixed one stale module path and new-document whitespace.
+  Active roadmap/conductor hashes remain unchanged. No execution or push.

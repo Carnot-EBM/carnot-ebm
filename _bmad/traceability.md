@@ -3189,3 +3189,26 @@ Exp7601–Exp7614. The previous V663 design is preserved in
 Validation uses the existing roadmap schema/gate/exclusion tests and direct
 private contract mutations. No experiment implementation or empirical result
 is claimed. Each future task names its own capability requirement before code.
+
+## V668 planning contract (2026-09-25)
+
+REQ-REPORT-V668-PLAN and SCENARIO-REPORT-V668-PLAN map to
+`research-roadmap-next.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md`: fourteen ordered tasks,
+Exp7657–Exp7670, in four phases. The V667 design is preserved byte for byte at
+`openspec/change-proposals/research-roadmap-v667-preserved-20260925.md`.
+
+Real-format evidence and typed decision training advance FR-01/FR-12 and
+GAP-ORACLE-DISTINCT/GAP-DETECTOR-AUROC-4208. Delayed source-conditioned updates
+and durable retention advance FR-06/FR-11. Observed-goal confirmation advances
+the ARC reusable-method/generalization floor and FR-07/FR-12. Native parity
+and complete service-cost measurement advance FR-05/FR-08 and NFR-01.
+These are proposed experiments, not implementation or benefit claims.
+
+Planning validation: 63 existing roadmap/schema/gate/exclusion tests passed.
+Affected-test spec coverage, schema, prior-failure, gate, exclusion, harness-fit,
+prompt-path, ARC and overdue-priority checks passed. Independent cold parsing
+matched the Markdown table/machine contract and YAML. Four private mutations
+(deletion, reorder, gate field, model list) were rejected. Protected active
+roadmap/conductor hashes and the preserved V667 hash matched. Numbered runtime
+E2Es are assigned to future experiment prompts; none ran during planning.

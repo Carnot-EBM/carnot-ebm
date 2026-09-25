@@ -46961,3 +46961,79 @@ semantic assertions. This is a new discriminator, not renewed scalar-only
 calibration or a claim that regular expressions solve general extraction.
 Any optional current Qwen test remains separately resource-gated. Record
 counterfactual source effects and evaluator-only labels before claiming value.
+
+## 2026-09-25 — V668 planning review: evidence formats before learned decisions
+
+Recorded before the V668 design. This review searched all eight requested
+areas and six secondary channels. Entries marked rechecked already appear
+above. A search result is a lead; it is not local experimental evidence.
+
+### Primary research and adoption boundaries
+
+| Area | Source, date and review depth | Implication for Carnot |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2, 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 17, 2025, revised May 25, 2026. Abstracts rechecked. | Keep conditional input/output compatibility explicit. Exact normalization of a small decision head is feasible. Neither paper makes learned low energy a correctness certificate. |
+| Neural constraint satisfaction | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 11, 2025. Abstract rechecked. | Feasibility methods assume specified constraints. Carnot first needs evidence extraction that covers real input formats. No new solver branch. |
+| Ising and learning | [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752), May 23, 2026. Abstract rechecked. | Parameter learning and efficient sampling have different limits. Use exact two-state normalization; do not infer general sampler tractability. |
+| Hallucination detection | [EAEV](https://arxiv.org/abs/2609.08267), September 8, 2026. Abstract and prior method notes rechecked. | Source identity and counterfactual source interventions motivate typed evidence features. Literal membership alone does not verify a sentence's meaning. |
+| Code verification | [Static-analysis study](https://arxiv.org/abs/2604.07755), April 9, 2026. Abstract rechecked. | Measure coverage and abstention on real code/tool outputs before training. Static checks address only a subset of errors. |
+| KAN continual learning | [KAC](https://arxiv.org/abs/2503.21076), March 27, 2025; [KAN-CL](https://arxiv.org/abs/2605.12306), May 12, 2026. Abstracts rechecked. | Local spline support remains a hardware-friendly candidate. Existing importance-anchor nulls do not justify another unchanged anchoring trial. Defer architecture selection until evidence features carry signal. |
+| Energy-guided/constrained generation | [JSONSchemaBench](https://arxiv.org/abs/2501.10868), January 2025; [Energy-Guided Decoding for Object Hallucination Mitigation](https://arxiv.org/abs/2507.07731), July 10, 2025. Abstracts reviewed. | Score schema validity and semantic support separately. The second paper concerns vision-language hidden-layer selection; it does not establish a text/source verification benefit. |
+| Hardware sampling | [FPGA/ASIC decomposition](https://arxiv.org/abs/2602.15985), February 17, 2026. Abstract rechecked. | Include parsing, dispatch, persistence and serialization in whole-service cost. Do not infer accelerator speed from a kernel-only timing. |
+| Continuous learning | [Calibeating Made Simple](https://arxiv.org/html/2603.22167v1), March 23, 2026. Sequential protocol and reduction read. [Intermittent-feedback calibration](https://arxiv.org/abs/2503.10345), March 13, 2025, abstract rechecked. | Test prediction before feedback, source-conditioned updates, missing-label controls and durable state. Set coverage, Brier improvement and useful typed decisions are distinct claims. No theorem transfer to delayed selective admission. |
+| Live world-model verification | [World Action Verifier](https://arxiv.org/html/2604.01985v1), April 2, 2026, abstract/method overview reviewed; [WorldCycle](https://arxiv.org/abs/2608.04964), August 5, 2026, abstract reviewed. | Separate transition plausibility, action reachability and actual task completion. Existing `arc_transition_cycle_verifier.py` already implements a related mechanism. Do not reimplement it or assume every game action is reversible. A real SDK terminal observation remains necessary for solve credit. |
+
+### Secondary-source receipts and limits
+
+- **OpenReview:** searched 2025–2026 EBM submissions. The
+  [VFScale paper](https://openreview.net/pdf?id=8ta0xgtsJK) describes
+  quality-aligned energy and search, with an ICLR 2026 proceedings header.
+  Its forum returned a browser challenge. No acceptance status is inferred
+  for other submissions. Its puzzle result does not validate Carnot's goals.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing)
+  and the September 4 [Z1T article](https://extropic.ai/writing/z1t).
+  The article links open recipes and weights. Its energy estimate excludes
+  inter-device data movement and final vocabulary logits. Its latency table
+  excludes final logits. Those are vendor study boundaries, not measured
+  Carnot performance or authenticated TSU access.
+- **Semantic Scholar:** searched both seed titles and attempted the
+  [EBT citation API](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citation API](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both calls returned browser internal errors; title searches found no usable
+  results. No citing-paper census or absence of newer work is claimed.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  The cached feed includes claim decomposition and test-coverage research.
+  It supplies discovery leads, not technical authority or a current census.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Cached pages
+  did not establish a new relevant trending dependency. No adoption by trend.
+- **Logical Intelligence:** searched [Kona](https://logicalintelligence.com/kona)
+  and its official site. Search exposed product descriptions; direct page
+  retrieval failed. No new open checkpoint or reproducible recipe was verified.
+
+### Local evidence discovered during this review
+
+V667's source failure has a concrete format cause. `source_claim_witness.py`
+requires a fence with `python file=...`, numbered `1 | ...` lines, and claims
+starting `In <file>, <symbol> ...`. The actual eight pilot groups contain
+unlabelled fences, `1: ...` lines, grep output, stack traces, file listings,
+and natural sentences. Exp7646 records zero parseable scopes and zero checked
+predicates across all 248 groups. Its artifact is disqualified, so these are
+raw diagnostic observations, not eligible accuracy estimates.
+
+A source adapter must preserve bytes and scope. It must not rewrite ordinary
+claims into an invented grammar or treat search snippets as complete files.
+An evidence atom can support a path, quote or line reference without proving
+causation. Unsupported semantics must remain visible.
+
+Exp7646 also failed coverage (39%), formatting and substrate methodology
+validation. Exp7652/7653 passed focused checks but added failing repository-wide
+checks to their terminal gates. Required affected-scope checks must be frozen
+before measurement; unrelated suite debt remains a separate recorded finding.
+Exp7653 made six current Qwen generations, accepted none, and never reached the
+planner. Its six 4096-token completions cannot support a planner benefit claim.
+
+Exp7651 did complete an owned Qwen3.8 bounded pilot: sixteen generations across
+eight groups. It established transport feasibility, not whole-answer truth.
+The next Qwen question should concern grounded claim extraction against the
+actual source formats, rather than another schema-only transport pilot.

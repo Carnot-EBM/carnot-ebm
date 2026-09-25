@@ -81117,3 +81117,40 @@ then deletion, reordering, a wrong gate field, and self-input mutations fail.
 The published file SHALL contain current validation exits and log hashes,
 terminal reader outcomes, six separate acceptance gates, stable G1-G4, and
 scope-specific decisions with falsifiable changed premises.
+
+## REQ-REPORT-V668-PLAN: Bind evidence-format research to fourteen executable tasks
+
+The next milestone SHALL be `2026.09.668`. Its design and staged YAML SHALL
+contain exactly fourteen ordered tasks, Exp7657 through Exp7670, in four phases.
+IDs, titles, phases, paths, substrates, model lists and gates SHALL agree.
+The V667 design SHALL remain preserved byte for byte. The active roadmap and
+conductor SHALL remain unchanged. Planning SHALL not execute experiments.
+
+The plan SHALL distinguish V667's zero predicate coverage, disqualified
+measurements, valid bounded transport, and absent learning producers. Its
+literature review SHALL precede design. The changed evidence mechanism SHALL
+consume actual tool-output formats and original answer spans. Learned benefit
+SHALL use independent labels and source interventions. The plan SHALL include
+calibrated typed decisions, continuous learning, live ARC generalization or
+reusable-method hardening, and measured whole-consumer cost.
+
+Each prompt SHALL declare exact producer fields, closed verdict classes,
+prior-failure changes, per-unit rows, progress heartbeats and bounded writes.
+LLM tasks SHALL name `unsloth/Qwen3.8-27B-GGUF` and the actual substrate class.
+Required validation scope SHALL be frozen before measurement. Existing global
+suite debt SHALL remain visible separately. No failed check may be relabelled
+as passing. No unchanged retired mechanism may be reopened without authority.
+
+### SCENARIO-REPORT-V668-PLAN: Check the staged contract before activation
+
+Given the design, staged YAML, complete archive and exclusion manifest, when
+schema, gate, failure-lineage, prompt-path and independent contract readers run,
+then all fourteen tasks agree and each dependency names an earlier producer.
+Private deletion, reordering and gate-field mutations SHALL fail. Existing
+focused guard tests and affected-test spec coverage SHALL run. Runtime E2E
+checks SHALL be assigned to future tasks; planning uses cold contract replay.
+
+### Implementation status (REQ-REPORT-V668-PLAN)
+
+Planned documents only. Experiments, scientific benefits and deployments remain
+unexecuted. Validation results are recorded in the planning status entry.

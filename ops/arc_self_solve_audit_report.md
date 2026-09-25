@@ -16,9 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (95 modul
 
 ## Hostile LLM review
 
-**TL;DR:** No recent ARC solve artifacts were supplied, so there is no solve to credit as self-discovery or flag as outer-loop work. The reachability check passed, but it does not establish how any solve was found.
+**TL;DR:** No recent ARC solve artifacts were provided, so there are no solves to classify. The reachability check passes, but it does not establish self-discovery.
 
-**Per-artifact:** None (0 in the last 7 days).
+**Per artifact:** None in the last seven days.
 
-**Pattern watch:** No recent drift can be assessed. For the next claimed solve, require evidence that the live agent reached it through its own attempts and runtime reverse-engineering; module reachability alone is insufficient.
+**Pattern watch:** No recent artifact shows drift toward outer-loop solving. Keep treating source inspection, offline BFS, and hand-built game models as `OUTER_LOOP_RE` even when their solver code is reachable from a live entrypoint.
 

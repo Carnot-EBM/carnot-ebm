@@ -17113,3 +17113,22 @@ task must obtain terminal receipts before capture. All source groups remain
 historically exposed; the plan makes no fresh-confirmatory claim. Literature
 findings were recorded before design. No V664 task has run or been activated;
 the active roadmap and conductor remain unchanged.
+
+## 2026-09-25 — Milestone 2026.09.668 planned; not activated
+
+- Staged fourteen tasks, Exp7657–Exp7670, in four phases. Design and YAML agree
+  on IDs, order, titles, phases, deliverables, substrates, model lists and gates.
+- The main changed premise is real-format source evidence. The V667 parser
+  accepted an invented grammar and checked zero real predicates. New extraction
+  must cover pilot inputs before it can gate calibrated heads and causal learning.
+- Included continuous self-learning, a bounded Qwen3.8 grounded-claim study,
+  reusable ARC observed-goal confirmation, one live discovery case and native
+  whole-consumer cost measurement. No science result is claimed yet.
+- Literature review was recorded first in research-references.md. Citation API
+  and vendor-page limits remain explicit. V667's design is preserved byte for byte.
+- Validation: 63 focused guard tests passed; spec coverage, roadmap schema,
+  failure lineage, exclusion, gate, harness-fit, prompt-path, ARC and priority
+  checks passed. Independent contract replay checked all 27 gate conditions and
+  rejected four private mutations. The initial stale Gibbs path was corrected.
+- The active roadmap and conductor hashes are unchanged. No experiment, model
+  run, hardware operation, activation, publication or push was performed.

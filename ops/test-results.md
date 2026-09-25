@@ -727,3 +727,26 @@ Every grammar submission followed the force-engine nudge, so the trial shows the
 transport carries code on the 27B, not that the model submits unprompted. The trial
 ran on the round-1 grammar; nothing ran on round 2 (GPU spend stopped per the
 coordinator).
+
+## 2026-09-25 — V668 planning validation
+
+Scope: REQ-REPORT-V668-PLAN / SCENARIO-REPORT-V668-PLAN. Documentation and task
+metadata only; no runtime implementation changed.
+
+- `PYTHONPATH=python:. .venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-v668-plan-pytest tests/python/test_roadmap_schema.py tests/python/test_audit_roadmap_gates.py tests/python/test_exclusion_manifest_lint.py -q`: 63 passed in 6.02 seconds.
+- `scripts/check_spec_coverage.py` on those three test files: passed.
+- Roadmap schema, `validate_prior_failures.py`, `audit_roadmap_gates.py`,
+  `exclusion_manifest_lint.py`, `harness_fit_lint.py`, prompt-path,
+  `arc_levelup_guarantee_lint.py` and `overdue_priority_lint.py --strict`: passed.
+- Planning E2E: independent cold parsing matched all fourteen task records in
+  YAML, Markdown table and JSON contract; all 27 gates reference earlier
+  producers and exact required fields. Private deletion, reorder, gate-name
+  and model-list mutations were rejected. Both protected hashes and the
+  preserved previous-design hash matched.
+- First prompt-path run found the stale `models/gibbs.py` reference. Corrected
+  it to `models/gibbs/__init__.py`; the reader then reported zero invented paths.
+  New-document trailing whitespace was also corrected before the final diff check.
+- Publication reader reported unchanged G1–G4, paper_ready=true, unmet_gates=[].
+  This is existing FoVer readiness, not evidence from unrun V668 experiments.
+- No numbered model, ARC, native or hardware runtime E2E ran. The future task
+  prompts assign those checks. No repository-wide suite result is asserted.

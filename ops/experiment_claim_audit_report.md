@@ -11,125 +11,50 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 5 |
+| CLAIM_SUPPORTED | 5 |
+| NO_CLAIM | 2 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_7632_fit_evidence.json
+## experiment_7645_v667_arc_validation_requalification.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The ARC goal guard CPU planner is validation-ready across constructed regression fixtures while demonstrating complete null hidden-game benefit.
 
 ## WHAT WOULD REFUTE IT
-Not applicable; this artifact is a scaffolding/receipt artifact recording that the experiment was blocked prior to execution, making no comparative, empirical, or performance claim.
+The claim would be refuted if:
+1. Any regression fixture failed execution, threw an assertion, or triggered an invalid transition swallow (e.g., `passed` reporting `false`, or `hud_dedup_swallow` reporting `swallows` as `true`), or if any validation process exited non-zero, which would falsify the readiness claim.
+2. The run credited game solve advantages (e.g., `new_game_level_solve_credit` reporting `true` or `probability_benefit` passing with non-zero `hidden_game_groups`), which would contradict the null benefit claim.
 
 ## WAS THAT CHECKED
-No; the experiment was never executed, having been halted before launch at the pre-gate validation layer.
+Yes. Readiness refutation was checked across 6 regression fixtures in `goal_guard_rows` and 17 command runs in `validation_receipts`, where all checks completed and passed without swallow or failure. Game benefit refutation was checked at the gate level in `acceptance_gate_results.probability_benefit`, which verified zero hidden-game exposure and explicitly failed the benefit, utility, and retention gates, constraining downstream reporting to a null verdict.
 
 ## EVIDENCE
-`"schema"`
-`"blocked_gate_check_v1"`
-`"status"`
-`"blocked"`
-`"honest_verdict"`
-`"blocked_gate_check_failed"`
-`"duration_s"`
-`0.0`
-`"blocked_at_layer"`
-`"conductor_pre_gate"`
-`"gate_check_summary"`
-`"gate-unsat(final): 4 of 9 gate(s) failed; first failure: exp7631-schema-pilot.evidence_transport_ready_score (actual=0 == expected=1)"`
+- `"honest_verdict": "complete_null_arc_goal_guard_ready_no_hidden_game_benefit"`
+- `"verdict_class": "null"`
+- `"planner_goal_guard_ready_score": 1`
+- `"readiness_only": true`
+- `"hidden_game_groups": 0`
+- `"new_game_level_solve_credit": false`
+- `"passed": true`
+- `"passed": false`
+- `"unit_kind": "exact_regression_fixture"`
+- `"independent_groups": 6`
+- `"passed_groups": 6`
+- `"verifier_is_oracle": true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7633_online_evidence.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Because this artifact is a pre-execution gate-check receipt recording an unexecuted run, there is no substantive or comparative claim to refute. A demonstration that upstream dependencies had in fact met their gating criteria (e.g., `evidence_transport_ready_score` evaluating to `1`) would contradict the diagnostic trigger, but no empirical hypothesis was formulated or tested.
-
-## WAS THAT CHECKED
-No. The execution was halted at `conductor_pre_gate` before any experimental condition or comparator arm was run.
-
-## EVIDENCE
-`schema`
-`blocked_gate_check_v1`
-`status`
-`blocked`
-`honest_verdict`
-`blocked_gate_check_failed`
-`duration_s`
-`0.0`
-`blocked_at_layer`
-`conductor_pre_gate`
-`gate_check_summary`
-`gate-unsat(final): 4 of 9 gate(s) failed; first failure: exp7631-schema-pilot.evidence_transport_ready_score (actual=0 == expected=1)`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7634_evaluation_evidence.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no evaluation claim to falsify; this is a record of a blocked gate.
-
-## WAS THAT CHECKED
-No evaluation was run. The artifact records upstream gate checks and a block at the conductor pre-gate.
-
-## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "evidence_transport_ready_score"`; `"failed_expected": 1`; `"failed_observed": 0`; `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7638_v666_evidence_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no scientific benefit claim to refute. Eligible outputs from the six scientific producers, with raw evaluation rows, would contradict the artifact’s blocked status.
-
-## WAS THAT CHECKED
-Yes, for the blocked status: the producer eligibility gate checked all six and found none eligible. The artifact contains no raw rows, so it gave no scientific benefit claim a chance to fail.
-
-## EVIDENCE
-`positive_claim` `false`; `honest_verdict` `complete_blocked_v666_scientific_producers_unavailable`; `failed_count` `6`; `rows` `[]`; `observed` `0`; `audited_evidence_benefit_score` `null`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7639_v666_arc_goal_dedup.json
+## experiment_7646_v667_source_feature_corpus.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_7640_arc_wrapper_generalization.json
+## experiment_7647_witness_energy.json
 
 **NO_CLAIM**
 
@@ -140,22 +65,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative or empirical claim is asserted; the artifact is a gate-check receipt recording that the experiment was prevented from executing due to upstream gate failures.
+There is no training or comparative result to refute. The artifact records a gate check before training.
 
 ## WAS THAT CHECKED
-No. The experiment was blocked at the pre-gate stage before any experimental trials, measurements, or evaluations were executed.
+Yes. The gate check ran and recorded two failed gates; the experiment stopped at the pre-gate layer.
 
 ## EVIDENCE
-`schema`: `"blocked_gate_check_v1"`
-`status`: `"blocked"`
-`honest_verdict`: `"blocked_gate_check_failed"`
-`duration_s`: `0.0`
-`blocked_at_layer`: `"conductor_pre_gate"`
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7646-source-feature-corpus.flagged_adversarial (actual=True == expected=False)"`; `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7641_v666_native_consumer.json
+## experiment_7650_v667_independent_source_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -163,33 +84,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The direct PyO3 native consumer package integration is functional and contract-ready with verified integration units and no claimed model execution or downstream benefit (an honest null).
+The audit completed, but the available source evidence could not support a learning benefit.
 
 ## WHAT WOULD REFUTE IT
-Any failure among the integration units (`failed_units > 0`, `native_consumer_ready_score` not equaling 1, or `passed` being false on contract conditions), a runtime failure/crash during PyO3 integration, or an unearned positive claim of probability benefit, cost benefit, or speedup while no model was invoked or benchmarked.
+Eligible independent source rows, available downstream producer results, or failed audit validation would contradict the blocked or completed parts of the claim.
 
 ## WAS THAT CHECKED
-Yes; contract readiness was tested across 12 independent units in `integration_rows` (all passing with 0 failures), and acceptance gates explicitly evaluated and reported `false` for `new_probability_benefit_measured` and `new_total_cost_benefit_measured`, properly constraining `honest_verdict` to `complete_null_native_consumer_ready`.
+Yes. The artifact checks producer eligibility and existence, benefit gates, and terminal validation. The benefit gates did not pass, while terminal validation passed.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_native_consumer_ready`
-- `native_consumer_ready_score`: `1`
-- `verdict_class`: `null`
-- `integration_rows_complete`: `true`
-- `failed_units`: `0`
-- `passed_units`: `12`
-- `independent_units`: `12`
-- `new_probability_benefit_measured`: `false`
-- `new_total_cost_benefit_measured`: `false`
-- `new_speed_claim`: `false`
-- `model_invoked`: `false`
-- `production_defaults_changed`: `false`
-- `verifier_is_oracle`: `true`
+`honest_verdict`: `complete_blocked_source_producers_unavailable`; `benefit_eligible`: `false`; `eligible`: `0`; `disposition`: `disqualified`; `reader_result`: `unavailable`; `passed`: `false`; `passed`: `null`; `independent_audit_complete_score`: `1`; `verifier_is_oracle`: `true`; `oracle_distinct_benefit`: `false`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7642_v666_capstone.json
+## experiment_7651_v667_qwen_witness_challenge.json
 
 **CLAIM_SUPPORTED**
 
@@ -197,33 +106,91 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Milestone V666 is blocked from publication and roadmap activation due to unready upstream conductor pre-gates and missing required external evidence.
+The Qwen3.8-27B bounded witness challenge yielded a complete null pilot result with zero conservative intersection supported across all paired comparison items.
 
 ## WHAT WOULD REFUTE IT
-An observation in the artifact's own upstream checks showing that conductor pre-gates passed (`evidence_transport_ready_score` of 1 across upstream producers rather than 0) and that external scientific source groups were observed rather than missing (`observed` > 0 and `missing_external` == 0).
+Any observation in the artifact's own paired rows showing a non-zero count of supported witness propositions (`conservative_intersection_supported > 0`), or any structural control witness evaluation returning a valid verified proposition (`status` resolving to `supported` rather than `unknown`). Refutation was given a genuine opportunity to occur by executing 16 generation calls across 8 independent paired groups on GPU hardware under two distinct generation arms (`schema_constrained_decoding` and `explicit_schema_prompt`).
 
 ## WAS THAT CHECKED
-Yes; checked in `gate_check_summary` (recording 9 failed conductor pre-gate checks where `evidence_transport_ready_score` was 0 instead of 1), `sample_size_budget` (recording 0 observed and 280 missing external units across scientific branches), and `acceptance_gate_results` (where freshness, readiness, probability_benefit, retention, and utility all failed).
+Yes. Evaluated across 8 paired pilot groups (16 generation calls) recorded in `paired_pilot_rows` and `rows`, where all 8 groups were evaluated against structural grammar rules and all produced `conservative_intersection_supported` equal to `0`.
 
 ## EVIDENCE
-`"honest_verdict"`: `"complete_blocked_required_v666_external_evidence"`
-`"verdict_class"`: `"blocked"`
-`"status"`: `"complete"`
-`"gate_check_summary"`: `"passed"`: `false`, `"failed_count"`: `9`
-`"first_failure"`: `"check"`: `"conductor_pre_gate"`, `"field"`: `"evidence_transport_ready_score"`, `"expected"`: `1`, `"observed"`: `0`, `"passed"`: `false`
-`"acceptance_gate_results"`:
-`"freshness"`: `"observed"`: `false`, `"passed"`: `false`
-`"readiness"`: `"observed"`: `false`, `"passed"`: `false`
-`"probability_benefit"`: `"observed"`: `null`, `"passed"`: `false`
-`"retention"`: `"observed"`: `null`, `"passed"`: `false`
-`"utility"`: `"observed"`: `null`, `"passed"`: `false`
-`"validity"`: `"observed"`: `true`, `"passed"`: `true`
-`"scientific_source_groups"`: `"missing_external"`: `120`, `"observed"`: `0`
-`"authorizes_submission"`: `false`
-`"publication_performed"`: `false`
-`"roadmap_activation_performed"`: `false`
-`"model_invoked"`: `false`
-`"verifier_is_oracle"`: `false`
+- `honest_verdict`: `complete_null_bounded_witness_pilot`
+- `conservative_intersection_supported`: `0`
+- `qwen_challenge_complete_score`: `1`
+- `groups`: `8`
+- `raw_rows`: `16`
+- `generation_calls_completed`: `16`
+- `arms`: `explicit_schema_prompt`, `schema_constrained_decoding`
+- `status`: `unknown`
+- `reason`: `claim_outside_structural_grammar`
+- `principle`: `A complete bounded pilot establishes feasibility only.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7652_v667_arc_wrapper_measurement.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+HUD_DEDUP showed no development-proxy benefit over OFF, and the wrapper was disqualified by failed validation.
+
+## WHAT WOULD REFUTE IT
+A valid induced window where HUD_DEDUP succeeded and OFF failed, with no offsetting loss, would refute the no-benefit finding; a passing full Python suite would refute the stated validation failure.
+
+## WAS THAT CHECKED
+Yes. The artifact compares paired HUD_DEDUP and OFF results across induced windows and records the validation receipt. Neither refuting observation occurred.
+
+## EVIDENCE
+`"honest_verdict": "complete_disqualified_wrapper_validation_failed"`; `"induced_new_successes": 0`; `"induced_lost_successes": 0`; `"usable_induced_windows": 38`; `"HUD_DEDUP"` and `"OFF"` each have `"successes": 1`; `"failed_receipts": ["full_python_suite"]`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7653_v667_arc_live_generalization.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The run completed, but it did not demonstrate HUD dedup benefit or generalization and was disqualified by required validation.
+
+## WHAT WOULD REFUTE IT
+A validated HUD dedup arm achieving a higher level than its matched baseline, together with passing evidence for hidden-game benefit and retention, would contradict that conclusion.
+
+## WAS THAT CHECKED
+Yes for the matched outcomes and validation gates: all three paired level differences were zero, and the gates failed. Hidden-game benefit and retention were not measured. The HUD dedup planner lever was unreachable, so these rows do not establish that the method has no value when active.
+
+## EVIDENCE
+`honest_verdict`: `complete_disqualified_required_validation`; `paired_level_deltas`: `bp35` `0`, `ls20` `0`, `tn36` `0`; `planner_lever_reachable`: `false`; `hidden_games`: `0`; `groups`: `0`; `executed`: `0`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7656_v667_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+A benefit claim would be refuted by eligible evidence showing no improvement over a serious baseline. This artifact makes no such claim. Its blocked disposition would be contradicted if the required gates passed on eligible evidence.
+
+## WAS THAT CHECKED
+Yes for the blocked disposition: the artifact reports failed producer and readiness checks and records the missing inputs. It does not present a comparative benefit claim to test.
+
+## EVIDENCE
+`complete_blocked_required_v667_external_evidence`; `blocked`; `A complete prefix records terminal work without implying benefit.`; `failed_upstream_checks`: `9`; `checked_predicates`: `0`; `accounting_completion`.
 
 ## RECOMMENDATION
 KEEP
