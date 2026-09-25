@@ -27728,3 +27728,19 @@ with its live 63-cell mask. No longer plans on OFF winners; main wasted actions 
 time unchanged, slower on wa30, ka59, ar25. Recommendation: keep both flags off. The real bottleneck
 remains search depth (wa30 needs 33 actions; sb26 has no live HUD mask). Flag-on fixes still needed
 are in the spec's REVIEW RECORD 2.
+
+### 2026-09-25 FINDING (not a scheduled priority): the conductor's eGPU fell off the Thunderbolt bus
+
+At 2026-09-24 20:25:17 UTC the RTX 3090 GPU-b52387a2 (PCI 03:00, the conductor's GPU 0, in a Razer
+Core X enclosure) dropped: `pciehp: Slot(0): Link Down ... Card not present`, then
+`NVRM: Xid 79, GPU has fallen off the bus`. Thunderbolt reconnected the enclosure 22 s later, but
+the NVIDIA driver never re-attached the card. Since then `nvidia-smi -L` lists only GPU-7971baff
+(the former GPU 1), and the kernel logs `nvidia-modeset: ERROR: GPU:1: Error while waiting for GPU
+progress` every 5 s.
+
+- Not a driver version split: kernel module and userspace are both 615.71.09.
+- CUDA index 0 now names GPU-7971baff, so conductor work pinned to "GPU 0" lands on the card the
+  outer loop used.
+- Recovery needs the operator: reseat or power-cycle the enclosure, then a driver reload or a
+  reboot. Check with `journalctl -k | grep -E 'Xid|pciehp|fallen off'` and `nvidia-smi -L`.
+
