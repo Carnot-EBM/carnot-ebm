@@ -1,0 +1,80 @@
+{
+  "experiment": 7640,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-25",
+  "started_at": "2026-09-25T01:06:28.206448+00:00",
+  "finished_at": "2026-09-25T01:06:28.206448+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure goal-safe planning through the scored ARC wrapper",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7639-arc-goal-dedup",
+  "failed_field": "planner_goal_guard_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7639_v666_arc_goal_dedup.json",
+  "failed_evidence_sha256": "sha256:d9e036352c75d6bc7e2913f16b560a938f73f91f4e2fc05afae72f7e4add0a3f",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7639-arc-goal-dedup",
+    "failed_field": "planner_goal_guard_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7639_v666_arc_goal_dedup.json",
+    "failed_evidence_sha256": "sha256:d9e036352c75d6bc7e2913f16b560a938f73f91f4e2fc05afae72f7e4add0a3f"
+  },
+  "gate_check_summary": "gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7639-arc-goal-dedup.planner_goal_guard_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7639-arc-goal-dedup",
+      "artifact_field": "planner_goal_guard_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7639_v666_arc_goal_dedup.json",
+      "artifact_sha256": "sha256:d9e036352c75d6bc7e2913f16b560a938f73f91f4e2fc05afae72f7e4add0a3f"
+    },
+    {
+      "upstream": "exp7639-arc-goal-dedup",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "null",
+        "positive"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['null', 'positive']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7639_v666_arc_goal_dedup.json",
+      "artifact_sha256": "sha256:d9e036352c75d6bc7e2913f16b560a938f73f91f4e2fc05afae72f7e4add0a3f"
+    },
+    {
+      "upstream": "exp7639-arc-goal-dedup",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": true,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=True == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7639_v666_arc_goal_dedup.json",
+      "artifact_sha256": "sha256:d9e036352c75d6bc7e2913f16b560a938f73f91f4e2fc05afae72f7e4add0a3f"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

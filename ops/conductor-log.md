@@ -18607,3 +18607,4 @@ code |
 | 2026-09-25 00:12 UTC | Measure probability improvement and typed decision | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7634-evaluation-evidence, exp7634-evaluation-evidence, exp7634-evaluation-evidence, exp7635-evidence-energy, exp7635-evidence-energy, exp7635-evidence-energy) |
 | 2026-09-25 00:12 UTC | Measure causal delayed updates and retained decisi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7633-online-evidence, exp7633-online-evidence, exp7633-online-evidence, exp7635-evidence-energy, exp7635-evidence-energy, exp7635-evidence-energy) |
 | 2026-09-25 00:37 UTC | Independently reduce source evidence and retained- | OK | 132 passed, 1 warning in 10.59s |
+| 2026-09-25 01:05 UTC | Protect goal checks in reusable ARC planner dedupl | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 152 passed, 1 warning in 13.13s |
