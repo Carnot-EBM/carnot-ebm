@@ -18629,3 +18629,4 @@ code |
 | 2026-09-25 15:21 UTC | Measure source-witness probability and decision va | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7647-witness-energy, exp7647-witness-energy, exp7647-witness-energy) |
 | 2026-09-25 15:21 UTC | Measure delayed source-conditioned learning and re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7647-witness-energy, exp7647-witness-energy, exp7647-witness-energy) |
 | 2026-09-25 15:37 UTC | Independently audit structural decisions and feedb | OK | 92 passed, 2 warnings in 8.45s |
+| 2026-09-25 15:54 UTC | Compare bounded Qwen evidence against structural w | OK | 87 passed, 1 warning in 7.90s |
