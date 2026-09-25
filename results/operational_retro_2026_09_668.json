@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.668",
+  "generated_at": "2026-09-25T23:24:42Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 7.9,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 10,
+  "slowest_experiments": [
+    {
+      "experiment": "Test Qwen grounded claim proposals against independently checked source atoms",
+      "duration_minutes": 3.26,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and distinguish evidence-format failure from scientific null",
+      "duration_minutes": 1.35,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently audit grounded decisions and delayed feedback causality",
+      "duration_minutes": 0.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify source atoms on actual tool-output formats and original claims",
+      "duration_minutes": 0.66,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify observed-goal confirmation in the live ARC planning path",
+      "duration_minutes": 0.51,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.668 completed 10 experiments, all compute-bound, totaling 7.9 wall-time minutes. The longest experiment was 'Test Qwen grounded claim proposals against independently checked source atoms' at 3.26 minutes, followed by 'Bind fourteen tasks and distinguish evidence-format failure from scientific null' at 1.35 minutes and 'Independently audit grounded decisions and delayed feedback causality' at 0.9 minutes. Task timing was reconstructed from disk mtime without intra-task sub-phase telemetry.",
+  "bottlenecks_identified": [
+    "The slowest experiment 'Test Qwen grounded claim proposals against independently checked source atoms' consumed 3.26 minutes (41.3% of the 7.9 total milestone wall-time minutes), but the absence of sub-phase profiling prevents decomposing time spent in model inference versus grounding verification checks.",
+    "The top two compute-bound experiments ('Test Qwen grounded claim proposals against independently checked source atoms' at 3.26 minutes and 'Bind fourteen tasks and distinguish evidence-format failure from scientific null' at 1.35 minutes) together accounted for 4.61 of the 7.9 total wall-time minutes (58.4%) without stage-level execution traces.",
+    "The 5 slowest experiments collectively accounted for 6.68 of the 7.9 total wall-time minutes (84.6%), with durations derived via disk-mtime fallback rather than live interval event timestamps.",
+    "The GPU monitor report captures an isolated post-execution snapshot (both RTX 3090 GPUs at 4MB allocated, 0% utilization), providing no active-window accelerator utilization trace while gpu_idle_on_compute_bound_tasks is false.",
+    "No experiment records indicate concurrent multi-model execution, meaning DualGPURunner dispatch was not applicable to the tasks completed this milestone."
+  ],
+  "improvements_suggested": [
+    "Introduce monotonic sub-phase timers inside compute-bound experiments—specifically claim proposal generation and grounding verification paths—to separate model inference time from validation routines.",
+    "Capture continuous in-run GPU telemetry during compute-bound executions to evaluate accelerator utilization and VRAM dynamics across active task windows.",
+    "Record model inventory and concurrency metadata in experiment execution manifests to verify DualGPURunner eligibility when multiple models are executed.",
+    "Persist structured milestone run logs with exact start and end timestamps to avoid falling back to disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration counters in grounded claim proposal generation and independent verification stages to decompose compute overhead.",
+    "Implement continuous GPU utilization logging during compute-bound task runs to record active-window accelerator metrics.",
+    "Log model concurrency and runner dispatch decisions in experiment receipts to audit DualGPURunner usage on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 7.9 wall-time minutes, milestone 2026.09.668 completed 10 compute-bound experiments dominated by grounded claim evaluation (3.26 minutes) and task binding validation (1.35 minutes). While the point-in-time GPU monitor snapshot showed both GPUs idle with 4MB allocated, gpu_idle_on_compute_bound_tasks is false and in-run accelerator metrics were unmeasured, with no multi-model tasks present to engage DualGPURunner. Implementing sub-phase profiling and continuous accelerator telemetry represents the highest-leverage path to isolating operational bottlenecks in subsequent milestones."
+}
