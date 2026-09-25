@@ -18625,3 +18625,6 @@ code |
 | 2026-09-25 14:46 UTC | Qualify abstaining structural witnesses from suppl | OK | 90 passed, 2 warnings in 11.24s |
 | 2026-09-25 15:00 UTC | Requalify goal-safe planner checks with valid exec | OK | 93 passed, 1 warning in 8.27s |
 | 2026-09-25 15:16 UTC | Measure structural coverage on every frozen source | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 85 passed, 1 warning in 7.38s |
+| 2026-09-25 15:19 UTC | Train a normalized source-witness decision energy | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7646-source-feature-corpus.flagged_adversarial (actual=True == expected=False) |
+| 2026-09-25 15:21 UTC | Measure source-witness probability and decision va | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7647-witness-energy, exp7647-witness-energy, exp7647-witness-energy) |
+| 2026-09-25 15:21 UTC | Measure delayed source-conditioned learning and re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7647-witness-energy, exp7647-witness-energy, exp7647-witness-energy) |
