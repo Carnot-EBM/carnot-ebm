@@ -18765,3 +18765,4 @@ code |
 | 2026-09-26 22:35 UTC | Bind thirteen tasks and register evidence-set meth | OK | 91 passed, 1 warning in 9.19s |
 | 2026-09-26 22:54 UTC | Seal exposed source families without relabeling th | OK | 90 passed, 2 warnings in 17.32s |
 | 2026-09-26 23:08 UTC | Qualify per-sentence evidence sets and exact finit | OK | 92 passed, 2 warnings in 9.15s |
+| 2026-09-26 23:32 UTC | Compare bounded draft-conditioned evidence decisio | OK | 98 passed, 1 warning in 11.31s |
