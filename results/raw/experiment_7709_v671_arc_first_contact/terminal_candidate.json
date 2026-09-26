@@ -1,0 +1,5200 @@
+{
+  "MODEL_SPECS": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "acceptance_gate_results": {
+    "coverage": {
+      "measured_operands": {
+        "passed_receipts": 11,
+        "required_receipts": 12
+      },
+      "passed": false,
+      "principle": "Changed code and required E2E checks must pass."
+    },
+    "efficiency": {
+      "measured_operands": {
+        "paired_causal_arms": 0
+      },
+      "passed": false,
+      "principle": "Efficiency requires a causal paired comparison."
+    },
+    "freshness": {
+      "measured_operands": {
+        "generations": 4
+      },
+      "passed": true,
+      "principle": "Current generation needs an owned completed request."
+    },
+    "probability": {
+      "measured_operands": {
+        "hidden_games": 0,
+        "public_games": 2
+      },
+      "passed": false,
+      "principle": "Two exposed public games cannot estimate hidden solve probability."
+    },
+    "readiness": {
+      "measured_operands": {
+        "complete": true,
+        "valid_receipts": false
+      },
+      "passed": false,
+      "principle": "Readiness prevents invalid evidence propagation."
+    },
+    "retention": {
+      "measured_operands": {
+        "retention_groups": 0
+      },
+      "passed": false,
+      "principle": "Retention bounds prevent improvement by forgetting."
+    },
+    "utility": {
+      "measured_operands": {
+        "paired_causal_arms": 0
+      },
+      "passed": false,
+      "principle": "Quality thresholds prevent effects being inferred from plumbing."
+    },
+    "validity": {
+      "measured_operands": {
+        "episodes": 2,
+        "failed_checks": 0
+      },
+      "passed": true,
+      "principle": "Both current episode dispositions and authentic operands are required."
+    }
+  },
+  "arc_measurement_complete_score": 1,
+  "current_agent_invocation_receipt": {
+    "backend": "codex",
+    "session_id": "01a0ddf6-0ec0-7f33-b16a-ea27c5a45eb3",
+    "successful_current_process": true
+  },
+  "current_model_receipts": {
+    "effective_settings": {
+      "CARNOT_ARC_GENERATOR_REQUIRE_CUDA": "1",
+      "CARNOT_ARC_INDUCE_MAX_TOKENS": "4096",
+      "CARNOT_ARC_INDUCE_TIMEOUT": "1200",
+      "CARNOT_ARC_MTP": "0",
+      "CARNOT_ARC_PLAN_HUD_DEDUP": "0",
+      "CARNOT_ARC_PROBE_PROTOCOL": "0"
+    },
+    "error": null,
+    "gguf_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "lease_id": "lease:dcd25837716c7f2cfbe3e1b5635708f0293d21e2aad54fbc7662de501e88b4ab",
+    "lease_release": {
+      "checksum": "sha256:c95e0d290b82abc09898484f959ed9fbcf99088f09ba4f06406209d6c55cb85f",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "lease_id": "lease:dcd25837716c7f2cfbe3e1b5635708f0293d21e2aad54fbc7662de501e88b4ab",
+      "phase": "terminal_complete",
+      "pid": 1158165,
+      "pid_start_ticks": 9187537,
+      "released": true,
+      "signals_sent": []
+    },
+    "loads_attempted": 1,
+    "loads_completed": 1,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_server_vram_mb": 17406,
+    "owner_pid": 1158165,
+    "prelaunch_recheck": {
+      "observations": [
+        {
+          "checkpoint": "after_lease_acquisition",
+          "device": {
+            "index": 0,
+            "memory_free_mb": 24174,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "processes": [],
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          "process_ownership_rows": [],
+          "selected": true
+        },
+        {
+          "checkpoint": "immediately_before_model_launch",
+          "device": {
+            "index": 0,
+            "memory_free_mb": 24174,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "processes": [],
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          "process_ownership_rows": [],
+          "selected": true
+        }
+      ],
+      "passed": true,
+      "reason": "both_rechecks_passed"
+    },
+    "request_rows": [
+      {
+        "call_index": 0,
+        "completed": true,
+        "elapsed_s": 108.1331488200085,
+        "episode_id": "wa30:live",
+        "event": "server_response",
+        "failed": false,
+        "output_tokens": 4096,
+        "request_dispatched": true,
+        "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/wa30__live/requests/00_request.json",
+        "request_sha256": "sha256:4b45d13135e3cd16e28d9723740b5af2218fcc1d26913933aa46b280db791ddf",
+        "request_started_monotonic": 91908.505746791,
+        "requested_max_tokens": 4096,
+        "response_observed": true,
+        "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/wa30__live/requests/00_response.json",
+        "response_sha256": "sha256:26f841ede3f0534ffba64710c69aaefec6cc726cd8e1ed117c79c306dc2c5b07",
+        "url": "http://127.0.0.1:33171/v1/chat/completions"
+      },
+      {
+        "call_index": 1,
+        "completed": true,
+        "elapsed_s": 106.46855177899124,
+        "episode_id": "wa30:live",
+        "event": "server_response",
+        "failed": false,
+        "output_tokens": 4096,
+        "request_dispatched": true,
+        "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/wa30__live/requests/01_request.json",
+        "request_sha256": "sha256:21038690419891111d58dcb68ffac6e2f2c528185320063b36bc487276bcda86",
+        "request_started_monotonic": 92016.682523316,
+        "requested_max_tokens": 4096,
+        "response_observed": true,
+        "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/wa30__live/requests/01_response.json",
+        "response_sha256": "sha256:ee6d18195d619695c7b000770613aca5ef1f3a88c3a7d7adcb3416197eec7b14",
+        "url": "http://127.0.0.1:33171/v1/chat/completions"
+      },
+      {
+        "call_index": 0,
+        "completed": true,
+        "elapsed_s": 116.79994774000079,
+        "episode_id": "lf52:live",
+        "event": "server_response",
+        "failed": false,
+        "output_tokens": 4096,
+        "request_dispatched": true,
+        "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/lf52__live/requests/00_request.json",
+        "request_sha256": "sha256:2881827762f9552823bc514fb7a4402e0531b6592577f892a918c6573a59ce2e",
+        "request_started_monotonic": 92136.314614174,
+        "requested_max_tokens": 4096,
+        "response_observed": true,
+        "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/lf52__live/requests/00_response.json",
+        "response_sha256": "sha256:66c0534f05f854eb22e4c5883dd8f83395140e24902eae9357a199cc3b1e5619",
+        "url": "http://127.0.0.1:33171/v1/chat/completions"
+      },
+      {
+        "call_index": 1,
+        "completed": true,
+        "elapsed_s": 109.18188832799206,
+        "episode_id": "lf52:live",
+        "event": "server_response",
+        "failed": false,
+        "output_tokens": 4096,
+        "request_dispatched": true,
+        "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/lf52__live/requests/01_request.json",
+        "request_sha256": "sha256:912de614e4b94aefe016fa6c7fdc705b247e56a80ebb9f334e654ac03f7eea86",
+        "request_started_monotonic": 92253.157512523,
+        "requested_max_tokens": 4096,
+        "response_observed": true,
+        "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/lf52__live/requests/01_response.json",
+        "response_sha256": "sha256:7634db74bed5cee06fcb5e6a84703e3fb2bafb429ed0d33c021192802d449e9f",
+        "url": "http://127.0.0.1:33171/v1/chat/completions"
+      }
+    ],
+    "server_command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "-ngl",
+      "999",
+      "-c",
+      "32768",
+      "--port",
+      "33171",
+      "--host",
+      "127.0.0.1",
+      "--parallel",
+      "1",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0"
+    ],
+    "server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "server_pid": 1158238,
+    "server_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+  },
+  "duration_s": 531.0177965589974,
+  "effective_agent_backend": {
+    "CODEX_FORCE_EXPERIMENTS": "1",
+    "effective": "codex",
+    "requested": "codex",
+    "session_id": "01a0ddf6-0ec0-7f33-b16a-ea27c5a45eb3"
+  },
+  "execution_venue": "host",
+  "execution_venue_details": {
+    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "host": "icbfl1",
+    "owned_pid": 1158165,
+    "server_pid": 1158238
+  },
+  "experiment_id": 7709,
+  "field_principles": {
+    "MODEL_SPECS": "This record makes the stated claim independently checkable and limits its scope.",
+    "acceptance_gate_results": "This record makes the stated claim independently checkable and limits its scope.",
+    "arc_measurement_complete_score": "This record makes the stated claim independently checkable and limits its scope.",
+    "coverage": "Changed code and required E2E checks must pass.",
+    "current_model_receipts": "This record makes the stated claim independently checkable and limits its scope.",
+    "efficiency": "Efficiency requires a causal paired comparison.",
+    "execution_venue": "This record makes the stated claim independently checkable and limits its scope.",
+    "flagged_adversarial": "This record makes the stated claim independently checkable and limits its scope.",
+    "freshness": "Current generation needs an owned completed request.",
+    "gate_check_summary": "This record makes the stated claim independently checkable and limits its scope.",
+    "honest_verdict": "This record makes the stated claim independently checkable and limits its scope.",
+    "inference_substrate": "This record makes the stated claim independently checkable and limits its scope.",
+    "inference_substrate_class": "This record makes the stated claim independently checkable and limits its scope.",
+    "model_invoked": "This record makes the stated claim independently checkable and limits its scope.",
+    "new_solve_credit": "This record makes the stated claim independently checkable and limits its scope.",
+    "per_game_results": "This record makes the stated claim independently checkable and limits its scope.",
+    "phase_spans": "This record makes the stated claim independently checkable and limits its scope.",
+    "preconditions_checked": "This record makes the stated claim independently checkable and limits its scope.",
+    "probability": "Two exposed public games cannot estimate hidden solve probability.",
+    "random_seed": "This record makes the stated claim independently checkable and limits its scope.",
+    "readiness": "Readiness prevents invalid evidence propagation.",
+    "reproducibility_checksum": "This record makes the stated claim independently checkable and limits its scope.",
+    "retention": "Retention bounds prevent improvement by forgetting.",
+    "rows": "This record makes the stated claim independently checkable and limits its scope.",
+    "sample_size_budget": "This record makes the stated claim independently checkable and limits its scope.",
+    "solve_provenance": "This record makes the stated claim independently checkable and limits its scope.",
+    "source_artifact_hashes": "This record makes the stated claim independently checkable and limits its scope.",
+    "utility": "Quality thresholds prevent effects being inferred from plumbing.",
+    "validation_receipts": "This record makes the stated claim independently checkable and limits its scope.",
+    "validity": "Both current episode dispositions and authentic operands are required.",
+    "verdict_class": "This record makes the stated claim independently checkable and limits its scope.",
+    "verifier_is_oracle": "This record makes the stated claim independently checkable and limits its scope."
+  },
+  "flagged_adversarial": false,
+  "frozen_validation_scope": {
+    "changed_modules": [
+      "python/carnot/experiment_7709_v671_arc_first_contact.py"
+    ],
+    "e2e": [
+      "E2E-009",
+      "E2E-011",
+      "E2E-013"
+    ],
+    "static_paths": [
+      "scripts/experiments/experiment_7709_v671_arc_first_contact.py"
+    ],
+    "tests": [
+      "tests/python/test_experiment_7709_v671_arc_first_contact.py"
+    ]
+  },
+  "gate_check_summary": {
+    "failed_checks": []
+  },
+  "honest_verdict": "complete_disqualified_required_validation",
+  "inference_substrate": "current_owned_cuda_qwen_e3",
+  "inference_substrate_class": "model_full_generation",
+  "invocation_counts": {
+    "cancellations": 0,
+    "failures": 0,
+    "forwards": 4,
+    "generations": 4,
+    "loads": 1,
+    "tokens": 16384
+  },
+  "milestone": "2026.09.671",
+  "model_invoked": true,
+  "model_specs": [
+    {
+      "name": "unsloth/Qwen3.8-27B-GGUF",
+      "scope": "current"
+    }
+  ],
+  "new_solve_credit": false,
+  "per_game_results": [
+    {
+      "actions": 128,
+      "censoring": "censored_action_limit",
+      "game": "wa30",
+      "goal_support": [
+        {
+          "attempt_id": "wa30:live:induction:1",
+          "engine_accepted": false,
+          "goal_predicate": null,
+          "reachable_firing": false,
+          "recall": "unknown",
+          "sdk_confirmed_level_progress": false
+        }
+      ],
+      "model_calls": 2,
+      "output_tokens": 8192,
+      "sdk_peak_level": 0
+    },
+    {
+      "actions": 128,
+      "censoring": "censored_action_limit",
+      "game": "lf52",
+      "goal_support": [
+        {
+          "attempt_id": "lf52:live:induction:1",
+          "engine_accepted": false,
+          "goal_predicate": null,
+          "reachable_firing": false,
+          "recall": "unknown",
+          "sdk_confirmed_level_progress": false
+        }
+      ],
+      "model_calls": 2,
+      "output_tokens": 8192,
+      "sdk_peak_level": 0
+    }
+  ],
+  "phase_spans": [
+    {
+      "completed_units": 32,
+      "end_monotonic_s": 91876.756156734,
+      "phase": "preflight",
+      "start_monotonic_s": 91876.661561643
+    },
+    {
+      "checkpoint": "results/raw/experiment_7709_v671_arc_first_contact/episode_rows.json",
+      "completed_units": 2,
+      "end_monotonic_s": 92363.450821063,
+      "phase": "live",
+      "start_monotonic_s": 91876.756172884
+    },
+    {
+      "completed_units": 12,
+      "end_monotonic_s": 92407.679273643,
+      "phase": "validation",
+      "start_monotonic_s": 92363.451609525
+    }
+  ],
+  "planned_MODEL_SPECS": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "planned_inference_substrate_class": "model_full_generation",
+  "preconditions_checked": [
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_executable_world_model.py",
+      "upstream": "python/carnot/agentic/arc_executable_world_model.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_goal_confirmation.py",
+      "upstream": "python/carnot/agentic/arc_goal_confirmation.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7630_v666_cuda_ownership.py",
+      "upstream": "python/carnot/experiment_7630_v666_cuda_ownership.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+      "upstream": "python/carnot/inference/sota_models.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7708_v671_arc_generalization_runner.json",
+      "upstream": "results/experiment_7708_v671_arc_generalization_runner.json"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7708_v671_arc_generalization_runner/schedule.json",
+      "upstream": "results/raw/experiment_7708_v671_arc_generalization_runner/schedule.json"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7709_v671_arc_first_contact.py",
+      "upstream": "python/carnot/experiment_7709_v671_arc_first_contact.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7709_v671_arc_first_contact.py",
+      "upstream": "scripts/experiments/experiment_7709_v671_arc_first_contact.py"
+    },
+    {
+      "check": "input_bytes",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7709_v671_arc_first_contact.py",
+      "upstream": "tests/python/test_experiment_7709_v671_arc_first_contact.py"
+    },
+    {
+      "check": "exp7708_arc_runner_ready_score",
+      "expected": 1,
+      "field": "arc_runner_ready_score",
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7708_v671_arc_generalization_runner.json",
+      "upstream": "experiment_7708"
+    },
+    {
+      "check": "exp7708_flagged_adversarial",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7708_v671_arc_generalization_runner.json",
+      "upstream": "experiment_7708"
+    },
+    {
+      "check": "exp7708_verdict_class",
+      "expected": "circular_positive",
+      "field": "verdict_class",
+      "observed": "circular_positive",
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7708_v671_arc_generalization_runner.json",
+      "upstream": "experiment_7708"
+    },
+    {
+      "check": "exp7708_arc_schedule_path",
+      "expected": "results/raw/experiment_7708_v671_arc_generalization_runner/schedule.json",
+      "field": "arc_schedule_path",
+      "observed": "results/raw/experiment_7708_v671_arc_generalization_runner/schedule.json",
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7708_v671_arc_generalization_runner.json",
+      "upstream": "experiment_7708"
+    },
+    {
+      "check": "exp7708_schedule",
+      "expected": true,
+      "field": "rows",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "results/raw/experiment_7708_v671_arc_generalization_runner/schedule.json",
+      "upstream": "experiment_7708"
+    },
+    {
+      "check": "scored_entrypoint",
+      "expected": true,
+      "field": "E3AgentPolicy_and_make_carnot_agent",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "upstream": "arc_competition_agent"
+    },
+    {
+      "check": "current_backend_invocation",
+      "expected": true,
+      "field": "successful_current_session_visible",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "environment:CODEX_SESSION_ID",
+      "upstream": "current_codex_invocation"
+    },
+    {
+      "check": "mandated_qwen_cache",
+      "expected": true,
+      "field": "nonempty_Q4_K_M_GGUF",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "upstream": "unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "check": "cuda_server_binary",
+      "expected": true,
+      "field": "executable_with_cuda_backend",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "upstream": "local_llama_cpp"
+    },
+    {
+      "check": "exclusive_cuda_capacity",
+      "expected": true,
+      "field": "exclusive_device_available",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "nvidia-smi",
+      "upstream": "current_gpu_inventory"
+    }
+  ],
+  "prior_failures": [
+    {
+      "custody": "not_emitted_usage_limit_three_attempts",
+      "experiment_id": "exp7694",
+      "same_verdict_retirement": "not_applicable_no_producer"
+    }
+  ],
+  "random_seed": {
+    "episode_seed": 7709,
+    "selection_salt": "v671-arc-20260926"
+  },
+  "reduction": {
+    "goal_recall": "unknown",
+    "joined_actions": 256,
+    "joined_requests": 4,
+    "observed_games": 2,
+    "per_game_results": [
+      {
+        "actions": 128,
+        "censoring": "censored_action_limit",
+        "game": "wa30",
+        "goal_support": [
+          {
+            "attempt_id": "wa30:live:induction:1",
+            "engine_accepted": false,
+            "goal_predicate": null,
+            "reachable_firing": false,
+            "recall": "unknown",
+            "sdk_confirmed_level_progress": false
+          }
+        ],
+        "model_calls": 2,
+        "output_tokens": 8192,
+        "sdk_peak_level": 0
+      },
+      {
+        "actions": 128,
+        "censoring": "censored_action_limit",
+        "game": "lf52",
+        "goal_support": [
+          {
+            "attempt_id": "lf52:live:induction:1",
+            "engine_accepted": false,
+            "goal_predicate": null,
+            "reachable_firing": false,
+            "recall": "unknown",
+            "sdk_confirmed_level_progress": false
+          }
+        ],
+        "model_calls": 2,
+        "output_tokens": 8192,
+        "sdk_peak_level": 0
+      }
+    ]
+  },
+  "reproducibility_checksum": "sha256:1ad32e609688fdd611f02bb2c1e1fa2a85e469e4e0f1f5fdc22b4098dc2ace13",
+  "rows": [
+    {
+      "actions": [
+        {
+          "action": "RESET",
+          "action_index": 1,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o1"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 2,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o2"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 3,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o3"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 4,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o4"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 5,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o5"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 6,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o6"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 7,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o7"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 8,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o8"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 9,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o9"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 10,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o10"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 11,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o11"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 12,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o12"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 13,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o13"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 14,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o14"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 15,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o15"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 16,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o16"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 17,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o17"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 18,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o18"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 19,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o19"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 20,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o20"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 21,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o21"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 22,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o22"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 23,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o23"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 24,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o24"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 25,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o25"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 26,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o26"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 27,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o27"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 28,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o28"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 29,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o29"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 30,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o30"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 31,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o31"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 32,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o32"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 33,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o33"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 34,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o34"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 35,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o35"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 36,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o36"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 37,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o37"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 38,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o38"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 39,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o39"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 40,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o40"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 41,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o41"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 42,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o42"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 43,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o43"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 44,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o44"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 45,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o45"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 46,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o46"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 47,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o47"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 48,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o48"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 49,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o49"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 50,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o50"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 51,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o51"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 52,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o52"
+        },
+        {
+          "action": "RESET",
+          "action_index": 53,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o53"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 54,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o54"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 55,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o55"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 56,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o56"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 57,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o57"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 58,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o58"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 59,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o59"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 60,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o60"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 61,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o61"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 62,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o62"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 63,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o63"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 64,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o64"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 65,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o65"
+        },
+        {
+          "action": "RESET",
+          "action_index": 66,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o66"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 67,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o67"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 68,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o68"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 69,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o69"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 70,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o70"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 71,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o71"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 72,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o72"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 73,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o73"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 74,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o74"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 75,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o75"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 76,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o76"
+        },
+        {
+          "action": "RESET",
+          "action_index": 77,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o77"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 78,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o78"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 79,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o79"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 80,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o80"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 81,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o81"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 82,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o82"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 83,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o83"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 84,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o84"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 85,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o85"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 86,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o86"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 87,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o87"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 88,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o88"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 89,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o89"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 90,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o90"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 91,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o91"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 92,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o92"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 93,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o93"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 94,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o94"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 95,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o95"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 96,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o96"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 97,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o97"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 98,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o98"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 99,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o99"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 100,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o100"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 101,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o101"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 102,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o102"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 103,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o103"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 104,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o104"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 105,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o105"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 106,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o106"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 107,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o107"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 108,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o108"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 109,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o109"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 110,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o110"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 111,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o111"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 112,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o112"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 113,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o113"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 114,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o114"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 115,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o115"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 116,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o116"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 117,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o117"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 118,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o118"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 119,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o119"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 120,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o120"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 121,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o121"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 122,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o122"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 123,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o123"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 124,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o124"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 125,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o125"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 126,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o126"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 127,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o127"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 128,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "wa30:live:o128"
+        }
+      ],
+      "arm": "adapter_withheld",
+      "censoring": "censored_action_limit",
+      "disposition": "censored_action_limit",
+      "elapsed_s": 227.82311240000126,
+      "engine_calls": 20000,
+      "episode_id": "wa30:live",
+      "error": null,
+      "exclusions": [],
+      "game": "wa30",
+      "goal_probe_errors": [],
+      "induction_attempts": [
+        {
+          "accepted": false,
+          "attempt_id": "wa30:live:induction:1",
+          "goal_candidate_names": [],
+          "goal_predicate": null,
+          "goal_predicate_satisfiable_in_model": false,
+          "reason": "stall",
+          "refinement_rounds": [
+            {
+              "action": "induce",
+              "channel_chars": {
+                "both_channels_empty": 0,
+                "chars_final": 0,
+                "chars_raw": 20261,
+                "chars_reasoning": 20225,
+                "chars_think_stripped": 0,
+                "chat_completions": 2,
+                "completions": 2,
+                "reasoning_only": 2,
+                "request_timeouts": 0
+              },
+              "message": "split induce: engine failed: local model code unusable after 1 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])",
+              "proposer_ok": false,
+              "round": 1,
+              "skipped": "proposer_failed"
+            }
+          ],
+          "skipped": "proposer_failed"
+        }
+      ],
+      "new_solve_credit": false,
+      "observations": [
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o1",
+          "state_sha256": "sha256:71dc9a1736fc9af85c414a8608921b9cf4525c8ba854a8a0691a199dd9ad9e6a"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o2",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o3",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o4",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o5",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o6",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o7",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o8",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o9",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o10",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o11",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o12",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o13",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o14",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o15",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o16",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o17",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o18",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o19",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o20",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o21",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o22",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o23",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o24",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o25",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o26",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o27",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o28",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o29",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o30",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o31",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o32",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o33",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o34",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o35",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o36",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o37",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o38",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o39",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o40",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o41",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o42",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o43",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o44",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o45",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o46",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o47",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o48",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o49",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o50",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o51",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o52",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o53",
+          "state_sha256": "sha256:88503824bf87285cd3feb45559bcee274cb2517f05f09fd8704b342c7944c245"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o54",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o55",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o56",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o57",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o58",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o59",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o60",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o61",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o62",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o63",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o64",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o65",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o66",
+          "state_sha256": "sha256:88503824bf87285cd3feb45559bcee274cb2517f05f09fd8704b342c7944c245"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o67",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o68",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o69",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o70",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o71",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o72",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o73",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o74",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o75",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o76",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o77",
+          "state_sha256": "sha256:88503824bf87285cd3feb45559bcee274cb2517f05f09fd8704b342c7944c245"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o78",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o79",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o80",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o81",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o82",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o83",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o84",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o85",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o86",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o87",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o88",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o89",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o90",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o91",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o92",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o93",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o94",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o95",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o96",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o97",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o98",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o99",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o100",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o101",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o102",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o103",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o104",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o105",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o106",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o107",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o108",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o109",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o110",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o111",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o112",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o113",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o114",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o115",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o116",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o117",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o118",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o119",
+          "state_sha256": "sha256:394240687fb8ae853822cacc2ef1b34eb3e571cfbaeb88562d8bbec2d5150d14"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o120",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o121",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o122",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o123",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o124",
+          "state_sha256": "sha256:ebb945ef35840138e48c3e13d7d1afb5e1996f5f20bc6decab5ad11c7c5dd30c"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o125",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o126",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o127",
+          "state_sha256": "sha256:bcabda3e17ec1f04e246678dc4eff58d65ecc56372c1e97bfcc8adca379c99d5"
+        },
+        {
+          "level": 0,
+          "observation_id": "wa30:live:o128",
+          "state_sha256": "sha256:30659b879c2f8a03879fdfb2f67e94823ab368b4ecb9a962842bcaa8e23dd445"
+        }
+      ],
+      "peak_level": 0,
+      "policy_entry": {
+        "factory": "make_carnot_agent",
+        "policy_class": "E3AgentPolicy",
+        "withheld_inputs": [
+          "per_game_adapter",
+          "stored_route",
+          "banked_solution",
+          "game_source",
+          "expert_goal",
+          "offline_bfs_truth",
+          "evaluator_label"
+        ]
+      },
+      "requests": [
+        {
+          "call_index": 0,
+          "completed": true,
+          "elapsed_s": 108.1331488200085,
+          "episode_id": "wa30:live",
+          "event": "server_response",
+          "failed": false,
+          "output_tokens": 4096,
+          "request_dispatched": true,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/wa30__live/requests/00_request.json",
+          "request_sha256": "sha256:4b45d13135e3cd16e28d9723740b5af2218fcc1d26913933aa46b280db791ddf",
+          "request_started_monotonic": 91908.505746791,
+          "requested_max_tokens": 4096,
+          "response_observed": true,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/wa30__live/requests/00_response.json",
+          "response_sha256": "sha256:26f841ede3f0534ffba64710c69aaefec6cc726cd8e1ed117c79c306dc2c5b07",
+          "url": "http://127.0.0.1:33171/v1/chat/completions"
+        },
+        {
+          "call_index": 1,
+          "completed": true,
+          "elapsed_s": 106.46855177899124,
+          "episode_id": "wa30:live",
+          "event": "server_response",
+          "failed": false,
+          "output_tokens": 4096,
+          "request_dispatched": true,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/wa30__live/requests/01_request.json",
+          "request_sha256": "sha256:21038690419891111d58dcb68ffac6e2f2c528185320063b36bc487276bcda86",
+          "request_started_monotonic": 92016.682523316,
+          "requested_max_tokens": 4096,
+          "response_observed": true,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/wa30__live/requests/01_response.json",
+          "response_sha256": "sha256:ee6d18195d619695c7b000770613aca5ef1f3a88c3a7d7adcb3416197eec7b14",
+          "url": "http://127.0.0.1:33171/v1/chat/completions"
+        }
+      ],
+      "solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "actions": [
+        {
+          "action": "RESET",
+          "action_index": 1,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o1"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 2,
+          "data": {
+            "x": 36,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o2"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 3,
+          "data": {
+            "x": 42,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o3"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 4,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o4"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 5,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o5"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 6,
+          "data": {
+            "x": 18,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o6"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 7,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o7"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 8,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o8"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 9,
+          "data": {
+            "x": 42,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o9"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 10,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o10"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 11,
+          "data": {
+            "x": 42,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o11"
+        },
+        {
+          "action": "ACTION7",
+          "action_index": 12,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o12"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 13,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o13"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 14,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o14"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 15,
+          "data": {
+            "x": 18,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o15"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 16,
+          "data": {
+            "x": 18,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o16"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 17,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o17"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 18,
+          "data": {
+            "x": 42,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o18"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 19,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o19"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 20,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o20"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 21,
+          "data": {
+            "x": 42,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o21"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 22,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o22"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 23,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o23"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 24,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o24"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 25,
+          "data": {
+            "x": 36,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o25"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 26,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o26"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 27,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o27"
+        },
+        {
+          "action": "ACTION7",
+          "action_index": 28,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o28"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 29,
+          "data": {
+            "x": 18,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o29"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 30,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o30"
+        },
+        {
+          "action": "ACTION3",
+          "action_index": 31,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o31"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 32,
+          "data": {
+            "x": 42,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o32"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 33,
+          "data": {
+            "x": 18,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o33"
+        },
+        {
+          "action": "ACTION2",
+          "action_index": 34,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o34"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 35,
+          "data": {
+            "x": 36,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o35"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 36,
+          "data": {
+            "x": 18,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o36"
+        },
+        {
+          "action": "ACTION7",
+          "action_index": 37,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o37"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 38,
+          "data": {
+            "x": 36,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o38"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 39,
+          "data": {
+            "x": 36,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o39"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 40,
+          "data": {
+            "x": 48,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o40"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 41,
+          "data": {
+            "x": 42,
+            "y": 43
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o41"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 42,
+          "data": {
+            "x": 48,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o42"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 43,
+          "data": {
+            "x": 30,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o43"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 44,
+          "data": {
+            "x": 48,
+            "y": 49
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o44"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 45,
+          "data": {
+            "x": 48,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o45"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 46,
+          "data": {
+            "x": 18,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o46"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 47,
+          "data": {
+            "x": 24,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o47"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 48,
+          "data": {
+            "x": 36,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o48"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 49,
+          "data": {
+            "x": 48,
+            "y": 43
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o49"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 50,
+          "data": {
+            "x": 36,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o50"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 51,
+          "data": {
+            "x": 36,
+            "y": 43
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o51"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 52,
+          "data": {
+            "x": 12,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o52"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 53,
+          "data": {
+            "x": 36,
+            "y": 49
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o53"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 54,
+          "data": {
+            "x": 42,
+            "y": 49
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o54"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 55,
+          "data": {
+            "x": 42,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o55"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 56,
+          "data": {
+            "x": 18,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o56"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 57,
+          "data": {
+            "x": 48,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o57"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 58,
+          "data": {
+            "x": 48,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o58"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 59,
+          "data": {
+            "x": 42,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o59"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 60,
+          "data": {
+            "x": 12,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o60"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 61,
+          "data": {
+            "x": 24,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o61"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 62,
+          "data": {
+            "x": 12,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o62"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 63,
+          "data": {
+            "x": 42,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o63"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 64,
+          "data": {
+            "x": 30,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o64"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 65,
+          "data": {
+            "x": 30,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o65"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 66,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o66"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 67,
+          "data": {
+            "x": 12,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o67"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 68,
+          "data": {
+            "x": 36,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o68"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 69,
+          "data": {
+            "x": 36,
+            "y": 43
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o69"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 70,
+          "data": {
+            "x": 48,
+            "y": 43
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o70"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 71,
+          "data": {
+            "x": 36,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o71"
+        },
+        {
+          "action": "RESET",
+          "action_index": 72,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o72"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 73,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o73"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 74,
+          "data": {
+            "x": 18,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o74"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 75,
+          "data": {
+            "x": 48,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o75"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 76,
+          "data": {
+            "x": 42,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o76"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 77,
+          "data": {
+            "x": 24,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o77"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 78,
+          "data": {
+            "x": 30,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o78"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 79,
+          "data": {
+            "x": 42,
+            "y": 43
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o79"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 80,
+          "data": {
+            "x": 48,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o80"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 81,
+          "data": {
+            "x": 48,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o81"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 82,
+          "data": {
+            "x": 36,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o82"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 83,
+          "data": {
+            "x": 30,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o83"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 84,
+          "data": {
+            "x": 42,
+            "y": 49
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o84"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 85,
+          "data": {
+            "x": 36,
+            "y": 49
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o85"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 86,
+          "data": {
+            "x": 24,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o86"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 87,
+          "data": {
+            "x": 48,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o87"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 88,
+          "data": {
+            "x": 30,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o88"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 89,
+          "data": {
+            "x": 42,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o89"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 90,
+          "data": {
+            "x": 12,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o90"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 91,
+          "data": {
+            "x": 12,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o91"
+        },
+        {
+          "action": "ACTION4",
+          "action_index": 92,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o92"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 93,
+          "data": {
+            "x": 48,
+            "y": 49
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o93"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 94,
+          "data": {
+            "x": 36,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o94"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 95,
+          "data": {
+            "x": 12,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o95"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 96,
+          "data": {
+            "x": 42,
+            "y": 49
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o96"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 97,
+          "data": {
+            "x": 48,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o97"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 98,
+          "data": {
+            "x": 18,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o98"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 99,
+          "data": {
+            "x": 48,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o99"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 100,
+          "data": {
+            "x": 36,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o100"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 101,
+          "data": {
+            "x": 12,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o101"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 102,
+          "data": {
+            "x": 42,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o102"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 103,
+          "data": {
+            "x": 30,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o103"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 104,
+          "data": {
+            "x": 48,
+            "y": 43
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o104"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 105,
+          "data": {
+            "x": 48,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o105"
+        },
+        {
+          "action": "ACTION7",
+          "action_index": 106,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o106"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 107,
+          "data": {
+            "x": 36,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o107"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 108,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o108"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 109,
+          "data": {
+            "x": 48,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o109"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 110,
+          "data": {
+            "x": 42,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o110"
+        },
+        {
+          "action": "ACTION1",
+          "action_index": 111,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o111"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 112,
+          "data": {
+            "x": 6,
+            "y": 55
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o112"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 113,
+          "data": {
+            "x": 24,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o113"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 114,
+          "data": {
+            "x": 12,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o114"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 115,
+          "data": {
+            "x": 42,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o115"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 116,
+          "data": {
+            "x": 18,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o116"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 117,
+          "data": {
+            "x": 48,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o117"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 118,
+          "data": {
+            "x": 36,
+            "y": 37
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o118"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 119,
+          "data": {
+            "x": 48,
+            "y": 49
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o119"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 120,
+          "data": {
+            "x": 18,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o120"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 121,
+          "data": {
+            "x": 12,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o121"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 122,
+          "data": {
+            "x": 30,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o122"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 123,
+          "data": {
+            "x": 24,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o123"
+        },
+        {
+          "action": "ACTION7",
+          "action_index": 124,
+          "data": {},
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o124"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 125,
+          "data": {
+            "x": 48,
+            "y": 25
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o125"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 126,
+          "data": {
+            "x": 18,
+            "y": 19
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o126"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 127,
+          "data": {
+            "x": 36,
+            "y": 31
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o127"
+        },
+        {
+          "action": "ACTION6",
+          "action_index": 128,
+          "data": {
+            "x": 48,
+            "y": 13
+          },
+          "goal_firings": [],
+          "level_after": 0,
+          "level_before": 0,
+          "observation_id": "lf52:live:o128"
+        }
+      ],
+      "arm": "adapter_withheld",
+      "censoring": "censored_action_limit",
+      "disposition": "censored_action_limit",
+      "elapsed_s": 237.85854303800443,
+      "engine_calls": 20000,
+      "episode_id": "lf52:live",
+      "error": null,
+      "exclusions": [],
+      "game": "lf52",
+      "goal_probe_errors": [],
+      "induction_attempts": [
+        {
+          "accepted": false,
+          "attempt_id": "lf52:live:induction:1",
+          "goal_candidate_names": [],
+          "goal_predicate": null,
+          "goal_predicate_satisfiable_in_model": false,
+          "reason": "stall",
+          "refinement_rounds": [
+            {
+              "action": "induce",
+              "channel_chars": {
+                "both_channels_empty": 0,
+                "chars_final": 0,
+                "chars_raw": 16158,
+                "chars_reasoning": 16122,
+                "chars_think_stripped": 0,
+                "chat_completions": 2,
+                "completions": 2,
+                "reasoning_only": 2,
+                "request_timeouts": 0
+              },
+              "message": "split induce: engine failed: local model code unusable after 1 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])",
+              "proposer_ok": false,
+              "round": 1,
+              "skipped": "proposer_failed"
+            }
+          ],
+          "skipped": "proposer_failed"
+        }
+      ],
+      "new_solve_credit": false,
+      "observations": [
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o1",
+          "state_sha256": "sha256:dd4904921fe1043d0c081d007dce0625c6e5eb688bd54ef0666fa164187a0c00"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o2",
+          "state_sha256": "sha256:438a830ddd46de6d65b2b3f4eea379ded36a95747996c7f0b5bcfdd5eaf66264"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o3",
+          "state_sha256": "sha256:91164ae93f5313638ef381cb7ca15f1d1bb7e62deb6399359516225081be8312"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o4",
+          "state_sha256": "sha256:38b32e63eaaac3d8f556394bda352d6b82e980254303efeb171152bb9e416f17"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o5",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o6",
+          "state_sha256": "sha256:612eb21fbbc77e4440a2c24b5eabe07c465f0362d08474461580007a58c6d1d7"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o7",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o8",
+          "state_sha256": "sha256:dcce8874d726b0ee7215a51ac6e98f6a46ed47cee3348e107fc8876df6f2aa31"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o9",
+          "state_sha256": "sha256:91164ae93f5313638ef381cb7ca15f1d1bb7e62deb6399359516225081be8312"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o10",
+          "state_sha256": "sha256:dcce8874d726b0ee7215a51ac6e98f6a46ed47cee3348e107fc8876df6f2aa31"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o11",
+          "state_sha256": "sha256:6910530d6703cf6e0d8be76c0cbc5ea7453320ea4b2f7d8816df106cfca55b62"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o12",
+          "state_sha256": "sha256:c8d0ef4b7c5bb571724600930ee898aeb92672c183f6bfd8a370f87eaad8e2e1"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o13",
+          "state_sha256": "sha256:2d10c39f27bb2dbaaaac243163024be76cf7df63df2146c74f7573405a2f446b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o14",
+          "state_sha256": "sha256:a4e285ab23a8d72aee23f5ffe195728f26882df1a8f96a5a6eaf59575ded480d"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o15",
+          "state_sha256": "sha256:612eb21fbbc77e4440a2c24b5eabe07c465f0362d08474461580007a58c6d1d7"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o16",
+          "state_sha256": "sha256:612eb21fbbc77e4440a2c24b5eabe07c465f0362d08474461580007a58c6d1d7"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o17",
+          "state_sha256": "sha256:a4e285ab23a8d72aee23f5ffe195728f26882df1a8f96a5a6eaf59575ded480d"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o18",
+          "state_sha256": "sha256:6910530d6703cf6e0d8be76c0cbc5ea7453320ea4b2f7d8816df106cfca55b62"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o19",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o20",
+          "state_sha256": "sha256:38b32e63eaaac3d8f556394bda352d6b82e980254303efeb171152bb9e416f17"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o21",
+          "state_sha256": "sha256:6910530d6703cf6e0d8be76c0cbc5ea7453320ea4b2f7d8816df106cfca55b62"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o22",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o23",
+          "state_sha256": "sha256:2d10c39f27bb2dbaaaac243163024be76cf7df63df2146c74f7573405a2f446b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o24",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o25",
+          "state_sha256": "sha256:438a830ddd46de6d65b2b3f4eea379ded36a95747996c7f0b5bcfdd5eaf66264"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o26",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o27",
+          "state_sha256": "sha256:a4e285ab23a8d72aee23f5ffe195728f26882df1a8f96a5a6eaf59575ded480d"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o28",
+          "state_sha256": "sha256:c8d0ef4b7c5bb571724600930ee898aeb92672c183f6bfd8a370f87eaad8e2e1"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o29",
+          "state_sha256": "sha256:612eb21fbbc77e4440a2c24b5eabe07c465f0362d08474461580007a58c6d1d7"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o30",
+          "state_sha256": "sha256:38b32e63eaaac3d8f556394bda352d6b82e980254303efeb171152bb9e416f17"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o31",
+          "state_sha256": "sha256:dcce8874d726b0ee7215a51ac6e98f6a46ed47cee3348e107fc8876df6f2aa31"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o32",
+          "state_sha256": "sha256:91164ae93f5313638ef381cb7ca15f1d1bb7e62deb6399359516225081be8312"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o33",
+          "state_sha256": "sha256:612eb21fbbc77e4440a2c24b5eabe07c465f0362d08474461580007a58c6d1d7"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o34",
+          "state_sha256": "sha256:2d10c39f27bb2dbaaaac243163024be76cf7df63df2146c74f7573405a2f446b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o35",
+          "state_sha256": "sha256:438a830ddd46de6d65b2b3f4eea379ded36a95747996c7f0b5bcfdd5eaf66264"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o36",
+          "state_sha256": "sha256:612eb21fbbc77e4440a2c24b5eabe07c465f0362d08474461580007a58c6d1d7"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o37",
+          "state_sha256": "sha256:c8d0ef4b7c5bb571724600930ee898aeb92672c183f6bfd8a370f87eaad8e2e1"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o38",
+          "state_sha256": "sha256:ac1185091b95503a46cdb5fee8db785f1803ec94b885b6663edbe115d7d28e10"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o39",
+          "state_sha256": "sha256:16bc924a1e16560f2aaa1971b2fa449287a508e66bd9d17fe7e161cfa1339f20"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o40",
+          "state_sha256": "sha256:6e342e8a40386188a5765c8bbf7e7cb9e100344fe1f8d871bf109761cb89b675"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o41",
+          "state_sha256": "sha256:572aef5787ff838bfbacb1e39d24ae9d7f3399b706257d7ac67abb25859fc7b3"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o42",
+          "state_sha256": "sha256:24914b3cae05c489e968c64c6d5f44c0f430da72533ee1ad72f1859a8027dddf"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o43",
+          "state_sha256": "sha256:8ed58b37de8d36f289e394ddd63cb0c8310c929d6303d47881cae7b1e891a27a"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o44",
+          "state_sha256": "sha256:99c0e4c51aec23143074354dc9100cc8dda34a60be5d8a81cfcd2723adf37c01"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o45",
+          "state_sha256": "sha256:f031ed3808bc52330e645640a25e17ed271a3d922c79113f1622c354cab35a39"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o46",
+          "state_sha256": "sha256:36fca8bc810f6ad1bcfa3e6ba1ff25186582c9a8f35608f10a73095c1f343853"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o47",
+          "state_sha256": "sha256:04a36f01b2286981571ea148d0499b5728d5849b26b2e0debbdce07b4d2d83f6"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o48",
+          "state_sha256": "sha256:0f4645870a3c7b6a2230b42f06a5e601dd516126c07775587e25023adb8fffa5"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o49",
+          "state_sha256": "sha256:8dcc06a3c81402bb4058bf1aa8a387c73a0c6e4268edaa8ec7af914885c36ccb"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o50",
+          "state_sha256": "sha256:92df849b7e59c0322a4d9c7975ceb69b80bfd250638b88ab093f0ba1a0bf6310"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o51",
+          "state_sha256": "sha256:f8b805bd0b9e72243a6eb1971a541fcfa116a46c4a44866ab59852e3d931cc4c"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o52",
+          "state_sha256": "sha256:d14e630d7b49b6d63ed50b30832d4ca21cf6d3801c55c58075d5ff1047d51997"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o53",
+          "state_sha256": "sha256:43a9e00312c172882d95721aa4a02aa84ae61facf82d7fe55962c5fd9df41a1c"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o54",
+          "state_sha256": "sha256:4118897f8344460ca4c6692baf99183c5ee4b3462393cfd372081d3f03d8dbae"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o55",
+          "state_sha256": "sha256:ee1bc3b974ecfa86ac468918cf3a633548dfce0ee5c2a369ce99f1ba32641d47"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o56",
+          "state_sha256": "sha256:ad73584ac581455cd42141d4a00726e42012279f769211b3f079595b9fa6d311"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o57",
+          "state_sha256": "sha256:8972b5e57f83e35dfdfa33c8214836130db06e95f59a9db17d37c9ba4033137b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o58",
+          "state_sha256": "sha256:08969ffe9b9893042dffe444bb1f13467cdb3e0a58c8ce177b2286a160226553"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o59",
+          "state_sha256": "sha256:e197b7f336243f6f322ccdffea57c876853d9d578477c09255691f23d23cebd4"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o60",
+          "state_sha256": "sha256:8a5aea17012c6e365d976cf73bb3b05a6f11fce6c2098fb69084b304f0025f6b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o61",
+          "state_sha256": "sha256:98c9fe7468d999cc457e417f2b207478039db2c8dbeeb52022a6dfda72bb8a70"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o62",
+          "state_sha256": "sha256:6a0c7a451058d87a1edf829d86124d9123b6fc88ea35d56589119368eb165dd8"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o63",
+          "state_sha256": "sha256:56bbce52a126d51a1c97c5d66bbceaf22aeeb54a79a60c348a58e68f2e944f79"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o64",
+          "state_sha256": "sha256:813ff163736e7eaabbb2d70d0cf0ab17addea3e8574b2db3eb3d6094bb881f78"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o65",
+          "state_sha256": "sha256:d83c9f491bee703c32489936f534a73fd2a6f4c19196eb4f5abba729a539323d"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o66",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o67",
+          "state_sha256": "sha256:d14e630d7b49b6d63ed50b30832d4ca21cf6d3801c55c58075d5ff1047d51997"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o68",
+          "state_sha256": "sha256:0f4645870a3c7b6a2230b42f06a5e601dd516126c07775587e25023adb8fffa5"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o69",
+          "state_sha256": "sha256:f8b805bd0b9e72243a6eb1971a541fcfa116a46c4a44866ab59852e3d931cc4c"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o70",
+          "state_sha256": "sha256:8dcc06a3c81402bb4058bf1aa8a387c73a0c6e4268edaa8ec7af914885c36ccb"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o71",
+          "state_sha256": "sha256:ab1f9db8f1c1ebb915419d181aae4412f6a88d16221aec7c4b403fc24676da25"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o72",
+          "state_sha256": "sha256:ee8ac3676999a15f45e555f0c837aac89bdd9eafebdb9809adab9e5ca48c9dca"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o73",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o74",
+          "state_sha256": "sha256:36fca8bc810f6ad1bcfa3e6ba1ff25186582c9a8f35608f10a73095c1f343853"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o75",
+          "state_sha256": "sha256:f031ed3808bc52330e645640a25e17ed271a3d922c79113f1622c354cab35a39"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o76",
+          "state_sha256": "sha256:56bbce52a126d51a1c97c5d66bbceaf22aeeb54a79a60c348a58e68f2e944f79"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o77",
+          "state_sha256": "sha256:98c9fe7468d999cc457e417f2b207478039db2c8dbeeb52022a6dfda72bb8a70"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o78",
+          "state_sha256": "sha256:d83c9f491bee703c32489936f534a73fd2a6f4c19196eb4f5abba729a539323d"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o79",
+          "state_sha256": "sha256:572aef5787ff838bfbacb1e39d24ae9d7f3399b706257d7ac67abb25859fc7b3"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o80",
+          "state_sha256": "sha256:8972b5e57f83e35dfdfa33c8214836130db06e95f59a9db17d37c9ba4033137b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o81",
+          "state_sha256": "sha256:24914b3cae05c489e968c64c6d5f44c0f430da72533ee1ad72f1859a8027dddf"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o82",
+          "state_sha256": "sha256:ac1185091b95503a46cdb5fee8db785f1803ec94b885b6663edbe115d7d28e10"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o83",
+          "state_sha256": "sha256:8ed58b37de8d36f289e394ddd63cb0c8310c929d6303d47881cae7b1e891a27a"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o84",
+          "state_sha256": "sha256:4118897f8344460ca4c6692baf99183c5ee4b3462393cfd372081d3f03d8dbae"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o85",
+          "state_sha256": "sha256:43a9e00312c172882d95721aa4a02aa84ae61facf82d7fe55962c5fd9df41a1c"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o86",
+          "state_sha256": "sha256:04a36f01b2286981571ea148d0499b5728d5849b26b2e0debbdce07b4d2d83f6"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o87",
+          "state_sha256": "sha256:6e342e8a40386188a5765c8bbf7e7cb9e100344fe1f8d871bf109761cb89b675"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o88",
+          "state_sha256": "sha256:813ff163736e7eaabbb2d70d0cf0ab17addea3e8574b2db3eb3d6094bb881f78"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o89",
+          "state_sha256": "sha256:ee1bc3b974ecfa86ac468918cf3a633548dfce0ee5c2a369ce99f1ba32641d47"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o90",
+          "state_sha256": "sha256:6a0c7a451058d87a1edf829d86124d9123b6fc88ea35d56589119368eb165dd8"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o91",
+          "state_sha256": "sha256:d14e630d7b49b6d63ed50b30832d4ca21cf6d3801c55c58075d5ff1047d51997"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o92",
+          "state_sha256": "sha256:a4e285ab23a8d72aee23f5ffe195728f26882df1a8f96a5a6eaf59575ded480d"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o93",
+          "state_sha256": "sha256:99c0e4c51aec23143074354dc9100cc8dda34a60be5d8a81cfcd2723adf37c01"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o94",
+          "state_sha256": "sha256:0f4645870a3c7b6a2230b42f06a5e601dd516126c07775587e25023adb8fffa5"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o95",
+          "state_sha256": "sha256:6a0c7a451058d87a1edf829d86124d9123b6fc88ea35d56589119368eb165dd8"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o96",
+          "state_sha256": "sha256:4118897f8344460ca4c6692baf99183c5ee4b3462393cfd372081d3f03d8dbae"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o97",
+          "state_sha256": "sha256:08969ffe9b9893042dffe444bb1f13467cdb3e0a58c8ce177b2286a160226553"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o98",
+          "state_sha256": "sha256:36fca8bc810f6ad1bcfa3e6ba1ff25186582c9a8f35608f10a73095c1f343853"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o99",
+          "state_sha256": "sha256:24914b3cae05c489e968c64c6d5f44c0f430da72533ee1ad72f1859a8027dddf"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o100",
+          "state_sha256": "sha256:92df849b7e59c0322a4d9c7975ceb69b80bfd250638b88ab093f0ba1a0bf6310"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o101",
+          "state_sha256": "sha256:8a5aea17012c6e365d976cf73bb3b05a6f11fce6c2098fb69084b304f0025f6b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o102",
+          "state_sha256": "sha256:ee1bc3b974ecfa86ac468918cf3a633548dfce0ee5c2a369ce99f1ba32641d47"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o103",
+          "state_sha256": "sha256:d83c9f491bee703c32489936f534a73fd2a6f4c19196eb4f5abba729a539323d"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o104",
+          "state_sha256": "sha256:8dcc06a3c81402bb4058bf1aa8a387c73a0c6e4268edaa8ec7af914885c36ccb"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o105",
+          "state_sha256": "sha256:6e342e8a40386188a5765c8bbf7e7cb9e100344fe1f8d871bf109761cb89b675"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o106",
+          "state_sha256": "sha256:c8d0ef4b7c5bb571724600930ee898aeb92672c183f6bfd8a370f87eaad8e2e1"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o107",
+          "state_sha256": "sha256:ac1185091b95503a46cdb5fee8db785f1803ec94b885b6663edbe115d7d28e10"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o108",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o109",
+          "state_sha256": "sha256:8972b5e57f83e35dfdfa33c8214836130db06e95f59a9db17d37c9ba4033137b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o110",
+          "state_sha256": "sha256:91164ae93f5313638ef381cb7ca15f1d1bb7e62deb6399359516225081be8312"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o111",
+          "state_sha256": "sha256:38b32e63eaaac3d8f556394bda352d6b82e980254303efeb171152bb9e416f17"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o112",
+          "state_sha256": "sha256:959506045cfcc6bf38be0b16d9e568b470d9f0d07129e7728a97e3df3bff79c0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o113",
+          "state_sha256": "sha256:e058d8a6f04dcb28d1f75fc4cba8e66333815864af9414c5c718d4322d32f5b0"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o114",
+          "state_sha256": "sha256:8a5aea17012c6e365d976cf73bb3b05a6f11fce6c2098fb69084b304f0025f6b"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o115",
+          "state_sha256": "sha256:e197b7f336243f6f322ccdffea57c876853d9d578477c09255691f23d23cebd4"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o116",
+          "state_sha256": "sha256:ad73584ac581455cd42141d4a00726e42012279f769211b3f079595b9fa6d311"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o117",
+          "state_sha256": "sha256:08969ffe9b9893042dffe444bb1f13467cdb3e0a58c8ce177b2286a160226553"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o118",
+          "state_sha256": "sha256:92df849b7e59c0322a4d9c7975ceb69b80bfd250638b88ab093f0ba1a0bf6310"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o119",
+          "state_sha256": "sha256:99c0e4c51aec23143074354dc9100cc8dda34a60be5d8a81cfcd2723adf37c01"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o120",
+          "state_sha256": "sha256:612eb21fbbc77e4440a2c24b5eabe07c465f0362d08474461580007a58c6d1d7"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o121",
+          "state_sha256": "sha256:d14e630d7b49b6d63ed50b30832d4ca21cf6d3801c55c58075d5ff1047d51997"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o122",
+          "state_sha256": "sha256:813ff163736e7eaabbb2d70d0cf0ab17addea3e8574b2db3eb3d6094bb881f78"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o123",
+          "state_sha256": "sha256:04a36f01b2286981571ea148d0499b5728d5849b26b2e0debbdce07b4d2d83f6"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o124",
+          "state_sha256": "sha256:c8d0ef4b7c5bb571724600930ee898aeb92672c183f6bfd8a370f87eaad8e2e1"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o125",
+          "state_sha256": "sha256:08969ffe9b9893042dffe444bb1f13467cdb3e0a58c8ce177b2286a160226553"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o126",
+          "state_sha256": "sha256:612eb21fbbc77e4440a2c24b5eabe07c465f0362d08474461580007a58c6d1d7"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o127",
+          "state_sha256": "sha256:ac1185091b95503a46cdb5fee8db785f1803ec94b885b6663edbe115d7d28e10"
+        },
+        {
+          "level": 0,
+          "observation_id": "lf52:live:o128",
+          "state_sha256": "sha256:24914b3cae05c489e968c64c6d5f44c0f430da72533ee1ad72f1859a8027dddf"
+        }
+      ],
+      "peak_level": 0,
+      "policy_entry": {
+        "factory": "make_carnot_agent",
+        "policy_class": "E3AgentPolicy",
+        "withheld_inputs": [
+          "per_game_adapter",
+          "stored_route",
+          "banked_solution",
+          "game_source",
+          "expert_goal",
+          "offline_bfs_truth",
+          "evaluator_label"
+        ]
+      },
+      "requests": [
+        {
+          "call_index": 0,
+          "completed": true,
+          "elapsed_s": 116.79994774000079,
+          "episode_id": "lf52:live",
+          "event": "server_response",
+          "failed": false,
+          "output_tokens": 4096,
+          "request_dispatched": true,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/lf52__live/requests/00_request.json",
+          "request_sha256": "sha256:2881827762f9552823bc514fb7a4402e0531b6592577f892a918c6573a59ce2e",
+          "request_started_monotonic": 92136.314614174,
+          "requested_max_tokens": 4096,
+          "response_observed": true,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/lf52__live/requests/00_response.json",
+          "response_sha256": "sha256:66c0534f05f854eb22e4c5883dd8f83395140e24902eae9357a199cc3b1e5619",
+          "url": "http://127.0.0.1:33171/v1/chat/completions"
+        },
+        {
+          "call_index": 1,
+          "completed": true,
+          "elapsed_s": 109.18188832799206,
+          "episode_id": "lf52:live",
+          "event": "server_response",
+          "failed": false,
+          "output_tokens": 4096,
+          "request_dispatched": true,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/lf52__live/requests/01_request.json",
+          "request_sha256": "sha256:912de614e4b94aefe016fa6c7fdc705b247e56a80ebb9f334e654ac03f7eea86",
+          "request_started_monotonic": 92253.157512523,
+          "requested_max_tokens": 4096,
+          "response_observed": true,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7709_v671_arc_first_contact/lf52__live/requests/01_response.json",
+          "response_sha256": "sha256:7634db74bed5cee06fcb5e6a84703e3fb2bafb429ed0d33c021192802d449e9f",
+          "url": "http://127.0.0.1:33171/v1/chat/completions"
+        }
+      ],
+      "solve_provenance": "live_agent_self_discovery"
+    }
+  ],
+  "run_date": "20260926",
+  "sample_size_budget": {
+    "censored_episodes": 2,
+    "effective_blocks": 2,
+    "eligible_episodes": 2,
+    "excluded_episodes": 0,
+    "intended_episodes": 2,
+    "intended_games": 2,
+    "max_actions_per_episode": 128,
+    "max_engine_calls_per_episode": 20000,
+    "max_output_tokens_per_call": 4096,
+    "max_qwen_calls_per_episode": 2,
+    "max_seconds_per_episode": 1200,
+    "observed_episodes": 2,
+    "observed_games": 2,
+    "prior_exposure": "25 public survey games; selected games historically cleared",
+    "total_live_seconds": 2400
+  },
+  "schema": "carnot.exp7709.v671.arc_first_contact.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifact_hashes": {
+    "missing_custody": [],
+    "pre_gate_receipts": {
+      "results/experiment_7708_v671_arc_generalization_runner.json": "sha256:759afa4f584eb8d3a45d462adeffa3069ff161013de6bfc32ae8f3aa35b6c382",
+      "results/raw/experiment_7708_v671_arc_generalization_runner/schedule.json": "sha256:800a91434812eb2c91810203be89a64fa66f449c19d695829b870b8a576098ca"
+    },
+    "producer_files": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+      "CODEX.md": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+      "model_weights": {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "native_runtime": {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+      },
+      "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:0e87eac5112aaf393ef22df0bd62996049537c7f8289f39cad5347171385a362",
+      "openspec/capabilities/research-reporting/spec.md": "sha256:faefe516e3238668b149ee992eca3c76b9f9d46ce18f62c1d9a0afb7e2f712e5",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/e2e-test-plan.md": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+      "ops/exclusion_manifest.yaml": "sha256:f7beb6b3481cd5b3fe02208fe7814e9dfa99cc6fef739c1f5594bd6b4468ca90",
+      "python/carnot/agentic/arc_competition_agent.py": "sha256:8199f38eef2d94be8443821e809b4870bb1814a4c5d92e434c3d10aaff9faad6",
+      "python/carnot/agentic/arc_executable_world_model.py": "sha256:05ece57ad768273bea6a73d7c71ddf29fcca9d42d1951efcc76e6bf5e1f7df45",
+      "python/carnot/agentic/arc_goal_confirmation.py": "sha256:352e8daa8742e04b8f797b6aaeabe312a468053e49d1bff8548c992c8f34d06f",
+      "python/carnot/experiment_7630_v666_cuda_ownership.py": "sha256:56a6a360bbf7ce55ca5bc39a2f72f5dcde2362dc2d64d0f4685bd332f42f2421",
+      "python/carnot/experiment_7709_v671_arc_first_contact.py": "sha256:a8531d9a1535af5d54989050d46d22e76675195dd3714088a2c10783b132a974",
+      "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+      "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "scripts/experiments/experiment_7709_v671_arc_first_contact.py": "sha256:699d507d7fb5b4ace7c4e15c2260700baccf3481ea68a43a6dda457ddbe15e51",
+      "tests/python/test_experiment_7709_v671_arc_first_contact.py": "sha256:8867cb834e5635eb045ed6bce4a4745d437a128aed6bd4116cf92e91d4325cc9"
+    }
+  },
+  "status": "complete",
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7709_v671_arc_first_contact",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7709_v671_arc_first_contact"
+      ],
+      "duration_s": 1.5512600530055352,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/00_worktree_imports.log",
+      "log_sha256": "sha256:e42e7280fd7a38c419aa8ba6f69fd44af3d49e83bdbcfb397b30f123884c4351",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7709_v671_arc_first_contact\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7709_v671_arc_first_contact.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7709_v671_arc_first_contact": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7709_v671_arc_first_contact.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7709-fwtjpzgs/pytest/focused tests/python/test_experiment_7709_v671_arc_first_contact.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7709-fwtjpzgs/pytest/focused",
+        "tests/python/test_experiment_7709_v671_arc_first_contact.py",
+        "-q"
+      ],
+      "duration_s": 4.597558706998825,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/01_focused_pytest.log",
+      "log_sha256": "sha256:c76d01a5fa94cf0cba37ea9db6243f58c88df63a73975fa8746df027dbeb6e27",
+      "name": "focused_pytest",
+      "output_tail": ".....                                                                    [100%]\n5 passed in 1.81s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7709-fwtjpzgs/.coverage '--include=*/experiment_7709_v671_arc_first_contact.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7709-fwtjpzgs/pytest/coverage tests/python/test_experiment_7709_v671_arc_first_contact.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7709-fwtjpzgs/.coverage",
+        "--include=*/experiment_7709_v671_arc_first_contact.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7709-fwtjpzgs/pytest/coverage",
+        "tests/python/test_experiment_7709_v671_arc_first_contact.py",
+        "-q"
+      ],
+      "duration_s": 7.296602118993178,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/02_changed_module_coverage.log",
+      "log_sha256": "sha256:811faccff6c6495e302cb25ad5ad402be063dbdc3daa40aba6b9ba1628d4f07b",
+      "name": "changed_module_coverage",
+      "output_tail": ".....                                                                    [100%]\n5 passed in 3.21s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7709-fwtjpzgs/.coverage '--include=*/experiment_7709_v671_arc_first_contact.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7709-fwtjpzgs/.coverage",
+        "--include=*/experiment_7709_v671_arc_first_contact.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.07263961900025606,
+      "exit_code": 2,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:9b9013cc97f4ce815bf9900b427a4aa6438e6177794ab1646e317503b71b77ae",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                      Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------\npython/carnot/experiment_7709_v671_arc_first_contact.py     437    343    22%   71-72, 145, 156-160, 217, 221, 386-520, 538-718, 746-942, 947-1045, 1050-1076, 1081-1221, 1225-1242\n---------------------------------------------------------------------------------------\nTOTAL                                                       437    343    22%\nCoverage failure: total of 22 is less than fail-under=100\n",
+      "passed": false,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7709_v671_arc_first_contact.py scripts/experiments/experiment_7709_v671_arc_first_contact.py tests/python/test_experiment_7709_v671_arc_first_contact.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7709_v671_arc_first_contact.py",
+        "scripts/experiments/experiment_7709_v671_arc_first_contact.py",
+        "tests/python/test_experiment_7709_v671_arc_first_contact.py"
+      ],
+      "duration_s": 0.013611368005513214,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7709_v671_arc_first_contact.py scripts/experiments/experiment_7709_v671_arc_first_contact.py tests/python/test_experiment_7709_v671_arc_first_contact.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7709_v671_arc_first_contact.py",
+        "scripts/experiments/experiment_7709_v671_arc_first_contact.py",
+        "tests/python/test_experiment_7709_v671_arc_first_contact.py"
+      ],
+      "duration_s": 0.0105213610077044,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7709_v671_arc_first_contact.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7709_v671_arc_first_contact.py"
+      ],
+      "duration_s": 0.1767101500008721,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/06_changed_module_mypy.log",
+      "log_sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7709_v671_arc_first_contact.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7709_v671_arc_first_contact.py"
+      ],
+      "duration_s": 0.022200937994057313,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_induction_state_persistence.py -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7709-fwtjpzgs/pytest/e2e009",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp7709-fwtjpzgs/pytest/e2e009"
+      ],
+      "duration_s": 12.03333762800321,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/08_e2e_009.log",
+      "log_sha256": "sha256:4cabb3409cdf1dc94df3b802d8c83e0c1d403ca84bc1951600563f4053101ae8",
+      "name": "e2e_009",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.46s\n",
+      "passed": true,
+      "scope": "applicable_e2e",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_decision_telemetry.py -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7709-fwtjpzgs/pytest/e2e011",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_arc_decision_telemetry.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp7709-fwtjpzgs/pytest/e2e011"
+      ],
+      "duration_s": 6.534321401006309,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/09_e2e_011.log",
+      "log_sha256": "sha256:741dcf0ebbe0727cce4e5cc7e00dd72895e428ab34016612d2814d6eb33a6cd5",
+      "name": "e2e_011",
+      "output_tail": "...............                                                          [100%]\n15 passed in 3.71s\n",
+      "passed": true,
+      "scope": "applicable_e2e",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_decision_telemetry.py tests/python/test_experiment_7491_e6_timed_live_profile.py tests/python/test_experiment_7531_b2_induction_gate_measurement.py tests/python/test_semif_arc_readout_eval.py -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7709-fwtjpzgs/pytest/e2e013",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_arc_decision_telemetry.py",
+        "tests/python/test_experiment_7491_e6_timed_live_profile.py",
+        "tests/python/test_experiment_7531_b2_induction_gate_measurement.py",
+        "tests/python/test_semif_arc_readout_eval.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp7709-fwtjpzgs/pytest/e2e013"
+      ],
+      "duration_s": 8.728800217999378,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/10_e2e_013.log",
+      "log_sha256": "sha256:4ca51474fb9279e28c8faec39e70e19b8ce84844195244ffc4e1f64ddfe43eed",
+      "name": "e2e_013",
+      "output_tail": "........................................                                 [100%]\n40 passed in 5.80s\n",
+      "passed": true,
+      "scope": "applicable_e2e",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/exp7709-fwtjpzgs/e2e009_smoke.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/exp7709-fwtjpzgs/e2e009_smoke.json"
+      ],
+      "duration_s": 3.188165689993184,
+      "exit_code": 0,
+      "log_path": "/tmp/exp7709-fwtjpzgs/logs/11_e2e_009_smoke.log",
+      "log_sha256": "sha256:43da260ac099b4ab6e50e98576f0579b8c3f3fe466119f7fc1668dd3bb6c1d69",
+      "name": "e2e_009_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-26 10:04:58 | INFO | Created new scorecard: 940dd66d-68bb-48e7-9c50-4b6fd599c526\n2026-09-26 10:04:58 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-26 10:04:58 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/exp7709-fwtjpzgs/e2e009_smoke.json\n",
+      "passed": true,
+      "scope": "applicable_e2e",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}

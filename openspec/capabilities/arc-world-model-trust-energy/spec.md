@@ -13,6 +13,24 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+### REQ-ARC-WMTE-7709: Measure goal firing against SDK progress
+
+The adapter-withheld E3 runner SHALL use only visible SDK observations and its
+own live induction. For every proposed goal it SHALL record whether an actual
+reachable execution fired the predicate and whether a later SDK observation
+confirmed level progress. Unobserved positives SHALL keep recall unknown.
+Engine acceptance and rejection, action cost, timeouts, and episode censoring
+SHALL remain separate. Public-game outcomes SHALL not add solve registry credit.
+
+#### SCENARIO-ARC-WMTE-7709-GOAL-JOIN
+
+Given a fired goal and a subsequent SDK level increase, the support row records
+both facts. Given a fired goal with no increase, it records no confirmation.
+Given no observed firing, it records unknown recall without treating absence
+as a negative label.
+
+**Implementation status:** Specified; current execution pending.
+
 ### REQ-ARC-WMTE-7708: Observe a scored adapter-withheld E3 episode
 
 The ARC runner SHALL invoke `make_carnot_agent` and its `E3AgentPolicy` through

@@ -82214,6 +82214,44 @@ Protected-file hashes remain unchanged. Runtime science remains proposed.
 Implementation status: planning in progress; no V671 experiment executed.
 ## V671 adapter-withheld ARC runner — 2026-09-26
 
+### REQ-REPORT-7709: Publish current first-contact evidence
+
+Exp7709 SHALL authenticate Exp7708's fixed two-game schedule, adapter denials,
+scored E3 entrypoint, current mandated GGUF, and an exclusively owned CUDA server
+before measuring. Each public game SHALL receive one bounded episode: at most
+1200 seconds, 128 actions, 20000 model-engine calls, and two actual Qwen calls
+of at most 4096 output tokens. The total live budget SHALL be 2400 seconds.
+The deployed generator configuration and probe settings SHALL remain unchanged.
+
+The artifact SHALL retain action and observation ledgers, owned request and
+response bytes, CUDA lease and server identity, induction attempts, accepted
+and rejected engines, goal predicates, reachable firings, SDK level changes,
+timeouts, and censoring. Each proposed goal SHALL distinguish reachable firing
+from observed SDK confirmation. Unobserved positives SHALL make recall unknown.
+The two public games permit descriptive support only and no new solve credit.
+
+Missing external resources SHALL produce a terminal blocked verdict with exact
+gate operands. A completed episode with no accepted engine SHALL be a scientific
+null. Validation SHALL freeze affected scope, require changed-module coverage,
+run applicable E2E checks, cold-reduce raw rows in a fresh process, and apply
+adversarial and strict row readers before atomic publication. Failed required
+checks SHALL zero readiness and disqualify evidence.
+
+#### SCENARIO-REPORT-7709-BLOCKED
+
+Given a missing or false Exp7708 gate or unavailable owned CUDA resource, the
+artifact reports `complete_blocked_*`, zero current model calls, the exact
+check operands, and planned versus actual substrate separately.
+
+#### SCENARIO-REPORT-7709-REDUCE
+
+Given two bounded episode rows, cold replay joins each action to its SDK
+observation and each generation to an owned request. It reports per-game goal
+support and unknown recall when no positive firing was observed. A missing
+join disqualifies the terminal candidate.
+
+**Implementation status:** Specified; current execution pending.
+
 ### REQ-REPORT-7708: Publish a bounded first-contact runner receipt
 
 Exp7708 SHALL freeze two locally runnable public SDK games by the smallest
