@@ -1,5 +1,63 @@
 # Research Reporting Capability Specification
 
+## V671 typed decision energy — 2026-09-26
+
+### REQ-REPORT-7703: Freeze a normalized typed decision head
+
+Exp7703 SHALL authenticate Exp7700 record readiness and Exp7701 sealed,
+unexposed roles before reading labels. It SHALL derive only frozen record
+certificate features from original source, question and answer bytes for all
+400 families, plus same-role source erasure and derangement controls. Tuple
+support, path or line membership, and unknown residuals SHALL remain separate.
+Every zero-coverage family SHALL remain in the roster. Evaluator labels SHALL
+never enter predictor features, and absent Qwen margins SHALL stay absent.
+
+Fit128 alone SHALL fit a conditional two-state energy with exact normalized
+probabilities. Tune40 SHALL select among fit prior, atom-only, matched-input
+logistic and same-width MLP heads. Each trained arm SHALL use at most 4096
+parameters and 500 gradient steps. Five declared seeds measure stability,
+not independent sample size. Label permutation and evidence erasure SHALL be
+measured controls; zero variance or zero checked coverage SHALL permit only a
+truthful null finding, not a learned-source claim. Policy40 alone SHALL freeze
+accept, reject and escalate thresholds for costs 0, 1 and 0.2. The strongest
+tune comparator, parameters, eight primitives, 28 pairs, proposal and update
+limits, delayed-loss scheduler and fixed-period control SHALL freeze before
+evaluation or online labels open. The scheduler threshold SHALL use only
+fit/tune replay and its 75th percentile rule.
+
+The artifact SHALL retain original unit and arm rows, training metrics,
+coverage and variance, immutable source hashes, complete frozen policies and
+starting states, a reload check within 1e-6, cold reduction and exact terminal
+reader receipts. It SHALL report validity, readiness, coverage, freshness,
+probability, utility, retention and efficiency separately. Readiness is
+administrative, not a scientific benefit claim. Failed required checks SHALL
+disqualify and zero readiness; unavailable upstream bytes SHALL yield a
+complete blocked verdict with exact failed operands.
+
+#### SCENARIO-REPORT-7703-CUSTODY
+
+Given a missing or mutated producer input, preflight SHALL stop before labels
+or training and record the upstream ID, path, field, operator, expected and
+observed values. A planned output SHALL not count as a required input.
+
+#### SCENARIO-REPORT-7703-SEAL
+
+Given valid public roles, feature extraction and both controls SHALL finish
+before any evaluator store opens. Fit, tune and policy labels SHALL be used
+only in their named phase. Evaluation and online labels SHALL remain sealed.
+
+#### SCENARIO-REPORT-7703-NORMALIZATION
+
+Given any saved head and feature vector, two probabilities SHALL be finite,
+sum to one and agree after reload within 1e-6. Typed action SHALL also agree.
+
+#### SCENARIO-REPORT-7703-TERMINAL
+
+Given an exact candidate, scoped tests, full Python tests, changed-module
+coverage, lint, type check, fresh-process reduction and both terminal readers
+SHALL complete before atomic publication. Failed required checks SHALL prevent
+readiness, while fit-score direction alone SHALL not.
+
 ## V671 sealed source cohort — 2026-09-26
 
 ### REQ-REPORT-7701: Seal fresh source families before evaluator access

@@ -1,0 +1,60 @@
+{
+  "candidate_sha256": "sha256:aa936c674f3d172c131f66fdd47bb55e00c7efa6469e0c3f3e6cbe8bf0acf4f7",
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m carnot.experiment_7703_v671_typed_decision_energy --cold-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7703_v671_typed_decision_energy/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.experiment_7703_v671_typed_decision_energy",
+        "--cold-reduce",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7703_v671_typed_decision_energy/terminal_candidate.json"
+      ],
+      "duration_s": 2.660632823011838,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7703_v671_typed_decision_energy/validation/terminal_exact/00_cold_reduction.log",
+      "log_sha256": "sha256:8b0ff82cbf3e9119924681a4a9bf2d6749a8e3b6756d059793d52dc8185faa0e",
+      "name": "cold_reduction",
+      "output_tail": "{\"passed\": true, \"independent_groups\": 400, \"paired_rows\": 1200, \"reload_tolerance\": 1e-06}\n",
+      "passed": true,
+      "scope": "exact_raw_rows",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7703_v671_typed_decision_energy/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7703_v671_typed_decision_energy/terminal_candidate.json"
+      ],
+      "duration_s": 2.512489511995227,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7703_v671_typed_decision_energy/validation/terminal_exact/01_adversarial_verify.log",
+      "log_sha256": "sha256:ec42d935861614ad8dae51b068f5724944229dbcfe8c119fb6cb55d247df6c17",
+      "name": "adversarial_verify",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7703_v671_typed_decision_energy/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": \"exp7703-typed-decision-energy\",\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_typed_decision_head_ready\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7703_v671_typed_decision_energy/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7703_v671_typed_decision_energy/terminal_candidate.json"
+      ],
+      "duration_s": 0.1137111139978515,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7703_v671_typed_decision_energy/validation/terminal_exact/02_strict_row_lint.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_row_lint",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact_candidate",
+      "timed_out": false
+    }
+  ]
+}

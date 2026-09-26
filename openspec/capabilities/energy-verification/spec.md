@@ -1,5 +1,26 @@
 # Energy Verification Capability
 
+### REQ-ENERGY-7703: Normalize bounded binary decision energy
+
+A source-evidence decision head SHALL compute E(x,0) and E(x,1), then return
+`exp(-E(x,y)) / (exp(-E(x,0)) + exp(-E(x,1)))` with stable arithmetic.
+Saved parameters and a frozen feature order SHALL suffice to reproduce both
+probabilities and the accept, reject or escalate decision. Training SHALL use
+fit labels only; no evaluator label, unavailable margin or exact fixture
+truth SHALL appear in x. Matched-input logistic and same-width MLP controls
+SHALL share the same fit/tune roles and declared budgets.
+
+#### SCENARIO-ENERGY-7703-RELOAD
+
+Given a fitted head, serialize and reload its parameters. Both probabilities
+and the frozen typed action SHALL match to within 1e-6.
+
+#### SCENARIO-ENERGY-7703-NO-INFORMATION
+
+Given all-zero checked coverage or zero feature variance, retain every family
+and fit the prior/null control. The record SHALL not assert learned source
+information merely because the normalized head trains.
+
 ## Requirements
 
 ### REQ-ENERGY-6746: Oracle-Distinct Diagnostic Energy
