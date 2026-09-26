@@ -3563,5 +3563,6 @@ Writing an estimate would put an invented number in the metrics record.
 | 64 | 2026-09-26T12:11:00Z | 2026-09-26T12:40:00Z | V6 capped go-explore: recovers all 9 of V5 losses + keeps sk48 win, but cd82 too slow (589 vs 169 actions); no promotion, first pilot to fail on speed not correctness |
 | 65 | 2026-09-26T14:01:00Z | 2026-09-26T14:38:00Z | Ablated V6 gate rules: spacing alone reproduces recovery AND cd82 slowdown together; no fixable single-rule culprit found; real tradeoff, not a bug |
 | 66 | 2026-09-26T14:51:00Z | 2026-09-26T15:25:00Z | V7/V8 seen-momentum selector: no promotion; V7 broken, V8 loses sk48 and regresses cd82/m0r0; seen-signal contamination flaw found; 5 pilots deep, no lever does both recovery and speed |
+| 67 | 2026-09-26T15:34:00Z | 2026-09-26T17:03:00Z | Fable 5.1 consulted for next-step opinion; rescored 8 pilots with real formula per its advice -- confirms most disputed pairs are noise, cd82 regression is real (~92% relative loss); V6 no-promotion holds for a score reason too |
 
 | V672-plan | 2026-09-26T16:11:32Z | pending | User: research and design next milestone 2026.09.672; create matching design and staged YAML, preserve active roadmap and conductor; startup timestamp recorded after initial reads. |

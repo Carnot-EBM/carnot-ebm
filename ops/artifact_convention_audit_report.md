@@ -10,26 +10,25 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 6 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 1 |
+| BLOCKED_WITHOUT_DIAGNOSTIC | 2 |
 
-## experiment_7705_v671_constraint_bank_protocol.json
+## experiment_7716_v672_qwen_semantic_pilot.json
 
-**CANNOT_DETERMINE**
+**BLOCKED_WITHOUT_DIAGNOSTIC**
 
 ## VERDICT
-CANNOT_DETERMINE
+BLOCKED_WITHOUT_DIAGNOSTIC
 
 ## WHAT THE CLAIM IS
-The artifact reports valid fixture mechanics without empirical acquisition and shows a lower aggregate Brier score for `weight_only`.
+The pilot run completed but was disqualified on required acceptance gates (`"honest_verdict": "complete_disqualified_required_checks"`).
 
 ## WHAT IS MISSING
-The supplied artifact cuts off mid-`lifecycle_rows`, so I cannot tell whether metric-bearing per-unit `rows` appear later. The visible `mean_brier_by_arm` and `mean_base_brier_by_arm` contain only aggregates; the visible `lifecycle_rows` contain events, not Brier scores.
+The diagnostic failure reasons or threshold criteria explaining why the acceptance gates failed. While `"gate_check_summary"` is present, it is empty (`[]`), and within `"acceptance_gate_results"`, `"coverage"`, `"readiness"`, and `"validity"` are marked `"passed": false` despite benign operands (e.g., `"validity"` reports `"failed_checks": 0` and `"coverage"` reports `"observed_families": 24` of `"intended_families": 24`) with no explanatory failure messages or thresholds attached.
 
 ## THE CHECK A READER CANNOT DO
-Did `weight_only` improve Brier scores across many units, or did a few units account for its lower mean?
+Which specific criterion or threshold failed to cause `"passed": false` across `"coverage"`, `"readiness"`, and `"validity"` when `"failed_checks": 0` and `"gate_check_summary"` contains no diagnostic entries?
 
-## experiment_7706_continuous_acquisition.json
+## experiment_7717_latent_evidence_fit.json
 
 **CHECKABLE**
 
@@ -37,7 +36,7 @@ Did `weight_only` improve Brier scores across many units, or did a few units acc
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked prior to execution because upstream prerequisite `exp7705-constraint-bank-protocol` failed its `constraint_bank_ready_score` gate check (observed 0, expected 1).
+The experiment was blocked at the conductor pre-gate because three upstream gate checks failed, led by exp7715-natural-source-cohort natural_cohort_ready_score observing 0 instead of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -45,7 +44,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7707_v671_independent_evidence_audit.json
+## experiment_7719_v672_acquisition_qualification.json
 
 **CHECKABLE**
 
@@ -53,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked from completion and activation due to failing required upstream readiness and validity checks (`complete_blocked_required_evidence`).
+The experiment was disqualified because a required validation check failed with exit code 2 instead of 0.
 
 ## WHAT IS MISSING
 nothing
@@ -61,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7708_v671_arc_generalization_runner.json
+## experiment_7721_v672_independent_evidence_audit.json
 
 **CHECKABLE**
 
@@ -69,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The independent evidence audit is blocked because required upstream v672 evidence artifacts from Exp7718 and Exp7720 are missing.
 
 ## WHAT IS MISSING
 nothing
@@ -77,7 +76,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7709_v671_arc_first_contact.json
+## experiment_7722_v672_arc_evidence_recovery.json
+
+**BLOCKED_WITHOUT_DIAGNOSTIC**
+
+## VERDICT
+BLOCKED_WITHOUT_DIAGNOSTIC
+
+## WHAT THE CLAIM IS
+The recovery is complete but disqualified by the terminal-reader gate, with no new solve credit.
+
+## WHAT IS MISSING
+The terminal-reader check’s observed result is missing. `honest_verdict` names the gate, but `gate_check_summary.failed_checks` is `[]`, `failed_count` is `0`, and `terminal_reader_receipts_path` provides only a path.
+
+## THE CHECK A READER CANNOT DO
+What did the terminal-reader check observe that caused the disqualification?
+
+## experiment_7723_v672_native_qualification.json
 
 **CHECKABLE**
 
@@ -85,7 +100,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run completed but was disqualified because required validation was incomplete: 11 of 12 receipts passed.
+The qualification run is disqualified because administrative readiness checks failed (`focused_pytest`, `changed_module_coverage`, `changed_module_coverage_report`), despite passing measured validity parity checks between Python and Rust.
 
 ## WHAT IS MISSING
 nothing
@@ -93,7 +108,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7710_v671_native_record_contract.json
+## experiment_7724_complete_service_cost.json
 
 **CHECKABLE**
 
@@ -101,23 +116,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The native-record checks completed but did not meet readiness, despite Python–Rust parity on fixture units and a passing durable-replay check.
-
-## WHAT IS MISSING
-nothing — `parity_rows` records per-unit outcomes, and `acceptance_gate_results` identifies failed gates and their measured operands.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7711_whole_service_cost.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked from executing at the conductor pre-gate layer because upstream dependency `exp7710-native-record-contract` failed its gate checks.
+The artifact claims the experiment was blocked before execution at the conductor pre-gate because three upstream qualification gates on `exp7723-native-qualification` failed.
 
 ## WHAT IS MISSING
 nothing
@@ -125,18 +124,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7712_v671_capstone.json
+## experiment_7725_v672_capstone.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports a decision-cost advantage for the matched-logistic candidate over its control across 40 static families.
+The v672 capstone is blocked on required scientific evidence due to 18 failed gate and contract checks across upstream tasks.
 
 ## WHAT IS MISSING
-Per-family, paired decision-cost rows for both arms, with family identifiers. The artifact gives `"decision_cost"` contrasts and `"cost_mean"` values; its `"interval_inputs"` contain per-family Brier values, not decision costs.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Was the reported 0.165 decision-cost advantage spread across the 40 families or driven by a few outliers?
+none

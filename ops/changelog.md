@@ -30,6 +30,13 @@
   was not modified. Repository-wide spec traceability still reports the
   existing 1,168-test backlog; the Exp7708 scoped check passes.
 
+## 2026-09-26 — Rescored 8 pilots with the real scoring formula (operator-directed via Fable)
+
+- codex (gpt-6-sol, worktree `rescore-arc-formula`) re-read all 8 pilots' logs through the installed
+  arc_agi.scorecard formula instead of the win/loss + 10% action-count rule used all day. Confirms most
+  disputed pairs were noise; corrects that cd82's regression IS real under the graded scale. Merged
+  d97f4f3245.
+
 ## 2026-09-26 — V7/V8 seen-momentum selector pilot (no promotion, new lever confirmed live)
 
 - codex (gpt-6-sol, worktree `go-explore-selector`) tried a different cell-selection rule (visits -

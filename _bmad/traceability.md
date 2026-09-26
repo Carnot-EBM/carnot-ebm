@@ -3272,3 +3272,18 @@ five private contract mutations failed as required. The active roadmap and
 conductor hashes remain unchanged. Runtime E2Es are assigned in task prompts;
 no experiment was executed. Ruff format reports pre-existing debt in unchanged
 `tests/python/test_exclusion_manifest_lint.py`; it is outside this docs-only change.
+
+**Operational Note:** 2026-09-26 REQ-ARC-WMTE-10024 maps the organic-sighting
+gate in `StepwiseExplorer._ingest` and replay-lifetime flag in
+`arc_competition_agent.py` to four focused scenarios in
+`tests/python/test_arc_go_explore_seen_contamination_10024.py`. The two-step
+RESET replay suppresses every replay frame, including the landing frame after
+the final queue pop; the next organic frame is observed. Three archive-selected
+returns leave the target cell's `seen` at its one organic seed observation, while
+ordinary frontier navigation keeps observing. The archive-off path matches
+`git show main` byte for byte on 100 distinct deterministic fixtures. The 17-test
+focused suite, scoped spec coverage, changed-file Ruff check/format, changed-module mypy,
+and ARC orphan solver lint pass. `SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED` remains
+False, so the fix is dormant on the default scored path until the archive is
+enabled. Repository-wide spec coverage still reports 1,168 unrelated tests
+without references; none is in the changed test file.

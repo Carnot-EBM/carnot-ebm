@@ -43,6 +43,19 @@
 - Task-owned spec traceability passes; the repository-wide reconciliation gate
   still reports its existing backlog of 1,168 untraced tests.
 
+## 2026-09-26 — Rescored 8 pilots with the real Kaggle formula: mostly noise, one real loss
+- Fable 5.1 (a second Claude session, consulted for a second opinion) argued today's win/loss + 10%
+  action guard may not track the real graded score. Rescoring all 8 pilots confirms it: V0's own
+  25-game mean is 0.17/100, and most disputed pairs (sk48, dc22, lf52, m0r0, r11l) differ by <=0.005
+  points between arms -- noise.
+- Correction to Fable: cd82's regression is real. 169 actions scores 0.505; 589 scores 0.042 (~92%
+  relative loss). V6's real 25-game mean (0.141) is below V0's (0.172) -- the no-promotion verdict now
+  holds for a score-based reason too, not just the action-count rule used all day.
+- Baselines sourced from the 25 downloaded environment metadata.json files (EnvironmentInfo); the
+  registry's baseline_actions_to_first_levelup field was verified to describe agent comparisons, not
+  human baselines -- do not reuse it as a real baseline. RESET-action charging parity with the live
+  gateway is unverified.
+
 ## 2026-09-26 — V7/V8 seen-momentum selector pilot: no promotion, real lever confirmed
 - First pilot to target WHICH cell go-explore picks, not how often. Score = visits - seen via the
   archive's existing selector hook (archive class itself untouched). V7 (selector alone) is broken:

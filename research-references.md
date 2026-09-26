@@ -47344,3 +47344,78 @@ not qualified hidden-game success. Exp7708's test was quarantined for broken
 setup. Exp7710 failed coverage, formatting and workspace Rust checks; a later
 test repair exists, but does not retroactively change its terminal verdict.
 Recover only the exact missing evidence, preserving original result bytes.
+
+## 2026-09-26 — V673 research review: evidence sets, bounded learning, and organic exploration
+
+This review was written before the V673 experiment design. It covers all eight
+requested topics and the six secondary channels. V672 completed its queue, but
+its fresh-data, learning, and native-service branches did not qualify.
+
+### Primary findings and proposed use
+
+| Topic | Primary source and review depth | Finding and local implication |
+|---|---|---|
+| EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025, abstract; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), revised May 2026, abstract | Learned compatibility and finite normalization inform small decision energies. Neither result equates low learned energy with truth. Keep the generator frozen. |
+| Source alignment | [HalluSpan/EviAlign](https://arxiv.org/html/2608.15804v1), August 2026, method and author repository | Predicting masked output tokens from source representations supplies explicit alignment. The released method uses a trained encoder. Carnot can test independent evidence locations for each complete answer sentence, but fixed hash features do not reproduce that encoder. |
+| Evidence sufficiency | [SURE-RAG](https://arxiv.org/html/2605.03534v1), 2026, method and limitations | Support can depend on a set of passages. Missing evidence and contradiction require separate treatment. Its controlled-to-natural benchmark reversal argues against transferring a synthetic success claim to natural hallucinations. Test coverage aggregation against a single shared evidence location. |
+| Hallucination labels | [RT4CHART](https://arxiv.org/abs/2603.27752), 2026, abstract; [HallDetect](https://arxiv.org/abs/2608.05823), August 2026, abstract | Local claim checks can differ from whole-answer scores. Re-annotation does not create new source families. Keep response labels, sentence hypotheses, and exact span checks distinct. |
+| Neural constraint satisfaction | [LagONN](https://arxiv.org/abs/2505.07179), May 2025, abstract | Lagrange variables target infeasible local minima in Ising optimization. This does not solve language-to-constraint extraction. Retain as a sampler lead; do not add another solver before measuring the present bottleneck. |
+| Constrained generation | [DCCD](https://arxiv.org/abs/2603.03305), 2026, abstract; [syntax/semantics gap](https://arxiv.org/abs/2609.23742), September 2026, abstract | Compare draft-conditioned structured output with token-matched direct and two-pass controls. Measure semantic decisions separately from valid JSON. Small-model findings motivate a Qwen3.8-27B test; they do not establish its outcome. |
+| Energy-guided decoding | [EBD](https://arxiv.org/abs/2605.28020), May 2026, abstract | Reward-tilted decoding targets frozen base-model behavior. Carnot's mandated instruction model and retired external-text reranker have different premises. Defer a new reward decoder. |
+| KAN retention | [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828), November 2025, abstract; [AAAI 2025 study](https://ojs.aaai.org/index.php/AAAI/article/view/33986), primary abstract | Local splines do not guarantee retention. Require independent retained examples and a complete static feature comparator. No KAN architecture sweep is justified yet. |
+| Continuous learning | [Capacity-Constrained Online Convex Optimization with Delayed Feedback](https://arxiv.org/abs/2606.11711), June 2026, abstract | Bound pending feedback and updates. Record predictions before feedback. A discrete constraint bank does not inherit the paper's convex-regret guarantee. |
+| Ising hardware | [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985), February 2026, abstract; [sparse FPGA Ising machine](https://doi.org/10.1038/s41467-026-75119-0), July 2026, primary abstract | Hardware mapping and orchestration determine useful speed. Preserve current board limits and measure complete host costs before proposing new hardware. |
+
+### Secondary channels and access limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. The indexed
+  [EBT paper](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  and [AtomGraph workshop entry](https://openreview.net/forum?id=dNsIZln2uv)
+  were discovered. Direct retrieval reached browser challenges. The indexed
+  AtomGraph description motivates dependency-aware checks; no full-paper
+  review or independent replication is claimed.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and read the
+  cost sections of [Z1T](https://extropic.ai/writing/z1t). Its main estimates
+  omit dense vocabulary readout and device movement. Hardware projections
+  cannot establish local service speed or TSU availability.
+- **Semantic Scholar:** searched both seed IDs and attempted the
+  [EBT citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both failed in the browsing tool. Citation coverage is incomplete.
+- **Hugging Face:** discovered [HalluSpan/EviAlign](https://huggingface.co/papers/2608.15804),
+  [SURE-RAG](https://huggingface.co/papers/2605.03534), and
+  [RT4CHART](https://huggingface.co/papers/2603.27752). Method claims above
+  use the primary papers. Display dates can differ from submission dates.
+- **GitHub:** inspected monthly [Python](https://github.com/trending/python?since=monthly)
+  and [Rust](https://github.com/trending/rust?since=monthly) pages. The returned
+  views were cached two weeks earlier; no fresh relevant trend was verified.
+  The author's [HalluSpan_EviAlign repository](https://github.com/miyu-y/HalluSpan_EviAlign)
+  supplies an MIT implementation and warns that its preprocessing and model
+  environments conflict. It reuses RAGTruth; it is not a fresh corpus.
+- **Logical Intelligence:** checked the [site](https://logicalintelligence.com/)
+  and [Kona 1.0](https://logicalintelligence.com/kona). These are vendor
+  descriptions, not a sufficient local reproduction recipe. Keep Kona as
+  long-term context rather than a claim of achieved parity.
+
+### Data availability and local inference
+
+[SciHal25](https://aclanthology.org/2025.sdp-1.29/) is a useful evidence-label
+lead. Its [official access page](https://sdproc.org/2025/scihal.html) requires
+registration. A [participant's primary report](https://aclanthology.org/2025.sdp-1.33.pdf)
+explains that many claims were synthetically modified. It is not a verified,
+ready replacement for a fresh natural-error corpus. Do not silently switch to it.
+
+Exp7715 excluded every one of its 2,894 observed RAGTruth source families as
+previously exposed. Its inventory treats prior evaluator shards as exposure.
+That conservative disposition remains authoritative until positive custody
+records establish something narrower. Renaming these families does not make
+fresh evidence. A mechanism study can use them with fixed disjoint roles and
+an explicit development-only claim. It cannot establish new generalization.
+
+The new local hypothesis is per-sentence evidence-set coverage, compared with
+V672's single latent window shared by an entire answer. Weak answer labels do
+not identify sentence truth. No paper above validates Carnot's proposed hash
+feature model. A paired mechanism test can reject it before fresh acquisition.
+The separate ARC hypothesis comes from the local V7/V8 pilot: archive replay
+increments the same `seen` counter used to measure organic exploration.
+Separating those events changes the mechanism; retuning the old counter does not.

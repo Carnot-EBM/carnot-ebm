@@ -37500,3 +37500,49 @@ belong to REQ-ARC-WMTE-10017 and are outside this change.
 - **GIVEN** paired fixed-seed offline replays across at least five public games
 - **WHEN** only action recording changes
 - **THEN** the full action and data sequences match exactly for both seeds of each game.
+
+### REQ-ARC-WMTE-10024: Exclude archive replay frames from organic cell sightings
+
+REQ-ARC-WMTE-10023's V7/V8 seen-momentum pilot found that `seen` was contaminated:
+`StepwiseExplorer._ingest` counted frames from the archive's own RESET and replay
+actions as independent rediscoveries. `StepwiseExplorer` SHALL initialize the one
+instance flag `self._go_explore_replay_active: bool` to `False` beside archive state,
+set it to `True` at the start of `_begin_go_explore_replay` before building `pending`
+or calling `_serve`, and call `go_explore_archive.observe` only when the existing
+archive-present and nonterminal guards hold and that flag is `False`. Immediately
+after deciding whether to observe in the same `_ingest`, it SHALL clear the flag
+when `pending` is empty. The clear SHALL occur after the observation decision so
+the final replay action's landing frame remains excluded. Ordinary pending drains
+SHALL leave the flag false. With the archive disabled, decisions SHALL match main
+on at least 100 deterministic fixtures. Archive internals and the submitted
+default-off setting SHALL remain unchanged.
+
+#### SCENARIO-ARC-WMTE-10024-REPLAY-LANDING
+
+- **GIVEN** a selected two-step archive prefix and `pending = [RESET, step1, step2]`
+- **WHEN** `_serve` pops RESET, step1, then step2 on successive calls, and each resulting frame enters `_ingest` at the top of the next call
+- **THEN** RESET and both replay-step frames are excluded from `observe`
+- **AND** the step2 landing frame sees empty `pending` but clears the flag only after its observation decision
+- **AND** the next organic action's frame is observed normally.
+
+#### SCENARIO-ARC-WMTE-10024-ORGANIC-SEEN
+
+- **GIVEN** a real archive cell with an organic `seen` count
+- **WHEN** the archive replays to it one or more times
+- **THEN** its `seen` count does not increase solely from those returns.
+
+#### SCENARIO-ARC-WMTE-10024-NONREPLAY-AND-OFF
+
+- **GIVEN** ordinary frontier navigation pending actions, or an archive-disabled explorer
+- **WHEN** their frames are ingested
+- **THEN** ordinary navigation observations remain enabled and the replay flag stays false
+- **AND** archive-disabled action behavior matches main on at least 100 deterministic fixtures.
+
+Implementation status: implemented and verified 2026-09-26. The four new
+scenario tests pass, including a two-step RESET replay, three repeated returns,
+ordinary frontier pending drains, and 100 distinct archive-off differential
+fixtures against `git show main`. The existing Go-Explore and forward-navigation
+tests pass (17 focused tests total); scoped spec coverage, changed-file Ruff check/format,
+changed-module mypy, and the ARC orphan solver lint pass. The archive remains
+off by default. No numbered `ops/e2e-test-plan.md` case covers this archive path;
+the focused tests drive its real `StepwiseExplorer`/archive action loop on CPU.

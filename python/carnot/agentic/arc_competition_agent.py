@@ -2097,6 +2097,7 @@ class StepwiseExplorer:
             amortized_first_contact_prior
         )
         self.go_explore_archive = coerce_go_explore_archive(go_explore_archive)
+        self._go_explore_replay_active: bool = False
         self.transition_cycle_verifier = transition_cycle_verifier
         self._transition_cycle_receipts: list[dict[str, Any]] = []
         self._transition_cycle_admitted = 0
@@ -3737,10 +3738,15 @@ class StepwiseExplorer:
                 },
             )
             self._index_similarity_state(h, latest)
-        if self.go_explore_archive is not None and not over:
+        if self.go_explore_archive is not None and not over and not self._go_explore_replay_active:
             node = self.graph.get(h)
             if node is not None:
                 self.go_explore_archive.observe(latest, node.get("path") or [])
+        # REQ-ARC-WMTE-10024: _serve already popped the action that made this frame.
+        # The final replay landing arrives with empty pending, so clear only after
+        # this frame's observe decision; the next organic frame is then admitted.
+        if not self.pending:
+            self._go_explore_replay_active = False
         # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring). Appends `latest` unconditionally (a
         # single list append is negligible next to everything else `_ingest` already does) so the
         # buffer is ready the moment the flag is later flipped for an A/B; the estimate itself is
@@ -4779,6 +4785,7 @@ class StepwiseExplorer:
         return self.go_explore_archive.select_prefix(current_path=current_path)
 
     def _begin_go_explore_replay(self, sequence: Sequence[Mapping[str, Any]]) -> tuple:
+        self._go_explore_replay_active = True
         self._go_explore_prefixes_injected += 1
         self._go_explore_actions_injected += len(sequence)
         self.pending = [{"kind": "RESET", "data": None, "probe": False}]

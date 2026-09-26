@@ -1,131 +1,178 @@
-# Carnot Research Roadmap v672: Source alignment and causal acquisition
+# Carnot Research Roadmap v673: Evidence sets and organic exploration
 
 **Created:** 2026-09-26
-**Milestone:** 2026.09.672
-**Title:** Learned source alignment, causal constraint acquisition, and qualified service evidence
+**Milestone:** 2026.09.673
+**Title:** Evidence-set decisions, causal constraint growth, and organic ARC exploration
 **Status:** Proposed; staged for conductor activation
-**Supersedes:** 2026.09.671, Exp7699–Exp7712
-**Previous design:** `research-roadmap-v671-preserved-20260926.md`, preserved byte for byte
+**Supersedes:** 2026.09.672, Exp7713–Exp7725
+**Previous design:** `research-roadmap-v672-preserved-20260926.md`, preserved byte for byte
 **Execution authority:** `research-roadmap-next.yaml`, then the matching activated roadmap
-**Contract:** exactly **13 tasks, exp7713 through exp7725**, in the order below, across **four phases**.
+**Contract:** exactly **13 tasks, exp7726 through exp7738**, in execution order, across **four phases**.
 
-## What v671 proved
+## What v672 proved
 
-The queue completed; its scientific results have narrower scopes. The active
-roadmap, producer artifacts and conductor log establish the following record.
-The completed archive currently ends at V670. That archive lag is preserved.
+Queue completion does not mean every scientific experiment ran. The active
+roadmap, terminal artifacts and conductor log provide the following evidence.
+The completed archive currently ends at V671; preserve that archive lag.
 
-| Evidence | Finding | What it does not establish |
+| Evidence | Observed outcome | Claim limit |
 |---|---|---|
-| Exp7699 | Matching fourteen-task contract qualified | An administrative result is not research benefit. |
-| Exp7700, Exp7701 | Record-address fixtures qualified; 400 isolated source families sealed | A byte address does not prove semantic support. |
-| Exp7702 | 48 bounded Qwen calls completed on 24 exposed/fixture groups | Fixture readiness is not fresh extraction accuracy. |
-| Exp7703, Exp7704 | Energy/control training ran; 368/400 families had no checked evidence and no bound tuples were found. All 40 evaluation cases escalated; paired cost reduction was zero. | No registered decision benefit. The unchanged certificate-count head is retired. |
-| Exp7705, Exp7706 | Durable fixture mechanics ran; the inspected fixed-period stream rolled back six proposals. Readiness stayed zero and Exp7706 was gate-skipped. | No empirical acquisition or retained-learning null was measured. |
-| Exp7707, Exp7712 | Missing science was recorded as blocked | Complete accounting does not supply missing online evidence. |
-| Exp7708, Exp7709 | Fixture runner qualified initially; later its test was quarantined. Live history contains 256 actions and four Qwen calls on wa30/lf52, with no observed progress. Exp7709 failed required coverage at 22 percent. | Raw observations do not erase disqualification or estimate hidden-game success. |
-| Exp7710, Exp7711 | Actual extension parity and restart work ran, but required coverage/format/Rust checks failed; service timing was skipped. A later standalone-test repair exists. | The later patch does not retroactively change the old verdict or prove complete-service speed. |
+| Exp7713 | `complete_blocked_v672_independent_contract`; the design contained neither the expected task table nor machine contract | Administrative qualification failed. This design supplies both sections and validates their exact contents before delivery. |
+| Exp7714 | Finite alignment protocol qualified; readiness was 1 | Exact normalization and fixtures do not establish natural-language accuracy. |
+| Exp7715 | 2,894 observed families were treated as previously exposed; zero eligible fresh train/test families | The proposed fresh-400 cohort was unavailable. Its blocked verdict remains intact. |
+| Exp7716 | 48 Qwen calls on 24 exposed families; 135.29 seconds recorded | Changed-module coverage was 26 percent. The terminal result was disqualified, not a usable positive pilot. |
+| Exp7717, Exp7718, Exp7720 | No terminal scientific producers after upstream gate skips | No latent-alignment benefit or retained-learning null was measured. |
+| Exp7719 | Five-case acquisition fixtures ran; global Python collection was a required failing gate | The fixture work did not qualify. A new, prospectively complete affected scope is required. |
+| Exp7721, Exp7725 | Required scientific evidence remained blocked | Accounting completeness cannot replace missing measurements. |
+| Exp7722 | Historical ARC joins and affected checks ran; terminal-reader qualification failed | No new solve or qualified generalization claim. |
+| Exp7723, Exp7724 | Native parity reached 136 payloads; validation failed, including missing pytest base-directory parents, coverage and affected Clippy; timing was skipped | No qualified complete-service speedup. Preserve all failed receipts. |
 
-The published Exp7705 builder writes its readiness field as a constant zero.
-Its fixture stream also fails to exercise a successful commit. Both must be
-addressed: replacing the constant alone cannot qualify acquisition. Its
-static arm must represent the complete feature closure, not an empty bank.
-
-V665's Exp7627 remains positive for its registered 1.10x cost gate, with a
-7.827x estimate that did not meet NFR-01's 10x target. Do not relabel that
-artifact as a scientific failure. The FoVer 0.9131 headline and its unchanged
-G1–G4 publication definition remain separate from all new hypotheses.
+The independent operator-led ARC pilots provide a new mechanism diagnosis.
+V7/V8 used `visits - seen` to select an archive cell. Archive replay also
+increased `seen`, contaminating the intended exploration signal. V8 gained
+no new game and lost the earlier sk48 win. Earlier spacing/cap variants
+showed an action tradeoff, including a real cd82 score loss. This milestone
+changes observation provenance while holding that selector and replay limits
+fixed. It does not repeat inert-click tuning or solve registered routes.
 
 ## Three biggest gaps to the PRD vision
 
-1. **Source-dependent evidence for FR-12.** Exact checks work when a narrow
-   claim matches their grammar. Most original language never reaches that
-   grammar. Learn source-to-answer alignment and test it against controls
-   with the same information, rather than fit another sparse-count head.
-2. **Causal retained improvement for FR-06/FR-11.** A durable event ledger
-   is useful, but a learner must commit a justified addition and improve a
-   later prediction. Qualify that path, measure delayed learning, and test
-   retention after restart against a complete-static comparator.
-3. **Qualified reachable behavior and cost for FR-05/FR-07/FR-08.** Recover
-   the actual live-agent evidence and measure the shipped native service
-   through durable acknowledgement. Fixture success and kernel timing do
-   not answer the end-user question.
+1. **FR-12: usable evidence coverage.** Exact constraints cover narrow claim
+   forms. The current alignment prototype shares one source location across
+   an entire response. A response can need several different passages.
+   Test a separate evidence location for each complete answer sentence.
+2. **FR-06/FR-11: retained causal improvement.** Persistence and fixture
+   mechanics are insufficient. A learned constraint addition must improve
+   later decisions against both frozen and complete-static controls.
+3. **FR-05/FR-07/FR-08 and NFR-01: useful reachable behavior at measured cost.**
+   The live ARC process still loses useful search budget. Native service
+   qualification remains incomplete. Test the measured ARC defect and time
+   the new CPU consumer before committing to another native or hardware port.
 
 ## Research incorporated before design
 
-The V672 entry in `research-references.md` was written before this design.
-It records all eight requested research topics and all six secondary channels,
-review depth, access failures and reasons to adopt or defer each lead.
+The V673 review in `research-references.md` precedes this plan. It records
+all requested topics and channels, review depth, access limits and deferrals.
 
-| Lead | Local test | Tasks |
+| Lead | Local hypothesis or boundary | Tasks |
 |---|---|---|
-| [HallDetect](https://arxiv.org/html/2608.05823v1), August 2026; [Enoki](https://arxiv.org/abs/2609.00581), September 2026 | Keep original sentences and compare learned source alignment with pooled controls. Isolate representation changes. | 7714–7718 |
-| [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), revised May 2026 | Normalize a small finite conditional energy and marginalize evidence location. Learned energy remains probabilistic. | 7714, 7717–7718 |
-| [Structured versus semantic decoding](https://arxiv.org/abs/2609.23742), September 2026 | Separate valid Qwen output syntax and quotes from correct semantic decisions. | 7716 |
-| [Delayed capacity-constrained OCO](https://arxiv.org/abs/2606.11711), June 2026; [KAN forgetting](https://arxiv.org/abs/2511.12828), November 2025 | Bound feedback and update budgets; test causality and forgetting directly. | 7719–7721 |
-| [FPGA/Ising co-design](https://arxiv.org/abs/2602.15985), February 2026; [Z1T](https://extropic.ai/writing/z1t), September 2026 | Include host work and all service stages in cost accounting. | 7723–7725 |
+| [SURE-RAG](https://arxiv.org/html/2605.03534v1), 2026; [HalluSpan/EviAlign](https://arxiv.org/html/2608.15804v1), August 2026 | Evidence may be spread across passages. Compare independent sentence locations with a shared location and pooled controls. | 7726, 7728, 7730–7731 |
+| [EBT](https://arxiv.org/abs/2507.02092), 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), revised May 2026 | Use finite normalized decision energy; learned probability is not proof. | 7728, 7730 |
+| [DCCD](https://arxiv.org/abs/2603.03305), 2026; [structural/semantic gap](https://arxiv.org/abs/2609.23742), September 2026 | Hold tokens fixed while separating draft conditioning, output structure and semantic decisions. | 7729 |
+| [Delayed capacity-constrained learning](https://arxiv.org/abs/2606.11711), 2026; [KAN forgetting](https://arxiv.org/abs/2511.12828), 2025 | Bound feedback, preserve temporal order and test retention. No theorem transfers automatically to discrete feature acquisition. | 7732–7734 |
+| [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985), 2026; [Z1T](https://extropic.ai/writing/z1t) | Include parsing, orchestration, serialization and durable acknowledgement in service cost. | 7737–7738 |
 
-The latent-alignment model is a **new local hypothesis**, not a reproduction
-of HallDetect's pretrained entailment system. Weak response labels do not
-identify sentence truth or the correct evidence location. Its latent weights
-are explanation hypotheses; exact certificates retain their narrow scope.
-No new pretrained encoder, generator training or external-text reranker is
-introduced. AS2, ETS, ERM, KAN-CL and new p-bit samplers remain reference leads;
-they do not resolve the current representation defect by themselves.
+This is a Carnot mechanism study, not a reproduction of a pretrained
+entailment encoder. Fixed hash features may still lack semantic information.
+The comparison can reject that premise. LagONN, EBD, KAN architecture changes
+and new samplers remain research leads, not additional tasks in this contract.
+Kona supplies vendor context without a sufficient local reproduction recipe.
+Semantic Scholar citation endpoints failed. OpenReview direct pages reached
+browser challenges. GitHub trending views were cached. Those gaps are recorded,
+not treated as proof that no newer work exists.
 
-Semantic Scholar citation endpoints failed; there is no citation census.
-OpenReview PDFs were challenged or inaccessible in this review. GitHub
-trending views were two weeks old. Hugging Face supplied discovery leads.
-Kona remains a vendor-described architecture without a local reproduction
-recipe in the retrieved pages. Z1T's main projected ratios exclude readout
-and movement costs, so they cannot justify a Carnot full-service claim.
+## Evidence scope and data decision
+
+V673 uses **exposed development data**. It does not relabel the RAGTruth archive
+as fresh. Inventory, evaluator materialization and actual fitting are tracked
+separately, but uncertain custody stays exposed. All new artifacts declare
+`fresh_generalization_eligible=false`. The fresh-data limitation is unresolved.
+SciHal requires registration and includes modified claims; it is not an
+already qualified replacement. RAGTruth re-annotation also reuses source families.
+
+Exp7727 freezes 640 distinct source families: fit256, tune64, policy64,
+online_update96, online_admission64, evaluation64 and retention32. Evaluation
+uses official test; other roles use official train. One label-blind response
+per source prevents responses from multiplying independent N. Prior pilot
+families and cross-role near-duplicates are excluded. A real shortage blocks
+the affected branch. Roles are not shrunk after seeing data.
+
+These roles protect within-run fitting and temporal comparisons. Historical
+exposure still limits every result to a development mechanism claim. Positive
+results can justify a future fresh-corpus study only. No generator weights,
+production defaults, publication gates or live submissions change here.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    S[Original natural source and response bytes]
-    P[7714: sentence windows and latent energy protocol]
-    C[7715: fresh families and isolated human labels]
-    Q[7716: bounded exposed Qwen semantic pilot]
-    E[7717: trained source alignment and matched controls]
-    D[7718: fresh typed decisions and source interventions]
-    B[7719: reachable advisory acquisition and static closure]
-    L[7720: delayed continuous learning and retention]
-    A[7721: independent raw-evidence audit]
-    R[7722: historical live ARC evidence qualification]
-    N[7723: existing native typed service qualification]
-    T[7724: complete service cost]
-    K[7725: thirteen dispositions and continuation]
-    S --> P
-    S --> C
-    P --> Q
-    P --> E
-    C --> E --> D
-    E --> L
+    C[7726: contract and method ingestion]
+    D[7727: exposed corpus with isolated roles]
+    P[7728: per-sentence evidence-set protocol]
+    Q[7729: bounded Qwen draft diagnostic]
+    F[7730: finite energies and calibrated decisions]
+    E[7731: development decisions and interventions]
+    B[7732: durable causal admission]
+    L[7733: delayed feature growth and retention]
+    A[7734: independent raw reduction]
+    R[7735: organic versus replay observation primitive]
+    G[7736: adapter-withheld scored-wrapper comparison]
+    T[7737: complete CPU service costs]
+    K[7738: thirteen dispositions and continuation]
+    D --> F
+    P --> F
+    F --> E
+    F --> L
     B --> L
-    D -. evidence .-> A
+    E -. evidence .-> A
     L -. evidence .-> A
-    N --> T
-    A -. custody .-> K
+    R --> G
+    F --> T
+    C -. custody .-> K
     Q -. custody .-> K
-    R -. custody .-> K
+    A -. custody .-> K
+    G -. custody .-> K
     T -. custody .-> K
-    M[7713: contract and literature] -. custody .-> K
 ```
 
-Solid arrows are execution prerequisites. Dotted arrows are evidence accounting.
-The native typed-record service is a separate existing capability. It does
-not implement or accelerate the proposed source-alignment model.
+Solid arrows are readiness dependencies. Dotted arrows are evidence reads
+that must still report missing or blocked inputs. Administrative and Qwen
+pilot results never gate the main science or ARC branch.
 
-## Phase 1 — Qualify the representation and fresh data
+## Phase 1 — Establish the contract, roles and evidence-set prototype
 
-**Exp7713–Exp7715.** Register the exact task contract and paper-to-method
-mapping. Administrative readiness never gates all science.
+**Exp7726–Exp7728.** Exp7726 tests the complete design against staged or
+activated authority. It also maps the literature onto these exact methods.
+Exp7727 provides role isolation without pretending that the corpus is fresh.
+Both are infrastructure work with no benefit claim.
 
-Exp7714 preserves original bytes, segments complete answer sentences, and
-builds one- and three-sentence source windows. Fixed signed token/bigram
-hashes and overlap, negation and numeric features replace grammar-dependent
-certificate counts as the primary input. Use 64 hash bins, at most 128 source
-windows and 16 answer units. Over-budget families remain in every denominator
-as explicit abstentions. No silent truncation or replacement is permitted.
+Exp7728 adds a distinct latent source-window index for each complete answer
+sentence. Each pair has two normalized support states. Marginalization uses
+`logsumexp`, grouped duplicate priors and a null-evidence state. Response
+support is the product of sentence-support probabilities, evaluated in log
+space. This conditional-independence assumption is tested, not certified.
+Missing evidence is not automatically contradiction.
+
+Keep the existing features and limits: at most 128 source windows and 16
+answer sentences. Over-budget inputs abstain and remain in all denominators.
+The original shared-location energy, pooled logistic and pooled MLP are
+same-input controls. Each head has at most 4,096 trainable parameters.
+Use 96 fixture groups with 32 reserved. Exact normalization, byte retention,
+reordering, duplicate invariance and boundary handling must pass before fit.
+Fixtures are `circular_positive`, never independent scientific positives.
+
+## Phase 2 — Measure semantics, calibrated probabilities and decisions
+
+**Exp7729–Exp7731.** The Qwen pilot is an independent diagnostic. Its three
+arms use a 256-token ceiling: direct schema; draft128 plus schema128; and
+draft128 plus unconstrained128. The 24 exposed families require at most 120
+calls and 18,432 output tokens. Report syntax, valid quotes, unknowns and
+binary human-label accuracy separately. The dataset does not certify a
+three-way support/contradiction/insufficient label. The actual model is
+`unsloth/Qwen3.8-27B-GGUF`; this is bounded generation with a 10-second floor.
+
+Exp7730 fits finite energies with five seeds and a fixed four-configuration
+budget, at most 200 epochs. Minimize fit NLL, calibrate temperature on tune,
+and freeze policy before evaluation. Typed costs are accept=`5*p`,
+reject=`1-p`, escalate=`0.25`, where `p` is unsupported probability.
+Ties escalate. Freeze an actual complete-static model containing all at
+most 16 advisory conjunctions for the later learning comparison.
+
+Exp7731 opens evaluation labels only after model hashes freeze. A development
+benefit needs paired cost reduction lower95>0 and estimate>=0.02 against all
+three same-input controls, Brier reduction lower95>0 and coverage>=0.20.
+Use 10,000 family bootstrap draws, seeds averaged within family, and Holm
+correction across the baseline contrasts. Require Brier benefit against the
+separately trained source-erased control too. Source permutations and erasure
+of evaluation inputs have no inherited labels; report prediction sensitivity,
+not invented counterfactual accuracy. N=64 permits a bounded mechanism study.
