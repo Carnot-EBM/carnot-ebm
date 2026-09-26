@@ -1,0 +1,78 @@
+{
+  "schema": "levelup_analysis.session.v1",
+  "episode_id": "m0r0:seed-7491003",
+  "game": "m0r0",
+  "seed": 7491003,
+  "actions": 180,
+  "first_levelup_action_index": null,
+  "replay_levels_completed": 0,
+  "recorded_peak_level_buggy": 0,
+  "action_trace_sha256": "0a44f22abdc359a656e37125fb25c723c02087d6517f3c880394cbf7e06e9dbf",
+  "adapter_disabled": true,
+  "banked_trajectories_disabled": true,
+  "stored_engines_disabled": true,
+  "action_vocabulary": {
+    "ACTION1": 29,
+    "ACTION2": 26,
+    "ACTION3": 30,
+    "ACTION4": 29,
+    "ACTION5": 23,
+    "ACTION6": 41
+  },
+  "phase_breakdown": {
+    "explorer_actions_inferred": 180,
+    "execute_plan_actions": 0,
+    "induction_attempts": 1,
+    "decision_telemetry_phase_counts": {
+      "explore": 401,
+      "induce": 1
+    }
+  },
+  "induction_attempts": [
+    {
+      "step_index": 28,
+      "reason": "stall",
+      "skipped": "proposer_failed",
+      "planned": false,
+      "verifier_result": "reject"
+    }
+  ],
+  "accepted_induced_engine": false,
+  "plan_executed": false,
+  "route_action_match": {
+    "source": "results/arc_loop_solve_m0r0.json",
+    "exact_from_reset": 0,
+    "ordered_with_extra_actions": 15,
+    "route_length": 15,
+    "reset_delimited_segments": 2,
+    "method": "first-level registered route actions; best match in a reset-delimited segment; ordered match allows extra actions but does not prove equivalent state"
+  },
+  "distinct_recorded_state_sha256": 36,
+  "last_20_actions_to_first_levelup": [],
+  "winning_action_explorer_mechanism": null,
+  "source_fields": [
+    "live_session.json:episodes[].action_rows",
+    "live_session.json:episodes[].adapter_disabled",
+    "live_session.json:episodes[].banked_trajectories_disabled",
+    "live_session.json:episodes[].stored_engines_disabled",
+    "induction_gate_telemetry.jsonl:record_type,step_index,phase,planned,skipped",
+    "goal_induction_design_2026_09_25/live_replay.json:episodes[].first_levelup_action_index,levels_completed"
+  ],
+  "registered_route_state_comparison": {
+    "method": "seeded offline replay of recorded actions and registered route; pixel Hamming to registered route frame just before first winning action; route state index includes start as 0; exact match uses rendered 64x64 grid",
+    "replay_seed": 7491003,
+    "registered_first_level_actions": 15,
+    "registered_route_reached_L1": true,
+    "route_prewin_grid_shape": [
+      64,
+      64
+    ],
+    "distinct_rendered_grids": 127,
+    "closest_pre_win_pixel_hamming": 100,
+    "closest_action_index": 14,
+    "initial_reset_pixel_hamming": 112,
+    "max_exact_registered_prewin_state_index": 0,
+    "first_levelup_action_index": null,
+    "status": "ok"
+  }
+}
