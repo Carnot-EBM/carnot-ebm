@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-09-26 — Exp7708 fixture preflight repair
+
+- Removed the coding-session-ID requirement from CPU fixture preflight; the ID
+  remains optional artifact provenance. Added a regression that unsets it.
+- Reproduced the regression before the fix, then passed the conductor's
+  146-test subset with `CODEX_SESSION_ID` unset and measured 519/519 statements
+  covered across the affected runner and Exp7722 recovery modules.
+
 ## 2026-09-26 — Test gate verification and historical registry compatibility
 
 - Restored Exp5500's historical three-model metadata lookup from the legacy

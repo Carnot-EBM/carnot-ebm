@@ -135,16 +135,6 @@ def collect_preconditions(
     )
     checks.append(
         check(
-            "effective_backend",
-            "current_codex_invocation",
-            "environment:CODEX_SESSION_ID",
-            "successful_current_session_visible",
-            True,
-            bool(os.environ.get("CODEX_SESSION_ID")),
-        )
-    )
-    checks.append(
-        check(
             "offline_runtime",
             "local_python_environment",
             str(root / ".venv/bin/python"),

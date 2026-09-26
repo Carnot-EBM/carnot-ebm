@@ -82326,6 +82326,34 @@ Protected-file hashes remain unchanged. Runtime science remains proposed.
 Implementation status: planning in progress; no V671 experiment executed.
 ## V671 adapter-withheld ARC runner — 2026-09-26
 
+### REQ-REPORT-7722: Recover V671 ARC evidence from immutable raw history
+
+Exp7722 SHALL authenticate the original Exp7709 action, observation, request,
+response, and attempt bytes before reduction. It SHALL cold-join 128 actions
+and two Qwen responses per public game, retain the original disqualified
+verdict, and publish a new terminal artifact without new model calls or solve
+credit. Missing or mutated history SHALL produce `complete_blocked_*` with
+exact failed operands. Failed required validation SHALL disqualify readiness.
+The current substrate SHALL be `no_model_load`; historical model provenance
+SHALL remain distinct. Two exposed games and fixture oracle truth SHALL not
+establish hidden-game probability, utility, or goal recall without positives.
+
+#### SCENARIO-REPORT-7722-RAW-JOIN
+
+Given authentic V671 ledgers, the reducer matches every action to its SDK
+observation and every request to exact hashed bytes. It reports two censored
+128-action traces, four reasoning-only length-limited responses, zero accepted
+engines, and zero observed level increases. Missing bytes close the gate.
+
+#### SCENARIO-REPORT-7722-TERMINAL
+
+Given repaired scored fixtures and passing frozen checks, a fresh-process
+replay and both terminal readers examine the exact candidate before atomic
+publication. Fixture correctness is circular evidence; historical failed
+validation and other closed nulls remain visible without becoming benefits.
+
+**Implementation status:** Specified; execution pending.
+
 ### REQ-REPORT-7709: Publish current first-contact evidence
 
 Exp7709 SHALL authenticate Exp7708's fixed two-game schedule, adapter denials,
@@ -82376,6 +82404,9 @@ No fixture or public-game result SHALL earn new registry solve credit.
 
 The artifact SHALL separate missing external inputs (complete blocked) from
 unfinished owned work (partial), and failing required validation (disqualified).
+The coding-agent session ID is optional provenance for a standalone CPU fixture
+replay; its absence SHALL NOT block fixture readiness when all required inputs,
+observations, and validation receipts are present.
 It SHALL retain raw rows, independent group counts, exact gate operands,
 current no-model provenance, source hashes, fixed schedule for Exp7709, frozen
 validation scope, cold reduction, command exits and log hashes, and terminal
@@ -82409,6 +82440,9 @@ the raw validation receipt. An exact fixture pass remains circular evidence.
 entrypoint. The final scripted two-game receipt is circular positive, with all
 12 validation commands and three terminal readers passing. The 25 focused tests
 cover 336/336 changed-module statements. No live benefit or solve credit is claimed.
+The standalone preflight no longer gates on `CODEX_SESSION_ID`; the additional
+spec-linked regression passes with that variable unset. The runner remains
+fully covered at 217/217 statements in the post-fix focused run.
 
 ## REQ-REPORT-7712: Reconcile V671 from exact current evidence
 

@@ -143,7 +143,9 @@ def test_current_preflight_carries_authenticated_gate_and_resource_operands() ->
     assert context["model_path"].is_file()
 
 
-def test_frozen_validation_and_terminal_commands_are_bounded(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_frozen_validation_and_terminal_commands_are_bounded(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     """REQ-REPORT-7709: affected scope and exact-candidate readers stay fixed."""
     from carnot.reporting import experiment_7303_validation_scope as scope
 
@@ -163,11 +165,15 @@ def test_frozen_validation_and_terminal_commands_are_bounded(monkeypatch: pytest
     candidate.write_text("{}")
     terminal = exp._terminal(exp.ROOT, candidate, tmp_path, time.monotonic())
     assert [row["name"] for row in terminal] == [
-        "cold_reduction", "adversarial_verify", "verdict_row_consistency_strict"
+        "cold_reduction",
+        "adversarial_verify",
+        "verdict_row_consistency_strict",
     ]
 
 
-def test_main_cold_read_rejects_mutated_raw_rows(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_main_cold_read_rejects_mutated_raw_rows(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     """SCENARIO-REPORT-7709-REDUCE: a fresh process must see exact raw rows."""
     monkeypatch.setattr(exp, "ROOT", tmp_path)
     monkeypatch.setattr(exp, "RAW", Path("raw"))
@@ -179,6 +185,43 @@ def test_main_cold_read_rejects_mutated_raw_rows(monkeypatch: pytest.MonkeyPatch
     candidate.write_text('{"rows": [{"game": "forged"}], "reduction": null}')
     with pytest.raises(ValueError, match="cold_raw_rows_mismatch"):
         exp.main(["--cold-read", str(candidate)])
+
+
+def test_original_raw_history_cold_reduces_without_model() -> None:
+    """SCENARIO-REPORT-7722-RAW-JOIN: the real Exp7709 raw rows remain readable."""
+    root = Path(__file__).resolve().parents[2]
+    raw = root / "results/raw/experiment_7709_v671_arc_first_contact/episode_rows.json"
+    reduction = exp.cold_reduce(raw)
+    assert reduction["joined_actions"] == 256
+    assert reduction["joined_requests"] == 4
+    assert reduction["goal_recall"] == "unknown"
+    assert [row["sdk_peak_level"] for row in reduction["per_game_results"]] == [0, 0]
+
+
+def test_original_raw_history_rejects_forged_request(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7709-REDUCE: no request path means a broken join."""
+    root = Path(__file__).resolve().parents[2]
+    original = root / "results/raw/experiment_7709_v671_arc_first_contact/episode_rows.json"
+    payload = json.loads(original.read_text())
+    payload["rows"][0]["requests"][0]["response_path"] = None
+    raw = tmp_path / "rows.json"
+    raw.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="request_response_join"):
+        exp.cold_reduce(raw)
+
+
+def test_v671_failed_coverage_stays_disqualified() -> None:
+    """REQ-REPORT-7722: the original failed check cannot become qualified retroactively."""
+    root = Path(__file__).resolve().parents[2]
+    original = json.loads(
+        (root / "results/experiment_7709_v671_arc_first_contact.json").read_text()
+    )
+    assert original["verdict_class"] == "disqualified"
+    assert any(
+        row["name"] == "changed_module_coverage_report" and row["exit_code"] != 0
+        for row in original["validation_receipts"]
+    )
+    assert original["arc_measurement_complete_score"] == 1
 
 
 @pytest.mark.parametrize("blocked", [True, False])
@@ -198,24 +241,43 @@ def test_orchestration_publishes_exact_current_disposition(
     def live(_root: Path, _context: dict, _started: float) -> tuple[list[dict], dict]:
         calls.append("live")
         rows = [
-            {"episode_id": f"{game}:live", "game": game, "arm": "adapter_withheld",
-             "actions": [], "observations": [], "requests": [], "induction_attempts": [],
-             "censoring": "censored_action_limit", "exclusions": [], "peak_level": 0}
+            {
+                "episode_id": f"{game}:live",
+                "game": game,
+                "arm": "adapter_withheld",
+                "actions": [],
+                "observations": [],
+                "requests": [],
+                "induction_attempts": [],
+                "censoring": "censored_action_limit",
+                "exclusions": [],
+                "peak_level": 0,
+            }
             for game in ("wa30", "lf52")
         ]
         exp.atomic_json(tmp_path / "raw/episode_rows.json", {"rows": rows})
-        return rows, {"loads_attempted": 1, "loads_completed": 1, "gpu_uuid": "GPU-fixture",
-                      "model_path": "/tmp/model", "gguf_sha256": "sha256:model",
-                      "server_path": "/tmp/server", "server_sha256": "sha256:server"}
+        return rows, {
+            "loads_attempted": 1,
+            "loads_completed": 1,
+            "gpu_uuid": "GPU-fixture",
+            "model_path": "/tmp/model",
+            "gguf_sha256": "sha256:model",
+            "server_path": "/tmp/server",
+            "server_sha256": "sha256:server",
+        }
 
     monkeypatch.setattr(exp, "collect_preconditions", preflight)
     monkeypatch.setattr(exp, "run_live", live)
     monkeypatch.setattr(exp, "_validation", lambda *_: [{"name": "required", "exit_code": 0}])
-    monkeypatch.setattr(exp, "_terminal", lambda *_: [
-        {"name": "cold_reduction", "exit_code": 0},
-        {"name": "adversarial_verify", "exit_code": 0},
-        {"name": "verdict_row_consistency_strict", "exit_code": 0},
-    ])
+    monkeypatch.setattr(
+        exp,
+        "_terminal",
+        lambda *_: [
+            {"name": "cold_reduction", "exit_code": 0},
+            {"name": "adversarial_verify", "exit_code": 0},
+            {"name": "verdict_row_consistency_strict", "exit_code": 0},
+        ],
+    )
     output = tmp_path / "out.json"
     result = exp.run_experiment(tmp_path, "20260926", output)
     assert json.loads(output.read_text())["honest_verdict"] == result["honest_verdict"]

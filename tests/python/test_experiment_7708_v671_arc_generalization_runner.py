@@ -187,6 +187,16 @@ def test_fixture_success_is_circular_and_requires_validation(tmp_path: Path) -> 
     assert candidate["arc_runner_ready_score"] == 0
 
 
+def test_fixture_preflight_does_not_require_coding_session_id(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-REPORT-7708-TERMINAL: offline replay needs no coding session."""
+    monkeypatch.delenv("CODEX_SESSION_ID", raising=False)
+    root = Path(__file__).resolve().parents[2]
+    checks, _ = runner.collect_preconditions(root, sdk_roster=["aa", "bb"])
+    assert all(row["passed"] for row in checks)
+
+
 def test_real_scored_policy_reaches_observation(monkeypatch: pytest.MonkeyPatch) -> None:
     """REQ-ARC-WMTE-7708: fixture transport drives the real E3 wrapper."""
     monkeypatch.setenv("CARNOT_ARC_DISABLE_INDUCTION", "1")

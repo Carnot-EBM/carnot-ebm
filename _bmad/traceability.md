@@ -1,6 +1,11 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-26
+**Operational Note:** SCENARIO-REPORT-7708-TERMINAL now verifies that the CPU
+fixture preflight succeeds when `CODEX_SESSION_ID` is absent. The conductor's
+146-test subset passes with the variable unset; the changed Exp7708 runner and
+Exp7722 recovery modules have 519/519 statement coverage. The optional session
+ID remains in artifact provenance and no longer controls fixture readiness.
 **Operational Note:** REQ-REPORT-7710 and REQ-PYBIND-7710 map the typed
 record reference, Rust scorer/service, and PyO3 calls to the 11 focused tests
 in `tests/python/test_experiment_7710_v671_native_record_contract.py`. The

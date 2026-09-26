@@ -13,6 +13,25 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+### REQ-ARC-WMTE-7722: Measure adapter-withheld historical generalization
+
+The evidence reducer SHALL use complete original SDK and request bytes from
+Exp7709. It SHALL report per-game action censoring, level progress, model
+acceptance reasons, and supervisor outcomes from actual receipts. Duplicate
+traces SHALL count once. Missing supervisor receipts SHALL remain unknown;
+no firings SHALL be reported as zero only when a complete receipt proves it.
+The wa30 and lf52 registry precheck SHALL record prior reproduced levels and
+that adapters, routes, solver hints, source, and offline truth were withheld.
+
+#### SCENARIO-ARC-WMTE-7722-HISTORICAL
+
+Given two original live attempts with no accepted engine or level progress,
+the report retains live self-discovery provenance, unknown goal recall, and
+zero new solve credit. The present scripted E3 fixtures have separate
+development-proxy provenance and cannot make a scientific positive claim.
+
+**Implementation status:** Specified; execution pending.
+
 ### REQ-ARC-WMTE-7709: Measure goal firing against SDK progress
 
 The adapter-withheld E3 runner SHALL use only visible SDK observations and its
