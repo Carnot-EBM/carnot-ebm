@@ -1,0 +1,93 @@
+{
+  "experiment": 7674,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-26",
+  "started_at": "2026-09-26T02:09:20.622688+00:00",
+  "finished_at": "2026-09-26T02:09:20.622688+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Train a fresh relation energy and freeze typed decision policies",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7673-fresh-relation-cohort",
+  "failed_field": "relation_features_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7673_v669_fresh_relation_cohort.json",
+  "failed_evidence_sha256": "sha256:ede0dc95bb255db330351c3bcb00ca8bcfa994440468e9f7fc5ad5e1abaf5791",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7673-fresh-relation-cohort",
+    "failed_field": "relation_features_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7673_v669_fresh_relation_cohort.json",
+    "failed_evidence_sha256": "sha256:ede0dc95bb255db330351c3bcb00ca8bcfa994440468e9f7fc5ad5e1abaf5791"
+  },
+  "gate_check_summary": "gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp7673-fresh-relation-cohort.relation_features_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7673-fresh-relation-cohort",
+      "artifact_field": "relation_features_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7673_v669_fresh_relation_cohort.json",
+      "artifact_sha256": "sha256:ede0dc95bb255db330351c3bcb00ca8bcfa994440468e9f7fc5ad5e1abaf5791"
+    },
+    {
+      "upstream": "exp7673-fresh-relation-cohort",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7673_v669_fresh_relation_cohort.json",
+      "artifact_sha256": "sha256:ede0dc95bb255db330351c3bcb00ca8bcfa994440468e9f7fc5ad5e1abaf5791"
+    },
+    {
+      "upstream": "exp7673-fresh-relation-cohort",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7673_v669_fresh_relation_cohort.json",
+      "artifact_sha256": "sha256:ede0dc95bb255db330351c3bcb00ca8bcfa994440468e9f7fc5ad5e1abaf5791"
+    },
+    {
+      "upstream": "exp7673-fresh-relation-cohort",
+      "artifact_field": "fresh_source_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7673_v669_fresh_relation_cohort.json",
+      "artifact_sha256": "sha256:ede0dc95bb255db330351c3bcb00ca8bcfa994440468e9f7fc5ad5e1abaf5791"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
