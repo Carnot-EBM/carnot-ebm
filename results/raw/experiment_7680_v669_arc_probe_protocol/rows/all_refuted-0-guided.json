@@ -1,0 +1,114 @@
+{
+  "actions": [
+    "GameAction.ACTION1",
+    "GameAction.ACTION2",
+    "GameAction.ACTION2",
+    "GameAction.ACTION2"
+  ],
+  "arm": "guided",
+  "case": "all_refuted",
+  "censored": false,
+  "counts": {
+    "model_calls": 0,
+    "virtual_engine_calls": 0,
+    "wrapper_calls": 4
+  },
+  "decisions": [
+    {
+      "admitted": false,
+      "base_action": 1,
+      "goal_guard": "unverifiable",
+      "legal_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mode": "guided",
+      "reason": "insufficient_support",
+      "selected_action": 1,
+      "tick": 0
+    },
+    {
+      "admitted": false,
+      "base_action": 2,
+      "goal_guard": "unverifiable",
+      "legal_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mode": "guided",
+      "reason": "insufficient_support",
+      "selected_action": 2,
+      "tick": 1
+    },
+    {
+      "admitted": false,
+      "base_action": 2,
+      "goal_guard": "unverifiable",
+      "legal_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mode": "guided",
+      "reason": "insufficient_support",
+      "selected_action": 2,
+      "tick": 2
+    },
+    {
+      "admitted": false,
+      "base_action": 2,
+      "goal_guard": "unverifiable",
+      "legal_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mode": "guided",
+      "reason": "insufficient_support",
+      "selected_action": 2,
+      "tick": 3
+    }
+  ],
+  "exclusions": [],
+  "goal_guard": [],
+  "goal_hypotheses": [
+    {
+      "direction": -1,
+      "feature": "visible_color_count",
+      "id": "color:0:down",
+      "source_action": 1,
+      "state": "refuted",
+      "threshold": 61,
+      "value": 0
+    },
+    {
+      "direction": 1,
+      "feature": "visible_color_count",
+      "id": "color:1:up",
+      "source_action": 1,
+      "state": "refuted",
+      "threshold": 2,
+      "value": 1
+    }
+  ],
+  "group_id": "all_refuted-0",
+  "provenance": "development_proxy_scored_wrapper_scripted_frames",
+  "raw_metrics": {
+    "admitted": 0,
+    "all_refuted": true,
+    "false_confirmation": 0,
+    "rejected": 4,
+    "sdk_progress": 0
+  },
+  "seed": 0
+}

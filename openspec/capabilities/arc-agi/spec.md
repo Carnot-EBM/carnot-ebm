@@ -12,6 +12,34 @@ hidden state, offline ground-truth search, or hand adapters on the scored path.
 
 ## Requirements
 
+### REQ-ARC-PROBE-7680: Bounded self-observation probe scheduling
+
+An explicit, default-off scored E3 policy option SHALL form at most sixteen generic
+goal hypotheses from current-episode visible frame differences and action effects.
+No-win observations SHALL leave goal truth unknown. The scheduler SHALL use the
+existing reward-machine frontier and two-sided goal contract for probe evidence.
+It MAY select an information-gathering legal action before an induced engine is
+accepted, within the existing action budget. It SHALL bound candidates, memory,
+virtual engine calls, and decision time; insufficient support SHALL return the
+current legal policy action. It SHALL log admitted and rejected decisions and
+consume the next actual observation. SDK level progress alone SHALL confirm a
+goal; a post-level-up frame is the next level's opening state. The default path,
+model acceptance checks, and SDK terminal authority SHALL remain unchanged.
+
+#### SCENARIO-ARC-PROBE-7680-ROUTE: Real scored wrapper executes both decisions
+
+With identical observations, current policy, novelty-only control, and hypothesis
+probe SHALL run through `make_carnot_agent` and `E3AgentPolicy`. The opt-in probe
+SHALL execute an admitted legal action and SHALL fall back on rejected proposals.
+Telemetry and checkpoint reload SHALL preserve the decision and its actual outcome.
+
+#### SCENARIO-ARC-PROBE-7680-UNKNOWN: Negative-only evidence is ambiguous
+
+Zero accepted engines, all hypotheses refuted, irreversible actions, misleading
+HUD changes, stale level frames, and false terminal predictions SHALL not create
+a positive goal confirmation. The two-sided contract SHALL keep unsupported
+goals unknown and the scored SDK observation SHALL govern any level claim.
+
 ### REQ-ARC-ARM-6387: Active Reward-Machine Discriminator
 
 Experiment 6387 SHALL add a bounded, default-off reward-machine hypothesis

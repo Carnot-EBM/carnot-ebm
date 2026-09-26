@@ -1,5 +1,33 @@
 # Research Reporting Capability Specification
 
+## V669 live-observation probe protocol — 2026-09-26
+
+### REQ-REPORT-7680: Measure a bounded scored-path probe protocol
+
+Exp7680 SHALL freeze inputs and measurement scope before fixture labels, compare
+current policy, novelty-only control, and hypothesis-guided probes on at least
+48 independent scripted cases through the real scored wrapper, and checkpoint
+each arm. It SHALL report legal actions, admission and rejection, actual next
+observations, goal guard decisions, resource bounds, and false confirmations.
+Exact fixture truth SHALL be circular-positive only. Missing external upstream
+evidence SHALL block with exact operands, authentication or required-check
+failure SHALL disqualify, and unfinished owned work alone SHALL be partial.
+Cold reduction, scoped validation, E2E-009 and E2E-011, adversarial verification,
+and strict row lint SHALL precede atomic terminal publication. No game solve,
+default activation, or registry credit follows from these fixtures.
+
+#### SCENARIO-REPORT-7680-ROWS: Groups and arms are independent
+
+Each scripted group SHALL have three arms with the same available observations;
+views and seeds SHALL not enlarge the independent group count. Raw rows SHALL
+retain counts, exclusions, censoring, and provenance for cold reduction.
+
+#### SCENARIO-REPORT-7680-TERMINAL: Validity and readiness are separate
+
+The artifact SHALL retain actual validation exits and log hashes. Failed required
+checks SHALL zero readiness; exact fixture success SHALL not establish learned
+verifier advantage or a hidden-game solve.
+
 ## V669 independent evidence audit — 2026-09-26
 
 ### REQ-REPORT-7679: Reduce available evidence and expose absent producers

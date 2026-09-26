@@ -5291,6 +5291,7 @@ class E3AgentPolicy:
         belief_ledger: Any | None = None,
         belief_aware_selector: bool | None = None,
         goal_confirmation: bool | None = None,
+        arc_probe_protocol: str | None = None,
     ) -> None:
         import os
 
@@ -5542,6 +5543,15 @@ class E3AgentPolicy:
         self._goal_confirmation = GoalConfirmation() if goal_confirmation_on else None
         self._goal_confirmation_predicate = None
         self._goal_confirmation_model_invalid = False
+        # REQ-ARC-PROBE-7680: this experiment option is inert unless named by the caller.
+        # It observes the same returned frames as the scored policy and spends real actions.
+        from carnot.agentic.arc_probe_protocol import ArcProbeProtocol
+
+        self._arc_probe_protocol = (
+            ArcProbeProtocol(arc_probe_protocol)
+            if arc_probe_protocol in {"guided", "novelty"}
+            else None
+        )
         self._prev = None  # last (grid, action_id, data) for transition pairing
         self._prev_level = 0  # real level AT THE TIME self._prev was captured (see next_move)
         self.cell = 1
@@ -7122,6 +7132,8 @@ class E3AgentPolicy:
             "_decision_telemetry",
             arc_decision_telemetry.NOOP_RECORDER,
         )
+        if self._arc_probe_protocol is not None:
+            self._arc_probe_protocol.observe(latest)
         decision_telemetry.begin_policy_step(self, latest)
         self._record_first_party_tool_gap_outcome(latest)
         if self._provenance is None:
@@ -7141,6 +7153,15 @@ class E3AgentPolicy:
             latest_level=latest_level,
             prospective_move=move if selected_move != move else None,
         )
+        if self._arc_probe_protocol is not None and self.phase == "explore":
+            from carnot.agentic.arc_agi3_live_adapter import _available_action_ids
+
+            selected_move = self._arc_probe_protocol.select(
+                latest, _available_action_ids(latest), selected_move
+            )
+            if self._prev is not None and isinstance(selected_move[0], int):
+                self._prev = (self._prev[0], int(selected_move[0]), selected_move[1])
+            self._arc_probe_protocol.record_action(latest, selected_move)
         self._record_outcome_transport_proposal(move, selected_move, latest)
         self._record_first_party_tool_gap_next_action(selected_move, latest)
         if decision_telemetry.enabled:
@@ -7158,6 +7179,12 @@ class E3AgentPolicy:
             except Exception:
                 observer.note_error()
         return selected_move
+
+    def arc_probe_diagnostics(self) -> dict[str, Any]:
+        """Report what the opt-in observer actually saw on the scored action path."""
+        if self._arc_probe_protocol is None:
+            return {"enabled": False}
+        return self._arc_probe_protocol.diagnostics()
 
     def observable_aliasing_diagnostics(self) -> dict[str, Any]:
         """Return bounded observer data, or the explicit default-off state."""
@@ -10025,6 +10052,7 @@ def make_carnot_agent(
     belief_ledger=None,
     belief_aware_selector: bool | None = None,
     goal_confirmation: bool | None = None,
+    arc_probe_protocol: str | None = None,
 ):
     """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
@@ -10070,6 +10098,7 @@ def make_carnot_agent(
                     belief_ledger=belief_ledger,
                     belief_aware_selector=belief_aware_selector,
                     goal_confirmation=goal_confirmation,
+                    arc_probe_protocol=arc_probe_protocol,
                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
                     early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),

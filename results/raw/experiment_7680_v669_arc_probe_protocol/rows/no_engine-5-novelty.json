@@ -1,0 +1,195 @@
+{
+  "actions": [
+    "GameAction.ACTION3",
+    "GameAction.ACTION2",
+    "GameAction.ACTION1",
+    "GameAction.ACTION4"
+  ],
+  "arm": "novelty",
+  "case": "no_engine",
+  "censored": false,
+  "counts": {
+    "model_calls": 0,
+    "virtual_engine_calls": 0,
+    "wrapper_calls": 4
+  },
+  "decisions": [
+    {
+      "admitted": false,
+      "base_action": 3,
+      "goal_guard": "unverifiable",
+      "legal_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mode": "novelty",
+      "reason": "insufficient_support",
+      "selected_action": 3,
+      "tick": 0
+    },
+    {
+      "admitted": false,
+      "base_action": 2,
+      "goal_guard": "unverifiable",
+      "legal_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mode": "novelty",
+      "reason": "insufficient_support",
+      "selected_action": 2,
+      "tick": 1
+    },
+    {
+      "admitted": true,
+      "base_action": 2,
+      "goal_guard": "unverifiable",
+      "legal_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mode": "novelty",
+      "reason": "novel_legal_action",
+      "selected_action": 1,
+      "tick": 2
+    },
+    {
+      "admitted": true,
+      "base_action": 2,
+      "goal_guard": "unverifiable",
+      "legal_actions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mode": "novelty",
+      "reason": "novel_legal_action",
+      "selected_action": 4,
+      "tick": 3
+    }
+  ],
+  "exclusions": [],
+  "goal_guard": [],
+  "goal_hypotheses": [
+    {
+      "direction": -1,
+      "feature": "visible_color_count",
+      "id": "color:1:down",
+      "source_action": 3,
+      "state": "unknown",
+      "threshold": -1,
+      "value": 1
+    },
+    {
+      "direction": 1,
+      "feature": "visible_color_count",
+      "id": "color:2:up",
+      "source_action": 3,
+      "state": "unknown",
+      "threshold": 17,
+      "value": 2
+    },
+    {
+      "direction": -1,
+      "feature": "visible_color_count",
+      "id": "color:5:down",
+      "source_action": 3,
+      "state": "unknown",
+      "threshold": -1,
+      "value": 5
+    },
+    {
+      "direction": 1,
+      "feature": "visible_color_count",
+      "id": "color:6:up",
+      "source_action": 3,
+      "state": "unknown",
+      "threshold": 9,
+      "value": 6
+    },
+    {
+      "direction": -1,
+      "feature": "visible_color_count",
+      "id": "color:2:down",
+      "source_action": 2,
+      "state": "unknown",
+      "threshold": -1,
+      "value": 2
+    },
+    {
+      "direction": 1,
+      "feature": "visible_color_count",
+      "id": "color:3:up",
+      "source_action": 2,
+      "state": "unknown",
+      "threshold": 17,
+      "value": 3
+    },
+    {
+      "direction": -1,
+      "feature": "visible_color_count",
+      "id": "color:6:down",
+      "source_action": 2,
+      "state": "unknown",
+      "threshold": -1,
+      "value": 6
+    },
+    {
+      "direction": 1,
+      "feature": "visible_color_count",
+      "id": "color:7:up",
+      "source_action": 2,
+      "state": "unknown",
+      "threshold": 9,
+      "value": 7
+    },
+    {
+      "direction": 1,
+      "feature": "visible_color_count",
+      "id": "color:0:up",
+      "source_action": 1,
+      "state": "unknown",
+      "threshold": 65,
+      "value": 0
+    },
+    {
+      "direction": -1,
+      "feature": "visible_color_count",
+      "id": "color:3:down",
+      "source_action": 1,
+      "state": "unknown",
+      "threshold": -1,
+      "value": 3
+    },
+    {
+      "direction": -1,
+      "feature": "visible_color_count",
+      "id": "color:7:down",
+      "source_action": 1,
+      "state": "unknown",
+      "threshold": -1,
+      "value": 7
+    }
+  ],
+  "group_id": "no_engine-5",
+  "provenance": "development_proxy_scored_wrapper_scripted_frames",
+  "raw_metrics": {
+    "admitted": 2,
+    "all_refuted": false,
+    "false_confirmation": 0,
+    "rejected": 2,
+    "sdk_progress": 0
+  },
+  "seed": 5
+}
