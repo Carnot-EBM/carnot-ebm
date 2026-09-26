@@ -1,5 +1,25 @@
 # Energy Verification Capability
 
+### REQ-ENERGY-7730: Train normalized set and comparator energies
+
+Binary NLL on fit256 SHALL train finite normalized heads using only label-free
+source and response features. A scalar tune64 temperature SHALL stay in
+[0.25, 4]. The policy64 rule SHALL minimize accept cost 5p, reject cost 1-p
+and escalate cost 0.25, resolving equal costs to escalate. A fixed dictionary
+of at most 16 advisory conjunctions SHALL use overlap, negation, numeric and
+missing-evidence signals; its complete-static comparator SHALL retain all
+learned parameters. Source identifiers SHALL only group families.
+
+#### SCENARIO-ENERGY-7730-RELOAD
+
+Every saved head produces the same probability within 1e-8 and the same
+action when reloaded and run from original public source bytes.
+
+#### SCENARIO-ENERGY-7730-LEAKAGE
+
+Evaluation, retention and online-admission labels cannot affect fit, tune,
+temperature or policy. No feature asserts semantic truth from advisory text.
+
 ### REQ-ENERGY-7703: Normalize bounded binary decision energy
 
 A source-evidence decision head SHALL compute E(x,0) and E(x,1), then return

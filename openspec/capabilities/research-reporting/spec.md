@@ -1,5 +1,36 @@
 # Research Reporting Capability Specification
 
+### REQ-REPORT-7730: Fit exposed set energies with terminal custody
+
+Exp7730 SHALL use only Exp7727 fit, tune and policy families and the Exp7728
+finite protocol. It SHALL train set, shared-location, pooled logistic, pooled
+MLP, source-erased and complete-static-closure heads under the same five seeds,
+four configurations and at most 200 epochs. Tune NLL selects a head and a
+bounded temperature; policy labels SHALL only score the already frozen
+cost rule. Evaluation, retention and online-admission labels SHALL remain
+unopened. Per-epoch losses, gradients, parameters, family predictions and
+role-specific calibration SHALL survive in raw evidence. The result SHALL
+count independent families, report abstentions, retain exact input hashes,
+separate development evidence from fresh generalization, and keep science
+gates null where unmeasured. Validation, cold reduction and terminal readers
+SHALL precede atomic publication.
+
+#### SCENARIO-REPORT-7730-CUSTODY
+
+Missing or changed producer bytes produce a complete blocked artifact with
+exact gate operands. A changed raw prediction or parameter fails cold replay.
+
+#### SCENARIO-REPORT-7730-TRAIN
+
+The same fit/tune budget is applied to each arm. Selection uses tune NLL
+only, never the final policy score. A loss increase remains visible.
+
+#### SCENARIO-REPORT-7730-E2E
+
+Original source and response bytes pass through feature extraction, a fitted
+head, temperature, serialized reload and typed decision with probability
+tolerance 1e-8 and identical action.
+
 ### REQ-REPORT-7728: Qualify finite set-energy mechanics on fixtures
 
 Exp7728 SHALL freeze its feature, aggregation and parameter-budget manifest
