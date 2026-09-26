@@ -20740,3 +20740,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Measure fresh probability and typed-decision value (⚠️ Research Finding) — honest_verdict=complete_null_no_registered_decision_benefit; results/experiment_7704_v671_heldout_decisions.json
 - 2026-09-26: Qualify causal constraint acquisition with a hard proposal budget (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_mechanics_no_acquisition; results/experiment_7705_v671_constraint_bank_protocol.json
 - 2026-09-26: Independently reduce evidence, decision and learning claims (⚠️ Blocked) — honest_verdict=complete_blocked_required_evidence; results/experiment_7707_v671_independent_evidence_audit.json
+- 2026-09-26: Measure live goal evidence during adapter-withheld first contact (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7709_v671_arc_first_contact.json
