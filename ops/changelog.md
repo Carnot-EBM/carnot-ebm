@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-09-26 — V3 inert-click pilot (no promotion) and a conflict-marker fix
+
+- codex (gpt-6-sol, worktree `inert-click-suppress`) piloted state-conditioned dead-click deferral
+  targeting sk48/ar25's wasted-click pattern. No promotion: the exact-repeat trigger almost never
+  fires in these games. Branch kept at 87ad5cb49f, not merged (depends on unmerged explorer-pilot
+  scaffolding); null result recorded in docs/research-notes/unwon-games-analysis-2026-09-26.md.
+- While merging, found 8 unresolved git conflict-marker blocks committed to main across 5 tracked
+  files (pre-existing, from an old `grammar-27b-trial2` merge). Fixed by keeping both sides' content
+  and stripping only the marker lines (89309cfaac).
+
 ## 2026-09-26 — Unwon public games studied (operator request)
 
 - codex (gpt-6-sol, worktree `unwon-analysis`) measured the 12 public games where the bare

@@ -80,3 +80,32 @@ A larger budget is a secondary test for `cn04`, `ka59`, `re86`, `tr87`, and `wa3
 ## Limits
 
 The JSONL has no frame pixels, game-over flag, hidden state, object identities, or distance to each game's win condition. `grid_hash` can include harmless counters or animation. A no-change click can still alter hidden state, though the registered action model and repeated outcomes make inert-click hypotheses strong for `ar25` and `sk48`. The registry's solved routes are explanatory context, not evidence that the explorer saw their preconditions. We cannot prove the unique reason for any failed level-up from these logs alone. The ranked mechanisms are falsifiable follow-up experiments.
+
+
+## Follow-up: V3 inert-click deferral pilot (2026-09-26, append-only)
+
+Branch `inert-click-suppress` (commit 87ad5cb49f, off `explorer-pilot`), not merged — its code
+depends on `arc_explorer_variants.py`, which lives only on `explorer-pilot` and was never merged to
+main (only the passive per-action provenance, REQ-ARC-WMTE-10016, was split out and merged).
+
+**Design.** Deprioritize a click once CONFIRMED inert from the exact same rendered state, keyed on
+`(action, pre-action grid_hash)`. Never fully excludes a candidate; falls back to V0's order if every
+candidate at a state is confirmed inert. Default off, `CARNOT_ARC_EXPLORER_VARIANT=V3`. Promotion
+rule fixed before running: at least one new first level-up on the 12 unwon games, no lost V0 win, no
+more than 10% median-action regression on shared wins.
+
+**Verdict: no promotion.** 75 episodes, 143,986 charged actions, 25 games x 3 seeds. Zero of the 12
+unwon games gained a first level-up. All 33 V0 winning seeds held (cd82 seed 7491003 gained an extra
+level without losing its win). The shared-win median guard held.
+
+**Why it did not fire.** The mechanism this rule targets — an exact `(action, grid_hash)` repeat —
+almost never recurs in these runs. ar25 had zero repeated pairs across all three seeds; sk48 had only
+2/1/7. The 835 and 1,100+ "wasted" clicks this note counted for those two games are mostly distinct
+exact actions or distinct rendered states, not exact repeats of the same action from the same state.
+Net effect on executed inert repeats was +32 (44 more elsewhere against 12 saved), a downstream
+consequence of the four times the rule did fire changing later play.
+
+**What this means.** Exact-state click memory is not the missing piece for sk48 or ar25. Their
+"wasted clicks" need a broader notion of futility than byte-identical repetition — for example
+grouping visually or spatially similar clicks, not just identical ones. 35/35 tests pass; adversarial
+verification flags zero artifacts. Public games are a development proxy, not a hidden-game estimate.

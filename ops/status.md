@@ -2,6 +2,16 @@
 
 **Last Updated:** 2026-09-24
 
+## 2026-09-26 — V3 inert-click deferral pilot: no promotion
+- Deprioritizing a click confirmed inert from the exact same rendered state gained zero of the 12
+  unwon public games. The mechanism barely fires: ar25 has zero exact-state repeats across 3 seeds,
+  sk48 only 2/1/7. Their wasted clicks are mostly distinct states, not exact repeats. All 33 V0 wins
+  held. Branch `inert-click-suppress` (87ad5cb49f, off `explorer-pilot`), not merged.
+- Separately found and fixed: main had 8 unresolved git conflict-marker blocks (`grammar-27b-trial2`)
+  committed across `_bmad/traceability.md`, `openspec/.../arc-world-model-trust-energy/spec.md`,
+  `ops/changelog.md`, `ops/status.md`, `ops/metrics.md` — predates this session. Fixed (89309cfaac),
+  keeping both sides' content.
+
 ## 2026-09-26 — 12 unwon public games studied: several causes, not one
 - No single blocker explains all 12 (ar25, cn04, g50t, ka59, ls20, re86, sb26, sc25, sk48, tn36,
   tr87, wa30). Found: wasted inert clicks (ar25, sk48), effective clicks unranked against a joint
