@@ -20791,3 +20791,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Cold-audit source dependence and retained learning from raw family rows (⚠️ Blocked) — honest_verdict=complete_blocked_required_v672_evidence; results/experiment_7721_v672_independent_evidence_audit.json
 - 2026-09-26: Qualify existing adapter-withheld live evidence and supervisor outcomes (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_reader; results/experiment_7722_v672_arc_evidence_recovery.json
 - 2026-09-26: Requalify the actual typed native service with complete affected checks (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_reader; results/experiment_7723_v672_native_qualification.json
+- 2026-09-26: Reconcile thirteen dispositions and decide continuation from qualified evidence (⚠️ Blocked) — honest_verdict=complete_blocked_required_v672_evidence; results/experiment_7725_v672_capstone.json
