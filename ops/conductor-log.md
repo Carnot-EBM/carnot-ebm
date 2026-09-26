@@ -18690,3 +18690,6 @@ code |
 | 2026-09-26 02:29 UTC | Test fresh constraint acquisition against frozen a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7677-constraint-acquisition-protocol, exp7677-constraint-acquisition-protocol, exp7677-constraint-acquisition-protocol) |
 | 2026-09-26 02:46 UTC | Cold-audit fresh decisions and acquired constraint | OK | 110 passed, 2 warnings in 10.02s |
 | 2026-09-26 03:14 UTC | Wire bounded goal-hypothesis probes into the score | OK | 161 passed, 1 warning in 73.91s (0:01:13) |
+| 2026-09-26 03:27 UTC | Observe bounded probes during live adapter-withhel | OK | 111 passed, 1 warning in 8.74s |
+| 2026-09-26 03:29 UTC | Serve the frozen relation policy through the actua | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7674-relation-energy, exp7674-relation-energy, exp7674-relation-energy) |
+| 2026-09-26 03:29 UTC | Measure complete relation-service cost and preserv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7682-native-relation-energy, exp7682-native-relation-energy, exp7682-native-relation-energy) |
