@@ -6997,3 +6997,10 @@ The critical path for milestone .250:
 - theme: ARC goal-hypothesis probing and quote-resolved Qwen relation testing accounted for the majority of milestone wall time in an all-compute execution without sub-phase metrics
 - key result: honest operational negative — ARC policy probing and Qwen relation testing consumed 8.62 of 11.0 total wall-time minutes, but available records lack internal phase timing, active-window accelerator telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.670
+
+- exp_range: no data available this milestone
+- theme: timing integrity mismatch between changelog references and zero assembled commits prevents operational throughput assessment
+- key result: honest operational negative — no data available this milestone; live git-log and disk-mtime reconstruction routes both found 0 experiment commits despite milestone references in ops/changelog.md, leaving compute-bound execution durations, accelerator efficiency, and DualGPURunner dispatch unmeasured
+- acceptance: no data available this milestone

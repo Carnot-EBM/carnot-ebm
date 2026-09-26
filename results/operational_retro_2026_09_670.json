@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.670",
+  "generated_at": "2026-09-26T06:19:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true,
+  "summary": "No experiment timing data is available for milestone 2026.09.670, with the locked authoritative record indicating 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Both the live git-log extraction path and disk-mtime reconstruction found 0 experiment commits despite existing references to 2026.09.670 in ops/changelog.md, establishing an operational timing integrity mismatch. Consequently, runtime durations, slowest experiments, GPU efficiency, and DualGPURunner engagement cannot be evaluated from the authoritative data.",
+  "bottlenecks_identified": [
+    "Timing assembly integrity defect: both the live git-log path and the disk-mtime reconstruction identified 0 experiment commits for milestone 2026.09.670 despite milestone entries in ops/changelog.md, preventing execution throughput profiling and ranking of slow experiments.",
+    "Absence of active compute-bound task records: with 0 compute-bound experiments recorded, accelerator utilization efficiency cannot be evaluated, and the monitor snapshot showing idle RTX 3090 GPUs cannot be treated as an operational bottleneck under milestone evaluation rules.",
+    "No multi-model execution telemetry: the authoritative record contains no tasks executing 2 or more models in parallel, precluding any assessment of DualGPURunner dispatch."
+  ],
+  "improvements_suggested": [
+    "Emit persistent start and completion timestamp receipts to disk during conductor task execution to eliminate dependency on git-log and disk-mtime reconstruction paths.",
+    "Implement an automated consistency assertion in the timing assembler that flags an error when ops/changelog.md contains milestone references but zero timing records are assembled.",
+    "Record explicit accelerator execution markers, model concurrency counts, and DualGPURunner dispatch decisions within task execution manifests.",
+    "Add a targeted regression test for this timing-assembly assembly failure mode where changelog references exist alongside zero git-log and disk-mtime commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Persist structured, milestone-scoped start and finish timestamps during task execution to make timing assembly resilient against git-log or filesystem timestamp reconstruction discrepancies.",
+    "Enforce an automated pre-closeout check that blocks retrospective finalization when milestone changelog entries exist without corresponding assembled timing records.",
+    "Capture task-level hardware requirements and model concurrency in experiment manifests to enable definitive evaluation of GPU utilization and DualGPURunner engagement."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Authoritative milestone telemetry was unavailable due to a timing integrity mismatch between ops/changelog.md references and dual reconstruction paths returning 0 experiment commits. Because the locked records show 0 compute-bound experiments, the ambient idle GPU state provides no evidence of operational waste, and DualGPURunner dispatch was not applicable. Hardening timing capture with synchronous task-level lifecycle receipts is essential to re-establishing data-driven operational retrospectives."
+}
