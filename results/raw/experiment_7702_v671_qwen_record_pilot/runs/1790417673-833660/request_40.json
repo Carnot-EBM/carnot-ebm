@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one compact JSON object with proposal: sentence_id, proposition_id, kind, arguments, polarity, modifiers, relation, and source_quote. Use the full answer sentence and one exact quoted substring from a source record. A source location alone does not prove a claim. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"```\\nclass A:\\n    def run0(self):\\n        pass\\nclass B:\\n    def stop(self):\\n        pass\\n```\", \"complete_answer\": \"`run0` is defined in `A` at line 2.\", \"records\": [{\"record_id\": \"R001\", \"source_bytes\": \"class A:\", \"byte_start\": 4, \"byte_end\": 12, \"dialect\": \"plain\", \"source_id\": \"anonymous:sha256:4a843411beea170e9388276222b38216bc6df4716b396f44fe76ce310d15a3d9\", \"line\": 1, \"arguments\": [{\"name\": \"A\", \"scope\": \"\", \"line\": 1}]}, {\"record_id\": \"R002\", \"source_bytes\": \"    def run0(self):\", \"byte_start\": 13, \"byte_end\": 32, \"dialect\": \"plain\", \"source_id\": \"anonymous:sha256:4a843411beea170e9388276222b38216bc6df4716b396f44fe76ce310d15a3d9\", \"line\": 2, \"arguments\": [{\"name\": \"run0\", \"scope\": \"A\", \"line\": 2}]}, {\"record_id\": \"R003\", \"source_bytes\": \"        pass\", \"byte_start\": 33, \"byte_end\": 45, \"dialect\": \"plain\", \"source_id\": \"anonymous:sha256:4a843411beea170e9388276222b38216bc6df4716b396f44fe76ce310d15a3d9\", \"line\": 3, \"arguments\": []}, {\"record_id\": \"R004\", \"source_bytes\": \"class B:\", \"byte_start\": 46, \"byte_end\": 54, \"dialect\": \"plain\", \"source_id\": \"anonymous:sha256:4a843411beea170e9388276222b38216bc6df4716b396f44fe76ce310d15a3d9\", \"line\": 4, \"arguments\": [{\"name\": \"B\", \"scope\": \"\", \"line\": 4}]}, {\"record_id\": \"R005\", \"source_bytes\": \"    def stop(self):\", \"byte_start\": 55, \"byte_end\": 74, \"dialect\": \"plain\", \"source_id\": \"anonymous:sha256:4a843411beea170e9388276222b38216bc6df4716b396f44fe76ce310d15a3d9\", \"line\": 5, \"arguments\": [{\"name\": \"stop\", \"scope\": \"B\", \"line\": 5}]}, {\"record_id\": \"R006\", \"source_bytes\": \"        pass\", \"byte_start\": 75, \"byte_end\": 87, \"dialect\": \"plain\", \"source_id\": \"anonymous:sha256:4a843411beea170e9388276222b38216bc6df4716b396f44fe76ce310d15a3d9\", \"line\": 6, \"arguments\": []}], \"sentences\": [{\"sentence_id\": \"S001\", \"full_text\": \"`run0` is defined in `A` at line 2.\"}], \"propositions\": [{\"proposition_id\": \"P001\", \"sentence_id\": \"S001\", \"text\": \"`run0` is defined in `A` at line 2\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7702,
+  "temperature": 0
+}

@@ -12,6 +12,25 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7702: Reduce generated record addresses independently
+
+The reader SHALL accept one bounded proposal with an exact source quote,
+explicit sentence ID and proposition ID, typed arguments, polarity, modifiers
+and proposed relation. It SHALL reject malformed schemas, absent sentences,
+ambiguous quotes and unbound records. An exact quoted substring inside one
+record is valid location evidence even when it is not the whole record.
+Proposed support SHALL never replace the independently checked tuple truth.
+The reader SHALL retain residual full-answer text and truncation status.
+Cold replay SHALL compare every arm-specific request with the frozen request
+builder and every original source-answer pair with the frozen panel. A saved
+row's own hashes alone do not authenticate that panel.
+
+#### SCENARIO-VERIFY-7702-ADDRESS
+
+Given a unique substring inside a source record, location is valid. Given an
+ambiguous duplicate, location and support remain unknown. Given a valid address
+but a wrong sentence, proposition, arguments or polarity, support remains false.
+
 ### REQ-VERIFY-7701: Deny evaluator access to cohort predictors
 
 A predictor child SHALL receive only role-scoped public projection bytes and

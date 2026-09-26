@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one compact JSON object with proposal: sentence_id, proposition_id, kind, arguments, polarity, modifiers, relation, and source_quote. Use the full answer sentence and one exact quoted substring from a source record. A source location alone does not prove a claim. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"```\\n at run0 (pkg0/a.js:5:2)\\n at other (pkg0/b.js:9:1)\\n```\", \"complete_answer\": \"`run0` at `pkg0/b.js:9`.\", \"records\": [{\"record_id\": \"R001\", \"source_bytes\": \" at run0 (pkg0/a.js:5:2)\", \"byte_start\": 4, \"byte_end\": 28, \"dialect\": \"stack\", \"source_id\": \"pkg0/a.js\", \"line\": 5, \"arguments\": [{\"function\": \"run0\", \"path\": \"pkg0/a.js\", \"line\": 5}]}, {\"record_id\": \"R002\", \"source_bytes\": \" at other (pkg0/b.js:9:1)\", \"byte_start\": 29, \"byte_end\": 54, \"dialect\": \"stack\", \"source_id\": \"pkg0/b.js\", \"line\": 9, \"arguments\": [{\"function\": \"other\", \"path\": \"pkg0/b.js\", \"line\": 9}]}], \"sentences\": [{\"sentence_id\": \"S001\", \"full_text\": \"`run0` at `pkg0/b.js:9`.\"}], \"propositions\": [{\"proposition_id\": \"P001\", \"sentence_id\": \"S001\", \"text\": \"`run0` at `pkg0/b.js:9`\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7702,
+  "temperature": 0
+}

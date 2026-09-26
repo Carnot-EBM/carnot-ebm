@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one compact JSON object with proposal: claim_index (zero based), kind, arguments, polarity, modifiers, relation, and source_quote. Copy an exact source quote. Use relation unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"```\\npkg0/a.py:7: 'caf\u00e90'\\npkg0/b.py:7: 'other'\\n```\", \"complete_answer\": \"`pkg0/b.py:7` contains 'caf\u00e90'.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7702,
+  "temperature": 0
+}

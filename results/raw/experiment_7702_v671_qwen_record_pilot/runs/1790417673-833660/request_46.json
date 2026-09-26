@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one compact JSON object with proposal: sentence_id, proposition_id, kind, arguments, polarity, modifiers, relation, and source_quote. Use the full answer sentence and one exact quoted substring from a source record. A source location alone does not prove a claim. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"```\\nclass A:\\n    def run0(self): pass; def alias(self): pass\\nclass B:\\n    def stop(self):\\n        pass\\n```\", \"complete_answer\": \"`run0` is defined in `A` at line 2.\", \"records\": [], \"sentences\": [{\"sentence_id\": \"S001\", \"full_text\": \"`run0` is defined in `A` at line 2.\"}], \"propositions\": [{\"proposition_id\": \"P001\", \"sentence_id\": \"S001\", \"text\": \"`run0` is defined in `A` at line 2\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7702,
+  "temperature": 0
+}

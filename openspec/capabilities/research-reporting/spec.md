@@ -81968,6 +81968,42 @@ scoped spec coverage passed; five private contract mutations were rejected.
 The planned runtime tasks remain unexecuted. Unchanged guard-test formatting
 debt is recorded in ops and traceability, not treated as new implementation.
 
+## REQ-REPORT-7702: Measure bounded Qwen record proposals
+
+Experiment 7702 SHALL authenticate the qualified Exp7700 schema and eight exposed
+pilot inputs before model load. It SHALL freeze sixteen exact relation fixtures,
+two arms, seed 7702, temperature zero, one proposal per call and max_tokens 256.
+Both arms SHALL see identical original source and answer bytes. The explicit arm
+SHALL receive record tables without truth labels and full sentence and proposition
+IDs; the control SHALL use opaque claim indices. Forty-eight calls are the fixed
+budget. Missing inputs or owned CUDA capacity SHALL yield a complete blocked
+record with exact failed gate operands and no model invocation.
+
+The record SHALL keep raw requests, responses, token counts, per-arm reductions,
+unknown remainders, paired group differences and censoring. It SHALL separate
+address validity from typed claim truth. Zero false support on adversarial
+fixtures is required for protocol qualification. Fixture-oracle success is
+circular_positive only; exposed pilots cannot establish fresh accuracy.
+Qualification requires at least one schema-valid explicit proposal and one
+independently bound explicit fixture proposition. An empty output cannot pass
+by vacuously having zero false support. A failed owned call SHALL retain an
+explicit censored disposition; lease failure before launch SHALL not be
+reported as a model load.
+Required scoped checks and cold terminal readers SHALL precede atomic publication.
+
+### SCENARIO-REPORT-7702-PAIRED
+
+Given eight authenticated pilots and sixteen exact fixtures, each original
+source-answer group receives one control and one explicit-record request with
+the same input bytes. No label enters either request. Every call, including a
+truncated or failed call, retains a disposition and a checkpoint.
+
+### SCENARIO-REPORT-7702-BLOCKED
+
+Given absent Exp7700 qualification, model bytes, offload, or owned GPU capacity,
+the terminal artifact names the check, upstream ID, path, field, operator,
+expected and observed values, and records no model load.
+
 ## REQ-REPORT-V671-PLAN: Recover unexecuted science with budgeted learning
 
 The staged milestone 2026.09.671 SHALL contain exactly fourteen ordered tasks,

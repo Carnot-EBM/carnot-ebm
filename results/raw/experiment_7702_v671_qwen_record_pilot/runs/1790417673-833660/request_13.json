@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one compact JSON object with proposal: claim_index (zero based), kind, arguments, polarity, modifiers, relation, and source_quote. Copy an exact source quote. Use relation unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"Tool output:\\n```\\ndjango/contrib/gis/db/backends/postgis/operations.py:14:from django.db import NotSupportedError, ProgrammingError\\ndjango/contrib/gis/db/backends/postgis/operations.py:179:            except ProgrammingError:\\n\\ndjango/contrib/postgres/signals.py:4:from psycopg2 import ProgrammingError\\ndjango/contrib/postgres/signals.py:44:    except ProgrammingError:\\ndjango/contrib/postgres/signals.py:59:    except ProgrammingError:\\n\\ndjango/db/__init__.py:6:    ProgrammingError,\\ndjango/db/__init__.py:11:    'InternalError', 'ProgrammingError', 'DataError', 'NotSupportedError',\\n\\ndjango/db/backends/base/features.py:1:from django.db import ProgrammingError\\ndjango/db/backends/base/features.py:206:    closed_cursor_error_class = ProgrammingError\\n\\ndjango/db/backends/sqlite3/schema.py:48:        except sqlite3.ProgrammingError:\\n\\ndjango/db/transaction.py:4:    DEFAULT_DB_ALIAS, DatabaseError, Error, ProgrammingError, connections,\\ndjango/db/transaction.py:8:class TransactionManagementError(ProgrammingError):\\n\\ndjango/db/utils.py:44:class ProgrammingError(DatabaseError):\\ndjango/db/utils.py:77:                ProgrammingError,\\n\\ndocs/ref/exceptions.txt:241:.. exception:: ProgrammingError\\n\\ntests/backends/tests.py:395:        # Both InterfaceError and ProgrammingError seem to be used when\\ntests/backends/tests.py:397:        # to use ProgrammingError).\\n\\ntests/db_utils/tests.py:5:from django.db import DEFAULT_DB_ALIAS, ProgrammingError, connection\\ntests/db_utils/tests.py:48:            with self.assertRaisesMessage(ProgrammingError, msg) as cm:\\n\\ntests/gis_tests/tests.py:4:from django.db import ProgrammingError\\ntests/gis_tests/tests.py:28:                    raise ProgrammingError\\n```\", \"complete_answer\": \"The import statement for `ProgrammingError` is located in the file `django/contrib/gis/db/backends/postgis/operations.py` at line 17, where it is imported alongside `NotSupportedError` from `django.db`.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7702,
+  "temperature": 0
+}

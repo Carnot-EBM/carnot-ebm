@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one compact JSON object with proposal: claim_index (zero based), kind, arguments, polarity, modifiers, relation, and source_quote. Copy an exact source quote. Use relation unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"```\\nclass A:\\n    def run0(self):\\n        pass\\nclass B:\\n    def stop(self):\\n        pass\\n```\", \"complete_answer\": \"`run0` is not defined in `A` at line 2.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7702,
+  "temperature": 0
+}
