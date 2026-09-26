@@ -2,6 +2,15 @@
 
 **Last Updated:** 2026-09-24
 
+## 2026-09-26 — V4 object-signature deferral pilot: no promotion, one regression
+- Grouped clicks by objects()-segmented color/size/shape signature instead of V3's exact-state key.
+  Fires far more than V3 (ar25 reached 476 new states/seed, sk48 hit its fallback 23-26 times) but
+  zero of the 12 unwon games gained a level-up, and dc22 seed 7491002 LOST its V0 win. Branch
+  `object-sig-defer` (68db99a823, off `explorer-pilot`), not merged.
+- Four candidate-order/click-avoidance mechanisms (V1, V2, V3, V4) have now all failed to unblock any
+  of the 12. The bottleneck looks upstream of action selection: the explorer has no notion of what
+  counts as progress, so freed budget just visits more distinct states, not better ones.
+
 ## 2026-09-26 — V3 inert-click deferral pilot: no promotion
 - Deprioritizing a click confirmed inert from the exact same rendered state gained zero of the 12
   unwon public games. The mechanism barely fires: ar25 has zero exact-state repeats across 3 seeds,

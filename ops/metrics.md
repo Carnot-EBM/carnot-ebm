@@ -3537,3 +3537,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 58 | 2026-09-26T07:19:57Z | 2026-09-26T08:03:00Z | Provenance merged to main (01e405382e); V1b no promotion (held-out 10/10/10 games; dc22, sp80 guard breaks); ops and research note updated |
 | 59 | 2026-09-26T08:19:57Z | 2026-09-26T08:55:00Z | Allowed gpt-6-luna in roadmap gate (review-flagged); studied 12 unwon public games, several distinct causes, ranked next target sk48 |
 | 60 | 2026-09-26T08:58:00Z | 2026-09-26T09:15:00Z | V3 inert-click pilot: no promotion (exact-repeat trigger rarely fires); found and fixed 8 unresolved conflict-marker blocks committed to main (pre-existing, grammar-27b-trial2) |
+| 61 | 2026-09-26T09:05:00Z | 2026-09-26T09:16:00Z | V4 object-signature pilot: no promotion, dc22 regression; grouping fires much more than V3 but new states != progress |

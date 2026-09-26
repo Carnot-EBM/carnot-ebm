@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-09-26 — V4 object-signature pilot (no promotion, one regression)
+
+- codex (gpt-6-sol, worktree `object-sig-defer`) piloted grouping click deferral by object signature
+  (color/size/shape) instead of exact state. Fires far more than V3 but produces zero new wins and
+  one regression (dc22 seed 7491002 lost its win). Branch kept at 68db99a823, not merged; null result
+  recorded in docs/research-notes/unwon-games-analysis-2026-09-26.md.
+
 ## 2026-09-26 — V3 inert-click pilot (no promotion) and a conflict-marker fix
 
 - codex (gpt-6-sol, worktree `inert-click-suppress`) piloted state-conditioned dead-click deferral

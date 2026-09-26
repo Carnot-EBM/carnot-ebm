@@ -109,3 +109,33 @@ consequence of the four times the rule did fire changing later play.
 "wasted clicks" need a broader notion of futility than byte-identical repetition — for example
 grouping visually or spatially similar clicks, not just identical ones. 35/35 tests pass; adversarial
 verification flags zero artifacts. Public games are a development proxy, not a hidden-game estimate.
+
+
+## Follow-up: V4 object-signature deferral pilot (2026-09-26, append-only)
+
+Branch `object-sig-defer` (commit 68db99a823, off `explorer-pilot`), not merged — same reason as V3:
+its code depends on `arc_explorer_variants.py`, which lives only on `explorer-pilot`.
+
+**Design.** V3's exact `(action, grid_hash)` key almost never repeats. V4 groups clicks more broadly:
+by the `objects()`-segmented target's majority color, a floor-log2 area bucket, and a bounding-box
+size capped at 4 pixels per side. Once 3+ clicks on a signature are ALL inert, defer every candidate
+sharing that signature (never fully exclude; fall back to V0 order if all candidates are deferred).
+Same fixed promotion rule as V1-V3: pre-registered before running.
+
+**Verdict: no promotion, and a regression V3 did not have.** 75 episodes, 142,927 charged actions, 25
+games x 3 seeds. Zero of the 12 unwon games gained a first level-up, and dc22 seed 7491002 LOST its
+V0 win. ft09 gained two extra winning seeds without losing its own win.
+
+**The grouping does fire, unlike V3 — but firing did not help.** ar25 crossed the deferral threshold
+on both its tracked signatures in every seed, reaching up to 476 rendered states V0 never saw in that
+seed. sk48 deferred its one signature and still spent 23-26 of its actions on the "everything is
+deferred" fallback path. sb26 bypassed 25-42 deferred candidates per seed and reached 415-553 new
+states. In every case: more exploration, zero level-ups.
+
+**What this means.** Object-signature is a real, more general grouping than exact state repetition —
+it correctly identifies "this kind of thing doesn't work" far more often. But avoiding a bad click
+just spends the freed budget on a DIFFERENT bad click; visiting more distinct rendered states is not
+the same as making progress toward whatever these games actually require. Two candidate-reordering
+mechanisms (V1, V4) and two click-avoidance mechanisms (V3, V4) have all failed to unblock any of the
+12. The bottleneck looks upstream of "which action to try" — closer to "the explorer has no notion of
+what would count as progress." Public games are a development proxy, not a hidden-game estimate.
