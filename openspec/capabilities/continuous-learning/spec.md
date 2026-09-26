@@ -1,5 +1,19 @@
 # Continuous Learning Capability Specification
 
+## REQ-CL-7721-AUDIT: Retained learning needs causal event proof
+
+An independent audit SHALL require proposal release before use, one frozen
+candidate per admission prediction, charged rejected proposals, exact static
+closure, future template firings, and untouched retention families before it
+can attribute a learning benefit. Missing online science leaves these operands
+unmeasured and blocks claim eligibility.
+
+### SCENARIO-CL-7721-MUTATIONS
+
+Private changes that reveal a future label, relabel injected errors as human,
+replace the static bank with empty state, or change a frozen candidate after
+admission prediction SHALL each fail their corresponding causal check.
+
 ## REQ-CL-7719-CAUSAL-ADMISSION: Frozen batches qualify advisory acquisition
 
 A proposal SHALL use released development feedback only. Before each five-case

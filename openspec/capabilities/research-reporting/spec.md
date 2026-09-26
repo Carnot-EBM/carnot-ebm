@@ -1,5 +1,41 @@
 # Research Reporting Capability Specification
 
+## V672 independent evidence audit — 2026-09-26
+
+### REQ-REPORT-7721: Cold audit natural decisions and retained learning
+
+Exp7721 SHALL hash the exact current source, static, online, acquisition, ARC,
+and native artifacts before reducing evidence. Exp7718 and Exp7720 are required
+science inputs. Missing or ineligible required science SHALL produce a terminal
+`complete_blocked_*` result with `verdict_class=blocked`, exact path and field
+operands, separate static and online eligibility, zero audit completion, and
+unmeasured claim gates set to null. An eligible null is complete evidence.
+Historical fixture truth SHALL remain circular; it cannot establish a learned
+benefit. The audit SHALL use original source families as independent units and
+shall never select a new arm on evaluation data.
+
+#### SCENARIO-REPORT-7721-CUSTODY
+
+A missing required producer, an upstream gate failure, or changed source bytes
+changes the exact custody check and cold replay result. Missing planned output
+is not a current-work failure. Pre-gate receipts and valid producers remain
+separate, with no invented operator override or model invocation.
+
+#### SCENARIO-REPORT-7721-REDUCTION
+
+Given eligible raw rows and event logs, an independent reducer SHALL recompute
+family coverage, losses, typed actions, source dependence, causal release order,
+static closure, future template firings and retention. Swapped source IDs,
+future labels, dropped zero-coverage families, relabeled injected errors, an
+empty static bank, and a changed admitted candidate SHALL fail distinct checks.
+
+#### SCENARIO-REPORT-7721-TERMINAL
+
+The audit SHALL freeze affected validation scope, run required checks, replay
+the exact terminal candidate in a fresh process, and run adversarial and strict
+row readers before atomic publication. Failed required checks disqualify and
+zero readiness. A blocked external input remains terminal rather than partial.
+
 ## V672 natural source cohort — 2026-09-26
 
 ### REQ-REPORT-7715: Seal unexposed RAGTruth source families
