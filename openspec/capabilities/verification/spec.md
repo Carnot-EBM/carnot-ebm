@@ -12,6 +12,23 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7715: Isolate natural labels from source predictors
+
+The public RAGTruth projection SHALL contain complete original source and
+response bytes, official split, family and byte hashes, and assigned role.
+It SHALL reject annotation, label, model identity, and extra fields. The
+evaluator-only store SHALL map a response to one exactly when at least one
+human-annotated unsupported span exists. No injected-error or model label may
+substitute. A predictor reader SHALL accept only its named public role path;
+path traversal and evaluator-store access SHALL fail closed.
+
+#### SCENARIO-VERIFY-7715-ISOLATION
+
+Private fixtures that inject a label field, alter a source or response byte,
+duplicate a family, cross a split, mutate prior exposure, or request an
+evaluator path SHALL fail before readiness. Sealing SHALL write the public
+manifest before opening any annotation callback.
+
 ### REQ-VERIFY-7714: Keep complete bytes in finite latent alignment
 
 The protocol SHALL split original source and answer into complete sentence

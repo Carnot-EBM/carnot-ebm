@@ -1,5 +1,45 @@
 # Research Reporting Capability Specification
 
+## V672 natural source cohort — 2026-09-26
+
+### REQ-REPORT-7715: Seal unexposed RAGTruth source families
+
+Exp7715 SHALL authenticate the pinned local RAGTruth bytes and MIT license,
+inventory original source families before reading labels, and subtract every
+known V651–V671 selected or inspected source-role exposure. Normalized source
+and answer copies, including cross-split copies, SHALL share one family or be
+excluded. Unknown custody SHALL be ineligible. Hash order with salt
+`v672-natural-20260926` SHALL assign exactly 128 fit, 40 tune, 40 policy,
+32 retention, 60 online update, 60 online admission families from official
+train and 40 evaluation families from official test. One response per family
+SHALL be chosen without using labels or generated model identity. Shortages
+SHALL produce a terminal blocked result with the observed role counts; roles
+SHALL never be shrunk or cross-filled.
+
+Public role files SHALL retain complete source and response bytes but omit
+labels. A frozen manifest SHALL bind role counts, source and answer hashes,
+exposure custody, the binary human unsupported-span definition, and a link to
+the source-window protocol before evaluator stores are written. Evaluation,
+retention, and future online admission labels SHALL remain evaluator-only.
+Independent cold replay, affected validation, full Python tests, adversarial
+verification, and strict row lint SHALL govern publication. Readiness requires
+400 disjoint unexposed families, valid isolated stores, and passing required
+checks. Administrative cohort readiness makes no predictive-benefit claim.
+
+#### SCENARIO-REPORT-7715-CUSTODY
+
+Given a prior source-role manifest, its selected and inspected families remain
+exposed even if its result failed. A changed or missing manifest, an unknown
+source identity, or an underfilled official split blocks fresh selection with
+exact check operands and candidate counts retained.
+
+#### SCENARIO-REPORT-7715-TERMINAL
+
+A fresh process SHALL reduce the exact candidate and raw rows before atomic
+publication. Failed required checks disqualify and zero readiness. A valid
+shortage is `complete_blocked_*`; a complete cohort without measured benefit
+is `complete_null_*`.
+
 ## V671 native record contract — 2026-09-26
 
 ### REQ-REPORT-7710: Qualify typed record decisions through the real extension
