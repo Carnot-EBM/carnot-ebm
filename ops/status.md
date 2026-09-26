@@ -32,6 +32,17 @@
 - Task-owned spec traceability passes; the repository-wide reconciliation gate
   still reports its existing backlog of 1,168 untraced tests.
 
+## 2026-09-26 — V5 regressions diagnosed: two distinct causes, one still open
+- cd82 (BOTH): the archive actively redirects the search away from the winning route -- two of three
+  lost seeds had MORE fresh search budget than V0 needed to win, so lost budget alone can't explain it.
+- lf52, m0r0 (PASSIVE_CROWDING_OUT): replay overhead simply eats the budget; both lost seeds had a
+  clear fresh-probe deficit against what V0 needed, and never reach the winning route.
+- dc22: INDETERMINATE -- both effects are present; needs a replay-cost-only counterfactual arm to
+  separate them, not yet built.
+- sk48's win only cost 26 replay actions before landing (the archive's larger total cost mostly comes
+  AFTER the win). Design fix for a future pilot: cap replay frequency/cost, require fresh search
+  between replays, weight cell choice by remaining budget, judge cost at actions-to-first-levelup.
+
 ## 2026-09-26 — V5 go-explore activation pilot: first crack in the 12, still no promotion
 - Turned on an EXISTING off-by-default mechanism (GoExploreReplayArchive: return to the least-visited
   known state instead of re-treading the current region). Won sk48 seed 7491001 — the FIRST win any

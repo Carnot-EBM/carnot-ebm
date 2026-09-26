@@ -3549,3 +3549,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 60 | 2026-09-26T08:58:00Z | 2026-09-26T09:15:00Z | V3 inert-click pilot: no promotion (exact-repeat trigger rarely fires); found and fixed 8 unresolved conflict-marker blocks committed to main (pre-existing, grammar-27b-trial2) |
 | 61 | 2026-09-26T09:05:00Z | 2026-09-26T09:16:00Z | V4 object-signature pilot: no promotion, dc22 regression; grouping fires much more than V3 but new states != progress |
 | 62 | 2026-09-26T09:24:00Z | 2026-09-26T09:50:00Z | V5 go-explore activation: won sk48 (first win on the 12 this session), lost 9 seeds elsewhere, tn36 unchanged; no promotion but real signal found |
+| 63 | 2026-09-26T09:57:00Z | 2026-09-26T15:44:00Z | Diagnosed V5 regressions: cd82 active redirection, lf52/m0r0 budget crowding, dc22 indeterminate; sk48 win cost only 26 replay actions; design fix implications recorded |

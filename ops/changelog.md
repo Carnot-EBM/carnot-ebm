@@ -22,6 +22,13 @@
   was not modified. Repository-wide spec traceability still reports the
   existing 1,168-test backlog; the Exp7708 scoped check passes.
 
+## 2026-09-26 — V5 regression diagnosis (research, no code change)
+
+- codex (gpt-6-sol, worktree `go-explore-diagnose`) compared per-action V0/V5 traces to explain V5's
+  cd82/dc22/lf52/m0r0 losses: cd82=BOTH (active redirection), lf52/m0r0=PASSIVE_CROWDING_OUT (budget
+  eaten by replay overhead), dc22=INDETERMINATE. sk48's win cost only 26 replay actions. Merged
+  3f493df2f9.
+
 ## 2026-09-26 — V5 go-explore activation pilot (first win on the 12, still no promotion)
 
 - codex (gpt-6-sol, worktree `go-explore-activate`) turned on the existing, off-by-default
