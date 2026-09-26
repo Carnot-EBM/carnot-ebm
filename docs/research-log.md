@@ -7012,3 +7012,11 @@ The critical path for milestone .250:
 - key result: honest operational negative — causal constraint acquisition consumed 21.0 of 40.7 total wall-time minutes (51.6%), but available records lack intra-task sub-phase telemetry, continuous active-window accelerator monitoring, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
 
+### Milestone 2026.09.672
+
+- exp_range: no data available this milestone
+- theme: natural source family sealing, latent-evidence energy qualification, and advisory bank controls dominated wall time in an all-compute milestone lacking sub-phase metrics
+- key result: honest operational negative — natural source family sealing and sentence window qualification consumed 36.50 of 58.3 total wall-time minutes (62.6%), while available records lack intra-task sub-phase telemetry, continuous active-window accelerator monitoring, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+

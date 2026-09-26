@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.672",
+  "generated_at": "2026-09-26T20:30:01Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 58.3,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Seal unexposed natural source families and isolate evaluation labels",
+      "duration_minutes": 19.93,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify complete sentence windows and a finite latent-evidence energy",
+      "duration_minutes": 16.57,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify commits, rejection and complete-static controls for the advisory bank",
+      "duration_minutes": 11.56,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify existing adapter-withheld live evidence and supervisor outcomes",
+      "duration_minutes": 3.32,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure bounded Qwen semantic decisions on complete exposed sentences",
+      "duration_minutes": 2.51,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.672 completed 9 experiments, all compute-bound, totaling 58.3 wall-time minutes (average 6 minutes per experiment) with timing reconstructed via disk-mtime fallback. Execution time was heavily concentrated in the top three compute-bound experiments—'Seal unexposed natural source families and isolate evaluation labels' at 19.93 minutes, 'Qualify complete sentence windows and a finite latent-evidence energy' at 16.57 minutes, and 'Qualify commits, rejection and complete-static controls for the advisory bank' at 11.56 minutes—accounting for 48.06 of 58.3 total wall-time minutes (82.4%). GPU idle on compute-bound tasks was false, and intra-task phase durations remained unmeasured.",
+  "bottlenecks_identified": [
+    "The slowest experiment ('Seal unexposed natural source families and isolate evaluation labels') required 19.93 minutes, consuming 34.2% of the 58.3 total milestone wall-time minutes alone, but the lack of sub-phase profiling prevents isolating time spent on model inference versus evaluation label isolation and data serialization.",
+    "The top three slowest compute-bound experiments ('Seal unexposed natural source families and isolate evaluation labels' at 19.93 minutes, 'Qualify complete sentence windows and a finite latent-evidence energy' at 16.57 minutes, and 'Qualify commits, rejection and complete-static controls for the advisory bank' at 11.56 minutes) accounted for 48.06 of 58.3 total minutes (82.4%), representing extreme execution concentration without intra-task stage breakdown.",
+    "The post-run GPU monitor report captures an idle state (GPU 0 at 5MB, 0% util; GPU 1 at 4MB, 0% util) at milestone completion, but because gpu_idle_on_compute_bound_tasks is false, this reflects post-run quiescence rather than an active-task bottleneck; continuous in-run GPU telemetry across active task windows was absent.",
+    "No experiment records indicate concurrent execution of two or more models in parallel, so DualGPURunner dispatch was not applicable to the single-model tasks executed this milestone.",
+    "Timing data required disk-mtime reconstruction fallback because the live git-log path found 0 commits, precluding commit-anchored execution timestamps."
+  ],
+  "improvements_suggested": [
+    "Instrument fine-grained sub-phase monotonic timers within long-running compute-bound tasks—particularly natural source family sealing, sentence window energy qualification, and advisory bank controls—to isolate inference latency from validation logic.",
+    "Capture continuous active-window GPU utilization and VRAM metrics during compute-bound executions to evaluate accelerator efficiency throughout task runs.",
+    "Persist model concurrency and runner dispatch metadata in experiment receipts to formally verify DualGPURunner applicability on multi-model workloads.",
+    "Emit synchronous, structured start and finish timestamps directly to experiment execution receipts to avoid falling back to filesystem disk-mtime reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration profiling inside source family sealing and sentence window energy evaluation routines to isolate model inference latency from evaluation overhead.",
+    "Deploy continuous in-task GPU utilization monitoring during compute-bound runs to capture active-window accelerator throughput.",
+    "Persist structured execution lifecycle timestamps and model concurrency metadata directly into task receipts to ensure robust timing and runner auditability."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.09.672 executed 9 compute-bound tasks across 58.3 wall-time minutes, with 82.4% of total runtime concentrated in the top three experiments led by source family sealing at 19.93 minutes and sentence window qualification at 16.57 minutes. While the post-run GPU monitor snapshot recorded both RTX 3090 GPUs idle (5MB/4MB allocated, 0% utilization), gpu_idle_on_compute_bound_tasks is false and active-window accelerator efficiency was not continuously logged, with no multi-model tasks present to engage DualGPURunner. Implementing fine-grained sub-phase timing and continuous accelerator telemetry represents the most effective operational path to isolating bottlenecks in upcoming compute-heavy milestones."
+}
