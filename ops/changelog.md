@@ -20789,3 +20789,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Measure bounded Qwen semantic decisions on complete exposed sentences (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7716_v672_qwen_semantic_pilot.json
 - 2026-09-26: Qualify commits, rejection and complete-static controls for the advisory bank (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7719_v672_acquisition_qualification.json
 - 2026-09-26: Cold-audit source dependence and retained learning from raw family rows (⚠️ Blocked) — honest_verdict=complete_blocked_required_v672_evidence; results/experiment_7721_v672_independent_evidence_audit.json
+- 2026-09-26: Qualify existing adapter-withheld live evidence and supervisor outcomes (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_reader; results/experiment_7722_v672_arc_evidence_recovery.json
