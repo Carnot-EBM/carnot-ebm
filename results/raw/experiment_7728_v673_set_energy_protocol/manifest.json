@@ -1,0 +1,46 @@
+{
+  "aggregation_assumption": "conditional_independence",
+  "control_arms": [
+    "shared_location",
+    "pooled_logistic",
+    "pooled_mlp",
+    "source_erased"
+  ],
+  "duplicate_prior": "equal_mass_per_equivalent_group",
+  "feature_dim": 132,
+  "feature_source": "source_alignment.pair_features",
+  "fit_tune_budget": {
+    "max_epochs": 200,
+    "same_four_configurations_each_arm": true,
+    "seeds": [
+      67301,
+      67302,
+      67303,
+      67304,
+      67305
+    ]
+  },
+  "fixture_roles": {
+    "development": 64,
+    "held": 32
+  },
+  "hash_seed_hex": "6361726e6f742d763637322d616c69676e6d656e742d37373134",
+  "labels_opened": false,
+  "max_answer_units": 16,
+  "max_parameters": 4096,
+  "max_windows": 128,
+  "null_state": true,
+  "parameter_counts": {
+    "pooled_logistic": 266,
+    "pooled_mlp": 2162,
+    "set_energy": 266,
+    "shared_energy": 266
+  },
+  "predictor_exclusions": [
+    "labels",
+    "annotation_offsets",
+    "source_ids",
+    "generator_ids",
+    "roles"
+  ]
+}

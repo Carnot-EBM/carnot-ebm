@@ -1,5 +1,30 @@
 # Research Reporting Capability Specification
 
+### REQ-REPORT-7728: Qualify finite set-energy mechanics on fixtures
+
+Exp7728 SHALL freeze its feature, aggregation and parameter-budget manifest
+before fixture evaluation. It SHALL compare separate sentence locations with
+the original shared-location energy, pooled logistic, budget-matched pooled
+MLP and source-erased controls. Each head has at most 4096 trainable
+parameters and the same future fit/tune budget. Ninety-six constructed
+families include 32 held until evaluation. Fixture truth is an oracle and
+can only yield circular_positive. Natural-label Brier score, decision cost,
+retention and efficiency remain unmeasured. Readiness requires exact
+normalization, all boundary fixtures, complete byte retention, affected
+validation, cold replay and terminal readers. No fresh generalization claim.
+
+#### SCENARIO-REPORT-7728-REPLAY
+
+A fresh CLI process recomputes every raw family and normalization row. Changed
+raw bytes or a changed terminal row fail replay. Missing external prerequisites
+produce a complete blocked verdict with exact gate operands.
+
+#### SCENARIO-REPORT-7728-SCOPE
+
+The artifact counts independent families once, records abstentions in the
+denominator, separates fixture readiness from scientific metrics and records
+the exact commands and hashes used before atomic publication.
+
 ## V673 contract and method custody — 2026-09-26
 
 ### REQ-REPORT-7726: Certify the thirteen-task administrative contract

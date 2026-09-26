@@ -1,5 +1,28 @@
 # Verification Capability Specification
 
+### REQ-VERIFY-7728: Normalize separate sentence evidence locations
+
+The set protocol SHALL reuse REQ-VERIFY-7714 complete bytes, windows, signed
+features and 128-window/16-sentence abstention bounds. For each answer sentence
+and each visible or null evidence state it SHALL normalize two support energies
+with logsumexp and equal mass per duplicate-equivalent window group. It SHALL
+marginalize each sentence location exactly. Response support SHALL multiply
+sentence-support probabilities in log space; its complement is unsupported.
+This conditional-independence rule is a model assumption. Missing evidence
+SHALL remain distinct from observed contradiction. No response label, source
+identifier, role, annotation offset or generator identity enters a pair feature.
+
+#### SCENARIO-VERIFY-7728-MATH
+
+Two claims can select different windows. Explicit tiny-state enumeration agrees
+with factorized probabilities, including extreme energies and null evidence.
+Duplicating a window changes neither result by more than 1e-8.
+
+#### SCENARIO-VERIFY-7728-BOUNDS
+
+Source reordering, empty inputs, 129 windows and 17 answer sentences retain
+original bytes. Oversized and empty-answer rows abstain and stay counted.
+
 **Capability:** verification
 **Version:** 0.1.0
 **Status:** Draft
