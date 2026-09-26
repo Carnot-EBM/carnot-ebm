@@ -1,5 +1,19 @@
 # Python Bindings Capability Specification
 
+### REQ-PYBIND-7710: Existing PyO3 service exposes durable typed record calls
+
+The existing `RustPortableRecalibrationService` SHALL add opt-in record predict,
+feedback and state summary calls. It SHALL call Rust record logic, validate the
+Exp7700-derived typed feature schema and explicit binary-energy parameters,
+and persist pending and processed event identities for restart. E2E-003 SHALL
+cross the loaded extension and E2E-004 SHALL reload the exact native state.
+No default consumer or natural-language parser change follows.
+
+#### SCENARIO-PYBIND-7710-ROUNDTRIP
+
+A private task-owned extension accepts a typed record payload, returns its
+normalized probability and action, and preserves feedback state after reload.
+
 **Capability:** python-bindings
 **Status:** Implemented
 

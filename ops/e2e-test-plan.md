@@ -47,6 +47,12 @@ mismatches; source-only and build-only checks did not satisfy the gate.
 2. Load in Python via safetensors
 3. Verify identical energy computation
 
+**Operational Note (2026-09-26, Exp7710):** The typed record service also
+checks E2E-003 and E2E-004 through a task-owned PyO3 extension. Its focused
+tests compare 128 Python and Rust decisions, then reopen pending native state
+after both normal destruction and a hard child exit. The test fixture builds
+the current extension for standalone runs when no producer path is supplied.
+
 ### E2E-005: Packaged Code Verification Generate-Verify-Repair
 
 **Objective:** Verify that the packaged end-user code-verification surfaces can

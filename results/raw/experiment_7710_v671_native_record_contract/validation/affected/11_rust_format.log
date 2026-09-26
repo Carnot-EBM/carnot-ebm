@@ -1,0 +1,148 @@
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core/src/math/gec.rs:2:
+ //!
+ //! Spec: REQ-FR11-1683
+ 
+-use ndarray::{Array1, ArrayView1};
+ use crate::Float;
++use ndarray::{Array1, ArrayView1};
+ 
+ /// Projects a gradient `grad` onto the feasible region defined by the reference
+ /// gradient `ref_grad` and epsilon, to prevent catastrophic forgetting.
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core/src/math/gec.rs:21:
+     if dot_product >= -epsilon {
+         return grad.to_owned();
+     }
+-    
++
+     let ref_norm_sq = ref_grad.dot(&ref_grad);
+     if ref_norm_sq == 0.0 {
+         return grad.to_owned();
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core/src/math/gec.rs:28:
+     }
+-    
++
+     let factor = (dot_product + epsilon) / ref_norm_sq;
+     let mut proj = grad.to_owned();
+     proj.scaled_add(-factor, &ref_grad);
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core/src/math/gec.rs:41:
+     fn assert_array_eq(a: &Array1<Float>, b: &Array1<Float>) {
+         assert_eq!(a.len(), b.len());
+         for i in 0..a.len() {
+-            assert!((a[i] - b[i]).abs() < 1e-5, "Mismatch at {}: {} != {}", i, a[i], b[i]);
++            assert!(
++                (a[i] - b[i]).abs() < 1e-5,
++                "Mismatch at {}: {} != {}",
++                i,
++                a[i],
++                b[i]
++            );
+         }
+     }
+ 
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core/src/math/gec.rs:62:
+         let proj = project_gradient(grad.view(), ref_grad.view(), 0.0);
+         assert_array_eq(&proj, &array![0.0, 0.0]);
+     }
+-    
++
+     #[test]
+     fn test_gec_projection_conflict_epsilon() {
+         // Spec traces: REQ-FR11-1683
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core/src/verification_learning.rs:26:
+         Self { constraints }
+     }
+ 
+-    pub fn score_constraint_satisfaction(&self, unlabelled_data: &[UnlabelledData]) -> HashMap<String, f64> {
++    pub fn score_constraint_satisfaction(
++        &self,
++        unlabelled_data: &[UnlabelledData],
++    ) -> HashMap<String, f64> {
+         let mut scores = HashMap::new();
+ 
+         for item in unlabelled_data {
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-kan/src/s2kan.rs:54:
+             for i in 0..input_dim {
+                 let val = x[[b, i]];
+                 let prims = Self::evaluate_primitives_single(val);
+-                let out = prims[0] * gates[[i, 0]] + prims[1] * gates[[i, 1]] + prims[2] * gates[[i, 2]];
++                let out =
++                    prims[0] * gates[[i, 0]] + prims[1] * gates[[i, 1]] + prims[2] * gates[[i, 2]];
+                 y[[b, i]] = out;
+             }
+         }
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/casal.rs:23:
+         // 1. Unconstrained Langevin step
+         let grad_energy = energy_fn.grad_energy(&state.view());
+         let noise: Array1<Float> = Array1::random(state.len(), StandardNormal);
+-        
++
+         let mut proposed_state = &state - (step_size * &grad_energy) + (noise_scale * &noise);
+-        
++
+         // 2. Split augmentation (projection) step
+         for _ in 0..proj_steps {
+             let (violation, grad_c) = constraint_value_and_grad(&proposed_state);
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/casal.rs:33:
+                 proposed_state = &proposed_state - (proj_lr * &grad_c);
+             }
+         }
+-        
++
+         // 3. Strict gate
+         let (violation, _) = constraint_value_and_grad(&proposed_state);
+         if violation <= 1e-5 {
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/casal.rs:41:
+         }
+         // else state remains the same
+     }
+-    
++
+     state
+ }
+ 
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/casal.rs:74:
+             (violation, grad)
+         };
+         let init_state = array![1.0, 1.0];
+-        let state = casal_sample(
+-            &energy_fn,
+-            &constraint_fn,
+-            &init_state,
+-            100,
+-            0.01,
+-            50,
+-            0.1,
+-        );
++        let state = casal_sample(&energy_fn, &constraint_fn, &init_state, 100, 0.01, 50, 0.1);
+         assert!((state[0] + state[1]).abs() <= 1e-2); // The gate is violation <= 1e-5, meaning val^2 <= 1e-5, so val <= 3.16e-3.
+     }
+ }
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/casal.rs:89:
+-
+ 
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/ebft.rs:1:
+-use ndarray::{ArrayView2, Axis};
+ use carnot_core::Float;
++use ndarray::{ArrayView2, Axis};
+ 
+ /// Computes the Energy-Based Fine-Tuning (EBFT) objective.
+-pub fn ebft_loss_contrastive(
+-    expert_energies: &[Float],
+-    rollout_energies: &[Float],
+-) -> Float {
+-    let expert_mean = expert_energies.iter().copied().sum::<Float>() / expert_energies.len() as Float;
+-    let rollout_mean = rollout_energies.iter().copied().sum::<Float>() / rollout_energies.len() as Float;
++pub fn ebft_loss_contrastive(expert_energies: &[Float], rollout_energies: &[Float]) -> Float {
++    let expert_mean =
++        expert_energies.iter().copied().sum::<Float>() / expert_energies.len() as Float;
++    let rollout_mean =
++        rollout_energies.iter().copied().sum::<Float>() / rollout_energies.len() as Float;
+     expert_mean - rollout_mean
+ }
+ 
+Diff in /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/ebft.rs:44:
+         assert!((loss - 2.0).abs() < 1e-6);
+     }
+ }
+-
+ 

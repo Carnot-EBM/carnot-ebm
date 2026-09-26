@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## V671 native record contract — 2026-09-26
+
+### REQ-REPORT-7710: Qualify typed record decisions through the real extension
+
+Exp7710 SHALL authenticate Exp7700 record schema and readiness before work. It
+SHALL test at least 128 explicit typed payloads through both the Python reference
+and a task-owned build of the existing PyO3 service. The payload SHALL carry the
+eight Exp7703 frozen certificate-count features, including unknown propositions
+and residual bytes; parameters SHALL be explicit fixture inputs with one binary
+energy bias, eight weights, and ordered action thresholds. Nonfinite, malformed,
+wrong-version and duplicate inputs SHALL return typed matching errors. Finite
+probabilities SHALL be normalized and agree within 1e-6; actions SHALL match.
+The native service SHALL durably retain pending predictions across restart and
+admit feedback exactly once. The consumer remains opt-in. A fixture parity
+result SHALL be circular evidence, with no trained-head or speed claim. Exact
+candidate readers and required checks SHALL control administrative readiness.
+
+#### SCENARIO-REPORT-7710-PARITY
+
+Given 128 or more finite, empty, unknown, extreme and malformed payloads,
+the loaded task-owned native symbol and Python reference return matching
+probabilities within 1e-6, actions and typed errors for every row.
+
+#### SCENARIO-REPORT-7710-RESTART
+
+Given a pending prediction when the service exits, reopening the same state
+recovers the prediction and admits its feedback once. Duplicate release and
+wrong state version fail without advancing the durable count.
+
+#### SCENARIO-REPORT-7710-TERMINAL
+
+Given an exact candidate, cold reduction, adversarial verification and strict
+row lint run on its bytes before atomic publication. Failed required checks
+disqualify the result and zero native readiness.
+
 ## V671 independent evidence audit — 2026-09-26
 
 ### REQ-REPORT-7707: Publish a cold audit with exact custody

@@ -2,6 +2,15 @@
 
 **Last Updated:** 2026-09-26
 
+## 2026-09-26 — Exp7710 standalone native test gate repaired
+
+- The two Exp7710 native tests now build and load the current PyO3 extension
+  when `CARNOT_7710_EXTENSION` is unset. Both real binding and hard-exit
+  restart checks run; the focused suite passes 11/11 and the
+  conductor-equivalent subset passes 92/92.
+- The typed Python reference has 37/37 statement coverage. This is fixture
+  conformance evidence and does not establish decision benefit.
+
 ## 2026-09-26 — Exp7708 test gate verified; historical panel import repaired
 
 - The exact conductor subset now passes 106/106. Exp7708's two modules retain

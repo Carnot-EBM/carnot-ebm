@@ -1,6 +1,13 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-26
+**Operational Note:** REQ-REPORT-7710 and REQ-PYBIND-7710 map the typed
+record reference, Rust scorer/service, and PyO3 calls to the 11 focused tests
+in `tests/python/test_experiment_7710_v671_native_record_contract.py`. The
+native test fixture now builds the current extension when no producer path is
+provided, so standalone and conductor runs execute the same parity and crash
+replay assertions. The conductor-equivalent subset passes 92/92, and the
+reference has 37/37 statement coverage.
 **Operational Note:** REQ-VERIFY-5500 keeps its historical three-model panel
 importable by resolving metadata from the legacy comparator registry. The nine
 focused Exp5500 tests pass. Exp7708's conductor subset passes 106/106 and its

@@ -1,0 +1,80 @@
+   Compiling autocfg v1.5.0
+   Compiling libc v0.2.184
+   Compiling libm v0.2.16
+   Compiling proc-macro2 v1.0.106
+   Compiling cfg-if v1.0.4
+   Compiling quote v1.0.45
+   Compiling unicode-ident v1.0.24
+   Compiling typenum v1.19.0
+   Compiling zerocopy v0.8.48
+   Compiling version_check v0.9.5
+   Compiling serde_core v1.0.228
+   Compiling zmij v1.0.21
+   Compiling serde_json v1.0.149
+   Compiling rawpointer v0.2.1
+   Compiling serde v1.0.228
+   Compiling rustix v1.1.4
+   Compiling thiserror v2.0.18
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.0
+   Compiling getrandom v0.4.2
+   Compiling linux-raw-sys v0.12.1
+   Compiling bitflags v2.11.0
+   Compiling cpufeatures v0.2.17
+   Compiling once_cell v1.21.4
+   Compiling fastrand v2.3.0
+   Compiling bytemuck v1.25.0
+   Compiling generic-array v0.14.7
+   Compiling num-traits v0.2.19
+   Compiling matrixmultiply v0.3.10
+   Compiling syn v2.0.117
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling num-complex v0.4.6
+   Compiling num-integer v0.1.46
+   Compiling approx v0.5.1
+   Compiling getrandom v0.2.17
+   Compiling digest v0.10.7
+   Compiling rand_core v0.6.4
+   Compiling sha2 v0.10.9
+   Compiling ndarray v0.16.1
+   Compiling tempfile v3.27.0
+   Compiling ppv-lite86 v0.2.21
+   Compiling serde_derive v1.0.228
+   Compiling thiserror-impl v2.0.18
+   Compiling rand_chacha v0.3.1
+   Compiling rand v0.8.5
+   Compiling rand_distr v0.4.3
+   Compiling ndarray-rand v0.15.0
+   Compiling safetensors v0.4.5
+   Compiling carnot-core v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core)
+warning: unused variable: `repaired`
+   --> crates/carnot-core/src/verify/sudoku.rs:305:14
+    |
+305 |         let (repaired, history) = repair(&energy_fn, &x, 0.01, 500);
+    |              ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_repaired`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `grad_all`
+   --> crates/carnot-core/src/verify/mod.rs:859:13
+    |
+859 |         let grad_all = composed.grad_energy(&x.view());
+    |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_grad_all`
+
+warning: `carnot-core` (lib test) generated 2 warnings (run `cargo fix --lib -p carnot-core --tests` to apply 2 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.41s
+     Running unittests src/lib.rs (/tmp/carnot-exp7710-owned/target/debug/deps/carnot_core-2f7ce08525e56534)
+
+running 2 tests
+test record_decision::tests::scenario_report_7710_restart_and_version ... ok
+test record_decision::tests::scenario_report_7710_parity_128_cases_and_errors ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.01s
+
+     Running unittests src/bin/portable-recalibration-service.rs (/tmp/carnot-exp7710-owned/target/debug/deps/portable_recalibration_service-b5c5fd24a6a4f10f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

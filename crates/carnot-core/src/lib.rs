@@ -44,6 +44,7 @@ pub mod error;
 pub mod init;
 pub mod math;
 pub mod portable_recalibration;
+pub mod record_decision;
 pub mod serialize;
 pub mod verification_learning;
 pub mod verify;
