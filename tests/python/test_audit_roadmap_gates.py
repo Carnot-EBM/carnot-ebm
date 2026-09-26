@@ -268,9 +268,24 @@ def test_model_agent_coherence_accepts_gpt_6_sol_for_codex(tmp_path: Path) -> No
 
     artifact = audit_mod.audit_roadmap(roadmap_path, complete_path=complete_path).to_artifact()
 
-    assert artifact["n_model_agent_coherence_failures"] == 1
-    assert any("exp3-luna" in line for line in artifact["failure_details"])
+    # SCENARIO-INFRA-086a: luna is accepted but listed for review (2026-09-26).
+    assert artifact["n_model_agent_coherence_failures"] == 0
+    assert artifact["luna_tasks_requiring_review"] == ["exp3-luna"]
     assert not any("exp1-new" in line for line in artifact["failure_details"])
+
+
+def test_model_agent_coherence_still_rejects_unknown_codex_model(tmp_path: Path) -> None:
+    """SCENARIO-INFRA-086: a codex model outside the accepted set still fails."""
+    roadmap_path = _write_yaml(
+        tmp_path / "research-roadmap.yaml",
+        _roadmap([_task("exp1-odd", "Fresh Odd Codex Task", agent_type="codex", model="gpt-4o")]),
+    )
+    complete_path = _write_yaml(tmp_path / "research-complete.yaml", _complete([]))
+
+    artifact = audit_mod.audit_roadmap(roadmap_path, complete_path=complete_path).to_artifact()
+
+    assert artifact["n_model_agent_coherence_failures"] == 1
+    assert artifact["luna_tasks_requiring_review"] == []
 
 
 def test_experiment_wrapper_writes_required_json_artifact(tmp_path: Path) -> None:

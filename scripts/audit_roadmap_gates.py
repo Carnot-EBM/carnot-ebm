@@ -47,7 +47,10 @@ _STOPWORDS = {
 }
 
 
-CODEX_MODELS_ACCEPTED = frozenset({"gpt-6-sol", "gpt-5.6-sol"})
+CODEX_MODELS_ACCEPTED = frozenset({"gpt-6-sol", "gpt-5.6-sol", "gpt-6-luna"})
+# gpt-6-luna is allowed (operator, 2026-09-26) but weak and loop-prone.
+# The audit lists each luna task so a reviewer reads its output.
+CODEX_MODELS_REVIEW_REQUIRED = frozenset({"gpt-6-luna"})
 
 
 @dataclass
@@ -62,6 +65,7 @@ class AuditResult:
     n_model_agent_coherence_failures: int = 0
     n_gate_field_cross_ref_failures: int = 0
     failure_details: list[str] = field(default_factory=list)
+    luna_tasks_requiring_review: list[str] = field(default_factory=list)
     audit_script_written: bool = True
 
     @property
@@ -94,6 +98,7 @@ class AuditResult:
             "n_gate_field_cross_ref_failures": self.n_gate_field_cross_ref_failures,
             "roadmap_gate_audit_passed": self.roadmap_gate_audit_passed,
             "failure_details": list(self.failure_details),
+            "luna_tasks_requiring_review": list(self.luna_tasks_requiring_review),
             "audit_script_written": self.audit_script_written,
             "honest_verdict": self.honest_verdict,
         }
@@ -200,6 +205,8 @@ def audit_roadmap(roadmap_path: Path, complete_path: Path = DEFAULT_COMPLETE_PAT
         model = str(task.get("model") or "").strip()
         # 2026-09-25: gpt-6-sol is the codex model. gpt-5.6-sol stays accepted while
         # tasks planned before the switch drain from the live roadmap.
+        if agent_type == "codex" and model in CODEX_MODELS_REVIEW_REQUIRED:
+            result.luna_tasks_requiring_review.append(task_id)
         if agent_type == "codex" and model not in CODEX_MODELS_ACCEPTED:
             result.n_model_agent_coherence_failures += 1
             result.failure_details.append(

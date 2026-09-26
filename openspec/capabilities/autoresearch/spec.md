@@ -4702,6 +4702,19 @@ Given a roadmap task with `agent_type: codex` and a model other than
 `gpt-5.5`, or any roadmap task with `agent_type: gemini`, the audit
 reports a `MODEL_AGENT_COHERENCE` failure.
 
+**AMENDMENT 2026-09-26 (append-only).** The accepted codex models are now
+`gpt-6-sol`, `gpt-5.6-sol` (draining), and `gpt-6-luna`. The operator allowed
+`gpt-6-luna` on 2026-09-26. It is fast but weak and can loop on nonsense. So
+the audit does not fail a luna task, but it lists every luna task id in
+`luna_tasks_requiring_review`. An outer-loop reviewer must read each luna
+task's output before it is trusted.
+
+### SCENARIO-INFRA-086a: Roadmap Audit Lists gpt-6-luna Tasks for Review
+
+Given a roadmap task with `agent_type: codex` and `model: gpt-6-luna`, the
+audit reports no `MODEL_AGENT_COHERENCE` failure for it, and the artifact's
+`luna_tasks_requiring_review` names that task id.
+
 ### SCENARIO-INFRA-087: Pre-Activation Audit Artifact Records ArXiv Prior Coverage
 
 Given a planned milestone roadmap, the Exp 1152 pre-activation runner MUST
