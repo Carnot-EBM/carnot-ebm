@@ -312,7 +312,16 @@ def _span(
 
 
 def _measure(
-    root: Path, panel: list[dict[str, Any]], context: dict[str, Any], started: float
+    root: Path,
+    panel: list[dict[str, Any]],
+    context: dict[str, Any],
+    started: float,
+    *,
+    arms: tuple[str, str] = ARMS,
+    request_builder: Any = None,
+    response_reducer: Any = None,
+    raw_path: Path = RAW,
+    task_id: str = "experiment_7665_v668_qwen_grounded_claims",
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:  # pragma: no cover
     """Own one server and checkpoint every bounded request before reduction."""
     from carnot import experiment_7630_v666_cuda_ownership as ownership
@@ -335,8 +344,8 @@ def _measure(
         progress(started, "gpu_lease", "before", uuid=selected["uuid"])
         try:
             lease = GpuLease.acquire(
-                runtime_dir=root / RAW / "gpu_leases",
-                task_id="experiment_7665_v668_qwen_grounded_claims",
+                runtime_dir=root / raw_path / "gpu_leases",
+                task_id=task_id,
                 device_uuid=str(selected["uuid"]),
                 expected_model=str(context["model_path"]),
                 vram_before_mb=int(selected["memory_used_mb"]),
@@ -357,7 +366,7 @@ def _measure(
         lease.transition("terminal_blocked")
         lease.release()
         raise RuntimeError("foreign_or_capacity_recheck_failed")
-    run_dir = root / RAW / "runs" / f"{int(time.time())}-{os.getpid()}"
+    run_dir = root / raw_path / "runs" / f"{int(time.time())}-{os.getpid()}"
     run_dir.mkdir(parents=True, exist_ok=False)
     old_visible = os.environ.get("CUDA_VISIBLE_DEVICES")
     os.environ["CUDA_VISIBLE_DEVICES"] = str(selected["index"])
@@ -417,11 +426,11 @@ def _measure(
         lease.transition("inferencing")
         generation_start = time.monotonic()
         for unit_index, row in enumerate(panel, 1):
-            for arm in ARMS:
+            for arm in arms:
                 if time.monotonic() - generation_start >= 1800:
                     raise TimeoutError("generation_1800s_budget_exhausted")
                 call_index = len(rows) + 1
-                request = make_request(row, arm)
+                request = (request_builder or make_request)(row, arm)
                 request_path = run_dir / f"request_{call_index:02d}.json"
                 response_path = run_dir / f"response_{call_index:02d}.json"
                 custody.atomic_json(request_path, request)
@@ -450,7 +459,11 @@ def _measure(
                 message = choice["message"]
                 content = str(message.get("content") or "")
                 finish = str(choice.get("finish_reason") or "unknown")
-                metrics = reduce_response(row, content, finish)
+                metrics = (
+                    (response_reducer or reduce_response)(row, arm, content, finish)
+                    if response_reducer
+                    else reduce_response(row, content, finish)
+                )
                 usage = response.get("usage") or {}
                 output_tokens = int(
                     usage.get("completion_tokens")

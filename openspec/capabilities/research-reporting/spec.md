@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## V669 Qwen quote relations — 2026-09-26
+
+### REQ-REPORT-7676: Compare exact quotes with numeric offsets on paired sources
+
+Exp7676 SHALL freeze eight exposed real pilot sources and sixteen exact fixture
+sources before generation. It SHALL make one numeric-offset and one exact-quote
+proposal on each identical input with the current Qwen3.8-27B GGUF, at most 256
+generated tokens per call. Raw requests, responses, timing, model ownership,
+and token receipts SHALL be checkpointed. Unique UTF-8 quote binding SHALL not
+alone certify relation content. Exp7672 SHALL check typed arguments, modifiers,
+and polarity against the untouched answer. Real source truth SHALL remain
+unknown where the narrow verifier has no authority; fixture oracle success
+SHALL remain circular evidence. Missing external resources SHALL block once;
+unfinished owned calls SHALL be partial; invalid authentication or required
+validation SHALL disqualify. Cold reduction and exact-candidate terminal
+readers SHALL precede atomic publication. No production activation follows.
+
+#### SCENARIO-REPORT-7676-PAIRS: Identical inputs and bounded calls
+
+Given a frozen 24-group panel, both arms SHALL use identical source and answer
+bytes and a 256-token cap. One group counts once despite two calls.
+
+#### SCENARIO-REPORT-7676-ACCOUNTING: Completion differs from benefit
+
+Given all 48 validated raw receipts, measurement completion SHALL be one even
+when no relation is supported. Missing model or owned memory SHALL be blocked,
+and a cutoff after owned work SHALL be partial with censored calls retained.
+
+#### SCENARIO-REPORT-7676-TERMINAL: Exact readers govern the result
+
+Given frozen raw rows, scoped tests, changed-code coverage, Ruff, mypy, spec
+coverage, task E2E, fresh reduction, adversarial verification, and strict row
+lint SHALL retain their actual exits and log hashes. Failed required checks
+SHALL disqualify and zero readiness.
+
 ## V669 fresh relation cohort — 2026-09-26
 
 ### REQ-REPORT-7673: Freeze a fresh source-family cohort before labels

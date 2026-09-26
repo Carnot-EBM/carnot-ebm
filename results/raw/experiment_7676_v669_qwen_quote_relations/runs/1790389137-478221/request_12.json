@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one compact JSON object with proposals array. For each proposal use claim_index (zero based), kind (stack_frame, grep_quote, definition_in_scope), arguments (all named tuple fields), polarity (positive or negative), modifiers (all causal, modal, quantifier and compound words), relation (supports, contradicts, unknown), and source_quote copied exactly from source. Preserve every qualifier in the original answer. Use [] when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"Tool output:\\n```\\ntotal 104\\n-rw-r--r--   1 adamkovacs  staff  1195 Mar  9 20:38 __init__.py\\ndrwxr-xr-x  13 adamkovacs  staff   416 Mar  9 20:37 __pycache__\\ndrwxr-xr-x  16 adamkovacs  staff   512 Mar  9 20:39 .\\ndrwxr-xr-x  19 adamkovacs  staff   608 Mar  9 20:38 ..\\n-rw-r--r--   1 adamkovacs  staff   403 Mar  9 20:37 async_checks.py\\n-rw-r--r--   1 adamkovacs  staff  2643 Mar  9 20:37 caches.py\\ndrwxr-xr-x   5 adamkovacs  staff   160 Mar  9 20:37 compatibility\\n-rw-r--r--   1 adamkovacs  staff   341 Mar  9 20:27 database.py\\n-rw-r--r--   1 adamkovacs  staff   522 Mar  9 20:37 files.py\\n-rw-r--r--   1 adamkovacs  staff  2241 Mar  9 20:37 messages.py\\n-rw-r--r--   1 adamkovacs  staff  8830 Mar  9 20:37 model_checks.py\\n-rw-r--r--   1 adamkovacs  staff  3458 Mar  9 20:38 registry.py\\ndrwxr-xr-x   7 adamkovacs  staff   224 Mar  9 20:37 security\\n-rw-r--r--   1 adamkovacs  staff  2243 Mar  9 20:39 templates.py\\n-rw-r--r--   1 adamkovacs  staff  1990 Mar  9 20:37 translation.py\\n-rw-r--r--   1 adamkovacs  staff  3328 Mar  9 20:37 urls.py\\n```\", \"complete_answer\": \"The `check_for_template_tags_with_the_same_name` function is defined in `django/template/backends/django.py` at line 1990 within the `templates.py` file. This code iterates through the registered template tag libraries to detect if any names are duplicated across different modules, raising the `templates.E003` error when conflicts like the one described are found.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7676,
+  "temperature": 0
+}

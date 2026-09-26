@@ -12,6 +12,27 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7676: Bind exact quotes before judging typed relations
+
+The quote reader SHALL resolve a proposed quote only when its exact UTF-8
+bytes occur once in the original source. Absent or repeated quotes SHALL stay
+unknown. A bound quote SHALL pass to the Exp7672 narrow relation checker only
+when it witnesses the same source record and untouched answer span. All tuple
+arguments, source scope, polarity, modal, causal, quantified, and compound
+qualifiers SHALL retain independent status; a valid quote alone SHALL never
+certify them. Truncated or malformed proposals SHALL remain counted.
+
+#### SCENARIO-VERIFY-7676-BIND: One byte occurrence is necessary
+
+Given non-ASCII text, a unique exact quote SHALL return its byte offsets.
+An absent or repeated quote SHALL return unknown without choosing an occurrence.
+
+#### SCENARIO-VERIFY-7676-RELATION: A pointer cannot change a proposition
+
+Given wrong tuple, wrong scope, negation, or an added qualifier, the reader
+SHALL preserve the original answer span and Exp7672 status. It SHALL report
+unknown remainder and qualifier retention separately from pointer validity.
+
 ### REQ-VERIFY-7673: Bound relation controls on fresh families
 
 For every selected Exp7673 family and source arm, the verifier SHALL emit

@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nReturn one compact JSON object with proposals array. For each proposal use claim_index (zero based), kind (stack_frame, grep_quote, definition_in_scope), arguments (all named tuple fields), polarity (positive or negative), modifiers (all causal, modal, quantifier and compound words), relation (supports, contradicts, unknown), and source_byte_start and source_byte_end as UTF-8 byte integers. Preserve every qualifier in the original answer. Use [] when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"```\\nclass A:\\n    pass\\n```\", \"complete_answer\": \"`run0` is defined in `A` at line 2.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7676,
+  "temperature": 0
+}
