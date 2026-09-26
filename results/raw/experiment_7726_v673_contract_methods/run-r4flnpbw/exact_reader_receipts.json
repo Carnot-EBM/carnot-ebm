@@ -1,0 +1,81 @@
+[
+  {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7726_v673_contract_methods.py --cold-validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/candidate.json --raw /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/rows.json",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/experiments/experiment_7726_v673_contract_methods.py",
+      "--cold-validate",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/candidate.json",
+      "--raw",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/rows.json"
+    ],
+    "duration_s": 0.4918317470001057,
+    "exit_code": 0,
+    "log_path": "results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/exact_terminal_logs/00_cold_cli_replay.log",
+    "log_sha256": "sha256:e7d06554a9178dbcc309d74e317ce58cc8870e468a4a68286e3f28c37481229f",
+    "name": "cold_cli_replay",
+    "output_tail": "{\"valid\": true, \"rows\": 13}\n",
+    "passed": true,
+    "scope": "candidate",
+    "timed_out": false
+  },
+  {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7726_v673_contract_methods.py --independent-reduce /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/candidate.json --raw /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/rows.json",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/experiments/experiment_7726_v673_contract_methods.py",
+      "--independent-reduce",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/candidate.json",
+      "--raw",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/rows.json"
+    ],
+    "duration_s": 0.48304291800013743,
+    "exit_code": 0,
+    "log_path": "results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/exact_terminal_logs/01_cold_independent_reduction.log",
+    "log_sha256": "sha256:e7d06554a9178dbcc309d74e317ce58cc8870e468a4a68286e3f28c37481229f",
+    "name": "cold_independent_reduction",
+    "output_tail": "{\"valid\": true, \"rows\": 13}\n",
+    "passed": true,
+    "scope": "candidate",
+    "timed_out": false
+  },
+  {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/candidate.json",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/adversarial_verify.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/candidate.json"
+    ],
+    "duration_s": 0.565237384987995,
+    "exit_code": 0,
+    "log_path": "results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/exact_terminal_logs/02_adversarial_verify.log",
+    "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+    "name": "adversarial_verify",
+    "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+    "passed": true,
+    "scope": "candidate",
+    "timed_out": false
+  },
+  {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/candidate.json",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/candidate.json"
+    ],
+    "duration_s": 0.044662814994808286,
+    "exit_code": 0,
+    "log_path": "results/raw/experiment_7726_v673_contract_methods/run-r4flnpbw/exact_terminal_logs/03_verdict_row_consistency_strict.log",
+    "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+    "name": "verdict_row_consistency_strict",
+    "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+    "passed": true,
+    "scope": "candidate",
+    "timed_out": false
+  }
+]

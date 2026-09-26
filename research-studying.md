@@ -6221,3 +6221,13 @@ in the dated V672 reference review. Search indexing and endpoint failures
 limit novelty conclusions. The plan's independent table and JSON block are
 absent, so Exp7713 records a blocked administrative contract rather than
 creating an agreement from the YAML itself.
+
+## 2026-09-26 — Exp7726 V673 methods INGESTED
+
+SURE-RAG set sufficiency, HalluSpan input alignment, DCCD's draft-conditioned
+structure, and capacity-constrained delayed feedback are mapped to local V673
+mechanism tests in `docs/research-notes/v673-method-map.md`. The arXiv delta
+recheck found the already reviewed Structure Snowballing lead. Semantic Scholar
+citation reads failed, so citation coverage remains incomplete. These methods
+do not turn reused RAGTruth families into fresh evidence or qualify a V673
+scientific claim.

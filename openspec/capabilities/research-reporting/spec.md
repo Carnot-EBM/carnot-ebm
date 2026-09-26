@@ -1,5 +1,42 @@
 # Research Reporting Capability Specification
 
+## V673 contract and method custody — 2026-09-26
+
+### REQ-REPORT-7726: Certify the thirteen-task administrative contract
+
+Exp7726 SHALL parse the V673 design table, design JSON block, and matching
+staged or active roadmap independently. It SHALL compare all thirteen ordered
+task identities, titles, phases, result paths, model lists, substrate classes,
+and exact producer gates. It SHALL reject a deletion, reorder, stale milestone,
+wrong producer field, or omitted mandated model. Missing design content SHALL
+remain missing. Contract readiness is administrative and SHALL never imply
+scientific benefit or fresh generalization.
+
+Exp7726 SHALL record input hashes, exact blocked gate operands, per-task raw
+comparison rows, V672 provenance, method review depth, and a frozen affected
+validation scope. It SHALL run scoped tests, changed-module coverage, Ruff,
+mypy, spec coverage, cold replay, adversarial verification, and strict row
+consistency before publishing one terminal artifact. Unmeasured science gates
+SHALL be null; external absence is terminal blocked evidence.
+
+#### SCENARIO-REPORT-7726-CONTRACT
+
+Given the complete V673 design and matching active roadmap, each independent
+representation agrees in order. Each of the five private mutations fails the
+contract check without modifying authority bytes.
+
+#### SCENARIO-REPORT-7726-CUSTODY
+
+Given a missing design section or changed source byte, readiness is zero and
+the exact missing or changed operand is retained. The planned Exp7726 result
+is never a required input. V672 verdicts and design bytes remain preserved.
+
+#### SCENARIO-REPORT-7726-TERMINAL
+
+A fresh process reduces raw rows into the candidate. The exact candidate
+passes required scoped and terminal readers before atomic publication. An
+affected failure disqualifies readiness; repository-wide debt stays separate.
+
 ## V672 capstone — 2026-09-26
 
 ### REQ-REPORT-7725: Account for thirteen V672 tasks without promoting missing science

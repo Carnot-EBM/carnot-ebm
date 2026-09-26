@@ -1,5 +1,17 @@
 # Research Harnesses Capability Specification
 
+### REQ-HARNESS-7726: Bound V673 administrative checks to selected bytes
+
+The V673 contract task SHALL run schema, exclusion, prior-failure, gate,
+harness-fit, ARC, overdue, and prompt-path checks against the selected roadmap
+bytes. It SHALL inventory required inputs separately from planned outputs and
+record actual dispatcher routing without changing the conductor.
+
+#### SCENARIO-HARNESS-7726-SELECTED
+
+With the V673 active roadmap selected, every check reads that path and records
+its exit. A missing staged file is not a missing required input after activation.
+
 **Capability:** research-harnesses
 **Version:** 0.1.0
 **Status:** Draft
