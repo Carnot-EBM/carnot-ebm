@@ -18688,3 +18688,4 @@ code |
 | 2026-09-26 02:27 UTC | Test quote-resolved Qwen relations separately from | OK | 106 passed, 1 warning in 8.06s |
 | 2026-09-26 02:29 UTC | Qualify delayed acquisition and one-use admission | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7674-relation-energy, exp7674-relation-energy, exp7674-relation-energy) |
 | 2026-09-26 02:29 UTC | Test fresh constraint acquisition against frozen a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7677-constraint-acquisition-protocol, exp7677-constraint-acquisition-protocol, exp7677-constraint-acquisition-protocol) |
+| 2026-09-26 02:46 UTC | Cold-audit fresh decisions and acquired constraint | OK | 110 passed, 2 warnings in 10.02s |
