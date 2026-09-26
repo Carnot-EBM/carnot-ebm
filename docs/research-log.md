@@ -6990,3 +6990,10 @@ The critical path for milestone .250:
 - theme: Qwen grounded claim proposal testing, task binding validation, and independent feedback causality auditing led execution across an all-compute set lacking sub-task telemetry
 - key result: honest operational negative — grounded claim proposal testing consumed 3.26 of 7.9 total wall-time minutes, but available data cannot isolate internal phase overhead, evaluate active-window GPU efficiency, or confirm an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.669
+
+- exp_range: no data available this milestone
+- theme: ARC goal-hypothesis probing and quote-resolved Qwen relation testing accounted for the majority of milestone wall time in an all-compute execution without sub-phase metrics
+- key result: honest operational negative — ARC policy probing and Qwen relation testing consumed 8.62 of 11.0 total wall-time minutes, but available records lack internal phase timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone

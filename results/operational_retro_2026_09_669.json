@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.669",
+  "generated_at": "2026-09-26T03:49:47Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 11.0,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Wire bounded goal-hypothesis probes into the scored ARC policy",
+      "duration_minutes": 4.32,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Test quote-resolved Qwen relations separately from pointer validity",
+      "duration_minutes": 4.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind the V669 contract and separate prior nulls from missing producers",
+      "duration_minutes": 0.76,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen task dispositions and the next evidence boundary",
+      "duration_minutes": 0.57,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Seal fresh source families and isolate evaluation labels",
+      "duration_minutes": 0.35,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.669 completed 8 experiments, all compute-bound, totaling 11.0 wall-time minutes. The two longest experiments were 'Wire bounded goal-hypothesis probes into the scored ARC policy' at 4.32 minutes and 'Test quote-resolved Qwen relations separately from pointer validity' at 4.3 minutes, followed by 'Bind the V669 contract and separate prior nulls from missing producers' at 0.76 minutes. Task timing was reconstructed from disk mtime without intra-task sub-phase telemetry.",
+  "bottlenecks_identified": [
+    "The two slowest compute-bound experiments ('Wire bounded goal-hypothesis probes into the scored ARC policy' at 4.32 minutes and 'Test quote-resolved Qwen relations separately from pointer validity' at 4.3 minutes) together accounted for 8.62 of the 11.0 total milestone wall-time minutes (78.4%), but the absence of sub-phase profiling prevents isolating time spent in model inference versus policy and verification checks.",
+    "The top 5 slowest compute-bound experiments collectively consumed 10.3 of the 11.0 total wall-time minutes (93.6%), with durations derived via disk-mtime fallback rather than live interval event timestamps.",
+    "The GPU monitor report captures an isolated post-execution snapshot (both RTX 3090 GPUs at 4MB allocated, 0% utilization), providing no active-window accelerator utilization trace while gpu_idle_on_compute_bound_tasks is false.",
+    "No experiment records indicate concurrent multi-model execution, meaning DualGPURunner dispatch was not applicable to the tasks completed this milestone."
+  ],
+  "improvements_suggested": [
+    "Introduce monotonic sub-phase timers inside compute-bound experiments—specifically ARC policy probe evaluation and Qwen relation testing paths—to separate model inference time from validation routines.",
+    "Capture continuous in-run GPU telemetry during compute-bound executions to evaluate accelerator utilization and VRAM dynamics across active task windows.",
+    "Record model inventory and concurrency metadata in experiment execution manifests to verify DualGPURunner eligibility when multiple models are executed.",
+    "Persist structured milestone run logs with exact start and end timestamps to avoid falling back to disk-mtime timing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration counters in ARC goal-hypothesis probe execution and relation testing stages to decompose compute overhead.",
+    "Implement continuous GPU utilization logging during compute-bound task runs to record active-window accelerator metrics.",
+    "Log model concurrency and runner dispatch decisions in experiment receipts to audit DualGPURunner usage on multi-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 11.0 wall-time minutes, milestone 2026.09.669 completed 8 compute-bound experiments heavily concentrated in ARC policy probing (4.32 minutes) and Qwen relation testing (4.3 minutes), which together comprised 78.4% of total execution time. While the post-run GPU monitor snapshot recorded both GPUs idle with 4MB allocated, gpu_idle_on_compute_bound_tasks is false and in-run accelerator utilization was unmeasured, with no multi-model tasks present to engage DualGPURunner. Implementing fine-grained sub-phase profiling and continuous accelerator telemetry represents the highest-leverage path to isolating operational bottlenecks in subsequent milestones."
+}
