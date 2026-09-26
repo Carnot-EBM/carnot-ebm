@@ -3,9 +3,7 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-26
 
-Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
-
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
 ## Summary
 
@@ -14,241 +12,244 @@ Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): 
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 6 |
+| `SILENT_NON_FIRING` | 0 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 0 |
-
-### MISSED INPUTS — a real input each guard does NOT catch
-The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_verify_artifact_impl` — results/experiment_1400_biprm_retrospective_verification_probe.json — a real scoring experiment whose `biprm_r2l_pivot_precision` bypasses the metric checks because “retrospective” describes its method.
-- `adversarial_verify.py::verify_artifact` — results/experiment_6487_representation_integrity_audit.json` has top-level status `"disqualified"`. If its classification rule changes on disk while a caller retains the verifier alias, this wrapper does not load the changed dependency before judging that real artifact.
-- `adversarial_verify.py::sweep_milestone_range` — results/experiment_3841.json
-- `adversarial_verify.py::_claims_live_model` — json { "inference_substrate": { "kind": "local_sota_receipt_smoke_v3", "executes_models": true, "live_model_calls": 2 }, "live_call_count": 2 } ``` These values occur in `results/experiment_3179_local_sota_receipt_smoke_v3.json`; the function returns false.
-- `adversarial_verify.py::backfill_stamps` — results/experiment_2961_capstone_v278.json` — an actual unstamped artifact with `duration_s: 0.0` and `inference_substrate: "aggregation_from_upstream_artifacts"`.
-- `adversarial_verify.py::main` — results/diffusiongemma_energy_prior_extracted.json
-
-### FLAGGED — operator action recommended
-- `adversarial_verify.py::_verify_artifact_impl` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::verify_artifact` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::sweep_milestone_range` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_claims_live_model` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::backfill_stamps` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::main` — **SILENT_NON_FIRING**
+| `UNKNOWN` | 20 |
 
 ---
 
-## adversarial_verify.py::_verify_artifact_impl
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Run all checks on a single artifact. Return a report dict.`
-
-## FINDINGS
-
-1. **A / silent non-firing:** The committed results/experiment_1400_biprm_retrospective_verification_probe.json is a benchmark probe that computes pivot precision. Its name, schema, and title describe a *retrospective scoring method*, yet `if is_retro:` returns before every metric check. In a temporary copy, changing its precision to 1.0 and adding 75 samples produced zero flags; the perfect-metric check, called directly, warned.
-
-2. **Field extraction:** `schema_raw = d_raw.get("schema", "") or ""` and `title_raw = d_raw.get("title") or d_raw.get("name") or ""` read before `d = _normalize_principle_wrapped_fields(d)`. Wrapped schema or title values become empty strings; a wrapped title also prevents fallback to a valid name. `d_raw.get("experiment") or d_raw.get("experiment_id")` can put a wrapped dict into the reported experiment ID; committed artifacts use that shape. None and lists are safely discarded for schema and title, but lose their meaning. The final verdict read uses the normalized dict.
-
-3. **Substring and context errors:** `schema.startswith("blocked")` would exempt a genuine blocked-Gibbs experiment schema. `"retro" in path.name.lower()` and `"retro" in schema.lower()` match inside “retrospective” in the real BiPRM probe. `"retrospective" in title.lower()` also accepts a title saying “not a retrospective.” These are category decisions made from text without checking what the artifact did.
-
-4. **B / pattern narrower than concept:** The three `is_retro` markers stand in for artifacts that only summarize prior experiments. They omit the committed results/experiment_2554_capstone_v245.json, titled “Milestone .245 Capstone Synthesis,” which carries forward upstream results. The blocked-schema prefix stands in for conductor diagnostics; I found no proven omitted diagnostic schema, so I cannot call that prefix narrower than the observed taxonomy.
-
-5. **C / untested overlap:** For the BiPRM probe, the path, schema, and title each independently trigger the same return. Deleting either the schema or title rule would leave this case unchanged. I found no test asserting these verifier skip markers independently; a full mutation run was not performed.
-
-6. **F / failure exits:** `except Exception as e:` returns `"loaded": False` with no flag by default. `if not isinstance(d_raw, dict):` likewise returns without metric checks. Both reports disclose the condition to a reader inspecting the report, but their empty flag summaries can look like passes to a flag-only gate. There is no substrate recognizer chain in the supplied function.
-
-7. **D / E / G and thresholds:** The supplied function has no hardcoded absolute write target, tracked-state write, or duration measurement. It has no numeric threshold comparison to audit for an off-by-one error; the 80-character slices only shorten report text.
-
-## COUNTEREXAMPLE
-A copy of results/experiment_1400_biprm_retrospective_verification_probe.json with `biprm_r2l_pivot_precision: 1.0`, `n_samples: 75`, and `honest_verdict: "complete: BiPRM R2L pivot precision measured on FoVer pairs"` returns `is_retro: true` and `flag_count: 0`. The perfect-metric check alone warns on that precision.
-
-## MISSED INPUT
-results/experiment_1400_biprm_retrospective_verification_probe.json — a real scoring experiment whose `biprm_r2l_pivot_precision` bypasses the metric checks because “retrospective” describes its method.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The skip decisions use names and prose as substitutes for artifact type, and they run before field normalization. The real BiPRM probe demonstrates the resulting blind spot; parse failures add a separate path that reports no flags despite completing no checks.
-
-
-## adversarial_verify.py::verify_artifact
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Run the current on-disk verifier, including through a cached caller alias.`
-
-## FINDINGS
-
-1. `report.setdefault("gate_version", module.LOADED_GATE_VERSION)` leaves an existing value untouched, even if it is stale, `None`, a list, or a principle-wrapped dict. That contradicts the stated intent to carry the judging module’s own version. There is no artifact-field read in this wrapper.
-2. `module = _module_with_current_source()` does not refresh when only the verifier’s terminal-classification dependency changes on disk. A cached caller can therefore run old classification rules and receive an ordinary-looking report. The docstring’s “current on-disk” claim is broader than the behavior.
-3. The existing version test covers adding an absent key, not replacing an incorrect one. Deleting the version assignment would fail that test; no deletable rule is established here. The wrapper contains no free-text matching, negation scan, numeric threshold, pattern list, absolute write target, tracked-state write, or measurement.
-
-## COUNTEREXAMPLE
-A delegated report of `{"loaded": true, "flags": [], "gate_version": "deadbeef"}` is returned with `"deadbeef"` intact even when the judging module’s loaded version is different.
-
-## MISSED INPUT
-`results/experiment_6487_representation_integrity_audit.json` has top-level status `"disqualified"`. If its classification rule changes on disk while a caller retains the verifier alias, this wrapper does not load the changed dependency before judging that real artifact.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-`setdefault` does not enforce version ownership, and the refresh boundary does not cover every source that decides a verdict. Both failures can return a normal report without saying that the claimed current verifier was not the one used.
-
-
-## adversarial_verify.py::sweep_milestone_range
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring claims `Verify all experiment_NNNN_*.json files where low <= NNNN <= high.`; the function’s milestone-sweep role also needs to account for the project’s bare-numbered artifacts.
-
-## FINDINGS
-1. **A, B, F — silent omission.** The committed file results/experiment_3841.json is found by `results_dir.glob("experiment_*.json")`, then rejected by `pattern = re.compile(r"experiment_(\d+)_.*\.json$")` because it has no underscore after the number. `if not m:` skips it without a report. Direct verification emits two warnings; sweeping milestone 3841 returns an empty list.
-2. **C — coverage gap.** I found no test that directly calls this sweep or checks bare-numbered filenames. I cannot establish that any rule is redundant or deletable with the full suite still green.
-3. **Questions 1–4, D, E, G.** This function has no artifact-field reads, free-text phrase checks, negation checks, writes, absolute path, or measurement. `low <= exp <= high` correctly includes both endpoints. The exact suffixed-filename claim in the docstring is met; the broader milestone sweep is narrower than the artifact corpus.
-
-## COUNTEREXAMPLE
-`results/experiment_3841.json` contains `{"duration_s":0.006045341491699219,"inference_substrate":"none"}`. Direct verification reports `SUBSTRATE_HAS_NO_DURATION_FLOOR` and `SUBSTRATE_CLASS_MISSING`; `sweep_milestone_range(Path("results"), 3841, 3841)` returns `[]`.
-
-## MISSED INPUT
-`results/experiment_3841.json`
-
-## RECOMMENDATION
-WIDEN_PATTERN_TO_CONCEPT
-
-## RATIONALE
-Six committed top-level artifacts use the bare experiment-number filename form, and this sweep silently excludes all six. Accept an optional descriptive suffix and test that a bare-numbered artifact appears in the sweep report.
-
-
-## adversarial_verify.py::_claims_live_model
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The function claims to return true when attributable provenance says the current task ran a live model.
-
-## FINDINGS
-
-1. **A/B/F — real live evidence is missed.** The `claim["state"] in {CLAIM_STATE_LIVE, CLAIM_STATE_CONTRADICTORY}` test turns an ambiguous classification into false. A real artifact records two live model calls and explicitly says it executes models, but its structured substrate fields are not recognized as invocation evidence. The function returns false, so the backfill caller can silently discard a duration flag.
-2. **Negation blindness — real honest work is flagged.** A real verdict says live model generation “did not execute.” The delegated classifier treats the preceding “live model” words as positive evidence, returns a contradictory state, and this function returns true. The resulting duration check emits two critical flags for that fragment.
-3. **C — an unprotected branch.** Removing `CLAIM_STATE_CONTRADICTORY` from this function’s return condition left all 96 relevant tests green. Those tests exercise contradictory classification, but do not protect this function’s handling of it.
-4. **Other requested checks.** This function itself has no artifact-field read, free-text match, numeric threshold, absolute path, write, or measurement. Its `claim["state"]` lookup relies on its internal classifier’s return shape.
-
-## COUNTEREXAMPLE
-```json
-{
-  "honest_verdict": "complete: replay beat no-memory, fixed-memory, write-through, and shuffled retrieval while preserving prior-family retention; live model generation did not execute",
-  "inference_substrate": "deterministic_exact_verifier_and_versioned_external_state_no_llm",
-  "duration_s": 0.044727
-}
-```
-This fragment from a real artifact makes the function return true and produces critical provenance and duration flags.
-
-## MISSED INPUT
-```json
-{
-  "inference_substrate": {
-    "kind": "local_sota_receipt_smoke_v3",
-    "executes_models": true,
-    "live_model_calls": 2
-  },
-  "live_call_count": 2
-}
-```
-These values occur in `results/experiment_3179_local_sota_receipt_smoke_v3.json`; the function returns false.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The boolean return hides the difference between verified non-live work and unrecognized live evidence. The classifier also turns explicit negation into a live claim. Both errors occur on existing artifacts, and the relevant tests miss a mutation of this function’s contradictory-state rule.
-
-
-## adversarial_verify.py::backfill_stamps
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`backfill_stamps` re-verifies out-of-band artifacts and stamps unstamped artifacts with qualifying critical flags while preserving existing fields.
-
-## FINDINGS
-
-1. **A, F, and claim mismatch:** `crit = [f for f in crit if f.get("kind") != "DURATION_TOO_SHORT" or _claims_live_model(d)]` discards every critical duration flag without a live-model claim, including flags for aggregation work. `if not crit: continue` then makes that miss indistinguishable from a genuine pass. This is narrower than the docstring’s promise to stamp any unstamped artifact with a qualifying critical flag.
-
-2. **Field shape and preservation:** `d.setdefault("corrigendum_pending", []).extend(crit)` assumes an existing field is a list. A principle-wrapped dict raises `AttributeError`; an existing list is altered and can receive duplicate flags. On a temporary copy of a real artifact, applying the backfill increased its pending list from one duration flag to two identical flags. `d["corrigendum_note"] = (` can overwrite an existing note, contrary to “Never deletes or alters existing fields.”
-
-3. **Other field reads:** `stamp_provenance.is_stamped(d)` handles principle-wrapped determinations. The reads through `rep.get("flags", [])` and `f.get("severity", "")` assume the verifier’s internally generated report shape; I found no corpus-backed failure there. `rep.get("gate_version")` likewise reads an internally generated value.
-
-4. **Patterns and tests:** There is no direct free-text substring search, negation scan, numeric threshold, or hardcoded absolute path in this function. Its single special kind rule treats `DURATION_TOO_SHORT` as though it meant *live-model duration*, omitting the aggregation duration cases the verifier itself detects. Direct backfill tests never supply a non-None filter, so `if kinds_filter is not None:` appears deletable with the visible tests still green; that is an inspection finding, not a mutation-test result.
-
-5. **Writes and measurement:** `p.write_text(json.dumps(d, indent=2))` rewrites the supplied artifact when `apply` is true; the default dry run does not write, and the tests use temporary paths. The function computes no duration or other work measurement.
-
-## COUNTEREXAMPLE
-`{"duration_s": 0.0, "inference_substrate": "aggregation_from_upstream_artifacts", "honest_verdict": "complete: milestone_278_capstone; paper_ready=false; clean=5; flagged=5; blocked=1; missing=0"}`. The verifier reports a critical duration flag; the backfill reports `[]`.
-
-## MISSED INPUT
-`results/experiment_2961_capstone_v278.json` — an actual unstamped artifact with `duration_s: 0.0` and `inference_substrate: "aggregation_from_upstream_artifacts"`.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The backfill silently drops a critical finding from a real artifact, so an empty result cannot be trusted as a pass. Its apply path also assumes one corrigendum shape and can alter existing correction records.
-
-
-## adversarial_verify.py::main
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The CLI claims to verify specified artifacts, sweep milestone ranges, and use `--backfill` to find unstamped critical results.
-
-## FINDINGS
-
-1. **A/B/F — a real critical artifact is never submitted to backfill.** `paths = sorted(args.results_dir.glob("experiment_*.json"))` treats one filename prefix as the set of results artifacts. The committed file results/diffusiongemma_energy_prior_extracted.json falls outside it. Direct verification reports a critical DURATION_TOO_SHORT flag, and a direct dry-run of backfill says it would stamp the file; this CLI sweep never reads it.
-
-2. **An unreadable input passes as clean.** `flagged = [r for r in reports if r.get("flag_count", 0) > 0]` ignores whether verification loaded the artifact, and `return 1 if flagged else 0` returns success. Passing the nonexistent but conventionally named results/experiment_3841_results.json prints “Scanned 1 artifact(s); 0 flagged.” and exits 0.
-
-3. **The milestone sweep misses another committed result.** The `if args.milestone_range:` branch delegates to a selector that requires an underscore after the number. Direct verification of results/experiment_3841.json reports two warnings; a sweep of milestone 3841 returns no reports. Its exact range boundary is inclusive, but its filename boundary is narrower than the advertised sweep.
-
-4. **Accepted options can silently lose their effect.** `if args.backfill:` returns before `for a in args.artifacts:` and `if args.json:`. A supplied artifact path is ignored in backfill mode, and `--backfill --json` emits text instead of JSON. `--since-hours` also accepts a negative value: the resulting future `cutoff` can empty the scan and make `return 1 if recs else 0` report success. The `>= cutoff` equality comparison itself is correct.
-
-5. **Field and text checks:** This function reads internal report records, not principle-wrapped artifact fields. `r.get("flag_count", 0)` assumes a bare number and silently treats a missing count as zero; `r["written"]`, `r["path"]`, `r["kinds"]`, `r.get("max_severity", -1)`, `r.get("flags", [])`, and the displayed flag fields likewise assume the helper’s report shape. There is no free-text substring scan or negation-sensitive phrase check in this function.
-
-6. **C/D/E/G:** `# pragma: no cover` excludes this CLI from coverage, and I found no test invoking its backfill or milestone dispatch; those selection branches appear removable with the current tests still green, though I did not run a mutation. The default results path derives from `Path(__file__)`, and this function computes no work-duration metric. `--apply` explicitly sends selected existing results to a writer; the backfill tests use temporary paths, and no fixed historical write target appears here.
-
-## COUNTEREXAMPLE
-The committed results/diffusiongemma_energy_prior_extracted.json contains `{"experiment":"diffusiongemma_energy_prior_extract","inference_substrate":"live_llm_inference","duration_s":9.3,"honest_verdict":"complete: energy_prior_score_extracted_from_frozen_diffusiongemma"}`. Direct verification gives it a critical DURATION_TOO_SHORT flag; the CLI’s backfill filename selection omits it.
-
-## MISSED INPUT
-results/diffusiongemma_energy_prior_extracted.json
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Read-only checks confirmed that direct backfill would select the missed committed artifact, while the CLI never submits its filename. The CLI also returns a clean exit for an artifact it could not load, so success cannot be trusted as evidence that the requested verification ran.
-
+## worktree_import_guard.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## capstone_milestone_rot_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## harness_integrity_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## eval_run_consumer_field_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## substrate_alias_evidence_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## determination_preservation_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## test_suite_mutation_check.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## operator_curated_docs_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## operator_curated_doc_guard.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## child_results_guard.py
+
+**Verdict:** `UNKNOWN`
+
+This request was blocked by Gemini's filters. They can occasionally trigger by mistake on safe coding, security, or biology-related queries. Please try rephrasing your prompt. You can [send feedback](https://ai.google.dev/gemini-api/docs/troubleshooting#file-bug) or read more about [our policies here](https://policies.google.com/terms/generative-ai/use-policy).
+
+
+## artifact_freshness_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## arc_artifact_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## arc_count_integrity_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## arc_llm_on_liveness_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## verifier_authenticity_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## arc_orphan_solver_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## tracked_results_guard.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## research_complete_ledger_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## mutation_marker_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## audit_findings_ledger.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)

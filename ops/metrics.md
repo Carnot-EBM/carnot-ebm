@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-09-26T06:19:15Z | 2026-09-26T06:22:14Z | Wrote operational retro for milestone 2026.09.670 (timing integrity mismatch); ran adversarial reviewer subagent (approved clean) | ~20k |
+| 2 | 2026-09-26T06:51:49Z | 2026-09-26T06:55:22Z | Populated interpretive layer for milestone 2026.09.670 operational retro after skeleton re-generation; ran adversarial reviewer subagent (approved clean) | ~20k |
 
 ---
 
@@ -3532,3 +3533,5 @@ Writing an estimate would put an invented number in the metrics record.
 | 52 | 2026-09-26T02:34:10Z | 2026-09-26T02:34:18Z | Level-up analysis: all 7 first wins are explorer actions in vc33/sp80 (depth-first draws); no induced plan, adapter, or banked route won; 39 sessions = 12 distinct traces |
 | 53 | 2026-09-26T03:19:47Z | - | Operator chose explorer upgrade pilot: codex gpt-6-sol (worktree explorer-pilot) REQ-ARC-WMTE-10016 provenance + 10017 variants on 25 public games |
 | 54 | 2026-09-26T03:45:13Z | 2026-09-26T03:51:28Z | Explorer pilot: V0 13/25 games first level-up; V1 13 (fewer actions, more levels, guard broken on 3); V2 12; no promotion; provenance proven passive; branch kept |
+| 55 | 2026-09-26T06:45:24Z | - | Operator chose 1+2: codex provenance-only port (worktree prov-only) + V1b diagnosis/fix (worktree v1b), in parallel |
+| 56 | 2026-09-26T06:45:38Z | 2026-09-26T06:45:56Z | Both codex jobs hit the codex usage limit before starting; queued automatic relaunch (probe every 20 min); conductor codex tasks also affected until reset |

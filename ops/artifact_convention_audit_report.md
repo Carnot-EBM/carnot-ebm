@@ -9,24 +9,14 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| BLOCKED_WITHOUT_DIAGNOSTIC | 1 |
+| CHECKABLE | 4 |
+| CANNOT_DETERMINE | 4 |
 
 ## experiment_7672_v669_bound_relations.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The bound-relation protocol passed validity, readiness, and coverage checks on fixture groups, while the remaining benefit gates were not established.
-
-## WHAT IS MISSING
-nothing; `acceptance_gate_results` records the gate values, and `fixture_results` provides per-unit `truth`, `observed`, and `raw_metrics`.
-
-## THE CHECK A READER CANNOT DO
-none
+reviewer call failed
 
 ## experiment_7673_v669_fresh_relation_cohort.json
 
@@ -36,10 +26,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports cohort infrastructure only and makes no learned-verifier improvement claim.
+no claim
 
 ## WHAT IS MISSING
-nothing; `acceptance_gate_results` records each failed gate with its `expected`, `observed`, and `passed` values.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -52,7 +42,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked at conductor pre-gate because three of four upstream gate checks on exp7673-fresh-relation-cohort failed.
+The experiment was blocked from executing at the conductor pre-gate because three of four upstream gate checks on `exp7673-fresh-relation-cohort` failed.
 
 ## WHAT IS MISSING
 nothing
@@ -62,51 +52,21 @@ none
 
 ## experiment_7676_v669_qwen_quote_relations.json
 
-**BLOCKED_WITHOUT_DIAGNOSTIC**
+**CANNOT_DETERMINE**
 
-## VERDICT
-BLOCKED_WITHOUT_DIAGNOSTIC
-
-## WHAT THE CLAIM IS
-The run was blocked and disqualified by required checks (`honest_verdict`: `"complete_disqualified_required_checks"`), failing all acceptance gates and denying activation and production promotion.
-
-## WHAT IS MISSING
-A diagnostic identifying which check failed and what value it observed. While `honest_verdict` reports `"complete_disqualified_required_checks"` and all gates in `acceptance_gate_results` report `"passed": false`, `gate_check_summary` reports `"failed_checks": []`, `"failed_count": 0`, and `"first_failure": null`, all 7 entries in `preconditions_checked` report `"passed": true`, and `acceptance_gate_results.validity.measured_operands` reports `"required_checks_passed": true`.
-
-## THE CHECK A READER CANNOT DO
-Which required check failed and what value did it observe to trigger the disqualification verdict `complete_disqualified_required_checks`?
+reviewer call failed
 
 ## experiment_7679_v669_independent_evidence_audit.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The audit is blocked because required static and online evidence was missing or failed producer checks, so no independent benefit was confirmed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+reviewer call failed
 
 ## experiment_7680_v669_arc_probe_protocol.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+reviewer call failed
 
 ## experiment_7681_v669_arc_live_probes.json
 
@@ -116,7 +76,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The experiment was blocked during precondition preflight because no eligible novel target games remained in the solve registry.
 
 ## WHAT IS MISSING
 nothing
@@ -132,7 +92,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V669 capstone is accounting-ready but blocked from claiming scientific benefit because required evidence and upstream gates are missing.
+The V669 capstone milestone is blocked due to missing required scientific evidence and failed upstream dependency gates (`honest_verdict`: "complete_blocked_required_v669_scientific_evidence").
 
 ## WHAT IS MISSING
 nothing

@@ -12,72 +12,33 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 1 |
-| CLAIM_OVERSTATED | 2 |
-| NO_CLAIM | 5 |
+| CLAIM_OVERSTATED | 1 |
+| NO_CLAIM | 1 |
+| CANNOT_DETERMINE | 5 |
 
 ## experiment_7672_v669_bound_relations.json
 
-**CLAIM_OVERSTATED**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-The bound relation protocol has achieved complete readiness based on passing validation across 72 fixture groups.
-
-## WHAT WOULD REFUTE IT
-A non-zero count of false support or wrong unknown classifications when evaluated against an independent ground-truth oracle on natural, unexposed data.
-
-## WAS THAT CHECKED
-no. All 72 evaluated fixture groups used constructed truth where the verifier was its own oracle (`verifier_is_oracle: true`), while evaluation on natural instances was unhandled and unpassed (`fresh_natural_groups: 0` and the freshness gate passed value is `null`).
-
-## EVIDENCE
-- `verifier_is_oracle`: `true`
-- `verdict_class`: `"circular_positive"`
-- `honest_verdict`: `"complete_circular_positive_bound_relation_protocol_ready"`
-- `relation_protocol_ready_score`: `1`
-- `provenance`: `"exact_fixture_oracle"`
-- `oracle_scope`: `"exact_fixture_only"`
-- `prior_exposure`: `"Eight V664 pilots exposed before this run; fixture oracle truth is constructed."`
-- `limits`: `"No natural-answer accuracy or learned-verifier advantage."`
-- `fresh_natural_groups`: `0`
-- `passed`: `null`
-- `principle`: `"Fixtures and exposed pilots cannot establish natural accuracy."`
-
-## RECOMMENDATION
-NARROW_CLAIM
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [
 
 ## experiment_7673_v669_fresh_relation_cohort.json
 
-**NO_CLAIM**
+**CANNOT_DETERMINE**
 
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-An observation claiming a learned-verifier benefit or successful validation despite failing acceptance gates (including validity, readiness, and freshness) and failing required coverage checks.
-
-## WAS THAT CHECKED
-Yes; acceptance gates and required checks were executed. The artifact recorded failures for validity (`gate: "validity"`, `passed: false`), readiness (`gate: "readiness"`, `passed: false`), freshness (`gate: "freshness"`, `observed: 0`), and coverage (`changed_module_coverage_report`, `passed: false`), resulting in a disqualified outcome.
-
-## EVIDENCE
-`claim_scope`
-`"cohort infrastructure only; no learned-verifier improvement"`
-`honest_verdict`
-`"complete_disqualified_required_validation"`
-`verdict_class`
-`"disqualified"`
-`model_invoked`
-`false`
-`required_checks_passed`
-`false`
-`"Completion describes the task, not a verifier benefit."`
-
-## RECOMMENDATION
-KEEP
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [
 
 ## experiment_7674_relation_energy.json
 
@@ -90,23 +51,39 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact asserts no empirical or comparative claim to refute, serving solely as an execution receipt recording that upstream gate checks failed before the experiment could execute.
+None; the artifact is a pre-execution gate check receipt recording that upstream gate criteria were unsatisfied, making no empirical, comparative, or performance claim.
 
 ## WAS THAT CHECKED
-No; no experimental evaluation or comparative run took place because execution was halted at `conductor_pre_gate`.
+No; execution was halted at the pre-gate layer prior to running any experiment or comparative evaluation.
 
 ## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `blocked_at_layer`: `conductor_pre_gate`
-- `duration_s`: `0.0`
-- `gate_check_summary`: `gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp7673-fresh-relation-cohort.relation_features_ready_score (actual=0 == expected=1)`
+`schema`
+`"blocked_gate_check_v1"`
+`status`
+`"blocked"`
+`honest_verdict`
+`"blocked_gate_check_failed"`
+`duration_s`
+`0.0`
+`blocked_at_layer`
+`"conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
 ## experiment_7676_v669_qwen_quote_relations.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [
+
+## experiment_7679_v669_independent_evidence_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -114,58 +91,36 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The exact quote prompt mechanism fails required acceptance checks and is disqualified from production promotion and retired.
+Production promotion is blocked because required independent static and online evidence is absent or unconfirmed, establishing no independent quality or efficiency benefit.
 
 ## WHAT WOULD REFUTE IT
-Observing non-zero supported relations (`supported_relations > 0` or `full_proposition_supported > 0`) or passing acceptance gates (`passed: true` across required gates) in the artifact's own rows would refute the disqualification claim.
+The observation that required static and online evidence artifacts (`results/experiment_7675_v669_static_decision.json`, `results/experiment_7677_v669_online_learning.json`, and `results/experiment_7678_v669_continuous_learning.json`) were present with valid producer contracts, passing all eight acceptance gates with positive confirmed quality and efficiency scores.
 
 ## WAS THAT CHECKED
-Yes; 48 generation calls were executed across 24 units in paired arms (`exact_quote` and `numeric_offset`), evaluated against 8 acceptance gates, and recorded in `acceptance_gate_results`, `proposal_metrics`, and `rows`.
+Yes. The audit verified producer existence across all slots under `preconditions_checked.producer_classes`, evaluated file custody in `source_artifact_hashes.missing_evidence`, audited upstream contracts in `gate_check_summary`, and evaluated all eight gates in `acceptance_gate_results`. Refutation was given a real chance to occur but did not; missing artifacts, failed contract checks, and failed acceptance gates confirmed the blocked verdict.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_disqualified_required_checks`
-- `verdict_class`: `disqualified`
-- `activation`: `false`
-- `production_promotion`: `false`
-- `quote_pilot_measurement_complete_score`: `0`
-- `acceptance_gate_results`:
-  - `coverage`: `measured_operands`: `supported_relations`: `0`, `passed`: `false`
-  - `readiness`: `measured_operands`: `supported_relations`: `0`, `passed`: `false`
-  - `validity`: `passed`: `false`
-- `proposal_metrics`:
-  - `full_proposition_supported`: `0`
-  - `schema_valid`: `27`
-- `retirement_decision`:
-  - `applied`: `true`
-  - `scope`: `exact_quote_prompt_mechanism`
-- `sample_size_budget`:
-  - `independent_unit`: `source_group`
-  - `observed`: `24`
-- `invocation_counts`:
-  - `forward_calls_completed`: `48`
-  - `generation_calls_completed`: `48`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7679_v669_independent_evidence_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Authenticated fresh static and online evidence passing the stated gates would contradict the audit’s blocked disposition. The artifact makes no comparative benefit claim.
-
-## WAS THAT CHECKED
-Yes for the blocked disposition: the source inventory and acceptance gates record missing evidence and failed gates. No comparative benefit test is reported.
-
-## EVIDENCE
-`honest_verdict`: `complete_blocked_required_static_online_evidence`; `independent_quality_confirmed_gates`: `[]`; `independent_quality_confirmed_score`: `0`; `activation`: `false`; `production_promotion`: `false`; `missing_evidence`; `passed`: `false`.
+`honest_verdict`
+`complete_blocked_required_static_online_evidence`
+`verdict_class`
+`blocked`
+`production_promotion`
+`false`
+`activation`
+`claim_limit`
+`No independent static or online benefit confirmed.`
+`independent_audit_complete_score`
+`0`
+`independent_efficiency_confirmed_score`
+`independent_quality_confirmed_score`
+`independent_quality_confirmed_gates`
+`failed_contract_checks`
+`11`
+`missing_evidence`
+`results/experiment_7675_v669_static_decision.json`
+`results/experiment_7677_v669_online_learning.json`
+`results/experiment_7678_v669_continuous_learning.json`
+`passed`
 
 ## RECOMMENDATION
 KEEP
@@ -178,102 +133,67 @@ KEEP
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-The ARC probe protocol achieves a complete positive verdict for probe readiness and generalization with zero false goal confirmations.
+The ARC probe protocol is ready and achieves a positive verdict on an ARC generalization task.
 
 ## WHAT WOULD REFUTE IT
-An independent external oracle or live game environment demonstrating non-zero false goal confirmations, probe rejection failures, or probe-guided policies failing to achieve decision utility over baselines on unobserved ARC tasks.
+The claim of probe protocol utility and generalization readiness would be refuted by observing:
+1. The guided probe arm failing to discriminate better than a trivial heuristic comparator arm (e.g., tying or underperforming a simple novelty baseline on admitted and rejected probes).
+2. Evaluation on unseen, independent ARC game instances exposing false goal confirmations or invalid probe decisions.
+3. An independent ground-truth environment or external oracle refuting the verifier's terminal state evaluations.
 
 ## WAS THAT CHECKED
-No. The evaluation was run exclusively on scripted CPU proxy fixtures where the verifier served as its own oracle; no model was invoked, and live hidden game validation was not performed.
+No. Refutation was not given a real chance to happen:
+1. The protocol was tested solely on a scripted CPU test fixture without loading or invoking any model (`model_invoked` is false), with zero independent hidden games tested (`independent_hidden_games` is 0, `new_hidden_game_wins` is 0).
+2. The verifier was designated as its own oracle (`verifier_is_oracle` is true), guaranteeing zero false terminal confirmations by construction across all scripted ambiguous goals.
+3. When evaluated against the rival arm, the `guided` arm exactly tied the `novelty` arm on admitted and rejected probes, demonstrating no added value over the simple baseline.
+4. All operational acceptance gates assessing real-world generalization (`decision_utility`, `freshness`, `efficiency`, `probability`, `retention`) explicitly failed.
 
 ## EVIDENCE
-`honest_verdict`
-`complete_circular_positive_probe_fixture`
-`verdict_class`
-`circular_positive`
-`verifier_is_oracle`
-`true`
-`arc_probe_protocol_ready_score`
-`1`
-`arc_generalization_task`
-`true`
-`model_invoked`
-`false`
-`inference_substrate`
-`cpu_scripted_scored_wrapper_no_model_load`
-`decision_utility`
-`passed`
-`false`
-`new_hidden_game_wins`
-`0`
-`independent_hidden_games`
-`prior_exposure`
-`scripted development proxy; no hidden-game inference`
+- `honest_verdict`: `"complete_circular_positive_probe_fixture"`
+- `verdict_class`: `"circular_positive"`
+- `verifier_is_oracle`: `true`
+- `arc_generalization_task`: `true`
+- `arc_probe_protocol_ready_score`: `1`
+- `inference_substrate`: `"cpu_scripted_scored_wrapper_no_model_load"`
+- `inference_substrate_class`: `"no_model_load"`
+- `model_invoked`: `false`
+- `MODEL_SPECS`: `[]`
+- `prior_exposure`: `"scripted development proxy; no hidden-game inference"`
+- `solve_provenance`: `"development_proxy"`
+- `historical_model_provenance`: `"V668 fixture is inherited; no current model calls"`
+- `decision_utility`: `{"admitted_probes": 192, "new_hidden_game_wins": 0, "passed": false}`
+- `freshness`: `{"live_producer_available": false, "passed": false}`
+- `probability`: `{"independent_hidden_games": 0, "passed": false}`
+- `efficiency`: `{"live_action_cost_measured": false, "passed": false}`
+- `retention`: `{"live_retest_groups": 0, "passed": false}`
+- `arm`: `"novelty"` -> `raw_metrics`: `{"admitted": 2, "false_confirmation": 0, "rejected": 2, "sdk_progress": 0}`
+- `arm`: `"guided"` -> `raw_metrics`: `{"admitted": 2, "false_confirmation": 0, "rejected": 2, "sdk_progress": 0}`
+- `ambiguous_goals`: `448`
+- `false_terminal_confirmations`: `0`
 
 ## RECOMMENDATION
 NARROW_CLAIM
 
 ## experiment_7681_v669_arc_live_probes.json
 
-**NO_CLAIM**
+**CANNOT_DETERMINE**
 
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-An assertion of empirical task performance, benchmark solving, or comparative capability would be refuted by the absence of model execution, executed actions, or novel target games; however, no such claim is advanced by this receipt.
-
-## WAS THAT CHECKED
-Yes. Preflight gate checks were executed (`preconditions_checked`, `gate_check_summary`), which determined that no eligible novel SDK targets remained and blocked execution before any model was loaded or evaluated.
-
-## EVIDENCE
-`"honest_verdict"`
-`"complete_blocked_eligible_novel_target"`
-`"verdict_class"`
-`"blocked"`
-`"counterfactual_solve_rate_claim"`
-`false`
-`"solve_provenance"`
-`"no_live_attempt"`
-`"model_invoked"`
-`false`
-`"inference_substrate"`
-`"host_preflight_no_model_call"`
-`"registry_credit_granted"`
-`false`
-`"rows"`
-`[]`
-`"check"`
-`"eligible_novel_target"`
-`"observed"`
-`false`
-`"passed"`
-`false`
-
-## RECOMMENDATION
-KEEP
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [
 
 ## experiment_7684_v669_capstone.json
 
-**NO_CLAIM**
+**CANNOT_DETERMINE**
 
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative scientific claim is made. The artifact records accounting completion and blocked scientific gates, so there is no benefit claim for its own data to refute.
-
-## WAS THAT CHECKED
-No comparative refutation applies. The artifact checks the gates and records that the required fresh comparisons and intervals are unavailable.
-
-## EVIDENCE
-`verdict_class`: `blocked`; `honest_verdict`: `complete_blocked_required_v669_scientific_evidence`; `paired_brier_improvement_ci`: `null`; `paired_cost_improvement_ci`: `null`; `inference_substrate`: `aggregation_from_upstream_artifacts_no_llm`.
-
-## RECOMMENDATION
-KEEP
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [
