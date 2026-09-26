@@ -12047,3 +12047,14 @@ Narrowed to guards a SPEC advertises as Implemented, it fires on 3 of 21. Three 
 14 percent and is nonetheless correct to ship, because every hit is a promise the project made and
 did not keep. **The operative test is "is every hit worth a human look", with the fire rate
 reported alongside so the claim can be argued with** -- not a fixed percentage.
+## REQ-HARNESS-7671: Keep V669 contract audit independent of science gates
+
+The V669 accounting task SHALL run CPU aggregation without a current model,
+preserve exact input and log custody, and record bounded validation receipts.
+Its contract readiness SHALL not open any scientific or publication gate.
+
+### SCENARIO-HARNESS-7671-ACCOUNTING
+
+Given a matching fourteen-task authority and ten producer files, the audit
+retains four absent producers as log custody and reports zero current model
+invocations.

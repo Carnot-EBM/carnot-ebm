@@ -81573,3 +81573,35 @@ fails private contract checks. Existing roadmap, gate, and exclusion readers
 pass before the plan is reported ready. Runtime experiments remain proposed.
 
 Implementation status: planning documents in progress; no experiment executed.
+
+## REQ-REPORT-7671: Authenticate V669 contracts and literal V668 custody
+
+Exp7671 SHALL choose staged authority only when its milestone is 2026.09.669,
+otherwise the activated authority with that milestone. It SHALL compare all
+fourteen ordered tasks with both design table and machine block, including IDs,
+titles, phases, outputs, model identities, substrate classes and structured
+gates. Deletion, reordering, changed gate fields, stale milestones, removed Qwen
+and self-input SHALL fail closed in private copies. Readiness is administrative.
+
+It SHALL authenticate ten V668 producer bytes and preserve four absent producer
+states using conductor log custody. Missing producers have no scientific verdict.
+The 66/248 covered groups, prior exposure, null decisions and learning, and zero
+exact-supported Qwen proposals SHALL remain separate measured observations.
+Required validation failure SHALL disqualify and zero readiness. External
+absence SHALL block with exact check operands. A terminal candidate SHALL pass
+cold reduction and both strict terminal readers before atomic publication.
+
+### SCENARIO-REPORT-7671-AUTHORITY
+
+Staged and activated-only private copies select the matching milestone; six
+contract mutations reject without changing the original authority.
+
+### SCENARIO-REPORT-7671-CUSTODY
+
+Each of fourteen prior tasks has a producer hash or honest missing-producer log
+custody. No log failure is converted to a producer scientific verdict.
+
+### SCENARIO-REPORT-7671-TERMINAL
+
+Frozen affected tests, coverage, static checks, cold row reduction, adversarial
+verification and strict verdict-row consistency control readiness and publication.

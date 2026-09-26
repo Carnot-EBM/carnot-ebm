@@ -6166,3 +6166,24 @@ The dated V668 review in `research-references.md` is mapped in `docs/research-no
 | 6 | Whole-consumer cost and bounded hardware claims | medium | low | high | medium | Include transfer and final-output costs excluded from Z1T vendor estimates; make no access claim. |
 
 T-SKM-Net, KAC/KAN-CL, Ising sampling limits, VFScale and WorldCycle remain context. No new sampler, unchanged anchoring rerun or generator-weight training is adopted. V667's zero checked predicates, 39 percent coverage failure, global-suite gate contamination and six rejected inductions are distinct diagnostics. Absent head and learning producers are not measured nulls.
+
+<!-- EXP7671-V669-METHOD-INGESTION -->
+## 2026-09-26 Exp7671 — V669 bound-relation methods — INGESTED
+
+The dated V669 review in `research-references.md` is mapped to local tests in
+`docs/research-notes/v669-method-map.md`. This accounting task makes no
+scientific benefit claim.
+
+| Rank | Method | Relevance | Novelty | Feasibility | Urgency | Decision |
+|---|---|---|---|---|---|---|
+| 1 | Enoki fact construction and HallDetect contradictions | high | high | high | immediate | Bind arguments, modifiers, polarity and source spans; keep unknown facts. This is a deterministic adaptation, not an Enoki reproduction. |
+| 2 | Capacity-constrained delayed learning and experience reuse | high | high | medium | high | Test bounded constraint acquisition, one-use admission and complete static closure. Do not inherit a regret theorem. |
+| 3 | EBT and ARM–EBM binary scoring | high | medium | high | high | Fit exact normalized energy on fresh source features; keep generator frozen and compare matched controls. |
+| 4 | CRANE quote transport | high | medium | high | medium | Separate valid exact quotes from true typed relations in Qwen proposals. |
+| 5 | Online recalibration | high | medium | medium | medium | Measure proper loss, decision utility and retention on prospective groups. |
+| 6 | KAN, Ising and hardware studies | low | low | unqualified | deferred | Defer spline, sampler and board changes until the source-bound mechanism and full cost qualify. |
+
+FoVer 0.9131 and publication gates G1–G4 remain the claim boundary. The
+66/248 covered V668 groups were all previously exposed; null decision and
+learning findings do not become fresh positives. Four missing V668 producers
+remain log custody, without invented scientific verdicts or credential repair.
