@@ -12,6 +12,33 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7700: Resolve source records before checking answer propositions
+
+The record interface SHALL retain exact source bytes, non-overlapping record
+spans, tuple arguments, polarity, completeness and full original answer
+sentences. It SHALL expose sentence IDs and narrow proposition IDs separately.
+An exact quote or numeric byte span SHALL resolve only inside one unique record.
+Repeated quotes, cross-record spans, UTF-8 splits and overlapping records SHALL
+fail closed. An address SHALL prove only source location. An explicit original
+answer proposition SHALL receive a separate typed certificate. Existing atom
+path and line claims SHALL keep their narrower membership certificate. A stack
+frame SHALL not prove causation or modality. Residual answer text SHALL remain
+unknown and the feature vocabulary SHALL be frozen for downstream readers.
+
+#### SCENARIO-VERIFY-7700-ADDRESS: Unique containment is required
+
+Given a subquote or numeric span inside one record, the resolver SHALL return
+that record. Given a duplicate quote, cross-record span, UTF-8 split or
+overlap, it SHALL return no address with a reason.
+
+#### SCENARIO-VERIFY-7700-CLAIM: Narrow truth differs from source location
+
+Given a valid address and an original answer, only a same-clause explicit
+tuple SHALL gain tuple support. A wrong pairing with the same token bag SHALL
+remain unknown. Modal, causal, quantified and added clauses SHALL remain
+unknown even when the narrow tuple is supported. Serialization and replay
+SHALL preserve the complete answer and all byte offsets.
+
 ### REQ-VERIFY-7676: Bind exact quotes before judging typed relations
 
 The quote reader SHALL resolve a proposed quote only when its exact UTF-8

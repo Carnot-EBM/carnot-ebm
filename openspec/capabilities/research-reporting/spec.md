@@ -1,5 +1,34 @@
 # Research Reporting Capability Specification
 
+## V671 record span protocol — 2026-09-26
+
+### REQ-REPORT-7700: Qualify record addresses without claiming answer accuracy
+
+Exp7700 SHALL authenticate the eight exposed pilot inputs and freeze at least
+72 deterministic fixture groups, with 24 held out from protocol tuning. It
+SHALL compare the old and new narrow reducers on identical source and complete
+answer bytes. Per-unit rows SHALL keep address validity, unique containment,
+claim binding, tuple truth, certificate type, unknown residuals and provenance.
+Fixture labels are oracle evidence only; exposed pilots are diagnostic only.
+The current run SHALL use no model. Missing external inputs SHALL block with
+exact gate operands. Failed required checks SHALL disqualify and zero readiness.
+Cold reduction, scoped validation and exact-candidate terminal readers SHALL
+precede atomic publication. No production activation follows.
+
+#### SCENARIO-REPORT-7700-FIXTURES: Independent groups and frozen roles
+
+Given at least 72 fixed fixture groups, exactly 24 SHALL have the held-out
+role. Arms and transformed views SHALL not increase the independent group count.
+Subquotes, duplicate records, wrong tuple pairings, qualifiers, incomplete
+sources and Unicode SHALL appear in the panel.
+
+#### SCENARIO-REPORT-7700-TERMINAL: Readers govern readiness
+
+Given a serialized candidate, fresh-process reduction, adversarial verification
+and strict row lint SHALL retain actual commands, exits and log hashes.
+Readiness SHALL be one only if addressing, qualifier preservation, typed
+certificate separation and all required checks pass.
+
 ## V671 contract recovery accounting — 2026-09-26
 
 ### REQ-REPORT-7699: Bind the recovery plan to literal custody
