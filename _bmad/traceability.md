@@ -1,6 +1,22 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-26
+**Operational Note:** REQ-VERIFY-5500 keeps its historical three-model panel
+importable by resolving metadata from the legacy comparator registry. The nine
+focused Exp5500 tests pass. Exp7708's conductor subset passes 106/106 and its
+two changed modules retain 336/336 statement coverage; E2E-009/011/013 CPU
+checks pass 80/80. Full repository collection still has 18 unrelated legacy
+errors, so no repository-wide green claim is made.
+**Operational Note:** REQ-ARC-WMTE-7708 and REQ-REPORT-7708 map the adapter-withheld
+scored policy and SDK loop to `python/carnot/agentic/arc_generalization_runtime.py`,
+the frozen schedule and terminal receipt to
+`python/carnot/experiment_7708_v671_arc_generalization_runner.py`, and the
+25 spec-linked tests to `tests/python/test_experiment_7708_v671_arc_generalization_runner.py`.
+The repair loads the scored policy before per-test memory measurement and moves
+validation base directories and the E3 smoke output outside `results/`. The
+conductor-equivalent subset, all 12 producer validation commands, and three
+terminal readers pass; scoped coverage is 336/336 statements. The two-game
+fixture is circular readiness evidence with no live solve or benefit claim.
 **Operational Note:** REQ-ARC-WMTE-10016, split from `f494c6cfc3`, maps the
 scored action's phase, top and explorer branches, plan-step flag, and resulting
 real `levels_completed` to `arc_action_provenance.py` and

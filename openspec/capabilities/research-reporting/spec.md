@@ -82212,3 +82212,50 @@ pass. Relevant guard tests, scoped lint and affected-test spec coverage pass.
 Protected-file hashes remain unchanged. Runtime science remains proposed.
 
 Implementation status: planning in progress; no V671 experiment executed.
+## V671 adapter-withheld ARC runner — 2026-09-26
+
+### REQ-REPORT-7708: Publish a bounded first-contact runner receipt
+
+Exp7708 SHALL freeze two locally runnable public SDK games by the smallest
+SHA-256 of `v671-arc-20260926` plus game ID. Registry levels and prior public
+exposure SHALL be recorded without removing cleared games from measurement.
+The runner SHALL exercise the scored E3 `choose_action` path and SDK transition
+on scripted CPU fixtures before claiming readiness. It SHALL withhold per-game
+adapters, routes, source, expert goals, and offline truth from the policy.
+No fixture or public-game result SHALL earn new registry solve credit.
+
+The artifact SHALL separate missing external inputs (complete blocked) from
+unfinished owned work (partial), and failing required validation (disqualified).
+It SHALL retain raw rows, independent group counts, exact gate operands,
+current no-model provenance, source hashes, fixed schedule for Exp7709, frozen
+validation scope, cold reduction, command exits and log hashes, and terminal
+adversarial and strict row readers. Exact fixture truth SHALL permit only a
+circular-positive readiness result, never a scientific benefit claim.
+
+#### SCENARIO-REPORT-7708-CPU
+
+Given a scripted SDK transport, the scored policy chooses an action, receives
+the next observation, and records action, level, telemetry, and resource costs.
+An environment exception remains a censored row. Flag-off actions match the
+existing policy. No evaluator label enters the policy input. Catalogue discovery
+excludes a game whose reset yields no observation, and unsupported visible frame
+values fail observation encoding.
+
+#### SCENARIO-REPORT-7708-BLOCKED
+
+Given an unavailable SDK catalogue or required byte input, the artifact names
+the upstream ID, path, field, operator, expected and observed values. It has
+zero current model calls and zero runner readiness.
+
+#### SCENARIO-REPORT-7708-TERMINAL
+
+Given a fixed validation scope, failing required checks zero readiness.
+Fresh-process cold reduction and terminal readers apply to the exact candidate
+before atomic publication. Pytest base directories and offline E3 smoke outputs
+SHALL live outside the immutable `results/` tree while command logs remain in
+the raw validation receipt. An exact fixture pass remains circular evidence.
+
+**Implementation status:** Implemented by the Exp7708 runtime, runner, and thin
+entrypoint. The final scripted two-game receipt is circular positive, with all
+12 validation commands and three terminal readers passing. The 25 focused tests
+cover 336/336 changed-module statements. No live benefit or solve credit is claimed.

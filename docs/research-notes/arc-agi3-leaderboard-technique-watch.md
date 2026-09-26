@@ -374,3 +374,13 @@ CHECK_TIMED_OUT
 
 I found no public code or writeup that verifies the method behind those **current submissions**. Their game-source or per-game hardcoding status is therefore **unknown**, and there is no verified new Carnot lever to flag. The [ARC Prize blog](https://arcprize.org/blog) has no newer milestone or technique post beyond the Astra finding already reported.
 
+## 2026-09-26 13:34 UTC -- NEW
+
+**Newly discovered technique details:** Fususu, a member of a [current top-ten team](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), disclosed three experiments:
+
+- A five-role LLM setup with role-specific context solved a few public games, but exceeded Kaggle’s time budget. **Classification: (b) general-purpose as described.**
+- A reward model trained on perfect human play learned to imitate individual games and did not outperform direct Qwen3.8 play. **Classification: (b) general-purpose training attempt; transfer failed.**
+- More than 16 concurrent model requests gave no further throughput benefit and sometimes slowed runs. **Classification: (b) general-purpose serving observation.**
+
+These are [Fususu’s reported experiments](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/739938), **not verified details of the team’s current scoring submission**. Its source-reading or per-game hardcoding status remains unknown. None establishes a new **POSSIBLE CARNOT LEVER**.
+

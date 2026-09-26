@@ -27756,3 +27756,5 @@ progress` every 5 s.
 
 
 **RESOLVED 2026-09-25 12:26 UTC:** operator power-cycled; after reboot (kernel 7.2.7) `nvidia-smi -L` lists both cards with their original indices (GPU 0 = b52387a2, GPU 1 = 7971baff), no Xid or nvidia-modeset errors this boot; conductor active with AGENT_MODEL=gpt-6-sol.
+
+- [AUTO-QUARANTINE 2026-09-26T13:39:33Z] tests/python/test_experiment_7708_v671_arc_generalization_runner.py moved to tests/python/quarantine/ after 3 consecutive pre-test gate failures (poison-test cascade guard). The experiment script is unaffected; the TEST setup is broken. Fix the test and move it back to tests/python/ to restore its regression coverage.

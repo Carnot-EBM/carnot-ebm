@@ -13,6 +13,28 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+### REQ-ARC-WMTE-7708: Observe a scored adapter-withheld E3 episode
+
+The ARC runner SHALL invoke `make_carnot_agent` and its `E3AgentPolicy` through
+the SDK action loop. The policy receives only its own observations and public
+game ID; evaluator labels, per-game adapters, stored routes, game source,
+expert goals, and offline BFS truth are withheld. Passive telemetry SHALL
+record actual observations, induced goals, model acceptance, goal firing,
+SDK transitions, and costs without changing flag-off actions. A cleared public
+game remains eligible for generalization measurement and receives no new solve
+credit.
+
+#### SCENARIO-ARC-WMTE-7708-SCORED-PATH
+
+Given a scripted transport, one episode reaches `choose_action`, calls the
+SDK transition, and observes its result. Adapter import and evaluator-label
+leakage are rejected. An SDK exception is retained as a censored outcome.
+
+**Implementation status:** Implemented in `arc_generalization_runtime.py` and
+covered by the Exp7708 focused suite. The scored policy is loaded before episode
+execution, so its one-time Torch import does not appear as per-episode memory
+growth; 118/118 runtime statements are covered.
+
 ## E6 current live-loop decision cost reduction — 2026-09-21
 
 **Status:** Specified. This is a CPU-only reduction of existing artifacts. It

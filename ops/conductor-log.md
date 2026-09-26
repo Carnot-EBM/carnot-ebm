@@ -18736,3 +18736,5 @@ code |
 | 2026-09-26 12:21 UTC | Qualify causal constraint acquisition with a hard  | OK | 99 passed, 1 warning in 81.98s (0:01:21) |
 | 2026-09-26 12:23 UTC | Measure budgeted constraint additions and delayed- | GATE_BLOCK | gate-unsat(final): 1 of 6 gate(s) failed; first failure: exp7705-constraint-bank-protocol.constraint_bank_ready_score (actual=0 == expected=1) |
 | 2026-09-26 12:41 UTC | Independently reduce evidence, decision and learni | OK | 88 passed, 1 warning in 10.37s |
+| 2026-09-26 13:42 UTC | Qualify an adapter-withheld ARC runner with reacha | FAIL | Post-tests failed: 1 failed, 114 passed, 1 warning in 14.66s |
+| 2026-09-26 13:44 UTC | Qualify an adapter-withheld ARC runner with reacha | OK | Deliverable already exists in repo |

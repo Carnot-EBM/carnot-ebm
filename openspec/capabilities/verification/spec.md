@@ -29011,7 +29011,12 @@ evidence into a headline claim.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-5500 | Planned (`python/carnot/experiment_5500_sota_concept_claim_panel_v499.py`, `results/experiment_5500_sota_concept_claim_panel_v499.json`) | Planned (`tests/python/test_experiment_5500_sota_concept_claim_panel_v499.py`) |
+| REQ-VERIFY-5500 | Implemented (`python/carnot/experiment_5500_sota_concept_claim_panel_v499.py`, `results/experiment_5500_sota_concept_claim_panel_v499.json`) | Implemented (`tests/python/test_experiment_5500_sota_concept_claim_panel_v499.py`) |
+
+The historical Exp5500 mandate remains the three model IDs above. Its model
+metadata lookup includes the legacy comparator registry after the current SOTA
+registry moved to Qwen3.8, so importing the panel and running its fixture tests
+does not depend on those historical IDs being current headline models.
 
 ### REQ-VERIFY-5512: Structured Output Positive Control For Hard/Soft Claim Candidates V500
 

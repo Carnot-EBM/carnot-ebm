@@ -1,6 +1,27 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-24
+**Last Updated:** 2026-09-26
+
+## 2026-09-26 — Exp7708 test gate verified; historical panel import repaired
+
+- The exact conductor subset now passes 106/106. Exp7708's two modules retain
+  336/336 statement coverage; E2E-009/011/013 CPU tests pass 80/80 and the
+  offline E3 SDK smoke writes its receipt to `/tmp`.
+- Exp5500's historical model metadata now resolves through the legacy comparator
+  registry; its nine tests pass. Full Python collection remains blocked by 18
+  other legacy collection errors and has not been called green.
+
+## 2026-09-26 — Exp7708 runner validation repaired
+
+- The scored policy import no longer appears as a 520 MB per-test RSS jump.
+  The focused suite passes 25/25, with 336/336 changed-module statements covered.
+- Validation pytest bases and the E3 smoke output now use temporary paths outside
+  `results/`. All 12 frozen validation commands and three terminal readers pass;
+  the conductor-equivalent subset passes 106/106.
+- The two-game scripted artifact is `complete_circular_positive_fixture_runner_ready`.
+  It grants no live solve credit or scientific benefit claim.
+- Task-owned spec traceability passes; the repository-wide reconciliation gate
+  still reports its existing backlog of 1,168 untraced tests.
 
 ## 2026-09-26 — V4 object-signature deferral pilot: no promotion, one regression
 - Grouped clicks by objects()-segmented color/size/shape signature instead of V3's exact-state key.
@@ -17207,4 +17228,3 @@ publication or push was performed.
   concatenation.
 - Prevention: none shipped yet. A cheap pre-commit check for literal conflict markers in tracked
   text files would have caught this at commit time; not built this session.
-

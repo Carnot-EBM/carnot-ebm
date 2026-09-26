@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-09-26 — Test gate verification and historical registry compatibility
+
+- Restored Exp5500's historical three-model metadata lookup from the legacy
+  comparator registry after the current SOTA registry changed. Its nine tests
+  pass without changing the current headline model mandate.
+- Re-ran the conductor's 106-test subset, 100% statement coverage for both
+  Exp7708 modules, and the 80 relevant ARC E2E CPU tests. The full Python suite
+  still has 18 unrelated collection errors.
+
+## 2026-09-26 — Exp7708 test and validation repair
+
+- Loaded the scored ARC policy before episode tests so its one-time Torch import
+  does not trigger the per-test memory watchdog. Added null-reset and unsupported
+  frame regressions; focused tests pass 25/25 with 100% changed-module coverage.
+- Moved the producer's pytest base directories and E3 smoke output to temporary
+  paths outside `results/`, satisfying the immutable-evidence output guard.
+  All 12 validation commands and three terminal readers pass. The updated
+  artifact records circular fixture readiness, no solve credit or live benefit.
+- The conductor-equivalent subset passes 106/106. `scripts/research_conductor.py`
+  was not modified. Repository-wide spec traceability still reports the
+  existing 1,168-test backlog; the Exp7708 scoped check passes.
+
 ## 2026-09-26 — V4 object-signature pilot (no promotion, one regression)
 
 - codex (gpt-6-sol, worktree `object-sig-defer`) piloted grouping click deferral by object signature

@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-09-03
+**Last Reconciled:** 2026-09-26
 
 ## Overview
 
@@ -71,6 +71,14 @@ The architecture has two distinct but coupled execution paths:
 |---|---|---|---|
 | Offline development twin | `scripts/arc_loop_solve.py` | Runs deterministic no-quota public environments, adaptered verifier-routed solves, adapter-free first contact, checkpoint refresh, and reproducibility capture. | Development proxy unless the result comes from live-agent self-discovery and passes the reproduction gate. |
 | Scored live cascade | `E3AgentPolicy` via the submitted competition kernel | Runs the hidden-game `choose_action` / `is_done` loop with exploration, routing, DSL/world-model induction, trust energy for hidden-state world models, optional active probes, and model-planned execution. | Authoritative hidden leaderboard path; the registry records a current scored baseline of `0.08`, while replay scorecards are not leaderboard evidence. |
+
+Exp7708 adds a bounded qualification path through the same scored
+`make_carnot_agent` wrapper. The runner freezes two public SDK games, withholds
+stored routes and per-game adapters, and records actual observations and SDK
+transitions on scripted CPU fixtures. Its private validation uses temporary
+paths outside `results/`; raw logs, cold reduction, and terminal readers bind
+the published receipt. This path establishes fixture readiness only and grants
+no live solve credit or hidden-game benefit claim.
 
 The shared search substrate is verifier-routed best-first exploration. `python/carnot/agentic/arc_graph_explore.py` provides adapter-free graph exploration with salience/candidate ordering, A*-style frontier priority, goal-energy hooks, action-effect frontier priority, MAP frontier seeding, QD sequence injection, and move-pruner hooks. `python/carnot/agentic/arc_solver_kit.py` provides the durable `OfflineSolver`: adaptered best-first search ordered by a hand or learned verifier, fresh-env branching for non-idempotent reset games, reusable primitive operators, and `reproduce()` as the executable reproduction gate. A solve only counts when the captured action labels replay through this gate.
 

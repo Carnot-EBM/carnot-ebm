@@ -21,7 +21,12 @@ import time
 from typing import Any
 
 from carnot import experiment_5499_preference_maxsat_minimal_fixture_v499 as fixture_mod
-from carnot.inference.sota_models import SOTA_GGUF_MODELS, cached_sota_pair, resolve_cached_gguf
+from carnot.inference.sota_models import (
+    LEGACY_COMPARATOR_GGUF_MODELS,
+    SOTA_GGUF_MODELS,
+    cached_sota_pair,
+    resolve_cached_gguf,
+)
 
 
 JsonDict = dict[str, Any]
@@ -51,7 +56,7 @@ MANDATED_HEADLINE_MODEL_IDS = (
     "unsloth/gemma-4-26B-A4B-it-GGUF",
 )
 
-_REGISTRY_BY_ID = {row["hf_id"]: row for row in SOTA_GGUF_MODELS}
+_REGISTRY_BY_ID = {row["hf_id"]: row for row in (*SOTA_GGUF_MODELS, *LEGACY_COMPARATOR_GGUF_MODELS)}
 MODEL_SPECS: list[JsonDict] = [
     {
         "name": _REGISTRY_BY_ID[hf_id]["name"],
@@ -172,11 +177,17 @@ def select_headline_specs(
     for pair_row in pair:
         hf_id = str(pair_row.get("hf_id"))
         spec = by_id.get(hf_id)
-        if spec and spec.get("local_model_present") is True and hf_id not in {row["hf_id"] for row in selected}:
+        if (
+            spec
+            and spec.get("local_model_present") is True
+            and hf_id not in {row["hf_id"] for row in selected}
+        ):
             selected.append(dict(spec))
     for spec in model_specs:
         hf_id = str(spec["hf_id"])
-        if spec.get("local_model_present") is True and hf_id not in {row["hf_id"] for row in selected}:
+        if spec.get("local_model_present") is True and hf_id not in {
+            row["hf_id"] for row in selected
+        }:
             selected.append(dict(spec))
     return selected[: max(0, max_headline_models)]
 
@@ -315,9 +326,7 @@ def score_instance(
     hard_ok = fixture_mod.hard_constraints_pass(instance, assignment)
     soft_score = fixture_mod.soft_score(instance, assignment)
     soft_optimal = bool(
-        reference["status"] == "optimal"
-        and hard_ok
-        and soft_score == reference["objective_score"]
+        reference["status"] == "optimal" and hard_ok and soft_score == reference["objective_score"]
     )
     reference_agreement = bool(
         soft_optimal
@@ -374,7 +383,9 @@ def aggregate_metrics(
     expected_optimal = [row for row in telemetry if row.get("expected_status") == "optimal"]
     token_counts = {
         "prompt_tokens": sum(int(row.get("prompt_tokens", 0)) for row in generation_receipts),
-        "completion_tokens": sum(int(row.get("completion_tokens", 0)) for row in generation_receipts),
+        "completion_tokens": sum(
+            int(row.get("completion_tokens", 0)) for row in generation_receipts
+        ),
         "total_tokens": sum(int(row.get("total_tokens", 0)) for row in generation_receipts),
     }
     return {
@@ -396,7 +407,9 @@ def aggregate_metrics(
         "gpu_memory_delta_mb": max(
             [float(row.get("gpu_memory_delta_mb", 0.0) or 0.0) for row in load_receipts] or [0.0]
         ),
-        "gpu_offload_verified": any(row.get("gpu_offload_verified") is True for row in load_receipts),
+        "gpu_offload_verified": any(
+            row.get("gpu_offload_verified") is True for row in load_receipts
+        ),
     }
 
 
@@ -423,7 +436,9 @@ def run(
         pair_resolver=pair_resolver,
         max_headline_models=max_headline_models,
     )
-    cached_missing = [str(row["hf_id"]) for row in model_specs if row["local_model_present"] is not True]
+    cached_missing = [
+        str(row["hf_id"]) for row in model_specs if row["local_model_present"] is not True
+    ]
     cached_present = [row for row in model_specs if row["local_model_present"] is True]
     blocked_reasons: list[str] = []
     if not cached_present:
@@ -449,7 +464,10 @@ def run(
                 load_receipts.append(load_receipt)
                 if load_receipt.get("gpu_offload_verified") is not True:
                     runtime_errors.append(
-                        {"model_hf_id": spec["hf_id"], "error": "gpu_offload_not_verified_after_load"}
+                        {
+                            "model_hf_id": spec["hf_id"],
+                            "error": "gpu_offload_not_verified_after_load",
+                        }
                     )
                     continue
                 generation = dict(runtime.generate(prompt))
@@ -583,13 +601,19 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
 
     for field in REQUIRED_ARTIFACT_FIELDS:
         _require(field in artifact, field)
-    _require(artifact.get("fixture_artifact") == FIXTURE_ARTIFACT_RELATIVE_PATH.as_posix(), "fixture_artifact")
+    _require(
+        artifact.get("fixture_artifact") == FIXTURE_ARTIFACT_RELATIVE_PATH.as_posix(),
+        "fixture_artifact",
+    )
     _require(artifact.get("guided_decoding_used") is False, "guided_decoding_used")
     _require(artifact.get("token_steering_used") is False, "token_steering_used")
     _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
     _require(artifact.get("legacy_smoke_models_used") == [], "legacy_smoke_models_used")
     _require(artifact.get("research_conductor_modified") is False, "research_conductor_modified")
-    _require(str(artifact.get("honest_verdict", "")).startswith(("complete:", "blocked:")), "honest_verdict")
+    _require(
+        str(artifact.get("honest_verdict", "")).startswith(("complete:", "blocked:")),
+        "honest_verdict",
+    )
     _require(
         [row.get("hf_id") for row in artifact.get("model_specs", [])]
         == list(MANDATED_HEADLINE_MODEL_IDS),
@@ -602,7 +626,10 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
     ):
         value = float(artifact.get(field, -1.0))
         _require(0.0 <= value <= 1.0, field)
-    _require(isinstance(artifact.get("concept_claim_telemetry_rows"), int), "concept_claim_telemetry_rows")
+    _require(
+        isinstance(artifact.get("concept_claim_telemetry_rows"), int),
+        "concept_claim_telemetry_rows",
+    )
     _require(artifact.get("reproducibility_checksum") == payload_checksum(artifact), "checksum")
 
 
@@ -630,7 +657,9 @@ def default_runtime_probe() -> JsonDict:  # pragma: no cover
         llama_cpp_import_ok = True
         llama_cpp_cuda_available = bool(llama_cpp.llama_supports_gpu_offload())
         raw_info = llama_cpp.llama_print_system_info()
-        system_info = raw_info.decode("utf-8", "replace") if isinstance(raw_info, bytes) else str(raw_info)
+        system_info = (
+            raw_info.decode("utf-8", "replace") if isinstance(raw_info, bytes) else str(raw_info)
+        )
     except Exception as exc:  # noqa: BLE001
         llama_error = f"{type(exc).__name__}: {exc}"
 
@@ -701,7 +730,9 @@ def total_gpu_memory_used_mb() -> float | None:  # pragma: no cover
     return float(sum(float(row["memory_used_mb"]) for row in snapshot["gpus"]))
 
 
-def default_runtime_factory(spec: Mapping[str, Any]) -> "LlamaCppClaimPanelRuntime":  # pragma: no cover
+def default_runtime_factory(
+    spec: Mapping[str, Any],
+) -> "LlamaCppClaimPanelRuntime":  # pragma: no cover
     """Create the real llama-cpp-python runtime for local delivery runs."""
 
     return LlamaCppClaimPanelRuntime(spec)
@@ -784,7 +815,14 @@ def _require(condition: bool, message: str) -> None:
 
 def main() -> int:  # pragma: no cover
     artifact = run()
-    print(json.dumps({"result": RESULT_RELATIVE_PATH.as_posix(), "honest_verdict": artifact["honest_verdict"]}))
+    print(
+        json.dumps(
+            {
+                "result": RESULT_RELATIVE_PATH.as_posix(),
+                "honest_verdict": artifact["honest_verdict"],
+            }
+        )
+    )
     return 0
 
 
