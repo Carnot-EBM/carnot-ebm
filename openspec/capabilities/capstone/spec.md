@@ -4630,3 +4630,17 @@ readiness separate from scientific benefit and from G1–G4 publication status.
 A fresh process SHALL reconstruct all fourteen dispositions and gate checks.
 Private producer deletion or gate-field deletion SHALL yield a terminal blocked
 result, never partial or a fabricated zero.
+
+## REQ-CAPSTONE-7712: Close fourteen V671 accounting slots
+
+The V671 capstone SHALL report a disposition for each ordered task, with
+administrative accounting readiness separate from scientific benefit. It SHALL
+use Exp7707 independent reductions for decision and learning claims, keep
+missing Exp7706 and disqualified evidence blocked, and state three falsifiable
+PRD gaps. It SHALL not activate a roadmap, publish, buy hardware, train the
+generator or change production defaults.
+
+### SCENARIO-CAPSTONE-7712-BLOCKED
+
+With required acquisition evidence absent, the capstone completes as blocked,
+records exact gate operands and has fourteen rows including its planned output.

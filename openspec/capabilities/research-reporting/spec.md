@@ -82145,6 +82145,7 @@ scientific benefit or a publication gate.
 
 ## REQ-REPORT-V670-PLAN: Plan evidence interfaces and retained constraints
 
+
 The staged milestone 2026.09.670 SHALL contain exactly fourteen ordered tasks,
 Exp7685 through Exp7698, across four phases. Its design table, machine contract
 and execution YAML SHALL agree on IDs, titles, phases, deliverables, models,
@@ -82332,3 +82333,25 @@ the raw validation receipt. An exact fixture pass remains circular evidence.
 entrypoint. The final scripted two-game receipt is circular positive, with all
 12 validation commands and three terminal readers passing. The 25 focused tests
 cover 336/336 changed-module statements. No live benefit or solve credit is claimed.
+
+## REQ-REPORT-7712: Reconcile V671 from exact current evidence
+
+Exp7712 SHALL compare all fourteen ordered V671 tasks with the staged or
+activated roadmap and independent design, including identity, title, phase,
+path, gates, substrate and models. It SHALL hash available producers, preserve
+separate pre-gate and missing custody, and never treat its own planned output
+as input. Missing or ineligible Exp7704, Exp7706 or Exp7707 evidence SHALL
+yield a terminal blocked verdict with exact operands. Valid null science SHALL
+remain null. It SHALL separate fixture, pilot, decision, acquisition, live ARC
+and native-cost claims, retain FoVer 0.9131 and current G1–G4 publication gates,
+and require cold replay and strict terminal readers before atomic publication.
+
+### SCENARIO-REPORT-7712-CUSTODY
+
+A private missing-producer mutation retains fourteen accounting rows and
+changes the exact required-evidence check to observed absence, never partial.
+
+### SCENARIO-REPORT-7712-TERMINAL
+
+Cold reduction reopens named bytes and rejects a changed producer, gate,
+contract or raw-row reduction. Failed validation disqualifies readiness.
