@@ -18739,3 +18739,4 @@ code |
 | 2026-09-26 13:42 UTC | Qualify an adapter-withheld ARC runner with reacha | FAIL | Post-tests failed: 1 failed, 114 passed, 1 warning in 14.66s |
 | 2026-09-26 13:44 UTC | Qualify an adapter-withheld ARC runner with reacha | OK | Deliverable already exists in repo |
 | 2026-09-26 14:09 UTC | Measure live goal evidence during adapter-withheld | OK | 91 passed, 1 warning in 8.00s |
+| 2026-09-26 14:37 UTC | Qualify typed evidence payloads through the actual | OK | 92 passed, 1 warning in 8.57s |
