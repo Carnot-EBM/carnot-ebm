@@ -1,5 +1,29 @@
 # Continuous Learning Capability Specification
 
+## REQ-CL-7705-BOUNDED-BANK: Released counterexamples can propose advisory checks
+
+A persistent bank SHALL use the frozen Exp7703 eight primitives and 28 pairs,
+with at most 36 templates and 16 pending feedback handles. Only released
+update counterexamples may select a conjunction. Delayed-loss priority SHALL
+use only released loss and the frozen fit/tune threshold. Fixed-period arms
+SHALL use periods 2, 4, 6, 8, 10 and 12 on the same grammar. Each arm SHALL
+spend at most six proposal credits and at most 50 gradient steps per proposal;
+rejected proposals and admission checks spend credits. An advisory candidate
+SHALL never certify unsupported clauses or erase exact contradictions.
+
+### SCENARIO-CL-7705-DURABLE
+
+Given duplicate, future, reordered or missing feedback, the bank SHALL reject
+application. State writes SHALL be atomic and reload SHALL preserve credits,
+pending handles, decisions and forecasts. A crash before commit SHALL leave
+the proposal uncommitted; after commit, replay SHALL not apply it twice.
+
+### SCENARIO-CL-7705-ACQUISITION
+
+Given no released counterexample or a rejected admission, the bank SHALL not
+claim learning benefit. Untouched admission and retention cases SHALL measure
+future utility and forgetting without entering proposal features.
+
 **Capability:** continuous-learning
 **Version:** 0.1.0
 **Status:** Draft

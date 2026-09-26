@@ -1,5 +1,49 @@
 # Research Reporting Capability Specification
 
+## V671 bounded constraint bank protocol — 2026-09-26
+
+### REQ-REPORT-7705: Publish causal, bounded bank evidence
+
+Exp7705 SHALL authenticate current V671 Exp7700, Exp7701, and Exp7703
+producer bytes, ready gates, frozen grammar, online roles, and evaluator-store
+hashes before labels open. The current run SHALL load no model. Missing or
+retired inputs SHALL yield a terminal blocked artifact with exact check
+operands. It SHALL compare delayed-loss priority, fixed periods 2/4/6/8/10/12,
+read-only, weight-only, and complete static closure on the same 60 update and
+60 admission families, with 32 untouched retention families. Predictions,
+release ticks, proposal freezes, admission decisions, commits, rollbacks,
+credit use, original-unit rows and provenance SHALL be retained. Rejected
+proposals and admission checks SHALL spend credits. A bank candidate SHALL be
+advisory only; exact contradictions and unsupported clauses remain governed by
+the existing verifier. Fixture truth SHALL be labeled circular evidence.
+
+The artifact SHALL report eight separate validity, readiness, coverage,
+freshness, probability, utility, retention and efficiency gates with measured
+operands. Readiness is administrative and requires causal bounded durable
+mechanics, valid checks and no forgotten retention cases. Independent cold
+reduction, scoped unit and changed-code coverage, lint, type, spec coverage,
+full Python suite, adversarial verification and strict row lint SHALL retain
+real exits and log hashes before atomic publication. Failed required checks
+SHALL disqualify and zero readiness. No production activation follows.
+
+#### SCENARIO-REPORT-7705-CUSTODY
+
+Given missing or altered current-milestone bytes, preflight SHALL name check,
+upstream ID, path, exact field, operator, expected and observed before any
+evaluator label is opened. A planned output SHALL not serve as input.
+
+#### SCENARIO-REPORT-7705-REPLAY
+
+Given a pending label, a restart SHALL preserve its prediction, apply its
+feedback once, and preserve identical future predictions. A fresh process
+SHALL reduce the full ledger and reject a removed or reordered event.
+
+#### SCENARIO-REPORT-7705-TERMINAL
+
+Given an exact candidate, required validators SHALL run on its bytes before
+publication. Their actual exits and log hashes SHALL remain in the terminal
+artifact; failed readers SHALL disqualify and zero readiness.
+
 ## V671 held-out typed decisions — 2026-09-26
 
 ### REQ-REPORT-7704: Publish a sealed forty-family decision measurement
