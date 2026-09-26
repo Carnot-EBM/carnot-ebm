@@ -18689,3 +18689,4 @@ code |
 | 2026-09-26 02:29 UTC | Qualify delayed acquisition and one-use admission | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7674-relation-energy, exp7674-relation-energy, exp7674-relation-energy) |
 | 2026-09-26 02:29 UTC | Test fresh constraint acquisition against frozen a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7677-constraint-acquisition-protocol, exp7677-constraint-acquisition-protocol, exp7677-constraint-acquisition-protocol) |
 | 2026-09-26 02:46 UTC | Cold-audit fresh decisions and acquired constraint | OK | 110 passed, 2 warnings in 10.02s |
+| 2026-09-26 03:14 UTC | Wire bounded goal-hypothesis probes into the score | OK | 161 passed, 1 warning in 73.91s (0:01:13) |
