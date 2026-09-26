@@ -1,5 +1,11 @@
 # Carnot — Changelog
 
+## 2026-09-26 — Unwon public games studied (operator request)
+
+- codex (gpt-6-sol, worktree `unwon-analysis`) measured the 12 public games where the bare
+  explorer (no induction/adapter/banked route/stored engine) never reaches a first level-up.
+  Several distinct causes, not one. Merged a342baef7f.
+
 ## 2026-09-26 — Provenance merge and V1b explorer fix (operator request: "1 + 2")
 
 - Merged only the per-action provenance (REQ-ARC-WMTE-10016) from `explorer-pilot`, via a codex

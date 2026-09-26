@@ -2,6 +2,15 @@
 
 **Last Updated:** 2026-09-24
 
+## 2026-09-26 — 12 unwon public games studied: several causes, not one
+- No single blocker explains all 12 (ar25, cn04, g50t, ka59, ls20, re86, sb26, sc25, sk48, tn36,
+  tr87, wa30). Found: wasted inert clicks (ar25, sk48), effective clicks unranked against a joint
+  precondition (cn04, sb26), a missed productive region (sc25), sparse selection in a large action
+  space (re86), an unsampled causal sequence (ka59, ls20, wa30), and cycling a tiny state space
+  (tn36: 37 hashes, 324 resets in 2000 actions). Route length does not predict difficulty: ka59 and
+  tr87 have 11-14 action registered routes and still fail the bare explorer.
+- Ranked next target: sk48 (inert-click waste), then sb26, sc25, re86, ar25, ka59.
+
 ## 2026-09-26 — Per-action provenance merged; V1b explorer fix: no promotion
 - Merged REQ-ARC-WMTE-10016 (01e405382e): the live agent records the phase and explorer branch behind
   every action. Recording only; 10/10 replay pairs identical, 300 decisions match the old code.

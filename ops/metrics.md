@@ -3538,3 +3538,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 56 | 2026-09-26T06:45:38Z | 2026-09-26T06:45:56Z | Both codex jobs hit the codex usage limit before starting; queued automatic relaunch (probe every 20 min); conductor codex tasks also affected until reset |
 | 57 | 2026-09-26T07:19:36Z | 2026-09-26T07:19:57Z | Operator reset codex quota; probe OK; relaunched provenance port and V1b jobs |
 | 58 | 2026-09-26T07:19:57Z | 2026-09-26T08:03:00Z | Provenance merged to main (01e405382e); V1b no promotion (held-out 10/10/10 games; dc22, sp80 guard breaks); ops and research note updated |
+| 59 | 2026-09-26T08:19:57Z | 2026-09-26T08:55:00Z | Allowed gpt-6-luna in roadmap gate (review-flagged); studied 12 unwon public games, several distinct causes, ranked next target sk48 |
