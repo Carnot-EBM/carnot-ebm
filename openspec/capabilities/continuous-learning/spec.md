@@ -19928,3 +19928,16 @@ Qwen diagnostics. A fresh CPU head SHALL not receive inherited model credit.
 
 Given no online raw rows, the audit reports null operands for probability,
 utility, retention, and efficiency and a blocked availability disposition.
+### REQ-CL-7707: Audit acquisition chronology before learning claims
+
+An independent reader SHALL verify both frozen acquisition schedules, sealed
+thresholds, six-credit caps, charged rejections, actual spend, later use,
+feedback origin order, uniqueness, and multiplicity correction from raw events.
+When the current online producer is blocked, these measures remain unobserved
+and no learning benefit may be inferred.
+
+#### SCENARIO-CL-7707-FEEDBACK
+
+Given a future-origin or duplicate feedback event, the reader disqualifies the
+event stream. Given an absent online stream, it records blocked custody and
+does not substitute fixture events for empirical learning.

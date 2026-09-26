@@ -1,5 +1,39 @@
 # Research Reporting Capability Specification
 
+## V671 independent evidence audit — 2026-09-26
+
+### REQ-REPORT-7707: Publish a cold audit with exact custody
+
+Exp7707 SHALL authenticate all fourteen planned V671 dispositions and exact
+bytes of the required Exp7700–Exp7706 producers. It SHALL reduce available raw
+unit operands without trusting producer summaries. A missing, blocked, or
+disqualified required static or online producer SHALL yield
+`complete_blocked_required_evidence`, `verdict_class=blocked`, zero audit
+readiness, and exact field-level gate operands. Absent rows SHALL never become
+zero losses. The audit SHALL preserve fixture circularity, independent-label
+scope, source-family denominators, and current no-model provenance.
+
+#### SCENARIO-REPORT-7707-CUSTODY
+
+Given a missing planned producer or a present producer with a failed readiness
+field, the audit records separate missing and pre-gate hashes and identifies
+the exact path, field, operator, expected, and observed values.
+
+#### SCENARIO-REPORT-7707-REDUCTION
+
+Given eligible raw families, probabilities, actions, and feedback, the cold
+reducer recomputes counts, Brier loss, cost, coverage, and chronological use.
+Ambiguous quotes, crossed record spans, permuted fit labels, future feedback,
+and duplicate feedback fail closed outside empirical denominators.
+
+#### SCENARIO-REPORT-7707-TERMINAL
+
+A fresh process SHALL replay the candidate from the same bytes. The strict
+verdict reader and adversarial reader SHALL consume the exact candidate before
+atomic publication. A private deleted producer must block custody; an
+inconsistent row must disqualify evidence. Valid null outcomes can still earn
+audit completion when every required evidence stream is eligible.
+
 ## V671 bounded constraint bank protocol — 2026-09-26
 
 ### REQ-REPORT-7705: Publish causal, bounded bank evidence
