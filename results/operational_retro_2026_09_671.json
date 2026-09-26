@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.671",
+  "generated_at": "2026-09-26T15:00:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 40.7,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 12,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify causal constraint acquisition with a hard proposal budget",
+      "duration_minutes": 21.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure live goal evidence during adapter-withheld first contact",
+      "duration_minutes": 8.85,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure explicit record and claim addressing with bounded Qwen proposals",
+      "duration_minutes": 4.67,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify typed evidence payloads through the actual native service",
+      "duration_minutes": 1.39,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure fresh probability and typed-decision value",
+      "duration_minutes": 1.03,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.671 completed 12 experiments, all compute-bound, totaling 40.7 wall-time minutes (average 3 minutes per experiment) with timing reconstructed via disk-mtime fallback. Execution time was dominated by 'Qualify causal constraint acquisition with a hard proposal budget' at 21.0 minutes, followed by 'Measure live goal evidence during adapter-withheld first contact' at 8.85 minutes and 'Measure explicit record and claim addressing with bounded Qwen proposals' at 4.67 minutes. Together, the top three compute-bound tasks accounted for 34.52 of the 40.7 total wall-time minutes (84.8%), while intra-task phase durations were unmeasured.",
+  "bottlenecks_identified": [
+    "The slowest experiment ('Qualify causal constraint acquisition with a hard proposal budget') required 21.0 minutes, consuming 51.6% of the 40.7 total milestone wall-time minutes alone, but the lack of sub-phase profiling prevents isolating time spent on model inference versus proposal budgeting and constraint evaluation.",
+    "The top three slowest compute-bound experiments ('Qualify causal constraint acquisition with a hard proposal budget' at 21.0 minutes, 'Measure live goal evidence during adapter-withheld first contact' at 8.85 minutes, and 'Measure explicit record and claim addressing with bounded Qwen proposals' at 4.67 minutes) accounted for 34.52 of 40.7 total minutes (84.8%), representing extreme execution concentration without intra-task stage breakdown.",
+    "The post-run GPU monitor report captures an idle state (GPU 0 at 5MB, 0% util; GPU 1 at 4MB, 0% util) at milestone completion, but because gpu_idle_on_compute_bound_tasks is false, this reflects post-run quiescence rather than an active-task bottleneck; continuous in-run GPU telemetry across active task windows was absent.",
+    "No experiment records indicate concurrent execution of two or more models in parallel, so DualGPURunner dispatch was not applicable to the single-model tasks executed this milestone.",
+    "Timing data required disk-mtime reconstruction fallback because the live git-log path found 0 commits, precluding commit-anchored execution timestamps."
+  ],
+  "improvements_suggested": [
+    "Instrument fine-grained sub-phase monotonic timers within long-running compute-bound tasks—particularly causal constraint acquisition and live goal evidence routines—to decompose proposal generation time from constraint validation.",
+    "Capture continuous active-window GPU utilization and VRAM metrics during compute-bound executions to evaluate accelerator efficiency throughout task runs.",
+    "Persist model concurrency and runner dispatch metadata in experiment receipts to formally verify DualGPURunner applicability on multi-model workloads.",
+    "Emit synchronous, structured start and finish timestamps directly to experiment execution receipts to avoid falling back to filesystem disk-mtime reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument sub-phase duration profiling inside causal constraint acquisition and adapter evaluation loops to isolate model inference latency from constraint logic.",
+    "Deploy continuous in-task GPU utilization monitoring during compute-bound runs to capture active-window accelerator throughput.",
+    "Persist structured execution lifecycle timestamps and model concurrency metadata directly into task receipts to ensure robust timing and runner auditability."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.09.671 executed 12 compute-bound tasks across 40.7 wall-time minutes, with 84.8% of runtime concentrated in the top three experiments led by causal constraint acquisition at 21.0 minutes and live goal evidence at 8.85 minutes. While the post-run GPU monitor snapshot recorded both RTX 3090 GPUs idle (5MB/4MB allocated, 0% utilization), gpu_idle_on_compute_bound_tasks is false and active-window accelerator efficiency was not continuously logged, with no multi-model tasks present to engage DualGPURunner. Implementing fine-grained sub-phase timing and continuous accelerator telemetry represents the most effective operational path to isolating bottlenecks in upcoming compute-heavy milestones."
+}

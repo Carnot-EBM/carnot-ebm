@@ -7004,3 +7004,11 @@ The critical path for milestone .250:
 - theme: timing integrity mismatch between changelog references and zero assembled commits prevents operational throughput assessment
 - key result: honest operational negative — no data available this milestone; live git-log and disk-mtime reconstruction routes both found 0 experiment commits despite milestone references in ops/changelog.md, leaving compute-bound execution durations, accelerator efficiency, and DualGPURunner dispatch unmeasured
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.671
+
+- exp_range: no data available this milestone
+- theme: causal constraint acquisition with a hard proposal budget and adapter-withheld live goal evidence dominated wall time in an all-compute milestone lacking sub-phase metrics
+- key result: honest operational negative — causal constraint acquisition consumed 21.0 of 40.7 total wall-time minutes (51.6%), but available records lack intra-task sub-phase telemetry, continuous active-window accelerator monitoring, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
