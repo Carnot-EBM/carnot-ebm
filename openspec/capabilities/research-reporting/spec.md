@@ -1,5 +1,35 @@
 # Research Reporting Capability Specification
 
+## V672 capstone — 2026-09-26
+
+### REQ-REPORT-7725: Account for thirteen V672 tasks without promoting missing science
+
+Exp7725 SHALL compare the staged or active YAML with the independent design
+table and machine contract, then account for Exp7713–Exp7725 in order. Its own
+planned result SHALL be a disposition, never an input. Producer bytes, conductor
+gate receipts, flagged historical evidence and missing custody SHALL remain
+separate. Exp7718, Exp7720 and Exp7721 must each exist, be unflagged and have an
+eligible terminal verdict for scientific completion. Missing, retired or invalid
+required science SHALL produce `complete_blocked_required_v672_evidence`, class
+`blocked`, and exact failed gate operands. Eligible nulls count as complete
+science but do not establish benefit. The unchanged publication reader supplies
+G1–G4. Every claim row SHALL preserve its own provenance and evidence limit.
+
+#### SCENARIO-REPORT-7725-CUSTODY
+
+Given the current missing design contract, absent Exp7718/7720 and blocked
+Exp7721, the capstone accounts for all thirteen slots, records each missing
+path and exact eligibility operand, and remains blocked. A gate receipt is not
+a producer. Mutation of a source byte or an upstream verdict changes cold replay.
+
+#### SCENARIO-REPORT-7725-TERMINAL
+
+The capstone SHALL freeze affected validation scope, pass scoped tests, complete
+changed-module coverage, Ruff, mypy and spec coverage, and cold-reduce the
+candidate in a fresh process. Adversarial and strict row readers SHALL inspect
+the exact candidate before atomic publication. Required check failure SHALL
+disqualify and zero readiness. CPU aggregation invokes no experimental model.
+
 ## V672 independent evidence audit — 2026-09-26
 
 ### REQ-REPORT-7721: Cold audit natural decisions and retained learning
