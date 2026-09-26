@@ -9,6 +9,19 @@ and persist pending and processed event identities for restart. E2E-003 SHALL
 cross the loaded extension and E2E-004 SHALL reload the exact native state.
 No default consumer or natural-language parser change follows.
 
+### REQ-PYBIND-7723: Recheck the unchanged typed record ABI and durability
+
+The V672 qualification SHALL load the private extension from its measured path,
+record its binary hash and ABI, and exercise the existing fixed typed-record
+methods. Normal restart and hard child exit before and after feedback SHALL
+recover the expected pending and processed identities. The API scope SHALL
+exclude the later source alignment model and remain opt-in.
+
+#### SCENARIO-PYBIND-7723-RESTART
+
+A real PyO3 service persists a prediction and exactly one feedback release
+through both clean reopen and abrupt child termination.
+
 #### SCENARIO-PYBIND-7710-ROUNDTRIP
 
 A private task-owned extension accepts a typed record payload, returns its

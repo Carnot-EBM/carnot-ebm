@@ -1,0 +1,53 @@
+{
+  "affected_python": [
+    "python/carnot/experiment_7723_v672_native_qualification.py",
+    "python/carnot/experiment_7710_v671_native_record_contract.py",
+    "python/carnot/pipeline/native_record_decision.py",
+    "python/carnot/pipeline/native_calibrated_decision_service.py",
+    "scripts/experiments/experiment_7723_v672_native_qualification.py"
+  ],
+  "affected_rust": [
+    "crates/carnot-core/src/record_decision.rs",
+    "crates/carnot-python/src/portable_recalibration.rs"
+  ],
+  "changed_modules": [
+    "python/carnot/experiment_7723_v672_native_qualification.py"
+  ],
+  "e2e": [
+    "E2E-003",
+    "E2E-004",
+    "normal_restart",
+    "hard_exit_before_ack",
+    "hard_exit_after_ack"
+  ],
+  "fixture_weights": "fixed-7710-v1",
+  "global_health": [
+    "full_python_suite",
+    "cargo_fmt_all",
+    "cargo_clippy_workspace"
+  ],
+  "minimum_original_payloads": 128,
+  "native_crates": [
+    "carnot-core",
+    "carnot-python"
+  ],
+  "probability_tolerance": 1e-06,
+  "required_validation": [
+    "focused_pytest",
+    "changed_module_coverage",
+    "ruff_check",
+    "ruff_format",
+    "changed_module_mypy",
+    "scoped_spec_coverage",
+    "e2e_003",
+    "e2e_004",
+    "cold_reduction",
+    "adversarial_verify",
+    "strict_row_lint"
+  ],
+  "schema": "carnot.exp7723.frozen_scope.v1",
+  "tests": [
+    "tests/python/test_experiment_7723_v672_native_qualification.py",
+    "tests/python/test_experiment_7710_v671_native_record_contract.py"
+  ]
+}

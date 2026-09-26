@@ -93,6 +93,37 @@ admit feedback exactly once. The consumer remains opt-in. A fixture parity
 result SHALL be circular evidence, with no trained-head or speed claim. Exact
 candidate readers and required checks SHALL control administrative readiness.
 
+### REQ-REPORT-7723: Requalify the fixed native record boundary after test repair
+
+Exp7723 SHALL authenticate the unchanged Exp7700 schema, the immutable Exp7710
+artifact and failed validation logs, and the later standalone test repair. It
+SHALL freeze affected Python, Rust, native crate, E2E and validation scope before
+measurement. It SHALL run 128 original typed payloads plus boundary and error
+paths through a privately built, origin-checked PyO3 extension. Python and Rust
+probabilities SHALL agree within 1e-6, actions and typed errors SHALL match, and
+normal restart and hard child exits around acknowledgment SHALL preserve exactly
+once feedback under the same fsync policy. A fresh process SHALL reduce raw rows;
+adversarial and strict row readers SHALL inspect the exact terminal candidate.
+Failed affected checks SHALL zero native readiness. Historical V671 failures
+and unrelated repository debt SHALL remain visible. Fixture truth SHALL permit
+only circular evidence and SHALL NOT establish learned benefit or accelerate the
+later source alignment model.
+
+#### SCENARIO-REPORT-7723-BLOCKED
+
+Missing or changed producer bytes, schema, repair evidence, or build resources
+yield a terminal blocked artifact with exact expected and observed gate operands.
+
+#### SCENARIO-REPORT-7723-PARITY
+
+Each of 128 original units and each boundary or error row records Python and
+native outputs, probability delta, provenance, and restart outcome.
+
+#### SCENARIO-REPORT-7723-TERMINAL
+
+Scoped checks, changed-module coverage, E2E-003/004, cold reduction and exact
+terminal readers control readiness; global failures are reported separately.
+
 #### SCENARIO-REPORT-7710-PARITY
 
 Given 128 or more finite, empty, unknown, extreme and malformed payloads,

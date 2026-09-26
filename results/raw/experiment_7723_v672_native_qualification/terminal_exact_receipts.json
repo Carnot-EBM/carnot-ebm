@@ -1,0 +1,58 @@
+{
+  "candidate_sha256": "sha256:fdd09e52b0599b214331023b1ecf7f87a5c7dd6ee53fe1b5f805c431659079b9",
+  "checks": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7723_v672_native_qualification.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7723_v672_native_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7723_v672_native_qualification.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7723_v672_native_qualification/terminal_candidate.json"
+      ],
+      "duration_s": 1.4844862949976232,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7723_v672_native_qualification/validation/terminal_exact/00_cold_reduction.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "cold_reduction",
+      "output_tail": "",
+      "passed": true,
+      "scope": "exact candidate in fresh process",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7723_v672_native_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7723_v672_native_qualification/terminal_candidate.json"
+      ],
+      "duration_s": 0.6685573760041734,
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_7723_v672_native_qualification/validation/terminal_exact/01_adversarial_verify.log",
+      "log_sha256": "sha256:2d15cdd35d4def00fecc5807482402da9040e8216f37bc92118c3a370849ce02",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[WARN] expexp7723-v672-native-qualification () -- 1 flag(s)\n  - WARN     METHODOLOGY_MISSING            Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n\n",
+      "passed": false,
+      "scope": "exact candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7723_v672_native_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7723_v672_native_qualification/terminal_candidate.json"
+      ],
+      "duration_s": 0.03383931200369261,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7723_v672_native_qualification/validation/terminal_exact/02_strict_row_lint.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_row_lint",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "exact candidate",
+      "timed_out": false
+    }
+  ]
+}
