@@ -82389,3 +82389,23 @@ ARC readers pass. Protected files retain their hashes. Runtime experiments
 remain proposed; planning checks do not claim their future E2Es passed.
 
 Implementation status: staged planning documents; validation pending.
+
+## REQ-REPORT-7713: Authenticate the V672 contract before science
+
+Exp7713 SHALL compare exactly thirteen ordered task records in the matching
+V672 YAML, independent design table, and JSON block. It SHALL compare identity,
+title, phase, path, model list, substrate, and complete gates. An absent table
+or block SHALL yield a terminal blocked result with the missing operand named.
+Contract readiness is administrative and SHALL stay zero for missing input or
+failed validation. V671 verdicts and archive lag SHALL remain historical custody.
+
+### SCENARIO-REPORT-7713-CONTRACT
+
+Private deletion, reorder, stale milestone, producer-field, and model-removal
+mutations fail the same comparison. Missing design sections retain thirteen
+rows with explicit exclusions and no invented science metrics.
+
+### SCENARIO-REPORT-7713-TERMINAL
+
+Cold reduction binds source hashes and row outcomes. The final artifact has
+separate validation receipts, exact blocked operands, and no positive claim.

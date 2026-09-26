@@ -6210,3 +6210,14 @@ orchestration and persistence. Retired external-text reranking, unchanged
 importance anchoring, new samplers and generator training remain excluded.
 The focused arXiv check found Enoki v2 and ADOWIP v1; Semantic Scholar paper
 endpoints returned internal errors, leaving citation deltas unknown.
+## 2026-09-26 — Exp7713 focused V672 method recheck
+
+The arXiv search rechecked HallDetect 2608.05823, EBT 2507.02092, and
+capacity-constrained delayed OCO 2606.11711. The retrieved abstracts support
+the method motivations in `docs/research-notes/v672-method-map.md`; they do
+not establish Carnot's source-alignment accuracy, acquisition benefit, or
+service cost. Semantic Scholar citation endpoints yielded no usable census
+in the dated V672 reference review. Search indexing and endpoint failures
+limit novelty conclusions. The plan's independent table and JSON block are
+absent, so Exp7713 records a blocked administrative contract rather than
+creating an agreement from the YAML itself.

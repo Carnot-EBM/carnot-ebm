@@ -12073,3 +12073,15 @@ Its contract readiness SHALL not open any scientific or publication gate.
 Given a matching fourteen-task authority and ten producer files, the audit
 retains four absent producers as log custody and reports zero current model
 invocations.
+
+## REQ-HARNESS-7713: Bound V672 administrative validation
+
+The harness SHALL use CPU aggregation with no experimental model. It SHALL
+freeze affected validation scope, stream bounded subprocess output, and keep
+command exits and log hashes. It SHALL record observed runtime routing and
+shall not infer it from requested YAML agent fields.
+
+### SCENARIO-HARNESS-7713-RECEIPTS
+
+An absent independent contract yields a blocked result. A failed required
+check yields zero readiness. Neither case retries unchanged external input.
