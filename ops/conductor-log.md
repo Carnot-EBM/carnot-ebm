@@ -18752,3 +18752,4 @@ code |
 | 2026-09-26 17:58 UTC | Test source-dependent probability and typed-decisi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7717-latent-evidence-fit, exp7717-latent-evidence-fit, exp7717-latent-evidence-fit) |
 | 2026-09-26 18:50 UTC | Qualify commits, rejection and complete-static con | OK | 91 passed, 1 warning in 50.88s |
 | 2026-09-26 18:52 UTC | Measure causal constraint additions on a delayed n | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7717-latent-evidence-fit, exp7717-latent-evidence-fit, exp7717-latent-evidence-fit) |
+| 2026-09-26 19:08 UTC | Cold-audit source dependence and retained learning | OK | 102 passed, 1 warning in 7.75s |
