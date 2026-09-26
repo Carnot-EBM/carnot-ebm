@@ -1311,3 +1311,21 @@ retired_extras:
   retire_if_same_verdict: true
   blocked_patterns:
   - infer generic external-text reranking from source-option readout
+- id: v671_frozen_source_certificate_decision_head_retired
+  experiment_scope: unchanged frozen source-specific atom or typed-certificate
+    energy decision head on LettuceDetect injected-error families
+  reason: >-
+    Exp7661 and Exp7704 both found no registered held-out decision benefit.
+    The V671 typed-certificate head had no non-escalating decisions in forty
+    families and no paired cost reduction. This retires the narrow frozen
+    decision mechanism, not independent energy research or FoVer.
+  experiment_ids:
+  - exp7661-decision-evaluation
+  - exp7704-heldout-decisions
+  retired_milestone: 2026.09.671
+  retired_by_artifact: results/experiment_7704_v671_heldout_decisions.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - repeat the same frozen source-certificate decision head on LettuceDetect
+    injected-error families without a new registered mechanism

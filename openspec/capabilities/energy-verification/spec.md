@@ -447,3 +447,18 @@ runtime receipts, freeze order, and verdict prefix
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-ENERGY-7013 and SCENARIO-ENERGY-7013-* | Implemented (`python/carnot/experiment_7013_three_family_intervention_surface.py`; `scripts/experiments/experiment_7013_three_family_intervention_surface.py`) | Implemented (`tests/python/test_experiment_7013_three_family_intervention_surface.py`; missing-family, legacy-model, CPU-fallback, stale-server, process-ownership, prompt-alignment, token-position, label-freeze, duplicate-row, null-logit, teardown, duration, artifact-validation, and 100% new-module statement coverage checks) |
+## V671 held-out decision contrasts — 2026-09-26
+
+### REQ-ENERGY-7704: Preserve paired energy and evidence contrasts
+
+The decision scorer SHALL use Exp7703's exact normalized probabilities and
+frozen actions for typed Gibbs, same-input logistic and MLP, atom-only, prior,
+and source-erased/deranged interventions. The strongest tune non-energy head
+SHALL stay frozen as the registered control. Each family SHALL contribute one
+paired bootstrap block regardless of seeds or transformed views. A source
+intervention changes evidence only and keeps the original injected-error label.
+
+#### SCENARIO-ENERGY-7704-ZERO-COVERAGE
+
+Given zero checked propositions, the family SHALL remain in all denominators,
+retain its null-evidence coverage, and receive ordinary probabilities and costs.

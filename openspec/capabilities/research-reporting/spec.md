@@ -1,5 +1,46 @@
 # Research Reporting Capability Specification
 
+## V671 held-out typed decisions — 2026-09-26
+
+### REQ-REPORT-7704: Publish a sealed forty-family decision measurement
+
+Exp7704 SHALL authenticate the terminal Exp7703 head, frozen control,
+thresholds, online protocol, forty public evaluation families, and isolated
+evaluator-store bytes before opening any evaluation label. It SHALL score every
+family, including zero-coverage cases, for each frozen head family, atom-only
+and source-erased or deranged evidence. Labels mean annotated injected-error
+presence only. It SHALL retain probability, label, action, Brier loss, charged
+decision cost, coverage, and provenance per arm and original family.
+
+The registered benefit SHALL require both 10,000-draw paired-family bootstrap
+95-percent lower bounds above 0.01 for Brier and decision-cost reduction
+against the strongest non-energy tune control, with non-escalation coverage at
+least 0.20. Energy form versus same-input MLP/logistic SHALL be reported
+separately from full typed evidence versus atom-only/source interventions.
+Interventions SHALL never relabel the answer or enlarge independent n.
+An independent fresh-process reducer SHALL replay raw rows and every gate.
+Failed custody SHALL produce complete_blocked with exact operands; failed
+required readers SHALL disqualify and zero readiness. This is a source-specific
+pilot and SHALL preserve the FoVer headline without promoting on calibration.
+
+#### SCENARIO-REPORT-7704-CUSTODY
+
+Given a missing or changed producer byte, preflight SHALL stop before opening
+evaluation labels and name check, upstream ID, path, field, operator, expected,
+and observed values. Planned output bytes SHALL not be an input.
+
+#### SCENARIO-REPORT-7704-DECISION
+
+Given authenticated frozen inputs, exactly forty original families SHALL have
+all registered arms, including families with no checked evidence. All actions
+SHALL use the frozen policy-role thresholds and charges.
+
+#### SCENARIO-REPORT-7704-TERMINAL
+
+Given an exact candidate, affected tests, changed-module coverage, scoped
+lint/type/spec checks, fresh reduction, adversarial verification and strict
+row lint SHALL retain actual exits and log hashes before atomic publication.
+
 ## V671 typed decision energy — 2026-09-26
 
 ### REQ-REPORT-7703: Freeze a normalized typed decision head
