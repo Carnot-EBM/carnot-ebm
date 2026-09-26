@@ -32275,7 +32275,6 @@ after the GPU-hours were spent. The join below fails at commit time instead.
 invisible to the join. The declaration-presence rule bounds that gap to fields
 within a known consumer, not to whole consumers.
 
-<<<<<<< HEAD
 **AMENDMENT 2026-09-05 (append-only) to SCENARIO-ARC-WMTE-6642-FAIL-CLOSED.**
 The "missing runs directory" clause above now applies to an EXPLICIT
 `--runs-dir`. A caller who names a corpus that is missing or empty gets a
@@ -32336,7 +32335,6 @@ scenario below and by the tests named in the status table.
 - THEN every producer file EXCEPT the consumer's own SHALL count
 - AND a field found in no artifact and in no other producer file SHALL fail
 - AND a field emitted by a different producer file SHALL still pass.
-=======
 ### SCENARIO-ARC-WMTE-6642-WORKTREE: Hooks read an explicitly selected evidence corpus
 
 - GIVEN an isolated worktree without ignored eval-run artifacts
@@ -32348,7 +32346,6 @@ scenario below and by the tests named in the status table.
 - AND consumer, producer and flat-artifact roots SHALL remain in the selected repository
 - AND a missing or empty selected corpus, or an un-emitted required field, SHALL fail
 - AND the check SHALL never copy or write evidence
->>>>>>> grammar-27b-trial2
 
 ## Implementation Status (REQ-ARC-WMTE-6642)
 
@@ -32668,7 +32665,6 @@ Implementation status: implemented 2026-09-04
 (`python/carnot/agentic/arc_trajectory_supervisor.py`, `arc_competition_agent.py` shadow
 transform, `arc_supervisor_refinement.py`;
 `tests/python/test_arc_supervisor_co_credit_20260904.py`, 6 tests).
-<<<<<<< HEAD
 
 ### REQ-ARC-WMTE-7019: Freeze a game-blind chronological belief stream
 
@@ -32760,7 +32756,6 @@ game, level, leaderboard, or registry solve claim.
 
 Implementation status: specified 2026-09-05. The conductor owns later documentation and
 traceability reconciliation.
-=======
 ## REQ-ARC-WMTE-7040: Carry induction work within a live episode
 
 The scored policy SHALL own optional induction memory. Only
@@ -33019,7 +33014,6 @@ against the llama.cpp binary (26 strings x 2 grammars); the reader agreed on all
 Mutations M5-M8 RED/GREEN at the call sites. The 27B trial ran before the review
 landed; its results are recorded in the note with the attribution caveat the
 review raised, and no further GPU time was spent.
->>>>>>> grammar-27b-trial2
 
 ## REQ-ARC-WMTE-7047: A compaction rebuild that grows the prompt is refused
 

@@ -13942,7 +13942,6 @@ until merged; content commit `47689d162f`. Full baseline with populations:
 - No `--record-null` for the two tool flags; no cap on induce transitions; no thinking budget;
   no shadow-control estimator (no window-120 shadow receipt with a firing exists yet).
 
-<<<<<<< HEAD
 ## 2026-09-05 17:xxZ (worktree agent, branch `worktree-agent-ac986fe334205e8c2`) — substrate vocabulary census
 
 Full write-up: `docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`.
@@ -14005,7 +14004,6 @@ Reproduce every corpus number with `scripts/substrate_vocabulary_census.py --jso
   known-issues entry. This session used a temporary access symlink and removed it after the
   last commit; note that the symlink is NOT ignored in a worktree (trailing-slash rule), so
   stage explicit paths while it exists.
-=======
 2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
 `--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
 existing main-checkout corpus. Source checks stay local; missing evidence and
@@ -14040,7 +14038,6 @@ Operator decision needed: keep `list_transitions` in grammar mode with the force
 closure, or remove it from grammar mode so no argument-less envelope exists at all.
 Then, if wanted, a second bounded trial on the round-2 grammar with the force turn at
 the loop default (3) rather than 2.
->>>>>>> grammar-27b-trial2
 
 ### 2026-09-06 13:15Z — GPU lease blocker repaired; the task it unblocks is not queued
 
@@ -17179,3 +17176,16 @@ priority checks passed. Table/JSON/YAML contracts agree; five private mutations
 were rejected. Existing Ruff-format debt in one unchanged guard test is
 recorded in traceability. No research experiment, activation, conductor edit,
 publication or push was performed.
+
+## 2026-09-26 — Fixed: unresolved git conflict markers were committed to main
+- Found while merging unrelated work: `_bmad/traceability.md`, `openspec/capabilities/arc-world-model-trust-energy/spec.md`,
+  `ops/changelog.md`, `ops/status.md`, and `ops/metrics.md` all carried literal, uncommitted-looking
+  `<<<<<<< HEAD` / `=======` / `>>>>>>> grammar-27b-trial2` conflict markers, checked into tracked
+  history. `git log -S` across all refs found no commit that added the string, so the exact origin
+  commit could not be identified; it predates this session.
+- Fixed by keeping BOTH sides' content in every block (never-prune), removing only the 3 marker
+  lines per block. 8 blocks resolved across the 5 files. No prose was deleted or reordered beyond
+  concatenation.
+- Prevention: none shipped yet. A cheap pre-commit check for literal conflict markers in tracked
+  text files would have caught this at commit time; not built this session.
+
