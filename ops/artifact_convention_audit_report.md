@@ -9,11 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 7 |
+| BLOCKED_WITHOUT_DIAGNOSTIC | 1 |
 
-## experiment_7659_v668_atom_corpus.json
+## experiment_7672_v669_bound_relations.json
 
 **CHECKABLE**
 
@@ -21,15 +20,15 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The atom corpus is ready, while probability benefit and utility remain untested and fresh confirmation failed.
+The bound-relation protocol passed validity, readiness, and coverage checks on fixture groups, while the remaining benefit gates were not established.
 
 ## WHAT IS MISSING
-nothing; `rows` records per-unit arm metrics, and `acceptance_gate_results` records the failed freshness check and its observed value.
+nothing; `acceptance_gate_results` records the gate values, and `fixture_results` provides per-unit `truth`, `observed`, and `raw_metrics`.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7660_v668_atom_energy.json
+## experiment_7673_v669_fresh_relation_cohort.json
 
 **CHECKABLE**
 
@@ -37,7 +36,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports an honest null result with the energy head ready (`honest_verdict`: "complete_null_energy_head_ready") and makes no comparative superiority claim.
+The artifact reports cohort infrastructure only and makes no learned-verifier improvement claim.
+
+## WHAT IS MISSING
+nothing; `acceptance_gate_results` records each failed gate with its `expected`, `observed`, and `passed` values.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7674_relation_energy.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked at conductor pre-gate because three of four upstream gate checks on exp7673-fresh-relation-cohort failed.
 
 ## WHAT IS MISSING
 nothing
@@ -45,7 +60,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7661_v668_decision_evaluation.json
+## experiment_7676_v669_qwen_quote_relations.json
+
+**BLOCKED_WITHOUT_DIAGNOSTIC**
+
+## VERDICT
+BLOCKED_WITHOUT_DIAGNOSTIC
+
+## WHAT THE CLAIM IS
+The run was blocked and disqualified by required checks (`honest_verdict`: `"complete_disqualified_required_checks"`), failing all acceptance gates and denying activation and production promotion.
+
+## WHAT IS MISSING
+A diagnostic identifying which check failed and what value it observed. While `honest_verdict` reports `"complete_disqualified_required_checks"` and all gates in `acceptance_gate_results` report `"passed": false`, `gate_check_summary` reports `"failed_checks": []`, `"failed_count": 0`, and `"first_failure": null`, all 7 entries in `preconditions_checked` report `"passed": true`, and `acceptance_gate_results.validity.measured_operands` reports `"required_checks_passed": true`.
+
+## THE CHECK A READER CANNOT DO
+Which required check failed and what value did it observe to trigger the disqualification verdict `complete_disqualified_required_checks`?
+
+## experiment_7679_v669_independent_evidence_audit.json
 
 **CHECKABLE**
 
@@ -53,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The completed evaluation found no registered decision benefit.
+The audit is blocked because required static and online evidence was missing or failed producer checks, so no independent benefit was confirmed.
 
 ## WHAT IS MISSING
 nothing
@@ -61,55 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7662_v668_delayed_update_protocol.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible `acceptance_gate_results` say the source arm failed the probability-benefit and utility gates, and there were no fresh confirmatory groups.
-
-## WHAT IS MISSING
-The artifact cuts off at `event_rows[32].origin_ordinal`, so the remaining fields, including any final verdict or per-group Brier and decision-cost rows, are unavailable; the visible `acceptance_gate_results` give pooled arm values.
-
-## THE CHECK A READER CANNOT DO
-Do per-group results support the reported pooled gate results, or are those results driven by a few groups?
-
-## experiment_7663_v668_continuous_atom_learning.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The candidate failed the probability-benefit and utility gates, so the artifact does not establish a benefit over the controls.
-
-## WHAT IS MISSING
-Per-group paired Brier and cost results for each arm. `acceptance_gate_results` gives `paired_block_ci95` summaries, while `admission_decisions` gives batch-level `candidate_admission_brier` and `prior_admission_brier`, not the individual results behind those gates. The failed gates do record their checks and measured values.
-
-## THE CHECK A READER CANNOT DO
-Were the reported differences spread across the groups, or driven by a few outliers?
-
-## experiment_7664_v668_independent_evidence_audit.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The audit found no independent probability or decision-cost benefit.
-
-## WHAT IS MISSING
-The supplied JSON cuts off inside `rows`. The visible `rows[].raw_metrics` contain `checked_propositions` and `lexical_membership`, but no per-`unit_id`, per-`arm` `brier` or `decision_cost` values; the missing remainder may contain them.
-
-## THE CHECK A READER CANNOT DO
-Were the reported Brier differences spread across groups or driven by a few outliers?
-
-## experiment_7665_v668_qwen_grounded_claims.json
+## experiment_7680_v669_arc_probe_protocol.json
 
 **CHECKABLE**
 
@@ -117,15 +100,15 @@ Were the reported Brier differences spread across groups or driven by a few outl
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The 48 calls established bounded mechanism feasibility, while the artifact claims no whole-answer benefit.
+no claim
 
 ## WHAT IS MISSING
-nothing; `rows` records per-unit, per-arm metrics, and `acceptance_gate_results.freshness.measured_operands` records the failed gate’s value.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7666_v668_arc_goal_confirmation.json
+## experiment_7681_v669_arc_live_probes.json
 
 **CHECKABLE**
 
@@ -133,10 +116,26 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The goal-confirmation check passed its scripted-fixture readiness gate, while hidden-game benefit remains unestablished.
+no claim
 
 ## WHAT IS MISSING
-nothing; `rows` and `goal_rows` record per-fixture outcomes, and `acceptance_gate_results` records each gate’s result and operands.
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7684_v669_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V669 capstone is accounting-ready but blocked from claiming scientific benefit because required evidence and upstream gates are missing.
+
+## WHAT IS MISSING
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none

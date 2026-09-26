@@ -3212,3 +3212,29 @@ matched the Markdown table/machine contract and YAML. Four private mutations
 (deletion, reorder, gate field, model list) were rejected. Protected active
 roadmap/conductor hashes and the preserved V667 hash matched. Numbered runtime
 E2Es are assigned to future experiment prompts; none ran during planning.
+
+## 2026-09-26 — V670 planned evidence interfaces and retained constraints
+
+REQ-REPORT-V670-PLAN and SCENARIO-REPORT-V670-PLAN trace to
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`: exactly fourteen tasks, Exp7685–Exp7698,
+in four phases. The V669 design is preserved byte for byte at
+`openspec/change-proposals/research-roadmap-v669-preserved-20260926.md`.
+
+Exp7686/7688 test source-record addressing and proposition boundaries for
+FR-01/FR-12. Exp7687/7689/7690 seal source roles and train/evaluate calibrated
+typed decisions for FR-06 and GAP-ORACLE-DISTINCT/GAP-DETECTOR-AUROC-4208.
+Exp7691/7692 test bounded structural acquisition and retained delayed learning
+for FR-11. Exp7694/7695 meet the ARC generalization floor through actual
+adapter-withheld execution. Exp7696/7697 cover FR-05/FR-08 and NFR-01 using
+actual native parity and complete service costs. Exp7685/7693/7698 preserve
+contracts, independent reduction and honest disposition of missing science.
+
+Planning validation: 86 focused schema/gate/exclusion/ARC tests passed.
+Affected-test spec coverage and Ruff lint passed. Schema, prior-failure,
+exclusion, gate, harness-fit, path, prompt-format, overdue-priority and ARC
+readers passed. Independent parsing matched all three task representations;
+five private contract mutations failed as required. The active roadmap and
+conductor hashes remain unchanged. Runtime E2Es are assigned in task prompts;
+no experiment was executed. Ruff format reports pre-existing debt in unchanged
+`tests/python/test_exclusion_manifest_lint.py`; it is outside this docs-only change.

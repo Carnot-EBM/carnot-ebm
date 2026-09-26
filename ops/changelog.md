@@ -20656,3 +20656,24 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Observe bounded probes during live adapter-withheld ARC self-discovery (⚠️ Blocked) — honest_verdict=complete_blocked_eligible_novel_target; results/experiment_7681_v669_arc_live_probes.json
 - 2026-09-26: Reconcile fourteen task dispositions and the next evidence boundary (⚠️ Blocked) — honest_verdict=complete_blocked_required_v669_scientific_evidence; results/experiment_7684_v669_capstone.json
 - 2026-09-26: Added the milestone 2026.09.669 operational retrospective. All 8 completed experiments were compute-bound and ran for 11.0 wall-time minutes. The longest-running task was Wire bounded goal-hypothesis probes into the scored ARC policy (4.32 minutes), followed by Test quote-resolved Qwen relations separately from pointer validity (4.3 minutes) and Bind the V669 contract and separate prior nulls from missing producers (0.76 minutes); internal phase durations were not recorded. The locked compute-task GPU-idle indicator is false. Because the monitor report reflects an end-state snapshot rather than an active-window trace, live GPU efficiency cannot be evaluated. No task records indicate concurrent execution of two or more models, meaning DualGPURunner dispatch was not applicable. Recommended operational tooling additions include intra-task phase timers, active-window GPU metrics collection, and runner dispatch receipts. Estimated time savings are 0% in the absence of measured counterfactuals. Artifact: results/operational_retro_2026_09_669.json.
+
+## 2026-09-26 — Plan milestone 2026.09.670 (REQ-REPORT-V670-PLAN)
+
+- Wrote a matching fourteen-task design and staged YAML, Exp7685–Exp7698,
+  across four phases. Preserved the V669 design byte for byte.
+- Filed the eight-topic research review and six secondary-source receipts
+  before design. Added the September structured-versus-semantic decoding lead;
+  recorded failed Semantic Scholar citation access and stale trending views.
+- Distinguished V669 validation failures from absent science, and excluded
+  exposure from selected contamination. Planned record-address qualification,
+  fresh decision evidence and bounded causal constraint additions.
+- Replaced the impossible novel-public-target prerequisite with a qualified
+  adapter-withheld runner and bounded live first-contact observations. Preserved
+  the separate goal-probe null and all registry solve-credit boundaries.
+- Required exact gate fields, full failure lineage, per-unit rows, correct
+  Qwen substrates, flushed heartbeats and bounded writes in every prompt.
+- Validation: 86 focused tests and all planning contract readers passed;
+  affected-test spec coverage and Ruff lint passed. Five private contract
+  mutations were rejected. Ruff format found existing debt in unchanged
+  test_exclusion_manifest_lint.py. Protected roadmap/conductor hashes matched.
+  No runtime experiment, activation or push.

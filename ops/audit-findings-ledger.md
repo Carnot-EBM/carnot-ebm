@@ -235,3 +235,11 @@ of truth, not this line.)
 | 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::check_world_model_trust_degeneracy | SILENT_NON_FIRING | OPEN | |
 | 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::_is_arc_outer_loop_calibration_solve | SILENT_NON_FIRING | OPEN | |
 | 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::check_arc_outer_loop_solve | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | experiment_claim_audit | experiment_7672_v669_bound_relations.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-26 | experiment_claim_audit | experiment_7680_v669_arc_probe_protocol.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::_verify_artifact_impl | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::verify_artifact | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::sweep_milestone_range | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_live_model | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::backfill_stamps | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::main | SILENT_NON_FIRING | OPEN | |

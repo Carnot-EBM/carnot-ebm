@@ -17143,3 +17143,23 @@ the active roadmap and conductor remain unchanged.
   rejected four private mutations. The initial stale Gibbs path was corrected.
 - The active roadmap and conductor hashes are unchanged. No experiment, model
   run, hardware operation, activation, publication or push was performed.
+
+## 2026-09-26 — Milestone 2026.09.670 planned; not activated
+
+Prepared fourteen tasks, Exp7685–Exp7698, across four phases in
+`research-roadmap-next.yaml` and the rewritten V670 design. Preserved V669 at
+`openspec/change-proposals/research-roadmap-v669-preserved-20260926.md`.
+
+The plan tests record/claim interfaces before scale, new independent source
+roles, normalized typed decisions, retained constraint acquisition, actual
+adapter-withheld ARC execution and complete native service cost. It corrects
+excluded-versus-selected exposure accounting and avoids repeating the null
+Exp10015 probe policy. Two current LLM tasks use the mandated Qwen3.8-27B GGUF
+with bounded and full generation classes matched to their workloads.
+
+Validation: 86 focused guard tests, affected-test spec coverage, schema,
+failure-lineage, exclusion, gate, harness-fit, path, prompt-format, ARC and
+priority checks passed. Table/JSON/YAML contracts agree; five private mutations
+were rejected. Existing Ruff-format debt in one unchanged guard test is
+recorded in traceability. No research experiment, activation, conductor edit,
+publication or push was performed.

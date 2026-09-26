@@ -47114,3 +47114,74 @@ Preserve injected-error label provenance and report uncertainty in exposure.
 The staged goal-induction note is a design input, not a result of its proposed
 probe loop. It shows why a no-win history cannot establish a unique goal.
 Reuse existing goal contracts and distinguish hypotheses from SDK outcomes.
+
+## 2026-09-26 — V670 planning review: usable evidence before scale
+
+Recorded before the V670 experiment design. This pass checked all eight
+requested topics and all six secondary channels. Most papers below were
+already indexed; the September structured-decoding paper is a new lead.
+The method changes come from inspecting current code and raw receipts.
+
+### Primary research and adoption limits
+
+| Topic | Primary source, date and review depth | Consequence for Carnot |
+|---|---|---|
+| Energy reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025, abstract; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025, revised May 2026, abstract | Train a small conditional energy and normalize binary outcomes exactly. Neither work makes learned energy a proof of correctness. Keep Qwen weights frozen. |
+| Neural constraints | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025, abstract | Its linear-constraint guarantees require a defined symbolic problem. Qualify the source-to-record boundary first; do not import its guarantees into natural-language extraction. |
+| Ising in ML | [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752), May 2026, abstract | Parameter learning and tractable sampling are separate questions. Two-class normalization needs no new sampler. |
+| Hallucination detection | [Enoki](https://arxiv.org/html/2609.00581v2), September 2026, method and scope sections | Keep fact arguments, modifiers and original answer spans. Adopt anchored records and separate extraction from checking; do not call the exact Carnot checker an Enoki reproduction. |
+| Constrained generation | [Structural failures and semantic gap](https://arxiv.org/html/2609.23742v1), September 20, 2026, methods and metrics | Report syntax, source addressing, proposition binding and semantic truth separately. The study uses small models and normalized string scoring; its results do not predict Qwen3.8-27B performance. Do not strip punctuation from evidence bytes. |
+| Energy-guided generation | [Thinking Before Constraining](https://arxiv.org/abs/2601.07525), January 2026, abstract; [finite-automaton diffusion decoding](https://arxiv.org/abs/2607.07026), July 2026, abstract | Reasoning and output constraints can have different roles. Defer a new decoder and diffusion substrate; diagnose the current evidence interface before changing token budgets. |
+| KAN and retention | [KAC](https://arxiv.org/abs/2503.21076), March 2025; [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828), November 2025, abstracts | Local support can help some tasks but does not guarantee retention. Use a bounded constraint bank and measured replay. Defer another KAN architecture while source information is unqualified. |
+| Hardware sampling | [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985), February 2026, revised September 4, abstract | The revised paper emphasizes orchestration cost. Measure original bytes through durable decisions, including parsing, dispatch and restart. Its chip results are not local KV260 measurements. |
+| Continuous learning | [Capacity-constrained delayed OCO](https://arxiv.org/abs/2606.11711), June 2026, abstract | Bound pending feedback, record discarded observations and predict before labels arrive. A discrete template-acquisition experiment does not inherit convex regret guarantees. |
+
+### Secondary-source receipts and limitations
+
+- **OpenReview:** searched 2026 EBM/reasoning submissions and inspected the
+  [ICLR computational-trace verification paper](https://openreview.net/pdf?id=CxiNICq0Rr).
+  Its cross-domain results limit transfer claims. No local hidden-state
+  dependency is added from this review.
+- **Extropic:** read the [writing index](https://extropic.ai/writing) and
+  [Z1T study](https://extropic.ai/writing/z1t), including its outlook and
+  linked training recipe. The study reports estimates and a large FPGA share
+  of energy use. It does not establish local TSU access or Carnot speed.
+- **Semantic Scholar:** searched both seed IDs and attempted the
+  [EBT citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both endpoint reads failed. No complete or current citing-paper census
+  was obtained; no absence of later work is inferred.
+- **Hugging Face:** checked the [verification papers feed](https://huggingface.co/papers?q=verification).
+  This remains a discovery source. Technical claims above use author papers.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Both cached
+  views were two weeks old. No relevant new trending dependency was verified.
+- **Logical Intelligence:** retrieved [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes an energy-based constraint layer beneath AI systems. The page
+  supplies no reproducible local training recipe or open checkpoint.
+  Its certainty claims remain vendor descriptions, not Carnot evidence.
+
+### Local findings that change the experiment premises
+
+- Exp7673 failed required changed-module coverage at 92 percent. It selected
+  480 families after exclusions. Its `prior_exposure_groups=429` counts
+  excluded families, not selected contaminated families. Its 1,440 feature
+  rows nevertheless checked no relations. Validation and information content
+  are separate defects; fixing tests alone cannot create a useful signal.
+- `quote_relations.reduce_proposal` requires a quote span to equal an entire
+  indexed record. A valid subspan is rejected as non-unique evidence. It also
+  interprets `claim_index` through the narrow deterministic parser, although
+  the Qwen prompt supplies no such claim list. These are concrete interface
+  hypotheses. A containment resolver must still reject ambiguous records
+  and must never convert source containment into answer entailment.
+- Exp7676 has 27 schema-valid proposals and zero unique-evidence matches in
+  its diagnostic reduction. Required coverage was 62 percent across three
+  modules. Its disqualified artifact supports failure diagnosis only.
+- Exp7681 requires an uncleared adapter-free registry target, then has no
+  implemented runner for an eligible target. All public games are cleared.
+  The standing ARC rule permits adapter-withheld generalization on known
+  games. A measured first-contact process needs an actual runner, not merely
+  a changed eligibility predicate. It earns no duplicate registry credit.
+- The separate Exp10015 pilot was null: the probe arm gained no game and
+  consumed more actions. The September 26 goal-induction note records this.
+  Do not repeat its visible-salience hypothesis bank as a promised solve lever.

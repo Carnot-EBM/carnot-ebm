@@ -81831,3 +81831,40 @@ Given the frozen candidate, cold reduction and strict adversarial and row
 readers pass before atomic publication. Failed required checks disqualify the
 candidate and set readiness to zero. Accounting readiness does not imply a
 scientific benefit or a publication gate.
+
+## REQ-REPORT-V670-PLAN: Plan evidence interfaces and retained constraints
+
+The staged milestone 2026.09.670 SHALL contain exactly fourteen ordered tasks,
+Exp7685 through Exp7698, across four phases. Its design table, machine contract
+and execution YAML SHALL agree on IDs, titles, phases, deliverables, models,
+substrate classes and structured gates. Preserve the V669 design byte for byte.
+Planning SHALL leave the active roadmap and conductor unchanged.
+
+The design SHALL distinguish V669 validation failures from scientific nulls,
+and excluded exposure from selected-family contamination. It SHALL diagnose
+record-span and claim-index interfaces before scaling Qwen extraction. It SHALL
+reserve calibrated decision training, continuous constraint acquisition, ARC
+adapter-withheld generalization, and full service costs. Literature receipts
+SHALL precede design. Fresh roles SHALL exclude every prior selected family.
+
+Every prompt SHALL contain numbered progress and bounded-write steps. Every
+comparative task SHALL emit per-unit rows. All tasks SHALL declare verdict_class,
+exact blocked operands, current substrate, principle annotations and measured
+validation receipts. Gate fields SHALL occur in producer required fields.
+Failed-scope continuations SHALL supply all four prior-failure fields. Every
+current LLM task SHALL use unsloth/Qwen3.8-27B-GGUF with the actual substrate.
+
+### SCENARIO-REPORT-V670-PLAN
+
+Independent parsing finds fourteen matching ordered contracts. Private deletion,
+reordering, gate-name and model-removal mutations fail. Schema, failure-lineage,
+exclusion, gate, prompt-path, harness-fit and ARC readers pass. The protected
+active roadmap and conductor hashes remain unchanged. Experiments stay proposed.
+
+Implementation status: planning documents in progress; no runtime task executed.
+
+V670 planning validation (2026-09-26): complete. The fourteen-task table,
+machine contract and staged YAML agree. Eighty-six existing guard tests and
+scoped spec coverage passed; five private contract mutations were rejected.
+The planned runtime tasks remain unexecuted. Unchanged guard-test formatting
+debt is recorded in ops and traceability, not treated as new implementation.
