@@ -20648,3 +20648,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Cold-audit fresh decisions and acquired constraints without requiring a positive result (⚠️ Blocked) — honest_verdict=complete_blocked_required_static_online_evidence; results/experiment_7679_v669_independent_evidence_audit.json
 - 2026-09-26: Wire bounded goal-hypothesis probes into the scored ARC policy (⚠️ Research Finding) — honest_verdict=complete_circular_positive_probe_fixture; results/experiment_7680_v669_arc_probe_protocol.json
 - 2026-09-26: Observe bounded probes during live adapter-withheld ARC self-discovery (⚠️ Blocked) — honest_verdict=complete_blocked_eligible_novel_target; results/experiment_7681_v669_arc_live_probes.json
+- 2026-09-26: Reconcile fourteen task dispositions and the next evidence boundary (⚠️ Blocked) — honest_verdict=complete_blocked_required_v669_scientific_evidence; results/experiment_7684_v669_capstone.json
