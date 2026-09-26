@@ -20771,3 +20771,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Qualify complete sentence windows and a finite latent-evidence energy (⚠️ Research Finding) — honest_verdict=complete_circular_positive_alignment_protocol_ready; results/experiment_7714_v672_alignment_protocol.json
 - 2026-09-26: Seal unexposed natural source families and isolate evaluation labels (⚠️ Blocked) — honest_verdict=complete_blocked_fresh_role_shortage; results/experiment_7715_v672_natural_source_cohort.json
 - 2026-09-26: Measure bounded Qwen semantic decisions on complete exposed sentences (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7716_v672_qwen_semantic_pilot.json
+- 2026-09-26: Qualify commits, rejection and complete-static controls for the advisory bank (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7719_v672_acquisition_qualification.json
