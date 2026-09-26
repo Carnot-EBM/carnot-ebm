@@ -139,3 +139,37 @@ the same as making progress toward whatever these games actually require. Two ca
 mechanisms (V1, V4) and two click-avoidance mechanisms (V3, V4) have all failed to unblock any of the
 12. The bottleneck looks upstream of "which action to try" — closer to "the explorer has no notion of
 what would count as progress." Public games are a development proxy, not a hidden-game estimate.
+
+
+## Follow-up: V5 go-explore activation pilot (2026-09-26, append-only)
+
+Branch `go-explore-activate` (commit c33ef0fdca, off `explorer-pilot`), not merged — same reason as
+V3/V4: depends on `arc_explorer_variants.py`, only on `explorer-pilot`.
+
+**This pilot invented nothing.** It measured an EXISTING mechanism, off by default:
+`GoExploreReplayArchive` (`arc_go_explore.py`) buckets visited states into coarse cells and, when the
+explorer exhausts its local region, replays back to the LEAST-VISITED, deepest known cell instead of
+re-treading the same ground (`SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False` in
+`arc_competition_agent.py` — it was off in every V0-V4 comparison this session). V5 = V0 + this archive
+turned on, default parameters, no learned selector.
+
+**Verdict: no promotion, but the first real crack in the 12.** 150 episodes, 25 games x 3 seeds. V5 won
+**sk48 seed 7491001** (action 814) — the first level-up ANY pilot this session (V1, V2, V3, V4, all
+null) produced on any of the 12 unwon games. But it lost 9 of V0's 33 winning seeds across cd82, dc22,
+lf52, and m0r0, and the one shared dc22 win regressed from 1,649 to 1,969 actions (past the 10% guard).
+Net: 11 distinct games won versus V0's 13.
+
+**tn36 (the sharpest missing-progress-signal evidence, 37 states / 324 resets under V0) was UNCHANGED
+in all three V5 seeds.** The archive collapsed to a single depth-zero cell with no eligible replay
+target — the mechanism never got a chance to fire there. Returning to a less-visited cell only helps
+when there is more than one cell to return to; tn36's tiny 37-state cycle apparently doesn't produce
+enough coarse-cell diversity for this archive's binning to distinguish them.
+
+**What this means.** A real, general, already-built progress-seeking mechanism (not invented this
+session) DOES move the needle — it's the first thing that has won any game in the unwon set. It is
+also clearly under-tuned for this use: it trades wins in one direction for losses in another, and it
+does nothing at all for the specific game (tn36) that most obviously needs it. The lf52/cd82/dc22/m0r0
+losses need diagnosis before this is a candidate for anything beyond further piloting: is the archive
+replaying INTO a state the local search would have reached anyway (wasted budget), or actively pulling
+the search AWAY from a productive path it was already on? Public games are a development proxy, not a
+hidden-game estimate.

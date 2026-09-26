@@ -22,6 +22,14 @@
   was not modified. Repository-wide spec traceability still reports the
   existing 1,168-test backlog; the Exp7708 scoped check passes.
 
+## 2026-09-26 — V5 go-explore activation pilot (first win on the 12, still no promotion)
+
+- codex (gpt-6-sol, worktree `go-explore-activate`) turned on the existing, off-by-default
+  GoExploreReplayArchive mechanism -- no new code invented. Won sk48 (first win on any of the 12 unwon
+  games this session), but lost 9 winning seeds elsewhere and regressed one shared win past guard.
+  tn36 unaffected. Branch kept at c33ef0fdca, not merged; result recorded in
+  docs/research-notes/unwon-games-analysis-2026-09-26.md.
+
 ## 2026-09-26 — V4 object-signature pilot (no promotion, one regression)
 
 - codex (gpt-6-sol, worktree `object-sig-defer`) piloted grouping click deferral by object signature

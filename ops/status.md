@@ -23,6 +23,18 @@
 - Task-owned spec traceability passes; the repository-wide reconciliation gate
   still reports its existing backlog of 1,168 untraced tests.
 
+## 2026-09-26 — V5 go-explore activation pilot: first crack in the 12, still no promotion
+- Turned on an EXISTING off-by-default mechanism (GoExploreReplayArchive: return to the least-visited
+  known state instead of re-treading the current region). Won sk48 seed 7491001 — the FIRST win any
+  pilot this session produced on any of the 12 unwon games. But lost 9 of V0's 33 winning seeds
+  (cd82, dc22, lf52, m0r0) and regressed the shared dc22 win past the 10% guard. Net 11 games vs V0's
+  13. Branch `go-explore-activate` (c33ef0fdca, off `explorer-pilot`), not merged.
+- tn36 (37 states, 324 resets — the sharpest evidence for a missing-progress-signal) was completely
+  UNCHANGED: the archive collapsed to one trivial cell, nothing to return to.
+- This is the first sign that a real progress-seeking mechanism helps at all. It needs diagnosis
+  (which losses are the archive actively pulling the search away from a working path?) before it's a
+  tuning target rather than another null pilot.
+
 ## 2026-09-26 — V4 object-signature deferral pilot: no promotion, one regression
 - Grouped clicks by objects()-segmented color/size/shape signature instead of V3's exact-state key.
   Fires far more than V3 (ar25 reached 476 new states/seed, sk48 hit its fallback 23-26 times) but
