@@ -12,6 +12,19 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7727: Deny development evaluator leakage
+
+Each role's predictor view SHALL reject extra evaluator columns, wrong roles,
+missing source or response bytes, and changed byte hashes. Evaluator custody
+SHALL bind exact annotation spans and binary unsupported-span labels to the
+selected response. Non-fit labels SHALL remain inaccessible to the initial fit
+reader, and evaluation and retention SHALL never feed fitting or admission.
+
+#### SCENARIO-VERIFY-7727-ISOLATION
+
+Injected labels, duplicate source families, role swaps, and altered bytes
+fail before development readiness is recorded.
+
 ### REQ-VERIFY-7716: Keep semantic quotes separate from entailment
 
 The pilot reducer SHALL parse exactly one support, contradiction, or unknown

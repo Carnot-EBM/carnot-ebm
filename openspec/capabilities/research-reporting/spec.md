@@ -105,6 +105,40 @@ zero readiness. A blocked external input remains terminal rather than partial.
 
 ## V672 natural source cohort — 2026-09-26
 
+### REQ-REPORT-7727: Seal an exposed RAGTruth development corpus
+
+Exp7727 SHALL authenticate the pinned RAGTruth release and V651 custody, retain
+the observed 2894 exposed families and zero fresh eligibility, and exclude the
+24 Exp7716 pilot families. Label-blind hash order with salt
+`v673-development-20260926` SHALL assign exactly 256 fit, 64 tune, 64 policy,
+96 online update, 64 online admission, 64 evaluation, and 32 retention
+families. Only evaluation uses official test. A shortage SHALL block the branch
+with exact counts and no role cross-fill. All rows SHALL state prior exposure
+and deny fresh generalization. The result SHALL distinguish inventory,
+evaluator materialization, fitting, and inspected predictions.
+
+Predictor files SHALL contain original source and response text, IDs, hashes,
+role and split, but no human labels. Role-specific evaluator files SHALL keep
+validated unsupported spans. Only fit labels may open initially. Eight ordered
+update blocks of 12 and eight separate admission blocks of eight SHALL be
+frozen. A fresh reader SHALL verify every file hash, role count, disjoint
+family and response identity, byte hash, and label join before publication.
+Scientific metric gates remain unmeasured; administrative readiness requires
+640 complete isolated families and passing current validation.
+
+#### SCENARIO-REPORT-7727-CUSTODY
+
+A leaked label, duplicate family, absent source bytes, changed hash, or role
+swap fails cold reduction. Previously exposed families never become fresh by
+reassignment. A pilot family is excluded before role capacity is assessed.
+
+#### SCENARIO-REPORT-7727-REPLAY
+
+A cold CLI replay of saved raw rows recomputes the terminal counts and
+disposition. External absence or a role shortage ends with a complete blocked
+verdict and exact operands; a complete corpus without scientific benefit ends
+with a complete null verdict.
+
 ### REQ-REPORT-7715: Seal unexposed RAGTruth source families
 
 Exp7715 SHALL authenticate the pinned local RAGTruth bytes and MIT license,
