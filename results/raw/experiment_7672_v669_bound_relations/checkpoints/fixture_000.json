@@ -1,0 +1,89 @@
+[
+  {
+    "answer_sha256": "sha256:d27904fd497e51fa5673768680e76dcec60e6cf5ae9d6209bc3a550966c71368",
+    "arm": "membership_only",
+    "attack": "0",
+    "censored": false,
+    "checked_spans": [],
+    "dialect": "stack",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 23,
+        "byte_start": 10,
+        "completeness": false,
+        "evidence_span": [
+          4,
+          28
+        ],
+        "kind": "path_line",
+        "line": 5,
+        "source_id": "pkg0/a.js",
+        "status": "observed",
+        "text": "`pkg0/a.js:5`"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 1,
+      "relations": 2,
+      "unknown": 0
+    },
+    "source_sha256": "sha256:1b7b8c1da393a3564acf6daded7159711c662c2eb8ca66a01726b8ce18acbebe",
+    "split": "development",
+    "truth": "supported",
+    "unit_id": "stack-00",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:d27904fd497e51fa5673768680e76dcec60e6cf5ae9d6209bc3a550966c71368",
+    "arm": "bound_relation",
+    "attack": "0",
+    "censored": false,
+    "checked_spans": [
+      [
+        0,
+        23
+      ]
+    ],
+    "dialect": "stack",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          23
+        ],
+        "arguments": {
+          "function": "run0",
+          "line": 5,
+          "path": "pkg0/a.js"
+        },
+        "evidence_span": [
+          4,
+          28
+        ],
+        "kind": "stack_frame",
+        "polarity": "positive",
+        "reason": "exact_bound_tuple",
+        "status": "supported",
+        "text": "`run0` at `pkg0/a.js:5`"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 1,
+      "relations": 2,
+      "unknown": 0
+    },
+    "source_sha256": "sha256:1b7b8c1da393a3564acf6daded7159711c662c2eb8ca66a01726b8ce18acbebe",
+    "split": "development",
+    "truth": "supported",
+    "unit_id": "stack-00",
+    "unknown_spans": []
+  }
+]

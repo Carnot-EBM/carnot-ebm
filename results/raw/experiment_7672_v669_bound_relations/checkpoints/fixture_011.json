@@ -1,0 +1,86 @@
+[
+  {
+    "answer_sha256": "sha256:c2f7e05ec930300cda8204da92294c6b8463bc435e4fd6ebc0d653dec90cbba9",
+    "arm": "membership_only",
+    "attack": "3",
+    "censored": false,
+    "checked_spans": [],
+    "dialect": "stack",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 23,
+        "byte_start": 10,
+        "completeness": false,
+        "evidence_span": [
+          4,
+          28
+        ],
+        "kind": "path_line",
+        "line": 5,
+        "source_id": "pkg1/a.js",
+        "status": "observed",
+        "text": "`pkg1/a.js:5`"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 3,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:51e1c01a880a5bd3a5c95bb21236cd4b9f89fcd83eb377abe6280250af4da082",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "stack-11",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:c2f7e05ec930300cda8204da92294c6b8463bc435e4fd6ebc0d653dec90cbba9",
+    "arm": "bound_relation",
+    "attack": "3",
+    "censored": true,
+    "checked_spans": [],
+    "dialect": "stack",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          23
+        ],
+        "arguments": {
+          "function": "run1",
+          "line": 5,
+          "path": "pkg1/a.js"
+        },
+        "evidence_span": null,
+        "kind": "stack_frame",
+        "polarity": "positive",
+        "reason": "cross_record_ambiguity",
+        "status": "unknown",
+        "text": "`run1` at `pkg1/a.js:5`"
+      }
+    ],
+    "observed": "unknown",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 3,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:51e1c01a880a5bd3a5c95bb21236cd4b9f89fcd83eb377abe6280250af4da082",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "stack-11",
+    "unknown_spans": [
+      [
+        0,
+        23
+      ]
+    ]
+  }
+]

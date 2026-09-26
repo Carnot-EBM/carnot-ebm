@@ -1,0 +1,83 @@
+[
+  {
+    "answer_sha256": "sha256:25442a8a100f6ea8b4c0c43b73e0bb5116a30b0e11ce873f75084c756293d20e",
+    "arm": "membership_only",
+    "attack": "4",
+    "censored": true,
+    "checked_spans": [],
+    "dialect": "grep",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 13,
+        "byte_start": 0,
+        "completeness": false,
+        "evidence_span": null,
+        "kind": "path_line",
+        "line": 7,
+        "source_id": "pkg1/a.py",
+        "status": "unknown",
+        "text": "`pkg1/a.py:7`"
+      }
+    ],
+    "observed": "unknown",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 1,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:68a64b620b5f29586e18352b52f9746adc9dd3b159e97d162ac3d90ebe491741",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "grep-12",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:25442a8a100f6ea8b4c0c43b73e0bb5116a30b0e11ce873f75084c756293d20e",
+    "arm": "bound_relation",
+    "attack": "4",
+    "censored": true,
+    "checked_spans": [],
+    "dialect": "grep",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          31
+        ],
+        "arguments": {
+          "line": 7,
+          "path": "pkg1/a.py",
+          "quote": "caf\u00e91"
+        },
+        "evidence_span": null,
+        "kind": "grep_quote",
+        "polarity": "positive",
+        "reason": "partial_or_absent_evidence",
+        "status": "unknown",
+        "text": "`pkg1/a.py:7` contains 'caf\u00e91'"
+      }
+    ],
+    "observed": "unknown",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 1,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:68a64b620b5f29586e18352b52f9746adc9dd3b159e97d162ac3d90ebe491741",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "grep-12",
+    "unknown_spans": [
+      [
+        0,
+        31
+      ]
+    ]
+  }
+]

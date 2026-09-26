@@ -1,0 +1,41 @@
+{
+  "finding_fields": [
+    "kind",
+    "arguments",
+    "polarity",
+    "answer_span",
+    "status",
+    "reason",
+    "evidence_span"
+  ],
+  "primitive_vocabulary": [
+    {
+      "applicability": "explicit stack frame",
+      "contradiction_authority": "none for partial stacks",
+      "predicate": "stack_frame(function,path,line)",
+      "unknown_rule": "missing, conflicting or truncated frame"
+    },
+    {
+      "applicability": "quoted visible grep row",
+      "contradiction_authority": "none for partial search",
+      "predicate": "grep_quote(path,line,text)",
+      "unknown_rule": "missing, conflicting or truncated row"
+    },
+    {
+      "applicability": "parseable complete Python fence",
+      "contradiction_authority": "complete local definition line",
+      "predicate": "definition_in_scope(name,scope,line)",
+      "unknown_rule": "unparsed, missing or ambiguous line"
+    }
+  ],
+  "relation_fields": [
+    "kind",
+    "dialect",
+    "arguments",
+    "polarity",
+    "complete",
+    "evidence_span",
+    "source_id"
+  ],
+  "schema": "carnot.exp7672.v669.relations.v1"
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "answer_sha256": "sha256:eae02fca7746a0ffa003348e4302cd86171a357fd5efbfed4b5ba7d6afafff84",
+    "arm": "membership_only",
+    "attack": "2",
+    "censored": false,
+    "checked_spans": [],
+    "dialect": "stack",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 30,
+        "byte_start": 17,
+        "completeness": false,
+        "evidence_span": [
+          4,
+          28
+        ],
+        "kind": "path_line",
+        "line": 5,
+        "source_id": "pkg0/a.js",
+        "status": "observed",
+        "text": "`pkg0/a.js:5`"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 2,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:1b7b8c1da393a3564acf6daded7159711c662c2eb8ca66a01726b8ce18acbebe",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "stack-02",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:eae02fca7746a0ffa003348e4302cd86171a357fd5efbfed4b5ba7d6afafff84",
+    "arm": "bound_relation",
+    "attack": "2",
+    "censored": true,
+    "checked_spans": [],
+    "dialect": "stack",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          31
+        ],
+        "arguments": {},
+        "evidence_span": null,
+        "kind": "unhandled_clause",
+        "polarity": "unknown",
+        "reason": "unhandled_answer_form",
+        "status": "unknown",
+        "text": "`run0` is not at `pkg0/a.js:5`."
+      }
+    ],
+    "observed": "unknown",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 2,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:1b7b8c1da393a3564acf6daded7159711c662c2eb8ca66a01726b8ce18acbebe",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "stack-02",
+    "unknown_spans": [
+      [
+        0,
+        31
+      ]
+    ]
+  }
+]

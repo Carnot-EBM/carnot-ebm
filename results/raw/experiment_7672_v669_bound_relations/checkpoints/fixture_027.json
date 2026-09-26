@@ -1,0 +1,86 @@
+[
+  {
+    "answer_sha256": "sha256:84b12e2151f4bdfa14e988b6770780b06a494275ab19a2f45aa8a608d7f29860",
+    "arm": "membership_only",
+    "attack": "3",
+    "censored": false,
+    "checked_spans": [],
+    "dialect": "grep",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 13,
+        "byte_start": 0,
+        "completeness": false,
+        "evidence_span": [
+          16,
+          25
+        ],
+        "kind": "path_line",
+        "line": 7,
+        "source_id": "pkg0/a.py",
+        "status": "observed",
+        "text": "`pkg0/a.py:7`"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 3,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:c13fa6da9356a0027d8e8aa9eff225737d4f0dfb28bb047b59500144a1902625",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "grep-03",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:84b12e2151f4bdfa14e988b6770780b06a494275ab19a2f45aa8a608d7f29860",
+    "arm": "bound_relation",
+    "attack": "3",
+    "censored": true,
+    "checked_spans": [],
+    "dialect": "grep",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          31
+        ],
+        "arguments": {
+          "line": 7,
+          "path": "pkg0/a.py",
+          "quote": "caf\u00e90"
+        },
+        "evidence_span": null,
+        "kind": "grep_quote",
+        "polarity": "positive",
+        "reason": "cross_record_ambiguity",
+        "status": "unknown",
+        "text": "`pkg0/a.py:7` contains 'caf\u00e90'"
+      }
+    ],
+    "observed": "unknown",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 3,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:c13fa6da9356a0027d8e8aa9eff225737d4f0dfb28bb047b59500144a1902625",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "grep-03",
+    "unknown_spans": [
+      [
+        0,
+        31
+      ]
+    ]
+  }
+]

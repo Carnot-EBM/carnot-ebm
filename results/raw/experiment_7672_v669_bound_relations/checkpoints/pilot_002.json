@@ -1,0 +1,35 @@
+{
+  "answer_sha256": "sha256:ec5c76b509eaa2c2ea840f0b38f1cf1b7d1e06237dfe68c5ce54139cd620691f",
+  "bound_decision": "unknown",
+  "checked_spans": [],
+  "error_categories": [
+    "unhandled_answer_form"
+  ],
+  "findings": [
+    {
+      "answer_span": [
+        0,
+        557
+      ],
+      "arguments": {},
+      "evidence_span": null,
+      "kind": "unhandled_clause",
+      "polarity": "unknown",
+      "reason": "unhandled_answer_form",
+      "status": "unknown",
+      "text": "In the `Migration` class, the logic for determining whether to wrap each operation in a transaction is found around lines 404-406, where the boolean `atomic_operation` is calculated based on `operation.atomic` and the migration's own `atomic` setting. If the schema editor does not support atomic migrations but the specific operation requires it, lines 407-411 (for forwards) and lines 415-420 (for backwards) use the `atomic` context manager to enforce a transaction around the execution of `operation.database_forwards` or `operation.database_backwards`."
+    }
+  ],
+  "fresh_accuracy_claim": false,
+  "membership_decision": "unknown",
+  "pilot_index": 2,
+  "prior_exposure": true,
+  "source_sha256": "sha256:2c3b40426d4b4889e18c09dcebae5335d03f85209cf5b612d65e1b4935b2d4de",
+  "unit_id": "sha256:8250589339bd7bc0dea485aecf136f89966d92ff58fec019e1af9923a2955eb7",
+  "unknown_spans": [
+    [
+      0,
+      557
+    ]
+  ]
+}

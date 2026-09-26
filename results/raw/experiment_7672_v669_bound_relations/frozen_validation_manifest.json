@@ -1,0 +1,118 @@
+{
+  "changed_modules": [
+    "python/carnot/verify/tool_source_relations.py",
+    "python/carnot/experiment_7672_v669_bound_relations.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.tool_source_relations",
+        "carnot.experiment_7672_v669_bound_relations"
+      ],
+      "name": "worktree_imports"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7672-rafmgbb4/basetemp/focused",
+        "tests/python/test_experiment_7672_v669_bound_relations.py",
+        "-q"
+      ],
+      "name": "focused_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7672-rafmgbb4/.coverage",
+        "--include=*/verify/tool_source_relations.py,*/experiment_7672_v669_bound_relations.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7672-rafmgbb4/basetemp/coverage",
+        "tests/python/test_experiment_7672_v669_bound_relations.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7672-rafmgbb4/.coverage",
+        "--include=*/verify/tool_source_relations.py,*/experiment_7672_v669_bound_relations.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/tool_source_relations.py",
+        "python/carnot/experiment_7672_v669_bound_relations.py",
+        "scripts/experiments/experiment_7672_v669_bound_relations.py",
+        "tests/python/test_experiment_7672_v669_bound_relations.py"
+      ],
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/tool_source_relations.py",
+        "python/carnot/experiment_7672_v669_bound_relations.py",
+        "scripts/experiments/experiment_7672_v669_bound_relations.py",
+        "tests/python/test_experiment_7672_v669_bound_relations.py"
+      ],
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/verify/tool_source_relations.py",
+        "python/carnot/experiment_7672_v669_bound_relations.py"
+      ],
+      "name": "changed_module_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7672_v669_bound_relations.py"
+      ],
+      "name": "scoped_spec_coverage"
+    }
+  ],
+  "fixture_hash": "sha256:d57caf905ae6dc91fbde1c635ac918f1d49c44510b2e045c538dc38db6d145dc",
+  "holdout_groups": 24,
+  "oracle_scope": "exact_fixture_only",
+  "specs": [
+    "REQ-REPORT-7672",
+    "REQ-VERIFY-7672"
+  ],
+  "static_paths": [
+    "scripts/experiments/experiment_7672_v669_bound_relations.py"
+  ],
+  "tests": [
+    "tests/python/test_experiment_7672_v669_bound_relations.py"
+  ]
+}

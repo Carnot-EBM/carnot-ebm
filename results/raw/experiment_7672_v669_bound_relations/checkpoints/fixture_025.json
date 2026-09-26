@@ -1,0 +1,86 @@
+[
+  {
+    "answer_sha256": "sha256:7c49569a7adf99e895bced47e8d6621ae0dc39f79986fb471ebd55ab9326a901",
+    "arm": "membership_only",
+    "attack": "1",
+    "censored": false,
+    "checked_spans": [],
+    "dialect": "grep",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 13,
+        "byte_start": 0,
+        "completeness": false,
+        "evidence_span": [
+          38,
+          46
+        ],
+        "kind": "path_line",
+        "line": 7,
+        "source_id": "pkg0/b.py",
+        "status": "observed",
+        "text": "`pkg0/b.py:7`"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 2,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:a8fb05a133517b46d2b304bcc170b73f7e1e128b8a23c48bf45db0b9b56ca2ce",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "grep-01",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:7c49569a7adf99e895bced47e8d6621ae0dc39f79986fb471ebd55ab9326a901",
+    "arm": "bound_relation",
+    "attack": "1",
+    "censored": true,
+    "checked_spans": [],
+    "dialect": "grep",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          31
+        ],
+        "arguments": {
+          "line": 7,
+          "path": "pkg0/b.py",
+          "quote": "caf\u00e90"
+        },
+        "evidence_span": null,
+        "kind": "grep_quote",
+        "polarity": "positive",
+        "reason": "partial_or_absent_evidence",
+        "status": "unknown",
+        "text": "`pkg0/b.py:7` contains 'caf\u00e90'"
+      }
+    ],
+    "observed": "unknown",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 2,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:a8fb05a133517b46d2b304bcc170b73f7e1e128b8a23c48bf45db0b9b56ca2ce",
+    "split": "development",
+    "truth": "unknown",
+    "unit_id": "grep-01",
+    "unknown_spans": [
+      [
+        0,
+        31
+      ]
+    ]
+  }
+]

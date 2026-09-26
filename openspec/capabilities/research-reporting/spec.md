@@ -1,5 +1,32 @@
 # Research Reporting Capability Specification
 
+## V669 bound source relations — 2026-09-26
+
+### REQ-REPORT-7672: Report byte-bound relations without answer leakage
+
+Exp7672 SHALL freeze 72 deterministic source groups in stack, grep, and Python
+definition dialects, with 24 held outside implementation tuning. It SHALL
+compare membership and bound-relation decisions per group, retain the eight
+previously exposed pilots only for failure inspection, and report exact fixture
+truth as circular-positive. Each raw row SHALL retain source and answer hashes,
+checked spans, counts, exclusions, censoring, and provenance. CPU work SHALL
+load no model. Missing external inputs SHALL block with exact operands;
+authentication failure and failed required validation SHALL disqualify.
+Cold reduction, exact terminal readers, and 100 percent changed-code coverage
+SHALL govern publication. Readiness SHALL not imply natural answer accuracy.
+
+#### SCENARIO-REPORT-7672-FIXTURES: Independent groups and held cases
+
+Given fixed fixture bytes and labels, 24 cases per dialect SHALL include tuple
+swaps, wrong scope, polarity, duplicate quotes, missing and truncated evidence.
+One source group counts once, even though it has two measured arms.
+
+#### SCENARIO-REPORT-7672-TERMINAL: Required checks govern class
+
+Given frozen scope and raw rows, failed required checks SHALL disqualify and
+zero readiness. Exact-candidate readers and fresh-process reduction SHALL run
+before atomic terminal publication.
+
 ## V668 live ARC goal observation — 2026-09-25
 
 ### REQ-REPORT-7667: Observe executed model goals on one adapter-withheld game

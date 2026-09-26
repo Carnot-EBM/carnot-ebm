@@ -1,0 +1,89 @@
+[
+  {
+    "answer_sha256": "sha256:b47713222fb8f7675f9423ca9a5e666d1c38e76d9842401d30edf3eded27be15",
+    "arm": "membership_only",
+    "attack": "6",
+    "censored": false,
+    "checked_spans": [],
+    "dialect": "ast",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 34,
+        "byte_start": 0,
+        "completeness": true,
+        "evidence_span": [
+          55,
+          74
+        ],
+        "kind": "definition",
+        "line": 5,
+        "name": "run2",
+        "status": "observed",
+        "text": "`run2` is defined in `A` at line 5"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 1,
+      "relations": 4,
+      "unknown": 0
+    },
+    "source_sha256": "sha256:e8b96a455f71b8476a314ef4f9c0dd010f989c4199b53841d7562c1a636094fd",
+    "split": "held_out",
+    "truth": "supported",
+    "unit_id": "ast-22",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:b47713222fb8f7675f9423ca9a5e666d1c38e76d9842401d30edf3eded27be15",
+    "arm": "bound_relation",
+    "attack": "6",
+    "censored": false,
+    "checked_spans": [
+      [
+        0,
+        34
+      ]
+    ],
+    "dialect": "ast",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          34
+        ],
+        "arguments": {
+          "line": 5,
+          "name": "run2",
+          "scope": "A"
+        },
+        "evidence_span": [
+          55,
+          74
+        ],
+        "kind": "definition_in_scope",
+        "polarity": "positive",
+        "reason": "exact_bound_tuple",
+        "status": "supported",
+        "text": "`run2` is defined in `A` at line 5"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 1,
+      "relations": 4,
+      "unknown": 0
+    },
+    "source_sha256": "sha256:e8b96a455f71b8476a314ef4f9c0dd010f989c4199b53841d7562c1a636094fd",
+    "split": "held_out",
+    "truth": "supported",
+    "unit_id": "ast-22",
+    "unknown_spans": []
+  }
+]

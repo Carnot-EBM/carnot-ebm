@@ -1,0 +1,89 @@
+[
+  {
+    "answer_sha256": "sha256:39d30791b60f950ec548ce9309719bbf803d695bad5ebf35fbd022f1cdcafeb0",
+    "arm": "membership_only",
+    "attack": "0",
+    "censored": false,
+    "checked_spans": [],
+    "dialect": "ast",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 34,
+        "byte_start": 0,
+        "completeness": true,
+        "evidence_span": [
+          13,
+          32
+        ],
+        "kind": "definition",
+        "line": 2,
+        "name": "run1",
+        "status": "observed",
+        "text": "`run1` is defined in `A` at line 2"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 1,
+      "relations": 4,
+      "unknown": 0
+    },
+    "source_sha256": "sha256:82d1bca3a66b79243449d0887f1a6576b38564aca9363dee3df02ce412be6105",
+    "split": "development",
+    "truth": "supported",
+    "unit_id": "ast-08",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:39d30791b60f950ec548ce9309719bbf803d695bad5ebf35fbd022f1cdcafeb0",
+    "arm": "bound_relation",
+    "attack": "0",
+    "censored": false,
+    "checked_spans": [
+      [
+        0,
+        34
+      ]
+    ],
+    "dialect": "ast",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          34
+        ],
+        "arguments": {
+          "line": 2,
+          "name": "run1",
+          "scope": "A"
+        },
+        "evidence_span": [
+          13,
+          32
+        ],
+        "kind": "definition_in_scope",
+        "polarity": "positive",
+        "reason": "exact_bound_tuple",
+        "status": "supported",
+        "text": "`run1` is defined in `A` at line 2"
+      }
+    ],
+    "observed": "supported",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 1,
+      "relations": 4,
+      "unknown": 0
+    },
+    "source_sha256": "sha256:82d1bca3a66b79243449d0887f1a6576b38564aca9363dee3df02ce412be6105",
+    "split": "development",
+    "truth": "supported",
+    "unit_id": "ast-08",
+    "unknown_spans": []
+  }
+]

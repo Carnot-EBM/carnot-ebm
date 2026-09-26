@@ -1,0 +1,83 @@
+[
+  {
+    "answer_sha256": "sha256:c06a46e020a03713095f9d72f3b0b2040ac22d40831d62af6ac9e01ba9f871a9",
+    "arm": "membership_only",
+    "attack": "5",
+    "censored": true,
+    "checked_spans": [],
+    "dialect": "stack",
+    "excluded": false,
+    "findings": [
+      {
+        "byte_end": 23,
+        "byte_start": 10,
+        "completeness": false,
+        "evidence_span": null,
+        "kind": "path_line",
+        "line": 5,
+        "source_id": "pkg2/a.js",
+        "status": "unknown",
+        "text": "`pkg2/a.js:5`"
+      }
+    ],
+    "observed": "unknown",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 0,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:c4e6674bf44588443874dc0bc9e8fcd7f2cb271f30f21a683cf173ba1f65f5a0",
+    "split": "held_out",
+    "truth": "unknown",
+    "unit_id": "stack-21",
+    "unknown_spans": []
+  },
+  {
+    "answer_sha256": "sha256:c06a46e020a03713095f9d72f3b0b2040ac22d40831d62af6ac9e01ba9f871a9",
+    "arm": "bound_relation",
+    "attack": "5",
+    "censored": true,
+    "checked_spans": [],
+    "dialect": "stack",
+    "excluded": false,
+    "findings": [
+      {
+        "answer_span": [
+          0,
+          23
+        ],
+        "arguments": {
+          "function": "run2",
+          "line": 5,
+          "path": "pkg2/a.js"
+        },
+        "evidence_span": null,
+        "kind": "stack_frame",
+        "polarity": "positive",
+        "reason": "partial_or_absent_evidence",
+        "status": "unknown",
+        "text": "`run2` at `pkg2/a.js:5`"
+      }
+    ],
+    "observed": "unknown",
+    "population": "fixture",
+    "provenance": "exact_fixture_oracle",
+    "raw_metrics": {
+      "checked": 0,
+      "relations": 0,
+      "unknown": 1
+    },
+    "source_sha256": "sha256:c4e6674bf44588443874dc0bc9e8fcd7f2cb271f30f21a683cf173ba1f65f5a0",
+    "split": "held_out",
+    "truth": "unknown",
+    "unit_id": "stack-21",
+    "unknown_spans": [
+      [
+        0,
+        23
+      ]
+    ]
+  }
+]

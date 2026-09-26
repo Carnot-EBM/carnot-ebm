@@ -12,6 +12,34 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7672: Bind typed source relations to original answer bytes
+
+The source atom index SHALL expose relation records for stack function/path/line,
+grep path/line/quoted text, and Python definition/name/scope/line. Each record
+SHALL retain dialect, all arguments, polarity, completeness, and exact UTF-8
+evidence offsets. The extractor SHALL retain answer offsets and unhandled
+causal, modal, quantified, or compound clauses as unknown. A tuple mismatch in
+partial evidence SHALL not prove contradiction. Explicit narrow contradiction
+requires complete local authority. Ambiguous aliases and conflicting records
+SHALL abstain. No source label or oracle may enter the predictor.
+
+#### SCENARIO-VERIFY-7672-TUPLE: Arguments stay together
+
+Given shuffled records or the same token bag with wrong pairings, only one
+record containing every claimed argument can support the proposition.
+
+#### SCENARIO-VERIFY-7672-QUALIFIER: Unknown text stays unknown
+
+Given negation, causality, modality, quantifiers, extra clauses, truncated
+records, or ambiguous aliases, the finding SHALL preserve those bytes and
+abstain unless a complete local record directly decides the narrow claim.
+
+#### SCENARIO-VERIFY-7672-REPLAY: Serialized decisions are byte exact
+
+Given source and answer hashes, relation and finding records SHALL survive
+JSON serialization and independent replay with identical decisions and UTF-8
+offsets. Drift or invalid offsets SHALL fail closed.
+
 ### REQ-VERIFY-5933: Adversarial QA Substrate Classification
 
 The adversarial artifact verifier SHALL classify an artifact's inference
