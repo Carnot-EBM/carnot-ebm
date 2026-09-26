@@ -1,0 +1,3106 @@
+{
+  "sources": [
+    "results/experiment_10017_explorer_variants.json",
+    "results/raw/experiment_10017_explorer_variants/<game>__<variant>__seed-<seed>.jsonl",
+    "ops/arc_solve_registry.yaml"
+  ],
+  "method": "Each episode row is post-action. grid_hash equality means equal rendered grid; it does not prove equal hidden state. explorer_actions counts non-null explorer_branch, including top_branch induce.no_plan.explorer. Early stop without level-up/error is inferred as explored_out from policy code, not logged.",
+  "games": {
+    "ar25": {
+      "registry_mechanic_class": "reflection_mirror_object_alignment",
+      "registry_action_model": "Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling (cycles horizontal mirror, then vertical mirror, then each disconnected movable sprite separately). L3 tail: ACTION1 x7 moves the selected horizontal axis up, ACTION5 selects the L-shaped object, ACTION4 x7 and ACTION2 x7 place it, ACTION5 selects the two-row object, then ACTION3 x12 and ACTION2 x5 place it. L4-L8: decompose each disconnected glyph into its component sprites and place each into its matching target orbit; L5 has a one-column anchor gotcha (large sprite starts at logical column 14, not 15 -- move left 10, not 11). Full 253-action winning sequence in results/outer_loop_codex_ar25_probe.json. ACTION6/ACTION7 are non-load-bearing (ACTION7 pops a hidden undo stack, deliberately excluded).",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "ddbee8039c64ba6e",
+            "261847eab6d11cf6",
+            "a28fda9a2f97a4b4"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1701,
+            2000,
+            1953
+          ],
+          "unique_rendered_hashes": [
+            1201,
+            1279,
+            1249
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1541,
+            0.1541,
+            0.1316
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ar25__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ar25__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ar25__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "c3edcb6005dad886",
+            "7ff7ee2bbd78726f",
+            "4dd05608264f5cc6"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1137,
+            1999,
+            1664
+          ],
+          "unique_rendered_hashes": [
+            1232,
+            1240,
+            1201
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1471,
+            0.1571,
+            0.1411
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ar25__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ar25__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ar25__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "28a2aa5175444dc9",
+            "d01863a7711ed55c",
+            "07aa3f4beca93d88"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            433
+          ],
+          "unique_rendered_hashes": [
+            1180,
+            1217,
+            1208
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1516,
+            0.1431,
+            0.1316
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ar25__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ar25__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ar25__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "cn04": {
+      "registry_mechanic_class": "marker_pair_shape_alignment",
+      "registry_action_model": "ACTION1-4 move the selected visible sprite; ACTION5 rotates a singleton selected sprite or cycles a stacked variant; ACTION6 selects a visible sprite through camera-derived display coordinates. L4+: ACTION5 semantics are PER-SPRITE and PER-LEVEL -- rigid 90-degree rotation on L4, but shape-VARIANT cycling starting at L5 (see gotcha below).",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "f2d16c585d5129cd",
+            "2aee13b912eea695",
+            "275c38c4e39c8838"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1999,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1499,
+            1540,
+            1536
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1661,
+            0.1536,
+            0.1541
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/cn04__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/cn04__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/cn04__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "729dbbf0eaa20467",
+            "76d0f35244ce1f7c",
+            "ea5526e67e0c95ef"
+          ],
+          "last_rendered_state_first_seen_at": [
+            960,
+            2000,
+            1998
+          ],
+          "unique_rendered_hashes": [
+            1514,
+            1501,
+            1502
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1476,
+            0.1521,
+            0.1571
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/cn04__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/cn04__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/cn04__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "f2d16c585d5129cd",
+            "2aee13b912eea695",
+            "275c38c4e39c8838"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1999,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1499,
+            1540,
+            1536
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1661,
+            0.1536,
+            0.1541
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/cn04__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/cn04__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/cn04__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "g50t": {
+      "registry_mechanic_class": "config_toggle_target_offset",
+      "registry_action_model": "Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right, ACTION5 commit/rewind clone. L2 uses two clone cycles: first clone holds the right-hand plate, second clone holds the left-hand plate, then the active player takes the top route to the target-offset cell.",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            1982,
+            1982,
+            1982
+          ],
+          "outcomes": [
+            "early_stop_explored_out_inferred_from_policy",
+            "early_stop_explored_out_inferred_from_policy",
+            "early_stop_explored_out_inferred_from_policy"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            1982,
+            1982,
+            1982
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "4169b8630cfad7ba",
+            "4169b8630cfad7ba",
+            "4169b8630cfad7ba"
+          ],
+          "last_rendered_state_first_seen_at": [
+            390,
+            390,
+            390
+          ],
+          "unique_rendered_hashes": [
+            1234,
+            1234,
+            1234
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1156,
+            0.1156,
+            0.1156
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/g50t__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/g50t__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/g50t__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            1982,
+            1982,
+            1982
+          ],
+          "outcomes": [
+            "early_stop_explored_out_inferred_from_policy",
+            "early_stop_explored_out_inferred_from_policy",
+            "early_stop_explored_out_inferred_from_policy"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            1982,
+            1982,
+            1982
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "4169b8630cfad7ba",
+            "4169b8630cfad7ba",
+            "4169b8630cfad7ba"
+          ],
+          "last_rendered_state_first_seen_at": [
+            390,
+            390,
+            390
+          ],
+          "unique_rendered_hashes": [
+            1234,
+            1234,
+            1234
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1156,
+            0.1156,
+            0.1156
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/g50t__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/g50t__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/g50t__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "2d36d9aec989464a",
+            "2d36d9aec989464a",
+            "2d36d9aec989464a"
+          ],
+          "last_rendered_state_first_seen_at": [
+            264,
+            264,
+            264
+          ],
+          "unique_rendered_hashes": [
+            1239,
+            1239,
+            1239
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1066,
+            0.1066,
+            0.1066
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/g50t__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/g50t__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/g50t__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "ka59": {
+      "registry_mechanic_class": null,
+      "registry_action_model": "mixed keyboard+click [4,4,4,3,2,3,3,3,C:1,1,4]; C:1 dynamically clicks the second movable block after the first block is placed. L2-L4 extends this with plain ACTION1-5 move/select labels and explicit \"6:x:y\" ACTION6 coordinate-click labels (frame pixel coords) for selecting e-framed blocks -- see experiment_4460_submission_package_prep.py:resolve_replay_plan's ka59 branch for the exact apply-function extension needed to replay these.",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "da31d86804aafd85",
+            "dcc23ca8e6de5726",
+            "0497ff2bcb429b29"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1632,
+            1623,
+            1638
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1271,
+            0.1421,
+            0.1256
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ka59__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ka59__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ka59__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "b4fe75d7ec04a852",
+            "d98988569c002a57",
+            "ccbd58b54dcc4ba2"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            1999
+          ],
+          "unique_rendered_hashes": [
+            1574,
+            1622,
+            1618
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1376,
+            0.1221,
+            0.1386
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ka59__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ka59__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ka59__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "96c45748333d526f",
+            "5bd692b457bab9b2",
+            "0497ff2bcb429b29"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1612,
+            1639,
+            1638
+          ],
+          "same_as_previous_grid_fraction": [
+            0.1201,
+            0.1256,
+            0.1256
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ka59__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ka59__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ka59__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "ls20": {
+      "registry_mechanic_class": "clean_navigation_shape_color_rotation_step_counter",
+      "registry_action_model": "Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right over the five-pixel grid. L2 route: reach the rhsxkxzdjz rotation trigger, re-enter it until rotation index 3, collect the lower and upper npxgalaybz step resets, then enter the target.",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "cb3d621ab765609f",
+            "cb3d621ab765609f",
+            "cb3d621ab765609f"
+          ],
+          "last_rendered_state_first_seen_at": [
+            46,
+            46,
+            46
+          ],
+          "unique_rendered_hashes": [
+            1110,
+            1110,
+            1110
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0185,
+            0.0185,
+            0.0185
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ls20__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ls20__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ls20__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "cb3d621ab765609f",
+            "cb3d621ab765609f",
+            "cb3d621ab765609f"
+          ],
+          "last_rendered_state_first_seen_at": [
+            46,
+            46,
+            46
+          ],
+          "unique_rendered_hashes": [
+            1110,
+            1110,
+            1110
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0185,
+            0.0185,
+            0.0185
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ls20__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ls20__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ls20__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "ec0542d59150d0d3",
+            "ec0542d59150d0d3",
+            "ec0542d59150d0d3"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1956,
+            1956,
+            1956
+          ],
+          "unique_rendered_hashes": [
+            1076,
+            1076,
+            1076
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0185,
+            0.0185,
+            0.0185
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/ls20__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ls20__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/ls20__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "re86": {
+      "registry_mechanic_class": "pattern_match_sprite_resize",
+      "registry_action_model": "Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right, ACTION5 cycles the active overlay source. L2 tail moves the active source downward and left, cycles, positions the next source upward/left, cycles again, then moves the final source down/left to cover the L2 target pixels. L3+: the single black pixel embedded in the active piece is the selection cursor; ACTION5 cycles which piece is selected, ACTION1-4 move it in exactly 3-pixel steps (targets must land on the piece anchor's mod-3 lattice). No coordinate clicks in this game.",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "a242ff52302a1a3a",
+            "a242ff52302a1a3a",
+            "a242ff52302a1a3a"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1999,
+            1999,
+            1999
+          ],
+          "unique_rendered_hashes": [
+            1918,
+            1918,
+            1918
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0155,
+            0.0155,
+            0.0155
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/re86__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/re86__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/re86__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "a242ff52302a1a3a",
+            "a242ff52302a1a3a",
+            "a242ff52302a1a3a"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1999,
+            1999,
+            1999
+          ],
+          "unique_rendered_hashes": [
+            1918,
+            1918,
+            1918
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0155,
+            0.0155,
+            0.0155
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/re86__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/re86__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/re86__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "d16c19b189b0c01c",
+            "d16c19b189b0c01c",
+            "d16c19b189b0c01c"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1743,
+            1743,
+            1743
+          ],
+          "same_as_previous_grid_fraction": [
+            0.015,
+            0.015,
+            0.015
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/re86__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/re86__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/re86__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "sb26": {
+      "registry_mechanic_class": "color_match_slot_sequence",
+      "registry_action_model": "ACTION6 item click then ACTION6 slot click; ACTION5 validates. L2 tail uses display-center clicks derived from the offline environment source: (32,59)->(23,23), (18,59)->(29,23), (11,59)->(23,37), (46,59)->(29,37), (25,59)->(35,37), (53,59)->(41,37), (39,59)->(41,23), then validate. L3+: placed items are re-selectable -- clicking a placed item then an OCCUPIED slot swaps the two items (no reset needed to fix mistakes); a wrong ACTION5 validation is penalty-free.",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              5,
+              6,
+              7
+            ],
+            [
+              5,
+              6,
+              7
+            ],
+            [
+              5,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "e27d4186bf01b949",
+            "8631508c9e6d8dc7",
+            "0ff94225df393ffa"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            236
+          ],
+          "unique_rendered_hashes": [
+            850,
+            732,
+            818
+          ],
+          "same_as_previous_grid_fraction": [
+            0.3197,
+            0.3252,
+            0.3437
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sb26__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sb26__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sb26__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              5,
+              6,
+              7
+            ],
+            [
+              5,
+              6,
+              7
+            ],
+            [
+              5,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "f949811b17a42c66",
+            "bc8d641a8074c679",
+            "fcdb49fdcb336487"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1195,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            753,
+            704,
+            773
+          ],
+          "same_as_previous_grid_fraction": [
+            0.3292,
+            0.3282,
+            0.3382
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sb26__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sb26__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sb26__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              5,
+              6,
+              7
+            ],
+            [
+              5,
+              6,
+              7
+            ],
+            [
+              5,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "96ff3c90cdc5a005",
+            "62efa79814424547",
+            "c9af3f7d7dbab5cf"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            1999,
+            444
+          ],
+          "unique_rendered_hashes": [
+            780,
+            720,
+            827
+          ],
+          "same_as_previous_grid_fraction": [
+            0.3057,
+            0.3022,
+            0.3252
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sb26__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sb26__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sb26__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "sc25": {
+      "registry_mechanic_class": "two_phase_cast_grid_then_tank_exit",
+      "registry_action_model": "ACTION6 toggles cast cells at (24+5c,49+5r) or raw spell-select clicks; ACTION1-4 are tank-control moves with facing load-bearing. Exp4468 banked L2-L5 cumulative replay plans.",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "a18becb4c7b40954",
+            "70badc605f9fc044",
+            "b9c8a66c897c5361"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            1997,
+            566
+          ],
+          "unique_rendered_hashes": [
+            397,
+            359,
+            359
+          ],
+          "same_as_previous_grid_fraction": [
+            0.6168,
+            0.6153,
+            0.6278
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sc25__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sc25__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sc25__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "8d50ff0005eccdc8",
+            "d7a701576be9baa7",
+            "d0fd8a467e3bbbfe"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            292,
+            1564
+          ],
+          "unique_rendered_hashes": [
+            394,
+            376,
+            388
+          ],
+          "same_as_previous_grid_fraction": [
+            0.6253,
+            0.6273,
+            0.6273
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sc25__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sc25__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sc25__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "a18becb4c7b40954",
+            "49c3cbe4dc37452b",
+            "445fabcdd7b23f6b"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            749,
+            409
+          ],
+          "unique_rendered_hashes": [
+            397,
+            399,
+            382
+          ],
+          "same_as_previous_grid_fraction": [
+            0.6168,
+            0.5773,
+            0.6308
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sc25__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sc25__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sc25__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "sk48": {
+      "registry_mechanic_class": "chain_color_reorder",
+      "registry_action_model": "Keyboard ACTION1-4 movement over the active chain head/selector; labels are compact JSON action rows emitted by the SK48 GameAdapter.",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "58601f38b6394233",
+            "645b480261e4bd27",
+            "fc1224b81baed3b6"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1997,
+            620,
+            581
+          ],
+          "unique_rendered_hashes": [
+            505,
+            436,
+            468
+          ],
+          "same_as_previous_grid_fraction": [
+            0.5953,
+            0.6003,
+            0.5878
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sk48__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sk48__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sk48__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "6a2d709b7ad8646c",
+            "4df28cbfd5809166",
+            "f6dbfc96796cf6bf"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1989,
+            1999,
+            498
+          ],
+          "unique_rendered_hashes": [
+            507,
+            467,
+            420
+          ],
+          "same_as_previous_grid_fraction": [
+            0.5933,
+            0.5918,
+            0.5888
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sk48__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sk48__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sk48__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "c7c43bd34cac4466",
+            "a815953b9253fa23",
+            "af1de4f88253fa79"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1063,
+            2000,
+            1999
+          ],
+          "unique_rendered_hashes": [
+            485,
+            478,
+            456
+          ],
+          "same_as_previous_grid_fraction": [
+            0.5753,
+            0.5588,
+            0.5473
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/sk48__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sk48__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/sk48__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "tn36": {
+      "registry_mechanic_class": "program_editor",
+      "registry_action_model": "ACTION6 click; data schema IS {x,y} and display->grid is 1:1 (camera.display_to_grid(30,13)==(30,13)). Clicks register (121/121 change the grid). Control is a PROGRAM/transform EDITOR, not direct steering: dispatch (tn36.py:2500) routes a click to a tool-palette (miytdaqzei, EMPTY at reset) else mvqheosngn(apply/2nd-object) else bzirenxmrg(the object); the object carries a move-program vkuvtkaerv=[3,0,3,0,0]; clicking it runs mmmdksslmq()->olrpupaury(). The exact EDIT->EXECUTE semantics that drive obj.y 13->33 are not yet cracked (directly invoking mmmdksslmq did NOT move the object; palette empty).",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              6
+            ],
+            [
+              6
+            ],
+            [
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "b97556e0003b8665",
+            "b97556e0003b8665",
+            "b97556e0003b8665"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1,
+            1,
+            1
+          ],
+          "unique_rendered_hashes": [
+            37,
+            37,
+            37
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/tn36__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tn36__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tn36__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              6
+            ],
+            [
+              6
+            ],
+            [
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "b97556e0003b8665",
+            "b97556e0003b8665",
+            "b97556e0003b8665"
+          ],
+          "last_rendered_state_first_seen_at": [
+            1,
+            1,
+            1
+          ],
+          "unique_rendered_hashes": [
+            37,
+            37,
+            37
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/tn36__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tn36__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tn36__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              6
+            ],
+            [
+              6
+            ],
+            [
+              6
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "f78d01657c35b2c6",
+            "f78d01657c35b2c6",
+            "f78d01657c35b2c6"
+          ],
+          "last_rendered_state_first_seen_at": [
+            4,
+            4,
+            4
+          ],
+          "unique_rendered_hashes": [
+            37,
+            37,
+            37
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/tn36__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tn36__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tn36__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "tr87": {
+      "registry_mechanic_class": "config_substitution",
+      "registry_action_model": "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "a98f13b04e1ff9e6",
+            "a98f13b04e1ff9e6",
+            "a98f13b04e1ff9e6"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1936,
+            1936,
+            1936
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/tr87__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tr87__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tr87__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "a98f13b04e1ff9e6",
+            "a98f13b04e1ff9e6",
+            "a98f13b04e1ff9e6"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1936,
+            1936,
+            1936
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/tr87__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tr87__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tr87__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "acc987ac5fd9e95f",
+            "acc987ac5fd9e95f",
+            "acc987ac5fd9e95f"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1866,
+            1866,
+            1866
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/tr87__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tr87__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/tr87__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    },
+    "wa30": {
+      "registry_mechanic_class": null,
+      "registry_action_model": "ACTION1-5 keyboard only across all 9 levels. The banked 670-action route contains ZERO ACTION6 clicks, so any_oob_action6_clicks=False and it carries none of the live out-of-bounds risk that broke lf52's original L9 route. Solved by a 16-round OUTER-LOOP agent probe campaign (gpt-5.6-sol v1-v8 stalled at L1; claude-fable-5 v9-v16 broke through), NOT by an adapter and NOT by the live agent -- solve_provenance outer_loop_re, so it is never headline-eligible as live-agent capability.",
+      "variants": {
+        "V0": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "6d67f9d3acac430d",
+            "6d67f9d3acac430d",
+            "6d67f9d3acac430d"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1699,
+            1699,
+            1699
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0505,
+            0.0505,
+            0.0505
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/wa30__V0__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/wa30__V0__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/wa30__V0__seed-7491003.jsonl"
+          ]
+        },
+        "V1": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "6d67f9d3acac430d",
+            "6d67f9d3acac430d",
+            "6d67f9d3acac430d"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1699,
+            1699,
+            1699
+          ],
+          "same_as_previous_grid_fraction": [
+            0.0505,
+            0.0505,
+            0.0505
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/wa30__V1__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/wa30__V1__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/wa30__V1__seed-7491003.jsonl"
+          ]
+        },
+        "V2": {
+          "seeds": [
+            7491001,
+            7491002,
+            7491003
+          ],
+          "actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "outcomes": [
+            "budget",
+            "budget",
+            "budget"
+          ],
+          "errors": [
+            null,
+            null,
+            null
+          ],
+          "explorer_actions": [
+            2000,
+            2000,
+            2000
+          ],
+          "explorer_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "peak_levels": [
+            0,
+            0,
+            0
+          ],
+          "action_vocab": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "last_rendered_state_hash": [
+            "0fd6cc0582658649",
+            "0fd6cc0582658649",
+            "0fd6cc0582658649"
+          ],
+          "last_rendered_state_first_seen_at": [
+            2000,
+            2000,
+            2000
+          ],
+          "unique_rendered_hashes": [
+            1725,
+            1725,
+            1725
+          ],
+          "same_as_previous_grid_fraction": [
+            0.049,
+            0.049,
+            0.049
+          ],
+          "source_jsonl": [
+            "results/raw/experiment_10017_explorer_variants/wa30__V2__seed-7491001.jsonl",
+            "results/raw/experiment_10017_explorer_variants/wa30__V2__seed-7491002.jsonl",
+            "results/raw/experiment_10017_explorer_variants/wa30__V2__seed-7491003.jsonl"
+          ]
+        }
+      }
+    }
+  }
+}
