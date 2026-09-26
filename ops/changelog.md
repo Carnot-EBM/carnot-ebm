@@ -20694,3 +20694,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Bind recovery prerequisites, fourteen tasks and research methods (⚠️ Research Finding) — honest_verdict=complete_null_v671_contract_methods; results/experiment_7699_v671_contract_methods.json
 - 2026-09-26: Qualify source-record addressing and original-answer binding (⚠️ Research Finding) — honest_verdict=complete_circular_positive_record_protocol_ready; results/experiment_7700_v671_record_span_protocol.json
 - 2026-09-26: Seal independent source roles and validate label custody (⚠️ Research Finding) — honest_verdict=complete_null_cohort_readiness; results/experiment_7701_v671_sealed_cohort.json
+- 2026-09-26: Measure explicit record and claim addressing with bounded Qwen proposals (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_protocol; results/experiment_7702_v671_qwen_record_pilot.json
