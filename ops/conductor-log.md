@@ -18740,3 +18740,4 @@ code |
 | 2026-09-26 13:44 UTC | Qualify an adapter-withheld ARC runner with reacha | OK | Deliverable already exists in repo |
 | 2026-09-26 14:09 UTC | Measure live goal evidence during adapter-withheld | OK | 91 passed, 1 warning in 8.00s |
 | 2026-09-26 14:37 UTC | Qualify typed evidence payloads through the actual | OK | 92 passed, 1 warning in 8.57s |
+| 2026-09-26 14:39 UTC | Measure complete record-service cost and retain ha | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7710-native-record-contract.native_record_ready_score (actual=0 == expected=1) |
