@@ -20819,3 +20819,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   contract checks cover the defect; no new guard code was needed.
 
 - 2026-09-26: Bind thirteen tasks and register evidence-set methods (⚠️ Research Finding) — honest_verdict=complete_disqualified_v673_contract_validation; results/experiment_7726_v673_contract_methods.json
+- 2026-09-26: Seal exposed source families without relabeling them fresh (⚠️ Research Finding) — honest_verdict=complete_null_development_corpus_ready; results/experiment_7727_v673_development_corpus.json
