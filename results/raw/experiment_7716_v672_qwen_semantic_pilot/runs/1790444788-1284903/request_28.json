@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge whether the original answer is supported, contradicted, or unknown from the complete source. Return exactly one JSON object with decision (support, contradiction, unknown) and quote (an exact source substring). A quote alone does not prove support. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"answer\": \"To remove a sliding glass door, first use a pry bar to lift the door upward until the rollers clear the bottom track. Then, pull the door towards you until it clears the upper track. If the door is not able to clear the rollers on the lower track, you may need to adjust the rollers. Once the sliding door is removed, you can then remove the stationary door. To do this, use your screwdriver to remove the retaining screws from the top and sides. You may have to use the pry bar again to lift the stationary door upward until it clears the lower track. It might be helpful to have a helper during this process.\", \"source_windows\": [{\"index\": 0, \"start\": 0, \"end\": 75, \"text\": \"{\\\"passages\\\":\\\"passage 1:Removing an Andersen Sliding Stationary Patio Door. \"}, {\"index\": 1, \"start\": 75, \"end\": 202, \"text\": \"To remove an Andersen stationary patio door, you must first remove the sliding door as in the previous step, and get a helper. \"}, {\"index\": 2, \"start\": 202, \"end\": 335, \"text\": \"Located at the bottom of the stationary door is a screw or screws that secure the door to the bottom sill.liding Glass Shower Doors. \"}, {\"index\": 3, \"start\": 335, \"end\": 370, \"text\": \"Step inside the shower or bathtub. \"}, {\"index\": 4, \"start\": 370, \"end\": 403, \"text\": \"Turn and face the sliding doors. \"}, {\"index\": 5, \"start\": 403, \"end\": 470, \"text\": \"Grasp the door that is closest to the inside of the tub or shower. \"}, {\"index\": 6, \"start\": 470, \"end\": 617, \"text\": \"Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.\\\\n\\\\npassage 2:Sliding Glass Shower Doors. \"}, {\"index\": 7, \"start\": 617, \"end\": 652, \"text\": \"Step inside the shower or bathtub. \"}, {\"index\": 8, \"start\": 652, \"end\": 685, \"text\": \"Turn and face the sliding doors. \"}, {\"index\": 9, \"start\": 685, \"end\": 752, \"text\": \"Grasp the door that is closest to the inside of the tub or shower. \"}, {\"index\": 10, \"start\": 752, \"end\": 961, \"text\": \"Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.Lift up on the door until the rollers clear the bottom rail, and pull inward.liding Glass Shower Doors. \"}, {\"index\": 11, \"start\": 961, \"end\": 996, \"text\": \"Step inside the shower or bathtub. \"}, {\"index\": 12, \"start\": 996, \"end\": 1029, \"text\": \"Turn and face the sliding doors. \"}, {\"index\": 13, \"start\": 1029, \"end\": 1096, \"text\": \"Grasp the door that is closest to the inside of the tub or shower. \"}, {\"index\": 14, \"start\": 1096, \"end\": 1313, \"text\": \"Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.\\\\n\\\\npassage 3:1 Use the pry bar to lift the sliding glass door upward until the rollers clear the bottom track. \"}, {\"index\": 15, \"start\": 1313, \"end\": 1382, \"text\": \"2  Pull the bottom toward you until the door clears the upper track. \"}, {\"index\": 16, \"start\": 1382, \"end\": 1480, \"text\": \"3  If the door will not clear the rollers on the lower track, you may need to adjust the rollers. \"}, {\"index\": 17, \"start\": 1480, \"end\": 1542, \"text\": \"Pull the door toward you until it has cleared the top tracks. \"}, {\"index\": 18, \"start\": 1542, \"end\": 1573, \"text\": \"2  Remove the stationary door. \"}, {\"index\": 19, \"start\": 1573, \"end\": 1683, \"text\": \"3  To remove the stationary door, use your screwdriver to remove the retaining screws from the top and sides. \"}, {\"index\": 20, \"start\": 1683, \"end\": 1846, \"text\": \"4  Once again, you may have to use the pry bar to lift the door upward until the door clears the lower track.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to remove a sliding glass door\\\"}\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7716,
+  "temperature": 0
+}

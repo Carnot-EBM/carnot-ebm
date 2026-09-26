@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge whether the original answer is supported, contradicted, or unknown from the complete source. Return exactly one JSON object with decision (support, contradiction, unknown) and quote (an exact source substring). A quote alone does not prove support. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"answer\": \"Lois Lilienstein, co-star of the popular Canadian children's show \\\"Sharon, Lois & Bram's Elephant Show,\\\" has passed away at the age of 78 after a battle with cancer. She was a beloved figure in Canadian television and will be remembered for her contributions to children's entertainment.\", \"source_windows\": [{\"index\": 0, \"start\": 0, \"end\": 165, \"text\": \"Lois Lilienstein, co-star of \\\"Sharon, Lois & Bram's Elephant Show\\\" \u2014 the Canadian preschool show that ran on Nickelodeon during the early 1990s \u2014 has died, aged 78. \"}, {\"index\": 1, \"start\": 165, \"end\": 315, \"text\": \"Her son, David Lilienstein, told CBC News that his mother died in Toronto on Wednesday night from a rare form of cancer first diagnosed last October. \"}, {\"index\": 2, \"start\": 315, \"end\": 450, \"text\": \"\\\"She knew it was happening, she was at peace with it, and she died very peacefully and not in pain,\\\" he told the Canadian broadcaster. \"}, {\"index\": 3, \"start\": 450, \"end\": 467, \"text\": \"Liz Smith at 92. \"}, {\"index\": 4, \"start\": 467, \"end\": 574, \"text\": \"Lilienstein was born in Chicago in 1936 and moved to Toronto in 1996 with her son and her husband, Ernest. \"}, {\"index\": 5, \"start\": 574, \"end\": 656, \"text\": \"She joined Sharon Hampson and Bram Morrison to launch their singing trio in 1978. \"}, {\"index\": 6, \"start\": 656, \"end\": 811, \"text\": \"The TV show \\\"Sharon, Lois & Bram's Elephant Show\\\" ran on CBC in Canada from 1984 to 1989, before continuing in reruns on Nickelodeon stateside until 1995. \"}, {\"index\": 7, \"start\": 811, \"end\": 860, \"text\": \"The 30 most popular film producers in Hollywood. \"}, {\"index\": 8, \"start\": 860, \"end\": 991, \"text\": \"Sally Catto, general manager, programming at CBC Television, paid tribute to Lilienstein for her contribution to Canadian kids TV. \"}, {\"index\": 9, \"start\": 991, \"end\": 1187, \"text\": \"\\\"Sharon, Lois and Bram got their start at CBC back in the '80s with the Elephant Show, and they went on to become icons to children all across North America through various programs and specials. \"}, {\"index\": 10, \"start\": 1187, \"end\": 1282, \"text\": \"Lois will be fondly remembered by her many friends at CBC,\\\" Catto told The Hollywood Reporter. \"}, {\"index\": 11, \"start\": 1282, \"end\": 1309, \"text\": \"'Ghostbusters' budget cut. \"}, {\"index\": 12, \"start\": 1309, \"end\": 1468, \"text\": \"The Canadian variety show was best known for songs like \\\"Skinnamarink\\\" and \\\"Peanut Butter.\\\" Lilienstein left the Sharon, Lois & Bram performance trio in 2000. \"}, {\"index\": 13, \"start\": 1468, \"end\": 1498, \"text\": \"\u00a92015 The Hollywood Reporter. \"}, {\"index\": 14, \"start\": 1498, \"end\": 1519, \"text\": \"All rights reserved.\\n\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7716,
+  "temperature": 0
+}

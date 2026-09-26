@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge whether the original answer is supported, contradicted, or unknown from the complete source. Return exactly one JSON object with decision (support, contradiction, unknown) and quote (an exact source substring). A quote alone does not prove support. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"answer\": \"Based on the given passages, the weather in Mount Washington, NH on March 23 will be partly cloudy in the morning with a chance of rain and temperatures around 21-20 degrees. Later in the day, it will become sunny with temperatures around 32-40 degrees. Winds will be generally light, ranging from 2-7 mph and coming from different directions throughout the day.\", \"source_windows\": [{\"index\": 0, \"start\": 0, \"end\": 105, \"text\": \"{\\\"passages\\\":\\\"passage 1:0am:The Mount Washington, NH forecast for Mar 23 is 21 degrees and Partly cloudy. \"}, {\"index\": 1, \"start\": 105, \"end\": 185, \"text\": \"There is 53 percentage chance of rain and 7 mph winds from the North-Northwest. \"}, {\"index\": 2, \"start\": 185, \"end\": 262, \"text\": \"3am:The Mount Washington, NH forecast for Mar 23 is 20 degrees and Overcast. \"}, {\"index\": 3, \"start\": 262, \"end\": 407, \"text\": \"There is 57 percentage chance of rain and 6 mph winds from the Northwest.\\\\n\\\\npassage 2:Mount Washington Weather Forecast for Thursday, March 23. \"}, {\"index\": 4, \"start\": 407, \"end\": 478, \"text\": \"The Mount Washington, NH forecast for Mar 23 is 32 degrees and Sunny . \"}, {\"index\": 5, \"start\": 478, \"end\": 645, \"text\": \"There is 40 percentage chance of rain and 4 mph winds from the North-Northwest.\\\\n\\\\npassage 3:6pm:The Mount Washington, NH forecast for Mar 23 is 40 degrees and Sunny. \"}, {\"index\": 6, \"start\": 645, \"end\": 724, \"text\": \"There is 35 percentage chance of rain and 2 mph winds from the West-Southwest. \"}, {\"index\": 7, \"start\": 724, \"end\": 798, \"text\": \"9pm:The Mount Washington, NH forecast for Mar 23 is 34 degrees and Clear. \"}, {\"index\": 8, \"start\": 798, \"end\": 926, \"text\": \"There is 42 percentage chance of rain and 3 mph winds from the East-Southeast.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather in mount washington nh\\\"}\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7716,
+  "temperature": 0
+}

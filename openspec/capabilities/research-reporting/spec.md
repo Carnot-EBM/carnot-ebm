@@ -82471,3 +82471,29 @@ the raw rows. Changed bytes or a missing row SHALL fail readiness.
 Given passing required checks, the result SHALL be circular_positive with
 an explicit oracle flag and no measured natural benefit. A failed required
 check SHALL disqualify and zero readiness.
+
+## REQ-REPORT-7716: Measure exposed Qwen semantic evidence decisions
+
+Exp7716 SHALL authenticate Exp7714, cached Qwen3.8-27B GGUF bytes, and owned
+CUDA before generation. It SHALL freeze 24 previously exposed RAGTruth source
+families disjoint from any fresh roster. Each family receives one whole-source
+and one indexed sentence-window request with identical original source and
+answer information, temperature zero and at most 128 output tokens per call.
+The model SHALL return support, contradiction, or unknown and an exact quote.
+Raw requests, responses, timeouts, token counts and latency SHALL survive cold
+reduction. Syntax, address, human-label agreement and semantic benefit SHALL
+remain separate. The exposed pilot SHALL make no fresh-accuracy, training,
+retention or production-promotion claim. Missing or unchanged external inputs
+SHALL produce an exact terminal blocked gate; failed checks SHALL disqualify.
+
+### SCENARIO-REPORT-7716-PAIRED
+
+Given authenticated exposed families, a cold reader recomputes all 48 arm
+rows and paired family differences from saved raw bytes. Unknown or malformed
+outputs remain in the denominator and never count as supported evidence.
+
+### SCENARIO-REPORT-7716-BLOCKED
+
+Given a missing upstream input, unavailable owned GPU, or stale qualified
+protocol, the result is complete_blocked_* with exact upstream, path, field,
+operator, expected and observed operands and no invented model invocation.

@@ -12,6 +12,20 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7716: Keep semantic quotes separate from entailment
+
+The pilot reducer SHALL parse exactly one support, contradiction, or unknown
+enum and quoted source substring. It SHALL reject malformed or ambiguous
+addresses and retain unknown, truncation and timeout states. An exact quote
+SHALL certify only location; human annotation agreement is a separate field.
+The indexed window arm SHALL reconstruct the complete original source bytes
+and retain every original answer sentence without predictor access to labels.
+
+#### SCENARIO-VERIFY-7716-ADDRESS
+
+A unique exact quote has a valid address but no automatic semantic truth. A
+duplicate quote is ambiguous; malformed JSON and absent quotes are invalid.
+
 ### REQ-VERIFY-7715: Isolate natural labels from source predictors
 
 The public RAGTruth projection SHALL contain complete original source and

@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge whether the original answer is supported, contradicted, or unknown from the complete source. Return exactly one JSON object with decision (support, contradiction, unknown) and quote (an exact source substring). A quote alone does not prove support. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"answer\": \"Here is a summary of the news in 59 words:\\n\\nA helicopter crash in Malaysia killed six people, including the country's former ambassador to the US and a high-ranking PM staff member. Prime Minister Najib ordered an investigation and praised the victims as dedicated public servants. The helicopter's flight recorder was found in good condition, and a preliminary report is expected within a week.\", \"source_windows\": [{\"index\": 0, \"start\": 0, \"end\": 228, \"text\": \"A helicopter crash Saturday in Malaysia killed six people, including the nation's former ambassador to the United States and a high-ranking member of the prime minister's staff, the Malaysian state news agency Bernama reported. \"}, {\"index\": 1, \"start\": 228, \"end\": 301, \"text\": \"The helicopter crashed near Kampung Pasir Baru in Semenyih, at 4:55 p.m. \"}, {\"index\": 2, \"start\": 301, \"end\": 321, \"text\": \"Saturday (4:55 a.m. \"}, {\"index\": 3, \"start\": 321, \"end\": 340, \"text\": \"ET), Bernama said. \"}, {\"index\": 4, \"start\": 340, \"end\": 393, \"text\": \"Prime Minister Najib Razak ordered an investigation. \"}, {\"index\": 5, \"start\": 393, \"end\": 589, \"text\": \"Among the victims were Azlin Alias, who worked on the prime minister's staff, and Jamaluddin Jarjis, former Malaysian ambassador to the United States and chairman of PR1MA Malaysia, Bernama said. \"}, {\"index\": 6, \"start\": 589, \"end\": 654, \"text\": \"PR1MA is an organization that develops housing in urban centers. \"}, {\"index\": 7, \"start\": 654, \"end\": 820, \"text\": \"\\\"We have lost two figures who had made great contributions to the government, party and country in this tragedy,\\\" Najib told reporters after visiting the crash site. \"}, {\"index\": 8, \"start\": 820, \"end\": 942, \"text\": \"Jamaluddin Jarjis was \\\"a person of high caliber, who had sacrificed much for the government, party and country,\\\" he said. \"}, {\"index\": 9, \"start\": 942, \"end\": 1115, \"text\": \"\\\"He had many acquaintances here and abroad.\\\" The state news agency called Azlin the prime minister's private secretary general, but Najib referred to him as chief of staff. \"}, {\"index\": 10, \"start\": 1115, \"end\": 1247, \"text\": \"\\\"Personally he had agreed to leave his career in the corporate sector to serve the government as his national service,\\\" Najib said. \"}, {\"index\": 11, \"start\": 1247, \"end\": 1354, \"text\": \"The helicopter's flight recorder has been found in good condition, Bernama reported Sunday, citing police. \"}, {\"index\": 12, \"start\": 1354, \"end\": 1489, \"text\": \"The news agency said Malaysian civil aviation authorities are expected to release a preliminary report on the crash within seven days. \"}, {\"index\": 13, \"start\": 1489, \"end\": 1537, \"text\": \"CNN's Jethro Mullen contributed to this report.\\n\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7716,
+  "temperature": 0
+}

@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge whether the original answer is supported, contradicted, or unknown from the complete source. Return exactly one JSON object with decision (support, contradiction, unknown) and quote (an exact source substring). A quote alone does not prove support. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"answer\": \"Based on the given passages, the drawer on the bottom of an oven stove is called a \\\"warming drawer\\\" and is designed to keep hot foods at serving temperature. It is intended to be used for warming food, rather than for storage. Therefore, the correct answer is:\\n\\nThe drawer on the bottom of an oven stove is for warming food.\", \"source_windows\": [{\"index\": 0, \"start\": 0, \"end\": 145, \"text\": \"{\\\"passages\\\":\\\"passage 1:It\u2019s called a \u201cwarming drawer,\u201d and it\u2019s where food is supposed to be placed to stay toasty until it\u2019s ready to be eaten! \"}, {\"index\": 1, \"start\": 145, \"end\": 172, \"text\": \"Wikimedia Commons / Brown. \"}, {\"index\": 2, \"start\": 172, \"end\": 245, \"text\": \"As you can see, some models blatantly point this out on their packaging. \"}, {\"index\": 3, \"start\": 245, \"end\": 342, \"text\": \"The stove pictured above has a special label on the drawer.\\\\n\\\\npassage 2:Depending on the model. \"}, {\"index\": 4, \"start\": 342, \"end\": 360, \"text\": \"January 12, 2017. \"}, {\"index\": 5, \"start\": 360, \"end\": 478, \"text\": \"Perhaps, like me, you use that drawer located underneath your stove for storing pans, cookie sheets, and muffin tins. \"}, {\"index\": 6, \"start\": 478, \"end\": 583, \"text\": \"Unfortunately, many of us have been doing it wrong, according to the good people who manufacture stoves. \"}, {\"index\": 7, \"start\": 583, \"end\": 722, \"text\": \"While it does serve as a great spot for all of your back-up cooking tools, on some oven models it's actually meant to be a warming drawer. \"}, {\"index\": 8, \"start\": 722, \"end\": 972, \"text\": \"Check the inside of the drawer or owner's manual, and you may find it says something like this: \u201cThe warming drawer is designed to keep hot foods at serving temperature.\\\\n\\\\npassage 3:The bottom drawer on some ovens can be used to broil or warm food. \"}, {\"index\": 9, \"start\": 972, \"end\": 986, \"text\": \"WHAT'S FALSE. \"}, {\"index\": 10, \"start\": 986, \"end\": 1096, \"text\": \"Not all ovens have warming drawers, and the bottom drawer on some ovens is used for storage purposes instead. \"}, {\"index\": 11, \"start\": 1096, \"end\": 1168, \"text\": \"ORIGIN\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the drawer for on bottom of oven stove\\\"}\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7716,
+  "temperature": 0
+}

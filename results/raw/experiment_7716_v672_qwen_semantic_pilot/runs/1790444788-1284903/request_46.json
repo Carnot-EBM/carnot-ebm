@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge whether the original answer is supported, contradicted, or unknown from the complete source. Return exactly one JSON object with decision (support, contradiction, unknown) and quote (an exact source substring). A quote alone does not prove support. Use unknown when unsure.",
+      "role": "system"
+    },
+    {
+      "content": "{\"answer\": \"Passage 3 states that if menstrual bleeding lasts longer than 7 days per period or is so heavy that you have to change your pad or tampon nearly every hour, you need to talk with your doctor.\", \"source_windows\": [{\"index\": 0, \"start\": 0, \"end\": 146, \"text\": \"{\\\"passages\\\":\\\"passage 1:For people with Type 1 diabetes, however, having measurable amounts of ketones in the urine or blood is cause for concern. \"}, {\"index\": 1, \"start\": 146, \"end\": 371, \"text\": \"Ketones in a person with Type 1 diabetes may be a sign that his diabetes is out of control, he is ill or has an infection, or he is under extreme stress.\\\\n\\\\npassage 2:Iron-deficiency anemia is the most common type of anemia. \"}, {\"index\": 2, \"start\": 371, \"end\": 429, \"text\": \"It happens when you do not have enough iron in your body. \"}, {\"index\": 3, \"start\": 429, \"end\": 530, \"text\": \"Iron deficiency is usually due to blood loss but may occasionally be due to poor absorption of iron. \"}, {\"index\": 4, \"start\": 530, \"end\": 758, \"text\": \"Pregnancy and childbirth consume a great deal of iron and thus can result in pregnancy-related anemia.\\\\n\\\\npassage 3:Usually, menstrual bleeding lasts about 4 to 5 days and the amount of blood lost is small (2 to 3 tablespoons). \"}, {\"index\": 5, \"start\": 758, \"end\": 859, \"text\": \"However, women who have menorrhagia usually bleed for more than 7 days and lose twice as much blood. \"}, {\"index\": 6, \"start\": 859, \"end\": 1090, \"text\": \"If you have bleeding that lasts longer than 7 days per period, or is so heavy that you have to change your pad or tampon nearly every hour, you need to talk with your doctor.\\\\n\\\\n\\\",\\\"question\\\":\\\"when to be concerned about blood loss\\\"}\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7716,
+  "temperature": 0
+}
