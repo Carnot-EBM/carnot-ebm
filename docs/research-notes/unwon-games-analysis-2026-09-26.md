@@ -228,3 +228,40 @@ swapping one of the three rules does not sidestep the tradeoff; it just changes 
 cost. A different lever than these three would be needed to both recover the losses and keep cd82's
 speed -- this ablation does not identify what that lever would be. Public games are a development
 proxy, not a hidden-game estimate.
+
+
+## Follow-up: V7/V8 seen-momentum selector pilot (2026-09-26, append-only)
+
+Branch `go-explore-selector` (commit caf85e61f5, off `go-explore-ablation`), not merged. A full
+25-game promotion attempt (not diagnostic-only like the ablation), and the first pilot in this lineage
+to target WHICH cell the archive picks rather than how often or how cheaply.
+
+**Design.** A custom selector callable plugged into `GoExploreReplayArchive`'s existing (unused until
+now) `selector=` hook -- the class itself is untouched. Score = `visits - seen` per eligible cell
+(lower is better): prefer cells that fresh, organic search keeps independently rediscovering (`seen`)
+but the archive has not replayed to much yet (`visits`), instead of the archive's own default
+"least-visited, deepest" rule. V7 = this selector alone (no rate limiting). V8 = this selector plus
+V6's fresh-action spacing gate (the one gate rule the ablation found does the real recovery work).
+
+**Verdict: no promotion for either.** V7 alone is broken: it loses 10 of V0's 33 winning seeds and
+wins none of the 12 unwon games. V8 loses no V0 win, but wins nothing new either, and cd82 (589->693
+median) and m0r0 (710->1418 median) both regress further past the 10% guard than V6 already was.
+
+**The selector is real, not a no-op -- it just isn't a win here.** cd82's first replay lands at
+different prefix depths under V7/V8 (3/7/3) than under V6 (4/9/5), and V8's action trace diverges from
+V6's own trace starting at action 49/51/31. So the new selector genuinely routes the search
+differently. It also actively UNDOES the lineage's one win: sk48 is lost under both V7 and V8 -- the
+smarter-looking selection rule picks a worse cell than the old one did for that specific game.
+
+**A real design flaw, caught and disclosed by the pilot itself.** `GoExploreReplayArchive.observe()`
+is called after replay actions too, not only after organic exploration -- so `seen` is a contaminated
+proxy for "the real search keeps finding this on its own." A cell the archive has replayed to
+repeatedly accumulates `seen` count from ITS OWN visits, defeating the intended signal. This should be
+fixed (distinguish observations made during a replay from observations made during fresh search)
+before testing a `seen`-based selector again.
+
+**Where this leaves the go-explore line after 5 pilots (V5-V8 plus the ablation).** The mechanism can
+win one game it never won before (sk48), or it can avoid breaking anything else, but nothing tried so
+far does both. Every lever tried -- rate, cost, prefix length, and now cell-selection criterion -- has
+moved the tradeoff around without eliminating it. Public games are a development proxy, not a
+hidden-game estimate.

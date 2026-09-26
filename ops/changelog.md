@@ -22,6 +22,14 @@
   was not modified. Repository-wide spec traceability still reports the
   existing 1,168-test backlog; the Exp7708 scoped check passes.
 
+## 2026-09-26 — V7/V8 seen-momentum selector pilot (no promotion, new lever confirmed live)
+
+- codex (gpt-6-sol, worktree `go-explore-selector`) tried a different cell-selection rule (visits -
+  seen) via the archive's existing selector hook instead of rate-limiting replay frequency. V7 broken
+  (loses 10 wins); V8 (+ spacing) loses nothing but also wins nothing and drops sk48. Found the seen
+  counter is contaminated by the archive's own replays. Branch kept at caf85e61f5, not merged; result
+  recorded in docs/research-notes/unwon-games-analysis-2026-09-26.md.
+
 ## 2026-09-26 — V6 gate-rule ablation (diagnostic, no single culprit)
 
 - codex (gpt-6-sol, worktree `go-explore-ablation`) isolated V6's three gate rules one at a time on

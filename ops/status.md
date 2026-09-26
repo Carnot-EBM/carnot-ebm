@@ -32,6 +32,18 @@
 - Task-owned spec traceability passes; the repository-wide reconciliation gate
   still reports its existing backlog of 1,168 untraced tests.
 
+## 2026-09-26 — V7/V8 seen-momentum selector pilot: no promotion, real lever confirmed
+- First pilot to target WHICH cell go-explore picks, not how often. Score = visits - seen via the
+  archive's existing selector hook (archive class itself untouched). V7 (selector alone) is broken:
+  loses 10 V0 wins. V8 (selector + spacing) loses nothing but wins nothing new, regresses cd82/m0r0
+  further, and LOSES sk48 -- the one win the whole lineage had. Branch `go-explore-selector`
+  (caf85e61f5, off `go-explore-ablation`), not merged.
+- Real design flaw found and disclosed by the pilot itself: the archive's `seen` counter gets bumped
+  by its own replays, not just organic search, contaminating the intended signal. Worth fixing before
+  retrying a seen-based selector.
+- After 5 pilots (V5-V8 + the ablation): the mechanism can win sk48, or avoid breaking anything else,
+  but nothing tried yet does both.
+
 ## 2026-09-26 — V6 gate-rule ablation: no single culprit, looks like a real tradeoff
 - Isolated each of V6's three gate rules alone. Spacing alone reproduces BOTH V6's full lf52/dc22
   recovery AND its exact cd82 slowdown -- it is doing almost all the work, for better and worse. The
