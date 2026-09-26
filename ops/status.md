@@ -2,6 +2,13 @@
 
 **Last Updated:** 2026-09-24
 
+## 2026-09-26 — Per-action provenance merged; V1b explorer fix: no promotion
+- Merged REQ-ARC-WMTE-10016 (01e405382e): the live agent records the phase and explorer branch behind
+  every action. Recording only; 10/10 replay pairs identical, 300 decisions match the old code.
+- V1b (sort only clicks, in click slots) fixed V1's bp35/m0r0 losses but gained zero games and broke
+  the action guard on dc22 and sp80. Default stays V0. Branch `explorer-v1b` (1f3b9580dc), not merged.
+- Next: candidate order is exhausted as a lever. The 12 unwon public games need a different mechanism.
+
 ## 2026-09-26 — Explorer variants pilot: no promotion; provenance recording ready
 - Explorer alone reaches a first level-up on 13 of 25 public games (V0). V1 control-targeting: same 13,
   fewer median actions, more levels, but broke the action guard on 3 games. V2 lost tu93. Branch

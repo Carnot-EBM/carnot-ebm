@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-09-26 — Provenance merge and V1b explorer fix (operator request: "1 + 2")
+
+- Merged only the per-action provenance (REQ-ARC-WMTE-10016) from `explorer-pilot`, via a codex
+  provenance-only port (commit 01e405382e). Passive: 10/10 replay pairs identical; 39 tests pass.
+- codex diagnosed V1's three losses (it reordered non-click actions) and built V1b behind AMENDMENT 1.
+  Held-out 22 games: V0/V1/V1b 10/10/10 wins. No promotion; branch `explorer-v1b` kept at 1f3b9580dc.
+
 ## 2026-09-26 — Explorer upgrade pilot (operator request: "1") — no promotion, not merged
 
 - codex (gpt-6-sol, CPU, worktree `explorer-pilot`) added passive per-action provenance and two explorer

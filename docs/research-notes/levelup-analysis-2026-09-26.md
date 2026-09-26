@@ -91,3 +91,30 @@ V1 broke the action guard on bp35, cd82, m0r0. Every winning action was an explo
 plan step. Per-action provenance recording is proven passive (identical traces in 10 paired replays)
 and is the part worth merging if wanted.
 
+
+## Follow-up: V1b corrective pilot (2026-09-26, append-only)
+
+Branch `explorer-v1b` (commit 1f3b9580dc), not merged. Spec: REQ-ARC-WMTE-10017 AMENDMENT 1,
+written before V1b was built.
+
+**Diagnosis of V1's three losses.** The per-action provenance shows V1 reorders every candidate, not
+only clicks. In bp35, cd82 and m0r0 it moved a click or another action ahead of the key action V0 took
+first. V1 has no evidence to reorder non-click actions.
+
+**V1b rule.** Sort only valid clicks, by V1's score, inside the slots clicks already held. Every other
+candidate keeps its place. Promotion was judged only on the 22 games that exclude the three diagnosis
+games.
+
+| View | V0 / V1 / V1b games won | Total levels | Median actions to first level-up |
+|---|---|---|---|
+| All 25 games | 13 / 13 / 13 | 40 / 43 / 43 | 579 / 453 / 455 |
+| 22 held-out games | 10 / 10 / 10 | 35 / 36 / 37 | 538.5 / 402 / 406 |
+
+**Verdict: no promotion.** V1b gains zero games over V0. It fixed bp35 and m0r0, but cd82 stayed slow,
+and on the held-out view dc22 (1649 to 1889) and sp80 (148 to 197) broke the 110% per-game action
+guard. The default stays V0. Evidence: `results/experiment_10017_explorer_variants_am1.json` on that
+branch; 225/225 episodes reduced independently; adversarial verification flagged zero artifacts.
+
+**What this means.** Reordering the explorer's candidates lowers the median actions but does not win
+new games. Neither V1, V2 nor V1b found a single game V0 cannot win. The 12 unwon public games need
+something other than candidate order. Public games are a development proxy, not a hidden-game estimate.
