@@ -20646,3 +20646,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Seal fresh source families and isolate evaluation labels (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7673_v669_fresh_relation_cohort.json
 - 2026-09-26: Test quote-resolved Qwen relations separately from pointer validity (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7676_v669_qwen_quote_relations.json
 - 2026-09-26: Cold-audit fresh decisions and acquired constraints without requiring a positive result (⚠️ Blocked) — honest_verdict=complete_blocked_required_static_online_evidence; results/experiment_7679_v669_independent_evidence_audit.json
+- 2026-09-26: Wire bounded goal-hypothesis probes into the scored ARC policy (⚠️ Research Finding) — honest_verdict=complete_circular_positive_probe_fixture; results/experiment_7680_v669_arc_probe_protocol.json
