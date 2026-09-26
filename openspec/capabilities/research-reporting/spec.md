@@ -1,5 +1,42 @@
 # Research Reporting Capability Specification
 
+## V669 independent evidence audit — 2026-09-26
+
+### REQ-REPORT-7679: Reduce available evidence and expose absent producers
+
+Exp7679 SHALL inventory Exp7672–Exp7678 terminal producers, raw stores, and
+actual pre-gate receipts by byte hash. It SHALL cold-reduce available fixture,
+cohort, and Qwen rows without importing producer aggregate helpers, retaining
+one independent source family per arm and unknown, rejected, and unchanged
+outcomes in denominators. Missing producers or declared fields SHALL be exact
+blocked checks, never zero science or unfinished owned work. An invalid source
+receipt SHALL be exposed separately. Fixture oracle truth SHALL be circular;
+diagnostic quote binding SHALL not imply relation content or learned benefit.
+Static and online quality, probability, utility, retention, and efficiency
+SHALL remain unconfirmed without their raw evidence. Frozen scope, private
+corruptions, fresh-process reduction, scoped validation, adversarial reading,
+and strict row lint SHALL govern an atomic terminal artifact. Current work is
+CPU aggregation with no model invocation.
+
+#### SCENARIO-REPORT-7679-CUSTODY: Missing and malformed sources remain visible
+
+Given absent static or online producers, or a source with a failed receipt,
+the audit SHALL record exact path, field, expected and observed values while
+still reducing valid available cells. It SHALL distinguish availability from
+scientific disposition and retain the absent source in the roster.
+
+#### SCENARIO-REPORT-7679-ROWS: Independent units govern evidence
+
+Given raw paired fixture, cohort, and quote rows, the reducer SHALL reject a
+missing arm, duplicate family, swapped role, early admission label, or missing
+gate field. It SHALL recompute counts from rows and preserve censored unknowns.
+
+#### SCENARIO-REPORT-7679-TERMINAL: Exact candidate readers govern publication
+
+Given a frozen validation scope, the audit SHALL retain actual command exits
+and log hashes. A failed required check SHALL disqualify and zero readiness;
+missing external science SHALL yield one complete blocked verdict.
+
 ## V669 Qwen quote relations — 2026-09-26
 
 ### REQ-REPORT-7676: Compare exact quotes with numeric offsets on paired sources

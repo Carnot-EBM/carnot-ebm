@@ -19890,3 +19890,17 @@ persist, and reload.
 
 Implementation status: specified 2026-09-23. The conductor owns later status,
 changelog, and traceability reconciliation.
+# V669 independent continuous evidence boundary — 2026-09-26
+
+### REQ-CONTINUOUS-7679: Require raw online operands before confirming benefit
+
+An independent audit SHALL require per-family online probabilities, labels,
+actions, costs, release order, admission use, restart state, and retention rows
+before it confirms continuous quality or efficiency. Missing Exp7677–7678
+producers SHALL leave these gates blocked, while preserving exposed cohort and
+Qwen diagnostics. A fresh CPU head SHALL not receive inherited model credit.
+
+#### SCENARIO-CONTINUOUS-7679-ABSENT: No invented online probabilities
+
+Given no online raw rows, the audit reports null operands for probability,
+utility, retention, and efficiency and a blocked availability disposition.
