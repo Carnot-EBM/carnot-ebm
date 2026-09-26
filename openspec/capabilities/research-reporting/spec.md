@@ -82409,3 +82409,25 @@ rows with explicit exclusions and no invented science metrics.
 
 Cold reduction binds source hashes and row outcomes. The final artifact has
 separate validation receipts, exact blocked operands, and no positive claim.
+
+## REQ-REPORT-7714: Publish a bounded source-alignment protocol
+
+Exp7714 SHALL freeze a label-free feature protocol and 96 independent fixture
+families, including 32 held aside, before natural labels can be opened. It
+SHALL retain original source and answer bytes, per-family exclusions and
+normalization rows. Exact fixture truth is an oracle and cannot establish a
+natural predictive advantage. Readiness SHALL require byte custody, finite
+normalization, negative controls, and passing scoped validation and terminal
+readers. The result SHALL preserve V671 verdicts and report absent upstream
+operands exactly as blocked rather than inventing evidence.
+
+### SCENARIO-REPORT-7714-CUSTODY
+
+Given the frozen fixture protocol, a fresh process SHALL rehash and reduce
+the raw rows. Changed bytes or a missing row SHALL fail readiness.
+
+### SCENARIO-REPORT-7714-TERMINAL
+
+Given passing required checks, the result SHALL be circular_positive with
+an explicit oracle flag and no measured natural benefit. A failed required
+check SHALL disqualify and zero readiness.

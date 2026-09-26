@@ -12,6 +12,31 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7714: Keep complete bytes in finite latent alignment
+
+The protocol SHALL split original source and answer into complete sentence
+spans, make one- and three-sentence source windows, and retain byte-exact
+reconstruction. It SHALL compute fixed signed 64-bin token and bigram hashes
+plus overlap, negation and numeric mismatch features from label-free inputs.
+It SHALL abstain explicitly above 128 source windows or 16 answer units.
+For each visible window and a null-evidence state, a learned two-label energy
+SHALL aggregate all answer units, normalize exactly over label and latent
+state, and marginalize the latent state. Equal grouped priors SHALL make a
+duplicated window invariant. Null evidence SHALL not imply contradiction.
+Pooled logistic, pooled MLP and source-erased controls SHALL use the same
+input representation; low learned energy is not an exact certificate.
+
+#### SCENARIO-VERIFY-7714-BYTES
+
+Non-ASCII bytes, negation, qualifiers and cross-sentence context survive
+segmentation and reconstruction. Over-budget inputs produce abstention rows.
+
+#### SCENARIO-VERIFY-7714-NORMALIZE
+
+For constant and extreme finite energies, the joint distribution sums to
+one and its label marginals match explicit enumeration. Shuffling source
+changes addressable views while duplicating a window leaves marginals fixed.
+
 ### REQ-VERIFY-7702: Reduce generated record addresses independently
 
 The reader SHALL accept one bounded proposal with an exact source quote,
