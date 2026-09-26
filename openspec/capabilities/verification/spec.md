@@ -12,6 +12,20 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7673: Bound relation controls on fresh families
+
+For every selected Exp7673 family and source arm, the verifier SHALL emit
+source-bound relation evidence, explicit unknown or zero-coverage counts, and
+exact source and answer hashes. A changed role or answer identity, a label
+column, or a donor from another role SHALL fail closed. A partial source SHALL
+not certify whole-answer truth.
+
+#### SCENARIO-VERIFY-7673-CONTROLS: Views share one denominator
+
+Given original, erased, and deranged views of one answer, all three SHALL
+retain the same family identity. Erasure has no source evidence; derangement
+uses a distinct family in the same role; neither view enlarges sample size.
+
 ### REQ-VERIFY-7672: Bind typed source relations to original answer bytes
 
 The source atom index SHALL expose relation records for stack function/path/line,

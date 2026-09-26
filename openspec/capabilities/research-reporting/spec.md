@@ -1,5 +1,38 @@
 # Research Reporting Capability Specification
 
+## V669 fresh relation cohort — 2026-09-26
+
+### REQ-REPORT-7673: Freeze a fresh source-family cohort before labels
+
+Exp7673 SHALL authenticate the pinned LettuceDetect tool-output shards and audit
+prior source, answer, and family exposure before selecting one answer view per
+family. It SHALL hash-sort eligible families with a registered salt and freeze
+fit128, retention32, tune40, policy40, online-update80, online-admission80,
+and official-test evaluation80. A family spanning official splits or matching
+uncertain exposure SHALL not receive fresh credit. Selection and feature
+extraction SHALL not read evaluator labels. Original, erased, and within-role
+deranged source views SHALL retain unknown rows and one family denominator.
+The protocol SHALL bind roles, hashes, feature rules, label semantics, and
+claim limits before evaluator labels open. Readiness is a null infrastructure
+result; injected-error labels cannot prove natural-response benefit.
+
+#### SCENARIO-REPORT-7673-CUSTODY: Exposure precedes roles
+
+Given authenticated shards and prior manifests, public identities and
+near-duplicate families SHALL be grouped before salted role assignment. Missing
+or unverifiable prior exposure SHALL block fresh credit with exact operands.
+
+#### SCENARIO-REPORT-7673-ISOLATION: Evaluator data stays separate
+
+Given a selected family, a predictor view SHALL reject label-bearing columns,
+changed source bytes, duplicate family roles, and output used as its own input.
+
+#### SCENARIO-REPORT-7673-TERMINAL: Cold readers govern publication
+
+Given frozen raw stores, cold reduction, affected validation, adversarial
+verification, and strict row lint SHALL bind the exact candidate before atomic
+publication. Failed required checks SHALL disqualify and zero readiness.
+
 ## V669 bound source relations — 2026-09-26
 
 ### REQ-REPORT-7672: Report byte-bound relations without answer leakage
