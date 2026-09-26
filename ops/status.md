@@ -2,6 +2,11 @@
 
 **Last Updated:** 2026-09-24
 
+## 2026-09-26 — Goal probe-loop pilot: null, not merged
+- REQ-ARC-WMTE-10015 (branch `probe-loop`, 5f97577a1f): hypothesis-probe goals add no level-up (1 vs 1);
+  with expert dynamics they reach 1/10 against 5/10 for the true goal. Win-condition induction before the
+  first win remains the open bottleneck; salience hypotheses do not solve it.
+
 ## 2026-09-25 — Planner search pruning measured: null result, not merged
 - REQ-ARC-WMTE-10014 (branch `deep-search`, cdc1d9d905): no-op pruning, caching, and duplicate-move
   collapse add no expert win and slow the planner. Kept on the branch only. Blind search is out of

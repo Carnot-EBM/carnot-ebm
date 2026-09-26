@@ -83,3 +83,20 @@ The cheap checks here set a low prior for a predicate-only fix: 5/38 missing, 11
 - Can disagreement probes find a first win within an action-efficient budget, or will they only reject hypotheses? The existing active reward-machine evidence is fixture reachability, not a solve (`results/experiment_6387_arc_active_reward_machine_discriminator.json:1-125`).
 - Can an engine reconstruct a terminal configuration from the last winning transition with enough independent dynamics accuracy to transfer? The post-level-up opening cannot serve as a positive, as the 0/6 transfer check shows (`results/raw/goal_induction_design_2026_09_25/single_positive_transfer.json:4-237`).
 - How much of the remaining failure is dynamics or search? The positive-control study found several held-out windows where even correct grid-only dynamics cannot pass the unmasked exact gate, and the 10013 expert planner still misses short winning routes under 20,000 calls (`docs/research-notes/b2-positive-control-2026-09-23.md:33-72`, `docs/research-notes/goal-gradient-design-2026-09-25.md:7-11`).
+
+## Pilot result (2026-09-26, append-only)
+
+The section 6 pilot ran as pre-registered (REQ-ARC-WMTE-10015, branch `probe-loop`, commit 5f97577a1f;
+flag `CARNOT_ARC_GOAL_PROBE_LOOP` default off; flags-off wrapper identical to main on 300 fixtures).
+
+| Arm | Real first level-ups |
+|---|---|
+| Current (induced engine + induced goal) | 1 (su15 think-ON, 39 actions) |
+| Probe (induced engine + hypothesis bank) | 1 (su15 think-ON) |
+| Dynamics control (expert engine, probe goals) | 1/10 |
+| Search ceiling (expert engine + expert goal) | 5/10 |
+
+Probe gained no game and lost none, so the promotion rule fails. It spent many more real actions and
+false positives. Even with correct dynamics, the probe loop found only 1 of the 5 wins the correct goal
+reaches. Visible-salience hypotheses do not recover these games' win conditions. Not merged.
+

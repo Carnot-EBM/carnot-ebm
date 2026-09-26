@@ -1,5 +1,10 @@
 # Carnot — Changelog
 
+## 2026-09-26 — Goal probe-loop pilot (operator request: "1") — null, not merged
+
+- codex (gpt-6-sol, CPU, worktree `probe-loop`) built and ran the pre-registered REQ-ARC-WMTE-10015 pilot.
+  Promotion rule failed. Branch preserved at 5f97577a1f; result appended to the goal-induction note.
+
 ## 2026-09-25 — Planner search pruning (operator request: "1", deeper search) — null, not merged
 
 - codex (gpt-6-sol, CPU, worktree `deep-search`) built and measured REQ-ARC-WMTE-10014. No live expert
