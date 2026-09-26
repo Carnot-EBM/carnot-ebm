@@ -18683,3 +18683,5 @@ code |
 | 2026-09-26 01:34 UTC | Bind the V669 contract and separate prior nulls fr | OK | 93 passed, 1 warning in 11.39s |
 | 2026-09-26 01:49 UTC | Check bound record relations without certifying un | OK | 92 passed, 1 warning in 7.98s |
 | 2026-09-26 02:07 UTC | Seal fresh source families and isolate evaluation  | OK | 87 passed, 1 warning in 7.64s |
+| 2026-09-26 02:10 UTC | Train a fresh relation energy and freeze typed dec | GATE_BLOCK | gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp7673-fresh-relation-cohort.relation_features_ready_score (actual=0 == expected=1) |
+| 2026-09-26 02:12 UTC | Measure fresh relation decisions against simple ma | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7674-relation-energy, exp7674-relation-energy, exp7674-relation-energy) |
