@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.09.670",
-  "generated_at": "2026-09-26T06:51:36Z",
+  "generated_at": "2026-09-26T07:21:28Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
@@ -10,14 +10,14 @@
   "gpu_idle_on_compute_bound_tasks": null,
   "reconstructed_from_disk_mtime": false,
   "timing_integrity_mismatch": true,
-  "summary": "Authoritative timing data for milestone 2026.09.670 records 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments as a result of a timing integrity mismatch where both git-log extraction and disk-mtime reconstruction found 0 commits despite changelog references. Because no compute-bound experiments were logged, accelerator efficiency on compute workloads is unmeasured with gpu_idle_on_compute_bound_tasks set to null, and slowest experiments cannot be identified. All milestone runtime durations and operational performance rankings are therefore precluded by this timing-assembly defect.",
+  "summary": "Authoritative timing data for milestone 2026.09.670 records 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments as a result of a timing integrity mismatch where both git-log extraction and disk-mtime reconstruction found 0 commits despite changelog references. Because no compute-bound experiments were logged (compute_bound_experiments_count=0), accelerator efficiency on compute workloads is unmeasured with gpu_idle_on_compute_bound_tasks set to null, and slowest experiments cannot be identified. All milestone runtime durations and operational performance rankings are therefore precluded by this timing-assembly defect.",
   "bottlenecks_identified": [
     "Timing-assembly integrity mismatch: git-log extraction and disk-mtime reconstruction both yielded 0 experiment commits for milestone 2026.09.670 despite existing references in ops/changelog.md, preventing execution throughput profiling and experiment duration analysis.",
     "Absence of intra-task execution receipts: reliance on post-hoc git commit history and filesystem mtime leaves the timing pipeline vulnerable to zero-record assembly failures when commit metadata or workspace tracking diverges.",
     "Lack of active compute-bound task telemetry: with 0 compute-bound experiments recorded and gpu_idle_on_compute_bound_tasks set to null, the idle GPU monitor state (0% utilization on both RTX 3090 GPUs) cannot be analyzed for execution efficiency."
   ],
   "improvements_suggested": [
-    "Emit synchronous, durable start and completion task lifecycle timestamps directly to task receipt files during conductor execution to eliminate dependence on git-log or mtime reconstruction.",
+    "Emit synchronous, durable start and completion task lifecycle timestamps directly to task receipt files during conductor execution to eliminate dependence on git-log or disk-mtime reconstruction.",
     "Add an automated pre-closeout timing-assembly verification check that alerts if ops/changelog.md references a milestone but the assembled experiment count is zero.",
     "Persist runtime hardware execution profiles, including model count and accelerator targeting, within experiment metadata to evaluate DualGPURunner eligibility definitively.",
     "Create a dedicated regression test reproducing the changelog-present / commit-zero timing assembly mismatch to ensure robust milestone reporting."
