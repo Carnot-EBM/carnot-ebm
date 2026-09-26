@@ -18733,3 +18733,4 @@ code |
 | 2026-09-26 10:23 UTC | Measure explicit record and claim addressing with  | OK | 97 passed, 1 warning in 7.24s |
 | 2026-09-26 10:48 UTC | Train a normalized decision energy on typed eviden | OK | 88 passed, 1 warning in 16.17s |
 | 2026-09-26 11:08 UTC | Measure fresh probability and typed-decision value | OK | 89 passed, 1 warning in 8.64s |
+| 2026-09-26 12:21 UTC | Qualify causal constraint acquisition with a hard  | OK | 99 passed, 1 warning in 81.98s (0:01:21) |
