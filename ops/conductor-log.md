@@ -18754,3 +18754,4 @@ code |
 | 2026-09-26 18:52 UTC | Measure causal constraint additions on a delayed n | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7717-latent-evidence-fit, exp7717-latent-evidence-fit, exp7717-latent-evidence-fit) |
 | 2026-09-26 19:08 UTC | Cold-audit source dependence and retained learning | OK | 102 passed, 1 warning in 7.75s |
 | 2026-09-26 19:50 UTC | Qualify existing adapter-withheld live evidence an | OK | 146 passed, 1 warning in 18.30s |
+| 2026-09-26 20:09 UTC | Requalify the actual typed native service with com | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 90 passed, 1 warning in 15.46s |
