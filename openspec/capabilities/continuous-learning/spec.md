@@ -1,5 +1,28 @@
 # Continuous Learning Capability Specification
 
+## REQ-CL-7719-CAUSAL-ADMISSION: Frozen batches qualify advisory acquisition
+
+A proposal SHALL use released development feedback only. Before each five-case
+admission batch, the candidate and all base and candidate forecasts SHALL be
+frozen without admission labels. One batch SHALL test at most one candidate.
+Only a strict paired loss improvement may commit a candidate. A rejected
+candidate SHALL spend credits and leave later forecasts unchanged. Exact
+verifier status SHALL remain authoritative. Six proposals, 50 steps each,
+16 pending handles and 36 templates are hard limits.
+
+### SCENARIO-CL-7719-REACHABLE
+
+A beneficial fixture candidate commits after legal release and changes a later
+forecast. A harmful candidate rolls back, and zero headroom cannot pass.
+Missing, duplicate and out-of-order feedback, overflow and hard-exit replay
+preserve the same decision after restart.
+
+### SCENARIO-CL-7719-STATIC
+
+The static control SHALL fit coefficients for all eight primitives and 28
+conjunctions on development fixtures only. Its nonzero fitted forecast SHALL
+differ from an empty bank. Restart SHALL reproduce all arm forecasts exactly.
+
 ## REQ-CL-7705-BOUNDED-BANK: Released counterexamples can propose advisory checks
 
 A persistent bank SHALL use the frozen Exp7703 eight primitives and 28 pairs,

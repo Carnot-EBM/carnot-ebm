@@ -82497,3 +82497,27 @@ outputs remain in the denominator and never count as supported evidence.
 Given a missing upstream input, unavailable owned GPU, or stale qualified
 protocol, the result is complete_blocked_* with exact upstream, path, field,
 operator, expected and observed operands and no invented model invocation.
+
+## REQ-REPORT-7719: Publish causal acquisition qualification
+
+Exp7719 SHALL authenticate V671 historical bytes without reopening its zero
+readiness or claiming empirical benefit. It SHALL freeze a 96-family oracle
+fixture with 32 development, 32 untouched admission and 32 retention families,
+then measure positive and harmful acquisitions, complete static closure,
+budget limits and restart parity. A valid qualification is circular_positive;
+administrative readiness remains null and empirical benefit unmeasured.
+Missing upstream bytes are terminal blocked with exact operands. Failed
+required validation disqualifies and zeros readiness. Raw rows, cold reduction,
+scoped commands and terminal readers SHALL precede atomic publication.
+
+### SCENARIO-REPORT-7719-CAUSAL
+
+Frozen counterfactual probabilities precede admission labels. A legal commit
+changes a later forecast; a rejected proposal does not. All 36 static
+coefficients and independent denominators are retained for reduction.
+
+### SCENARIO-REPORT-7719-TERMINAL
+
+A fresh process recomputes raw rows and bank state hashes. Adversarial and
+strict row readers inspect the exact terminal candidate. Invalid required
+checks cannot open the acquisition_protocol_ready_score.
