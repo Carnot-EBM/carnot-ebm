@@ -82355,3 +82355,37 @@ changes the exact required-evidence check to observed absence, never partial.
 
 Cold reduction reopens named bytes and rejects a changed producer, gate,
 contract or raw-row reduction. Failed validation disqualifies readiness.
+
+## REQ-REPORT-V672-PLAN: Plan source alignment and causal acquisition
+
+The staged milestone 2026.09.672 SHALL contain thirteen ordered tasks,
+Exp7713 through Exp7725, across four phases. Its design table, machine
+contract and YAML SHALL agree on IDs, titles, phases, deliverables, models,
+substrates and gates. Preserve the V671 design byte for byte. Leave the
+active roadmap and conductor unchanged.
+
+The plan SHALL distinguish the retired frozen certificate head from the new
+latent source-alignment hypothesis on natural human annotations. It SHALL
+qualify acquisition commits and rejection before empirical delayed learning,
+preserve complete-static controls and measure retention. It SHALL include
+bounded mandated-Qwen evaluation, calibrated typed decisions, historical
+adapter-withheld ARC evidence recovery and full native service cost. A native
+typed-record benchmark SHALL NOT claim to accelerate the new alignment model.
+
+Every task SHALL require numbered flushed-progress and bounded-write steps,
+per-unit comparison rows, closed verdict_class, exact gate_check_summary,
+principle-annotated fields and measured required validation. All failed-scope
+continuations SHALL carry complete prior-failure entries and retirement signals.
+Every structured gate SHALL reference a current earlier producer that declares
+the identical required artifact field. Missing external science is blocked;
+valid null science is terminal and eligible for independent reduction.
+
+### SCENARIO-REPORT-V672-PLAN
+
+Independent parsing matches thirteen ordered tasks in all representations.
+Private deletion, reorder, stale-milestone, gate-field and model-removal
+mutations fail. Existing schema, gate, failure-lineage, exclusion, prompt and
+ARC readers pass. Protected files retain their hashes. Runtime experiments
+remain proposed; planning checks do not claim their future E2Es passed.
+
+Implementation status: staged planning documents; validation pending.

@@ -47261,3 +47261,86 @@ that routing works. Before activation, inspect the resolved dispatcher route
 and require a successful current backend receipt. Do not edit conductor code,
 credentials or global routing settings during this planning task. Preserve
 all fourteen missing-artifact dispositions and use new experiment IDs.
+
+## 2026-09-26 — V672 research review: learn source alignment and qualify acquisition
+
+This entry precedes the V672 design. All 244 proposal documents and the full
+completed YAML were indexed, with direct reads of v7/v8 and the recent chain.
+The active V671 artifacts and conductor log are newer than the completed
+archive, which ends at V670. Queue completion is not a scientific verdict.
+
+### Primary research and decisions
+
+| Topic | Source and review depth | Consequence for Carnot |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), May 2026 revision; abstracts | Test a normalized conditional energy with a latent evidence-window index. Exact normalization is feasible for a small finite state space. Neither paper establishes truth from low learned energy. |
+| Neural constraint satisfaction | [AS2](https://arxiv.org/abs/2603.18436), March 2026, abstract | Supplied constraints and learned satisfaction are separate from faithful language extraction. Keep learned source relevance outside exact certificate authority. No new symbolic solver is justified by the current bottleneck. |
+| Ising and hardware | [FPGA/Ising co-design](https://arxiv.org/abs/2602.15985), February 2026; [parallel p-bit inertia](https://arxiv.org/abs/2604.17109), April 2026; abstracts | Orchestration can dominate solver cost. Retain the existing sampler portfolio and measure complete native service cost before a hardware proposal. External speedups do not transfer to this host. |
+| Hallucination and extraction | [HallDetect](https://arxiv.org/html/2608.05823v1), August 2026; method and limitations inspected; [Enoki](https://arxiv.org/abs/2609.00581), September 2026, abstract | Compare sentence-level evidence alignment with document pooling while holding features, labels and budgets fixed. Preserve all original answer clauses. HallDetect explicitly reports a confounded decomposition/chunking ablation, missing close discriminative baselines and unmeasured efficiency. This motivates a controlled local test, not a reproduction claim. |
+| Constrained generation | [Structural versus semantic decoding gap](https://arxiv.org/abs/2609.23742), September 2026, abstract | A bounded Qwen diagnostic must score semantic decisions separately from schema validity. Exact input spans avoid paraphrase drift, but do not make Qwen an oracle. |
+| Energy-guided decoding | [ETS](https://arxiv.org/abs/2601.21484), January 2026; [ERM](https://arxiv.org/abs/2607.10128), July 2026, abstracts | Keep candidate selection and supplied-constraint results distinct from source verification. Defer a new decoder and external generated-text reranking. |
+| KAN and continual learning | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026; [KAN forgetting](https://arxiv.org/abs/2511.12828), November 2025, abstracts | Local support does not guarantee retention. Use fixed retention examples and restart checks. Do not reopen unchanged importance anchoring. |
+| Delayed online learning | [Capacity-constrained delayed OCO](https://arxiv.org/abs/2606.11711), June 2026, abstract | Bound pending feedback and candidate proposals. Check forecast-before-label chronology. Discrete acquisition has no inherited convex-regret theorem. |
+| Verifier robustness | [The Verification Horizon](https://arxiv.org/abs/2606.26300), June 2026, abstract | Keep evaluator labels independent of the learner and expose proxy limitations. Natural human annotations and synthetic injected-error labels cannot be pooled as the same target. |
+
+The papers were already present in the large index. The new planning inference
+is to learn **source-to-answer alignment**, not fit another head on the same
+sparse certificate counts. A small multi-instance energy can use original
+sentence/window pairs and a missing-evidence state. It must compete with
+same-input logistic and pooled-MLP controls and a source-erasure intervention.
+This is a proposed Carnot adaptation; none of the cited papers demonstrates
+this exact weakly supervised model. Sentence labels must not be invented from
+response-level annotations. A learned alignment is an explanation hypothesis,
+not a proof that an individual sentence is true.
+
+### Secondary-source receipts
+
+- **OpenReview:** searched 2026 EBM submissions. The EBT PDF URL reached a
+  [browser challenge](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf);
+  the [reasoning submission PDF](https://openreview.net/pdf?id=bYkfHTcR1v)
+  returned a tool error. No new acceptance claim or full-paper review follows.
+- **Extropic:** the [writing index](https://extropic.ai/writing) exposed only
+  navigation. Read [Z1T](https://extropic.ai/writing/z1t), especially its
+  cost boundary. Its main projection excludes dense vocabulary readout and
+  inter-device movement; the page separately reports a much larger estimate
+  with the FPGA readout included. This strengthens the need to charge the
+  complete service. It establishes neither local TSU access nor measured
+  Carnot acceleration.
+- **Semantic Scholar:** searched both seed titles and attempted the
+  [EBT citing-paper endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citing-paper endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both returned internal errors; title searches found no usable citation
+  list. Citation coverage remains incomplete, not evidence of no later work.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification)
+  and [verifier feed](https://huggingface.co/papers?q=verifier). Used the
+  Verification Horizon lead through its primary arXiv page above.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending pages.
+  Both views were cached two weeks earlier. No current new EBM/constraint/KAN
+  repository was verified as a dependency.
+- **Logical Intelligence:** read the [site](https://logicalintelligence.com/)
+  and [Kona page](https://logicalintelligence.com/kona). The energy-based
+  constraint architecture is vendor-described. The retrieved material is not
+  a reproducible local implementation or independent certainty benchmark.
+
+### Local evidence that changes the next experiment
+
+V671's Exp7703 has zero checked evidence in 368/400 families and zero bound
+tuples. Exp7704 escalates all 40 evaluation families and has zero paired cost
+gain. Its unchanged certificate-count head is explicitly retired. Natural
+RAGTruth source/answer pairs offer a different representation and label target;
+fresh groups still require a full exposure check before use.
+
+Exp7705 spends proposal credits but rolls candidates back on the inspected
+fixed-period fixture stream. Its published readiness field is unconditionally
+zero in the artifact builder. Correct qualification must test both commit and
+rejection, then derive readiness from those checks, without requiring empirical
+benefit. The existing static arm also needs a real full-closure comparator;
+an empty bank cannot stand in for all available constraints.
+
+Exp7709 recorded 256 real actions and four Qwen calls on wa30/lf52, but failed
+changed-module coverage at 22 percent. These are historical raw observations,
+not qualified hidden-game success. Exp7708's test was quarantined for broken
+setup. Exp7710 failed coverage, formatting and workspace Rust checks; a later
+test repair exists, but does not retroactively change its terminal verdict.
+Recover only the exact missing evidence, preserving original result bytes.

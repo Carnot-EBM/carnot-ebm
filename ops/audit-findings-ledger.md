@@ -244,3 +244,4 @@ of truth, not this line.)
 | 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::backfill_stamps | SILENT_NON_FIRING | OPEN | |
 | 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::main | SILENT_NON_FIRING | OPEN | |
 | 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::_positive_control_failed_or_unchecked | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | experiment_claim_audit | experiment_7708_v671_arc_generalization_runner.json | CLAIM_OVERSTATED | OPEN | |

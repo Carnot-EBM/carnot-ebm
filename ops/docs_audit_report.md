@@ -4,84 +4,79 @@
 # docs_audit_report — 2026-09-26
 
 ## TL;DR (stranger's 30-second take)
-I am closing the tab within 15 seconds. The page suffers from an acute identity crisis: half of it pitches an open-source verification library, while the other half reads like an unhinged post-mortem of an autonomous AI research agent caught cheating, faking benchmarks, sleep-padding code, and retracting papers.
+I would close the tab within 15 seconds. What starts as a promising LLM verification tool instantly devolves into an unhinged, defensive lab diary about autonomous agent cheating, contradictory licenses, conflicting benchmark metrics, and uncompilable Rust physics simulations.
 
 ## TOP 3 PROBLEMS
-1. **Self-incriminating lab drama destroys credibility** (`#writing`, `.stats-bar`, `#preprint`): The page openly advertises that its prior metrics were faked or flawed ("Caught Cheating: 95 Microseconds", "Regex in an NTK Costume", "Two Retractions and a Rescue", "Repinned from v2 0.9857"). A stranger will assume the current numbers are equally fabricated.
-2. **Conflicting legal and metric claims** (Hero vs Footer, `#features` vs `#results`): The hero advertises `MIT-0`, while the footer declares `Apache 2.0`; HumanEval pass-rate gains are simultaneously claimed as `+3.0 points`, `+15pp`, and `+18pp`.
-3. **Internal agent jargon and broken DOM structure** (`#features`, `#results`, `#preprint`): Card 7 is orphaned outside the bento grid due to mismatched closing tags; the copy is polluted with insider jargon (`PREM`, `CCTU`, `CRANE`, `SVAMP`, `VerdictRecord`, `paper-v6`, `non-operator environment`, `operator-initiated upload`).
+1. **Contradictory project identity and licensing** — Hero badge and meta tag declare `MIT-0`, while the footer insists on `Apache 2.0 License` (Hero vs. Footer).
+2. **Defensive internal bureaucracy masquerading as copy** — Hero stats, preprint copy, and blog teasers obsess over "completed milestones", "repinned AUROCs after adversarial audits", and "pending operator upload" instead of communicating user value (`.stats-bar`, `#preprint`, `#writing`).
+3. **Broken quickstart and conflicting benchmarks** — The Rust snippet fails compilation on an undeclared `&activations` token, while HumanEval pass-rate improvements contradict themselves across cards as +3pp, +15pp, and +18pp (`#quickstart`, `#features`, `#results`).
 
 ---
 
 ## DETAILED FINDINGS
 
 ### Bloat
-- **Hero stats bar (`.stats-bar`)** — 59-word narrative card + 4 stats — The `.r-card` ("Recent progress") injected into the hero metrics breaks the layout and dumps 59 words of audit drama into the initial viewport. Suggested cap: 0 words (remove the card entirely from stats; keep stats strictly numerical).
-- **Hero vanity metrics (`.stats-bar`)** — 4 stats — "6,583 Experiment runs", "382 Completed milestones", and "30,658 Automated tests" are internal CI tracking stats that mean nothing to an external developer. Suggested cap: replace with user-relevant metrics (e.g. latency, supported models, verified benchmarks).
-- **Results section (`#results`)** — 12 result cards — Twelve micro-benchmark cards with arbitrary, disconnected CSS meter bars (e.g. `+3.0 points` displays a `14.6%` bar width; `0.0pp accuracy delta` displays a `95.6%` bar width). A stranger will skim none of them. Suggested cap: 4 consolidated, high-signal benchmark cards.
-- **Blog section (`#writing`)** — 7 post cards (~350 words total) — A wall of seven lengthy post summaries documenting internal debugging failure modes. Suggested cap: 3 technical articles focused on architecture and usage.
-- **Navigation header (`nav-links`)** — 14 links — Nav bar is congested with 12 text links plus 2 buttons. Four of the first links bounce the user off the website into raw GitHub markdown files (`.../blob/main/docs/...`). Suggested cap: 5 core links (Docs, Architecture, Benchmarks, Quickstart, GitHub).
+- **Hero Stats Bar / Recent Progress card (`.stats-bar > .r-card`)** — 63 words — Suggested cap: 0 words (delete card entirely; it does not belong in a top-level stats bar).
+- **Evidence Grid (`#results`)** — 12 cards with no thematic clustering or hierarchy — Suggested cap: 4 flagship benchmarks.
+- **Capabilities Grid (`#features`)** — 7 cards, including non-user capabilities ("Research operations" and "Test-Time Compute") — Suggested cap: 4 user-facing verification capabilities.
+- **Preprint section paragraph (`#preprint .section-desc`)** — 71 words of legalistic defensive commentary about clean CI environments and operator upload queues — Suggested cap: 25 words summarizing the core theoretical thesis.
+- **Blog teasers (`#writing`)** — 7 cards detailing internal lab drama and agent mishaps — Suggested cap: 3 technical articles.
 
 ### Internal jargon
-- **Hero stats & progress card (`.stats-bar`)** — `FoVer math step-errors (5-seed)`, `dual-condition`, `architecture-only 0.8947`, `Repinned from v2 0.9857 after pre-submission adversarial audit` — A stranger has no idea what "FoVer" is, why you have two conditions, or why your internal audit repinned numbers.
-- **Capabilities (`#features`)** — `CCTU constrained tool-use micro-benchmark` — Opaque benchmark acronym with zero explanation.
-- **Capabilities (`#features`)** — `Research operations` card — Mentions "autonomous research loop", "planner generates experiment proposals", "inner agent", "adversarial-verify pass". This describes the developer's internal automation scaffolding, not a product capability.
-- **Capabilities (`#features`)** — `APIs & portable memory` card — Mentions `VerdictRecord` and `SessionMemory packs`. Raw internal code symbols dropped without API context.
-- **Capabilities (`#features`)** — `Test-Time Compute (TTC) & PREM` card — Buzzword soup ("Process-Reward Energy Model (PREM) variance", "intrinsic motivation for continuous self-learning") without explaining what it actually does for the user.
-- **Results (`#results`)** — `EstimationVerifier SVAMP AUC`, `CRANE vs rigid grammar`, `VeriCoT equation-style CoT fix`, `PRM-BiasBench-style attacks`, `HalluGuard v3` — Seven unanchored project codenames/acronyms presented with zero definitions.
-- **Preprint (`#preprint`)** — `paper-v6`, `clean continuous-integration checkout in a non-operator environment`, `pending operator-initiated upload` — Internal release management and agent-vs-human workflow jargon.
+- **Hero stats bar (`.stats-bar`)** — `382 Completed milestones`, `6,597 Experiment runs` — A stranger has no idea whether a "milestone" is a git commit, a sprint, or an autonomous agent iteration; tracking runs is internal vanity tracking.
+- **Hero progress card (`.stats-bar > .r-card`)** — `FoVer`, `5-seed dual-condition`, `architecture-only 0.8947`, `Repinned from v2 0.9857` — Reads like an internal audit ticket resolving a benchmark dispute.
+- **Capabilities (`#features`)** — `PREM variance`, `dynamic budget controller`, `VerdictRecord`, `SessionMemory packs` — Cryptic acronyms and internal class names presented without definition.
+- **Capabilities: Research operations (`#features`)** — `planner generates experiment proposals`, `inner agent runs each experiment`, `adversarial-verify pass catches fabricated or methodology-incomplete artifacts` — Explains the repository's internal AI agent development loop, not anything a user can verify.
+- **Evidence cards (`#results`)** — `CRANE vs rigid grammar`, `EstimationVerifier SVAMP AUC`, `HalluGuard v3`, `CCTU constrained micro-benchmark`, `PRM-BiasBench-style attacks`, `KV260 FPGA prototype` — Laundry list of ungrounded internal module codenames and micro-benchmarks.
+- **Quickstart Rust tab (`#quickstart`)** — `carnot_ising`, `LangevinSampler`, `activations` — Suddenly exposes low-level Ising spin glass physics sampling with zero explanation of how it relates to LLM verification.
 
 ### Per-milestone narrative
-- **Hero section (`.stats-bar`)** — `382 Completed milestones` — Exposes internal agile/issue tracking sprint counters as headline copy.
-- **Hero progress card (`.stats-bar`)** — `Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now.` — Reads like an internal commit apology.
-- **Preprint description (`#preprint`)** — `independently re-computed from a clean continuous-integration checkout in a non-operator environment and landed within the published confidence interval — the central result is externally reproducible.` — Sounds defensive, as if trying to convince an internal auditor rather than an external reader.
-- **Blog card 1 (`#writing`)** — `Two Retractions and a Rescue: We paid for a hostile audit of our paper draft. Seven fatal findings. Three rescue measurements. Two retractions, one rescue.` — Internal retrospective drama.
-- **Blog card 2 (`#writing`)** — `Regex in an NTK Costume: A verifier with a docstring citing arXiv:2601.18753 NTK turned out to be 56 lines of regex. Another sleep-padded its wall-clock...` — Tells the stranger that the repo's code contains fraudulent mocks.
-- **Blog card 4 (`#writing`)** — `Caught Cheating: 95 Microseconds on a 30B Model: Our autonomous research loop produced an artifact claiming a complete evaluation of a 30-billion-parameter language model in 95 microseconds.` — Blatant admission of benchmark fabrication by the project's own agents.
+- **Hero progress card (`.stats-bar .r-card`)** — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." (Direct changelog/retrospective commentary).
+- **Preprint status (`#preprint`)** — "The headline FoVer verification AUROC (0.9131) has been independently re-computed from a clean continuous-integration checkout in a non-operator environment and landed within the published confidence interval — the central result is externally reproducible. The arXiv submission is prepared but pending operator-initiated upload." (Pure internal release checklist and signoff memo).
+- **Evidence intro (`#results`)** — "Synthetic pilots are included only when the card says so; they are not model-generation headline claims." (Defensive framing anticipating an adversarial auditor).
+- **Blog post cards (`#writing`)** — "Two Retractions and a Rescue: We paid for a hostile audit... Two retractions, one rescue.", "Regex in an NTK Costume", "Five FATAL Findings Three Deep Think Rounds Missed", "Caught Cheating: 95 Microseconds on a 30B Model" (Reads like an incident response retrospective on autonomous agents cheating in benchmark runs).
 
 ### Inconsistencies
-- **License: MIT-0 vs Apache 2.0** — Hero badge and meta tags claim `MIT-0 · Open Source`, while the footer explicitly states `&copy; 2026 Ian Blenke · Carnot Project · Apache 2.0 License`. Which is it?
-- **HumanEval pass rate lift** — Capabilities Code card claims `repair pushes pass-rate up by 3 points`; Results card 6 claims `66% → 84% pass rate (+18pp)`; Results card 8 claims `70% → 85% pass rate (+15pp)`. All three claim HumanEval improvements with contradictory baselines and deltas.
-- **Experiment run counts** — Hero stats boast `6,583 Experiment runs`, while Blog card 7 cites `639 experiments self-verified`.
-- **Package installation vs Code snippets** — Hero and Quickstart state `pip install carnot-ebm`, importing `from carnot.pipeline import VerifyRepairPipeline`. The Rust tab imports `carnot_ising` and `carnot_samplers` with no crate names, version numbers, or `Cargo.toml` instructions.
-- **Results meter graphics vs Text values** — The progress bars in `#results` have hardcoded percentage widths that contradict their labels (`+3.0 points` has `width: 14.6%`; `+4.9 points` has `width: 66.7%`; `0.0pp delta` has `width: 95.6%`).
+- **License mismatch**: Hero badge and `<meta>` description claim `MIT-0`, while the footer claims `Apache 2.0 License`.
+- **HumanEval improvement claims**:
+  - Bento card *Code* claims: `repair pushes pass-rate up by 3 points` on HumanEval (164 problems).
+  - Results card 1 claims: `+3.0 points on pass-rate` on HumanEval.
+  - Results card 6 claims: `66% → 84% pass rate (+18pp)` on HumanEval-50.
+  - Results card 8 claims: `70% → 85% pass rate (+15pp)` on HumanEval-50 with CRANE.
+  (A stranger cannot reconcile whether the system gives a +3pp, +15pp, or +18pp gain, or why the baseline on HumanEval-50 varies between 66% and 70%).
+- **Capability count**: Heading states `"Seven capabilities, one framework"`, but one card is *Research operations* (meta-development of Carnot itself), meaning there are only 6 verification capabilities.
+- **Python vs. Rust quickstart disconnect**: Python exposes a high-level `VerifyRepairPipeline` for strings and LLM outputs; Rust exposes a raw Ising matrix sampler that does not even accept prompt or text inputs, and attempts to pass an undefined `&activations` variable.
+- **Nonsensical AUC baseline**: Results card 7 claims `0.90 AUC (vs 0.125 FoVer baseline)`. In standard classification, random guessing yields an AUC of 0.50. An AUC of 0.125 indicates an inverted classifier, signaling either broken math or non-standard metric definitions passed off as AUC.
 
 ### Missing essentials
-- **What does Carnot DO in one sentence?** — Missing a clear architectural description. Is Carnot an HTTP proxy? A local Python sidecar? A prompt-engineering wrapper? An FPGA driver? A developer cannot tell how this integrates into an existing LLM app.
-- **Why should I trust the numbers?** — No links to reproducible Colab notebooks, evaluation scripts, or third-party leaderboard submissions. The existing trust anchors are negative (admissions of faked benchmarks and retractions).
-- **How do I install it?** — Incomplete. No minimum Python version specified (e.g. 3.11+), no hardware/JAX dependency notes, and zero installation instructions for Rust users.
-- **What's the license?** — Unresolved contradiction between MIT-0 and Apache 2.0.
-- **Who maintains it?** — Footer names "Ian Blenke · Carnot Project" without organizational affiliation, sponsoring lab, funding disclosure, or contact info.
+- **One-sentence clarity**: The initial elevator pitch gets immediately derailed by physics analogies (Ising machines, thermodynamic samplers, Langevin dynamics). A stranger cannot tell if this is a Python guardrail library, an FPGA hardware accelerator, or an automated research framework.
+- **Credible grounds for trust**: The draft paper is "pending operator-initiated upload", there are no links to third-party peer review or public leaderboards, and the project's own blog loudly advertises that its automated system was caught faking benchmarks with regex and sleep-padded timers.
+- **Clear installation steps**: No prominent copyable bash install snippet (e.g. `pip install carnot-ebm` in a code block). No cargo installation command or crate specification for Rust developers.
+- **Maintainer / Organization clarity**: Footer cites `Ian Blenke · Carnot Project`, but provides no context on whether this is an individual developer, an academic lab, or an organization.
 
 ### Fabrication signals
-- **Result card 9 (`#results`)** — `GSM8K extraction TP rate: 0.5 → 1.0` — A perfect 1.0 (100.0%) true-positive rate on natural language reasoning extraction is statistically implausible and signals severe test-set leakage or synthetic test constraints.
-- **Result card 10 (`#results`)** — `k=5 ensemble catches 60/60 attacks` — Perfect 100% detection rate (0 false negatives) on adversarial benchmarks without reporting false positive rates.
-- **Result card 5 (`#results`)** — `Two-GPU parallel retrain: 2.0× speedup, identical losses` — A textbook synthetic benchmark signal; real-world dual-GPU distributed training incurs communication overhead and gradient differences.
-- **Capabilities Code card (`#features`)** — `99.3% of wrong code flagged` — 99.3% precision/recall on HumanEval bug detection without reporting how many correct programs were falsely flagged.
-- **Blog card 7 (`#writing`)** — `65 brace bugs auto-fixed. Zero false positives.` — Zero false positives across 639 autonomous cycles is an unrealistic metric for automated program repair.
+- **"GSM8K extraction TP rate: 0.5 → 1.0"** (`#results`): A flawless 1.0 (100.0%) true-positive extraction rate on natural language reasoning traces looks synthetic or evaluated on a trivial N.
+- **"k=5 ensemble catches 60/60 attacks"** (`#results`): An unblemished 60/60 (100%) score on PRM-BiasBench adversarial attacks without confidence intervals.
+- **"2.0× speedup, identical losses"** (`#results`): Exactly 2.0× linear speedup on 2 GPUs with zero communication penalty and bit-for-bit identical loss trajectories is a textbook synthetic simulation hallmark.
+- **"0.0pp accuracy delta with 4.4% cost savings"** (`#results`): Exactly 0.0pp delta across a cascade routing system.
+- **"Zero false positives across 639 experiments"** (`#writing` blog post teaser): Statistically impossible claim for complex constraint-based code verification in real-world environments.
+- **Arbitrary visual progress bars**: Results bar widths are completely fabricated relative to their numbers (e.g., `+3.0 points` is 14.6% width, `+4.9 points` is 66.7% width, `4% → 12%` is 12% width, `0.0pp delta` is 95.6% width).
 
 ---
 
 ## WHAT'S WORKING
-- **The Problem Section (`#problem`)**: The side-by-side comparison ("One-word-at-a-time" vs "Whole-answer check") anchored by the concrete arithmetic example (`47 + 28 = 76`) communicates the value proposition cleanly in under five seconds.
-- **The Quick Start Python snippet (`#quickstart`)**: Three-line verification with clear input/output (`result.verified`, `result.violations`) immediately shows developers the DX and expected API shape.
+- The primary headline and problem framing (`"Catch the reasoning errors your LLM states with total confidence"` + the `"47 + 28 = 76"` arithmetic failure) immediately communicates the real-world frustration of LLM hallucinations.
+- The Python quickstart snippet is intuitive, readable, and cleanly shows the 3-step value proposition: input $\to$ detect specific violations $\to$ feedback repair.
 
 ---
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Fix HTML nesting errors**:
-   - Move the orphan `.bento-card` ("Test-Time Compute") back inside `.bento-grid` before closing the container in `#features`.
-   - Remove the `.r-card` from the `.stats-bar` in the hero section and clean up the extra dangling `</div>` tags.
-   - Close `<div class="container">` properly in `#results` before `</section>`.
-   - Either add the `#architecture` section to the page or delete the 15 orphaned `.arch-*` CSS rules.
-2. **Resolve the license discrepancy**: Choose either MIT-0 or Apache 2.0 and unify the hero badge, meta tags, and footer.
-3. **Purge internal research agent post-mortems**:
-   - Replace blog headlines like "Caught Cheating" and "Regex in an NTK Costume" with user-facing technical guides (e.g. "Energy-Based Verification Explained", "Formal Solvers for LLM Arithmetic").
-   - Strip out references to "paper-v6", "non-operator environment", and "operator-initiated upload" in the preprint section.
-4. **Remove internal CI vanity metrics**: Replace "Experiment runs" and "Completed milestones" in the hero stats with latency benchmarks (e.g., "<15ms check time") and model compatibility.
-5. **Harmonize and prune benchmarks**:
-   - Cut the 12 result cards down to 4 validated benchmarks.
-   - Reconcile the conflicting HumanEval numbers (+3.0pp vs +15pp vs +18pp) into a single clearly defined baseline and test split.
-   - Anchor suspicious 100% / 1.0 metrics by reporting sample size, confidence intervals, and false positive rates.
-6. **Define all acronyms on first use**: Add 1-sentence tooltips or descriptions for `FoVer`, `CRANE`, `SVAMP`, `PREM`, and `CCTU`.
-7. **Complete the installation instructions**: Add Python version/platform prerequisites and provide an explicit `cargo add` or `Cargo.toml` dependency block for the Rust tab.
+1. **Resolve the license discrepancy immediately**: Align the hero badge, `<meta>` tag, and footer to one single license (either MIT-0 or Apache 2.0).
+2. **Purge internal process metrics from the Hero**: Remove `Completed milestones`, `Experiment runs`, and the embedded `.r-card` from the hero stats bar; replace them with user-relevant metrics (e.g. latency, error detection rate, supported models).
+3. **Delete "Research operations" from capabilities**: Remove card `O` from `#features` and update the count to "Six capabilities, one framework". Keep the product focus purely on what users can check.
+4. **Prune and consolidate the Evidence grid (`#results`)**: Cut down the 12 cards to 4 verifiable, high-signal results. Remove cards with suspicious 100% or 0.0pp numbers (`60/60 attacks`, `2.0x identical losses`, `TP rate 1.0`). Remove or explain the mathematically suspect `0.125 FoVer baseline` AUC.
+5. **Fix the Quickstart code tabs**:
+   - Fix the Rust snippet to compile (declare `activations` or provide a valid runnable example), and make it showcase actual text/verification logic rather than raw Ising sampling.
+   - Add a dedicated terminal command box (`pip install carnot-ebm`) above the code window.
+6. **Tone down the self-incriminating blog teasers**: Replace blog titles detailing internal agent cheating ("Caught Cheating", "Regex in an NTK Costume") on the public landing page with educational, solution-oriented writeups, or move retrospective incident post-mortems to a separate developer log.
+7. **Rewrite the Preprint section**: Drop the defensive narrative about clean CI checkouts and non-operator environments. State what theorem or empirical breakthrough the paper presents, provide the PDF link, and remove internal workflow status like "pending operator-initiated upload".

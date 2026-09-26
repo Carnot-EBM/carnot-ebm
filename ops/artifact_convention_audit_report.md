@@ -9,9 +9,27 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 8 |
+| CHECKABLE | 6 |
+| AGGREGATE_ONLY | 1 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_7672_v669_bound_relations.json
+## experiment_7705_v671_constraint_bank_protocol.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The artifact reports valid fixture mechanics without empirical acquisition and shows a lower aggregate Brier score for `weight_only`.
+
+## WHAT IS MISSING
+The supplied artifact cuts off mid-`lifecycle_rows`, so I cannot tell whether metric-bearing per-unit `rows` appear later. The visible `mean_brier_by_arm` and `mean_base_brier_by_arm` contain only aggregates; the visible `lifecycle_rows` contain events, not Brier scores.
+
+## THE CHECK A READER CANNOT DO
+Did `weight_only` improve Brier scores across many units, or did a few units account for its lower mean?
+
+## experiment_7706_continuous_acquisition.json
 
 **CHECKABLE**
 
@@ -19,7 +37,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The bound-relation protocol passed the validity, readiness, and coverage gates on fixtures; natural accuracy and other benefits remain unestablished.
+The experiment was blocked prior to execution because upstream prerequisite `exp7705-constraint-bank-protocol` failed its `constraint_bank_ready_score` gate check (observed 0, expected 1).
 
 ## WHAT IS MISSING
 nothing
@@ -27,7 +45,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7673_v669_fresh_relation_cohort.json
+## experiment_7707_v671_independent_evidence_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked from completion and activation due to failing required upstream readiness and validity checks (`complete_blocked_required_evidence`).
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7708_v671_arc_generalization_runner.json
 
 **CHECKABLE**
 
@@ -43,7 +77,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7674_relation_energy.json
+## experiment_7709_v671_arc_first_contact.json
 
 **CHECKABLE**
 
@@ -51,7 +85,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because three of four upstream gates failed.
+The run completed but was disqualified because required validation was incomplete: 11 of 12 receipts passed.
 
 ## WHAT IS MISSING
 nothing
@@ -59,7 +93,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7676_v669_qwen_quote_relations.json
+## experiment_7710_v671_native_record_contract.json
 
 **CHECKABLE**
 
@@ -67,7 +101,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The quote-relation pilot was disqualified and not activated after its acceptance gates failed.
+The native-record checks completed but did not meet readiness, despite Python–Rust parity on fixture units and a passing durable-replay check.
+
+## WHAT IS MISSING
+nothing — `parity_rows` records per-unit outcomes, and `acceptance_gate_results` identifies failed gates and their measured operands.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7711_whole_service_cost.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked from executing at the conductor pre-gate layer because upstream dependency `exp7710-native-record-contract` failed its gate checks.
 
 ## WHAT IS MISSING
 nothing
@@ -75,66 +125,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7679_v669_independent_evidence_audit.json
+## experiment_7712_v671_capstone.json
 
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The audit was blocked because required independent static and online evidence was not confirmed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7680_v669_arc_probe_protocol.json
-
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The scripted probe fixture met protocol readiness, but showed no hidden-game wins or live benefit.
+The artifact reports a decision-cost advantage for the matched-logistic candidate over its control across 40 static families.
 
 ## WHAT IS MISSING
-nothing
+Per-family, paired decision-cost rows for both arms, with family identifiers. The artifact gives `"decision_cost"` contrasts and `"cost_mean"` values; its `"interval_inputs"` contain per-family Brier values, not decision costs.
 
 ## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7681_v669_arc_live_probes.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7684_v669_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capstone accounting is complete, but the V669 scientific claim is blocked by missing or disqualified required evidence.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary.failed_checks` records the failed fields, expected values, and observed values, and `rows` records each task’s accounting status.
-
-## THE CHECK A READER CANNOT DO
-none
+Was the reported 0.165 decision-cost advantage spread across the 40 families or driven by a few outliers?
