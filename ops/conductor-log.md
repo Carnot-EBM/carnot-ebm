@@ -18715,3 +18715,7 @@ code |
 | 2026-09-26 06:03 UTC | Independently reduce evidence, decision and learni | FAIL | Codex CLI error: ERROR: You’ve hit your usage limit. Visit https://chatgpt.co |
 | 2026-09-26 06:05 UTC | Qualify an adapter-withheld ARC runner with reacha | FAIL | Codex CLI error: ERROR: You’ve hit your usage limit. Visit https://chatgpt.co |
 | 2026-09-26 06:07 UTC | Qualify an adapter-withheld ARC runner with reacha | FAIL | Codex CLI error: ERROR: You’ve hit your usage limit. Visit https://chatgpt.co |
+| 2026-09-26 06:09 UTC | Qualify an adapter-withheld ARC runner with reacha | FAIL | Codex CLI error: ERROR: You’ve hit your usage limit. Visit https://chatgpt.co |
+| 2026-09-26 06:11 UTC | Measure live goal evidence during adapter-withheld | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7694-arc-generalization-runner, exp7694-arc-generalization-runner, exp7694-arc-generalization-runner) |
+| 2026-09-26 06:11 UTC | Qualify typed evidence payloads through the actual | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7686-record-span-protocol, exp7686-record-span-protocol, exp7686-record-span-protocol) |
+| 2026-09-26 06:11 UTC | Measure complete record-service cost and retain ha | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7696-native-record-contract, exp7696-native-record-contract, exp7696-native-record-contract) |
