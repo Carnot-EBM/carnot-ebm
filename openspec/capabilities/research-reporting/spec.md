@@ -1,5 +1,38 @@
 # Research Reporting Capability Specification
 
+## V671 contract recovery accounting — 2026-09-26
+
+### REQ-REPORT-7699: Bind the recovery plan to literal custody
+
+Exp7699 SHALL compare all fourteen ordered V671 tasks against both the design
+table and machine contract, including phase, path, substrate, models and every
+gate. It SHALL select a staged roadmap only when its milestone matches V671.
+It SHALL retain all fourteen absent V670 producers with literal conductor-log
+custody: six three-attempt usage-limit failures and eight gate skips. The zero
+commit retrospective and V669 findings SHALL remain historical, not V670
+science. CPU aggregation SHALL invoke no model and SHALL open no science gate.
+
+#### SCENARIO-REPORT-7699-AUTHORITY: Private corruptions fail
+
+Given staged or activated-only matching authority, deleting or reordering a
+task, changing a gate producer field, removing a mandated model, or changing
+the milestone SHALL fail contract validation.
+
+#### SCENARIO-REPORT-7699-CUSTODY: No producer means no verdict
+
+Given fourteen absent V670 artifacts and matching log lines, each row SHALL
+carry its exact planned path and log hash with a not_emitted custody marker,
+without assigning an honest scientific verdict.
+
+#### SCENARIO-REPORT-7699-TERMINAL: Exact readers control readiness
+
+Given frozen validation scope and a serialized candidate, fresh reduction,
+adversarial verification and strict row lint SHALL run on the exact bytes.
+Required-check failure SHALL disqualify and zero readiness; a valid contract
+SHALL be an administrative null only. Exact failed operands SHALL appear in
+blocked results, and no later validation SHALL convert a missing external
+input into partial work.
+
 ## V669 single live ARC probe episode — 2026-09-26
 
 ### REQ-REPORT-7681: Measure probe reachability in one real scored episode

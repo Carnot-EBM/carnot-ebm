@@ -12047,6 +12047,21 @@ Narrowed to guards a SPEC advertises as Implemented, it fires on 3 of 21. Three 
 14 percent and is nonetheless correct to ship, because every hit is a promise the project made and
 did not keep. **The operative test is "is every hit worth a human look", with the fire rate
 reported alongside so the claim can be argued with** -- not a fixed percentage.
+## REQ-HARNESS-7699: Keep recovery receipts tied to the effective backend
+
+The V671 accounting harness SHALL report the declared and effective agent
+backend separately. It SHALL read dispatcher routing and available launch
+metadata without launching another agent or altering credentials. A successful
+current invocation SHALL have a real receipt; it SHALL not be treated as proof
+of future quota. Validation children SHALL stream output and retain command,
+exit, log hash and bounded timing for exact candidate readers.
+
+### SCENARIO-HARNESS-7699-ROUTING: YAML is a request
+
+Given a Claude request and CODEX_FORCE_EXPERIMENTS=1, the harness SHALL record
+Codex as effective only when the launch environment supports that resolution.
+An unknown launch environment SHALL remain unknown rather than invented.
+
 ## REQ-HARNESS-7671: Keep V669 contract audit independent of science gates
 
 The V669 accounting task SHALL run CPU aggregation without a current model,

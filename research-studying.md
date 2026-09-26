@@ -6197,3 +6197,16 @@ is a blocked independent audit. Exp7680 qualified scripted probes; Exp7681
 found no eligible novel live target. See `docs/research-notes/v669-retrospective.md`
 for controls, missing effect intervals, and next evidence. Do not treat these
 states as a fresh benefit, a live solve, or a reason to change FoVer 0.9131.
+## 2026-09-26 Exp7699 — V671 method applicability
+
+The V671 accounting task ingested the dated V671 entry in
+`research-references.md` into `docs/research-notes/v671-method-map.md`.
+Enoki suggests anchored relation records but does not validate Carnot's
+deterministic semantic checker. Structural decoding metrics do not certify
+support. Delayed OCO and ADOWIP motivate bounded, causally released feedback
+and a fixed-budget scheduler control; their guarantees and reported gains do
+not transfer to a discrete constraint bank. Full-service timing must include
+orchestration and persistence. Retired external-text reranking, unchanged
+importance anchoring, new samplers and generator training remain excluded.
+The focused arXiv check found Enoki v2 and ADOWIP v1; Semantic Scholar paper
+endpoints returned internal errors, leaving citation deltas unknown.
