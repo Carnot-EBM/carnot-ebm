@@ -9,8 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| CANNOT_DETERMINE | 4 |
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
 ## experiment_7672_v669_bound_relations.json
 
@@ -42,7 +42,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked from executing at the conductor pre-gate because three of four upstream gate checks on `exp7673-fresh-relation-cohort` failed.
+The experiment was blocked at the conductor pre-gate because 3 of 4 upstream gate checks against experiment 7673 failed.
 
 ## WHAT IS MISSING
 nothing
@@ -58,9 +58,19 @@ reviewer call failed
 
 ## experiment_7679_v669_independent_evidence_audit.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
-reviewer call failed
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
 
 ## experiment_7680_v669_arc_probe_protocol.json
 
@@ -76,7 +86,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked during precondition preflight because no eligible novel target games remained in the solve registry.
+The run was blocked prior to model invocation because no uncleared, eligible novel SDK target games were available (`honest_verdict`: `"complete_blocked_eligible_novel_target"`).
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +102,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V669 capstone milestone is blocked due to missing required scientific evidence and failed upstream dependency gates (`honest_verdict`: "complete_blocked_required_v669_scientific_evidence").
+The V669 milestone capstone is blocked on required scientific evidence due to 21 upstream gate check failures and missing producers.
 
 ## WHAT IS MISSING
 nothing

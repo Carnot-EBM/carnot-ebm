@@ -19,7 +19,7 @@ Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21):
 
 ---
 
-## worktree_import_guard.py
+## run_stop_authority.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -31,7 +31,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## capstone_milestone_rot_lint.py
+## exclusion_manifest_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -43,7 +43,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## harness_integrity_lint.py
+## in_process_doc_reconcile.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -55,7 +55,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## eval_run_consumer_field_lint.py
+## adversarial_verify.py::_declares_terminal_artifact_readiness
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -67,7 +67,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## substrate_alias_evidence_lint.py
+## adversarial_verify.py::check_terminal_artifact_readiness
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -79,7 +79,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## determination_preservation_lint.py
+## adversarial_verify.py::_flag_summary
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -91,7 +91,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## test_suite_mutation_check.py
+## adversarial_verify.py::_is_finite_number
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -103,7 +103,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## operator_curated_docs_lint.py
+## adversarial_verify.py::_numeric_pairs
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -115,7 +115,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## operator_curated_doc_guard.py
+## adversarial_verify.py::_name_tokens
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -127,14 +127,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## child_results_guard.py
-
-**Verdict:** `UNKNOWN`
-
-This request was blocked by Gemini's filters. They can occasionally trigger by mistake on safe coding, security, or biology-related queries. Please try rephrasing your prompt. You can [send feedback](https://ai.google.dev/gemini-api/docs/troubleshooting#file-bug) or read more about [our policies here](https://policies.google.com/terms/generative-ai/use-policy).
-
-
-## artifact_freshness_lint.py
+## adversarial_verify.py::_is_count_field
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -146,7 +139,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## arc_artifact_lint.py
+## adversarial_verify.py::_is_timestamp_field
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -158,7 +151,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## arc_count_integrity_lint.py
+## adversarial_verify.py::_is_chance_floor_score
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -170,7 +163,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## arc_llm_on_liveness_lint.py
+## adversarial_verify.py::_is_identifier_field
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -182,7 +175,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## verifier_authenticity_lint.py
+## adversarial_verify.py::_is_reference_field
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -194,7 +187,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## arc_orphan_solver_lint.py
+## adversarial_verify.py::_delta_stem
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -206,7 +199,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## tracked_results_guard.py
+## adversarial_verify.py::_is_verified_arithmetic_delta
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -218,7 +211,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## research_complete_ledger_lint.py
+## adversarial_verify.py::_is_rate_metric_field
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -230,7 +223,7 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## mutation_marker_lint.py
+## adversarial_verify.py::_add_variant_denominators_from_value
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -242,7 +235,19 @@ sandbox: danger-full-access
 reasoning effort: xhigh
 )
 
-## audit_findings_ledger.py
+## adversarial_verify.py::_variant_denominators
+
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+)
+
+## adversarial_verify.py::_is_small_shared_denominator_rate_pair
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
