@@ -201,3 +201,30 @@ but broke more than it fixed. V6 shows the SAME mechanism, properly rate-limited
 losing anything else -- it just isn't fast enough yet on cd82. This is the first pilot whose failure
 mode is "too slow," not "doesn't work" or "actively wrong." Public games are a development proxy, not a
 hidden-game estimate.
+
+
+## Follow-up: V6 gate-rule ablation (2026-09-26, append-only)
+
+Branch `go-explore-ablation` (commit 3a13f04c23, off `go-explore-capped`), not merged. A diagnostic
+ablation, not a promotion-seeking pilot: isolates each of V6's three gate rules alone (V6a =
+fresh-action spacing only, V6b = 400-action budget cap only, V6c = <=30-action prefix preference
+only), measured on the 6 games the V5/V6 work turned on: cd82, lf52, m0r0, dc22, sk48, r11l.
+
+**cd82's slowdown is not one rule's fault.** Spacing alone (V6a) reproduces V6's exact 589-action
+median slowdown by itself. The budget cap alone (V6b) ALSO slows cd82, to a 943-action median --
+worse, not better. Prefix preference alone (V6c) recovers nothing at all, identical to V5.
+
+**Spacing alone does almost all of the recovery work.** V6a fully reproduces V6's lf52 and dc22
+recovery by itself. The budget cap alone partially recovers lf52 (slower) but fails dc22 seeds 1-2.
+No single rule reproduces V6's exact m0r0 pattern -- V6a wins different seeds than V6 does there,
+suggesting some genuine interaction between rules on that game specifically.
+
+**sk48 (the win) and r11l (the control) are unaffected in every arm.** Neither game's outcome depends
+on which rule is active -- both are robust to this whole gate-design space.
+
+**Conclusion: this looks like a real speed/recovery tradeoff, not a fixable single-rule bug.** The
+same mechanism (spacing) that recovers the crowded-out games is the one slowing down cd82. Removing or
+swapping one of the three rules does not sidestep the tradeoff; it just changes which games pay the
+cost. A different lever than these three would be needed to both recover the losses and keep cd82's
+speed -- this ablation does not identify what that lever would be. Public games are a development
+proxy, not a hidden-game estimate.

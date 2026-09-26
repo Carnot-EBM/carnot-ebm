@@ -22,6 +22,13 @@
   was not modified. Repository-wide spec traceability still reports the
   existing 1,168-test backlog; the Exp7708 scoped check passes.
 
+## 2026-09-26 — V6 gate-rule ablation (diagnostic, no single culprit)
+
+- codex (gpt-6-sol, worktree `go-explore-ablation`) isolated V6's three gate rules one at a time on
+  the 6 games that mattered. Spacing alone reproduces both the full recovery and the exact cd82
+  slowdown -- no single rule is the fixable culprit; this looks like a real tradeoff. Branch kept at
+  3a13f04c23, not merged; result recorded in docs/research-notes/unwon-games-analysis-2026-09-26.md.
+
 ## 2026-09-26 — V6 capped go-explore pilot (recovers V5's losses, still fails guard)
 
 - codex (gpt-6-sol, worktree `go-explore-capped`) gated V5's mechanism per the regression diagnosis's

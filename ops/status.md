@@ -32,6 +32,15 @@
 - Task-owned spec traceability passes; the repository-wide reconciliation gate
   still reports its existing backlog of 1,168 untraced tests.
 
+## 2026-09-26 — V6 gate-rule ablation: no single culprit, looks like a real tradeoff
+- Isolated each of V6's three gate rules alone. Spacing alone reproduces BOTH V6's full lf52/dc22
+  recovery AND its exact cd82 slowdown -- it is doing almost all the work, for better and worse. The
+  budget cap alone also slows cd82 (worse, in fact). Prefix preference alone does nothing. sk48/r11l
+  are unaffected in every arm. Branch `go-explore-ablation` (3a13f04c23, off `go-explore-capped`), not
+  merged.
+- This looks like a genuine speed/recovery tradeoff in the approach, not a bug fixable by swapping one
+  of the three rules. A different lever, not identified here, would be needed to get both.
+
 ## 2026-09-26 — V6 capped go-explore pilot: recovers V5's losses, still too slow
 - A fixed external gate (20-fresh-action spacing, 400-action replay-cost cutoff, prefer <=30-action
   returns) around V5's mechanism recovers ALL 9 of V5's lost/regressed seeds while keeping sk48's win
