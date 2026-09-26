@@ -18755,3 +18755,4 @@ code |
 | 2026-09-26 19:08 UTC | Cold-audit source dependence and retained learning | OK | 102 passed, 1 warning in 7.75s |
 | 2026-09-26 19:50 UTC | Qualify existing adapter-withheld live evidence an | OK | 146 passed, 1 warning in 18.30s |
 | 2026-09-26 20:09 UTC | Requalify the actual typed native service with com | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 90 passed, 1 warning in 15.46s |
+| 2026-09-26 20:12 UTC | Measure full native service cost and preserve hard | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7723-native-qualification.native_service_ready_score (actual=0 == expected=1) |
