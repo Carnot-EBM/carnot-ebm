@@ -3511,3 +3511,4 @@ Writing an estimate would put an invented number in the metrics record.
 | 51 | 2026-09-26T02:14:23Z | - | Operator chose level-up analysis of the 7/39 live sessions: codex gpt-6-sol (worktree levelup-analysis) |
 | 52 | 2026-09-26T02:34:10Z | 2026-09-26T02:34:18Z | Level-up analysis: all 7 first wins are explorer actions in vc33/sp80 (depth-first draws); no induced plan, adapter, or banked route won; 39 sessions = 12 distinct traces |
 | 53 | 2026-09-26T03:19:47Z | - | Operator chose explorer upgrade pilot: codex gpt-6-sol (worktree explorer-pilot) REQ-ARC-WMTE-10016 provenance + 10017 variants on 25 public games |
+| 54 | 2026-09-26T03:45:13Z | 2026-09-26T03:51:28Z | Explorer pilot: V0 13/25 games first level-up; V1 13 (fewer actions, more levels, guard broken on 3); V2 12; no promotion; provenance proven passive; branch kept |

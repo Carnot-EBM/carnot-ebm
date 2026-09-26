@@ -73,3 +73,21 @@ The only demonstrated first-win mechanism in these 39 started sessions is **envi
 The most direct next test is to improve explorer action choice and return to promising states while keeping the real level increment as the success test. Target visible controls and commits, and measure state-changing actions from the rendered grid. vc33's repeated support clicks and sp80's reset/retry show why these choices matter (`sessions/*.json:last_20_actions_to_first_levelup`; `python/carnot/agentic/arc_competition_agent.py:4800-4923`). This is a proposal, not measured lift. Once a first win occurs, bank its real action trace as within-game evidence and test transfer separately; no such bank was used for these L1 wins.
 
 A follow-up should count **distinct game traces**, capture `top_branch`, `explorer_branch`, and `explorer_serve_kind` on every chosen action, and replay every action with `frame.levels_completed`. It should compare explorer variants on new games, not count identical seeds as independent wins. The broken harness level reader and absent original per-action provenance currently block a sharper causal attribution (`python/carnot/agentic/arc_competition_agent.py:7427-7542`; `docs/research-notes/b2-induction-failure-triage-2026-09-23.md:134-138`).
+
+## Follow-up: explorer variants pilot (2026-09-26, append-only)
+
+REQ-ARC-WMTE-10016/10017, branch `explorer-pilot` (commit f494c6cfc3), not merged. All 25 public
+games, 3 seeds, the scored 2,000-action limit, with induction, adapters, banked routes and stored
+engines off.
+
+| Variant | Games with a first level-up | Median actions to it | Total levels | Lost vs V0 |
+|---|---|---|---|---|
+| V0 today's explorer | 13 | 579 | 40 | - |
+| V1 control-targeting | 13 | 453 | 43 | none |
+| V2 return to promising state | 12 | 616 | 35 | tu93 |
+
+Neither variant meets the promotion rule (+2 games, no loss, no >10% action increase on shared wins);
+V1 broke the action guard on bp35, cd82, m0r0. Every winning action was an explorer action, never a
+plan step. Per-action provenance recording is proven passive (identical traces in 10 paired replays)
+and is the part worth merging if wanted.
+

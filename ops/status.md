@@ -2,6 +2,12 @@
 
 **Last Updated:** 2026-09-24
 
+## 2026-09-26 — Explorer variants pilot: no promotion; provenance recording ready
+- Explorer alone reaches a first level-up on 13 of 25 public games (V0). V1 control-targeting: same 13,
+  fewer median actions, more levels, but broke the action guard on 3 games. V2 lost tu93. Branch
+  `explorer-pilot` (f494c6cfc3), not merged. Passive per-action provenance is proven and could be
+  merged alone.
+
 ## 2026-09-26 — Goal probe-loop pilot: null, not merged
 - REQ-ARC-WMTE-10015 (branch `probe-loop`, 5f97577a1f): hypothesis-probe goals add no level-up (1 vs 1);
   with expert dynamics they reach 1/10 against 5/10 for the true goal. Win-condition induction before the

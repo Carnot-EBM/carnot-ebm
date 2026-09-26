@@ -1,5 +1,11 @@
 # Carnot — Changelog
 
+## 2026-09-26 — Explorer upgrade pilot (operator request: "1") — no promotion, not merged
+
+- codex (gpt-6-sol, CPU, worktree `explorer-pilot`) added passive per-action provenance and two explorer
+  variants behind a default-off flag, and measured them on 25 public games x 3 seeds. Neither variant
+  qualifies. Branch preserved at f494c6cfc3.
+
 ## 2026-09-26 — Goal probe-loop pilot (operator request: "1") — null, not merged
 
 - codex (gpt-6-sol, CPU, worktree `probe-loop`) built and ran the pre-registered REQ-ARC-WMTE-10015 pilot.
@@ -20649,3 +20655,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Wire bounded goal-hypothesis probes into the scored ARC policy (⚠️ Research Finding) — honest_verdict=complete_circular_positive_probe_fixture; results/experiment_7680_v669_arc_probe_protocol.json
 - 2026-09-26: Observe bounded probes during live adapter-withheld ARC self-discovery (⚠️ Blocked) — honest_verdict=complete_blocked_eligible_novel_target; results/experiment_7681_v669_arc_live_probes.json
 - 2026-09-26: Reconcile fourteen task dispositions and the next evidence boundary (⚠️ Blocked) — honest_verdict=complete_blocked_required_v669_scientific_evidence; results/experiment_7684_v669_capstone.json
+- 2026-09-26: Added the milestone 2026.09.669 operational retrospective. All 8 completed experiments were compute-bound and ran for 11.0 wall-time minutes. The longest-running task was Wire bounded goal-hypothesis probes into the scored ARC policy (4.32 minutes), followed by Test quote-resolved Qwen relations separately from pointer validity (4.3 minutes) and Bind the V669 contract and separate prior nulls from missing producers (0.76 minutes); internal phase durations were not recorded. The locked compute-task GPU-idle indicator is false. Because the monitor report reflects an end-state snapshot rather than an active-window trace, live GPU efficiency cannot be evaluated. No task records indicate concurrent execution of two or more models, meaning DualGPURunner dispatch was not applicable. Recommended operational tooling additions include intra-task phase timers, active-window GPU metrics collection, and runner dispatch receipts. Estimated time savings are 0% in the absence of measured counterfactuals. Artifact: results/operational_retro_2026_09_669.json.
