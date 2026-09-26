@@ -20701,3 +20701,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Measure explicit record and claim addressing with bounded Qwen proposals (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_protocol; results/experiment_7702_v671_qwen_record_pilot.json
 - 2026-09-26: Train a normalized decision energy on typed evidence certificates (⚠️ Research Finding) — honest_verdict=complete_null_typed_decision_head_ready; results/experiment_7703_v671_typed_decision_energy.json
 - 2026-09-26: Measure fresh probability and typed-decision value (⚠️ Research Finding) — honest_verdict=complete_null_no_registered_decision_benefit; results/experiment_7704_v671_heldout_decisions.json
+- 2026-09-26: Qualify causal constraint acquisition with a hard proposal budget (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_mechanics_no_acquisition; results/experiment_7705_v671_constraint_bank_protocol.json
