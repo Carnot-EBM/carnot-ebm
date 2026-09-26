@@ -20695,3 +20695,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Qualify source-record addressing and original-answer binding (⚠️ Research Finding) — honest_verdict=complete_circular_positive_record_protocol_ready; results/experiment_7700_v671_record_span_protocol.json
 - 2026-09-26: Seal independent source roles and validate label custody (⚠️ Research Finding) — honest_verdict=complete_null_cohort_readiness; results/experiment_7701_v671_sealed_cohort.json
 - 2026-09-26: Measure explicit record and claim addressing with bounded Qwen proposals (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_protocol; results/experiment_7702_v671_qwen_record_pilot.json
+- 2026-09-26: Train a normalized decision energy on typed evidence certificates (⚠️ Research Finding) — honest_verdict=complete_null_typed_decision_head_ready; results/experiment_7703_v671_typed_decision_energy.json
