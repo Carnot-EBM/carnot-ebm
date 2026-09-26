@@ -22,6 +22,14 @@
   was not modified. Repository-wide spec traceability still reports the
   existing 1,168-test backlog; the Exp7708 scoped check passes.
 
+## 2026-09-26 — V6 capped go-explore pilot (recovers V5's losses, still fails guard)
+
+- codex (gpt-6-sol, worktree `go-explore-capped`) gated V5's mechanism per the regression diagnosis's
+  design implications (fixed spacing/budget-cap/prefix-preference numbers, archive itself untouched).
+  Recovers all 9 of V5's lost seeds and keeps sk48's win, but cd82's win is now too slow (589 vs 169
+  actions), failing the 10% guard. Branch kept at 468f43ab2c, not merged; result recorded in
+  docs/research-notes/unwon-games-analysis-2026-09-26.md.
+
 ## 2026-09-26 — V5 regression diagnosis (research, no code change)
 
 - codex (gpt-6-sol, worktree `go-explore-diagnose`) compared per-action V0/V5 traces to explain V5's

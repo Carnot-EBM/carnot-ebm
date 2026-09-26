@@ -32,6 +32,14 @@
 - Task-owned spec traceability passes; the repository-wide reconciliation gate
   still reports its existing backlog of 1,168 untraced tests.
 
+## 2026-09-26 — V6 capped go-explore pilot: recovers V5's losses, still too slow
+- A fixed external gate (20-fresh-action spacing, 400-action replay-cost cutoff, prefer <=30-action
+  returns) around V5's mechanism recovers ALL 9 of V5's lost/regressed seeds while keeping sk48's win
+  byte-identical. Still no promotion: cd82's win comes back but at 589 actions vs V0's 169, past the
+  10% guard. Branch `go-explore-capped` (468f43ab2c, off `go-explore-activate`), not merged.
+- First pilot whose failure mode is "too slow" rather than "doesn't work" or "actively wrong." Next
+  step would be an ablation of the three gate rules to find which one is costing cd82 its speed.
+
 ## 2026-09-26 — V5 regressions diagnosed: two distinct causes, one still open
 - cd82 (BOTH): the archive actively redirects the search away from the winning route -- two of three
   lost seeds had MORE fresh search budget than V0 needed to win, so lost budget alone can't explain it.

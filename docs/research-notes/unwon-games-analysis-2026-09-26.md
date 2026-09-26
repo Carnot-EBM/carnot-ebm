@@ -173,3 +173,31 @@ losses need diagnosis before this is a candidate for anything beyond further pil
 replaying INTO a state the local search would have reached anyway (wasted budget), or actively pulling
 the search AWAY from a productive path it was already on? Public games are a development proxy, not a
 hidden-game estimate.
+
+
+## Follow-up: V6 capped go-explore pilot (2026-09-26, append-only)
+
+Branch `go-explore-capped` (commit 468f43ab2c, off `go-explore-activate`), not merged. Built directly
+from the V5 regression diagnosis's design implications. `GoExploreReplayArchive` itself is untouched
+(zero diff confirmed); three fixed numbers gate it externally: no new replay before 20+ fresh
+(non-replay) actions have passed, a one-way 400-action cumulative replay-cost cutoff per episode, and a
+preference for a <=30-action return prefix when one is eligible.
+
+**Result: recovers every V5 loss, keeps the win, still fails the fixed rule.** All 9 of V5's
+lost/regressed seeds (cd82 x3, lf52 x3, m0r0 x1, dc22 x2) come back. sk48's win is untouched -- the
+same 4 replay blocks fire at the same action indices, cost the same 26 actions, and land the same
+action-814 win. But cd82's winning-seed median rises from V0's 169 to 589 actions -- the win returns,
+just much slower -- which breaks the 10% shared-win guard. No promotion; V0 stays the default.
+
+**What the numbers show.** lf52 and m0r0's fresh-search deficit (the crowding-out cause the diagnosis
+found) closes without the 400-action cutoff ever engaging in their winning seeds -- so spacing and
+prefix-preference alone did the work there, not the hard cap. cd82 (the active-diversion case) now
+executes MORE of V0's original winning route than V5 did (e.g. seed 1: 0/5 steps under V5, 4/5 under
+V6) but still finishes by a slower path on 2 of 3 seeds. This run does not isolate which of the three
+gate rules mattered for which game -- that would need an ablation (each rule alone) as a follow-up.
+
+**Where this leaves things.** Four pilots (V1-V4) failed outright. V5 showed a real mechanism exists
+but broke more than it fixed. V6 shows the SAME mechanism, properly rate-limited, can win without
+losing anything else -- it just isn't fast enough yet on cd82. This is the first pilot whose failure
+mode is "too slow," not "doesn't work" or "actively wrong." Public games are a development proxy, not a
+hidden-game estimate.
