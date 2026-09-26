@@ -37422,3 +37422,28 @@ predicate during `plan_in_model` without changing the predicate, the binary
 goal-energy evaluation, action choice, call budget, or production flags. Each
 execution row SHALL expose this count so a fresh reader can reject an applied
 HUD mask that skipped the full-grid goal check.
+
+### REQ-ARC-WMTE-10016: Record scored action provenance and real level progress
+
+The scored `E3AgentPolicy` SHALL expose, for every emitted action when recording is enabled,
+the policy phase, top branch, explorer branch and serve kind where applicable, whether the
+action consumed a plan step, and the `levels_completed` value from the resulting real frame.
+Recording SHALL be passive: on at least five public games with two fixed seeds each, the
+complete action sequences with recording enabled and disabled SHALL be identical. An
+unset flag SHALL preserve today's action selection and defaults.
+
+This requirement was split from `f494c6cfc3`; the explorer variants in that commit
+belong to REQ-ARC-WMTE-10017 and are outside this change.
+
+#### SCENARIO-ARC-WMTE-10016-PROVENANCE
+
+- **GIVEN** a scored action and its resulting environment frame
+- **WHEN** the action row is recorded
+- **THEN** branch, phase, plan-step, and actual `levels_completed` fields are present
+- **AND** the first level-up is credited only to a real counter increment.
+
+#### SCENARIO-ARC-WMTE-10016-IDENTITY
+
+- **GIVEN** paired fixed-seed offline replays across at least five public games
+- **WHEN** only action recording changes
+- **THEN** the full action and data sequences match exactly for both seeds of each game.

@@ -7127,6 +7127,7 @@ class E3AgentPolicy:
         which is the pre-instrument `next_move` with constant-string branch labels added at
         its return sites.
         """
+        self.observe_action_outcome(latest)
         decision_telemetry = getattr(
             self,
             "_decision_telemetry",
@@ -7508,6 +7509,8 @@ class E3AgentPolicy:
             "plan_pi": int(self.pi),
             "plan_remaining": plan_remaining,
             "plan_present": bool(self.plan),
+            "plan_step": top in {"execute.plan_step", "induce.plan_from_current"},
+            "levels_completed": None,
             "plan_replaced_this_action": self.plan is not plan_before,
             "plan_epoch": rec.plan_epoch,
             "plan_installed_by_attempt": rec.plan_installed_by_attempt,
@@ -7877,6 +7880,16 @@ class E3AgentPolicy:
         accounting at all?" must be answerable from outside the policy.
         """
         return self._provenance
+
+    def observe_action_outcome(self, frame: Any) -> None:
+        """SCENARIO-ARC-WMTE-10016-PROVENANCE: attach the resulting real level."""
+        recorder = getattr(self, "_provenance", None)
+        if recorder is None or frame is None:
+            return
+        try:
+            recorder.observe_outcome_level(_level_of(frame))
+        except Exception:
+            pass
 
     def decision_telemetry(self):
         return getattr(self, "_decision_telemetry", arc_decision_telemetry.NOOP_RECORDER)
@@ -9732,6 +9745,7 @@ class E3AgentPolicy:
         return row
 
     def is_done(self, frames, latest):
+        self.observe_action_outcome(latest)
         return self.explorer.is_done(frames, latest) and self.phase == "explore"
 
 

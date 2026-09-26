@@ -219,6 +219,15 @@ class ActionProvenanceRecorder:
         except Exception as exc:  # pragma: no cover
             self.errors.append(f"record: {exc!r}"[:200])
 
+    def observe_outcome_level(self, level: int) -> None:
+        """REQ-ARC-WMTE-10016: join the last action to its resulting real frame once."""
+        try:
+            if self.rows and self.rows[-1].get("levels_completed") is None:
+                self.rows[-1]["levels_completed"] = int(level)
+                self.rows[-1]["level_after"] = int(level)
+        except Exception as exc:  # pragma: no cover - measurement must remain passive
+            self.errors.append(f"observe_outcome_level: {exc!r}"[:200])
+
     # -- output ------------------------------------------------------------------------
 
     def summary(self) -> dict[str, Any]:

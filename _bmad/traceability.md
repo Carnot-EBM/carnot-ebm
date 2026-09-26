@@ -1,6 +1,18 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-24
+**Last Updated:** 2026-09-26
+**Operational Note:** REQ-ARC-WMTE-10016, split from `f494c6cfc3`, maps the
+scored action's phase, top and explorer branches, plan-step flag, and resulting
+real `levels_completed` to `arc_action_provenance.py` and
+`arc_competition_agent.py`. The focused tests are
+`tests/python/test_arc_action_provenance_10016.py`; the CPU-only offline proof
+driver and raw receipts are in `scripts/experiments/req_10016_provenance_passive.py`
+and `results/raw/req_10016_provenance_passive/`. Recording on/off matched all
+10 pairs (five public games, two seeds, 200 actions each); the unset branch
+matched `git show main:python/carnot/agentic/arc_competition_agent.py` on 300
+scored-policy decisions. Independent raw reduction matched 2,000 paired replay
+actions and all 300 differential decisions. No explorer variants or default
+changes are included.
 **Operational Note:** 2026-09-24 REQ-REPORT-7628 maps the V665 fourteen-task
 custody inventory, independent branch reductions, terminal classifier, and cold
 readers to `python/carnot/experiment_7628_v665_capstone.py` and its 15 focused
