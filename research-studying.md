@@ -6187,3 +6187,13 @@ FoVer 0.9131 and publication gates G1–G4 remain the claim boundary. The
 66/248 covered V668 groups were all previously exposed; null decision and
 learning findings do not become fresh positives. Four missing V668 producers
 remain log custody, without invented scientific verdicts or credential repair.
+# 2026-09-26 V669 evidence boundary
+
+Exp7672 qualified exact bound-relation fixtures. Exp7673's 480 source families
+had zero checked relations and failed required validation. Exp7676's 24 pilot
+families yielded zero fully supported relations and failed required checks.
+Exp7675 and Exp7678 have no producer result after upstream gate skips. Exp7679
+is a blocked independent audit. Exp7680 qualified scripted probes; Exp7681
+found no eligible novel live target. See `docs/research-notes/v669-retrospective.md`
+for controls, missing effect intervals, and next evidence. Do not treat these
+states as a fresh benefit, a live solve, or a reason to change FoVer 0.9131.

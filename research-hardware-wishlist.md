@@ -418,3 +418,12 @@ K nearest neighbors.
 - GateMate preserves the v477 physical/JTAG block (`0xffffffff`) until the operator changes cable, port, or board power setup.
 - Future sampler plan: `docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md` for `distributed_sparse_pbit_boundary_exchange_n1024x4`.
 <!-- exp5231-pbit-boundary-plan:end -->
+
+### V669 capstone continuity (2026-09-26)
+
+Exp7683 has no whole-service cost producer after the native relation gate
+skip. Preserve the qualified KV260 fabric scope at `k_max<=5` and PolarFire
+Linux CPU-only dispatch. GateMate remains blocked by the unchanged
+`0xffffffff` physical/JTAG observation. NPU and TSU remain unqualified.
+Vendor efficiency figures are estimates, not local complete-service timings.
+No board availability probe or purchase was scheduled by Exp7684.

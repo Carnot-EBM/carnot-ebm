@@ -81806,3 +81806,28 @@ custody. No log failure is converted to a producer scientific verdict.
 
 Frozen affected tests, coverage, static checks, cold row reduction, adversarial
 verification and strict verdict-row consistency control readiness and publication.
+
+## REQ-REPORT-7684: Reconcile V669 without inventing absent science
+
+Exp7684 SHALL authenticate the selected V669 roadmap against its design and
+account for all fourteen ordered tasks. Producer bytes, conductor gate custody,
+and absent evidence SHALL have distinct provenance. Missing required Exp7675,
+Exp7678, or Exp7679 scientific evidence SHALL produce one terminal blocked
+verdict with exact failed operands; optional live and native evidence SHALL not
+become fabricated zeros. The capstone SHALL preserve FoVer 0.9131 and the
+independent G1–G4 publication gates. It SHALL record three PRD gaps, hardware
+continuity, per-unit rows, and no-model aggregation provenance. A fresh reader
+SHALL reproduce the custody and registered gate states from immutable bytes.
+
+### SCENARIO-REPORT-7684-CUSTODY
+
+Deleting a producer in a private copy changes its custody to absent. Removing
+one registered gate field creates an exact blocked diagnostic. Neither control
+creates a partial verdict or a zero scientific measurement.
+
+### SCENARIO-REPORT-7684-TERMINAL
+
+Given the frozen candidate, cold reduction and strict adversarial and row
+readers pass before atomic publication. Failed required checks disqualify the
+candidate and set readiness to zero. Accounting readiness does not imply a
+scientific benefit or a publication gate.

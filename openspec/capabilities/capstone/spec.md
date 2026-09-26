@@ -4615,3 +4615,18 @@ The honest verdict SHALL agree with the closed verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-7135 and SCENARIO-CAPSTONE-7135-* | Implemented: Exp7135 module, command wrapper, and V626 artifact | Verified: focused RED tests and 100% new-code statement coverage |
+
+## REQ-CAPSTONE-7684: Close fourteen V669 accounting slots
+
+The capstone SHALL retain one ordered disposition for each Exp7671–Exp7684
+task. It SHALL distinguish a valid scientific null, exact fixture result,
+disqualification, blocked producer, and missing gate-skipped producer. Missing
+required scientific evidence blocks the capstone once with explicit upstream,
+path, field, operator, expected, and observed values. It SHALL keep accounting
+readiness separate from scientific benefit and from G1–G4 publication status.
+
+### SCENARIO-CAPSTONE-7684-COLD
+
+A fresh process SHALL reconstruct all fourteen dispositions and gate checks.
+Private producer deletion or gate-field deletion SHALL yield a terminal blocked
+result, never partial or a fabricated zero.
