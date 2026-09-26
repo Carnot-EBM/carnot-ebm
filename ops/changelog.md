@@ -20818,3 +20818,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   activation, publication or push were performed. Existing rejection and
   contract checks cover the defect; no new guard code was needed.
 
+- 2026-09-26: Bind thirteen tasks and register evidence-set methods (⚠️ Research Finding) — honest_verdict=complete_disqualified_v673_contract_validation; results/experiment_7726_v673_contract_methods.json
