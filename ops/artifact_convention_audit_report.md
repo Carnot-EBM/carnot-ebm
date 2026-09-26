@@ -9,14 +9,23 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| CANNOT_DETERMINE | 3 |
+| CHECKABLE | 8 |
 
 ## experiment_7672_v669_bound_relations.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
-reviewer call failed
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The bound-relation protocol passed the validity, readiness, and coverage gates on fixtures; natural accuracy and other benefits remain unestablished.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
 
 ## experiment_7673_v669_fresh_relation_cohort.json
 
@@ -42,7 +51,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because 3 of 4 upstream gate checks against experiment 7673 failed.
+The task was blocked because three of four upstream gates failed.
 
 ## WHAT IS MISSING
 nothing
@@ -52,11 +61,53 @@ none
 
 ## experiment_7676_v669_qwen_quote_relations.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
-reviewer call failed
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The quote-relation pilot was disqualified and not activated after its acceptance gates failed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
 
 ## experiment_7679_v669_independent_evidence_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The audit was blocked because required independent static and online evidence was not confirmed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7680_v669_arc_probe_protocol.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The scripted probe fixture met protocol readiness, but showed no hidden-game wins or live benefit.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7681_v669_arc_live_probes.json
 
 **CHECKABLE**
 
@@ -72,28 +123,6 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7680_v669_arc_probe_protocol.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_7681_v669_arc_live_probes.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The run was blocked prior to model invocation because no uncleared, eligible novel SDK target games were available (`honest_verdict`: `"complete_blocked_eligible_novel_target"`).
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
 ## experiment_7684_v669_capstone.json
 
 **CHECKABLE**
@@ -102,10 +131,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V669 milestone capstone is blocked on required scientific evidence due to 21 upstream gate check failures and missing producers.
+The capstone accounting is complete, but the V669 scientific claim is blocked by missing or disqualified required evidence.
 
 ## WHAT IS MISSING
-nothing
+nothing; `gate_check_summary.failed_checks` records the failed fields, expected values, and observed values, and `rows` records each task’s accounting status.
 
 ## THE CHECK A READER CANNOT DO
 none

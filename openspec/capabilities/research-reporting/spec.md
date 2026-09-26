@@ -81868,3 +81868,35 @@ machine contract and staged YAML agree. Eighty-six existing guard tests and
 scoped spec coverage passed; five private contract mutations were rejected.
 The planned runtime tasks remain unexecuted. Unchanged guard-test formatting
 debt is recorded in ops and traceability, not treated as new implementation.
+
+## REQ-REPORT-V671-PLAN: Recover unexecuted science with budgeted learning
+
+The staged milestone 2026.09.671 SHALL contain exactly fourteen ordered tasks,
+Exp7699 through Exp7712, across four phases. The design table, machine contract
+and execution YAML SHALL agree on IDs, titles, phases, deliverables, substrates,
+models and gates. Preserve the V670 design byte for byte. Leave the active
+roadmap and scripts/research_conductor.py unchanged.
+
+The plan SHALL distinguish six usage-limit launch failures and eight gate
+skips from scientific null results. It SHALL not claim a V670 implementation
+exists. Activation SHALL require evidence that the effective execution backend
+can run; declared routing alone is insufficient. No planner-only flag may
+bypass operator routing. Failure lineage SHALL retain literal missing-producer
+custody without inventing honest verdicts or requiring retired upstream IDs.
+
+Research receipts SHALL precede design. The plan SHALL reserve exact source
+addressing, fresh calibrated energy decisions, causal constraint additions,
+a fixed-budget update-scheduling comparison, live ARC generalization and
+complete native service timing. All prompts SHALL require flushed phase and
+loop progress, bounded writes, per-unit evidence, verdict classes, exact gate
+operands and principle annotations. Qwen3.8-27B remains the experimental LLM.
+
+### SCENARIO-REPORT-V671-PLAN
+
+Independent parsing finds fourteen identical ordered task contracts. Private
+count, order, gate-field, model and stale-milestone mutations fail. Existing
+schema, exclusion, gate, prompt-path, harness-fit, ARC and priority readers
+pass. Relevant guard tests, scoped lint and affected-test spec coverage pass.
+Protected-file hashes remain unchanged. Runtime science remains proposed.
+
+Implementation status: planning in progress; no V671 experiment executed.

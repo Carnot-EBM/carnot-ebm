@@ -47185,3 +47185,79 @@ The method changes come from inspecting current code and raw receipts.
 - The separate Exp10015 pilot was null: the probe arm gained no game and
   consumed more actions. The September 26 goal-induction note records this.
   Do not repeat its visible-salience hypothesis bank as a promised solve lever.
+
+## 2026-09-26 — V671 planning research: recover execution, then test useful learning
+
+This review was recorded before the V671 design. The previous milestone was
+processed but produced no scientific artifacts. Its conductor log records
+usage-limit errors for six task launches and gate skips for eight descendants.
+The operational retrospective records zero reconstructed experiment commits.
+The archive ends at V669. Do not describe V670 as a scientific null or claim
+that its record-interface, cohort, learning or native-service code shipped.
+
+### Primary sources reviewed
+
+| Topic | Source and review depth | Decision for the next milestone |
+|---|---|---|
+| EBM reasoning and verification | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, December 2025](https://arxiv.org/abs/2512.15605), abstracts rechecked | Keep the small conditional energy with exact normalization. Neither paper proves that learned low energy certifies truth. |
+| Neural constraint satisfaction | [PAL, March 2025](https://arxiv.org/abs/2503.19466); [T-SKM-Net, December 2025](https://arxiv.org/abs/2512.10461), abstracts | Guarantees concern supplied algebraic constraints. They do not establish correct extraction from original answers. Preserve narrow certificates and abstention. |
+| Ising in ML | [Learning-to-sample phase transition, May 2026](https://arxiv.org/abs/2605.24752), abstract | Sampling hardness remains distinct from prediction quality. A binary decision head can normalize exactly without another sampler branch. |
+| Hallucination detection | [Enoki, September 2026](https://arxiv.org/html/2609.00581v2), abstract and method inspected | Preserve text-anchored relations, arguments and complete clauses. Separate evidence location from semantic support. Reuse the unexecuted record-interface question. |
+| Constrained generation | [Structural failures and semantic gap, September 2026](https://arxiv.org/abs/2609.23742); [Thinking Before Constraining, January 2026](https://arxiv.org/abs/2601.07525), abstracts | Measure syntax, addressing, binding and support separately. A valid schema or a larger token budget is not evidence of truth. |
+| Energy-guided decoding | [ETS, January 2026](https://arxiv.org/abs/2601.21484); [Energy-guided Recursive Model, July 2026](https://arxiv.org/abs/2607.10128), abstracts | Candidate quality and matched search budgets matter. Defer a new decoder and do not reopen retired external-text reranking. |
+| KAN continual learning | [KAN-CL, May 2026](https://arxiv.org/abs/2605.12306); [Catastrophic Forgetting in KANs, November 2025](https://arxiv.org/abs/2511.12828), abstracts | Local spline support does not guarantee retention on Carnot data. Keep the measured retention control; unchanged importance anchoring remains closed. |
+| Hardware sampling | [FPGA/Ising co-design, February 2026](https://arxiv.org/abs/2602.15985), abstract; [Extropic Z1T, September 4](https://extropic.ai/writing/z1t), method and estimate boundaries | Include source processing, orchestration and persistence in timing. Vendor projections are not local TSU or KV260 measurements. |
+| Online constraint learning | [Capacity-constrained delayed OCO, June 2026](https://arxiv.org/abs/2606.11711), abstract | Bound pending feedback and preserve label-release order. A discrete constraint bank inherits no convex regret guarantee. |
+
+### New actionable lead: update allocation under a fixed budget
+
+[Adapt Only When It Pays (ADOWIP), June 23, 2026](https://arxiv.org/html/2606.25068v1)
+was not in the reference index before this pass. The method uses revealed
+loss to decide when to spend an update budget. The full method and limitation
+sections were inspected. Its positive evidence concerns time-series decision
+proxies; other reported regimes are negative. Its theory does not establish
+benefit for discrete constraint acquisition.
+
+Carnot adaptation: compare a delayed-loss scheduler with a fixed-period
+scheduler under the same maximum number of candidate proposals and admission
+checks. Both use the same constraint grammar and causal feedback. Measure
+later predictions and retention. Charge rejected proposals too. This is a
+falsifiable scheduling experiment, not a reproduction of ADOWIP or a claim
+that its guarantees transfer. It adds a new causal control to V670's untested
+acquisition protocol without adding generator training.
+
+### Secondary-source receipts
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and reasoning work. Retrieved
+  the [ICLR 2026 EBT paper](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  and the [On the Emergence of Reasoning submission](https://openreview.net/pdf?id=bYkfHTcR1v).
+  The latter's forum hit a browser challenge; its PDF labels it under review.
+  Search also returned unrelated spam-index pages, which were excluded.
+  No acceptance status is inferred from those search pages.
+- **Extropic:** opened the [writing index](https://extropic.ai/writing), whose
+  extracted view contains navigation only, and the accessible Z1T article.
+  Its sparse hardware design is relevant; no local device access was established.
+- **Semantic Scholar:** searched both seed titles and attempted the
+  [EBT citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both returned tool internal errors. No citing-paper list was recovered;
+  there is no claim that later citations are absent.
+- **Hugging Face:** opened the [verification paper feed](https://huggingface.co/papers?q=verification).
+  It is a discovery channel; technical claims use author papers above.
+- **GitHub:** opened weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending pages.
+  Retrieved views were two weeks old. No current relevant trending dependency
+  was verified, and no installation follows from this scan.
+- **Logical Intelligence:** opened [Kona](https://logicalintelligence.com/kona).
+  The vendor describes energy-based constraint reasoning. The retrieved page
+  supplies no reproducible local recipe sufficient to copy the architecture.
+  Vendor certainty claims are not independent Carnot evidence.
+
+### Execution premise that must change
+
+V670 declared some Claude tasks, but every actual launch shown in the log used
+Codex and failed on quota. Merely changing a YAML backend does not demonstrate
+that routing works. Before activation, inspect the resolved dispatcher route
+and require a successful current backend receipt. Do not edit conductor code,
+credentials or global routing settings during this planning task. Preserve
+all fourteen missing-artifact dispositions and use new experiment IDs.

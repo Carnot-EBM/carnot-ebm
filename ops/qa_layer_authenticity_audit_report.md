@@ -3,7 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-26
 
-Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 7 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -12,249 +14,286 @@ Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21):
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 0 |
+| `SILENT_NON_FIRING` | 7 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 20 |
+| `UNKNOWN` | 0 |
+
+### MISSED INPUTS — a real input each guard does NOT catch
+The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
+- `adversarial_verify.py::_finite_float` — "generic_transfer_delta": {"principle": "with_verifier - baseline", "value": 0.0}
+- `adversarial_verify.py::_has_positive_control_null_metric` — results/experiment_4572_integration_gate.json: generic_transfer_baseline = 0.04; generic_transfer_rate_integrated = 0.04. The function returns false for this real artifact.
+- `adversarial_verify.py::_is_positive_control_null_claim` — results/experiment_4549_llm_proposer_primitive_persist_transfer.json` — verdict `complete: llm_proposer_primitive_persisted_transfer_null_characterized`, with `a1_summary.positive_control_passed` equal to `false`.
+- `adversarial_verify.py::_positive_control_failed_or_unchecked` — {"honest_verdict":"complete: llm_proposer_no_deeper_level_honest_null","efficiency_delta":0.0,"positive_control_passed":true,"false_negative_risk_checked":true,"false_negative_risk_open":true}` returns false despite an explicitly open risk.
+- `adversarial_verify.py::check_false_negative_risk` — results/experiment_7127_v626_adapter_withheld_arc_loo.json`: `honest_verdict` is `complete_null_executed_pair_zero_withheld_levels_no_solve_claim`, `verdict_class` is `null`, and `withheld_levels`, `control_levels`, and `level_delta` are all `0`. The current function emits no flag.
+- `adversarial_verify.py::_is_comparative_claim` — [results/experiment_2355_projected_langevin.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2355_projected_langevin.json:19) records `honest_verdict: "complete: Projected-Langevin matched or exceeded CASAL satisfaction (1.000 vs 0.667)"`, `constraint_satisfaction_rate: 1.0`, and `casal_satisfaction_rate: 0.6666666666666666`. The helper returns false.
+- `adversarial_verify.py::check_ceiling_saturation` — Using exp3518’s real method scores with a plausible verdict: `{"honest_verdict":"complete: energy inference exceeds greedy AR on graph coloring","solve_rate":1.0,"solve_rate_by_optimizer_variant":{"vanilla_descent":1.0,"parallel_tempering":1.0}}`. The function emits no flag.
+
+### FLAGGED — operator action recommended
+- `adversarial_verify.py::_finite_float` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_positive_control_null_metric` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_positive_control_null_claim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_positive_control_failed_or_unchecked` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_false_negative_risk` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_comparative_claim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_ceiling_saturation` — **SILENT_NON_FIRING**
 
 ---
 
-## run_stop_authority.py
+## adversarial_verify.py::_finite_float
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+**Verdict:** `SILENT_NON_FIRING`
 
-## exclusion_manifest_lint.py
+## VERDICT
+SILENT_NON_FIRING
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## CLAIM
+The function has no docstring; its name `_finite_float` implies that it extracts a finite numeric field value.
 
-## in_process_doc_reconcile.py
+## FINDINGS
+1. **Silent non-firing:** `value = d.get(key)` followed by `return float(value) if _is_finite_number(value) else None` returns `None` for a valid principle-wrapped number. A caller cannot distinguish that result from a missing, null, or invalid field. This is narrower than the name implies.
+2. This function has no free-text matching, negation check, numeric threshold, hardcoded marker list, absolute path, write, or measurement. It has no separate named pattern whose deletion can be assessed from this code.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## COUNTEREXAMPLE
+`{"generic_transfer_delta": {"principle": "with_verifier - baseline", "value": 0.0}}` passed with key `"generic_transfer_delta"` returns `None`, losing the valid zero.
 
-## adversarial_verify.py::_declares_terminal_artifact_readiness
+## MISSED INPUT
+`"generic_transfer_delta": {"principle": "with_verifier - baseline", "value": 0.0}`
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
 
-## adversarial_verify.py::check_terminal_artifact_readiness
+## RATIONALE
+The helper silently drops an annotated finite value, so a caller using its result can skip the numeric evidence. The current main artifact path unwraps top-level fields before calling this helper; this audit establishes the direct-call failure, not an end-to-end miss through that path.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
 
-## adversarial_verify.py::_flag_summary
+## adversarial_verify.py::_has_positive_control_null_metric
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+**Verdict:** `SILENT_NON_FIRING`
 
-## adversarial_verify.py::_is_finite_number
+## VERDICT
+SILENT_NON_FIRING
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## CLAIM
+The name `_has_positive_control_null_metric` claims to recognize a null metric relevant to positive-control validation.
 
-## adversarial_verify.py::_numeric_pairs
+## FINDINGS
+1. **A/B/F — real silent miss.** The committed artifact results/experiment_4572_integration_gate.json has generic_transfer_baseline = 0.04 and generic_transfer_rate_integrated = 0.04. That baseline name is absent from the four pairs under `return any(`, and the helper returns false. False is also its result for a measured non-null; it gives no indication that the metric was unrecognized. The artifact’s explicit null verdict lets the caller detect that particular claim, but the metric rule itself does nothing.
+2. **Field extraction and pattern scope.** Every metric read passes through `_finite_float(d, key)`. A principle-wrapped numeric value is skipped, as are a list or None, without distinguishing an unsupported shape from a non-null measurement. The four delta names also omit real corpus fields such as actions_delta, winner_generated_delta, and first_win_delta_vs_baseline.
+3. **C — untested rules.** I forced the entire helper to return false in memory; all 90 relevant tests passed. The named positive-control regression still fires through the caller’s verdict path, so those tests do not establish that any of this helper’s four delta rules or four pair rules works.
+4. **Other requested classes.** This function scans no free text, so it has no substring-boundary or negation check to fault. Its `math.isclose(value, 0.0, rel_tol=0.0, abs_tol=1e-12)` includes the exact tolerance boundary; no contrary threshold is claimed. It contains no absolute path, write, or work-duration measurement.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## COUNTEREXAMPLE
+`{"efficiency_delta": {"principle": "best minus baseline", "value": 0.0}}` is a null metric in the permitted wrapped shape, but the function returns false.
 
-## adversarial_verify.py::_name_tokens
+## MISSED INPUT
+results/experiment_4572_integration_gate.json: generic_transfer_baseline = 0.04; generic_transfer_rate_integrated = 0.04. The function returns false for this real artifact.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## RECOMMENDATION
+NEEDS_REDESIGN
 
-## adversarial_verify.py::_is_count_field
+## RATIONALE
+The fixed names are narrower than the metric concept they represent, and unsupported field shapes silently produce the same result as a genuine non-null. The observed artifact does not prove a missed final flag because its verdict supplies another detection path; the mutation result shows that path currently masks the helper’s failure in the relevant tests.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
 
-## adversarial_verify.py::_is_timestamp_field
+## adversarial_verify.py::_is_positive_control_null_claim
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+**Verdict:** `SILENT_NON_FIRING`
 
-## adversarial_verify.py::_is_chance_floor_score
+## VERDICT
+SILENT_NON_FIRING
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## CLAIM
+The docstring claims `True for efficiency/proposer/transfer nulls that require a positive control.`
 
-## adversarial_verify.py::_is_identifier_field
+## FINDINGS
+1. **A/F — missing control silently passes.** The first condition requires a control field or the control phrase in the verdict before the function will examine a null claim. Its `return False` therefore treats absent control evidence as no applicable check. A real transfer-null artifact with a failed control recorded in a nested summary takes this path; the caller emits no false-negative-risk flag.
+2. **Field extraction.** There is no `d.get` in this function. The membership checks inspect only top-level keys, and `text = " ".join([verdict, " ".join(str(key).lower() for key in d)])` discards field values. Nested control evidence is invisible. The function assumes `verdict` is a string; the caller turns a principle-wrapped verdict into an empty string, silently losing the claim. The called `_has_positive_control_null_metric(d)` also misses principle-wrapped numeric values.
+3. **Substring and context errors.** `marker in verdict for marker in _POSITIVE_CONTROL_NULL_VERDICT_MARKERS` has no word boundary: *nullable* contains the null marker, although schema nullability is not a null experimental result. It also has no claim context: a blocked verdict describing a control that was not attempted can be classified as a scientific null. The domain search uses the same substring method on keys and verdict text. The six `.startswith` prefixes are anchored and end in punctuation, so I found no within-word match in that branch.
+4. **B — enumerations are narrower than their concepts.** The initial three alternatives stand in for positive-control evidence but omit its absence and nested control records. The domain markers stand in for efficiency, proposer, and transfer work but omit action-count efficiency expressed through fields such as median-actions measurements. The verdict markers stand in for null claims but omit *no_improvement*, present in a real transfer verdict. The metric helper’s zero-delta list omits the real field forward_transfer_delta. I found no supported omitted positive-outcome prefix in the `.startswith` tuple.
+5. **C — decorative patterns.** In the current verdict-marker tuple, honest_null is wholly covered by null, and no_value_added by no_value. In the domain tuple, llm_proposer, core_efficiency, and generic_transfer are wholly covered by proposer, efficiency, and transfer respectively. Removing any of those narrower entries cannot change this function’s result, so outcome-based tests would stay green.
+6. **D/E/G and thresholds.** This function has no absolute path, write, or measurement. The focused regression test reads a results fixture. There is no numeric comparison or floor in this function to assess for an equality or off-by-one error.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## COUNTEREXAMPLE
+This fragment comes from `results/experiment_4549_llm_proposer_primitive_persist_transfer.json`:
 
-## adversarial_verify.py::_is_reference_field
+```json
+{
+  "honest_verdict": "complete: llm_proposer_primitive_persisted_transfer_null_characterized",
+  "a1_summary": {
+    "positive_control_passed": false,
+    "barrier_refinement": "positive_control_failed: live Qwen proposer did not produce the known reachable fixture plan."
+  }
+}
+```
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+The function returns `False`; the caller emits no false-negative-risk flag.
 
-## adversarial_verify.py::_delta_stem
+## MISSED INPUT
+`results/experiment_4549_llm_proposer_primitive_persist_transfer.json` — verdict `complete: llm_proposer_primitive_persisted_transfer_null_characterized`, with `a1_summary.positive_control_passed` equal to `false`.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## RECOMMENDATION
+NEEDS_REDESIGN
 
-## adversarial_verify.py::_is_verified_arithmetic_delta
+## RATIONALE
+The missing-control case is exactly where the claimed check should act, yet the first guard makes it indistinguishable from a genuine pass. The actual artifact demonstrates the silent failure; substring matches and unwrapped fields create additional false positives and false negatives.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
 
-## adversarial_verify.py::_is_rate_metric_field
+## adversarial_verify.py::_positive_control_failed_or_unchecked
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+**Verdict:** `SILENT_NON_FIRING`
 
-## adversarial_verify.py::_add_variant_denominators_from_value
+## VERDICT
+SILENT_NON_FIRING
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## CLAIM
+`A null is informative only when the positive control and FNR check passed.`
 
-## adversarial_verify.py::_variant_denominators
+## FINDINGS
+1. **Silent non-firing:** `d.get("false_negative_risk_checked") is not True` tests whether a check was recorded as completed, not whether it passed. An artifact can record both booleans as true while also recording an open false-negative risk; this function returns false and gives no indication of that conflict. The two exact field names stand in for the broader control-risk decision but omit that risk outcome.
+2. **Field shape:** `d.get("positive_control_passed") is not True` and `d.get("false_negative_risk_checked") is not True` reject principle-wrapped true values. That falsely treats a passed control and completed check as failed. Missing values and nulls correctly count as unchecked; lists and numbers also fail the strict boolean test.
+3. **Untested operands:** The focused failure fixture sets both fields false, and the passing fixture sets both true. Deleting either side of `or` would leave those cases unchanged; neither test isolates one failed field.
+4. This function has no free-text matching, numeric threshold, recognizer chain, path, write, or measurement. The substring, negation, boundary, path, tracked-state, default-branch, and timing hazards do not occur here.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## COUNTEREXAMPLE
+`{"honest_verdict":"complete: llm_proposer_no_deeper_level_honest_null","positive_control_passed":{"principle":"Known reachable plan succeeded.","value":true},"false_negative_risk_checked":{"principle":"Null-risk review completed.","value":true}}` returns true: a false positive.
 
-## adversarial_verify.py::_is_small_shared_denominator_rate_pair
+## MISSED INPUT
+`{"honest_verdict":"complete: llm_proposer_no_deeper_level_honest_null","efficiency_delta":0.0,"positive_control_passed":true,"false_negative_risk_checked":true,"false_negative_risk_open":true}` returns false despite an explicitly open risk.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-)
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The function equates a completed risk check with a passed one and cannot recognize a contradictory open-risk result. It also misreads valid wrapped booleans. Unwrap the two fields, evaluate the recorded risk outcome, and test each gate failing independently.
+
+
+## adversarial_verify.py::check_false_negative_risk
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Detect NULL/negative claims that lack a valid positive control or that` `rest on a degenerate (un-exercised) method`.
+
+## FINDINGS
+
+1. **A real null passes silently.** `is_null_claim = any(m in verdict for m in null_markers)` does not recognize the project’s actual complete_null verdict form or its declared null verdict class. `if not is_null_claim:` then skips all three degeneracy signals. The separate positive-control check is limited to particular research domains. The exp7127 artifact named below produces zero flags from this function despite both arms reaching zero levels.
+
+2. **Field extraction has a direct-call gap.** `d.get("honest_verdict") or ""` followed by `(verdict_raw if isinstance(verdict_raw, str) else "").lower()` treats a wrapped dict, list, or other non-string as an empty verdict. Numeric and boolean signal values in `d.items()` are likewise skipped when wrapped or nested. The normal artifact-verification caller unwraps top-level principle fields before calling this function, so that specific wrapper risk is mitigated on the normal path. The two `d.get` reads in the warning detail only format values; they make no bare-type assumption.
+
+3. **The pattern lists are samples of their concepts.** `null_markers` represents negative verdicts but omits the real complete_null form. The flip/count and `kl.startswith("n_changed")` recognizers represent method non-exercise but miss exp7127’s paired zero control and treatment levels. The oracle-name, metric-name, and baseline-name lists represent comparable ceiling-versus-baseline evidence but miss exp6960’s available oracle headroom and exp7127’s control levels. The gate-name list represents self-reported degeneracy but does not account for the opposite polarity of `no_headroom`.
+
+4. **Substring and context matching can reverse the verdict.** `any(m in verdict for m in null_markers)` has no token boundary or negation check: `"refuted"` matches inside a statement that a premise was *not* refuted. The field-key checks have the same context problem: a zero control flip count can be described as proof that the *method* never changed a selection.
+
+5. **The headroom gate reads a negated field backwards.** `v is False` combined with `"headroom" in kl` flags `no_headroom=False` as degeneracy, although that value says headroom is present. The oracle scan also takes the first matching number through `oracle is None` and `baseline is None`; its broad `"rate"` and `"score"` matches do not establish that the two numbers measure comparable outcomes. The stated threshold operators themselves are correct: `float(v) == 0.0` tests exact zero, and `oracle <= baseline` includes equality as “does not exceed.”
+
+6. **A named regression test does not isolate its named rule.** The G2 test’s field name also contains the non-degenerate marker. Removing `or "g2" in kl` in memory left all 81 tests in the guard test module green, including that test. This establishes that the focused suite does not protect the G2-only branch; it does not establish that the entire repository suite would stay green.
+
+7. **No path, write, or measurement defect appears in this function.** It appends flags and computes no duration or counter. There is no baked-in absolute write target or tracked-artifact write here; the existing guard tests use temporary artifact paths.
+
+## COUNTEREXAMPLE
+```json
+{
+  "honest_verdict": "success: selection_premise_not_refuted",
+  "method_flip_count": 12,
+  "no_headroom": false,
+  "oracle_accuracy": 0.80,
+  "baseline_accuracy": 0.65
+}
+```
+This function emits `FALSE_NEGATIVE_RISK`: it mistakes “not refuted” for a null and `no_headroom: false` for missing headroom.
+
+## MISSED INPUT
+`results/experiment_7127_v626_adapter_withheld_arc_loo.json`: `honest_verdict` is `complete_null_executed_pair_zero_withheld_levels_no_solve_claim`, `verdict_class` is `null`, and `withheld_levels`, `control_levels`, and `level_delta` are all `0`. The current function emits no flag.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The guard silently misses a recorded null with a failed control, then can flag an honest positive claim by reading negation backwards. Adding one token would address the named miss but leave the polarity, field-meaning, and test-isolation defects intact.
+
+
+## adversarial_verify.py::_is_comparative_claim
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The docstring says the helper identifies artifacts that assert one method beats another, so the ceiling-saturation check can evaluate that claim.
+
+## FINDINGS
+
+1. **A/F — Real missed input.** A recorded artifact says one method exceeded another, but `_is_comparative_claim` returns `False`: neither its verdict wording nor its metric names satisfy the recognizers. `return False` gives the caller no way to distinguish an unrecognized comparison from a genuinely noncomparative artifact. This is a confirmed miss by the helper; that artifact has no tier map, so it is not evidence of a missed ceiling warning on that file.
+
+2. **Field shapes.** `v = str(d.get("honest_verdict", "")).lower()` turns a wrapped dict or list into its representation; words in a wrapper’s principle can trigger a match unrelated to the verdict value. `headline = d.get("solve_rate") or d.get("accuracy") or d.get("pass_rate")` skips zero and lets a truthy wrapped dict prevent fallback. `_is_finite_number(vv)` silently ignores wrapped baseline numbers. The full verifier normalizes top-level principle wrappers before calling this helper, so the wrapper defects are exposed by direct calls, not established as failures of that entry point.
+
+3. **Substring and context errors.** `m in v` has no word or negation check. The markers for beats and wins can occur inside unrelated words; `_vs_` and `_beat_` have underscore delimiters but still match statements denying a win. An actual verdict explicitly says the method does not significantly beat its baseline; this helper returns true and the ceiling check emits a warning. `"baseline" in kl`, `"exact" not in kl`, and `"oracle" not in kl` likewise classify keys by incidental substrings.
+
+4. **Patterns narrower than their concepts.** `_COMPARISON_VERDICT_MARKERS` stands for asserted method superiority but omits wording such as *improved over* and *exceeded*. The three headline fields stand for the result metric but omit satisfaction rate; the baseline-name rule stands for a comparator but omits named controls such as CASAL. The exact/oracle exclusions stand for upper bounds but omit names such as optimal, while also excluding names containing *inexact* or *nonoracle*.
+
+5. **Threshold.** `float(vv) < float(headline)` correctly implements the stated *strictly below* rule: equality does not qualify. The `or` chain is a separate zero-value selection error. The fallback compares any numeric field whose name contains baseline with the headline, without checking that the two measurements have the same meaning.
+
+6. **C — Deletable rules.** In separate in-memory mutations, emptying the entire marker tuple and removing the numeric-baseline route each left all 81 tests in the focused guard module passing. Its positive ceiling tests satisfy both routes at once; that module does not protect either route independently. The full test suite was not mutation-run.
+
+7. **D/E/G.** This helper has no absolute path, write, or measurement. Its focused tests use in-memory artifacts. There is no tracked-state write or timing-span defect in the supplied function.
+
+## COUNTEREXAMPLE
+A fragment drawn from the recorded negative verdict and rates in experiment 3540:
+
+```json
+{
+  "honest_verdict": "complete: p01_energy_does_not_significantly_beat_strong_baseline_at_n60_advantage_was_small_sample_artifact",
+  "solve_rate": 1.0,
+  "strong_baseline_solve_rate": 0.99,
+  "solve_rate_by_difficulty": {"easy": 1.0, "hard": 1.0}
+}
+```
+
+It says the superiority result was **not significant**, yet the helper returns true and the ceiling check warns.
+
+## MISSED INPUT
+[results/experiment_2355_projected_langevin.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2355_projected_langevin.json:19) records `honest_verdict: "complete: Projected-Langevin matched or exceeded CASAL satisfaction (1.000 vs 0.667)"`, `constraint_satisfaction_rate: 1.0`, and `casal_satisfaction_rate: 0.6666666666666666`. The helper returns false.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The gate misses a recorded positive comparison and accepts a recorded denial of one. Adding one token cannot fix both the negation error and the assumption that any lower baseline-named number establishes a superiority claim. Focused mutation tests show that the current tests do not independently exercise either recognition route.
+
+
+## adversarial_verify.py::check_ceiling_saturation
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The docstring says the check catches ceiling-saturated results that make method superiority uninformative and `Only fires on comparative claims (gated)`.
+
+## FINDINGS
+1. **A/F — silent miss.** `if not _is_comparative_claim(d): return` treats an unrecognized superiority phrase as a clean result. The concrete input in MISSED INPUT uses method scores from the project’s graph-coloring experiment; the check emits no flag.
+2. **Field shapes.** This function has no direct `d.get` read. Both passes require a dict, then `nums = {kk: float(vv) for kk, vv in v.items() if _is_finite_number(vv)}` silently drops wrapped, list, and null values. The normal verifier unwraps top-level principle fields before calling this function, but nested values remain unhandled; dropping an unmeasured tier can make the remaining tiers appear universally saturated.
+3. **Substring and context errors.** `s in kl` can recognize a name ending in “by_methodology” as a method breakdown. `m in kk.lower()` can classify “nonrandomized” as random. The comparative gate also accepts a negated “does_not_beat” verdict as a superiority claim.
+4. **Threshold and claim mismatch.** Exact equality at `CEIL = 0.99` is included as intended. But 0.99 and 1.0 are reported as a tie, and counts such as 100 pass the same ceiling test because neither pass establishes that its numbers are rates. The docstring describes `every method variant` tying; signal 1 needs only two. The real exp3529 artifact receives a difficulty warning despite its single-restart baseline scoring 0.733 on the comparison.
+5. **Narrow pattern lists.** The method-key tuple stands for per-method performance but omits the project’s by-arm naming. The difficulty-key tuple stands for tiered performance but omits tier-results naming. `_TRIVIAL_BASELINE_MARKERS` stands for simple controls but misses DSATUR when named alone, although this project uses it as a greedy comparator.
+6. **Untested or decorative rules.** `max(nums.values()) < CEIL` is redundant: `len(at_ceiling) >= 2` already prevents a flag below the ceiling. Removing the vanilla marker in memory left all four dedicated ceiling tests green because the fixture’s vanilla_descent name also matches the descent marker. Those tests exercise only the optimizer and difficulty key recognizers.
+7. **D/E/G.** The shown function has no absolute path, write target, or computed measurement. Its dedicated tests do not write a fixed tracked artifact.
+
+## COUNTEREXAMPLE
+Actual exp3529 fragment: `{"honest_verdict":"complete: p01_sudoku_energy_power_visible_on_discriminating_tier_solve_rate_1_00_vs_single_sa_0_73","solve_rate_by_difficulty":{"hard":1.0,"extreme":1.0,"ultra_hard":1.0},"solve_rate_by_optimizer_variant":{"discrete_sa_single":0.7333333333333333,"discrete_sa_restarts20":1.0,"parallel_tempering_tuned":0.28888888888888886,"exact_cp":1.0}}`. The function emits a ceiling warning even though the comparison has measured headroom.
+
+## MISSED INPUT
+Using exp3518’s real method scores with a plausible verdict: `{"honest_verdict":"complete: energy inference exceeds greedy AR on graph coloring","solve_rate":1.0,"solve_rate_by_optimizer_variant":{"vanilla_descent":1.0,"parallel_tempering":1.0}}`. The function emits no flag.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+An unknown claim phrase or metric layout is silently treated as a pass, while unrelated numeric maps can be treated as ceiling rates. The current tests miss both behaviors and permit deletion of at least one named marker. The check needs explicit rate and comparison semantics, plus a visible unverified outcome for claims it cannot classify.
+

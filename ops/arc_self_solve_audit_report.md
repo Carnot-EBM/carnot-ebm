@@ -16,16 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-(LLM review unavailable: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-reasoning summaries: none
-session id: 01a0dc8d-f1a7-7b71-9281-773e99891b13
---------
-user
-You are a HOSTILE reviewe)
+**TL;DR:** No recent ARC solve artifacts were supplied, so there is no demonstrated live self-discovery advance to credit.
+
+**Per artifact:** None (last 7 days: 0).
+
+**Pattern watch:** The reachability check passed for 97 modules, but reachability does not show that the live agent discovered a hidden-game solution through its own attempts. There is no recent artifact to assess for outer-loop solving or off-path work.
+

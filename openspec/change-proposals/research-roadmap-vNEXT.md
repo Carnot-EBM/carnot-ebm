@@ -1,120 +1,132 @@
-# Carnot Research Roadmap v670: Usable evidence and retained constraints
+# Carnot Research Roadmap v671: Recover execution and test budgeted learning
 
 **Created:** 2026-09-26
-**Milestone:** 2026.09.670
-**Title:** Usable source relations, retained constraints, and live generalization
-**Status:** Proposed; not activated or executed
-**Supersedes:** 2026.09.669, Exp7671–Exp7684
-**Previous design:** `research-roadmap-v669-preserved-20260926.md`, preserved byte for byte
-**Execution authority:** `research-roadmap-next.yaml`, then the activated roadmap with this milestone
-**Contract:** exactly **14 tasks, exp7685 through exp7698**, in the order below, across **four phases**.
+**Milestone:** 2026.09.671
+**Title:** Recovering source evidence and testing budgeted constraint learning
+**Status:** Proposed; activation depends on verified execution capacity
+**Supersedes:** 2026.09.670, Exp7685–Exp7698
+**Previous design:** `research-roadmap-v670-preserved-20260926.md`, preserved byte for byte
+**Execution authority:** `research-roadmap-next.yaml`, then its matching activated roadmap
+**Contract:** exactly **14 tasks, exp7699 through exp7712**, in the order below, across **four phases**.
 
-## What v669 proved
+## What v670 proved and did not measure
 
-All fourteen tasks were handled. Eight producer artifacts exist; six tasks
-were skipped behind gates. The completed archive currently ends at V668.
-Producer bytes and conductor receipts establish V669's current disposition.
+The conductor handled all fourteen tasks, but none produced its experiment
+artifact. Completion here means the queue drained. It does not mean the
+proposed experiments ran, and it establishes no scientific null.
 
-| Experiment | Evidence and limit |
-|---|---|
-| Exp7671 | Contract and method ingestion completed; no scientific benefit claim. |
-| Exp7672 | Bound tuple protocol qualified on exact fixtures. Evidence is circular; natural-language coverage remains open. |
-| Exp7673 | Selected 480 families and emitted 1,440 feature rows, but checked no relations. Required coverage was 92 percent, so the artifact is disqualified. |
-| Exp7674–7675 | No trained relation head or static evaluation producer after upstream gate skips. Missing measurements are not null results. |
-| Exp7676 | Forty-eight bounded Qwen calls yielded 27 schema-valid proposals and zero unique-evidence matches. Required coverage was 62 percent. These disqualified rows support diagnosis only. |
-| Exp7677–7678 | No acquisition protocol or empirical learning producer after gate skips. |
-| Exp7679 | Correctly blocked on missing static and online scientific evidence. |
-| Exp7680 | Scored-path probe fixtures qualified; no hidden-game utility demonstrated. |
-| Exp7681 | Blocked before generation: no uncleared eligible public target. Source also lacks the runner for an eligible target. |
-| Exp7682–7683 | No native relation or whole-service cost producer after upstream gate skips. |
-| Exp7684 | All fourteen dispositions accounted for; scientific completion remains blocked. |
+| Previous tasks | Observed disposition | Evidence boundary |
+|---|---|---|
+| Exp7685, 7686, 7687, 7693, 7694, 7698 | Each launch failed three times with a Codex usage-limit error | No contract, record interface, fresh cohort, audit, runner or capstone implementation is assumed to exist. |
+| Exp7688–7692, 7695–7697 | Eight gate skips after upstream retirement | No current Qwen pilot, energy head, decision evaluation, acquisition run or native measurement. |
+| Operational retrospective | Zero experiment commits reconstructed; no task timing | Ambient GPU idleness does not measure experiment efficiency. |
 
-**Exposure correction:** Exp7673's `prior_exposure_groups=429` counts excluded
-families, not contamination among the 480 selected families. This distinction
-comes from its source and exclusion ledger. The selected roster has now been
-inspected and must join the exposure ledger for V670 selection.
+Sources: the 2026-09-26 05:38–06:16 UTC entries in `ops/conductor-log.md`,
+absence of all fourteen declared result paths, and
+`results/operational_retro_2026_09_670.json`. The completed archive ends at
+V669 at planning time. Preserve that archive lag as custody; do not fill it
+with fabricated producer verdicts. YAML failure lineage uses explicit
+`not_emitted_*` log-disposition markers where no honest verdict exists.
 
-Two interface defects precede another broad science claim. The quote reducer
-requires the quote span to equal an entire indexed record. Its `claim_index`
-addresses a narrow parser list that the model prompt does not supply. A unique
-contained quote can be valid addressing without proving an answer proposition.
-The new interface must preserve that distinction.
+The last measured scientific boundary remains V669 and V668. V669's bound
+relation fixtures worked, but fresh features and Qwen quote relations failed
+required validation. Its 480 selected source families yielded no checked
+relations. The 429 previously exposed families were excluded, not selected
+contamination. The quote resolver requires full-record equality, and its
+claim index is not supplied by the prompt. These are diagnosed interface
+problems. V668 found no registered decision or retained-learning benefit.
 
-The separate Exp10015 goal-probe pilot also matters: Probe gained no game
-and used more actions. Its null is recorded in the September 26 addition to
-`docs/research-notes/goal-induction-design-2026-09-25.md`. Repeating the same
-salience bank is not the next experiment. The live runner must first expose
-which goal evidence the deployed policy actually obtains.
-
-V668's decision and retained-learning results remain valid nulls. V665's
-7.827x direct-service result remains below NFR-01's 10x target and does not
-measure this complete source-processing boundary. FoVer 0.9131 remains the
-established reference headline; this plan declares no replacement.
+ARC's V669 runner required an uncleared public target despite all public
+games being cleared, then lacked an episode implementation. Generalization
+with adapters withheld remains permitted; duplicate solve credit is not.
+The separate Exp10015 probe null remains unchanged. The latest known-issues
+entry records a scored 0.09, but does not isolate the reasoning-parser fix.
+V665's 7.827x native result did not establish the complete-service 10x target.
+None of these facts becomes a V670 result by being carried forward.
 
 ## Three biggest gaps to the PRD vision
 
-1. **Usable evidence — FR-01/FR-12.** Exact tuple fixtures work, but actual
-   answers rarely reach that checker. Resolve addresses, preserve complete
-   answer meaning and distinguish narrow certificates from whole-answer truth.
-   Measure evidence information separately from protocol validity.
-2. **Improvement from experience — FR-06/FR-11.** Reweighting on exposed
-   groups did not establish benefit. Train a normalized typed-decision policy
-   on separate source roles, then test bounded constraint additions with legal
-   delayed feedback, a complete static comparator and untouched retention data.
-3. **Reachable live reasoning at a measured cost — FR-07/FR-08/FR-12.**
-   Registry completion must prevent duplicate solve credit while permitting
-   adapter-withheld generalization. Execute the real policy, observe goal
-   evidence and measure full native service cost. Correct fixtures and fast
-   kernels alone cannot establish useful live reasoning.
+1. **Usable evidence for FR-12.** Exact checks exist, but original answers
+   often never reach a sound, meaning-preserving constraint representation.
+   Measure addressing, binding and complete-clause coverage separately.
+2. **Causal improvement for FR-06/FR-11.** Existing weight changes did not
+   establish fresh retained benefit. Test new constraints and the allocation
+   of a bounded update budget with legally delayed labels and strong controls.
+3. **Reachable reasoning at a measured cost for FR-05/FR-07/FR-08.** Execute
+   the actual live ARC policy with adapters withheld, and measure complete
+   native-service cost. Fixture success and kernel speed alone are insufficient.
 
-FR-05 and NFR-01 are tested through actual Rust/PyO3 parity and complete
-service timing. Tiny policy training uses CPU because the head is capped at
-4,096 parameters; LLM inference uses the owned CUDA path.
+Execution availability is a prerequisite across these gaps. It is not a fourth
+research thesis and does not justify another round of unmeasured positives.
+The stable FoVer 0.9131 headline and G1–G4 publication definition stay intact.
 
-## Research incorporated before experiment design
+## Activation prerequisite and failure recovery
 
-The dated V670 section of `research-references.md` was written before this
-plan. It records eight requested topics, all secondary channels, review depth
-and access failures. The table maps adopted ideas to actual tasks.
+V670 already requested Claude for some tasks. Actual launches still used
+Codex. Read-only inspection of the dispatcher confirms that
+`CODEX_FORCE_EXPERIMENTS=1` can coerce those requests. Changing task metadata
+alone cannot fix the measured failure.
 
-| Source | Local adaptation | Experiments |
+Before activation, the operating environment must provide a recent successful
+receipt from the **effective** backend that will execute the tasks. Quota
+recovery is not verified by this plan. The available planning session is not
+proof that the conductor account has capacity. If the prerequisite remains
+missing, retain this staged plan rather than deliberately repeating fourteen
+failures. This is a documented launch prerequisite, not a new automatic gate
+claimed to have been implemented.
+
+Exp7699 records the resolved route and its own successful invocation without
+starting a nested coding agent. Every task records effective execution custody.
+No prompt edits conductor code, credentials, global settings or operator-only
+bypass flags. Formulaic work retains Codex `gpt-6-sol`; schema work requests
+Claude Opus/100 turns; routine work uses the user-requested default backend.
+Runtime coercion must be disclosed. All experiment IDs are new, and every
+structured dependency points to a producer in V671, never a retired V670 ID.
+
+## Research incorporated before design
+
+The dated V671 entry in `research-references.md` precedes this design. It
+records all eight requested topics and all secondary channels, review depth,
+access failures and limits. Most leads were already indexed. ADOWIP is new.
+
+| Source | Local question | Tasks |
 |---|---|---|
-| [Enoki](https://arxiv.org/html/2609.00581v2), September 2026 | Retain anchored arguments, modifiers and original answer spans. Supply an explicit address/claim interface; exact containment does not establish entailment. | 7686, 7688 |
-| [Structural versus semantic decoding gap](https://arxiv.org/html/2609.23742v1), September 20, 2026 | Separate syntax, evidence addressing, proposition binding and truth. Do not transfer small-model results or punctuation normalization to source-byte evidence. | 7688–7690 |
-| [EBT](https://arxiv.org/abs/2507.02092) and [ARM–EBM](https://arxiv.org/abs/2512.15605), 2025 | Small conditional energy with exact binary normalization and matched-input logistic/MLP controls; no generator training. | 7689–7690 |
-| [Capacity-constrained delayed learning](https://arxiv.org/abs/2606.11711), June 2026 | Bound pending feedback, log loss and preserve chronology. Discrete template selection inherits no convex regret theorem. | 7691–7693 |
-| [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985), revised September 2026; [Extropic Z1T](https://extropic.ai/writing/z1t) | Charge orchestration, parsing, dispatch and persistence before projecting hardware value. Vendor estimates are not local measurements. | 7696–7698 |
+| [Enoki](https://arxiv.org/html/2609.00581v2) and [semantic decoding gap](https://arxiv.org/abs/2609.23742) | Does an explicit source/claim interface improve addressing without weakening meaning? | 7700, 7702 |
+| [EBT](https://arxiv.org/abs/2507.02092), [ARM–EBM](https://arxiv.org/abs/2512.15605) | Can normalized source-conditioned energy improve calibrated typed decisions over matched controls? | 7703–7704 |
+| [Delayed OCO](https://arxiv.org/abs/2606.11711), [ADOWIP](https://arxiv.org/html/2606.25068v1) | Do causal additions help, and does delayed-loss scheduling help under the same proposal ceiling? | 7705–7707 |
+| [FPGA/Ising co-design](https://arxiv.org/abs/2602.15985), [Z1T](https://extropic.ai/writing/z1t) | Which complete-service costs remain after native dispatch? | 7710–7712 |
 
-T-SKM-Net supports explicit symbolic representation, not a new natural-language
-soundness theorem. Ising learning-to-sample hardness supports exact normalization
-for this small output space. KAC and KAN forgetting studies motivate empirical
-retention checks but not another spline architecture. New decoding and sampler
-branches are deferred until the current evidence interface is informative.
+ADOWIP motivates the scheduling control, not a transferred theorem. Carnot's
+bank is discrete, its corpus is different, and a six-credit ceiling does not
+prove equal realized compute. Retention and rejected proposal costs are measured.
+KAN-CL and KAN forgetting work support retention checks; unchanged importance
+anchoring stays closed. PAL and T-SKM-Net require correct supplied constraints.
+ETS and ERM do not reopen retired text reranking or generator-training scopes.
 
-OpenReview trace-verification work gives a transfer caution. Both Semantic
-Scholar citation endpoints failed; there is no citing-paper census. Hugging
-Face and stale GitHub trending views added no verified dependency. Kona's
-retrieved page describes a constraint layer but supplies no local training
-recipe. The plan needs no new external service, checkpoint or hardware purchase.
+Semantic Scholar citation endpoints failed again; there is no citation census.
+GitHub trending views were stale. OpenReview's accessible PDF is distinguished
+from its challenged forum and unrelated spam search results. Hugging Face is a
+discovery source. Kona's vendor description supplies no local reproduction
+recipe. No new dependency, hardware purchase or external publication is planned.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
     S[Original source and complete answer bytes]
-    R[7686: typed records, address resolver, narrow certificates]
-    C[7687: independent source roles and isolated labels]
-    Q[7688: bounded Qwen interface experiment]
-    E[7689: normalized decision energy and frozen controls]
-    D[7690: held-out probabilities and decisions]
-    B[7691: bounded constraint bank]
-    L[7692: delayed acquisition and retained predictions]
-    A[7693: independent raw-row audit]
-    U[7694: scored adapter-withheld runner]
-    V[7695: real first-contact goal evidence]
-    N[7696: actual native typed service]
-    T[7697: complete service cost]
-    K[7698: fourteen dispositions and continuation]
+    R[7700: typed records, address resolver, narrow certificates]
+    C[7701: independent source roles and isolated labels]
+    Q[7702: bounded Qwen interface experiment]
+    E[7703: normalized decision energy and frozen controls]
+    D[7704: held-out probabilities and decisions]
+    B[7705: bounded constraint bank]
+    L[7706: delayed acquisition and retained predictions]
+    A[7707: independent raw-row audit]
+    U[7708: scored adapter-withheld runner]
+    V[7709: real first-contact goal evidence]
+    N[7710: actual native typed service]
+    T[7711: complete service cost]
+    K[7712: fourteen dispositions and continuation]
     S --> R
     R --> Q
     R --> E
@@ -130,19 +142,19 @@ flowchart TD
     Q -. custody .-> K
     V -. custody .-> K
     T -. custody .-> K
-    M[7685: contract and methods; gates no science] -. custody .-> K
+    M[7699: contract and methods; gates no science] -. custody .-> K
 ```
 
 ## Phase 1 — Qualify the interface and independent data roles
 
-**Exp7685–Exp7687.** Establish exact contract and literature custody, then
+**Exp7699–Exp7701.** Establish exact contract and literature custody, then
 qualify a reusable record-address interface. The protocol uses 72 deterministic
 cases, including 24 outside tuning. It rejects duplicate, cross-record and
 invalid UTF-8 spans. Existing path/line certificates stay narrow. A function
 and location must be explicitly linked in the original clause for a bound
 relation check. Causal, modal and other unchecked clauses remain unknown.
 
-Exp7687 handles data and validation independently. Close the known missing
+Exp7701 handles data and validation independently. Close the known missing
 coverage branches before sealing. Subtract prior source, answer and family
 exposure, including all 480 V669 selected families. Seal **400 families**:
 fit128, tune40, policy40, retention32, online_update60, online_admission60,
@@ -159,7 +171,7 @@ features. The protocol and hashes freeze before any labels are released.
 
 ## Phase 2 — Measure addressing and calibrated decisions
 
-**Exp7688–Exp7690.** The Qwen diagnostic uses eight exposed pilot sources
+**Exp7702–Exp7704.** The Qwen diagnostic uses eight exposed pilot sources
 and sixteen exact fixtures. Two arms receive identical full sources and
 answers: opaque indices versus explicit record and claim tables. Each of
 48 calls has a 256-token cap. Compare old and containing-record reductions,
@@ -177,7 +189,7 @@ labels. No positive fit result is needed to evaluate a valid head.
 Freeze hyperparameters on tune40 and decision thresholds on policy40. Costs
 are 0 for a correct decision, 1 for incorrect accept/reject and 0.2 for
 escalation. Freeze the online grammar, thresholds and all starting states
-before Exp7690 opens evaluation labels. Evaluate all forty test families.
+before Exp7704 opens evaluation labels. Evaluate all forty test families.
 Use 10,000 paired family bootstrap draws. The registered benefit gate requires
 lower 95-percent bounds above 0.01 for **both** Brier reduction and decision
 cost reduction, with non-escalation coverage at least 0.20. The comparator is
@@ -191,7 +203,7 @@ are diagnostic views of the same families and do not enlarge sample size.
 
 ## Phase 3 — Acquire constraints and observe real first contact
 
-**Exp7691–Exp7695.** Qualify the bounded acquisition bank on 96 lifecycle
+**Exp7705–Exp7709.** Qualify the bounded acquisition bank on 96 lifecycle
 fixtures, including 32 untouched admission/retention cases. This branch needs
 only the record protocol, not a fitted head. At most eight primitives, 28
 pairwise conjunctions and sixteen pending feedback handles may persist.
@@ -205,10 +217,11 @@ commit but cannot fit that candidate or test additional candidates. The
 primary predictions come from the committed bank present before each query.
 Restart every arm after cycle six. Record rejected, dropped and lost updates.
 
-Compare acquisition with a read-only bank, matched weight-only updates and
-the full static closure. The complete comparator prevents manufactured gains
+Compare fixed-period acquisition with a read-only bank, matched weight-only
+updates and the full static closure. A fifth arm uses delayed-loss allocation
+under the same proposal ceiling. The complete comparator prevents manufactured gains
 from deliberately withholding known rules. Use twelve chronological bootstrap
-blocks, not sixty independent time points. Quality requires lower 95-percent
+blocks, not sixty independent time points. Primary fixed-period acquisition quality requires lower 95-percent
 bounds above 0.01 for Brier and cost improvement against both read-only and
 weight-only controls. The upper bound on excess cost versus full static
 closure must be at most 0.01. At least one acquired template must fire on a
@@ -216,18 +229,31 @@ later family. Evaluate retention32 once at the end; its upper loss-increase
 bound must be at most 0.01. Retention labels never choose commits. Efficiency
 is a separate measured result, not an alternative way to claim quality.
 
-Exp7693 independently reduces raw evidence even when producers are missing.
+The new scheduler comparison freezes a 75th-percentile loss threshold from
+fit/tune replay before any evaluation or online labels open. The fixed arm
+can propose only at cycles 2,4,6,8,10,12. The priority arm uses released losses.
+Each has six proposal credits and at most 50 gradient steps per proposal.
+Rejected candidates consume credits. No admission family is reused to test
+another candidate. Budget balances survive restart.
+
+Scheduler benefit is separate from primary learning benefit: lower cost
+reduction bound above 0.01, Brier excess upper bound at most 0.01, and no extra
+actual proposal or gradient spend. Report unequal realized spend honestly.
+Apply Holm adjustment across the two benefit families before any positive
+headline. Twelve blocks only support a pilot; no ADOWIP theorem is claimed.
+
+Exp7707 independently reduces raw evidence even when producers are missing.
 It is never gated on a positive scientific result. Missing required science
 produces a blocked audit with exact custody; a valid null is complete evidence.
 
-For ARC, Exp7694 implements and tests a real runner through the existing
+For ARC, Exp7708 implements and tests a real runner through the existing
 scored `E3AgentPolicy` entrypoint. Hash-select two locally runnable public games
-using `v670-arc-20260926`; withhold all per-game adapters, routes, hints and
+using `v671-arc-20260926`; withhold all per-game adapters, routes, hints and
 solver memory. Registry-precheck records existing levels and prohibits new
 credit, while permitting generalization measurement. Scripted fixtures must
 reach action selection and observation before the live task starts.
 
-Exp7695 runs each episode for at most 1,200 seconds, 128 real actions,
+Exp7709 runs each episode for at most 1,200 seconds, 128 real actions,
 20,000 model-engine calls and two Qwen calls capped at 4,096 tokens each.
 The total live budget is 2,400 seconds. This is `model_full_generation` when
 generation actually occurs, with a 60-second floor. If no call fires, emit
@@ -243,7 +269,7 @@ registry credit is permitted.
 
 ## Phase 4 — Measure the deployed boundary and reconcile
 
-**Exp7696–Exp7698.** Qualify 128 typed-payload cases through the actual
+**Exp7710–Exp7712.** Qualify 128 typed-payload cases through the actual
 PyO3 extension and existing durable service. Fixed fixture weights establish
 conformance, not learned performance. Optional trained weights are a separate
 smoke and cannot become a prerequisite that blocks native qualification.
@@ -272,19 +298,20 @@ are evidence accounting. The execution YAML is the authoritative order.
 The exact structured checks also appear in the machine contract below.
 
 ```text
-7685                  contract and methods; no science gate
-7686 -> 7688          qualified interface -> bounded Qwen diagnostic
-7686 + 7687 -> 7689 -> 7690
-7686 -> 7691; 7689 + 7691 -> 7692
-7690 + 7692 --> 7693   evidence read even when absent; no pre-gate
-7694 -> 7695          qualified real runner -> live observations
-7686 -> 7696 -> 7697  native conformance independent of learned benefit
-all dispositions --> 7698; capstone has no pre-gate
+7699                  contract and methods; no science gate
+7700 -> 7702          qualified interface -> bounded Qwen diagnostic
+7700 + 7701 -> 7703 -> 7704
+7700 -> 7705; 7703 + 7705 -> 7706
+7704 + 7706 --> 7707   evidence read even when absent; no pre-gate
+7708 -> 7709          qualified real runner -> live observations
+7700 -> 7710 -> 7711  native conformance independent of learned benefit
+all dispositions --> 7712; capstone has no pre-gate
 ```
 
 Every readiness gate also checks `flagged_adversarial == false` and an exact
 allowed `verdict_class` list. Fixture readiness can be `circular_positive`;
-training/data readiness is `null`. No gate requires a scientific positive.
+training/data readiness is `null`. No gate requires a scientific positive. Exp7699 gates no science; its
+accounting must not turn an administrative receipt into a global science gate.
 Every gate field is spelled identically in its producer's required fields.
 There are no references to retired upstream tasks in `gated_on` or `requires`.
 Prior-failure IDs are historical custody, not runtime dependencies.
@@ -294,7 +321,7 @@ Prior-failure IDs are historical custody, not runtime dependencies.
 | Resource | Use and constraint |
 |---|---|
 | CPU and host memory | Source parsing, small-head training, bank updates, audits and Rust service measurements. Reserve private scratch and bounded raw-row storage. |
-| Existing RTX 3090 CUDA path | Exp7688 and Exp7695 load `unsloth/Qwen3.8-27B-GGUF`. Resolve and hash the cached quantization; record GPU UUID, process ownership, offload and actual tokens. The two GPUs are separate 24 GiB resources, not an assumed unified allocation. |
+| Existing RTX 3090 CUDA path | Exp7702 and Exp7709 load `unsloth/Qwen3.8-27B-GGUF`. Resolve and hash the cached quantization; record GPU UUID, process ownership, offload and actual tokens. The two GPUs are separate 24 GiB resources, not an assumed unified allocation. |
 | Native toolchain | Existing Rust/PyO3 service; use a private build target and verify actual extension origin. No simulated native implementation. |
 | KV260 | Preserve qualified quadratic fabric scope `k_max<=5`. A future task needs an authenticated board workload through SSH, not a host SD-card prerequisite. No repeated availability probe here. |
 | PolarFire | Preserve Linux CPU-only dispatch; no FPGA-fabric or acceleration claim. |
@@ -304,32 +331,35 @@ Prior-failure IDs are historical custody, not runtime dependencies.
 Tier 1 updates use counters and bitsets. Tier 2 additions use at most 36
 compiled templates. Native batching offers an acceleration path by reducing
 Python dispatch and memory traffic. Whether that reaches 100x is unmeasured;
-Exp7697 measures the present boundary before any hardware projection.
+Exp7711 measures the present boundary before any hardware projection.
 
 Estimated per-task budgets are 35–70 minutes; their sum is **780 minutes** if
 all tasks run to estimates. Each must stay within the 4,800-second conductor
 cap. Live ARC work is capped at 40 minutes inside its 70-minute task budget.
 A wall-time estimate is not evidence of elapsed computation.
 
-The contract and data-custody tasks use Claude Opus with 100 turns because
+The contract and data-custody tasks request Claude Opus with 100 turns because
 they coordinate schema/preflight checks. Formulaic verifier, lifecycle,
 runner and binding work uses Codex `gpt-6-sol`. Routine science uses the
 default Claude backend. Independent audit and capstone have 30 turns.
+These are requested routes, subject to the activation prerequisite above.
 The model used to implement a task is distinct from its experimental model.
 
-Only Exp7688 and Exp7695 need an LLM. Their YAML and prompts name the mandated
+Only Exp7702 and Exp7709 need an LLM. Their YAML and prompts name the mandated
 Qwen. No legacy model is a headline model. Bounded canaries use the 10-second
 class, actual full generation the 60-second class, and a future embeddings or
 load-only task would use the 2-second class. None is padded to pass a floor.
 
 ## Failure discipline and verification
 
-The plan consulted all manifest entries and the historical roadmap index,
-including v7/v8 and recent V650–V669 designs. It avoids closed generated-answer
+The plan consulted all manifest entries, the completed-task archive and all
+243 proposal documents through a full-text index, with direct reading of
+v7/v8 and the recent evidence chain. It avoids closed generated-answer
 transport, generic external-text reranking, unchanged importance anchoring,
 retired sampler variants and repeated public-game solve credit. New IDs have
-no operator override. Every similar failed attempt has all four lineage
-fields, including `retire_if_same_verdict: true` and a concrete changed premise.
+no operator override. Every resumed V670 scope and relevant earlier failure has all four lineage
+fields, including `retire_if_same_verdict: true` and an explicit execution prerequisite or changed mechanism. Execution recovery
+is conditional; it has not been established by writing this plan.
 Absent producers use `not_emitted_*` custody markers; these are not invented
 honest verdicts. A repeated resource block is not a scientific negative.
 
@@ -350,42 +380,41 @@ Every comparative artifact carries raw per-unit rows. Every artifact declares
 
 ## Exact Task Contract
 
-The table and machine block describe exactly the fourteen YAML tasks. Neither
-is an aspirational list. The machine block adds the exact models, substrates
-and gates for independent contract checks.
+Exactly fourteen tasks, Exp7699–Exp7712, in conductor execution order.
+The table and JSON describe the staged YAML, including all structured gates.
 
 | Order | ID | Phase | Task | Deliverable |
 |---|---|---|---|---|
-| 1 | `exp7685-contract-methods` | 1 | Bind fourteen tasks and ingest evidence-interface methods | `results/experiment_7685_v670_contract_methods.json` |
-| 2 | `exp7686-record-span-protocol` | 1 | Qualify source-record addressing and original-answer binding | `results/experiment_7686_v670_record_span_protocol.json` |
-| 3 | `exp7687-sealed-cohort` | 1 | Seal independent source roles and validate label custody | `results/experiment_7687_v670_sealed_cohort.json` |
-| 4 | `exp7688-qwen-record-pilot` | 2 | Measure explicit record and claim addressing with bounded Qwen proposals | `results/experiment_7688_v670_qwen_record_pilot.json` |
-| 5 | `exp7689-typed-decision-energy` | 2 | Train a normalized decision energy on typed evidence certificates | `results/experiment_7689_v670_typed_decision_energy.json` |
-| 6 | `exp7690-heldout-decisions` | 2 | Measure fresh probability and typed-decision value | `results/experiment_7690_v670_heldout_decisions.json` |
-| 7 | `exp7691-constraint-bank-protocol` | 3 | Qualify bounded counterexample-driven constraint acquisition | `results/experiment_7691_v670_constraint_bank_protocol.json` |
-| 8 | `exp7692-continuous-acquisition` | 3 | Measure prospective constraint additions and retention after restart | `results/experiment_7692_v670_continuous_acquisition.json` |
-| 9 | `exp7693-independent-evidence-audit` | 3 | Independently reduce evidence, decision and learning claims | `results/experiment_7693_v670_independent_evidence_audit.json` |
-| 10 | `exp7694-arc-generalization-runner` | 3 | Qualify an adapter-withheld ARC runner with reachable episode execution | `results/experiment_7694_v670_arc_generalization_runner.json` |
-| 11 | `exp7695-arc-first-contact` | 3 | Measure live goal evidence during adapter-withheld first contact | `results/experiment_7695_v670_arc_first_contact.json` |
-| 12 | `exp7696-native-record-contract` | 4 | Qualify typed evidence payloads through the actual native service | `results/experiment_7696_v670_native_record_contract.json` |
-| 13 | `exp7697-whole-service-cost` | 4 | Measure complete record-service cost and retain hardware boundaries | `results/experiment_7697_v670_whole_service_cost.json` |
-| 14 | `exp7698-capstone` | 4 | Reconcile fourteen dispositions and decide continuation by evidence | `results/experiment_7698_v670_capstone.json` |
+| 1 | `exp7699-contract-methods` | 1 | Bind recovery prerequisites, fourteen tasks and research methods | `results/experiment_7699_v671_contract_methods.json` |
+| 2 | `exp7700-record-span-protocol` | 1 | Qualify source-record addressing and original-answer binding | `results/experiment_7700_v671_record_span_protocol.json` |
+| 3 | `exp7701-sealed-cohort` | 1 | Seal independent source roles and validate label custody | `results/experiment_7701_v671_sealed_cohort.json` |
+| 4 | `exp7702-qwen-record-pilot` | 2 | Measure explicit record and claim addressing with bounded Qwen proposals | `results/experiment_7702_v671_qwen_record_pilot.json` |
+| 5 | `exp7703-typed-decision-energy` | 2 | Train a normalized decision energy on typed evidence certificates | `results/experiment_7703_v671_typed_decision_energy.json` |
+| 6 | `exp7704-heldout-decisions` | 2 | Measure fresh probability and typed-decision value | `results/experiment_7704_v671_heldout_decisions.json` |
+| 7 | `exp7705-constraint-bank-protocol` | 3 | Qualify causal constraint acquisition with a hard proposal budget | `results/experiment_7705_v671_constraint_bank_protocol.json` |
+| 8 | `exp7706-continuous-acquisition` | 3 | Measure budgeted constraint additions and delayed-loss update allocation | `results/experiment_7706_v671_continuous_acquisition.json` |
+| 9 | `exp7707-independent-evidence-audit` | 3 | Independently reduce evidence, decision and learning claims | `results/experiment_7707_v671_independent_evidence_audit.json` |
+| 10 | `exp7708-arc-generalization-runner` | 3 | Qualify an adapter-withheld ARC runner with reachable episode execution | `results/experiment_7708_v671_arc_generalization_runner.json` |
+| 11 | `exp7709-arc-first-contact` | 3 | Measure live goal evidence during adapter-withheld first contact | `results/experiment_7709_v671_arc_first_contact.json` |
+| 12 | `exp7710-native-record-contract` | 4 | Qualify typed evidence payloads through the actual native service | `results/experiment_7710_v671_native_record_contract.json` |
+| 13 | `exp7711-whole-service-cost` | 4 | Measure complete record-service cost and retain hardware boundaries | `results/experiment_7711_v671_whole_service_cost.json` |
+| 14 | `exp7712-capstone` | 4 | Reconcile fourteen dispositions and decide continuation by evidence | `results/experiment_7712_v671_capstone.json` |
 
 ```json
-{"milestone": "2026.09.670", "task_count": 14, "tasks": [
-{"id": "exp7685-contract-methods", "title": "Bind fourteen tasks and ingest evidence-interface methods", "phase": 1, "deliverable": "results/experiment_7685_v670_contract_methods.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []},
-{"id": "exp7686-record-span-protocol", "title": "Qualify source-record addressing and original-answer binding", "phase": 1, "deliverable": "results/experiment_7686_v670_record_span_protocol.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
-{"id": "exp7687-sealed-cohort", "title": "Seal independent source roles and validate label custody", "phase": 1, "deliverable": "results/experiment_7687_v670_sealed_cohort.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
-{"id": "exp7688-qwen-record-pilot", "title": "Measure explicit record and claim addressing with bounded Qwen proposals", "phase": 2, "deliverable": "results/experiment_7688_v670_qwen_record_pilot.json", "inference_substrate_class": "model_bounded_generation", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "gated_on": [{"upstream": "exp7686-record-span-protocol", "artifact_field": "record_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7686-record-span-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7686-record-span-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
-{"id": "exp7689-typed-decision-energy", "title": "Train a normalized decision energy on typed evidence certificates", "phase": 2, "deliverable": "results/experiment_7689_v670_typed_decision_energy.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7686-record-span-protocol", "artifact_field": "record_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7686-record-span-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7686-record-span-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}, {"upstream": "exp7687-sealed-cohort", "artifact_field": "cohort_ready_score", "op": "==", "value": 1}, {"upstream": "exp7687-sealed-cohort", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7687-sealed-cohort", "artifact_field": "verdict_class", "op": "in", "value": ["null"]}, {"upstream": "exp7687-sealed-cohort", "artifact_field": "fresh_source_score", "op": "==", "value": 1}, {"upstream": "exp7687-sealed-cohort", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7687-sealed-cohort", "artifact_field": "verdict_class", "op": "in", "value": ["null"]}]},
-{"id": "exp7690-heldout-decisions", "title": "Measure fresh probability and typed-decision value", "phase": 2, "deliverable": "results/experiment_7690_v670_heldout_decisions.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7689-typed-decision-energy", "artifact_field": "decision_energy_ready_score", "op": "==", "value": 1}, {"upstream": "exp7689-typed-decision-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7689-typed-decision-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null"]}]},
-{"id": "exp7691-constraint-bank-protocol", "title": "Qualify bounded counterexample-driven constraint acquisition", "phase": 3, "deliverable": "results/experiment_7691_v670_constraint_bank_protocol.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7686-record-span-protocol", "artifact_field": "record_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7686-record-span-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7686-record-span-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
-{"id": "exp7692-continuous-acquisition", "title": "Measure prospective constraint additions and retention after restart", "phase": 3, "deliverable": "results/experiment_7692_v670_continuous_acquisition.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7689-typed-decision-energy", "artifact_field": "decision_energy_ready_score", "op": "==", "value": 1}, {"upstream": "exp7689-typed-decision-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7689-typed-decision-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null"]}, {"upstream": "exp7691-constraint-bank-protocol", "artifact_field": "constraint_bank_ready_score", "op": "==", "value": 1}, {"upstream": "exp7691-constraint-bank-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7691-constraint-bank-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
-{"id": "exp7693-independent-evidence-audit", "title": "Independently reduce evidence, decision and learning claims", "phase": 3, "deliverable": "results/experiment_7693_v670_independent_evidence_audit.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []},
-{"id": "exp7694-arc-generalization-runner", "title": "Qualify an adapter-withheld ARC runner with reachable episode execution", "phase": 3, "deliverable": "results/experiment_7694_v670_arc_generalization_runner.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
-{"id": "exp7695-arc-first-contact", "title": "Measure live goal evidence during adapter-withheld first contact", "phase": 3, "deliverable": "results/experiment_7695_v670_arc_first_contact.json", "inference_substrate_class": "model_full_generation", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "gated_on": [{"upstream": "exp7694-arc-generalization-runner", "artifact_field": "arc_runner_ready_score", "op": "==", "value": 1}, {"upstream": "exp7694-arc-generalization-runner", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7694-arc-generalization-runner", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
-{"id": "exp7696-native-record-contract", "title": "Qualify typed evidence payloads through the actual native service", "phase": 4, "deliverable": "results/experiment_7696_v670_native_record_contract.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7686-record-span-protocol", "artifact_field": "record_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7686-record-span-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7686-record-span-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
-{"id": "exp7697-whole-service-cost", "title": "Measure complete record-service cost and retain hardware boundaries", "phase": 4, "deliverable": "results/experiment_7697_v670_whole_service_cost.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7696-native-record-contract", "artifact_field": "native_record_ready_score", "op": "==", "value": 1}, {"upstream": "exp7696-native-record-contract", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7696-native-record-contract", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
-{"id": "exp7698-capstone", "title": "Reconcile fourteen dispositions and decide continuation by evidence", "phase": 4, "deliverable": "results/experiment_7698_v670_capstone.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []}
+{"milestone": "2026.09.671", "task_count": 14, "tasks": [
+{"id": "exp7699-contract-methods", "title": "Bind recovery prerequisites, fourteen tasks and research methods", "phase": 1, "deliverable": "results/experiment_7699_v671_contract_methods.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7700-record-span-protocol", "title": "Qualify source-record addressing and original-answer binding", "phase": 1, "deliverable": "results/experiment_7700_v671_record_span_protocol.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7701-sealed-cohort", "title": "Seal independent source roles and validate label custody", "phase": 1, "deliverable": "results/experiment_7701_v671_sealed_cohort.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7702-qwen-record-pilot", "title": "Measure explicit record and claim addressing with bounded Qwen proposals", "phase": 2, "deliverable": "results/experiment_7702_v671_qwen_record_pilot.json", "inference_substrate_class": "model_bounded_generation", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "gated_on": [{"upstream": "exp7700-record-span-protocol", "artifact_field": "record_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7700-record-span-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7700-record-span-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
+{"id": "exp7703-typed-decision-energy", "title": "Train a normalized decision energy on typed evidence certificates", "phase": 2, "deliverable": "results/experiment_7703_v671_typed_decision_energy.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7700-record-span-protocol", "artifact_field": "record_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7700-record-span-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7700-record-span-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}, {"upstream": "exp7701-sealed-cohort", "artifact_field": "cohort_ready_score", "op": "==", "value": 1}, {"upstream": "exp7701-sealed-cohort", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7701-sealed-cohort", "artifact_field": "verdict_class", "op": "in", "value": ["null"]}, {"upstream": "exp7701-sealed-cohort", "artifact_field": "fresh_source_score", "op": "==", "value": 1}, {"upstream": "exp7701-sealed-cohort", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7701-sealed-cohort", "artifact_field": "verdict_class", "op": "in", "value": ["null"]}]},
+{"id": "exp7704-heldout-decisions", "title": "Measure fresh probability and typed-decision value", "phase": 2, "deliverable": "results/experiment_7704_v671_heldout_decisions.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7703-typed-decision-energy", "artifact_field": "decision_energy_ready_score", "op": "==", "value": 1}, {"upstream": "exp7703-typed-decision-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7703-typed-decision-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null"]}]},
+{"id": "exp7705-constraint-bank-protocol", "title": "Qualify causal constraint acquisition with a hard proposal budget", "phase": 3, "deliverable": "results/experiment_7705_v671_constraint_bank_protocol.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7700-record-span-protocol", "artifact_field": "record_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7700-record-span-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7700-record-span-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
+{"id": "exp7706-continuous-acquisition", "title": "Measure budgeted constraint additions and delayed-loss update allocation", "phase": 3, "deliverable": "results/experiment_7706_v671_continuous_acquisition.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7703-typed-decision-energy", "artifact_field": "decision_energy_ready_score", "op": "==", "value": 1}, {"upstream": "exp7703-typed-decision-energy", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7703-typed-decision-energy", "artifact_field": "verdict_class", "op": "in", "value": ["null"]}, {"upstream": "exp7705-constraint-bank-protocol", "artifact_field": "constraint_bank_ready_score", "op": "==", "value": 1}, {"upstream": "exp7705-constraint-bank-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7705-constraint-bank-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
+{"id": "exp7707-independent-evidence-audit", "title": "Independently reduce evidence, decision and learning claims", "phase": 3, "deliverable": "results/experiment_7707_v671_independent_evidence_audit.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7708-arc-generalization-runner", "title": "Qualify an adapter-withheld ARC runner with reachable episode execution", "phase": 3, "deliverable": "results/experiment_7708_v671_arc_generalization_runner.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+{"id": "exp7709-arc-first-contact", "title": "Measure live goal evidence during adapter-withheld first contact", "phase": 3, "deliverable": "results/experiment_7709_v671_arc_first_contact.json", "inference_substrate_class": "model_full_generation", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "gated_on": [{"upstream": "exp7708-arc-generalization-runner", "artifact_field": "arc_runner_ready_score", "op": "==", "value": 1}, {"upstream": "exp7708-arc-generalization-runner", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7708-arc-generalization-runner", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
+{"id": "exp7710-native-record-contract", "title": "Qualify typed evidence payloads through the actual native service", "phase": 4, "deliverable": "results/experiment_7710_v671_native_record_contract.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7700-record-span-protocol", "artifact_field": "record_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7700-record-span-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7700-record-span-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
+{"id": "exp7711-whole-service-cost", "title": "Measure complete record-service cost and retain hardware boundaries", "phase": 4, "deliverable": "results/experiment_7711_v671_whole_service_cost.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7710-native-record-contract", "artifact_field": "native_record_ready_score", "op": "==", "value": 1}, {"upstream": "exp7710-native-record-contract", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7710-native-record-contract", "artifact_field": "verdict_class", "op": "in", "value": ["circular_positive", "null"]}]},
+{"id": "exp7712-capstone", "title": "Reconcile fourteen dispositions and decide continuation by evidence", "phase": 4, "deliverable": "results/experiment_7712_v671_capstone.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []}
 ]}
 ```
