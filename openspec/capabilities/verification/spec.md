@@ -12,6 +12,19 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-7701: Deny evaluator access to cohort predictors
+
+A predictor child SHALL receive only role-scoped public projection bytes and
+SHALL be unable to open evaluator paths. Projected rows SHALL reject every
+extra key, changed source or answer bytes, wrong role, and label access flag.
+Evaluator rows SHALL join to the frozen family and answer hash only after the
+protocol exists. An exact fixture label is an oracle, not learned advantage.
+
+#### SCENARIO-VERIFY-7701-ISOLATION: Canary label and denied file open
+
+Given a canary annotation in an evaluator store, the predictor child SHALL
+reject the injected key and fail a direct open of the store.
+
 ### REQ-VERIFY-7700: Resolve source records before checking answer propositions
 
 The record interface SHALL retain exact source bytes, non-overlapping record

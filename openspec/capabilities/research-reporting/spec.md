@@ -1,5 +1,42 @@
 # Research Reporting Capability Specification
 
+## V671 sealed source cohort — 2026-09-26
+
+### REQ-REPORT-7701: Seal fresh source families before evaluator access
+
+Exp7701 SHALL authenticate pinned LettuceDetect shard bytes and all registered
+public exposure records, including all 480 selected Exp7673 families. It SHALL
+cluster source, question and answer relatives across official splits without
+reading labels or feature coverage. It SHALL exclude exposed and uncertain
+families, then hash-select exactly 400 with salt `v671-20260926`: train roles
+fit128, tune40, policy40, retention32, online_update60,
+online_admission60, and official-test evaluation40. Underfilled roles SHALL
+block without resizing. A frozen protocol SHALL bind role IDs, source hashes,
+selection rules, and predictor inputs before annotation labels are opened.
+Evaluator stores SHALL be separate and inaccessible to a predictor child.
+Cold replay SHALL reject source mutation, role swap, label leakage, and
+cross-role families. Readiness SHALL report data validity only. Required
+validation failure SHALL disqualify and zero readiness.
+
+#### SCENARIO-REPORT-7701-CUSTODY: Earlier selections remain exposed
+
+Given V669's disqualified terminal result, all its 480 selected families SHALL
+still enter the exposure ledger. Selected and excluded prior exposure counts
+SHALL remain separate. Missing upstream bytes SHALL produce a complete blocked
+record with exact failed operands.
+
+#### SCENARIO-REPORT-7701-SEAL: Fixed public roster precedes labels
+
+Given enough eligible public families, the role roster SHALL have exactly 400
+unique families and official splits. Predictor rows SHALL contain only projected
+public fields. Injected labels or extra keys SHALL fail before predictor work.
+
+#### SCENARIO-REPORT-7701-TERMINAL: Cold readers control readiness
+
+Given a frozen candidate, fresh reduction, affected validation, adversarial
+verification, and strict row lint SHALL run on exact bytes before publication.
+Only a passing terminal candidate may report cohort_ready_score=1.
+
 ## V671 record span protocol — 2026-09-26
 
 ### REQ-REPORT-7700: Qualify record addresses without claiming answer accuracy
