@@ -3287,3 +3287,15 @@ and ARC orphan solver lint pass. `SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED` remains
 False, so the fix is dormant on the default scored path until the archive is
 enabled. Repository-wide spec coverage still reports 1,168 unrelated tests
 without references; none is in the changed test file.
+
+### 2026-09-26 — V673 activation-refusal repair
+
+REQ-REPORT-V673-REPLAN and SCENARIO-REPORT-V673-REPLAN bind the thirteen
+ordered tasks to the completed design table, machine contract and staged
+YAML. Exp7736 records the five exact failure verdicts with changed premises
+and true same-verdict retirement. Existing exclusion, ARC, schema, gate
+and harness readers pass. A private comparison rejects four contract
+mutations, four incomplete-entry mutations and the original missing block.
+Focused guard tests: 124 pass; one unchanged legacy live-benchmark matcher
+test fails. No implementation or guard changed. This is planning evidence,
+not execution of Exp7726–Exp7738 or completion of their capability work.

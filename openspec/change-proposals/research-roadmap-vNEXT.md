@@ -13,7 +13,8 @@
 
 Queue completion does not mean every scientific experiment ran. The active
 roadmap, terminal artifacts and conductor log provide the following evidence.
-The completed archive currently ends at V671; preserve that archive lag.
+At initial planning the completed archive ended at V671. At refusal repair,
+it includes V672; its gate skips still do not constitute scientific results.
 
 | Evidence | Observed outcome | Claim limit |
 |---|---|---|
@@ -176,3 +177,161 @@ correction across the baseline contrasts. Require Brier benefit against the
 separately trained source-erased control too. Source permutations and erasure
 of evaluation inputs have no inherited labels; report prediction sensitivity,
 not invented counterfactual accuracy. N=64 permits a bounded mechanism study.
+
+## Phase 3 — Qualify causal growth and measure retained learning
+
+**Exp7732–Exp7734.** Exp7732 qualifies the durable advisory bank on 96
+fixture families: 32 development, 32 one-use admission and 32 retained.
+Exercise beneficial commit, harmful rejection, duplicate feedback, queue
+overflow and interrupted writes. Require exactly-once updates and cold
+restart parity. Readiness measures lifecycle correctness, not empirical benefit.
+
+Exp7733 runs eight delayed-feedback blocks with at most eight proposals,
+one admitted feature per block and 12 pending items. Predictions precede
+feedback. Compare adaptive additions against frozen and complete-static
+banks; keep shuffled feedback as a separate control. Admission uses eight
+independent cases per block, mean Brier reduction>=0.01 and no increase in
+false accepts. Retention labels never determine admission.
+
+Retained benefit requires evaluation cost-reduction lower95>0 and estimate
+>=0.02 against both controls, plus Brier reduction lower95>0. Average seeds
+within family; use 10,000 family bootstrap draws and Holm correction.
+Retention Brier-increase upper95 must be<=0.02 without more false accepts.
+Zero admissions is a valid null when execution and validation pass.
+Exp7734 independently reduces the raw decisions, feedback order and restart
+state. Missing external evidence is blocked, never retryable partial work.
+
+## Phase 4 — Measure organic exploration and complete service costs
+
+**Exp7735–Exp7738.** Exp7735 qualifies organic versus replay observation
+provenance through `make_carnot_agent` and `E3AgentPolicy`. Preserve existing
+defaults, cell representations, tie breaks and replay limits. Test 300
+default-parity decisions and ten reset/replay episodes. Use the existing
+visits-minus-seen rule with the organic counter substituted. LLM induction
+is disabled for this isolated mechanism; no model is loaded.
+
+Exp7736 compares archive-off V0, V8-equivalent selection and organic
+selection. Freeze games cd82, dc22, lf52, m0r0, sk48, tn36, sb26 and sc25;
+use seeds 673101 and 673102. Withhold per-game adapters, engines, goals and
+winning routes. Run 48 episodes, each with 2,000 charged actions and a
+75-second child cap. Stop launching after 3,900 seconds. Preserve censored
+episodes; incomplete pairs cannot support a benefit claim.
+
+Reduce scores with installed SDK baseline metadata and both reset-charging
+conventions until gateway parity is established. Continue only when the
+eight-game bootstrap score-delta lower95>0 against both controls under both
+conventions, no V0 winning seed is lost, and common-win first-level actions
+stay within 10 percent. Registry-known levels earn no new solve credit.
+Actual runtime attempts use `solve_provenance=live_agent_self_discovery`;
+this public, adapter-withheld comparison is not hidden leaderboard evidence.
+
+Exp7737 measures the frozen CPU service on 64 policy families. Include
+parsing, windows, features, normalization, typed decisions, serialization
+and durable acknowledgement. Use ten warmups and 30 randomized paired
+blocks at batches 1, 8 and 32. Batch 1 is primary: p95<=100ms and <=2x the
+pooled-MLP p95, with identical reload semantics. Report valid cost evidence
+even when accuracy is null. Online costs require eligible Exp7733 events.
+
+Exp7738 accounts for all thirteen tasks, including blocked and censored
+branches. Apply continuation and same-verdict retirement to the measured
+scope. Compute unchanged G1–G4 publication gates; make no publication,
+submission, default-promotion or new hardware claim.
+
+## Hardware and execution requirements
+
+The existing CPU host and storage cover twelve tasks, including actual ARC
+SDK episodes. Exp7729 alone needs the cached `unsloth/Qwen3.8-27B-GGUF`
+through llama.cpp on the available RTX 3090 pair. Capture actual offload
+and invocation evidence. Its fixed token budget is bounded generation,
+with the 10-second floor; do not pad time to meet a floor.
+
+The learning path keeps cheap counters and dictionary lookup on CPU.
+Batched fitting has a GPU path; future dictionary matching has an FPGA
+path. Measure the <1 microsecond bookkeeping and <1 millisecond lookup
+targets separately from fitting and durable writes. No acceleration ratio
+is assumed. KV260 remains limited to qualified k<=5 work, PolarFire to
+Linux CPU dispatch, and GateMate to its unresolved physical/JTAG block.
+NPU and TSU execution remain unqualified. No purchase or board probe is
+needed to execute this milestone.
+
+Every YAML prompt mandates flushed phase and long-call progress, loop
+heartbeats, checkpoints and several calls for files over about 200 lines.
+Each task requires specs and tests before implementation, affected lint,
+type and coverage checks, applicable E2E, independent terminal reduction,
+and operational reconciliation. ARC tasks retain E2E-009/011/013 and actual
+wrapper execution; planning validation does not execute those experiments.
+
+## Activation refusal correction
+
+The 2026-09-26 activation guard refused Exp7736 because five matching
+failures lacked structured acknowledgement. Its `prior_failures` now names
+Exp5450, Exp7100, Exp7114, Exp7612 and Exp7652 with their exact artifact
+verdicts, specific changed premises and `retire_if_same_verdict: true`.
+Exp7735 readiness, clean validation and an eligible verdict still gate it.
+No operator override is claimed. The task IDs, order, science, gates and
+prompts remain those of the quarantined proposal. This document completes
+the missing later phases and contract from that same proposal.
+
+The unchanged Exp7730 input list uses the old `python/carnot/models/gibbs.py`
+path. Its current package implementation is
+`python/carnot/models/gibbs/__init__.py`; use that existing file when reading
+the Gibbs model. This path clarification does not change the experiment.
+
+## Exact Task Contract
+
+Exactly 13 tasks, exp7726 through exp7738, execute in the order below.
+Each result path is a separate deliverable. The JSON block also binds
+experimental models, substrates and all structured prerequisites.
+
+| Order | ID | Phase | Title | Deliverable |
+|---|---|---|---|---|
+| 1 | `exp7726-contract-methods` | 1 | Bind thirteen tasks and register evidence-set methods | `results/experiment_7726_v673_contract_methods.json` |
+| 2 | `exp7727-development-corpus` | 1 | Seal exposed source families without relabeling them fresh | `results/experiment_7727_v673_development_corpus.json` |
+| 3 | `exp7728-set-energy-protocol` | 1 | Qualify per-sentence evidence sets and exact finite normalization | `results/experiment_7728_v673_set_energy_protocol.json` |
+| 4 | `exp7729-qwen-draft-pilot` | 2 | Compare bounded draft-conditioned evidence decisions | `results/experiment_7729_v673_qwen_draft_pilot.json` |
+| 5 | `exp7730-set-energy-fit` | 2 | Train evidence-set probabilities and freeze typed decisions | `results/experiment_7730_v673_set_energy_fit.json` |
+| 6 | `exp7731-development-decisions` | 2 | Measure evidence-set decisions and source dependence | `results/experiment_7731_v673_development_decisions.json` |
+| 7 | `exp7732-causal-admission` | 3 | Qualify advisory constraint growth with scoped validation | `results/experiment_7732_v673_causal_admission.json` |
+| 8 | `exp7733-continuous-set-learning` | 3 | Measure delayed constraint additions and retained decisions | `results/experiment_7733_v673_continuous_set_learning.json` |
+| 9 | `exp7734-independent-evidence-audit` | 3 | Cold-reduce development decisions and feedback causality | `results/experiment_7734_v673_independent_evidence_audit.json` |
+| 10 | `exp7735-arc-organic-visits` | 4 | Separate organic exploration from archive replay visits | `results/experiment_7735_v673_arc_organic_visits.json` |
+| 11 | `exp7736-arc-organic-measurement` | 4 | Measure organic archive selection through the scored wrapper | `results/experiment_7736_v673_arc_organic_measurement.json` |
+| 12 | `exp7737-set-service-cost` | 4 | Measure complete evidence-set service and update costs | `results/experiment_7737_v673_set_service_cost.json` |
+| 13 | `exp7738-capstone` | 4 | Reconcile thirteen outcomes and bound the next continuation | `results/experiment_7738_v673_capstone.json` |
+
+Every dependency is within this contract and precedes its consumer. Each
+readiness gate also requires `flagged_adversarial=false` and `verdict_class`
+in `[null, circular_positive, positive]`. Here `null` is the literal string.
+Producer prompts require those exact fields. Audits and the capstone are
+ungated so that missing inputs still receive terminal accounting.
+
+| Consumer | Producer | Required readiness field |
+|---|---|---|
+| Exp7730 | Exp7727 | `development_cohort_ready_score == 1` |
+| Exp7730 | Exp7728 | `set_protocol_ready_score == 1` |
+| Exp7731 | Exp7730 | `set_heads_ready_score == 1` |
+| Exp7733 | Exp7730 | `set_heads_ready_score == 1` |
+| Exp7733 | Exp7732 | `acquisition_protocol_ready_score == 1` |
+| Exp7736 | Exp7735 | `organic_runner_ready_score == 1` |
+| Exp7737 | Exp7730 | `set_heads_ready_score == 1` |
+
+```json
+{
+  "milestone": "2026.09.673",
+  "tasks": [
+    {"id": "exp7726-contract-methods", "title": "Bind thirteen tasks and register evidence-set methods", "phase": 1, "deliverable": "results/experiment_7726_v673_contract_methods.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []},
+    {"id": "exp7727-development-corpus", "title": "Seal exposed source families without relabeling them fresh", "phase": 1, "deliverable": "results/experiment_7727_v673_development_corpus.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+    {"id": "exp7728-set-energy-protocol", "title": "Qualify per-sentence evidence sets and exact finite normalization", "phase": 1, "deliverable": "results/experiment_7728_v673_set_energy_protocol.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+    {"id": "exp7729-qwen-draft-pilot", "title": "Compare bounded draft-conditioned evidence decisions", "phase": 2, "deliverable": "results/experiment_7729_v673_qwen_draft_pilot.json", "inference_substrate_class": "model_bounded_generation", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "gated_on": []},
+    {"id": "exp7730-set-energy-fit", "title": "Train evidence-set probabilities and freeze typed decisions", "phase": 2, "deliverable": "results/experiment_7730_v673_set_energy_fit.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7727-development-corpus", "artifact_field": "development_cohort_ready_score", "op": "==", "value": 1}, {"upstream": "exp7727-development-corpus", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7727-development-corpus", "artifact_field": "verdict_class", "op": "in", "value": ["null", "circular_positive", "positive"]}, {"upstream": "exp7728-set-energy-protocol", "artifact_field": "set_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7728-set-energy-protocol", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7728-set-energy-protocol", "artifact_field": "verdict_class", "op": "in", "value": ["null", "circular_positive", "positive"]}]},
+    {"id": "exp7731-development-decisions", "title": "Measure evidence-set decisions and source dependence", "phase": 2, "deliverable": "results/experiment_7731_v673_development_decisions.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7730-set-energy-fit", "artifact_field": "set_heads_ready_score", "op": "==", "value": 1}, {"upstream": "exp7730-set-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7730-set-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["null", "circular_positive", "positive"]}]},
+    {"id": "exp7732-causal-admission", "title": "Qualify advisory constraint growth with scoped validation", "phase": 3, "deliverable": "results/experiment_7732_v673_causal_admission.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+    {"id": "exp7733-continuous-set-learning", "title": "Measure delayed constraint additions and retained decisions", "phase": 3, "deliverable": "results/experiment_7733_v673_continuous_set_learning.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7730-set-energy-fit", "artifact_field": "set_heads_ready_score", "op": "==", "value": 1}, {"upstream": "exp7730-set-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7730-set-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["null", "circular_positive", "positive"]}, {"upstream": "exp7732-causal-admission", "artifact_field": "acquisition_protocol_ready_score", "op": "==", "value": 1}, {"upstream": "exp7732-causal-admission", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7732-causal-admission", "artifact_field": "verdict_class", "op": "in", "value": ["null", "circular_positive", "positive"]}]},
+    {"id": "exp7734-independent-evidence-audit", "title": "Cold-reduce development decisions and feedback causality", "phase": 3, "deliverable": "results/experiment_7734_v673_independent_evidence_audit.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []},
+    {"id": "exp7735-arc-organic-visits", "title": "Separate organic exploration from archive replay visits", "phase": 4, "deliverable": "results/experiment_7735_v673_arc_organic_visits.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": []},
+    {"id": "exp7736-arc-organic-measurement", "title": "Measure organic archive selection through the scored wrapper", "phase": 4, "deliverable": "results/experiment_7736_v673_arc_organic_measurement.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7735-arc-organic-visits", "artifact_field": "organic_runner_ready_score", "op": "==", "value": 1}, {"upstream": "exp7735-arc-organic-visits", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7735-arc-organic-visits", "artifact_field": "verdict_class", "op": "in", "value": ["null", "circular_positive", "positive"]}]},
+    {"id": "exp7737-set-service-cost", "title": "Measure complete evidence-set service and update costs", "phase": 4, "deliverable": "results/experiment_7737_v673_set_service_cost.json", "inference_substrate_class": "no_model_load", "MODEL_SPECS": [], "gated_on": [{"upstream": "exp7730-set-energy-fit", "artifact_field": "set_heads_ready_score", "op": "==", "value": 1}, {"upstream": "exp7730-set-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7730-set-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["null", "circular_positive", "positive"]}]},
+    {"id": "exp7738-capstone", "title": "Reconcile thirteen outcomes and bound the next continuation", "phase": 4, "deliverable": "results/experiment_7738_v673_capstone.json", "inference_substrate_class": "aggregation", "MODEL_SPECS": [], "gated_on": []}
+  ]
+}
+```

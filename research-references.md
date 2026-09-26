@@ -47419,3 +47419,27 @@ feature model. A paired mechanism test can reject it before fresh acquisition.
 The separate ARC hypothesis comes from the local V7/V8 pilot: archive replay
 increments the same `seen` counter used to measure organic exploration.
 Separating those events changes the mechanism; retuning the old counter does not.
+
+### 2026-09-26 — V673 activation-refusal research delta
+
+Rechecked the requested channels before completing the refused design. The
+experiment scope stays fixed; these leads do not add tasks.
+
+- [KAC](https://arxiv.org/abs/2503.21076), 2025, studies KAN classifiers for
+  continual learning. Abstract review only. Retain as a future comparator;
+  its classification result does not establish retention for Carnot's bank.
+- [Structure Snowballing](https://arxiv.org/abs/2604.06066), April 2026,
+  examines constrained-decoding reflection failures. It reinforces the
+  existing Exp7729 separation of output syntax from semantic correctness.
+  No transfer to the mandated 27B model is assumed.
+- Reopened the primary LagONN and FPGA–ASIC co-design abstracts cited above.
+  They do not change the current extraction or complete-service hypotheses.
+- OpenReview search surfaced the [ICLR 2026 EBT paper](https://openreview.net/pdf?id=ZBj3Qp1bYg).
+  This recheck used indexed text, not a full-paper review. EBM-CoT
+  ([arXiv 2511.07124](https://arxiv.org/abs/2511.07124)) remains a latent
+  representation lead, outside this refusal repair.
+- Rechecked Extropic Writing, Hugging Face verification, GitHub monthly
+  Python trending and Kona. The trending view remains cached. No new
+  hardware access or local Kona implementation was established.
+- Both Semantic Scholar seed citation endpoints again returned retrieval
+  errors. The earlier citation-coverage limitation remains open.

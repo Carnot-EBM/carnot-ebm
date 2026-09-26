@@ -82652,3 +82652,18 @@ coefficients and independent denominators are retained for reduction.
 A fresh process recomputes raw rows and bank state hashes. Adversarial and
 strict row readers inspect the exact terminal candidate. Invalid required
 checks cannot open the acquisition_protocol_ready_score.
+
+### REQ-REPORT-V673-REPLAN: Preserve the refused task contract
+
+The V673 repair SHALL preserve thirteen tasks, Exp7726–Exp7738, in order.
+The design table and machine contract SHALL agree with the staged YAML.
+Exp7736 SHALL acknowledge all five activation-matched failures with exact
+artifact verdicts, changed premises and true same-verdict retirement.
+The existing exclusion and ARC guards SHALL pass without modification.
+
+### SCENARIO-REPORT-V673-REPLAN: Reject missing failure metadata
+
+Given the refused V673 proposal, the unchanged exclusion reader rejects
+Exp7736. With all five complete entries, it accepts the repaired proposal.
+Removing the block from a private copy reproduces the original refusal.
+The staged design and YAML retain the same thirteen ordered deliverables.

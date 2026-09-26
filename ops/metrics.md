@@ -3566,3 +3566,6 @@ Writing an estimate would put an invented number in the metrics record.
 | 67 | 2026-09-26T15:34:00Z | 2026-09-26T17:03:00Z | Fable 5.1 consulted for next-step opinion; rescored 8 pilots with real formula per its advice -- confirms most disputed pairs are noise, cd82 regression is real (~92% relative loss); V6 no-promotion holds for a score reason too |
 
 | V672-plan | 2026-09-26T16:11:32Z | pending | User: research and design next milestone 2026.09.672; create matching design and staged YAML, preserve active roadmap and conductor; startup timestamp recorded after initial reads. |
+| V673-replan | 2026-09-26T21:59:36Z | 2026-09-26T22:07:16Z | User: repair V673 activation refusal with complete failure lineage; preserve thirteen tasks and complete the matching design; startup timestamp recorded after initial reads. |
+
+V673 replan: activation readers pass; 124 focused tests pass and one unchanged legacy matcher test fails. Token usage is unavailable: the documented `scripts/session-metrics.py` extractor is absent.

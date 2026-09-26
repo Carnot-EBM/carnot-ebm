@@ -17313,3 +17313,23 @@ publication or push was performed.
   concatenation.
 - Prevention: none shipped yet. A cheap pre-commit check for literal conflict markers in tracked
   text files would have caught this at commit time; not built this session.
+## 2026-09-26 — V673 activation-refusal repair
+
+V673 retains thirteen tasks, Exp7726–Exp7738. Exp7736 now acknowledges all
+five scope-matched failures with exact artifact verdicts, changed premises
+and `retire_if_same_verdict: true`. No operator override is asserted. The
+YAML change from the quarantined proposal is only that metadata block.
+
+The design now includes the missing phases three and four, hardware
+requirements and exact table/JSON contract. It also identifies Exp7730's
+current Gibbs package input, replacing the obsolete path for readers.
+The research-reference delta preserves the existing experiment scope.
+
+Validation: exclusion, ARC-floor, schema/prior-failure, all 21 gate checks,
+harness-fit, scoped spec coverage and guard-source Ruff pass. Independent
+table/JSON/YAML comparison and nine negative cases pass. Focused unit tests
+have 124 passes and one failure in the unchanged legacy live-benchmark
+matcher expectation. This failure is not hidden or repaired by this task.
+ARC E2E-009/011/013 apply during experiment implementation; planning changes
+no runtime behavior. Active roadmap, conductor and activation guards retain
+their original hashes. Normal conductor activation is the next step.
