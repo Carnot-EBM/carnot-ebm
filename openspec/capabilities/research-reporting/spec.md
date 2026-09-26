@@ -1,5 +1,46 @@
 # Research Reporting Capability Specification
 
+## V669 single live ARC probe episode — 2026-09-26
+
+### REQ-REPORT-7681: Measure probe reachability in one real scored episode
+
+Exp7681 SHALL freeze a hash-selected, adapter-withheld SDK game and target above
+the registry's reproduced level before opening the environment. It SHALL use the
+current Qwen3.8 GGUF and the scored E3 policy with the default-off guided probe
+enabled for one bounded episode. Every fresh public observation SHALL yield
+current-policy and novelty-only shadow choices before the factual guided action.
+Only factual actions SHALL enter the SDK. The raw event log, action, level,
+induction, probe, model, and guard receipts SHALL be checkpointed and reduced in
+a fresh process. An absent predecessor SHALL remain missing upstream evidence,
+not a prior null or a required input. External resource absence SHALL block;
+zero accepted engines or probes in a valid episode SHALL be an honest null.
+One episode SHALL not support a causal solve-rate advantage.
+
+#### SCENARIO-REPORT-7681-BLOCKED: External custody is exact
+
+Given no eligible SDK game, credential, mandated model, or owned CUDA capacity,
+the terminal result SHALL use a complete blocked verdict, name the failed path,
+field, operator, expected and observed values, and report zero current model
+invocations and independent groups. It SHALL not repair credentials or disturb
+foreign processes.
+
+#### SCENARIO-REPORT-7681-LIVE: One factual action and two shadows
+
+Given a live SDK frame, the scored policy SHALL choose its guided action after
+recording both shadows from the identical history. The next fresh observation
+SHALL settle the prior action and SDK level guard. Probe proposals, admissions,
+executions, informative outcomes, engine acceptance, and confirmed terminals
+SHALL have separate counters. A solve SHALL require self-discovery provenance,
+SDK confirmation, reproduction and registry novelty.
+
+#### SCENARIO-REPORT-7681-TERMINAL: Independent readers control publication
+
+Given a frozen scope and raw event ledger, fresh-process reduction, scoped
+tests and changed-code coverage, Ruff, mypy, affected-test spec coverage,
+E2E-009/011/013, adversarial verification and strict row lint SHALL retain
+their actual exits and log hashes. Failed required checks SHALL disqualify and
+zero readiness. Exact fixtures SHALL be circular evidence only.
+
 ## V669 live-observation probe protocol — 2026-09-26
 
 ### REQ-REPORT-7680: Measure a bounded scored-path probe protocol

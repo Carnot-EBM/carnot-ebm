@@ -240,6 +240,15 @@ class ArcProbeProtocol:
         # No probe alters the SDK action set. An unsupported or unsafe candidate falls back.
         if chosen not in legal:
             chosen = None
+        # REQ-ARC-PROBE-7681: both shadows see this same live history. They
+        # describe decisions only; neither shadow calls the SDK.
+        novelty_counts = Counter(row["action"] for row in self.effects)
+        novelty_action = (
+            min(legal, key=lambda action: (novelty_counts[action], action))
+            if len(self.effects) >= 2 and legal and base_data is None
+            else fallback[0]
+        )
+        factual_action = chosen if chosen is not None else fallback[0]
         self.decisions.append(
             {
                 "tick": self.tick,
@@ -247,6 +256,22 @@ class ArcProbeProtocol:
                 "legal_actions": list(legal),
                 "base_action": base_action,
                 "selected_action": chosen if chosen is not None else fallback[0],
+                "current_policy_shadow": {
+                    "action": fallback[0],
+                    "legal": fallback[0] in legal,
+                    "executed": False,
+                    "predicted_information": 0,
+                },
+                "novelty_only_shadow": {
+                    "action": novelty_action,
+                    "legal": novelty_action in legal,
+                    "executed": False,
+                    "predicted_information": int(novelty_action != fallback[0]),
+                },
+                "factual_probe_action": factual_action,
+                "route_reachable": factual_action in legal,
+                "shadow_disagreement": novelty_action != fallback[0],
+                "compute_cost_s": time.monotonic() - started,
                 "admitted": chosen is not None,
                 "reason": reason,
                 "goal_guard": self.contract.evaluate(

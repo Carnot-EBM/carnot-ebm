@@ -1,0 +1,596 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "coverage": {
+      "measured_operands": {
+        "observed_groups": 0
+      },
+      "passed": false,
+      "principle": "One factual episode is required."
+    },
+    "decision_utility": {
+      "measured_operands": {
+        "factual_actions": 0
+      },
+      "passed": false,
+      "principle": "Unexecuted shadows cannot prove utility."
+    },
+    "efficiency": {
+      "measured_operands": {
+        "actions": 0
+      },
+      "passed": false,
+      "principle": "No action or compute outcome was measured."
+    },
+    "freshness": {
+      "measured_operands": {
+        "generations": 0
+      },
+      "passed": false,
+      "principle": "No current generation occurred."
+    },
+    "probability": {
+      "measured_operands": {
+        "independent_games": 0
+      },
+      "passed": false,
+      "principle": "One public episode cannot estimate solve probability."
+    },
+    "readiness": {
+      "measured_operands": {
+        "live_episodes": 0
+      },
+      "passed": false,
+      "principle": "Blocked evidence cannot open a readiness gate."
+    },
+    "retention": {
+      "measured_operands": {
+        "followups": 0
+      },
+      "passed": false,
+      "principle": "No later episode tested retained learning."
+    },
+    "validity": {
+      "measured_operands": {
+        "eligible_game_count": 0,
+        "failed_checks": [
+          {
+            "check": "eligible_novel_target",
+            "expected": true,
+            "field": "uncleared_adapter_free_sdk_games_at_least_one",
+            "observed": false,
+            "operator": "==",
+            "passed": false,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+            "upstream": "arc_solve_registry"
+          }
+        ]
+      },
+      "passed": false,
+      "principle": "A novel eligible SDK target is required."
+    }
+  },
+  "arc_live_measurement_complete_score": 0,
+  "counterfactual_solve_rate_claim": false,
+  "current_model_receipts": {
+    "cached_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "episode_budget_s": 3000,
+    "generation_tokens": 0,
+    "gguf_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "load_attempted": false,
+    "owned_gpu_uuid_available": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "planned_identity": "unsloth/Qwen3.8-27B-GGUF"
+  },
+  "duration_s": 8.215101524001511,
+  "execution_venue": "host",
+  "execution_venue_details": {
+    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "host": "icbfl1",
+    "owned_pid": 545968
+  },
+  "experiment_id": 7681,
+  "field_principles": {
+    "MODEL_SPECS": "Literal current-run custody and raw operands govern this field.",
+    "acceptance_gate_results": "Literal current-run custody and raw operands govern this field.",
+    "arc_live_measurement_complete_score": "Literal current-run custody and raw operands govern this field.",
+    "counterfactual_solve_rate_claim": "Literal current-run custody and raw operands govern this field.",
+    "current_model_receipts": "Literal current-run custody and raw operands govern this field.",
+    "duration_s": "Literal current-run custody and raw operands govern this field.",
+    "execution_venue": "Literal current-run custody and raw operands govern this field.",
+    "execution_venue_details": "Literal current-run custody and raw operands govern this field.",
+    "experiment_id": "Literal current-run custody and raw operands govern this field.",
+    "flagged_adversarial": "Literal current-run custody and raw operands govern this field.",
+    "gate_check_summary": "Literal current-run custody and raw operands govern this field.",
+    "honest_verdict": "Literal current-run custody and raw operands govern this field.",
+    "inference_substrate": "Literal current-run custody and raw operands govern this field.",
+    "inference_substrate_class": "Literal current-run custody and raw operands govern this field.",
+    "invocation_counts": "Literal current-run custody and raw operands govern this field.",
+    "milestone": "Literal current-run custody and raw operands govern this field.",
+    "model_invoked": "Literal current-run custody and raw operands govern this field.",
+    "model_specs": "Literal current-run custody and raw operands govern this field.",
+    "per_game_results": "Literal current-run custody and raw operands govern this field.",
+    "phase_spans": "Literal current-run custody and raw operands govern this field.",
+    "planned_MODEL_SPECS": "Literal current-run custody and raw operands govern this field.",
+    "planned_inference_substrate_class": "Literal current-run custody and raw operands govern this field.",
+    "preconditions_checked": "Literal current-run custody and raw operands govern this field.",
+    "probe_opportunities": "Literal current-run custody and raw operands govern this field.",
+    "production_defaults_changed": "Literal current-run custody and raw operands govern this field.",
+    "random_seed": "Literal current-run custody and raw operands govern this field.",
+    "registry_credit_granted": "Literal current-run custody and raw operands govern this field.",
+    "registry_precheck": "Literal current-run custody and raw operands govern this field.",
+    "rows": "Literal current-run custody and raw operands govern this field.",
+    "run_date": "Literal current-run custody and raw operands govern this field.",
+    "sample_size_budget": "Literal current-run custody and raw operands govern this field.",
+    "schema": "Literal current-run custody and raw operands govern this field.",
+    "solve_provenance": "Literal current-run custody and raw operands govern this field.",
+    "source_artifact_hashes": "Literal current-run custody and raw operands govern this field.",
+    "status": "Literal current-run custody and raw operands govern this field.",
+    "validation_receipts": "Literal current-run custody and raw operands govern this field.",
+    "verdict_class": "Literal current-run custody and raw operands govern this field.",
+    "verifier_is_oracle": "Literal current-run custody and raw operands govern this field."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "failed_checks": [
+      {
+        "check": "eligible_novel_target",
+        "expected": true,
+        "field": "uncleared_adapter_free_sdk_games_at_least_one",
+        "observed": false,
+        "operator": "==",
+        "passed": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+        "upstream": "arc_solve_registry"
+      }
+    ]
+  },
+  "honest_verdict": "complete_blocked_eligible_novel_target",
+  "inference_substrate": "host_preflight_no_model_call",
+  "inference_substrate_class": "no_model_load",
+  "invocation_counts": {
+    "forwards": 0,
+    "generations_attempted": 0,
+    "generations_cancelled": 0,
+    "generations_completed": 0,
+    "loads_attempted": 0,
+    "loads_completed": 0,
+    "tokens": 0
+  },
+  "milestone": "2026.09.669",
+  "model_invoked": false,
+  "model_specs": [
+    {
+      "no_model_invoked": true
+    }
+  ],
+  "per_game_results": [],
+  "phase_spans": [
+    {
+      "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7681_v669_arc_live_probes/preconditions.json",
+      "completed_units": 26,
+      "end_s": 8.212415257003158,
+      "phase": "preconditions",
+      "start_s": 0.0005439220039988868
+    }
+  ],
+  "planned_MODEL_SPECS": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "planned_inference_substrate_class": "model_full_generation",
+  "preconditions_checked": [
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "upstream": "python/carnot/reporting/current_work_receipt.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-agi/spec.md",
+      "upstream": "openspec/capabilities/arc-agi/spec.md"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_goal_confirmation.py",
+      "upstream": "python/carnot/agentic/arc_goal_confirmation.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_executable_world_model.py",
+      "upstream": "python/carnot/agentic/arc_executable_world_model.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_probe_protocol.py",
+      "upstream": "python/carnot/agentic/arc_probe_protocol.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7630_v666_cuda_ownership.py",
+      "upstream": "python/carnot/experiment_7630_v666_cuda_ownership.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+      "upstream": "python/carnot/inference/sota_models.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7681_v669_arc_live_probes.py",
+      "upstream": "python/carnot/experiment_7681_v669_arc_live_probes.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7681_v669_arc_live_probes.py",
+      "upstream": "scripts/experiments/experiment_7681_v669_arc_live_probes.py"
+    },
+    {
+      "check": "input_exists",
+      "expected": true,
+      "field": "readable_nonempty",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7681_v669_arc_live_probes.py",
+      "upstream": "tests/python/test_experiment_7681_v669_arc_live_probes.py"
+    },
+    {
+      "check": "sdk_catalogue",
+      "expected": true,
+      "field": "catalogue_available",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files",
+      "upstream": "arc_agi_offline_sdk"
+    },
+    {
+      "check": "eligible_novel_target",
+      "expected": true,
+      "field": "uncleared_adapter_free_sdk_games_at_least_one",
+      "observed": false,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "upstream": "arc_solve_registry"
+    },
+    {
+      "check": "mandated_model",
+      "expected": true,
+      "field": "cached_gguf_present",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "upstream": "cached_current_model"
+    },
+    {
+      "check": "llama_server",
+      "expected": true,
+      "field": "executable_present",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "upstream": "local_cuda_runtime"
+    },
+    {
+      "check": "owned_cuda_capacity",
+      "expected": true,
+      "field": "exclusive_device_available",
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "path": "nvidia-smi",
+      "upstream": "nvidia_smi"
+    }
+  ],
+  "probe_opportunities": {
+    "accepted_engines": 0,
+    "admitted": 0,
+    "eligible": 0,
+    "executed": 0,
+    "informative": 0,
+    "proposed": 0,
+    "rejected": 0
+  },
+  "production_defaults_changed": false,
+  "random_seed": {
+    "episode_seed": 7681669,
+    "selection_salt": "v669-live-probe-20260926"
+  },
+  "registry_credit_granted": false,
+  "registry_precheck": {
+    "eligible_game_ids": [],
+    "excluded_full_clear_games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "excluded_reproduced_levels": {
+      "ar25": 8,
+      "bp35": 9,
+      "cd82": 6,
+      "cn04": 6,
+      "dc22": 6,
+      "ft09": 6,
+      "g50t": 7,
+      "ka59": 7,
+      "lf52": 10,
+      "lp85": 8,
+      "ls20": 7,
+      "m0r0": 6,
+      "r11l": 6,
+      "re86": 8,
+      "s5i5": 8,
+      "sb26": 8,
+      "sc25": 6,
+      "sk48": 8,
+      "sp80": 6,
+      "su15": 9,
+      "tn36": 7,
+      "tr87": 6,
+      "tu93": 9,
+      "vc33": 7,
+      "wa30": 9
+    },
+    "sdk_game_ids": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "sdk_outcome_custody": "catalogue_only",
+    "selected_target": null
+  },
+  "reproducibility_checksum": "sha256:419359f1633188b186846a8f8f4286fb25fd97a7cbb69ab04953077b322168ea",
+  "rows": [],
+  "run_date": "20260926",
+  "sample_size_budget": {
+    "censored_independent_groups": 0,
+    "effective_blocks": 0,
+    "eligible_independent_groups": 0,
+    "excluded_independent_groups": 1,
+    "intended_independent_groups": 1,
+    "limits": {
+      "actions": 256,
+      "engine_calls": 20000,
+      "episode_s": 3000,
+      "hypotheses": 16
+    },
+    "observed_independent_groups": 0,
+    "prior_exposure": "public_registry_games_all_full_clear"
+  },
+  "schema": "carnot.exp7681.v669.arc_live_probes.v1",
+  "solve_provenance": "no_live_attempt",
+  "source_artifact_hashes": {
+    "missing_evidence": [
+      "results/experiment_7667_v668_arc_live_goal_observation.json"
+    ],
+    "pre_gate_receipts": {},
+    "producers": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+      "CODEX.md": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+      "openspec/capabilities/arc-agi/spec.md": "sha256:aa2bbf5d2c22dc49cb1e7135ce5b8f2e738b00d6a3e479accb0966b890e4025f",
+      "openspec/capabilities/research-reporting/spec.md": "sha256:c76d3411afebe2a89fcd858b027ab4680243ca4e7cc5260d6960941ff262b442",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/e2e-test-plan.md": "sha256:b733f3fafaa82ebd74ff8133f1c7d6149ca36643b8ee20709dc4e3091b1343ac",
+      "ops/exclusion_manifest.yaml": "sha256:075bb83744d788b3d72f76682e96118c682f36bead6ae1e0770a1eec5210da65",
+      "python/carnot/agentic/arc_competition_agent.py": "sha256:b05b6cca9938fd0ed3d739179f2df1ec4a4690a4e9f4c7f3bf68d469e84dd98a",
+      "python/carnot/agentic/arc_executable_world_model.py": "sha256:05ece57ad768273bea6a73d7c71ddf29fcca9d42d1951efcc76e6bf5e1f7df45",
+      "python/carnot/agentic/arc_goal_confirmation.py": "sha256:352e8daa8742e04b8f797b6aaeabe312a468053e49d1bff8548c992c8f34d06f",
+      "python/carnot/agentic/arc_probe_protocol.py": "sha256:63dfedcc2b62f8abd26442da5ed276f04b1e3decc74eb1230fd431c82cb5f922",
+      "python/carnot/experiment_7630_v666_cuda_ownership.py": "sha256:56a6a360bbf7ce55ca5bc39a2f72f5dcde2362dc2d64d0f4685bd332f42f2421",
+      "python/carnot/experiment_7681_v669_arc_live_probes.py": "sha256:be565650e38884651a4bb6413d16698a4ba193cc1ecc3b89cb95c3e3f499a311",
+      "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+      "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "scripts/experiments/experiment_7681_v669_arc_live_probes.py": "sha256:37c3257e86e95c059f4cd6773c84f526be0c4854e1e62f093f310114b219a598",
+      "tests/python/test_experiment_7681_v669_arc_live_probes.py": "sha256:ee8238561ce7d3369bc883876ae6765b6942cb64f1074bf076fe4695a283d731"
+    }
+  },
+  "status": "complete",
+  "validation_receipts": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

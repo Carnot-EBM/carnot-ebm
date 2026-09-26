@@ -12,6 +12,30 @@ hidden state, offline ground-truth search, or hand adapters on the scored path.
 
 ## Requirements
 
+### REQ-ARC-PROBE-7681: Observe three decisions without extra SDK actions
+
+A single opted-in E3 episode SHALL expose the current-policy and novelty-only
+shadow decisions from each public observation before executing the guided probe
+choice. The shadows SHALL receive identical live history and SHALL never call
+the environment. The factual path SHALL enforce 256 real actions, 20000 model
+simulation calls, sixteen generic hypotheses and 3000 seconds. Generator calls
+SHALL respect the remaining episode budget. SDK LEVEL_UP or WIN alone SHALL
+confirm progress; predicted terminals remain hypotheses. Production defaults
+SHALL remain off.
+
+#### SCENARIO-ARC-PROBE-7681-ZERO-ENGINE: Probe remains reachable
+
+When induction accepts no engine, a live observation MAY still admit a legal
+information probe from observed effects. The receipt SHALL distinguish a probe
+opportunity from a submitted probe and a next-observation information gain.
+When none arise, it SHALL report zero opportunities without inventing a solve.
+
+#### SCENARIO-ARC-PROBE-7681-SHADOW: No counterfactual success claim
+
+Each shadow SHALL record legality, route reachability, predicted information,
+disagreement and compute cost. The episode SHALL not execute shadow actions or
+expand the independent sample count by shadow views.
+
 ### REQ-ARC-PROBE-7680: Bounded self-observation probe scheduling
 
 An explicit, default-off scored E3 policy option SHALL form at most sixteen generic
