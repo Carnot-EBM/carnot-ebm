@@ -82725,6 +82725,36 @@ Given a missing upstream input, unavailable owned GPU, or stale qualified
 protocol, the result is complete_blocked_* with exact upstream, path, field,
 operator, expected and observed operands and no invented model invocation.
 
+## REQ-REPORT-7729: Measure an exposed Qwen draft pilot with terminal custody
+
+Exp7729 SHALL authenticate original RAGTruth source bytes, the cached
+Qwen3.8-27B Q4 GGUF, its chat template, and an owned idle GPU before capture.
+It SHALL freeze the same 24 exposed natural families as Exp7716 and randomize
+three arms within each family: direct schema with 256 output tokens, a plain
+draft of 128 then schema answer of 128, and a plain draft of 128 then plain
+answer of 128. All arms SHALL keep the full original source and answer, equal
+decoding settings and a 256-token total output ceiling. Raw requests,
+responses, token usage, hashes, latency, failed parses and checkpoints SHALL
+survive an independent cold reduction. Completion requires all 24 paired
+families and terminal readers, regardless of semantic benefit. Prior exposure
+limits this result to development_only; no generalization, training,
+retention, extraction or ARC gate opens from this pilot.
+
+### SCENARIO-REPORT-7729-PAIRED
+
+Each of 24 families has three arm results and at most five real model calls.
+The cold reader recomputes syntax, exact quote address, missing or truncated
+answer, binary unsupported decision, unknown rate, tokens, latency and paired
+family intervals from saved bytes. All malformed or truncated calls remain in
+the family denominator. Draft-schema is compared with both controls.
+
+### SCENARIO-REPORT-7729-TERMINAL
+
+Missing input, unsupported runtime or unavailable owned GPU yields a
+complete_blocked_* verdict with exact gate operands and no invented model
+call. Failed affected validation or exact-candidate readers disqualify. A
+valid scientific null can complete the pilot without claiming benefit.
+
 ## REQ-REPORT-7719: Publish causal acquisition qualification
 
 Exp7719 SHALL authenticate V671 historical bytes without reopening its zero

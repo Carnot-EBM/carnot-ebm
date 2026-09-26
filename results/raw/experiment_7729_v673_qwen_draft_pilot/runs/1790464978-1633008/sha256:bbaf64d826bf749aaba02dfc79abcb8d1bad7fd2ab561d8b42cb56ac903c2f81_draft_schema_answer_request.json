@@ -1,0 +1,30 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge the complete original answer from the source as support, contradiction, or insufficient_evidence. Give one exact original-source quotation. If evidence is insufficient, say insufficient_evidence. Return exactly one JSON object with decision and quote.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"What do we have for the contestant on \\\"The Price Is Right\\\"? A brand-new car! Whoops. That wasn't supposed to happen. On Thursday's edition of the popular game show, model Manuela Arbelaez accidentally revealed the correct answer to a guessing game for a new Hyundai Sonata. Host Drew Carey couldn't stop laughing. \\\"Congratulations! Manuela just gave you a car!\\\" he exulted. Arbelaez was mortified, attempting to hide behind the display. But everything turned out OK, she tweeted later. It's been a busy week for \\\"The Price Is Right.\\\" On Wednesday, former host Bob Barker, 91, showed up to run his old show.\\n\", \"original_answer\": \"Model Manuela Arbelaez accidentally revealed the correct answer on \\\"The Price is Right,\\\" leading to hilarious moment as host Drew Carey couldn't stop laughing.\"}",
+      "role": "user"
+    },
+    {
+      "content": "**Draft Check**\n\n**1. Fact Verification:**\n*   **Claim:** Model Manuela Arbelaez accidentally revealed the correct answer.\n    *   **Source:** \"model Manuela Arbelaez accidentally revealed the correct answer to a guessing game for a new Hyundai Sonata.\"\n    *   **Status:** Accurate.\n*   **Claim:** On \"The Price is Right.\"\n    *   **Source:** \"What do we have for the contestant on \\\"The Price Is Right\\\"?\"\n    *   **Status:** Accurate.\n*   **Claim:** Leading to a hilarious moment.\n   ",
+      "role": "assistant"
+    },
+    {
+      "content": "Now give the final decision and quotation.",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7729,
+  "temperature": 0
+}

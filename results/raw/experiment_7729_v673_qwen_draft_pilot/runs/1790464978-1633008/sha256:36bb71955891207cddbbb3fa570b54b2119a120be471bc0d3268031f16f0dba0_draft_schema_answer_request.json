@@ -1,0 +1,30 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge the complete original answer from the source as support, contradiction, or insufficient_evidence. Give one exact original-source quotation. If evidence is insufficient, say insufficient_evidence. Return exactly one JSON object with decision and quote.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Vitamins to Prevent Bruising. Bruises are purple and blue dark discolored spots on the skin that can be painful to the touch. People who bruise easily may be suffering from vitamin deficiencies; other causes of easy bruising include aging, thin skin and inadequate blood vessel function.\\\\n\\\\npassage 2:Bruising occurs when the blood vessels break under the skin, usually as a result of a fall or a blow to the body. Bruising may also occur after surgery or after cosmetic treatments, such as Botox or Juvederm injections.\\\\n\\\\npassage 3:Bruises are often the first sign of abuse. You may be able to prevent further abuse by reporting it and seeking help. 1  Call your local child or adult protective agency, police, or clergy or a health professional (such as a doctor, nurse, or counselor) if you suspect abuse.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prevent bruising\\\"}\", \"original_answer\": \"Passages 1 and 2 provide relevant information on how to prevent bruising. Taking vitamins, especially those that address vitamin deficiencies, may help prevent bruising (passage 1). Additionally, being cautious to avoid falls or blows to the body can help prevent bruising (passage 2).\"}",
+      "role": "user"
+    },
+    {
+      "content": "**Draft Check**\n\n**Source Analysis:**\n*   **Passage 1:** States that \"People who bruise easily may be suffering from vitamin deficiencies.\" It lists other causes: \"aging, thin skin and inadequate blood vessel function.\" It does not explicitly state that taking vitamins *prevents* bruising, only that deficiencies are a cause of easy bruising.\n*   **Passage 2:** States \"Bruising occurs when the blood vessels break under the skin, usually as a result of a fall or a blow to the body.\" It also mentions bruising after \"surgery or after cosmetic treatments.\" It does",
+      "role": "assistant"
+    },
+    {
+      "content": "Now give the final decision and quotation.",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7729,
+  "temperature": 0
+}

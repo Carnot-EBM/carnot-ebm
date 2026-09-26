@@ -1,0 +1,30 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "/no_think\nJudge the complete original answer from the source as support, contradiction, or insufficient_evidence. Give one exact original-source quotation. If evidence is insufficient, say insufficient_evidence. Return exactly one JSON object with decision and quote.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:0am:The Mount Washington, NH forecast for Mar 23 is 21 degrees and Partly cloudy. There is 53 percentage chance of rain and 7 mph winds from the North-Northwest. 3am:The Mount Washington, NH forecast for Mar 23 is 20 degrees and Overcast. There is 57 percentage chance of rain and 6 mph winds from the Northwest.\\\\n\\\\npassage 2:Mount Washington Weather Forecast for Thursday, March 23. The Mount Washington, NH forecast for Mar 23 is 32 degrees and Sunny . There is 40 percentage chance of rain and 4 mph winds from the North-Northwest.\\\\n\\\\npassage 3:6pm:The Mount Washington, NH forecast for Mar 23 is 40 degrees and Sunny. There is 35 percentage chance of rain and 2 mph winds from the West-Southwest. 9pm:The Mount Washington, NH forecast for Mar 23 is 34 degrees and Clear. There is 42 percentage chance of rain and 3 mph winds from the East-Southeast.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather in mount washington nh\\\"}\", \"original_answer\": \"Based on the given passages, the weather in Mount Washington, NH on March 23 will be partly cloudy in the morning with a chance of rain and temperatures around 21-20 degrees. Later in the day, it will become sunny with temperatures around 32-40 degrees. Winds will be generally light, ranging from 2-7 mph and coming from different directions throughout the day.\"}",
+      "role": "user"
+    },
+    {
+      "content": "**Draft Check: Original Answer vs. Source**\n\n**1. Morning Conditions (0am - 3am)**\n*   **Source:** \"0am... 21 degrees and Partly cloudy... 53 percentage chance of rain... 7 mph winds from the North-Northwest.\" / \"3am... 20 degrees and Overcast... 57 percentage chance of rain... 6 mph winds from the Northwest.\"\n*   **Original Answer:** \"partly cloudy in the morning with a chance of rain and temperatures around 21-20 degrees.\"\n*   **Verification:** Acc",
+      "role": "assistant"
+    },
+    {
+      "content": "Now give the final decision and quotation.",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7729,
+  "temperature": 0
+}

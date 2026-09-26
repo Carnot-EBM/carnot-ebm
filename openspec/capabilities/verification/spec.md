@@ -62,6 +62,23 @@ and retain every original answer sentence without predictor access to labels.
 A unique exact quote has a valid address but no automatic semantic truth. A
 duplicate quote is ambiguous; malformed JSON and absent quotes are invalid.
 
+### REQ-VERIFY-7729: Keep binary human labels separate from three way decisions
+
+The Exp7729 reducer SHALL accept support, contradiction or insufficient
+evidence with one exact original-source quote. It SHALL score strict schema
+syntax and unique quote address separately, keep failed parses in every
+denominator, and map both contradiction and insufficient evidence to the
+binary human unsupported class. Human unsupported labels SHALL NOT certify
+which of those two relations is correct. A quoted substring alone SHALL NOT
+certify semantic support.
+
+#### SCENARIO-VERIFY-7729-BINARY
+
+An unsupported human label makes contradiction and insufficient evidence
+equally correct only for binary accuracy. Missing, duplicate or non-source
+quotes fail quote validity, while malformed and truncated answers stay in the
+denominator and cannot score as correct.
+
 ### REQ-VERIFY-7715: Isolate natural labels from source predictors
 
 The public RAGTruth projection SHALL contain complete original source and

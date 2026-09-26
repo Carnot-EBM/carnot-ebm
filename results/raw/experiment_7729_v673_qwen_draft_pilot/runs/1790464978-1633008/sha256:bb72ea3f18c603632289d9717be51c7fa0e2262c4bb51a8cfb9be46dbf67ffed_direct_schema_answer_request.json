@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nJudge the complete original answer from the source as support, contradiction, or insufficient_evidence. Give one exact original-source quotation. If evidence is insufficient, say insufficient_evidence. Return exactly one JSON object with decision and quote.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1915 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\"},\\\"name\\\":\\\"El Pastorcito\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-28 04:51:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hit this place up 2 nights in a row and if I was in town one more night I'd do it again. Mulitas de pastor were on point, we also had mulitas de pollo, tacos de birria and pastor. Horchata drinks. Large. See you next time.\\\"},{\\\"review_date\\\":\\\"2021-06-30 03:39:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Yes! Soo good. Drove by the El Pastorcito Mobile 3 nights in a row on our way to our hotel and would see a crowd of people at this taco truck every night. (East Beach on S Milpas St) They have tables set up and some lights. It's a fun scene. We decided to check it out. So glad we did. Go get you some al Pastor tacos and burritos and all of it. \\\\nWe had the birria tacos too - which were fine but nothing to go on and on about. But the el pastor... damn good! Squeeze on some lime, a splash of the salsa verde. Game ON! \\\\nWould go back again and again. In fact we did - we got back in line and got another taco and burrito the same night because it was SO good.\\\\nGO!\\\"},{\\\"review_date\\\":\\\"2021-06-18 02:32:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"First time trying them. I ordered the tripa tacos and an asada mulita with an horchata. Everything was delicious. I will definitely be back to try the rest of the menu\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Pastorcito is a highly-rated Mexican restaurant located in Santa Barbara, CA. According to customer reviews, the restaurant serves delicious and authentic Mexican cuisine, with popular dishes including mulitas de pastor, tacos de birria, and pastor burritos. Customers have praised the flavors and quality of the food, with one reviewer commenting that the al pastor tacos are \\\"damn good\\\" and another saying they would return to try the rest of the menu. The restaurant has a 5-star rating and is known for its friendly service and festive atmosphere, with outdoor seating and a fun scene. El Pastorcito is open Thursday through Saturday from 5:00 PM to 10:00 PM and is a great option for those looking for delicious Mexican food in the area.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7729,
+  "temperature": 0
+}
