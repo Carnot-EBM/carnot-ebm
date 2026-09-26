@@ -11,11 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 5 |
-| NO_CLAIM | 2 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| CLAIM_SUPPORTED | 7 |
+| CLAIM_OVERSTATED | 1 |
 
-## experiment_7645_v667_arc_validation_requalification.json
+## experiment_7659_v668_atom_corpus.json
 
 **CLAIM_SUPPORTED**
 
@@ -23,60 +22,165 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The ARC goal guard CPU planner is validation-ready across constructed regression fixtures while demonstrating complete null hidden-game benefit.
+The atom corpus meets the stated readiness gate, while scientific benefit remains unestablished.
 
 ## WHAT WOULD REFUTE IT
-The claim would be refuted if:
-1. Any regression fixture failed execution, threw an assertion, or triggered an invalid transition swallow (e.g., `passed` reporting `false`, or `hud_dedup_swallow` reporting `swallows` as `true`), or if any validation process exited non-zero, which would falsify the readiness claim.
-2. The run credited game solve advantages (e.g., `new_game_level_solve_credit` reporting `true` or `probability_benefit` passing with non-zero `hidden_game_groups`), which would contradict the null benefit claim.
+Fewer than 16 covered fit groups, constant fit features, invalid inputs, or failed required checks would refute readiness. Paired predictions with independent outcomes demonstrating benefit would refute the null benefit assessment.
 
 ## WAS THAT CHECKED
-Yes. Readiness refutation was checked across 6 regression fixtures in `goal_guard_rows` and 17 command runs in `validation_receipts`, where all checks completed and passed without swallow or failure. Game benefit refutation was checked at the gate level in `acceptance_gate_results.probability_benefit`, which verified zero hidden-game exposure and explicitly failed the benefit, utility, and retention gates, constraining downstream reporting to a null verdict.
+Yes for readiness: the gates report 22 covered fit groups, nonconstant features, authenticated inputs, and passing required checks. Benefit was not tested because the required paired predictions and outcomes were absent; the artifact makes no positive benefit claim.
 
 ## EVIDENCE
-- `"honest_verdict": "complete_null_arc_goal_guard_ready_no_hidden_game_benefit"`
+`"honest_verdict": "complete_null_atom_corpus_ready"`; `"fit_covered_groups": 22`; `"threshold": 16`; `"fit_nonconstant": true`; `"authenticated_inputs": true`; `"required_checks_passed": true`; `"paired_probabilities": 0`; `"typed_decisions": 0`; `"delayed_feedback_events": 0`; `"fresh_confirmatory_groups": 0`; `"fresh_confirmatory_claim_allowed": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7660_v668_atom_energy.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The energy head architecture is execution-ready with valid frozen heads, but demonstrates null scientific benefit over baseline with no held-out benefit claimed.
+
+## WHAT WOULD REFUTE IT
+Any of the following observations in the artifact's own data would refute the claim:
+1. Operational failure: non-zero exit codes in validation checks, non-empty `failed_required_commands`, `required_checks_passed` being false, `frozen_heads` being 0, or `flagged_adversarial` being true.
+2. Verdict/row contradiction: claiming positive benefit despite `identity` achieving a lower Brier score than `atom` (0.030189 vs 0.049949) or despite zero held-out groups opened.
+3. Failing consistency checks: `verdict_row_consistency` or `adversarial_verify` flagging circularity or discrepancies between the 720 paired rows and the null verdict.
+
+## WAS THAT CHECKED
+Yes. Operational readiness was checked via 9 affected-scope validation commands (`focused_pytest`, `changed_module_coverage`) and 3 terminal readers (`cold_reduce`, `adversarial_verify`, `verdict_row_consistency`), all passing with zero failures. The absence of scientific benefit was explicitly checked through acceptance gates: `validity` passed, `readiness` passed, while `freshness` was evaluated and failed (`passed`: false due to 0 fresh confirmatory groups) and `probability_benefit` was evaluated and nulled (`passed`: null due to 0 held-out groups opened), confirming an honest null.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_energy_head_ready`
+- `verdict_class`: `null`
+- `energy_ready_score`: `1`
+- `claim_limits`: `Paired arms do not enlarge N; no held-out benefit is claimed.`
+- `prior_exposure`: `All 120 inherited learning groups were previously exposed.`
+- `fresh_confirmatory_groups`: `0`
+- `held_out_groups_opened`: `0`
+- `frozen_heads`: `5`
+- `paired_rows`: `720`
+- `required_checks_passed`: `true`
+- `failed_required_commands`: `[]`
+- `missing_required_commands`: `[]`
+- `flagged_adversarial`: `false`
+- `verifier_is_oracle`: `false`
+- `target_is_witness_output`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7661_v668_decision_evaluation.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Atom scoring provides no registered decision benefit over prespecified controls across the evaluated groups.
+
+## WHAT WOULD REFUTE IT
+Observing a statistically significant decision benefit for atom scoring over prespecified controls, specifically achieving a paired Brier score 95% confidence interval lower bound exceeding 0.01 against `cheap_atom` or meeting the registered utility cost and non-escalation coverage thresholds.
+
+## WAS THAT CHECKED
+Yes. Paired comparisons and 10,000-draw bootstrap confidence intervals were evaluated against prespecified controls (including `cheap_atom`, `scalar`, `identity`, `source_deranged`, and `source_erased`) in `acceptance_gate_results` under `probability_benefit` and `utility`, as well as in `independent_reduction.confidence_intervals` across 40 independent groups and 240 paired rows.
+
+## EVIDENCE
+`"honest_verdict"`: `"complete_null_no_registered_decision_benefit"`
+`"verdict_class"`: `"null"`
+`"probability_benefit_score"`: `0`
+`"utility_benefit_score"`: `0`
+`"source_dependence_score"`: `0`
+`"best_prespecified_control"`: `"cheap_atom"`
+`"gate"`: `"probability_benefit"`
+`"passed"`: `false`
+`"estimate"`: `-0.0010338017975771076`
+`"ci95"`: `[-0.011074405974452384, 0.009060886357545343]`
+`"threshold"`: `0.01`
+`"gate"`: `"utility"`
+`"passed"`: `false`
+`"claim_limit"`: `"no fresh confirmatory claim"`
+`"prior_exposure"`: `"all groups exposed; exploratory only"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7662_v668_delayed_update_protocol.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The delayed update protocol yields no fresh benefit over frozen and scalar controls, resulting in a complete null.
+
+## WHAT WOULD REFUTE IT
+The source arm achieving Brier score and decision cost improvements over both frozen and scalar controls exceeding the 0.01 margin on fresh confirmatory data, causing the `probability_benefit`, `utility`, and `freshness` acceptance gates to pass.
+
+## WAS THAT CHECKED
+Yes; evaluated in `acceptance_gate_results` (under `probability_benefit`, `utility`, and `freshness`) and in `independent_reduction`.
+
+## EVIDENCE
+`honest_verdict`: `"complete_null_delayed_update_no_fresh_benefit"`
+`verdict_class`: `"null"`
+`claim_limit`: `"no fresh confirmatory benefit"`
+`gate`: `"probability_benefit"`
+`passed`: `false`
+`threshold`: `0.01`
+`brier`: `frozen`: `0.14649937700872429`, `scalar`: `0.14645674990801422`, `source`: `0.1487339496444748`
+`gate`: `"utility"`
+`passed`: `false`
+`threshold`: `0.01`
+`decision_cost`: `frozen`: `0.17750000000000002`, `scalar`: `0.17750000000000002`, `source`: `0.175`
+`gate`: `"freshness"`
+`passed`: `false`
+`fresh_confirmatory_groups`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7663_v668_continuous_atom_learning.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Continuous atom learning provides no registered benefit in predictive accuracy or decision utility over frozen or scalar baselines.
+
+## WHAT WOULD REFUTE IT
+Observing a statistically significant improvement in predictive accuracy or decision cost where the lower bound of the paired block 95% confidence interval exceeds 0.01 (`lower_ci95` > 0.01) against frozen or scalar baselines, or observing the `probability_benefit` or `utility` acceptance gates passing.
+
+## WAS THAT CHECKED
+Yes. Checked in `acceptance_gate_results` (under `probability_benefit` and `utility`) and in `independent_reduction.paired_contrasts` across 80 independent groups (400 paired rows) evaluated against `frozen` and `scalar` baseline arms.
+
+## EVIDENCE
+- `"honest_verdict": "complete_null_continuous_learning_no_registered_benefit"`
 - `"verdict_class": "null"`
-- `"planner_goal_guard_ready_score": 1`
-- `"readiness_only": true`
-- `"hidden_game_groups": 0`
-- `"new_game_level_solve_credit": false`
-- `"passed": true`
+- `"continuous_benefit_score": 0`
+- `"utility_benefit_score": 0`
+- `"gate": "probability_benefit"`
+- `"lower_bound_threshold": 0.01`
+- `"lower_ci95": -0.0002996276115452211`
+- `"lower_ci95": -6.780939558444666e-05`
+- `"gate": "utility"`
+- `"threshold": 0.01`
 - `"passed": false`
-- `"unit_kind": "exact_regression_fixture"`
-- `"independent_groups": 6`
-- `"passed_groups": 6`
-- `"verifier_is_oracle": true`
+- `"independent_groups": 80`
+- `"paired_rows": 400`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7646_v667_source_feature_corpus.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7647_witness_energy.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no training or comparative result to refute. The artifact records a gate check before training.
-
-## WAS THAT CHECKED
-Yes. The gate check ran and recorded two failed gates; the experiment stopped at the pre-gate layer.
-
-## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7646-source-feature-corpus.flagged_adversarial (actual=True == expected=False)"`; `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7650_v667_independent_source_audit.json
+## experiment_7664_v668_independent_evidence_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -84,21 +188,29 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The audit completed, but the available source evidence could not support a learning benefit.
+Atom evidence and continuous learning provide no independent benefit in probability calibration or decision utility over baseline controls.
 
 ## WHAT WOULD REFUTE IT
-Eligible independent source rows, available downstream producer results, or failed audit validation would contradict the blocked or completed parts of the claim.
+A statistically significant positive improvement in Brier score or decision cost (such as a 95% bootstrap confidence interval strictly above zero or meeting the 0.01 acceptance gate threshold) for the active evidence arm relative to baseline controls (such as `identity`, `scalar`, or `frozen`).
 
 ## WAS THAT CHECKED
-Yes. The artifact checks producer eligibility and existence, benefit gates, and terminal validation. The benefit gates did not pass, while terminal validation passed.
+Yes. It was evaluated across multiple contrast gates and slices (`probability_benefit`, `utility`, `retention`, and independent contrasts across `continuous`, `delayed`, and `evaluation` sets against controls like `cheap_atom`, `identity`, `scalar`, `frozen`, and `omission`), where all measured improvements failed to clear thresholds, point estimates were near-zero or negative, and bootstrap confidence intervals covered zero or negative values.
 
 ## EVIDENCE
-`honest_verdict`: `complete_blocked_source_producers_unavailable`; `benefit_eligible`: `false`; `eligible`: `0`; `disposition`: `disqualified`; `reader_result`: `unavailable`; `passed`: `false`; `passed`: `null`; `independent_audit_complete_score`: `1`; `verifier_is_oracle`: `true`; `oracle_distinct_benefit`: `false`.
+- `honest_verdict`: `complete_null_no_independent_benefit`
+- `verdict_class`: `null`
+- `gate`: `probability_benefit`, `passed`: `false`
+- `gate`: `utility`, `passed`: `false`
+- `principle`: `Both block-eight lower Brier improvements must exceed 0.01.`
+- `finding`: `No registered held-out Brier benefit`
+- `finding`: `No calibrated decision-cost and coverage benefit`
+- `finding`: `Delayed updates and replay exist; benefit is not established`
+- `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7651_v667_qwen_witness_challenge.json
+## experiment_7665_v668_qwen_grounded_claims.json
 
 **CLAIM_SUPPORTED**
 
@@ -106,91 +218,38 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The Qwen3.8-27B bounded witness challenge yielded a complete null pilot result with zero conservative intersection supported across all paired comparison items.
+The bounded measurement completed and found zero exactly supported claims, without claiming a benefit for the typed index or for whole answers.
 
 ## WHAT WOULD REFUTE IT
-Any observation in the artifact's own paired rows showing a non-zero count of supported witness propositions (`conservative_intersection_supported > 0`), or any structural control witness evaluation returning a valid verified proposition (`status` resolving to `supported` rather than `unknown`). Refutation was given a genuine opportunity to occur by executing 16 generation calls across 8 independent paired groups on GPU hardware under two distinct generation arms (`schema_constrained_decoding` and `explicit_schema_prompt`).
+An eligible row with an exactly supported claim would refute the reported zero-support result. An incomplete or excluded call counted toward completion would refute the completion claim.
 
 ## WAS THAT CHECKED
-Yes. Evaluated across 8 paired pilot groups (16 generation calls) recorded in `paired_pilot_rows` and `rows`, where all 8 groups were evaluated against structural grammar rules and all produced `conservative_intersection_supported` equal to `0`.
+Yes. The artifact reports zero exactly supported claims across 24 sources, 48 completed calls, no exclusions, and passing independent reduction and row-consistency checks. The displayed rows show outcomes that could differ, including an invalid pointer and a generated response with no pointer. The remaining rows are elided, so their individual outcomes cannot be inspected here.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_bounded_witness_pilot`
-- `conservative_intersection_supported`: `0`
-- `qwen_challenge_complete_score`: `1`
-- `groups`: `8`
-- `raw_rows`: `16`
-- `generation_calls_completed`: `16`
-- `arms`: `explicit_schema_prompt`, `schema_constrained_decoding`
-- `status`: `unknown`
-- `reason`: `claim_outside_structural_grammar`
-- `principle`: `A complete bounded pilot establishes feasibility only.`
+`complete_null_bounded_grounded_claim_mechanism`; `verdict_class`: `null`; `exact_supported`: `0`; `sources`: `24`; `forward_calls_completed`: `48`; `excluded`: `0`; `independent_reduction`: `passed`: `true`; `verdict_row_consistency_strict`: `passed`: `true`; `whole_answer_benefit_claim`: `false`; `verifier_is_oracle`: `true`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7652_v667_arc_wrapper_measurement.json
+## experiment_7666_v668_arc_goal_confirmation.json
 
-**CLAIM_SUPPORTED**
+**CLAIM_OVERSTATED**
 
 ## VERDICT
-CLAIM_SUPPORTED
+CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-HUD_DEDUP showed no development-proxy benefit over OFF, and the wrapper was disqualified by failed validation.
+The goal-confirmation guard has a positive, fixture-ready result.
 
 ## WHAT WOULD REFUTE IT
-A valid induced window where HUD_DEDUP succeeded and OFF failed, with no offsetting loss, would refute the no-benefit finding; a passing full Python suite would refute the stated validation failure.
+A direct check of the same SDK level and terminal state that ties the guard would refute any claim that the guard adds value. An independently labeled fixture on which the guard gives the wrong status would refute its fixture accuracy.
 
 ## WAS THAT CHECKED
-Yes. The artifact compares paired HUD_DEDUP and OFF results across induced windows and records the validation receipt. Neither refuting observation occurred.
+No for added value. The verifier is the correctness oracle, and the shown OFF row has no correctness score, so the arms cannot establish a gain. Scripted fixtures did exercise the guard’s status handling.
 
 ## EVIDENCE
-`"honest_verdict": "complete_disqualified_wrapper_validation_failed"`; `"induced_new_successes": 0`; `"induced_lost_successes": 0`; `"usable_induced_windows": 38`; `"HUD_DEDUP"` and `"OFF"` each have `"successes": 1`; `"failed_receipts": ["full_python_suite"]`.
+`complete_circular_positive_goal_confirmation_fixture_ready` · `circular_positive` · `verifier_is_oracle` · `true` · `oracle_matches` · `48` · `OFF` · `correct` · `null` · `scripted_sdk_fixture_oracle`
 
 ## RECOMMENDATION
-KEEP
-
-## experiment_7653_v667_arc_live_generalization.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The run completed, but it did not demonstrate HUD dedup benefit or generalization and was disqualified by required validation.
-
-## WHAT WOULD REFUTE IT
-A validated HUD dedup arm achieving a higher level than its matched baseline, together with passing evidence for hidden-game benefit and retention, would contradict that conclusion.
-
-## WAS THAT CHECKED
-Yes for the matched outcomes and validation gates: all three paired level differences were zero, and the gates failed. Hidden-game benefit and retention were not measured. The HUD dedup planner lever was unreachable, so these rows do not establish that the method has no value when active.
-
-## EVIDENCE
-`honest_verdict`: `complete_disqualified_required_validation`; `paired_level_deltas`: `bp35` `0`, `ls20` `0`, `tn36` `0`; `planner_lever_reachable`: `false`; `hidden_games`: `0`; `groups`: `0`; `executed`: `0`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7656_v667_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-A benefit claim would be refuted by eligible evidence showing no improvement over a serious baseline. This artifact makes no such claim. Its blocked disposition would be contradicted if the required gates passed on eligible evidence.
-
-## WAS THAT CHECKED
-Yes for the blocked disposition: the artifact reports failed producer and readiness checks and records the missing inputs. It does not present a comparative benefit claim to test.
-
-## EVIDENCE
-`complete_blocked_required_v667_external_evidence`; `blocked`; `A complete prefix records terminal work without implying benefit.`; `failed_upstream_checks`: `9`; `checked_predicates`: `0`; `accounting_completion`.
-
-## RECOMMENDATION
-KEEP
+NARROW_CLAIM

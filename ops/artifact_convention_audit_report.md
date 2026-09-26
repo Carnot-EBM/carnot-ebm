@@ -9,10 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| CANNOT_DETERMINE | 1 |
+| CHECKABLE | 5 |
+| AGGREGATE_ONLY | 1 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_7645_v667_arc_validation_requalification.json
+## experiment_7659_v668_atom_corpus.json
 
 **CHECKABLE**
 
@@ -20,7 +21,23 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims an honest null: the CPU goal guard meets readiness qualification across six exact regression fixtures with zero hidden-game probability benefit.
+The atom corpus is ready, while probability benefit and utility remain untested and fresh confirmation failed.
+
+## WHAT IS MISSING
+nothing; `rows` records per-unit arm metrics, and `acceptance_gate_results` records the failed freshness check and its observed value.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7660_v668_atom_energy.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact reports an honest null result with the energy head ready (`honest_verdict`: "complete_null_energy_head_ready") and makes no comparative superiority claim.
 
 ## WHAT IS MISSING
 nothing
@@ -28,7 +45,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7646_v667_source_feature_corpus.json
+## experiment_7661_v668_decision_evaluation.json
 
 **CHECKABLE**
 
@@ -36,7 +53,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The feature corpus was completed but disqualified because required validation failed: 15 of 18 receipts passed.
+The completed evaluation found no registered decision benefit.
 
 ## WHAT IS MISSING
 nothing
@@ -44,55 +61,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7647_witness_energy.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Experiment 7647 was blocked at the conductor pre-gate because upstream dependency exp7646-source-feature-corpus failed required gate checks.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7650_v667_independent_source_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The audit is complete but downstream benefit evaluation is blocked because upstream producer artifacts are disqualified, flagged adversarial, pre-gate blocked, or missing.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7651_v667_qwen_witness_challenge.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The completed eight-group paired pilot found no conservatively supported claim intersection and makes no confirmatory benefit claim.
-
-## WHAT IS MISSING
-nothing; `paired_pilot_rows` and `rows` provide per-unit results, while `acceptance_gate_results` records which gates were and were not assessed.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7652_v667_arc_wrapper_measurement.json
+## experiment_7662_v668_delayed_update_protocol.json
 
 **CANNOT_DETERMINE**
 
@@ -100,15 +69,47 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The wrapper showed no added induced successes and was disqualified because validation failed.
+The visible `acceptance_gate_results` say the source arm failed the probability-benefit and utility gates, and there were no fresh confirmatory groups.
 
 ## WHAT IS MISSING
-The artifact cuts off inside `per_game_results.dc22`; the remaining per-unit rows needed to check `independent_reduction.induced_new_successes: 0` are missing. `gate_check_summary.validation_failures` does identify `full_python_suite`.
+The artifact cuts off at `event_rows[32].origin_ordinal`, so the remaining fields, including any final verdict or per-group Brier and decision-cost rows, are unavailable; the visible `acceptance_gate_results` give pooled arm values.
 
 ## THE CHECK A READER CANNOT DO
-Did every remaining game and window show zero added induced successes?
+Do per-group results support the reported pooled gate results, or are those results driven by a few groups?
 
-## experiment_7653_v667_arc_live_generalization.json
+## experiment_7663_v668_continuous_atom_learning.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The candidate failed the probability-benefit and utility gates, so the artifact does not establish a benefit over the controls.
+
+## WHAT IS MISSING
+Per-group paired Brier and cost results for each arm. `acceptance_gate_results` gives `paired_block_ci95` summaries, while `admission_decisions` gives batch-level `candidate_admission_brier` and `prior_admission_brier`, not the individual results behind those gates. The failed gates do record their checks and measured values.
+
+## THE CHECK A READER CANNOT DO
+Were the reported differences spread across the groups, or driven by a few outliers?
+
+## experiment_7664_v668_independent_evidence_audit.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The audit found no independent probability or decision-cost benefit.
+
+## WHAT IS MISSING
+The supplied JSON cuts off inside `rows`. The visible `rows[].raw_metrics` contain `checked_propositions` and `lexical_membership`, but no per-`unit_id`, per-`arm` `brier` or `decision_cost` values; the missing remainder may contain them.
+
+## THE CHECK A READER CANNOT DO
+Were the reported Brier differences spread across groups or driven by a few outliers?
+
+## experiment_7665_v668_qwen_grounded_claims.json
 
 **CHECKABLE**
 
@@ -116,15 +117,15 @@ Did every remaining game and window show zero added induced successes?
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Six episodes completed, but required validation failed and the three public games showed no paired level gain.
+The 48 calls established bounded mechanism feasibility, while the artifact claims no whole-answer benefit.
 
 ## WHAT IS MISSING
-nothing
+nothing; `rows` records per-unit, per-arm metrics, and `acceptance_gate_results.freshness.measured_operands` records the failed gate’s value.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7656_v667_capstone.json
+## experiment_7666_v668_arc_goal_confirmation.json
 
 **CHECKABLE**
 
@@ -132,10 +133,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The capstone is complete but blocked from supporting a V667 benefit claim because required upstream evidence failed eligibility checks or was absent.
+The goal-confirmation check passed its scripted-fixture readiness gate, while hidden-game benefit remains unestablished.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary.failed_checks` records each failed check and its `expected` and `observed` values.
+nothing; `rows` and `goal_rows` record per-fixture outcomes, and `acceptance_gate_results` records each gate’s result and operands.
 
 ## THE CHECK A READER CANNOT DO
 none

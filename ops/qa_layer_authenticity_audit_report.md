@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-25
 
-Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 5 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -14,31 +14,29 @@ Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): 
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 6 |
+| `SILENT_NON_FIRING` | 5 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_claims_world_model_trust_pass` — success: pivot_cracked_0.08_wall_trust_pass_6_first_win_up
-- `adversarial_verify.py::_grid_changing_correct_evidence` — results/experiment_6011_world_model_change_gate_four_arm.json` contains `"correct_changed_cells": 0` alongside `"min_correct_changed_cells": 1` for an identity-engine branch. The helper treats the latter as positive measured evidence.
-- `adversarial_verify.py::_has_s2_schema_signal` — {"experiment_id":4791,"result_path":"results/experiment_4791_structural_energy_s2_offpath_trust_gate.json","honest_verdict":"complete_no_live_trust_value","game_results":[{"candidate_rows":[{"heldout_cell_recall":0.5},{"heldout_cell_recall":0.5}]}]}`. The path and field name come from the real S2 artifact. With the shown plausible shortened verdict and no delta key, the helper returns false and th
-- `adversarial_verify.py::_engine_selection_game_rows` — json {"experiment":"experiment_4791_structural_energy_s2_offpath_trust_gate","honest_verdict":"complete_structural_energy_s2_no_live_trust_value","energy_minus_accuracy_delta":0.0,"game_results":{"principle":"Record each game's candidate comparison.","value":[{"candidate_rows":[{"heldout_cell_recall":0.5},{"heldout_cell_recall":0.5}]}]}} ``` The wrapped game results make the recognizer return `Non
-- `adversarial_verify.py::_candidate_outcome_values` — Principle-wrapped `heldout_cell_recall` values of `0.0` for both candidates in each of ten S2 games, alongside raw `offpath_structural_energy` values of `100.0` and `200.0`.
-- `adversarial_verify.py::_count_effective_selection_games` — Twenty-three repeated entries for game `ar25` with the outcome values `0.0` and `0.19744058500914077`, presented as a 25-game corpus comparison.
+- `adversarial_verify.py::_draws_selection_conclusion` — json { "experiment": "experiment_4791_structural_energy_s2_offpath_trust_gate", "honest_verdict": "complete_positive: structural energy selection improves held-out cell recall over accuracy control", "energy_minus_accuracy_delta": 0.21, "game_results": [ {"candidate_rows": [ {"heldout_cell_recall": 0.30}, {"heldout_cell_recall": 0.51} ]} ] } ``` This claims a win from one effective game, below the
+- `adversarial_verify.py::check_engine_selection_candidate_diversity` — Take the first 12 real `game_results` rows from `results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json`, retain its bounded `honest_verdict`, and set `n_available_games` to `12` and `min_heldout_games` to `10`. Eleven rows are effective, so this function emits no flag. The actual corpus has 25 games; changing only `n_available_games` to `25` makes it flag the same evidence.
+- `adversarial_verify.py::check_world_model_trust_degeneracy` — json { "experiment": "experiment_4604_world_model_trust_energy", "honest_verdict": "success: new trust gate passed", "world_model_trust_pass_rate_new": { "principle": "Share of trusted world models", "value": 1.0 }, "verifier_is_oracle": true, "n_correct_grid_changing_transitions": 0 } ``` This circular, degenerate pass produced zero flags in a direct probe.
+- `adversarial_verify.py::_is_arc_outer_loop_calibration_solve` — {"experiment":"arc_tu93_calibration_probe","game":"tu93","offline_ground_truth_bfs":true,"honest_verdict":"complete: reached level 3"}` — the helper returns false and the caller emits no flag.
+- `adversarial_verify.py::check_arc_outer_loop_solve` — The real `results/experiment_hazard_l3_calibration.json` fields, with the provenance correction the flag itself requests: `{"experiment":"experiment_hazard_l3_calibration","game":"tu93","honest_verdict":"success: facing_aware_omni_lethal_zone_CLEAN_FN0_FP0_winpath_unpruned_on_tu93_L3","solve_provenance":"outer_loop_re"}`. With no structural reproduction fields, this produces **no flag**.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_claims_world_model_trust_pass` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_grid_changing_correct_evidence` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_s2_schema_signal` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_engine_selection_game_rows` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_candidate_outcome_values` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_count_effective_selection_games` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_draws_selection_conclusion` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_engine_selection_candidate_diversity` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_world_model_trust_degeneracy` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_arc_outer_loop_calibration_solve` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_arc_outer_loop_solve` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_claims_world_model_trust_pass
+## adversarial_verify.py::_draws_selection_conclusion
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -46,48 +44,150 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-`True when an ARC artifact affirmatively claims a world-model trust pass.`
+The docstring claims to recognize a no-value or bounded-null selection conclusion, `a PASS/trust win.`, and a zero or negative selection delta.
 
 ## FINDINGS
-
-1. **Field extraction:** `text = f"{d.get('experiment', '')} {d.get('honest_verdict', '')}".lower()` stringifies wrapped dicts, lists, and None instead of reading their values. A wrapped null verdict can match a success phrase in its principle. `numerator = d.get("trust_pass_numerator")` and `value = d.get(key)` pass wrapped positive numbers or lists to `_is_finite_number`, which rejects them silently.
-
-2. **Substring and context blindness:** `"world_model_trust" in text` and `any(marker in text for marker in _WORLD_MODEL_TRUST_VERDICT_MARKERS)` have no word or claim boundaries. A verdict saying `blocked_world_model_trust_pass_rate_up_not_attempted`, or an experiment name describing a success-pattern regression, can be classified as an affirmative pass.
-
-3. **Pattern lists are narrower than the claim:** `_WORLD_MODEL_TRUST_VERDICT_MARKERS` stands in for affirmative trust-pass verdicts but omits the capstone’s documented pivot-cracked trust-pass success form. `_WORLD_MODEL_TRUST_RATE_KEYS` stands in for positive trust-pass measurements but omits positive trust-pass-rate delta fields used by artifacts.
-
-4. **Silent default:** The final `return False` gives the same result for an honest null and an unrecognized affirmative claim. The downstream degeneracy check skips both, so its output does not reveal that recognition failed. The implementation is both narrower and broader than its docstring: it misses a documented success form while accepting mentions in principles, names, and negations.
-
-5. **Untested rule:** With `_WORLD_MODEL_TRUST_VERDICT_MARKERS` emptied in memory, all nine tests in the relevant hardening test module still passed. Its positive fixture also has a positive numerator and rate, so those tests do not establish that the verdict markers work.
-
-6. **Thresholds and side effects:** `float(numerator) > 0` and `float(value) > 0.0` correctly exclude exactly zero from a positive-pass claim. This function has no baked-in absolute path, write, or measurement operation; classes D, E, and G do not apply to it.
+1. **A — Silent non-firing:** A positive selection verdict using the project’s real complete_positive style is missed unless it contains one of five pass tokens. The function reaches `return False`; the caller then skips the diversity flag, with no indication that the claim went unchecked. The concrete input is in MISSED INPUT.
+2. **Field assumptions:** `str(d.get("honest_verdict", "")).lower()` turns a dict or list into its representation, so explanatory text can supply a false verdict token. `_is_finite_number(v)` ignores a wrapped negative delta when this helper is called directly. The normal verifier unwraps top-level annotated fields before calling it, which mitigates those wrapper cases on that path. `k.lower()` assumes string keys, as JSON object keys are.
+3. **Pattern lists are narrower than their concepts:** `_NO_VALUE_VERDICT_TOKENS` represents null or losing conclusions but omits phrasing such as loses_to_accuracy_gate. `_PASS_VERDICT_TOKENS` represents selection wins but omits the corpus’s complete_positive verdict style. `("delta" in kl or "margin" in kl)` omits the real field name selection_improvement_pp; `"energy" in kl or "select" in kl or "trust" in kl` would omit a candidate_recall_delta.
+4. **Substring and context blindness:** `t in verdict` matches bounded inside unbounded and null inside nonnull. The pass token `"trust_gate"` also matches a verdict stating that the gate was blocked and not attempted. The key scan matches margin inside marginal_gain. The blocked case in COUNTEREXAMPLE produces a false flag.
+5. **Boundary error:** `float(v) <= 1e-9` treats a *positive* delta of exactly 1e-9 as no-value, despite the code’s `zero or negative = no value` claim.
+6. **Untested branches:** In memory, all 16 focused tests stayed green when each verdict token was removed individually. They also stayed green when the entire no-value branch, the numeric branch, or the final false default was disabled separately. The negative-delta test is covered by its below_control verdict; the pass test has overlapping pass tokens. This establishes a gap in those focused tests, not a full-suite mutation result.
+7. **D, E, G:** This function has no absolute path, write target, or measurement. The inspected focused tests read committed artifacts or write under temporary paths.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "experiment": "experiment_4614_capstone_v425",
-  "honest_verdict": "success: pivot_cracked_0.08_wall_trust_pass_6_first_win_up",
-  "world_model_trust_pass_rate": {
-    "clean_value": 1.0,
-    "trust_pass_numerator": 6
+  "experiment": "experiment_4791_structural_energy_s2_offpath_trust_gate",
+  "honest_verdict": "blocked_s2_trust_gate_not_attempted",
+  "game_results": [
+    {"candidate_rows": [
+      {"heldout_cell_recall": 0.30},
+      {"heldout_cell_recall": 0.30}
+    ]}
+  ]
+}
+```
+The predicate returns true and the caller emits a degenerate-candidate-pool flag, although the verdict says the trust gate was not attempted.
+
+## MISSED INPUT
+```json
+{
+  "experiment": "experiment_4791_structural_energy_s2_offpath_trust_gate",
+  "honest_verdict": "complete_positive: structural energy selection improves held-out cell recall over accuracy control",
+  "energy_minus_accuracy_delta": 0.21,
+  "game_results": [
+    {"candidate_rows": [
+      {"heldout_cell_recall": 0.30},
+      {"heldout_cell_recall": 0.51}
+    ]}
+  ]
+}
+```
+This claims a win from one effective game, below the caller’s minimum of ten. The predicate returns false and the caller emits no diversity flag.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The predicate infers a research conclusion from loose substrings and a short vocabulary, then silently skips an unrecognized positive claim. I reproduced both the missed flag and the blocked-verdict false flag; the focused tests do not protect the missed branches.
+
+
+## adversarial_verify.py::check_engine_selection_candidate_diversity
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The function claims to flag S2 engine-selection conclusions drawn from behaviorally degenerate or under-covered candidate pools.
+
+## FINDINGS
+1. **The corpus floor can be lowered by the artifact being checked.** `corpus = max(total, n_available)` trusts the declared available-game count. I reproduced a silent pass using 12 real game rows from experiment 4811; supplying the actual 25-game corpus count flags the same rows.
+2. **Repeated games count as independent evidence.** `effective, total = _count_effective_selection_games(gr)` does not establish that the games are distinct. Repeating one real, diverse game row 23 times clears `if effective >= required:` with no flag.
+3. **Skipped checks look like passes.** `if gr is None:` and `if not _draws_selection_conclusion(d):` both return without recording that an S2 comparison was unrecognized or lacked a recognized conclusion.
+4. **Field types receive inconsistent treatment.** `d.get("min_heldout_games")` and `d.get("n_available_games")` become zero for lists, None, or wrapped dictionaries passed directly to this function; finite fractional counts are truncated by `int`. The standard verifier unwraps top-level principle fields before calling it, but nested candidate rows do not get that protection. `d.get('honest_verdict')!r` only affects the flag detail.
+5. **The delegated text rules lack boundaries and context.** A blocked verdict saying the trust gate was not attempted still triggers a critical flag. Substring matching can also read “bounded” inside “unbounded.” The helper’s fixed vocabulary omits plausible no-improvement and trust-win verdicts, and its fixed evidence-field names omit other per-game and candidate-outcome names present in the corpus.
+6. **The stated floor is stale.** The docstring says `max(5, ceil(0.6*total), declared)`; the implementation uses `required = max(10, math.ceil(0.6 * corpus), declared)`. Equality at `if effective >= required:` is correct, but the flag’s instruction to attempt all available games is not enforced by a 60% effective-game floor.
+7. **Focused tests leave rules decorative.** In separate in-memory mutations, removing the producer-declared minimum, the numeric-delta conclusion branch, or the no-conclusion escape left all 16 focused guard tests green. This function has no absolute write path, tracked-file write, or pre-work measurement.
+
+## COUNTEREXAMPLE
+This plausible blocked artifact receives a critical `DEGENERATE_CANDIDATE_POOL` flag even though it says the comparison was not attempted:
+```json
+{"experiment":"structural_energy_s2_offpath_trust_gate","honest_verdict":"blocked_s2_trust_gate_not_attempted","n_available_games":25,"game_results":[{"game":"ar25","candidate_rows":[{"heldout_cell_recall":0.0},{"heldout_cell_recall":0.19744058500914077}]}]}
+```
+
+## MISSED INPUT
+Take the first 12 real `game_results` rows from `results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json`, retain its bounded `honest_verdict`, and set `n_available_games` to `12` and `min_heldout_games` to `10`. Eleven rows are effective, so this function emits no flag. The actual corpus has 25 games; changing only `n_available_games` to `25` makes it flag the same evidence.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The check lets a producer’s corpus count determine whether that producer’s result passes, and it does not verify distinct game identities. It also returns silently when recognition fails, making an unchecked artifact indistinguishable from one that passed.
+
+
+## adversarial_verify.py::check_world_model_trust_degeneracy
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Flag circular or degenerate ARC world-model trust-pass claims.` The docstring requires an oracle-distinct model with at least one correctly predicted real grid-changing transition.
+
+## FINDINGS
+1. **Silent miss:** `if not _claims_world_model_trust_pass(d):` returns without a flag when a positive trust-pass rate is principle wrapped and the verdict uses ordinary “trust gate passed” wording. The helper recognizes bare numeric rates and a short marker list; the missed input below was tested and produced zero flags. An unrecognized claim is indistinguishable from a pass.
+2. **Field shape:** `if d.get("verifier_is_oracle") is not False:` flags a legitimate principle-wrapped false value as circular. The second read of the same field repeats the wrapper in the diagnostic. Missing, null, or list values are appropriately rejected; the wrapped false value is the false positive.
+3. **Evidence from the wrong model:** `evidence = _grid_changing_correct_evidence(d)` searches the whole artifact. A positive baseline or unselected candidate count clears `if evidence is None:` even when the trusted model predicts zero changes. The tested fragment below produced no flag.
+4. **Substring and context errors:** The evidence helper also accepts a positive “n_incorrect_grid_changing_transitions” counter because its key contains a shorter positive marker. The claim helper treats “world_model_trust_pass_rate_up_not_achieved” as an affirmative pass, and can read a marker in a wrapped verdict’s principle rather than its value.
+5. **Threshold and claim mismatch:** The stated floor is `>=1`, but the evidence helper accepts any positive number, including 0.5. It also accepts correctly predicted *cells* without establishing that any complete grid-changing transition was predicted correctly. Exact zero is rejected and exact one is accepted.
+6. **Narrow and redundant patterns:** The claim recognizers omit corpus-used boolean fields named “trust_pass” and “new_trust_pass.” Conversely, three prefixed evidence markers are wholly subsumed by shorter substring markers. Removing those three markers in memory left the three focused world-model regression tests green; those tests do not establish that each named marker matters.
+7. **Other classes:** This function has no absolute write path, tracked-file write, or measurement of work. Its existing focused tests write artifacts under a temporary directory.
+
+## COUNTEREXAMPLE
+```json
+{
+  "experiment": "experiment_4604_world_model_trust_energy",
+  "honest_verdict": "success: world_model_trust_energy_pass_rate_up_1_first_win_up",
+  "world_model_trust_pass_rate_new": 1.0,
+  "verifier_is_oracle": false,
+  "n_correct_grid_changing_transitions": 0,
+  "measurements": [
+    {
+      "binary_baseline": {"correct_changed_cells": 2},
+      "new": {"correct_changed_cells": 0}
+    }
+  ]
+}
+```
+The guard emits no flag: it uses the baseline’s two correct cells as evidence for the new model.
+
+## MISSED INPUT
+```json
+{
+  "experiment": "experiment_4604_world_model_trust_energy",
+  "honest_verdict": "success: new trust gate passed",
+  "world_model_trust_pass_rate_new": {
+    "principle": "Share of trusted world models",
+    "value": 1.0
   },
   "verifier_is_oracle": true,
   "n_correct_grid_changing_transitions": 0
 }
 ```
-False negative: the function returns false, so the circular, degenerate pass claim is not checked.
-
-## MISSED INPUT
-`success: pivot_cracked_0.08_wall_trust_pass_6_first_win_up`
+This circular, degenerate pass produced zero flags in a direct probe.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The recognizer treats incidental text as a claim while silently rejecting a documented affirmative verdict and valid structured fields. Parse field values and explicit claim evidence, then test success, null, negation, wrapper, and unknown-form cases independently.
+The gate can silently skip a real pass claim and can accept evidence belonging to a different model. It needs normalized field values, explicit claim recognition, and evidence tied to the model and complete transition being claimed.
 
 
-## adversarial_verify.py::_grid_changing_correct_evidence
+## adversarial_verify.py::_is_arc_outer_loop_calibration_solve
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -95,41 +195,36 @@ The recognizer treats incidental text as a claim while silently rejecting a docu
 SILENT_NON_FIRING
 
 ## CLAIM
-`Find positive evidence for at least one correctly predicted real change.`
+The docstring says `This catches the prose-only solve claim the structural _is_arc_solve_claim misses` when an ARC artifact declares outer-loop calibration or offline BFS.
 
 ## FINDINGS
-1. **Silent non-firing (A, 2, 3):** `if _is_finite_number(nested) and any(k in kl for k in _GRID_CHANGING_CORRECT_KEYS):` accepts a positive minimum setting as observed success. A real result records correct_changed_cells = 0 beside min_correct_changed_cells = 1. With a trust-pass claim, the helper returns the minimum and the caller emits no degeneracy flag. This is structural context blindness; the helper does not scan free text, so textual negation is not involved.
-2. **Field shape (1):** There is no `d.get` in this helper, and it handles dicts, lists, and None without crashing. But recursion loses the metric’s key: a principle-wrapped correct_changed_cells value of 2 reaches the numeric value under the key value and returns no evidence. A list of per-game counts has the same problem.
-3. **Claim mismatch (5):** The parent guard requires a correctly predicted grid-changing *transition*. The helper accepts a positive correct_changed_cells count even when n_changes_correct is zero. That exact pairing occurs in a real Exp6018 artifact: one cell correct, zero changing transitions exactly correct.
-4. **Pattern lists (B):** The evidence-key list stands for measured correct changes but omits the real metric change_accuracy, whose positive value with a nonzero changing-transition denominator records exact successes. The metadata-key set stands for fields that describe evidence rather than supply it, but omits the real field metric_definitions.
-5. **Decorative rules and tests (C):** Three evidence aliases are subsumed by shorter aliases: n_correct_grid_changing_transitions by correct_grid_changing_transitions, and new_correct_changed_cells and heldout_correct_changed_cells by correct_changed_cells. Deleting those entries cannot change this substring search. The focused regression tests do not exercise the minimum-setting collision or wrapped evidence.
-6. **Threshold (4):** `if float(nested) > 0.0:` correctly rejects zero and accepts one. It also accepts a fractional count such as 0.5 without establishing the claimed whole transition.
-7. **Other silent-failure classes (D–G):** This helper has no absolute path, write, or work-duration measurement; its regression tests use temporary artifact paths. Its terminal `return None` causes the caller to flag missing evidence, so an unrecognized metric fails closed.
+
+1. **Silent non-firing (A, F).** A declared offline-BFS artifact claiming it reached level 3 returns false: `return bool(_ARC_GAME_SOLVE_CLAIM_RE.search(claim_text))` does not recognize that ordinary level claim. An unrecognized signature also reaches `if not sig:` and `return False`. The caller emits no “unverified” result, so either miss looks like a pass.
+
+2. **Field extraction (1).** `name = str(d.get("experiment", ""))` searches the representation of a wrapped dict, list, or None instead of extracting its value. `d.get(k) is True for k in _ARC_OUTER_LOOP_INPUT_FLAGS` silently misses a principle/value-wrapped true flag. `claim_text = f"{d.get('experiment', '')} {d.get('honest_verdict', '')}"` likewise searches container representations, including principle text that is not the verdict.
+
+3. **Boundaries and negation (2, 3).** `_ARC_CALIBRATION_NAME_RE.search(name)` accepts calibration text inside a longer, negated name. `_ARC_GAME_SOLVE_CLAIM_RE.search(claim_text)` accepts solve-related text inside longer words and in statements that explicitly deny a solve. It also searches the experiment name as if that name itself were a claim. The counterexample below produces a critical flag for a blocked, no-solve control.
+
+4. **Patterns narrower than their concepts (B, 5).** `_ARC_OUTER_LOOP_INPUT_FLAGS` stands for outer-loop inputs but omits the corpus field game_source_read. The calibration-name matcher stands for offline or per-game work but omits names using offline_bfs. The solve/level matcher omits “reached level 3” and underscore-joined level claims. The delegated ARC game-ID list omits the registered game g50t. Thus the implementation is both narrower and broader than the docstring’s solve-claim description.
+
+5. **Decorative rule and test gap (C).** In the underlying solve regex, the winpath alternative is wholly covered by the neighboring optional-separator win/path alternative; deleting it cannot change a match. Its incident test also contains another matching token. All 14 focused assertions completed after an in-memory deletion of that alternative, though the test process was interrupted during teardown. Other individual alternatives and flag names have no isolated focused test.
+
+6. **Other classes (4, D, E, G).** This function has no numeric threshold or equality comparison, absolute write target, tracked-state write, or measurement of work. No off-by-one, path, write-side-effect, or premature-metric finding is supported here.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "experiment": "experiment_6011_world_model_change_gate_four_arm",
-  "honest_verdict": "success: world_model_trust_pass_rate_up",
-  "trust_pass_numerator": 1,
-  "verifier_is_oracle": false,
-  "correct_changed_cells": 0,
-  "min_correct_changed_cells": 1
-}
-```
-The trust-degeneracy guard emits no flag. Removing min_correct_changed_cells makes it emit WORLD_MODEL_TRUST_DEGENERACY.
+`{"experiment":"arc_tu93_uncalibrated_nonlethal_control","game":"tu93","honest_verdict":"blocked_no_solve_attempted"}` — the helper returns true and the caller emits a critical ARC_OUTER_LOOP_SOLVE flag.
 
 ## MISSED INPUT
-`results/experiment_6011_world_model_change_gate_four_arm.json` contains `"correct_changed_cells": 0` alongside `"min_correct_changed_cells": 1` for an identity-engine branch. The helper treats the latter as positive measured evidence.
+`{"experiment":"arc_tu93_calibration_probe","game":"tu93","offline_ground_truth_bfs":true,"honest_verdict":"complete: reached level 3"}` — the helper returns false and the caller emits no flag.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A substring match cannot distinguish an observed metric from its minimum, a baseline, or a different measurement unit. Read defined evidence fields with their context and unwrap their values; add a regression case using the observed zero-count/minimum-one pair.
+Direct calls reproduced both classifications. The check needs value-aware field reads and a claim decision that distinguishes an achieved level from a negated or merely named solve; adding one more token would leave the other silent paths intact.
 
 
-## adversarial_verify.py::_has_s2_schema_signal
+## adversarial_verify.py::check_arc_outer_loop_solve
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -137,159 +232,32 @@ A substring match cannot distinguish an observed metric from its minimum, a base
 SILENT_NON_FIRING
 
 ## CLAIM
-`_has_s2_schema_signal` claims to recognize S2 schema signals in artifact metadata.
+The docstring says “outer-loop / off-path / duplicate solves are flagged” and requires ARC solve artifacts to declare how the solve was produced.
 
 ## FINDINGS
-1. **Silent miss:** `for k in ("experiment", "experiment_id", "schema", "honest_verdict", "title")` omits result_path, a real field whose value in an S2 artifact identifies the experiment. When that is the only S2 identifier and there is no delta or margin key, the caller skips the candidate-diversity check without a flag. Its output does not distinguish that skip from a pass.
-2. **Narrow and overbroad matching:** The token list stands for S2 engine-selection identifiers but omits project spellings such as engine-selection and off-path. Conversely, `return any(t in blob for t in _S2_SCHEMA_TOKENS)` has no boundaries: its s2 token matches the unrelated, committed S2KAN schema.
-3. **Field shape:** `str(d.get(k, ""))` stringifies all five fields, including wrapped dictionaries, lists, and None. A wrapper’s principle text can create a false signal even when its value is unrelated. The normal verifier unwraps top-level principle/value fields before calling this helper, so I found no production wrapper miss here.
-4. **Context:** A verdict saying blocked_engine_selection_not_attempted still supplies a signal. The helper does not distinguish a stated comparison from a statement that it was not attempted.
-5. **Untested branch:** With this helper forced to return false in memory, all 18 selected candidate-diversity tests passed. Those tests do not protect the schema-signal branch. This function has no numeric threshold, absolute write path, write side effect, or measurement.
+1. **A declared outer-loop solve can produce no flag.** The line `if _is_arc_outer_loop_calibration_solve(d) and d.get("solve_provenance") != "outer_loop_re":` suppresses the prose-only calibration check when provenance is correctly declared. The subsequent `if not _is_arc_solve_claim(d):` returns because that helper requires structural solve fields. This defeats the comment’s claim that the later critical check will fire.
+
+2. **Field shapes are assumed.** The provenance comparison assumes a bare string; a principle-wrapped dict or list reaches `if prov not in _ARC_VALID_PROVENANCE:` and raises `TypeError`. The line `bad = [k for k in _ARC_OUTER_LOOP_INPUT_FLAGS if d.get(k) is True]` misses wrapped true values. `str(d.get("game"))` cannot look up a wrapped game ID; the solve-claim helper also rejects wrapped game, reproduction, and level fields before that lookup.
+
+3. **Text matching is both boundary-blind and context-blind.** The ARC recognizer matches “arc” inside “search.” The calibration and solve-claim matchers treat a calibration name plus “blocked_no_solve_attempted” as a solved game, while “lethal” can match inside “nonlethal.” Conversely, the solve-claim matcher misses an underscore-joined “_L3” unless another token supplies a match.
+
+4. **The pattern lists omit real members of their concepts.** The outer-loop input list omits the corpus field “ran_offline_ground_truth_bfs.” The level-field tuple omits “generic_agent_reached_level”; the game-ID tuple omits the real game “g50t.” The solve-claim alternatives omit plain “reached level 3.” The three valid provenance values match the documented enum; no omission was found there.
+
+5. **No numeric equality error was found.** Level 1 passes the stated minimum, and `lvl <= reg` flags equality as a duplicate. The docstring’s separate promise that critical checks require declared provenance is false: the first calibration branch can emit a critical flag without it. Off-path reachability itself is not checked here.
+
+6. **The focused tests leave rules unprotected.** All 14 tests passed after separately deleting “read_game_source” from the input list and deleting four calibration-name alternatives. They also passed after deleting the redundant “winpath” alternative, which is covered by the neighboring optional-separator alternative. These were in-memory mutations of the focused suite, not a claim about every test in the repository.
+
+7. **Unrecognized cases look like passes.** The structural solve gate returns silently, and a failed registry read yields no duplicate flag or diagnostic. There is no baked-in absolute write path, tracked-artifact write, or work-duration measurement in this check.
 
 ## COUNTEREXAMPLE
-The committed S2KAN artifact contains `{"schema":"carnot.s2kan_symbolic.experiment_1926.v1","honest_verdict":"complete: s2kan_symbolic_primitives_dict_and_gates_implemented"}`. This helper returns true, misclassifying S2KAN as an S2 engine-selection signal. That artifact has no candidate rows, so this example does not show a full-verifier quarantine.
+`{"experiment":"graph_search_calibration","honest_verdict":"blocked_no_solve_attempted"}` produces a critical ARC outer-loop-solve flag, despite describing a blocked, non-ARC search experiment with no solve attempt.
 
 ## MISSED INPUT
-`{"experiment_id":4791,"result_path":"results/experiment_4791_structural_energy_s2_offpath_trust_gate.json","honest_verdict":"complete_no_live_trust_value","game_results":[{"candidate_rows":[{"heldout_cell_recall":0.5},{"heldout_cell_recall":0.5}]}]}`. The path and field name come from the real S2 artifact. With the shown plausible shortened verdict and no delta key, the helper returns false and the diversity check emits no flag.
+The real `results/experiment_hazard_l3_calibration.json` fields, with the provenance correction the flag itself requests: `{"experiment":"experiment_hazard_l3_calibration","game":"tu93","honest_verdict":"success: facing_aware_omni_lethal_zone_CLEAN_FN0_FP0_winpath_unpruned_on_tu93_L3","solve_provenance":"outer_loop_re"}`. With no structural reproduction fields, this produces **no flag**.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The missed-input fragment was checked in memory: the selection conclusion is recognized, but the schema gate silently prevents the diversity check from running. The three committed S2 candidate-row artifacts I found also have delta keys, so this demonstrates a reachable failure mode, not a proven historical escape.
-
-
-## adversarial_verify.py::_engine_selection_game_rows
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring claims `Per-game candidate rows for an S2-style engine-SELECTION comparison, or None.` and says incidental field names will not trigger recognition.
-
-## FINDINGS
-
-1. **Silent non-firing; field shape; default branch.** `gr = d.get("game_results")` followed by `if not isinstance(gr, list) or not gr:` rejects a valid principle-wrapped list. It returns `None`, which the caller treats like an out-of-scope artifact. The output gives no indication that declared S2 evidence went unchecked. The `candidate_rows` presence check also ignores value shape: a wrapped candidate list is recognized, then counted downstream as having no diverse candidates.
-
-2. **False positive; substring and context blindness.** `has_delta = any(("delta" in k.lower() or "margin" in k.lower()) for k in d)` treats any matching top-level key as a schema signal. An unrelated energy delta or a methodology-note key qualifies; “margin” also matches inside a longer word such as marginality. `if not (_has_s2_schema_signal(d) or has_delta):` makes that sufficient despite the docstring’s claim `Scoping to the S2 schema (not an incidental field-name substring) closes the`.
-
-3. **Negation is not checked here.** The call to `_has_s2_schema_signal(d)` supplies no attempt-status check. With candidate rows present, a blocked verdict saying an S2 no-value test was *not attempted* was recognized and flagged by the surrounding check in a direct reproduction.
-
-4. **Pattern coverage is narrower than the concept.** `game_results` and `candidate_rows` stand for per-game candidate evidence; the corpus also uses per_game_results and per_candidate_rows. The `delta`/`margin` tokens stand for selection-effect fields; the corpus uses selection_improvement_pp. Those names are omitted, although the available evidence does not establish that those particular artifacts are S2 comparisons.
-
-5. **Untested and redundant branches.** Removing the delta-key alternative left all 17 focused tests green; the test named for incidental energy delta does not supply an energy-delta key. `or not gr` is logically redundant because an empty list fails the following `any(...)` check. The full suite was not mutation-tested.
-
-6. **Other requested classes.** This function has no numeric floor or equality threshold, absolute path, write target, or computed measurement. No off-by-one, tracked-state write, or measurement-timing defect is established here.
-
-## COUNTEREXAMPLE
-```json
-{"experiment":"unrelated_energy_calibration","honest_verdict":"complete_no_value","energy_delta":0.0,"game_results":[{"candidate_rows":[{"heldout_cell_recall":0.5},{"heldout_cell_recall":0.5}]}]}
-```
-This unrelated artifact is recognized and receives a degenerate-candidate-pool flag.
-
-## MISSED INPUT
-```json
-{"experiment":"experiment_4791_structural_energy_s2_offpath_trust_gate","honest_verdict":"complete_structural_energy_s2_no_live_trust_value","energy_minus_accuracy_delta":0.0,"game_results":{"principle":"Record each game's candidate comparison.","value":[{"candidate_rows":[{"heldout_cell_recall":0.5},{"heldout_cell_recall":0.5}]}]}}
-```
-The wrapped game results make the recognizer return `None`; the degenerate pool is not checked.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The recognizer silently skips valid annotated S2 evidence while admitting unrelated artifacts through a loose key substring. Both behaviors were reproduced, and the focused tests do not exercise the delta-key branch. Normalize annotated fields, validate selection evidence explicitly, and report unrecognized declared S2 shapes.
-
-
-## adversarial_verify.py::_candidate_outcome_values
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring claims to extract per-candidate outcome values field agnostically, preferring held-out cell recall, then structural energy, then held-out accuracy.
-
-## FINDINGS
-1. `_is_finite_number(r.get(field))` rejects a principle-wrapped numeric value without unwrapping it. The function then accepts a later metric through `if len(vals) >= 2:`, even when the preferred held-out recall is present and identical across candidates. I reproduced a silent pass in the surrounding diversity check; unwrapping the same recall values produced a degenerate-pool flag.
-2. The tuple `("heldout_cell_recall", "offpath_structural_energy", "heldout_accuracy")` stands in for candidate outcome metrics but omits heldout_change_consistency, a metric present in real S2 candidate rows. That makes the docstring’s “field-agnostic” claim broader than the implementation. With only an omitted metric, the function returns `[]`.
-3. The `heldout_accuracy` fallback lacks an isolating test: removing it in memory left all 81 focused guard tests passing. This does not establish that the full suite would pass.
-4. This function has no free-text matching or negation check, absolute path, write, or measurement. `len(vals) >= 2` includes exactly two values, as intended. `return []` alone counts as no effective game downstream; the silent pass arises when a different metric is selected.
-
-## COUNTEREXAMPLE
-An S2 artifact with ten game records, each containing these two candidate rows and a bounded no-value verdict:
-
-```json
-[
-  {
-    "heldout_cell_recall": {"principle": "Off-path outcome", "value": 0.0},
-    "offpath_structural_energy": 100.0
-  },
-  {
-    "heldout_cell_recall": {"principle": "Off-path outcome", "value": 0.0},
-    "offpath_structural_energy": 200.0
-  }
-]
-```
-
-The function returns `[100.0, 200.0]`. The surrounding check emits no degenerate-pool flag. With the same recall values unwrapped, it does flag the pool.
-
-## MISSED INPUT
-Principle-wrapped `heldout_cell_recall` values of `0.0` for both candidates in each of ten S2 games, alongside raw `offpath_structural_energy` values of `100.0` and `200.0`.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-The preferred outcome is present, but its permitted wrapper makes this function ignore it and approve diversity in a different metric. Unwrap and validate candidate values before applying the field preference, then add a regression test for the reproduced silent pass.
-
-
-## adversarial_verify.py::_count_effective_selection_games
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring says a game is effective only when its candidate outcomes have a `MEANINGFUL outcome range` whose spread `exceeds` `_EFFECTIVE_SPREAD_EPS`.
-
-## FINDINGS
-1. **Silent non-firing:** `total += 1` and `effective += 1` count entries without checking game identity. Repeating one real, diverse ar25 game 23 times produces (23, 23); the calling diversity check raises no flag, although only one game was tested.
-2. **Field-shape false positive:** `rows = g.get("candidate_rows")` followed by `if not isinstance(rows, list) or len(rows) < 2:` silently rejects a permitted principle-wrapped value. Wrapping the candidate rows in the real experiment_4811 artifact changes its count from (23, 25) to (0, 25) and triggers a critical flag.
-3. **Decorative branch:** `len(rows) < 2` is redundant: the outcome extractor already returns no usable values for fewer than two candidates. The direct count test’s single-candidate case would still pass if that clause were removed.
-4. The exact-equality boundary is correct: `(max(vals) - min(vals)) > _EFFECTIVE_SPREAD_EPS` matches “exceeds.” This function has no free-text matching, negation scan, pattern list, absolute write path, tracked-file write, recognizer default that grants a pass, or pre-work measurement.
-
-## COUNTEREXAMPLE
-This Python dict fragment uses the ar25 outcome range from experiment_4811, repeated as though it were 23 games:
-
-```python
-{
-    "schema": "s2",
-    "honest_verdict": "complete_structural_energy_s2v3_bounded_corpus_wide",
-    "n_available_games": 25,
-    "min_heldout_games": 23,
-    "energy_minus_accuracy_delta": 0.0,
-    "game_results": [{
-        "game": "ar25",
-        "candidate_rows": [
-            {"heldout_cell_recall": 0.0},
-            {"heldout_cell_recall": 0.19744058500914077},
-        ],
-    }] * 23,
-}
-```
-
-The function returns (23, 23), and the calling diversity check raises no flag.
-
-## MISSED INPUT
-Twenty-three repeated entries for game `ar25` with the outcome values `0.0` and `0.19744058500914077`, presented as a 25-game corpus comparison.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Counting repeated game IDs as independent coverage lets a one-game comparison satisfy a 23-game floor without warning. The same function also flags an otherwise unchanged honest artifact when its candidate rows use the permitted field wrapper.
+The guard can silently approve the exact prose-only outer-loop solve its special branch was added to catch. Its shape assumptions, token matching, and incomplete field lists create independent misses and false flags; the focused tests pass despite removal of several named rules.
 

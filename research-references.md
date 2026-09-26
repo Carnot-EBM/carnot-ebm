@@ -47037,3 +47037,80 @@ Exp7651 did complete an owned Qwen3.8 bounded pilot: sixteen generations across
 eight groups. It established transport feasibility, not whole-answer truth.
 The next Qwen question should concern grounded claim extraction against the
 actual source formats, rather than another schema-only transport pilot.
+## 2026-09-25 — V669 planning review: bound relations and fresh learning
+
+Recorded before designing V669. All eight requested subjects and six secondary
+channels were checked. Most useful methods were already indexed. This review
+changes their local application; it does not claim discovery of those methods.
+
+### Primary sources and adoption limits
+
+| Subject | Source and review depth | Application or reason to defer |
+|---|---|---|
+| EBM reasoning and verification | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605), December 2025. Abstracts rechecked. | Use a small conditional energy with exact label normalization. Learned energy is a score; it is not a proof that a source entails a claim. Keep generator weights frozen. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461), December 2025; [ASP Energised, 2607.08136](https://arxiv.org/abs/2607.08136), July 2026. Abstracts rechecked. | Both depend on a defined constraint representation. Reuse bounded symbolic execution for record relations. No new solver or energy-generation branch. |
+| Ising in ML | [Learning-to-sample phase transition, 2605.24752](https://arxiv.org/abs/2605.24752), May 2026. Abstract rechecked. | Parameter learning need not make sampling tractable. A binary decision head needs exact normalization, not another sampler. |
+| Hallucination mitigation | [Enoki, 2609.00581v2](https://arxiv.org/html/2609.00581v2), September 2026. Fact construction and limitations read. | Preserve arguments, modifiers, polarity, and answer spans in a shared relation record. Missing extracted facts bound recall. Its rule extractor still uses a learned entailment verifier; a deterministic Carnot checker is an adaptation, not a reproduction. |
+| Evidence aggregation | [HallDetect, 2608.05823](https://arxiv.org/abs/2608.05823), August 2026. Abstract rechecked. | Test explicit contradiction features against membership counts. A checked mismatch can refute one narrow claim; it cannot certify the rest of an answer. Do not assume a learned entailment score is exact authority. |
+| KAN | [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306), May 2026; [Catastrophic Forgetting in KANs, 2511.12828](https://arxiv.org/abs/2511.12828), November 2025. Abstracts rechecked. | Local support motivates sparse updates, but retention remains empirical. Defer another spline architecture until informative features beat simple controls. The unchanged importance-anchor mechanism stays closed. |
+| Constrained generation | [CRANE, 2502.09061](https://arxiv.org/abs/2502.09061), February 2025. Abstract rechecked. | Separate output grammar from semantic correctness. Test exact quote resolution independently from Qwen's proposed relation. This is not a finite-choice answer-transport retry. |
+| Hardware sampling | [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985), February 2026; [natively sparse FPGA Ising machine](https://doi.org/10.1038/s41467-026-75119-0), July 2026. Abstract/author publication checked. | Sparse deployment is a future option. Measure parsing, dispatch, scoring, and durable writes before proposing hardware. Optimization throughput does not establish correct sampling or whole-service speed. |
+| Continuous learning | [Experience reuse, 2604.27003](https://arxiv.org/abs/2604.27003), April 2026; [capacity-constrained delayed learning, 2606.11711](https://arxiv.org/abs/2606.11711), June 2026. Abstracts rechecked. | Test small reusable constraint templates with bounded pending feedback. Include a complete static template bank and charge discarded observations. Finite template selection does not inherit convex regret guarantees. |
+| Probability calibration | [Optimal Recalibration, 2607.19689](https://arxiv.org/abs/2607.19689), July 2026; [Calibeating Made Simple](https://arxiv.org/html/2603.22167v1), March 2026. Abstract and prior algorithm notes rechecked. | Report proper loss, useful decisions, and excess loss separately. Fresh predictions precede feedback. Calibration alone cannot create source information. A secondary index misidentified the first paper as 2609.01228; arXiv resolves that ID to an unrelated biology paper. Use 2607.19689. |
+
+### Secondary-source receipts
+
+- **OpenReview:** searched ICLR, ICML, and NeurIPS EBM/verification work.
+  The [EBT proceedings paper](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  and a [computational-trace verification paper](https://openreview.net/pdf/91870c1fe75134b7dc25ff28dc74b4434d060b51.pdf)
+  were indexed. The latter reports limited transfer across reasoning domains.
+  No new local checkpoint or general correctness guarantee was established.
+- **Extropic:** opened the [writing index](https://extropic.ai/writing)
+  and September 4 [Z1T study](https://extropic.ai/writing/z1t).
+  Its sparse hardware/software design and open recipes remain relevant.
+  Reported efficiency estimates exclude some system costs. Vendor studies do
+  not establish local TSU access, measured Carnot speed, or a purchase need.
+- **Semantic Scholar:** searched both seed titles and attempted the
+  [EBT citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both endpoint reads failed. No current citing-paper census was obtained.
+- **Hugging Face:** opened the [verification feed](https://huggingface.co/papers?q=verification).
+  It is a discovery channel. Method claims above use author papers.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages.
+  Their cached views were one and two weeks old. No new relevant trending
+  dependency was established; author-linked code is not called trending.
+- **Logical Intelligence:** direct [Kona](https://logicalintelligence.com/kona)
+  retrieval failed, but official-site search exposed its current description.
+  The [January architecture article](https://logicalintelligence.com/blog/energy-based-models-for-reasoning)
+  remains conceptual context. No open checkpoint or reproducible training
+  recipe was verified. Aleph's formal-proof claims are a separate product.
+
+### Local evidence governing the next experiments
+
+V668 produced ten terminal artifacts. The log records authentication failures
+for Exp7667, Exp7668, and Exp7670, plus a dependency skip for Exp7669. Their
+absence does not refute their science. The completed archive still ends at V667.
+
+Exp7664 independently counted 66 covered groups of 248, with 182 censored
+groups and 272 unknown claims. All 248 groups had prior exposure. Exp7661
+found no registered probability or decision benefit; non-escalation coverage
+was 0.125. Exp7663 qualified restart and retention but found no registered
+learning benefit. Another run on this roster cannot establish fresh learning.
+
+The current atom checker mostly tests a path and line or a definition's
+location. Stack records carry explicit function/path/line relations that are
+not checked together. Exp7665 completed 48 bounded Qwen calls, but reported
+zero exact-supported proposals. Its raw rows include syntactically valid
+offsets that do not resolve to evidence. A changed pilot must separate quote
+resolution from relation meaning; a larger token budget alone changes neither.
+
+The pinned LettuceDetect cache contains 10,508 tool-output training rows with
+8,103 distinct raw contexts, and 617 test rows with 519 contexts. These are
+label-blind inventory counts, not eligible fresh sample counts. Deduplicate
+source families and subtract all prior exposure before sealing new roles.
+Preserve injected-error label provenance and report uncertainty in exposure.
+
+The staged goal-induction note is a design input, not a result of its proposed
+probe loop. It shows why a no-win history cannot establish a unique goal.
+Reuse existing goal contracts and distinguish hypotheses from SDK outcomes.

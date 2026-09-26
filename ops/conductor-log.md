@@ -18657,3 +18657,24 @@ code |
 | 2026-09-25 23:15 UTC | Reconcile fourteen outcomes and decide evidence, l | FAIL | Codex CLI error: A, request id: 62792f04-0c7f-4896-967b-a367bc0ba9e4 ERROR: u |
 | 2026-09-25 23:18 UTC | Reconcile fourteen outcomes and decide evidence, l | FAIL | Codex CLI error: A, request id: 740fb636-0f23-4203-9e59-0711eb3482c6 ERROR: u |
 | 2026-09-25 23:21 UTC | Reconcile fourteen outcomes and decide evidence, l | FAIL | Codex CLI error: A, request id: c30858fc-e87d-4702-a400-8aa46b07050c ERROR: u |
+| 2026-09-25 23:28 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7028_v616_active_contract_preflight.json age-week 3: OPEN 21 days: CL |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7029_v616_sota_scope_audit.json age-week 3: OPEN 21 days: CLAIM_OVERS |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | eval_run_consumer_field_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on e |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_declares_deterministic_non_live age-week 2: OP |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 2: OPEN 1 |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::duration_floor_for_artifact age-week 2: OPEN 14 days: SIL |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7403_v649_synthetic_memory.json age-week 1: OPEN 7 days: CLAIM_OVERST |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 1: OPEN 7 days: REAL_B |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_match_declared_substrate age-week 1: OPEN 7 days: SILENT |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_field_name age-week 1: OPEN 7 days: SILENT_NON_FIR |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_novelty_proposal_ablation_overclaim age-week 0: OPE |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_proposal_filter_coverage_up age-week 0: OPEN 1 da |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim age-wee |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_perception_overclaim age-week 0: OPEN 1 days: SILEN |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_world_model_trust_pass age-week 0: OPEN 1 days: S |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_grid_changing_correct_evidence age-week 0: OPEN 1 days:  |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_s2_schema_signal age-week 0: OPEN 1 days: SILENT_NON |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_engine_selection_game_rows age-week 0: OPEN 1 days: SILE |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_candidate_outcome_values age-week 0: OPEN 1 days: SILENT |
+| 2026-09-26 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_count_effective_selection_games age-week 0: OPEN 1 days: |

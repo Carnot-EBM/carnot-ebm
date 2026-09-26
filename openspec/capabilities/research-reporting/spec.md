@@ -81542,3 +81542,34 @@ equal an uninterrupted replay. Exposed anchors are read only after learning.
 Given frozen affected scope, focused checks, full changed-code coverage, cold
 reduction, adversarial reader, and strict row reader govern atomic publication.
 Reader failure is disqualification, never a scientific null.
+
+## REQ-REPORT-V669-PLAN: Bind the next research milestone to fresh evidence
+
+The staged milestone 2026.09.669 SHALL contain exactly fourteen ordered tasks,
+Exp7671 through Exp7684, across four phases. The design document and execution
+YAML SHALL agree on IDs, titles, phases, deliverables, substrates, models, and
+structured gates. Preserve the V668 design before replacing vNEXT. Do not edit
+the active roadmap or conductor during planning.
+
+The plan SHALL record V668's eligible nulls separately from missing producers
+after authentication failures. It SHALL cover source-bound relations, calibrated
+typed decisions, causal constraint acquisition, ARC generalization, and complete
+service cost. Literature receipts SHALL precede the design. Fresh-data claims
+require source-family separation and an explicit prior-exposure audit.
+
+Every prompt SHALL include numbered progress and bounded-write requirements.
+Gate fields SHALL appear verbatim in the upstream required artifact fields.
+Comparative tasks SHALL require per-unit rows. Every task SHALL require a closed
+verdict class, measured gate operands, and principle annotations. Failed-scope
+continuations SHALL declare all four prior-failure fields. Current LLM tasks
+SHALL name unsloth/Qwen3.8-27B-GGUF and the actual generation substrate.
+
+### SCENARIO-REPORT-V669-PLAN
+
+Given the staged YAML and design, independent parsing finds fourteen identical
+ordered contracts and no missing or forward gate producer. Removing a task,
+reordering a task, misspelling a gate field, or removing the required model
+fails private contract checks. Existing roadmap, gate, and exclusion readers
+pass before the plan is reported ready. Runtime experiments remain proposed.
+
+Implementation status: planning documents in progress; no experiment executed.

@@ -229,3 +229,9 @@ of truth, not this line.)
 | 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_engine_selection_game_rows | SILENT_NON_FIRING | OPEN | |
 | 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_candidate_outcome_values | SILENT_NON_FIRING | OPEN | |
 | 2026-09-25 | qa_layer_authenticity_audit | adversarial_verify.py::_count_effective_selection_games | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | experiment_claim_audit | experiment_7666_v668_arc_goal_confirmation.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::_draws_selection_conclusion | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::check_engine_selection_candidate_diversity | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::check_world_model_trust_degeneracy | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::_is_arc_outer_loop_calibration_solve | SILENT_NON_FIRING | OPEN | |
+| 2026-09-26 | qa_layer_authenticity_audit | adversarial_verify.py::check_arc_outer_loop_solve | SILENT_NON_FIRING | OPEN | |
