@@ -18750,3 +18750,5 @@ code |
 | 2026-09-26 17:53 UTC | Measure bounded Qwen semantic decisions on complet | OK | 84 passed, 1 warning in 10.74s |
 | 2026-09-26 17:56 UTC | Train source-alignment energy and freeze matched d | GATE_BLOCK | gate-unsat(final): 3 of 7 gate(s) failed; first failure: exp7715-natural-source-cohort.natural_cohort_ready_score (actual=0 == expected=1) |
 | 2026-09-26 17:58 UTC | Test source-dependent probability and typed-decisi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7717-latent-evidence-fit, exp7717-latent-evidence-fit, exp7717-latent-evidence-fit) |
+| 2026-09-26 18:50 UTC | Qualify commits, rejection and complete-static con | OK | 91 passed, 1 warning in 50.88s |
+| 2026-09-26 18:52 UTC | Measure causal constraint additions on a delayed n | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7717-latent-evidence-fit, exp7717-latent-evidence-fit, exp7717-latent-evidence-fit) |
