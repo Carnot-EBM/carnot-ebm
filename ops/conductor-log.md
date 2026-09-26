@@ -18760,3 +18760,5 @@ code |
 | 2026-09-26 21:48 UTC | Plan milestone 2026.09.673 | OK | 13 tasks proposed |
 | 2026-09-26 21:59 UTC | Activation REFUSED: milestone 2026.09.673 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on exp7736-arc-organic-measurement. NEXT_ROADMAP_FILE left in place for operator inspection. |
 | 2026-09-26 21:59 UTC | Activation replan 1/2: 2026.09.673 | OK | refused roadmap quarantined to roadmap-2026.09.673-refusal1.yaml; replanning with lint report |
+| 2026-09-26 22:08 UTC | Plan milestone 2026.09.673 | OK | 13 tasks proposed |
+| 2026-09-26 22:19 UTC | Milestone 2026.09.673 activated | OK | 13 tasks queued |
