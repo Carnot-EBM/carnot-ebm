@@ -20937,3 +20937,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Complete Qwen transport and reducer tests before GPU capture (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7770_v676_qwen_runner_qualification.json
 - 2026-09-27: Independently reduce calibration and causal learning evidence (⚠️ Blocked) — honest_verdict=complete_blocked_required_v676_evidence; results/experiment_7775_v676_independent_evidence_audit.json
 - 2026-09-27: Qualify organic exploration with complete affected ARC checks (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_runner_validation; results/experiment_7776_v676_arc_runner_qualification.json
+- 2026-09-27: Bind hardware continuity to immutable historical evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7779_v676_hardware_evidence.json
