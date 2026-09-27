@@ -18816,3 +18816,6 @@ code |
 | 2026-09-27 04:13 UTC | Bind fourteen tasks and ingest localized-supervisi | OK | 93 passed, 1 warning in 14.59s |
 | 2026-09-27 04:39 UTC | Bind natural output annotations to complete answer | OK | 92 passed, 2 warnings in 12.10s |
 | 2026-09-27 04:42 UTC | Qualify normalized energy training and typed-decis | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7740-sentence-label-protocol.sentence_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-27 05:24 UTC | Qualify causal bank failures and durable constrain | OK | 105 passed, 1 warning in 117.35s (0:01:57) |
+| 2026-09-27 05:26 UTC | Train locally supervised energy probabilities and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7741-training-qualification, exp7741-training-qualification, exp7741-training-qualification) |
+| 2026-09-27 05:26 UTC | Measure localized decision value and source depend | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7743-localized-energy-fit, exp7743-localized-energy-fit, exp7743-localized-energy-fit) |
