@@ -8867,6 +8867,58 @@ loss calculations clip probabilities to [1e-6, 1-1e-6]. Identical views have
 zero consistency divergence. Divergence failures and save/reload differences
 disqualify fixture qualification.
 
+## REQ-VERIFY-7769: Requalify finite training before natural fitting
+
+Exp7769 SHALL reuse the Exp7755 normalized numerical runtime with paired
+complete source views. It SHALL freeze affected modules, tests and transitive
+consumers before edits. A private fixture SHALL exercise response_set,
+local_set, augmented_set, constrained_set, augmented_mlp, constrained_mlp,
+local_logistic, source_erased_constrained_set and
+complete_static_constrained_set. Every fitted head SHALL have at most 4096
+trainable scalars, including two duals and all sixteen complete-static
+predicate coefficients. Masked and over-budget rows SHALL remain visible.
+
+The local objective SHALL add response NLL and mean known-sentence NLL;
+unknown sentence targets add zero local loss. The constrained objective SHALL
+use symmetric Bernoulli KL/2 with tolerance 0.01, alternate-view CE tolerance
+0.70, projected dual step 0.01 and range [0,10]. Loss probabilities SHALL be
+clipped to [1e-6,1-1e-6]. An ordinary and a constrained objective SHALL agree
+when duals are zero and differ on a violated fixture with active duals.
+
+Deployment SHALL calculate response risk within each view, average A/B raw
+risks, apply one temperature to the resulting logit, then choose the typed
+action. Canonical arms use A. Paired logistic SHALL average features before
+its head. The natural adapter SHALL call the same aggregate-risk,
+temperature and action functions as the fixture trainer, and SHALL never use
+the Exp7760 fixture learner as its numerical head.
+
+### SCENARIO-VERIFY-7769-NUMERICAL
+
+Given small known fixtures with masked, extreme-logit, violated and identical
+views, all nine arms SHALL yield finite normalized probabilities, bounded
+heads, finite-difference gradients, nonzero updates and reload-identical
+decisions. Violated constraints SHALL change the active-dual loss; zero duals
+SHALL recover ordinary augmentation. Aggregate-before-temperature SHALL be
+distinguishable from temperature-before-average and average per-view loss.
+
+### SCENARIO-VERIFY-7769-ONLINE
+
+The current Exp7760 bank and queue fixture SHALL be rerun under a V676
+contract. Predictions precede feedback; rejected admissions, applied updates,
+delayed shuffled labels, all sixteen complete-static coefficients, owned hard
+exit and fresh-process restart parity SHALL be checked. Its historical
+full-suite failure SHALL remain visible and SHALL not be reclassified.
+
+### SCENARIO-VERIFY-7769-TERMINAL
+
+The task SHALL atomically publish a complete fixture artifact with per-unit
+rows, exact input hashes, numerical and online receipts, private raw paths,
+frozen scope, changed-module 100-percent statement coverage, affected tests,
+scoped static checks, real entrypoint execution, independent reduction and
+both terminal readers. A failed required check SHALL set readiness to zero
+and a disqualified terminal verdict. Repository-wide collection is a separate
+diagnostic; a passing current fixture SHALL claim circular_positive only.
+
 ## REQ-VERIFY-7756: Preserve complete bytes across two evidence views
 
 View A SHALL contain every source sentence and each adjacent triple. View B

@@ -1,0 +1,70 @@
+{
+  "architecture": "normalized_binary_sentence_energy",
+  "arms": [
+    "response_set",
+    "local_set",
+    "augmented_set",
+    "constrained_set",
+    "augmented_mlp",
+    "constrained_mlp",
+    "local_logistic",
+    "source_erased_constrained_set",
+    "complete_static_constrained_set"
+  ],
+  "complete_static_initial_coefficients": {
+    "all_four": 0.0,
+    "low_overlap": 0.0,
+    "low_overlap_and_missing": 0.0,
+    "low_overlap_and_negation": 0.0,
+    "low_overlap_and_negation_and_missing": 0.0,
+    "low_overlap_and_negation_and_number": 0.0,
+    "low_overlap_and_number": 0.0,
+    "low_overlap_and_number_and_missing": 0.0,
+    "missing_evidence": 0.0,
+    "negation_and_missing": 0.0,
+    "negation_and_number": 0.0,
+    "negation_and_number_and_missing": 0.0,
+    "negation_mismatch": 0.0,
+    "number_and_missing": 0.0,
+    "number_mismatch": 0.0,
+    "zero_overlap_and_missing": 0.0
+  },
+  "constraint": {
+    "alternate_ce_tolerance": 0.7,
+    "dual_clip": [
+      0,
+      10
+    ],
+    "dual_step": 0.01,
+    "symmetric_kl_half_tolerance": 0.01
+  },
+  "epochs": 2,
+  "learning_rate": 0.05,
+  "loss": "response_NLL_plus_mean_known_sentence_NLL",
+  "optimizer": "full_batch_gradient_descent",
+  "parameter_max": 4096,
+  "probability_clip": [
+    1e-06,
+    0.999999
+  ],
+  "seed": 67501,
+  "temperature_grid": [
+    0.25,
+    0.29730177875068026,
+    0.3535533905932738,
+    0.42044820762685725,
+    0.5,
+    0.5946035575013605,
+    0.7071067811865475,
+    0.8408964152537145,
+    1.0,
+    1.189207115002721,
+    1.4142135623730951,
+    1.6817928305074292,
+    1.9999999999999998,
+    2.378414230005442,
+    2.82842712474619,
+    3.363585661014858,
+    4.0
+  ]
+}
