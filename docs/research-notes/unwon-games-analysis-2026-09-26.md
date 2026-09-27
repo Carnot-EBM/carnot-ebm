@@ -265,3 +265,37 @@ win one game it never won before (sk48), or it can avoid breaking anything else,
 far does both. Every lever tried -- rate, cost, prefix length, and now cell-selection criterion -- has
 moved the tradeoff around without eliminating it. Public games are a development proxy, not a
 hidden-game estimate.
+
+
+## Follow-up: sc25 lattice-cell candidate pilot (2026-09-27, append-only)
+
+Branch `sc25-candidate-gen` (commit 5601df3eb6, off `explorer-pilot`), not merged. sc25 was flagged as
+different in kind from every other unwon game -- a candidate-generation problem, not a selection
+problem. This pilot checked that claim directly on a real frame before building anything.
+
+**The original diagnosis was wrong, and this pilot corrected it.** `rich_action_candidates()` already
+generates all 9 cast-region click points on sc25's real reset frame. They are not missing -- they are
+stamped tier 1, and tier-0 candidates always get picked first, so V0 never tries one. Confirmed against
+the offline game's own action list (`environment_files/sc25/635fd71a/sc25.py:1750`).
+
+**The fix: promote detected cast cells to tier 0.** A default-off lattice-cell detector (3-8px pitch,
+minimum edge-run and cell-count thresholds, fixed before measuring) finds small repeating-cell regions
+and both promotes any already-generated cell click to tier 0 and adds interior click points for cells
+the existing candidates missed elsewhere on the board.
+
+**Verdict: no promotion.** Scored with the real scorecard formula (per the earlier rescore lesson): mean
+score across 25 public games drops from V0's 0.171888 to 0.149261. 15 of 25 game/seeds regress, with
+tu93 losing its entire 0.344516 score and lp85 dropping 0.38 points -- the detector adds enough extra
+candidates (capped at 64 per node) to slow or misdirect search on games that did not need it.
+
+**sc25 itself: real, verified progress -- still no win.** With cast cells promoted, the explorer clicks
+into the cast panel 1,200+ times per seed. An independent replay matched all 6,000 recorded frame hashes
+and confirmed the clicks genuinely change panel pixels. No seed reaches the spell-fire / exit phase
+within 2,000 actions. The remaining gap is finding the RIGHT sequence of toggles, not reaching the
+region at all -- a different, harder problem than this pilot targeted.
+
+**What this means for the "several distinct causes" framing.** Four games (V1-V4, V6-V8) failed because
+of frequency/gating/selection tradeoffs on an already-reachable candidate. sc25 needed reachability
+fixed first and still didn't win -- confirming route-finding within a reachable region is a genuinely
+separate, harder problem than any lever tried on the other 11 games this session. Public games are a
+development proxy, not a hidden-game estimate.

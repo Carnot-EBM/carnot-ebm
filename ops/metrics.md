@@ -3604,3 +3604,10 @@ Real plan-divergence-halt pilot (REQ-ARC-WMTE-10025): launched ~2026-09-26T21:25
 induced-plan-divergence), killed by operator authorization ~2026-09-27T08:53Z (~11h28m wall, GPU 1).
 Code merged (f3d355c58b); measurement panel incomplete (su15 full, sp80 half, g50t/cd82 unrun). See
 ops/changelog.md and ops/status.md 2026-09-27 entries for detail.
+
+## Outer-loop note (2026-09-27, sc25 pilot)
+
+REQ-ARC-WMTE-10026: lattice-cell candidate promotion for sc25. Corrected the "candidates missing"
+diagnosis (they were tier-1, not absent). No promotion: 25-game mean real score 0.171888 -> 0.149261.
+sc25 gets confirmed real cast-panel clicks but no win. Branch 5601df3eb6, not merged. Closes out
+today's ARC session per Fable 5.1's recommendation list.

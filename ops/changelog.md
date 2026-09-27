@@ -20876,6 +20876,14 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Reconcile fourteen outcomes and bound the next research decision (⚠️ Research Finding) — honest_verdict=complete_disqualified_v675_capstone_validation; results/experiment_7766_v675_capstone.json
 - 2026-09-27: Completed the 2026.09.675 operational retrospective. The 10 compute-bound experiments used 32.3 wall-time minutes (averaging 3 minutes per experiment); qualification of prediction-before-feedback learning was longest at 11.32 minutes, followed by sentence annotation custody recovery at 7.52 minutes and bounded Qwen sensitivity measurement at 3.93 minutes. The point-in-time snapshot showed GPU 1 at 97% utilization running llama.cpp and GPU 0 idle, aligning with single-model inference rather than a DualGPURunner omission. Recommended tooling improvements include structured receipts with intra-task stage timing, continuous GPU sampling, and measured inference batching benchmarks. Savings could not be quantified. Artifact: results/operational_retro_2026_09_675.json.
 
+## 2026-09-27 — sc25 lattice-cell pilot (Fable's item 4, diagnosis corrected)
+
+- codex (gpt-6-sol, worktree `sc25-candidate-gen`) checked the "candidates missing" claim directly on
+  a real frame and found it false -- the cast-region clicks were generated all along, just tier 1.
+  Fixing that (promote to tier 0) regresses the 25-game mean score under the real scorecard; sc25
+  itself gets real confirmed cast-panel clicks but still no win. Branch kept at 5601df3eb6, not merged;
+  result recorded in docs/research-notes/unwon-games-analysis-2026-09-26.md.
+
 ## 2026-09-27 — Real plan-divergence halt merged; GPU panel killed incomplete (operator: "start item 3")
 
 - Merged two default-off mechanisms to main (f3d355c58b): CARNOT_ARC_PLAN_DIVERGENCE_HALT (the live

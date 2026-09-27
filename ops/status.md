@@ -1,5 +1,16 @@
 # Carnot — Operational Status
 
+## 2026-09-27 -- sc25 lattice-cell pilot: diagnosis corrected, no promotion
+- Original claim (candidates missing) was wrong: sc25's 9 cast-region clicks were already generated,
+  just stamped tier 1 and never picked over tier-0 candidates. Confirmed on a real frame and the
+  game's own source. Fix (promote to tier 0, default off) drops the 25-game mean real score from
+  0.171888 to 0.149261 -- net negative, 15 of 25 game/seeds regress. Branch `sc25-candidate-gen`
+  (5601df3eb6, off `explorer-pilot`), not merged.
+- sc25 itself: real, verified progress (1,200+ confirmed cast-panel clicks per seed via independent
+  replay) but no win within 2,000 actions -- finding the right toggle sequence is a separate, harder
+  problem than reaching the region.
+- This closes out the day's ARC session (12 unwon games, 10 pilots, Fable's full recommendation list).
+
 ## 2026-09-27 -- Real divergence-halt merged; GPU measurement panel killed incomplete after 11h47m
 - Merged two default-off mechanisms to main (f3d355c58b): CARNOT_ARC_PLAN_DIVERGENCE_HALT (the live
   execute loop now checks its plan against reality and abandons on mismatch, instead of blindly
