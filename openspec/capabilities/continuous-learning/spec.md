@@ -1,5 +1,33 @@
 # Continuous Learning Capability Specification
 
+## REQ-CL-7732-CAUSAL-ADMISSION: Bound advisory feature admission
+
+Exp7732 SHALL use the frozen eight primitive and 28 pair predicates with 96
+independent fixture families: 32 exposed development, 32 one-use admission,
+and 32 untouched retention. A released development feedback block may cause
+at most one proposal and one admitted feature. At most eight proposals may be
+spent, and no more than twelve predictions may await feedback. Admission SHALL
+compare frozen base and candidate forecasts on eight independent later
+admission families, require mean Brier reduction at least 0.01 and no increase
+in false accepts, and never inspect retention labels. Advisory probabilities
+SHALL leave exact verifier decisions unchanged. These guards make no
+significance or fresh generalization claim.
+
+### SCENARIO-CL-7732-LIFECYCLE
+
+Beneficial feedback commits a pair and changes a later forecast. Harmful
+feedback rolls a pair back. Duplicate feedback and pending overflow are
+rejected. A write interrupted before acknowledgement is not applied; a cold
+restart after acknowledgement replays the same state once. All five outcomes
+and exactly-once credits are evidenced through the production bank API.
+
+### SCENARIO-CL-7732-CONTROLS
+
+Bank growth, a frozen bank and a fitted complete-static dictionary see the
+same fixture stream. The dictionary retains all 36 feature names, fitted
+weights and equality checks. Readiness derives only from lifecycle invariants
+and affected validation, independently of retained Brier improvement.
+
 ## REQ-CL-7721-AUDIT: Retained learning needs causal event proof
 
 An independent audit SHALL require proposal release before use, one frozen

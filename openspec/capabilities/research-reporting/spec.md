@@ -1,5 +1,32 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7732: Publish bounded causal admission evidence
+
+Exp7732 SHALL authenticate V671, V672 and Exp7728 input bytes and exact
+schemas before measurement. It SHALL freeze the affected acquisition modules,
+their tests and commands before results. The artifact SHALL retain raw family
+rows, prediction and feedback events, one-use admission decisions, durable
+acknowledgements, static weights, restart state and input hashes. A fresh CLI
+process SHALL cold-reduce raw rows and bank ledgers. Affected pytest, changed
+module coverage, Ruff, mypy, spec coverage, task E2E and terminal readers
+SHALL pass before atomic publication. Unrelated full-suite failures remain
+repository health debt. A successful oracle fixture is circular_positive;
+administrative readiness and fresh generalization remain null or false.
+
+### SCENARIO-REPORT-7732-CAUSAL
+
+Each admission block has eight independent later forecasts frozen before its
+labels arrive. A commit and rollback are both observable through the bank API
+and cold restart; no retention label participates in admission. Matched
+growth, frozen and complete-static arms retain 96 family rows each.
+
+### SCENARIO-REPORT-7732-TERMINAL
+
+Missing or malformed external custody yields complete_blocked_* with exact
+check operands. Mutated rows or ledger bytes fail cold reduction. The
+adversarial and strict row readers inspect the exact candidate before final
+publication; failed affected checks cannot open readiness.
+
 ### REQ-REPORT-7730: Fit exposed set energies with terminal custody
 
 Exp7730 SHALL use only Exp7727 fit, tune and policy families and the Exp7728
