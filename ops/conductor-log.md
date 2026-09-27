@@ -18854,3 +18854,4 @@ code |
 | 2026-09-27 17:03 UTC | Measure source-dependent probabilities and typed d | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7771-view-energy-fit, exp7771-view-energy-fit, exp7771-view-energy-fit) |
 | 2026-09-27 17:04 UTC | Compare generic confidence with explicit source-su | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7770-qwen-runner-qualification.qwen_runner_ready_score (actual=0 == expected=1) |
 | 2026-09-27 17:06 UTC | Measure delayed constraint addition and retained d | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7771-view-energy-fit, exp7771-view-energy-fit, exp7771-view-energy-fit) |
+| 2026-09-27 17:21 UTC | Independently reduce calibration and causal learni | OK | 91 passed, 1 warning in 7.91s |
