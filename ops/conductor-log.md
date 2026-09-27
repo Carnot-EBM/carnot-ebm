@@ -18804,3 +18804,4 @@ code |
 | 2026-09-27 01:00 UTC | Cold-reduce development decisions and feedback cau | OK | 105 passed, 2 warnings in 7.48s |
 | 2026-09-27 01:15 UTC | Separate organic exploration from archive replay v | OK | 106 passed, 1 warning in 11.08s |
 | 2026-09-27 01:18 UTC | Measure organic archive selection through the scor | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7735-arc-organic-visits.organic_runner_ready_score (actual=0 == expected=1) |
+| 2026-09-27 01:21 UTC | Measure complete evidence-set service and update c | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7730-set-energy-fit.set_heads_ready_score (actual=0 == expected=1) |
