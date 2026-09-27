@@ -6231,3 +6231,11 @@ recheck found the already reviewed Structure Snowballing lead. Semantic Scholar
 citation reads failed, so citation coverage remains incomplete. These methods
 do not turn reused RAGTruth families into fresh evidence or qualify a V673
 scientific claim.
+## 2026-09-27 — Exp7739 V674 methods INGESTED
+
+HalluSpan sentence-local supervision and conflict limits, finite energy
+calibration, delayed pending-capacity accounting, Qwen error localization,
+retention controls and complete hardware service costs are mapped to specific
+V674 tests in `docs/research-notes/v674-method-map.md`. The sequential delta
+check could not access Semantic Scholar citations. This ingestion establishes
+method custody, not scientific benefit or fresh generalization.

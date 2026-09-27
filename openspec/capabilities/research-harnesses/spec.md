@@ -12097,3 +12097,15 @@ shall not infer it from requested YAML agent fields.
 
 An absent independent contract yields a blocked result. A failed required
 check yields zero readiness. Neither case retries unchanged external input.
+### REQ-HARNESS-7739: Preserve V674 prompt and authority custody
+
+The planning check SHALL select only a V674 staged or activated roadmap and
+SHALL run the unchanged roadmap schema, prior-failure, exclusion, gate,
+harness-fit, ARC-floor, overdue-priority and prompt-path readers on that
+authority. The Exp7726 nonexistent Gibbs-file path SHALL not be accepted as
+a current import path.
+
+#### SCENARIO-HARNESS-7739-SELECTED
+
+A stale staged milestone falls back to the matching active roadmap. Missing
+matching authority or a path reader finding closes contract readiness.

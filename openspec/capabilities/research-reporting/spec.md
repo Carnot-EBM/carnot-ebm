@@ -82947,3 +82947,37 @@ Given raw fixture rows in a fresh process, the reducer recomputes event counts a
 ### SCENARIO-REPORT-7735-TERMINAL
 
 The artifact records separate validity, readiness, Brier, decision cost, coverage, retention and efficiency gates, actual model-call counts, affected check receipts, exact candidate-reader exits and hashes, and an oracle-fixture claim limit.
+## V674 contract and method custody — 2026-09-27
+
+### REQ-REPORT-7739: Certify the fourteen-task administrative contract
+
+Exp7739 SHALL independently parse the V674 design table and JSON block and
+the matching staged or active roadmap with the real YAML schema. It SHALL
+compare exactly fourteen ordered tasks, Exp7739–Exp7752, including identity,
+title, phase, milestone, deliverable, substrate, model list and exact gates.
+The table's serialized gates SHALL be parsed as JSON, not treated as opaque
+text. A missing source or field SHALL fail closed. Contract agreement is
+administrative readiness only; probability quality, benefit, retention and
+efficiency remain unmeasured.
+
+#### SCENARIO-REPORT-7739-CONTRACT
+
+Private deletion, reorder, wrong milestone, stale deliverable, removed model,
+and misspelled gate-field copies fail independent comparison. The original
+authority bytes do not change.
+
+#### SCENARIO-REPORT-7739-CUSTODY
+
+Required paths are checked before execution. The current Gibbs import path is
+`python/carnot/models/gibbs/__init__.py`. Exp7726's disqualified verdict and
+the archived V673 design byte hash remain historical evidence. A missing
+external input yields a terminal blocked verdict with complete gate operands.
+The planned Exp7739 result is never treated as an upstream input.
+
+#### SCENARIO-REPORT-7739-TERMINAL
+
+The CLI writes raw rows and a candidate, then a fresh process recomputes rows
+and input hashes. Frozen affected checks, unchanged planning readers,
+adversarial verification and strict row consistency run before atomic
+publication. Failed current checks disqualify readiness; unrelated suite debt
+stays separate. No model is invoked for this aggregation task.
