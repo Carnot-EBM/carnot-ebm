@@ -20853,3 +20853,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Qualify causal bank failures and durable constraint admission (⚠️ Research Finding) — honest_verdict=complete_circular_positive_bank_lifecycle; results/experiment_7742_v674_bank_qualification.json
 - 2026-09-27: Compare bounded Qwen decisions with explicit error localization (⚠️ Research Finding) — honest_verdict=complete_null_exposed_localization_pilot; results/experiment_7745_v674_qwen_localization.json
 - 2026-09-27: Independently reduce supervision value and feedback causality (⚠️ Blocked) — honest_verdict=complete_blocked_required_v674_evidence; results/experiment_7747_v674_independent_evidence_audit.json
+- 2026-09-27: Qualify real organic-visit controls through the scored ARC wrapper (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_runner_validation; results/experiment_7748_v674_arc_runner_qualification.json
