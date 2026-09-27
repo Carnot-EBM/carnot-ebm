@@ -1,0 +1,81 @@
+{
+  "experiment": 7736,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-27",
+  "started_at": "2026-09-27T01:17:57.537504+00:00",
+  "finished_at": "2026-09-27T01:17:57.537504+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure organic archive selection through the scored wrapper",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7735-arc-organic-visits",
+  "failed_field": "organic_runner_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7735_v673_arc_organic_visits.json",
+  "failed_evidence_sha256": "sha256:d4bc44c63818b35fcc3af5118cb5038e5155ca3d795e118fe86ddcd36d00a0ff",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7735-arc-organic-visits",
+    "failed_field": "organic_runner_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7735_v673_arc_organic_visits.json",
+    "failed_evidence_sha256": "sha256:d4bc44c63818b35fcc3af5118cb5038e5155ca3d795e118fe86ddcd36d00a0ff"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7735-arc-organic-visits.organic_runner_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7735-arc-organic-visits",
+      "artifact_field": "organic_runner_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7735_v673_arc_organic_visits.json",
+      "artifact_sha256": "sha256:d4bc44c63818b35fcc3af5118cb5038e5155ca3d795e118fe86ddcd36d00a0ff"
+    },
+    {
+      "upstream": "exp7735-arc-organic-visits",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7735_v673_arc_organic_visits.json",
+      "artifact_sha256": "sha256:d4bc44c63818b35fcc3af5118cb5038e5155ca3d795e118fe86ddcd36d00a0ff"
+    },
+    {
+      "upstream": "exp7735-arc-organic-visits",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['null', 'circular_positive', 'positive']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7735_v673_arc_organic_visits.json",
+      "artifact_sha256": "sha256:d4bc44c63818b35fcc3af5118cb5038e5155ca3d795e118fe86ddcd36d00a0ff"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
