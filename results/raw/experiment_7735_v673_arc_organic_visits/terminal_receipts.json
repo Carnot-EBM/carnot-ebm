@@ -1,0 +1,61 @@
+{
+  "candidate_sha256": "sha256:d4bc44c63818b35fcc3af5118cb5038e5155ca3d795e118fe86ddcd36d00a0ff",
+  "commands": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7735_v673_arc_organic_visits.py --cold /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7735_v673_arc_organic_visits/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7735_v673_arc_organic_visits.py",
+        "--cold",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7735_v673_arc_organic_visits/candidate.json"
+      ],
+      "duration_s": 1.601285137992818,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7735_v673_arc_organic_visits/terminal_logs/00_cold_reduce.log",
+      "log_sha256": "sha256:497d3ac188fca7c1edcdd845404cdd201483f4f99034f069cd11a58964a0a04c",
+      "name": "cold_reduce",
+      "output_tail": "{\"actions\": 6, \"games\": 3, \"resets\": 2, \"rows\": 6}\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7735_v673_arc_organic_visits/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7735_v673_arc_organic_visits/candidate.json"
+      ],
+      "duration_s": 0.5722917660023086,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7735_v673_arc_organic_visits/terminal_logs/01_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7735_v673_arc_organic_visits/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7735_v673_arc_organic_visits/candidate.json"
+      ],
+      "duration_s": 0.034184596996055916,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7735_v673_arc_organic_visits/terminal_logs/02_strict_row_lint.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_row_lint",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    }
+  ]
+}

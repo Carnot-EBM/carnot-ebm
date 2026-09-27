@@ -37546,3 +37546,14 @@ tests pass (17 focused tests total); scoped spec coverage, changed-file Ruff che
 changed-module mypy, and the ARC orphan solver lint pass. The archive remains
 off by default. No numbered `ops/e2e-test-plan.md` case covers this archive path;
 the focused tests drive its real `StepwiseExplorer`/archive action loop on CPU.
+## REQ-ARC-WMTE-7735: Separate organic visits from return provenance
+
+The replay archive SHALL retain its existing total `seen` and default selector behavior while recording organic, replay, and reset observations independently. An opt-in selector SHALL rank eligible cells by the V8 visits-minus-seen rule with `organic_seen` replacing `seen`, with the same tie order and prefix eligibility. The scored `make_carnot_agent`/`E3AgentPolicy` path SHALL accept the option without enabling it by default. Return replay, including its landing frame, SHALL never raise `organic_seen`. Counters SHALL survive explicit snapshot reload; unsupported old snapshots SHALL fail clearly. The 400-action replay budget, spacing 20, and prefix preference at most 30 SHALL remain fixed in the paired runner. No game adapters, source inspection, stored routes, or LLM induction are allowed.
+
+### SCENARIO-ARC-WMTE-7735-PROVENANCE
+
+Given an organic cell and repeated reset and replay frames, total observations retain event counts, organic sightings stay fixed, and reset/replay counts rise separately. A serialized archive reload yields the same counters and next selection.
+
+### SCENARIO-ARC-WMTE-7735-PARITY
+
+With the option off, 300 fixed decisions and ten reset/replay episodes have identical actions and random state. With the option on, descriptors rank by visits minus organic sightings and return prefixes remain eligible under the frozen V8 settings.

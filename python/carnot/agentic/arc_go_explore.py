@@ -102,7 +102,7 @@ class GoExploreReplayArchive:
         enabled: bool = True,
         bins: int = 6,
         max_cells: int = 256,
-        selector: Optional[Callable[[Sequence[Mapping[str, Any]]], Optional[int]]] = None,
+        selector: Optional[Callable[[Sequence[Mapping[str, Any]]], Optional[int]] | str] = None,
     ) -> None:
         self.enabled = bool(enabled)
         self.bins = max(1, int(bins))
@@ -110,6 +110,7 @@ class GoExploreReplayArchive:
         self._cells: dict[tuple, dict[str, Any]] = {}
         self._observations = 0
         self._selected_prefixes = 0
+        self.last_selected_cell: tuple | None = None
         # IGE hook (2026-06-28): when a `selector` callable is supplied, the cell CHOICE among eligible
         # cells is delegated to it (e.g. an LLM promisingness judge); the heuristic stays as the fallback
         # when the selector is absent, returns None, or returns an out-of-range index. The plumbing
@@ -119,7 +120,16 @@ class GoExploreReplayArchive:
         self._selector_used = 0
         self._selector_fallbacks = 0
 
-    def observe(self, frame: Any, path: Sequence[Mapping[str, Any]] | None) -> None:
+    def observe(
+        self,
+        frame: Any,
+        path: Sequence[Mapping[str, Any]] | None,
+        *,
+        provenance: str = "organic",
+    ) -> None:
+        """Record a frame with its action source; old callers remain organic."""
+        if provenance not in {"organic", "replay", "reset"}:
+            raise ValueError("invalid_archive_provenance")
         if not self.enabled:
             return
         grid = _frame_grid(frame)
@@ -131,6 +141,8 @@ class GoExploreReplayArchive:
         existing = self._cells.get(key)
         if existing is not None and len(existing["prefix"]) <= len(prefix):
             existing["seen"] = int(existing.get("seen", 0)) + 1
+            field = f"{provenance}_seen"
+            existing[field] = int(existing.get(field, 0)) + 1
             return
         if len(self._cells) >= self.max_cells and key not in self._cells:
             worst = max(
@@ -146,6 +158,9 @@ class GoExploreReplayArchive:
             "visits": 0,
             "depth": len(prefix),
             "seen": 1,
+            "organic_seen": int(provenance == "organic"),
+            "replay_seen": int(provenance == "replay"),
+            "reset_seen": int(provenance == "reset"),
         }
 
     def select_prefix(
@@ -159,7 +174,9 @@ class GoExploreReplayArchive:
         eligible_items = [
             (key, entry)
             for key, entry in self._cells.items()
-            if entry.get("prefix") and entry.get("prefix") != current
+            if entry.get("prefix")
+            and entry.get("prefix") != current
+            and (self.selector != "organic_visits" or len(entry["prefix"]) <= 30)
         ]
         if not eligible_items:
             return []
@@ -176,6 +193,7 @@ class GoExploreReplayArchive:
                 ),
             )
         selected["visits"] = int(selected.get("visits", 0)) + 1
+        self.last_selected_cell = next(key for key, entry in eligible_items if entry is selected)
         self._selected_prefixes += 1
         return [dict(step) for step in selected["prefix"]]
 
@@ -186,6 +204,18 @@ class GoExploreReplayArchive:
         signal the caller to use the heuristic (selector absent / >=2 cells needed / declined / bad index)."""
         if self.selector is None or len(eligible_items) < 2:
             return None
+        if self.selector == "organic_visits":
+            self._selector_calls += 1
+            selected = min(
+                (entry for _key, entry in eligible_items),
+                key=lambda entry: (
+                    int(entry.get("visits", 0)) - int(entry.get("organic_seen", 0)),
+                    -int(entry.get("depth", 0)),
+                    tuple((step["action"], repr(step.get("data"))) for step in entry["prefix"]),
+                ),
+            )
+            self._selector_used += 1
+            return selected
         descriptors = []
         for index, (key, entry) in enumerate(eligible_items):
             level = int(key[0]) if isinstance(key, tuple) and key else 0
@@ -202,6 +232,8 @@ class GoExploreReplayArchive:
                     "depth": int(entry.get("depth", 0)),
                     "visits": int(entry.get("visits", 0)),
                     "seen": int(entry.get("seen", 0)),
+                    "organic_seen": int(entry.get("organic_seen", 0)),
+                    "replay_seen": int(entry.get("replay_seen", 0)),
                 }
             )
         self._selector_calls += 1
@@ -214,6 +246,55 @@ class GoExploreReplayArchive:
             return None
         self._selector_used += 1
         return eligible_items[choice][1]
+
+    def snapshot(self) -> dict[str, Any]:
+        """Return a JSON-safe, versioned archive with exact visit counters."""
+        if self.selector not in (None, "organic_visits"):
+            raise ValueError("unsupported_archive_selector_snapshot")
+        return {
+            "version": 7735,
+            "enabled": self.enabled,
+            "bins": self.bins,
+            "max_cells": self.max_cells,
+            "selector": self.selector,
+            "observations": self._observations,
+            "selected_prefixes": self._selected_prefixes,
+            "selector_calls": self._selector_calls,
+            "selector_used": self._selector_used,
+            "selector_fallbacks": self._selector_fallbacks,
+            "cells": [
+                {"level": key[0], "signature": list(key[1]), "entry": dict(entry)}
+                for key, entry in self._cells.items()
+            ],
+        }
+
+    @classmethod
+    def from_snapshot(cls, value: Mapping[str, Any]) -> GoExploreReplayArchive:
+        """Reject older snapshots because they cannot reconstruct organic sightings."""
+        if value.get("version") != 7735:
+            raise ValueError("unsupported_archive_snapshot")
+        archive = cls(
+            enabled=value["enabled"],
+            bins=value["bins"],
+            max_cells=value["max_cells"],
+            selector=value["selector"],
+        )
+        for row in value["cells"]:
+            entry = dict(row["entry"])
+            if int(entry["seen"]) != sum(
+                int(entry[f"{kind}_seen"]) for kind in ("organic", "replay", "reset")
+            ):
+                raise ValueError("archive_counter_mismatch")
+            archive._cells[(int(row["level"]), tuple(row["signature"]))] = entry
+        for field, key in (
+            ("_observations", "observations"),
+            ("_selected_prefixes", "selected_prefixes"),
+            ("_selector_calls", "selector_calls"),
+            ("_selector_used", "selector_used"),
+            ("_selector_fallbacks", "selector_fallbacks"),
+        ):
+            setattr(archive, field, int(value[key]))
+        return archive
 
     def diagnostics(self) -> dict[str, Any]:
         diag: dict[str, Any] = {
@@ -262,6 +343,8 @@ def _coerce_archive_selector(value: Any) -> Optional[Callable[..., Optional[int]
     (lazy import avoids loading the heavy world-model/LLM module unless IGE is actually requested)."""
     if value is None or value is False:
         return None
+    if value == "organic_visits":
+        return "organic_visits"
     if callable(value):
         return value
     if isinstance(value, str) and value.lower().startswith("ige"):

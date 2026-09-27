@@ -2098,6 +2098,13 @@ class StepwiseExplorer:
         )
         self.go_explore_archive = coerce_go_explore_archive(go_explore_archive)
         self._go_explore_replay_active: bool = False
+        self._go_explore_organic_visits = (
+            self.go_explore_archive is not None
+            and self.go_explore_archive.selector == "organic_visits"
+        )
+        self._go_explore_replay_event: str | None = None
+        self._go_explore_fresh_since_return = 0
+        self._go_explore_replay_actions_charged = 0
         self.transition_cycle_verifier = transition_cycle_verifier
         self._transition_cycle_receipts: list[dict[str, Any]] = []
         self._transition_cycle_admitted = 0
@@ -3738,10 +3745,22 @@ class StepwiseExplorer:
                 },
             )
             self._index_similarity_state(h, latest)
-        if self.go_explore_archive is not None and not over and not self._go_explore_replay_active:
+        replay_landing = self._go_explore_replay_active
+        if (
+            self.go_explore_archive is not None
+            and not over
+            and (not self._go_explore_replay_active or self._go_explore_organic_visits)
+        ):
             node = self.graph.get(h)
             if node is not None:
-                self.go_explore_archive.observe(latest, node.get("path") or [])
+                self.go_explore_archive.observe(
+                    latest,
+                    node.get("path") or [],
+                    provenance=self._go_explore_replay_event or "organic",
+                )
+        self._go_explore_replay_event = None
+        if self._go_explore_organic_visits and not replay_landing:
+            self._go_explore_fresh_since_return += 1
         # REQ-ARC-WMTE-10024: _serve already popped the action that made this frame.
         # The final replay landing arrives with empty pending, so clear only after
         # this frame's observe decision; the next organic frame is then admitted.
@@ -4242,6 +4261,8 @@ class StepwiseExplorer:
 
     def _serve(self) -> tuple:
         item = self.pending.pop(0)
+        if self._go_explore_organic_visits and self._go_explore_replay_active:
+            self._go_explore_replay_event = "reset" if item["kind"] == "RESET" else "replay"
         if item["kind"] == "RESET":
             self.awaiting = None  # RESET has no forward edge to attribute
             self._prov_serve_kind = "reset"  # provenance label; see arc_action_provenance
@@ -4782,9 +4803,24 @@ class StepwiseExplorer:
 
         if self.go_explore_archive is None:
             return []
-        return self.go_explore_archive.select_prefix(current_path=current_path)
+        if self._go_explore_organic_visits and (
+            self._go_explore_fresh_since_return < 20
+            or self._go_explore_replay_actions_charged >= 400
+        ):
+            return []
+        sequence = self.go_explore_archive.select_prefix(current_path=current_path)
+        if self._go_explore_organic_visits and (
+            self._go_explore_replay_actions_charged + len(sequence) + 1 > 400
+        ):
+            return []
+        return sequence
 
     def _begin_go_explore_replay(self, sequence: Sequence[Mapping[str, Any]]) -> tuple:
+        if self._go_explore_organic_visits:
+            if self._go_explore_replay_actions_charged + len(sequence) + 1 > 400:
+                raise ValueError("organic_replay_budget_exceeded")
+            self._go_explore_replay_actions_charged += len(sequence) + 1
+            self._go_explore_fresh_since_return = 0
         self._go_explore_replay_active = True
         self._go_explore_prefixes_injected += 1
         self._go_explore_actions_injected += len(sequence)
@@ -10074,6 +10110,7 @@ def make_carnot_agent(
     belief_aware_selector: bool | None = None,
     goal_confirmation: bool | None = None,
     arc_probe_protocol: str | None = None,
+    organic_visits: bool = False,
 ):
     """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
@@ -10120,6 +10157,7 @@ def make_carnot_agent(
                     belief_aware_selector=belief_aware_selector,
                     goal_confirmation=goal_confirmation,
                     arc_probe_protocol=arc_probe_protocol,
+                    go_explore_archive={"selector": "organic_visits"} if organic_visits else False,
                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
                     early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),

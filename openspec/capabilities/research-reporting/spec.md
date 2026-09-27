@@ -82886,3 +82886,14 @@ Given the refused V673 proposal, the unchanged exclusion reader rejects
 Exp7736. With all five complete entries, it accepts the repaired proposal.
 Removing the block from a private copy reproduces the original refusal.
 The staged design and YAML retain the same thirteen ordered deliverables.
+## REQ-REPORT-7735: Qualify organic-visit archive custody
+
+Exp7735 SHALL run a no-model, adapter-withheld paired ARC mechanism check through the scored wrapper. It SHALL retain a frozen schedule, raw action and observation provenance, per-game budget and censoring, exact source hashes, and reset-charging alternatives. Scripted CPU frames certify reachability only and receive `circular_positive`, never new solve credit. Missing external prerequisites yield terminal blocked evidence with exact gate operands. Current affected validation, cold reduction, and terminal readers SHALL precede atomic publication. The result SHALL make no fresh generalization claim.
+
+### SCENARIO-REPORT-7735-REPLAY
+
+Given raw fixture rows in a fresh process, the reducer recomputes event counts and rejects changed rows or a changed schedule. Each game/seed/arm is one row, while independent N counts games only.
+
+### SCENARIO-REPORT-7735-TERMINAL
+
+The artifact records separate validity, readiness, Brier, decision cost, coverage, retention and efficiency gates, actual model-call counts, affected check receipts, exact candidate-reader exits and hashes, and an oracle-fixture claim limit.
