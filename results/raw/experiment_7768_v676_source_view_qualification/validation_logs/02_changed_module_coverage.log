@@ -1,0 +1,219 @@
+........................................................................ [ 57%]
+................................................FFF.FF                   [100%]
+=================================== FAILURES ===================================
+____________________ test_contract_matches_literal_sources _____________________
+
+    def test_contract_matches_literal_sources() -> None:
+        """SCENARIO-REPORT-7766-CONTRACT: the three authorities must agree."""
+>       source = authority(ROOT)
+                 ^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7766_v675_capstone.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7766_v675_capstone.py:76: in authority
+    path, roadmap, candidates = resolve_authority(root)
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def resolve_authority(root: Path) -> tuple[Path, dict[str, Any], list[dict[str, Any]]]:
+        """Select a staged roadmap when present and matching, else matching active."""
+        candidates = []
+        for name in ("research-roadmap-next.yaml", "research-roadmap.yaml"):
+            path = root / name
+            value = yaml.safe_load(path.read_text()) if path.is_file() else None
+            milestone = value.get("milestone") if isinstance(value, dict) else None
+            candidates.append({"path": name, "exists": path.is_file(), "milestone": milestone})
+            if milestone == MILESTONE:
+                from scripts.roadmap_schema import Roadmap
+    
+                Roadmap.model_validate(value)
+                return path, value, candidates
+>       raise ValueError("matching V675 authority missing")
+E       ValueError: matching V675 authority missing
+
+python/carnot/experiment_7753_v675_contract_methods.py:52: ValueError
+______________ test_missing_producers_are_separate_from_receipts _______________
+
+    def test_missing_producers_are_separate_from_receipts() -> None:
+        """SCENARIO-REPORT-7766-BLOCKED: a queue receipt cannot become science."""
+>       rows, sources, failures = account(ROOT, authority(ROOT)["tasks"])
+                                                ^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7766_v675_capstone.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7766_v675_capstone.py:76: in authority
+    path, roadmap, candidates = resolve_authority(root)
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def resolve_authority(root: Path) -> tuple[Path, dict[str, Any], list[dict[str, Any]]]:
+        """Select a staged roadmap when present and matching, else matching active."""
+        candidates = []
+        for name in ("research-roadmap-next.yaml", "research-roadmap.yaml"):
+            path = root / name
+            value = yaml.safe_load(path.read_text()) if path.is_file() else None
+            milestone = value.get("milestone") if isinstance(value, dict) else None
+            candidates.append({"path": name, "exists": path.is_file(), "milestone": milestone})
+            if milestone == MILESTONE:
+                from scripts.roadmap_schema import Roadmap
+    
+                Roadmap.model_validate(value)
+                return path, value, candidates
+>       raise ValueError("matching V675 authority missing")
+E       ValueError: matching V675 authority missing
+
+python/carnot/experiment_7753_v675_contract_methods.py:52: ValueError
+_____________________ test_terminal_block_and_cold_replay ______________________
+
+    def test_terminal_block_and_cold_replay() -> None:
+        """SCENARIO-REPORT-7766-REPLAY: raw rows and sources bind the verdict."""
+        publication = {
+            "G1": True,
+            "G2": True,
+            "G3": True,
+            "G4": True,
+            "paper_ready": True,
+            "unmet_gates": [],
+            "command_exit": 0,
+            "result_hash": "test-only",
+        }
+>       artifact = build_artifact(ROOT, publication, [{"passed": True}], [], 1.0)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7766_v675_capstone.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7766_v675_capstone.py:243: in build_artifact
+    source = authority(root)
+             ^^^^^^^^^^^^^^^
+python/carnot/experiment_7766_v675_capstone.py:76: in authority
+    path, roadmap, candidates = resolve_authority(root)
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def resolve_authority(root: Path) -> tuple[Path, dict[str, Any], list[dict[str, Any]]]:
+        """Select a staged roadmap when present and matching, else matching active."""
+        candidates = []
+        for name in ("research-roadmap-next.yaml", "research-roadmap.yaml"):
+            path = root / name
+            value = yaml.safe_load(path.read_text()) if path.is_file() else None
+            milestone = value.get("milestone") if isinstance(value, dict) else None
+            candidates.append({"path": name, "exists": path.is_file(), "milestone": milestone})
+            if milestone == MILESTONE:
+                from scripts.roadmap_schema import Roadmap
+    
+                Roadmap.model_validate(value)
+                return path, value, candidates
+>       raise ValueError("matching V675 authority missing")
+E       ValueError: matching V675 authority missing
+
+python/carnot/experiment_7753_v675_contract_methods.py:52: ValueError
+_________________ test_changed_contract_cannot_open_readiness __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7efbfc5f54c0>
+
+    def test_changed_contract_cannot_open_readiness(monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-7766-CONTRACT: wrong order or design blocks a claim."""
+        with pytest.raises(ValueError, match="fourteen-task order"):
+            account(ROOT, [])
+>       source = authority(ROOT)
+                 ^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7766_v675_capstone.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7766_v675_capstone.py:76: in authority
+    path, roadmap, candidates = resolve_authority(root)
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def resolve_authority(root: Path) -> tuple[Path, dict[str, Any], list[dict[str, Any]]]:
+        """Select a staged roadmap when present and matching, else matching active."""
+        candidates = []
+        for name in ("research-roadmap-next.yaml", "research-roadmap.yaml"):
+            path = root / name
+            value = yaml.safe_load(path.read_text()) if path.is_file() else None
+            milestone = value.get("milestone") if isinstance(value, dict) else None
+            candidates.append({"path": name, "exists": path.is_file(), "milestone": milestone})
+            if milestone == MILESTONE:
+                from scripts.roadmap_schema import Roadmap
+    
+                Roadmap.model_validate(value)
+                return path, value, candidates
+>       raise ValueError("matching V675 authority missing")
+E       ValueError: matching V675 authority missing
+
+python/carnot/experiment_7753_v675_contract_methods.py:52: ValueError
+________________ test_failed_validation_is_an_explicit_operand _________________
+
+    def test_failed_validation_is_an_explicit_operand() -> None:
+        """SCENARIO-REPORT-7766-BLOCKED: a failed command disqualifies readiness."""
+        receipt = {
+            "name": "full_python_suite",
+            "passed": False,
+            "exit_code": 2,
+            "log_path": "private/full.log",
+            "log_sha256": "sha256:test",
+        }
+>       result = build_artifact(ROOT, {}, [receipt])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7766_v675_capstone.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7766_v675_capstone.py:243: in build_artifact
+    source = authority(root)
+             ^^^^^^^^^^^^^^^
+python/carnot/experiment_7766_v675_capstone.py:76: in authority
+    path, roadmap, candidates = resolve_authority(root)
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def resolve_authority(root: Path) -> tuple[Path, dict[str, Any], list[dict[str, Any]]]:
+        """Select a staged roadmap when present and matching, else matching active."""
+        candidates = []
+        for name in ("research-roadmap-next.yaml", "research-roadmap.yaml"):
+            path = root / name
+            value = yaml.safe_load(path.read_text()) if path.is_file() else None
+            milestone = value.get("milestone") if isinstance(value, dict) else None
+            candidates.append({"path": name, "exists": path.is_file(), "milestone": milestone})
+            if milestone == MILESTONE:
+                from scripts.roadmap_schema import Roadmap
+    
+                Roadmap.model_validate(value)
+                return path, value, candidates
+>       raise ValueError("matching V675 authority missing")
+E       ValueError: matching V675 authority missing
+
+python/carnot/experiment_7753_v675_contract_methods.py:52: ValueError
+=============================== warnings summary ===============================
+tests/python/test_experiment_7714_v672_alignment_protocol.py::test_cli_modes_and_disqualified_gate
+  <frozen runpy>:128: RuntimeWarning: 'carnot.experiment_7714_v672_alignment_protocol' found in sys.modules after import of package 'carnot', but prior to execution of 'carnot.experiment_7714_v672_alignment_protocol'; this may result in unpredictable behaviour
+
+tests/python/test_experiment_7727_v673_development_corpus.py::test_req_report_7727_blocked_candidate_and_entrypoint
+  <frozen runpy>:128: RuntimeWarning: 'carnot.experiment_7727_v673_development_corpus' found in sys.modules after import of package 'carnot', but prior to execution of 'carnot.experiment_7727_v673_development_corpus'; this may result in unpredictable behaviour
+
+tests/python/test_experiment_7728_v673_set_energy_protocol.py::test_module_entry_cold_replay
+  <frozen runpy>:128: RuntimeWarning: 'carnot.experiment_7728_v673_set_energy_protocol' found in sys.modules after import of package 'carnot', but prior to execution of 'carnot.experiment_7728_v673_set_energy_protocol'; this may result in unpredictable behaviour
+
+tests/python/test_experiment_7740_v674_sentence_label_protocol.py::test_main_dispatch_and_bad_cold_arguments
+  <frozen runpy>:128: RuntimeWarning: 'carnot.experiment_7740_v674_sentence_label_protocol' found in sys.modules after import of package 'carnot', but prior to execution of 'carnot.experiment_7740_v674_sentence_label_protocol'; this may result in unpredictable behaviour
+
+tests/python/test_experiment_7754_v675_sentence_protocol.py::test_main_dispatch_and_module_entry
+  <frozen runpy>:128: RuntimeWarning: 'carnot.experiment_7754_v675_sentence_protocol' found in sys.modules after import of package 'carnot', but prior to execution of 'carnot.experiment_7754_v675_sentence_protocol'; this may result in unpredictable behaviour
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7766_v675_capstone.py::test_contract_matches_literal_sources
+FAILED tests/python/test_experiment_7766_v675_capstone.py::test_missing_producers_are_separate_from_receipts
+FAILED tests/python/test_experiment_7766_v675_capstone.py::test_terminal_block_and_cold_replay
+FAILED tests/python/test_experiment_7766_v675_capstone.py::test_changed_contract_cannot_open_readiness
+FAILED tests/python/test_experiment_7766_v675_capstone.py::test_failed_validation_is_an_explicit_operand
+5 failed, 121 passed, 5 warnings in 600.51s (0:10:00)

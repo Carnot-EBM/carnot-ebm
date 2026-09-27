@@ -83386,6 +83386,45 @@ A fresh process verifies panel identity, request and response byte hashes,
 prompt reconstruction, row metrics, and aggregate reduction. A changed raw
 byte or row fails replay. Missing upstream evidence yields a terminal blocked
 record, not a partial scientific result.
+
+## REQ-REPORT-7768: Qualify source custody and complete evidence views
+
+Exp7768 SHALL authenticate the declared Exp7727 producer, seven role shards,
+source bytes and response bytes for all 640 exposed families. It SHALL keep
+prior exposure and fresh-generalization ineligibility. It SHALL freeze one
+task-owned manifest before evaluator labels open. It SHALL reuse the Exp7754
+byte-offset mapper and Exp7756 view builder without inheriting their failed
+readiness scores. Source windows SHALL contain every sentence, adjacent
+triples in view A, adjacent pairs in view B, and one null location per view.
+Both views SHALL use at most 128 visible windows and 16 answer units. A
+family over either limit SHALL remain in all nine arms with risk 0.5 and
+forced escalation. Output-error spans SHALL remain local response labels.
+Probability quality, decision benefit, retention, and efficiency remain
+unmeasured for this exposed development qualification.
+
+### SCENARIO-REPORT-7768-CUSTODY
+
+Changed source or answer bytes, offsets, missing premises, removed families,
+overlapping output spans, unauthorized labels or altered role assignments
+SHALL fail fresh-process replay. Label mutation SHALL leave public features,
+evidence windows and role assignment unchanged. Missing declared producers
+and separate conductor receipts SHALL have distinct failed-check rows.
+
+### SCENARIO-REPORT-7768-VIEWS
+
+Joint-premise fixtures SHALL retain both necessary source sentences in the
+view representation without asserting semantic learning. Duplicate and
+permuted sources SHALL retain exact bytes and the duplicate-group prior.
+Empty sources, padding and serialized round trips SHALL keep one null state.
+
+### SCENARIO-REPORT-7768-TERMINAL
+
+The real entrypoint SHALL prepare and cold-replay all 640 records. Frozen
+affected tests, complete new-module statement coverage, scoped Ruff and mypy,
+spec coverage, adversarial verification and strict row consistency SHALL pass
+before either readiness field equals one. Broad repository collection SHALL
+be recorded separately. Failed required checks SHALL disqualify readiness.
+
 ## REQ-REPORT-7765: Bound V675 complete service cost from qualified heads
 
 Exp7765 SHALL authenticate the declared current Exp7757 fit and optional Exp7761 online state independently. A conductor pre-gate receipt SHALL not substitute for a fitted head. Missing or disqualified fitting SHALL produce a terminal blocked artifact with exact failed operands, zero timing rows, and dated authenticated hardware continuity. It SHALL not claim a measured kernel or hardware speedup.

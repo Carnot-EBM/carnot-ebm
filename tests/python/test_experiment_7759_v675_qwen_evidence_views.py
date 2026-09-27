@@ -140,11 +140,23 @@ def test_prompt_budget_marks_unstarted_without_truncation(family, tmp_path):
 
 def reply(probability=0.8, finish="stop"):
     """Give the capture path one OpenAI-compatible transport reply."""
-    return {"choices": [{"message": {"content": json.dumps({
-        "decision": "unsupported", "probability_unsupported": probability,
-        "quote": "First sentence.",
-    })}, "finish_reason": finish}],
-        "usage": {"prompt_tokens": 15, "completion_tokens": 12}}
+    return {
+        "choices": [
+            {
+                "message": {
+                    "content": json.dumps(
+                        {
+                            "decision": "unsupported",
+                            "probability_unsupported": probability,
+                            "quote": "First sentence.",
+                        }
+                    )
+                },
+                "finish_reason": finish,
+            }
+        ],
+        "usage": {"prompt_tokens": 15, "completion_tokens": 12},
+    }
 
 
 def test_capture_raw_bytes_and_cold_replay(family, tmp_path, monkeypatch):
@@ -162,8 +174,11 @@ def test_capture_raw_bytes_and_cold_replay(family, tmp_path, monkeypatch):
     panel.parent.mkdir(parents=True)
     panel.write_text(json.dumps([family]))
     monkeypatch.setattr(exp, "ROOT", tmp_path)
-    artifact = {"verdict_class": "null", "rows": rows,
-                "paired_family_results": exp.reduce_rows(rows)}
+    artifact = {
+        "verdict_class": "null",
+        "rows": rows,
+        "paired_family_results": exp.reduce_rows(rows),
+    }
     path = tmp_path / "candidate.json"
     path.write_text(json.dumps(artifact))
     assert exp.cold_reduce(path)["passed"]
@@ -189,6 +204,7 @@ def test_capture_raw_bytes_and_cold_replay(family, tmp_path, monkeypatch):
 
 def test_capture_transport_failure_and_all_unstarted(family, tmp_path):
     """SCENARIO-REPORT-7759-DENOMINATOR keeps failures and blocked launches."""
+
     def broken(_):
         raise OSError("transport down")
 
@@ -196,11 +212,9 @@ def test_capture_transport_failure_and_all_unstarted(family, tmp_path):
     assert len(rows) == 3 and all(row["censored"] for row in rows)
     assert all(row["disposition"] == "censored_transport_error" for row in rows)
     assert all(Path(row["raw_response_path"]).is_file() for row in rows)
-    expired = exp.capture_family(family, broken, tmp_path / "expired", 0.0,
-                                 deadline=0)
+    expired = exp.capture_family(family, broken, tmp_path / "expired", 0.0, deadline=0)
     assert all(row["disposition"] == "unstarted_time_budget" for row in expired)
-    exhausted = exp.capture_family(family, broken, tmp_path / "exhausted", 0.0,
-                                   output_left=0)
+    exhausted = exp.capture_family(family, broken, tmp_path / "exhausted", 0.0, output_left=0)
     assert all(row["disposition"] == "unstarted_output_budget" for row in exhausted)
 
 
@@ -220,8 +234,12 @@ def test_artifact_claim_classes_and_gate_operands(family, tmp_path):
     for index in range(24):
         member = {**family, "family_id": f"family-{index}"}
         rows.extend(exp.capture_family(member, lambda _: reply(), tmp_path / "calls", 0.0))
-    runtime = {"model_load_attempted": 1, "model_load_completed": 1,
-               "generation_attempted": 72, "offload_layers": {"actual_offload": True}}
+    runtime = {
+        "model_load_attempted": 1,
+        "model_load_completed": 1,
+        "generation_attempted": 72,
+        "offload_layers": {"actual_offload": True},
+    }
     done = exp.build_artifact(rows, [], {}, runtime, [], 3.0, "20260927")
     assert done["verdict_class"] == "null"
     assert done["sample_size_budget"]["effective_independent_n"] == 24
@@ -250,12 +268,19 @@ def test_preflight_keeps_producer_and_panel_custody_separate(family, tmp_path, m
     result_path.parent.mkdir(parents=True, exist_ok=True)
     panel = [{**family, "family_id": f"f{i}"} for i in range(24)]
     panel_path.write_text(json.dumps(panel))
-    prior_record = {"milestone": "2026.09.674", "qwen_localization_complete_score": 1,
-                    "flagged_adversarial": False, "verdict_class": "null",
-                    "paired_family_results": {"paired_families": 24},
-                    "source_artifact_hashes": {"pre_gate_receipts": {
-                        str(exp.prior.RAW / "frozen_panel.json"): exp.custody.sha256_file(panel_path)}},
-                    "current_model_receipts": {"model_sha256": "model-hash"}}
+    prior_record = {
+        "milestone": "2026.09.674",
+        "qwen_localization_complete_score": 1,
+        "flagged_adversarial": False,
+        "verdict_class": "null",
+        "paired_family_results": {"paired_families": 24},
+        "source_artifact_hashes": {
+            "pre_gate_receipts": {
+                str(exp.prior.RAW / "frozen_panel.json"): exp.custody.sha256_file(panel_path)
+            }
+        },
+        "current_model_receipts": {"model_sha256": "model-hash"},
+    }
     result_path.write_text(json.dumps(prior_record))
     context = {"model_sha256": "model-hash", "selected": {"uuid": "fake"}}
     monkeypatch.setattr(exp.prior, "prepare_panel", lambda *_: (panel, [], {}, context))
@@ -270,7 +295,9 @@ def test_preflight_keeps_producer_and_panel_custody_separate(family, tmp_path, m
     prior_record["qwen_localization_complete_score"] = 0
     result_path.write_text(json.dumps(prior_record))
     rebuilt, checks, _, _ = exp.preflight(tmp_path, 0.0)
-    assert not rebuilt and any(check["check"] == "exp7745_qualified" and not check["passed"] for check in checks)
+    assert not rebuilt and any(
+        check["check"] == "exp7745_qualified" and not check["passed"] for check in checks
+    )
     result_path.unlink()
     rebuilt, checks, hashes, _ = exp.preflight(tmp_path, 0.0)
     assert not rebuilt and hashes["missing_custody"] == [str(result_path)]
@@ -290,10 +317,13 @@ def test_owned_cuda_capture_lifecycle_with_fake_server(family, tmp_path, monkeyp
     class FakeLease:
         def __init__(self):
             self.document = {"phase": "preflight"}
+
         def owner_receipt(self):
             return {"owner": "task"}
+
         def transition(self, phase, **_):
             self.document["phase"] = phase
+
         def release(self):
             return {"released": True, "phase": self.document["phase"]}
 
@@ -312,24 +342,33 @@ def test_owned_cuda_capture_lifecycle_with_fake_server(family, tmp_path, monkeyp
 
     class FakeProposer:
         last = None
+
         def __init__(self, **_):
             self._proc = type("Proc", (), {"pid": 456})()
             self._stderr_log_path = None
             self.stopped = False
             FakeProposer.last = self
+
         def _ensure_server(self):
             return True
+
         def server_props(self):
             return {"chat_template": "template"}
+
         def _url(self):
             return "http://localhost:12345"
+
         def stop(self):
             self.stopped = True
 
     monkeypatch.setattr(world, "LocalGGUFProposer", FakeProposer)
-    context = {"selected": {"uuid": "GPU-test", "index": 0, "memory_used_mb": 5},
-               "registry": object(), "model_path": tmp_path / "model.gguf",
-               "model_sha256": "hash", "chat_template_sha256": hashlib.sha256(b"template").hexdigest()}
+    context = {
+        "selected": {"uuid": "GPU-test", "index": 0, "memory_used_mb": 5},
+        "registry": object(),
+        "model_path": tmp_path / "model.gguf",
+        "model_sha256": "hash",
+        "chat_template_sha256": hashlib.sha256(b"template").hexdigest(),
+    }
     panel = [{**family, "family_id": f"f{i}"} for i in range(24)]
     rows, runtime = exp.owned_capture(tmp_path, panel, context, 0.0)
     assert len(rows) == 72 and runtime["generation_attempted"] == 72

@@ -5,18 +5,43 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
 import carnot.experiment_7766_v675_capstone as capstone
 from carnot.experiment_7753_v675_contract_methods import compare_contract
 from carnot.experiment_7766_v675_capstone import (
-    ROOT,
+    ROOT as SOURCE_ROOT,
     account,
     authority,
     build_artifact,
     cold_replay,
 )
+
+ROOT = SOURCE_ROOT
+V675_SNAPSHOT = "b2423a1cca9d42c604cfe7e467a6258e0a200b18"
+
+
+@pytest.fixture(autouse=True)
+def historical_v675_authority(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Use frozen V675 design bytes after the live roadmap advances to V676."""
+    for relative in (
+        "research-roadmap.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+    ):
+        content = subprocess.run(
+            ["git", "show", f"{V675_SNAPSHOT}:{relative}"],
+            cwd=SOURCE_ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+    (tmp_path / "results").symlink_to(SOURCE_ROOT / "results", target_is_directory=True)
+    monkeypatch.setattr(sys.modules[__name__], "ROOT", tmp_path)
 
 
 def test_contract_matches_literal_sources() -> None:
