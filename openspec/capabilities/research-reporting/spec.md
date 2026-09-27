@@ -1,5 +1,34 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7747: Independently audit V674 evidence
+
+Exp7747 SHALL resolve the declared Exp7744 and Exp7746 deliverables and
+conductor pre-gate receipts separately, hash exact source bytes, and recompute
+eligible family outcomes from raw rows without producer metric helpers. Missing,
+flagged, blocked or disqualified required evidence SHALL yield
+`complete_blocked_required_v674_evidence` with each failed operand. A complete
+valid null remains eligible. No absence may be scored as zero effect.
+
+### SCENARIO-REPORT-7747-CUSTODY
+
+Given missing required producers, the audit records both missing paths,
+preserves V673 and Qwen diagnostic limits, emits complete blocked accounting,
+and leaves probability, decision, retention and efficiency results unmeasured.
+
+### SCENARIO-REPORT-7747-REDUCTION
+
+Given private paired family rows, the cold reducer checks exact arm and seed
+rosters, source and input hashes, label and feature separation, fixed costs,
+optimizer budgets, temperature, Brier and NLL arithmetic, and family-level
+contrasts. It rejects leaked labels, mismapped offsets, missing arms, empty
+static closure and contradictory pooled metrics.
+
+### SCENARIO-REPORT-7747-TERMINAL
+
+The task freezes affected scope, tests the private CLI and fresh-process cold
+reader, records required validation and exact terminal readers, and publishes
+only a candidate whose source hashes and recomputed summary still match.
+
 ## REQ-REPORT-7745: Measure exposed Qwen answer localization
 
 Exp7745 SHALL authenticate the original source and answer bytes for the same

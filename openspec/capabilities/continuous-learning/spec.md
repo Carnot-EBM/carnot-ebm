@@ -1,5 +1,19 @@
 # Continuous Learning Capability Specification
 
+## REQ-CL-7747-AUDIT: Verify delayed acquisition causally
+
+Exp7747 SHALL independently replay Exp7746 events before qualifying retained
+learning. It SHALL check prediction before feedback, one-use admission,
+eight-credit limit, twelve-pending capacity, complete-static fitted closure,
+past-only shuffled labels, restart parity and lack of Exp7744 evaluation
+consumption. Erasing each admitted predicate must change later frozen
+predictions to count as useful learning; structural change alone is insufficient.
+
+### SCENARIO-CL-7747-MUTATIONS
+
+Private future-feedback, duplicate admission, overflow, empty closure,
+evaluation-consumption and erasure-invariant mutations each fail a named gate.
+
 ## REQ-CL-7742-BANK: Bound sentence-risk advisory admission
 
 Exp7742 SHALL carry all 16 declared sentence-risk predicates with development
