@@ -20823,3 +20823,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Qualify per-sentence evidence sets and exact finite normalization (⚠️ Research Finding) — honest_verdict=complete_circular_positive_set_energy_protocol; results/experiment_7728_v673_set_energy_protocol.json
 - 2026-09-26: Compare bounded draft-conditioned evidence decisions (⚠️ Research Finding) — honest_verdict=complete_null_exposed_draft_pilot; results/experiment_7729_v673_qwen_draft_pilot.json
 - 2026-09-26: Train evidence-set probabilities and freeze typed decisions (⚠️ Research Finding) — honest_verdict=complete_disqualified_set_energy_fit; results/experiment_7730_v673_set_energy_fit.json
+- 2026-09-27: Qualify advisory constraint growth with scoped validation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7732_v673_causal_admission.json
