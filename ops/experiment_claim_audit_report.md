@@ -11,10 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 6 |
+| CLAIM_SUPPORTED | 3 |
+| NO_CLAIM | 5 |
 
-## experiment_7731_development_decisions.json
+## experiment_7741_training_qualification.json
 
 **NO_CLAIM**
 
@@ -25,10 +25,143 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-None. The artifact is a pre-execution gate failure receipt indicating that upstream prerequisites were not met, so it makes no empirical, comparative, or performance claim that could be refuted.
+There is no experimental result to refute. This artifact records a blocked qualification gate.
 
 ## WAS THAT CHECKED
-No. Execution was blocked at the pre-gate check before the experiment could execute or evaluate any hypothesis.
+No experiment was run past the gate; the artifact reports two failed gate checks.
+
+## EVIDENCE
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7740-sentence-label-protocol.sentence_protocol_ready_score (actual=0 == expected=1)"`; `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7742_v674_bank_qualification.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The bank completed its lifecycle protocol under the exact-verifier oracle.
+
+## WHAT WOULD REFUTE IT
+An eligible lifecycle case that failed, duplicate feedback that changed the bank twice, or a restart that failed to preserve exact state.
+
+## WAS THAT CHECKED
+Yes. The artifact reports lifecycle pass flags, exactly-once behavior, and restart parity. It does not claim decision benefit or fresh generalization.
+
+## EVIDENCE
+`complete_circular_positive_bank_lifecycle`; `beneficial_commit`; `harmful_rejection`; `passed`; `true`; `exactly_once`; `restart_exact_parity`; `decision_benefit`; `null`; `fresh_generalization_eligible`; `false`; `verifier_is_oracle`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7745_v674_qwen_localization.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Localized prompting yields no statistically significant decision benefit over direct prompting for Qwen3.8-27B-GGUF, representing a null pilot result.
+
+## WHAT WOULD REFUTE IT
+A statistically significant decision benefit favoring localized prompting over direct prompting, such as a paired bootstrap 95% interval for binary accuracy delta strictly excluding 0.0, or widespread non-zero accuracy improvements across families.
+
+## WAS THAT CHECKED
+Yes. It was checked across 24 paired families under `paired_family_results` and `acceptance_gate_results.decision_benefit`, where 23 of 24 families tied with a delta of 0 and the paired bootstrap 95% interval [0.0, 0.125] included 0.0.
+
+## EVIDENCE
+`"honest_verdict"`: `"complete_null_exposed_localization_pilot"`
+`"verdict_class"`: `"null"`
+`"activation"`: `false`
+`"production_promotion"`: `false`
+`"claim_scope"`: `"development_only"`
+`"verifier_is_oracle"`: `false`
+`"binary_accuracy_delta"`: `0.041666666666666664`
+`"paired_bootstrap_95_interval"`
+`0.0`
+`0.125`
+`"paired_n"`: `24`
+`"sha256:b48c248419d6cd53a35fd49b7e4b09068437b12ca4f0d50b5adb1fa48880f974": 1`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7747_v674_independent_evidence_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Because the artifact is an audit receipt that asserts no comparative, model, or performance claim, there is no headline empirical claim to refute. To test and potentially refute a substantive claim, the artifact would require an experimental intervention, comparative arms, baseline rivals, or performance metrics, which are not present.
+
+## WAS THAT CHECKED
+No. The artifact evaluated no comparative hypotheses or rival baselines. It performed only administrative prerequisite checks on the presence and status of upstream files in `gate_check_summary` and `preconditions_checked`.
+
+## EVIDENCE
+- `schema`: `"carnot.exp7747.v674.independent_evidence_audit.v1"`
+- `honest_verdict`: `"complete_blocked_required_v674_evidence"`
+- `verdict_class`: `"blocked"`
+- `inference_substrate`: `"aggregation_from_upstream_artifacts"`
+- `model_invoked`: `false`
+- `MODEL_SPECS`: `[]`
+- `arm`: `"custody"`
+- `fresh_generalization_eligible`: `false`
+- `decision_benefit`: `null`
+- `efficiency`: `null`
+- `probability_quality`: `null`
+- `readiness`: `null`
+- `retention`: `null`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7748_v674_arc_runner_qualification.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+A claim that the total or organic arm adds value would be refuted by matched arms tying on actions and progress. The artifact makes no such claim.
+
+## WAS THAT CHECKED
+Yes. The matched fixture and SDK rows show ties, and the artifact reports failed readiness and unmeasured decision benefit.
+
+## EVIDENCE
+`honest_verdict`: `complete_disqualified_required_runner_validation`; `verdict_class`: `disqualified`; `decision_benefit`: `null`; `readiness`: `false`; `model_invoked`: `false`. The `off`, `total`, and `organic` rows have matching `actions_charged` and `peak_level` within each game.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7749_arc_organic_measurement.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+None; the artifact is an operational gate-check receipt recording that the experiment was blocked prior to execution, so no empirical or comparative claim is made.
+
+## WAS THAT CHECKED
+No; execution was halted at the pre-gate layer, so no experimental hypothesis or measurement was evaluated.
 
 ## EVIDENCE
 `"schema": "blocked_gate_check_v1"`
@@ -36,11 +169,12 @@ No. Execution was blocked at the pre-gate check before the experiment could exec
 `"honest_verdict": "blocked_gate_check_failed"`
 `"duration_s": 0.0`
 `"blocked_at_layer": "conductor_pre_gate"`
+`"gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7748-arc-runner-qualification.organic_runner_ready_score (actual=0 == expected=1)"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7732_v673_causal_admission.json
+## experiment_7751_v674_hardware_continuity.json
 
 **CLAIM_SUPPORTED**
 
@@ -48,21 +182,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The experiment completed but was disqualified because a required validation check failed.
+The hardware continuity inventory is complete, while hardware advantage and scientific benefit remain unclaimed.
 
 ## WHAT WOULD REFUTE IT
-All required validation checks passing would refute the stated reason for disqualification.
+An eligible row showing a qualified, measured hardware advantage that the null verdict ignored, or an inventory row lacking the evidence needed for its stated status.
 
 ## WAS THAT CHECKED
-Yes. The required coverage report ran and failed: it required 100% coverage and reported 99%.
+Yes, within the inventory’s scope. The rows identify eligible and excluded entries, preserve the missing service-cost input as a failed check, and show no measured service fraction. This was an aggregation, so it did not test a new hardware workload.
 
 ## EVIDENCE
-`honest_verdict`: `complete_disqualified_required_checks`; `verdict_class`: `disqualified`; `check`: `required_validation`; `name`: `changed_module_coverage_report`; `exit_code`: `2`; `passed`: `false`; `99%`.
+`hardware_continuity_complete_score`: `1`; `honest_verdict`: `complete_null_hardware_continuity_only`; `hardware_advantage_claimed`: `false`; `eligible`: `2`; `excluded`: `4`; `measured_service_fraction`: `null`; `service_fractions.quadratic_ising_kernel`; `observed`: `missing`; `passed`: `false`; `hardware_operations_issued`: `[]`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7733_continuous_set_learning.json
+## experiment_7752_v674_capstone.json
 
 **NO_CLAIM**
 
@@ -73,143 +207,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-This is a gate receipt, not a result about continuous set learning. Its blocked status would be contradicted if every evaluated gate had passed.
+There is no comparative result to refute. The reported blocked status would be contradicted if the required sources were eligible and the capstone findings were complete.
 
 ## WAS THAT CHECKED
-Yes. The gate rows include failures, so the blocked status is consistent with the artifact’s own data. No learning outcome was measured here.
+Yes, for the blocked status: the required source checks failed and the scientific findings are null. No comparative value claim was tested here.
 
 ## EVIDENCE
-`"status": "blocked"`; `"blocked_at_layer": "conductor_pre_gate"`; `"gate_check_summary": "gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7730-set-energy-fit.set_heads_ready_score (actual=0 == expected=1)"`; `"passed": false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7734_v673_independent_evidence_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The audit completed, but required v673 evidence remains blocked and does not support activation or fresh generalization.
-
-## WHAT WOULD REFUTE IT
-Both required sources passing the eligibility gate, with independent evidence eligible for the claimed use, would refute the blocked disposition.
-
-## WAS THAT CHECKED
-Yes. The required-source gate checked both sources and recorded failures; the eligibility and activation fields reflect the blocked result.
-
-## EVIDENCE
-`honest_verdict`: `complete_blocked_required_v673_evidence`; `Exp7731` and `Exp7733`: `eligible`: `false`, `state`: `pre_gate`; `required_source_eligible`: `observed`: `blocked_gate_check_failed`; `independent_online_eligible`: `false`; `independent_static_eligible`: `false`; `fresh_generalization_eligible`: `false`; `activation`: `false`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7735_v673_arc_organic_visits.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No falsifying observation applies. If the artifact claimed organic visits improved outcomes, a control arm that tied or beat it would refute that claim.
-
-## WAS THAT CHECKED
-The fixture arms tied, but the public game rows ended in policy exceptions. The artifact makes no comparative outcome claim from them.
-
-## EVIDENCE
-`honest_verdict`: `complete_disqualified_required_validation_or_runner`; `verdict_class`: `disqualified`; `solve_provenance`: `development_proxy_for_fixtures_no_game_level_solve_claim`; `censoring`: `policy_exception`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7736_arc_organic_measurement.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; this artifact makes no empirical or comparative claim, as pipeline execution was halted prior to any measurement.
-
-## WAS THAT CHECKED
-No; the experiment was never run because upstream gate checks failed before execution could begin.
-
-## EVIDENCE
-`schema`
-`blocked_gate_check_v1`
-`status`
-`blocked`
-`honest_verdict`
-`blocked_gate_check_failed`
-`duration_s`
-`0.0`
-`blocked_at_layer`
-`conductor_pre_gate`
-`gate_check_summary`
-`gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7735-arc-organic-visits.organic_runner_ready_score (actual=0 == expected=1)`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7737_set_service_cost.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-None; this artifact is a gate-check execution receipt recording an unexecuted, blocked experiment rather than asserting an empirical or comparative claim. A refutation would only be possible if the experiment had run and asserted a substantive measurement or performance advantage.
-
-## WAS THAT CHECKED
-No; the experiment was never executed because upstream preconditions failed at the pre-gate layer, blocking execution before any measurement occurred.
-
-## EVIDENCE
-`schema`
-`blocked_gate_check_v1`
-`status`
-`blocked`
-`duration_s`
-`0.0`
-`honest_verdict`
-`blocked_gate_check_failed`
-`blocked_at_layer`
-`conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7738_v673_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative method claim to refute. Three eligible required tasks and a ready acceptance gate would contradict the report’s blocked accounting conclusion.
-
-## WAS THAT CHECKED
-Yes, through the required-source gate checks and coverage count. The artifact reports zero eligible required tasks out of three.
-
-## EVIDENCE
-`honest_verdict` `complete_blocked_required_v673_evidence` `required` `3` `required_eligible` `0` `readiness` `false` `model_invoked` `false` `verdict_class` `blocked`
+`honest_verdict` = `complete_blocked_required_v674_evidence`; `verdict_class` = `blocked`; `capstone_complete_score` = `0`; `decision_value` = `null`; `required_source_eligible` shows `observed` = `false` for two sources and `observed` = `blocked` for another.
 
 ## RECOMMENDATION
 KEEP

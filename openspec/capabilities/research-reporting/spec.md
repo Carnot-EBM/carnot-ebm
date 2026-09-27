@@ -83156,3 +83156,27 @@ Changed shard hashes, source bytes, role membership, cross-role families, corrup
 ### SCENARIO-REPORT-7740-TERMINAL
 
 The task CLI SHALL pass a private fixture E2E and cold reduction, frozen scoped checks, adversarial verification and strict row consistency before atomic publication. Missing external inputs produce complete blocked evidence with exact gate operands. A valid completed protocol has a null scientific verdict and administrative readiness remains null.
+
+## REQ-REPORT-V675-PLAN: Qualified measurements and view consistency
+
+The V675 plan SHALL contain fourteen ordered tasks, Exp7753–Exp7766, across
+four phases. The design table and JSON contract SHALL match the staged YAML.
+The plan SHALL distinguish V674 validation failures from measured nulls.
+It SHALL name changed prerequisites for repeated scopes and retain all four
+prior-failure fields. All gates SHALL reference declared current producers.
+Each task SHALL require flushed progress, bounded writes, exact verdict
+classes, and per-unit evidence. LLM tasks SHALL include the mandated Qwen
+GGUF and declare the actual generation substrate. The plan SHALL include
+calibrated decision training, continuous constraint acquisition, live ARC
+generalization, and complete-service hardware boundaries. New evidence-view
+constraints SHALL preserve original source bytes and role custody.
+The active roadmap, conductor, guard sources and past evidence SHALL remain
+unchanged. The previous design SHALL be preserved byte for byte.
+
+### SCENARIO-REPORT-V675-PLAN: Reject inconsistent planned execution
+
+The existing schema, exclusion, gate, ARC and harness readers accept the
+proposal. A private independent checker compares table, JSON and YAML.
+Removing a task, changing its order or gate field, omitting a required prior
+field, or declaring the wrong Qwen substrate SHALL fail that contract check.
+Planning checks do not constitute execution of the proposed experiments.

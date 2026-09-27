@@ -3581,3 +3581,9 @@ Writing an estimate would put an invented number in the metrics record.
 V673 replan: activation readers pass; 124 focused tests pass and one unchanged legacy matcher test fails. Token usage is unavailable: the documented `scripts/session-metrics.py` extractor is absent.
 
 | V674-replan | 2026-09-27T03:32:36Z | pending | User: repair only V674's hardware-continuity activation refusal; preserve fourteen tasks, reconcile both planning files, recheck research and unchanged guards. Startup timestamp follows initial reads. |
+
+## Session: 2026-09-27 Plan milestone 2026.09.675
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-09-27T08:26:18Z | pending | Plan next research milestone; research sources; emit matching design and staged YAML; preserve active roadmap and conductor. | unavailable |

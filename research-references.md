@@ -47547,3 +47547,96 @@ The prior V674 review remains the experiment design basis.
   [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
   and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
   again returned retrieval errors. Citation coverage remains incomplete.
+## 2026-09-27 — V675 planning research, before experiment design
+
+This review covers 2025–2026 work and all eight requested topics. Earlier
+entries remain historical records. Sources below are research leads, not
+Carnot results. The new method hypothesis is consistency across evidence
+views that preserve the complete source and answer bytes.
+
+### Methods to test or retain
+
+- **Hallucination detection and neural constraints:** [Constrained Paraphrase
+  Consistency for LLM Hallucination Detection](https://arxiv.org/html/2606.08158v1),
+  6 June 2026. Reviewed the primary abstract and method, including equations
+  1–7. CCHD adds prediction-consistency and label-preservation constraints
+  with nonnegative dual variables. Carnot can test the objective on two
+  evidence-window views of the same original bytes. This avoids assuming
+  that a generated paraphrase preserves truth. It is an adaptation, not a
+  reproduction of CCHD's back-translation or encoder results. Compare with
+  ordinary two-view augmentation and apply the same objective to an MLP.
+- **Localized verification:** [HalluSpan](https://arxiv.org/abs/2608.15804),
+  16 August 2026. Abstract reviewed; full method was reviewed in V674.
+  Output localization and source alignment are distinct targets. Retain
+  natural sentence supervision as the base experiment. Existing error
+  annotations do not supply gold source-location labels.
+- **EBM reasoning:** [EBT](https://arxiv.org/abs/2507.02092), July 2025,
+  and [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025,
+  revised 25 May 2026. Primary abstracts and revision dates checked.
+  Retain exact finite normalization and calibrated decisions. These papers
+  do not reopen Carnot's negative energy-as-generator results.
+- **Neural constraint satisfaction:** [Ontology Neural Networks](https://arxiv.org/abs/2601.05304),
+  January 2026. Abstract reviewed. Topology and projection are interesting,
+  but its reported twenty-node scale does not establish language reasoning.
+  Defer a new network until the current small energy head has useful evidence.
+- **Ising in ML:** [Correspondence Between Ising Machines and Neural
+  Networks](https://arxiv.org/abs/2511.00746), November 2025. Abstract reviewed.
+  Spin averages provide a different computation target from ground states.
+  Treat this as a future mapping lead. No local neural-to-fabric equivalence
+  or latency follows from the abstract.
+- **Constrained generation:** [DCCD](https://arxiv.org/abs/2603.03305), 2026,
+  and [primal-dual guided discrete diffusion](https://arxiv.org/abs/2605.09749),
+  May 2026. Abstracts checked. Preserve the local draft and localization
+  nulls. Use a bounded Qwen evidence-view sensitivity diagnostic; do not
+  import a diffusion decoder into an autoregressive GGUF runtime.
+- **Continuous learning:** [Capacity-Constrained Online Convex Optimization
+  with Delayed Feedback](https://arxiv.org/abs/2606.11711), June 2026.
+  Abstract reviewed. Bound pending feedback, charge acquisition credits,
+  and retain missing-feedback rows. Its convex regret guarantees do not
+  transfer to Carnot's discrete advisory predicate admission.
+- **KAN:** [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026, and
+  [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828),
+  November 2025. Abstracts reviewed. Local spline support motivates explicit
+  retention tests; it does not guarantee retention. Defer another KAN arm
+  until a qualified base decision and learning comparison exists.
+- **Hardware sampling:** [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985),
+  February 2026, revised 4 September 2026. Abstract reviewed. The digital
+  orchestration boundary can dominate the physical kernel. Measure complete
+  host work and update cost before estimating any acceleration opportunity.
+
+### Secondary discovery receipts and limits
+
+- **OpenReview:** searched 2026 EBM submissions. The indexed
+  [EBT conference PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  describes self-verification. Opening it returned a browser challenge.
+  This review uses the primary arXiv record, not an unseen conference revision.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). The latter describes sparse models
+  and a heterogeneous FPGA/TSU decode pipeline. Its preliminary hardware
+  estimates are vendor evidence. Count readout and host work in local cost
+  accounting. No TSU access or measured Carnot speedup was established.
+- **Semantic Scholar:** requested citation lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both requests returned retrieval errors. Citation coverage is incomplete;
+  this is not a finding that no papers cite them.
+- **Hugging Face:** checked the [verification papers feed](https://huggingface.co/papers?q=verification).
+  The mixed-date feed is a discovery aid. Primary papers determine adoption.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending lists.
+  Both views were cached from two weeks earlier. No newly trending EBM,
+  constraint or KAN dependency was established from these views.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  Its vendor page places energy-based constraints beneath a generative stack.
+  No newly reproducible local model or independent certainty result was verified.
+
+### Local prerequisite evidence
+
+V674's Exp7740 failed because pytest could not create a nested basetemp whose
+parent was absent. Its affected test run had 21 setup errors. A required
+format check also failed. Exp7748 passed 49 functional tests and measured
+100% of its changed module, but its CLI format check failed. These are
+specific execution defects, not evidence against the proposed mechanisms.
+Exp7742 qualified the bank lifecycle. Reuse that bank instead of rebuilding it.
+The exposed 640-family corpus retains its roles and exposure status.
+The two-view objective is new; any benefit must beat matched augmentation.

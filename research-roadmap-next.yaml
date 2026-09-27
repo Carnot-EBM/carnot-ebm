@@ -1,0 +1,1754 @@
+milestone: 2026.09.675
+milestone_title: Qualified evidence views, calibrated decisions, and causal constraint learning
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp7753-contract-methods
+  title: Bind fourteen tasks and register evidence-view methods
+  phase: 1
+  track: infrastructure
+  priority: high
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 25
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7753_v675_contract_methods.json
+  inference_substrate_class: aggregation
+  MODEL_SPECS: []
+  agent_type: claude
+  model: opus
+  prior_failures:
+  - experiment_id: exp7726-contract-methods
+    verdict: complete_disqualified_v673_contract_validation
+    addressed_by: Use the completed V674 contract implementation and new independent fourteen-row contract;
+      check all paths and new gate fields before dispatch.
+    retire_if_same_verdict: true
+  - experiment_id: exp7713-contract-methods
+    verdict: complete_blocked_v672_independent_contract
+    addressed_by: Use the completed V674 contract implementation and new independent fourteen-row contract;
+      check all paths and new gate fields before dispatch.
+    retire_if_same_verdict: true
+  - experiment_id: exp7739-contract-methods
+    verdict: complete_null_v674_contract_methods
+    addressed_by: Use the completed V674 contract implementation and new independent fourteen-row contract;
+      check all paths and new gate fields before dispatch.
+    retire_if_same_verdict: true
+  - experiment_id: exp7532-v659-contract-methods
+    verdict: complete_blocked_incomplete_v659_authorities
+    addressed_by: Use the completed V674 contract implementation and new independent fourteen-row contract;
+      check all paths and new gate fields before dispatch.
+    retire_if_same_verdict: true
+  - experiment_id: exp7713-v672-contract-methods
+    verdict: complete_blocked_v672_independent_contract
+    addressed_by: Use the completed V674 contract implementation and new independent fourteen-row contract;
+      check all paths and new gate fields before dispatch.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. V674 completed its queue but six scientific producers never ran. Preserve disqualified execution, missing producers and measured nulls separately.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/research-roadmap-next.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/research-references.md
+    - {project_root}/research-complete.yaml
+    - {project_root}/ops/conductor-log.md
+    - {project_root}/scripts/roadmap_schema.py
+    - {project_root}/scripts/audit_roadmap_gates.py
+    - {project_root}/scripts/exclusion_manifest_lint.py
+    - {project_root}/scripts/harness_fit_lint.py
+    - {project_root}/python/carnot/experiment_7739_v674_contract_methods.py
+    - {project_root}/results/experiment_7752_v674_capstone.json
+
+    TASK:
+    Independently bind table, machine contract and YAML to exactly Exp7753–Exp7766. Ingest the primary-source methods already filed before design. This task does not gate scientific work.
+    Deliverable: {project_root}/results/experiment_7753_v675_contract_methods.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Resolve roadmap authority by milestone: use staged .675 when present, otherwise matching active .675. Reject any other milestone. Compare fourteen ordered ids, titles, phases, deliverables, classes, MODEL_SPECS and gates. Read the preserved .674 design without changing it.
+    6. Precheck every EXISTING CODE path. Paths produced later in this same roadmap are declared future dependencies, not existing inputs. Correct no guard sources. Run schema, complete prior-failure validation, exclusion, gate, harness-fit and ARC-floor readers.
+    7. In private copies reject dropped task, reordered ids, title drift, missing producer field, wrong substrate, missing prior field and non-true retirement flag. Compare against a separately parsed design, not a JSON object generated from YAML at test time.
+    8. Write docs/research-notes/v675-method-map.md. Map CCHD view consistency, HalluSpan localization, finite EBM normalization, delayed feedback and complete hardware boundaries to the registered tasks. Check cited versions via bounded primary-source requests; record unavailable citation or conference access. No new task or source-role reshuffle.
+    9. For planning E2E, run the exact readers against this staged file and the private mutations. Record current corpus, model and producer inventory without loading an LLM. Keep the .674 publication gate separate from its blocked new scientific evidence.
+    10. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    11. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    12. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare aggregation_from_upstream_artifacts and aggregation for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - contract_ready_score: 1 only after independent agreement and registered reader success. principle: Readiness certifies executable instructions, not science.
+    - method_map_path: docs/research-notes/v675-method-map.md with URLs, review depth, transfer and deferrals. principle: External work must inform a falsifiable local question.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7753_v675_contract_methods.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp7754-sentence-protocol
+  title: Recover sentence annotation custody with real child validation
+  phase: 1
+  track: verification
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 35
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7754_v675_sentence_protocol.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  agent_type: codex
+  model: gpt-6-sol
+  prior_failures:
+  - experiment_id: exp7730-set-energy-fit
+    verdict: complete_disqualified_set_energy_fit
+    addressed_by: Fix the observed missing basetemp parents and affected formatting; execute actual child
+      validation against unchanged exposed family roles.
+    retire_if_same_verdict: true
+  - experiment_id: exp7740-sentence-label-protocol
+    verdict: complete_disqualified_sentence_label_protocol
+    addressed_by: Fix the observed missing basetemp parents and affected formatting; execute actual child
+      validation against unchanged exposed family roles.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Exp7740 was disqualified after 21 pytest setup errors: its nested basetemp parent did not exist. A required old test format check also failed. There is no qualified local-supervision result.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7740_v674_sentence_label_protocol.py
+    - {project_root}/tests/python/test_experiment_7740_v674_sentence_label_protocol.py
+    - {project_root}/tests/python/test_experiment_7727_v673_development_corpus.py
+    - {project_root}/tests/python/test_experiment_7730_v673_set_energy_fit.py
+    - {project_root}/python/carnot/experiment_7727_v673_development_corpus.py
+    - {project_root}/results/experiment_7740_v674_sentence_label_protocol.json
+    - {project_root}/results/experiment_7727_v673_development_corpus.json
+    - {project_root}/python/carnot/verify/source_alignment.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Qualify the existing sentence-label protocol by fixing its measured execution defects. Preserve the 640 exposed families and every original role; do not manufacture a new corpus.
+    Deliverable: {project_root}/results/experiment_7754_v675_sentence_protocol.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Reproduce the absent-parent failure in a private child pytest. Create parent directories before build_scoped_commands/run_commands dispatch. Format the affected CLI and tests, including the recorded Exp7730 format failure. Keep all required tests and coverage thresholds.
+    6. Authenticate the Exp7727 manifest and exact source/answer hashes. Keep fit256, tune64, policy64, online_update96, online_admission64, evaluation64 and retention32. Prior exposure remains true and fresh_generalization_eligible remains false.
+    7. Reuse original output-span annotations. Test Unicode character-to-byte mapping, half-open offsets, empty/overlapping/out-of-range spans, unknown local labels and every complete answer sentence. Unknown local labels supply no auxiliary loss; no hard family is removed.
+    8. Separate label-free features from role-specific evaluator labels. Prove label mutation cannot change features, source windows, roles or selection. Record exact permissions and chronology for opening labels. No gold source-alignment claim follows from output annotations.
+    9. Run the original affected tests plus new child-directory regression. Cold-reduce sealed manifests in a new process and reject changed offsets, hashes, roles and missing files. Publish a fresh .675 receipt; retain the original .674 disqualification.
+    10. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    11. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    12. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare verifier_ensemble_against_cached_candidates and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - sentence_protocol_ready_score: 1 only after custody, child-process validation and all affected checks pass. principle: An execution defect must be corrected before scientific use.
+    - sentence_protocol_manifest_path: Task-owned immutable features, roles, byte offsets and evaluator paths. principle: Every downstream label must bind to the same answer bytes.
+    - annotation_coverage_rows: One row per family, including unmappable labels and abstentions. principle: Missing annotations must remain visible.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7754_v675_sentence_protocol.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp7755-training-runtime
+  title: Qualify small energy training independently of natural labels
+  phase: 1
+  track: verification
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 40
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7755_v675_training_runtime.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  agent_type: codex
+  model: gpt-6-sol
+  prior_failures:
+  - experiment_id: exp7730-set-energy-fit
+    verdict: complete_disqualified_set_energy_fit
+    addressed_by: Remove the unnecessary natural-data gate from fixture qualification; split the oversized
+      runner into tested numerical components and a thin CLI.
+    retire_if_same_verdict: true
+  - experiment_id: exp7741-training-qualification
+    verdict: blocked_gate_check_failed
+    addressed_by: Remove the unnecessary natural-data gate from fixture qualification; split the oversized
+      runner into tested numerical components and a thin CLI.
+    retire_if_same_verdict: true
+  - experiment_id: exp7730-v673-set-energy-fit
+    verdict: complete_disqualified_set_energy_fit
+    addressed_by: Remove the unnecessary natural-data gate from fixture qualification; split the oversized
+      runner into tested numerical components and a thin CLI.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Compute raw response risk per view first. Average A/B risks for two-view arms, then apply one response-level temperature to the mean risk logit, then choose one typed decision. Tune selection uses uncalibrated deployed response NLL; temperature fits the same aggregated tune risk. Canonical arms use A; logistic averages features before its shared head. Never average losses as a substitute for this deployment rule. Exp7741 was gate-blocked behind Exp7740. Its numerical qualification can run on fixtures without a natural corpus. Exp7730 previously covered only 30% of its large runner.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/verify/source_set_energy.py
+    - {project_root}/python/carnot/verify/source_alignment.py
+    - {project_root}/python/carnot/experiment_7730_v673_set_energy_fit.py
+    - {project_root}/python/carnot/models/gibbs/__init__.py
+    - {project_root}/python/carnot/training/nce.py
+    - {project_root}/tests/python/test_experiment_7730_v673_set_energy_fit.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Create a small reusable train/calibrate/reload runner with tested two-view loss hooks. Qualify it on fixtures independently of sentence-protocol readiness. Do not run natural fitting here.
+    Deliverable: {project_root}/results/experiment_7755_v675_training_runtime.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Implement reusable numerical code under python/carnot/verify/ and a thin scripts/experiments entrypoint. Test finite two-state energy normalization against enumeration, stable extreme logits, sentence support products, masks and known parameter updates.
+    6. For matched MLP/logistic controls, pool the same source-window features separately for each answer sentence using the registered duplicate-group prior, including the null window. A shared per-sentence head outputs two logits. Use width 16 for the MLP and a linear head for logistic. Combine sentence support probabilities by the same product as the energy arm. Local loss sees the same known-sentence labels; response_set uses the same energy architecture without the auxiliary local loss. Test these shapes and masked padding explicitly. Test response NLL plus mean known-sentence NLL. Add ordinary two-view augmentation and constrained two-view loss hooks using synthetic paired views. For Bernoulli risks, J is symmetric KL/2; constrain J<=0.01 and second-view label CE<=0.70. Clip probabilities to [1e-6,1-1e-6] only inside loss calculations. Use projected dual ascent in [0,10], eta_dual=0.01, initialized at zero.
+    7. Finite-difference check gradients within 1e-4 relative or 1e-6 absolute error. Require real parameter movement and lower loss on a separable fixture. Test lambda growth on violations, lambda zero for satisfied constraints, divergence errors and restart equality. An identity-view fixture must yield zero consistency divergence.
+    8. Freeze seeds [67501,67502,67503,67504,67505], learning rates [0.01,0.05], 40 epochs maximum and 4096 total trainable parameters including added coefficients and dual variables. Freeze temperature search [0.25,4] on a declared grid. No wall-time minimum may be filled with idle sleep.
+    9. Use the real train/calibrate/save/load/decide entrypoint as E2E. Frozen unsupported risk p has costs accept=5p, reject=1-p, escalate=0.25; ties escalate. Mark successful fixture evidence circular_positive. Natural performance remains unmeasured.
+    10. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    11. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    12. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare verifier_ensemble_against_cached_candidates and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - training_runtime_ready_score: 1 only after numerical, real optimization, restart and complete affected checks pass. principle: A fixture learner must execute before a natural comparison.
+    - training_protocol_path: Frozen architecture, losses, dual updates, budgets, seeds and optimizer grid. principle: Outcomes cannot select the training recipe.
+    - fixture_training_rows: Loss, parameter hashes, gradient errors and policy outcomes by fixture and arm. principle: A no-op or numerically invalid optimizer must fail.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7755_v675_training_runtime.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp7756-evidence-view-protocol
+  title: Qualify byte-preserving evidence windows and consistency targets
+  phase: 1
+  track: verification
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 30
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7756_v675_evidence_view_protocol.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  agent_type: codex
+  model: gpt-6-sol
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Compute raw response risk per view first. Average A/B risks for two-view arms, then apply one response-level temperature to the mean risk logit, then choose one typed decision. Tune selection uses uncalibrated deployed response NLL; temperature fits the same aggregated tune risk. Canonical arms use A; logistic averages features before its shared head. Never average losses as a substitute for this deployment rule. CCHD motivates consistency constraints. Carnot already normalizes duplicate evidence groups. Repeating that solved invariant would provide no new learning signal.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/verify/source_alignment.py
+    - {project_root}/python/carnot/verify/source_set_energy.py
+    - {project_root}/python/carnot/experiment_7728_v673_set_energy_protocol.py
+    - {project_root}/research-references.md
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Shared over-budget/invalid-view families use risk p=0.5 without temperature calibration and forced escalation in every arm. Include their Brier=0.25 and realized cost=0.25 in overall denominators; report eligible-only metrics separately. Use the frozen inference rule in online learning too: mean A/B risks then one decision, except canonical arms and averaged-feature logistic.
+    Implement two evidence views over identical complete source and answer bytes. Register the new learning comparison without assuming generated paraphrases preserve truth.
+    Deliverable: {project_root}/results/experiment_7756_v675_evidence_view_protocol.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Define canonical view A as existing single sentences plus adjacent triples. Define view B as single sentences plus adjacent pairs. Keep every original source sentence, original answer unit, byte offsets and original byte hashes. No paraphrases, text rewrite, retrieval or label-guided window choice.
+    6. For matched MLP/logistic controls, pool the same source-window features separately for each answer sentence using the registered duplicate-group prior, including the null window. A shared per-sentence head outputs two logits. Use width 16 for the MLP and a linear head for logistic. Combine sentence support probabilities by the same product as the energy arm. Local loss sees the same known-sentence labels; response_set uses the same energy architecture without the auxiliary local loss. Test these shapes and masked padding explicitly. Use the same 132 label-free features, exact normalization and duplicate-group prior in both views. Keep MAX_WINDOWS=128 and MAX_ANSWER_UNITS=16. If either view exceeds limits, both arms abstain for that family; retain it in the denominator. Empty sources use the same explicit null location.
+    7. Test complete byte coverage, punctuation and Unicode offsets, final fragments, duplicate groups and shared abstention. Produce witness fixtures where the two views change features; otherwise report no intervention headroom. Duplicate/permutation invariance remains a regression check, not the new hypothesis.
+    8. Freeze nine arms: response_set, local_set, augmented_set, constrained_set, augmented_mlp, constrained_mlp, local_logistic, source_erased_constrained_set, complete_static_constrained_set. Only constrained arms add dual constraints; augmented arms see the identical two views with averaged supervised loss. response_set and local_set use canonical A to isolate local supervision.
+    9. Freeze inference as the arithmetic mean of A/B unsupported probabilities per seed for augmented and constrained arms; canonical arms use A only. Apply the cost policy after that mean. Local logistic sees averaged features. Run direct prepare-to-distribution and serialized-view cold replay as E2E. Register every arm and parameter ceiling. No natural evaluator labels are needed for this protocol task. Prove changed labels cannot alter view construction.
+    10. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    11. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    12. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare verifier_ensemble_against_cached_candidates and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - evidence_view_ready_score: 1 after byte preservation, distinct-view witnesses and complete checks. principle: A proposed regularizer needs a real, truth-preserving intervention.
+    - evidence_view_protocol_path: Two exact view definitions, nine arm ids, normalization, limits and shared abstention. principle: Identical input information makes the comparison interpretable.
+    - view_witness_rows: Source coverage, differing features and invariance errors per fixture. principle: A name change alone is not a changed technique.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7756_v675_evidence_view_protocol.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+  - experiment_id: exp7588-v663-evidence-protocol
+    verdict: complete_blocked_selected_role_roster
+    addressed_by: The prior failed selected-role roster. This independent byte-view fixture protocol needs
+      no natural labels or fresh-role selection; retain the already sealed corpus roles for later fitting.
+    retire_if_same_verdict: true
+- id: exp7757-view-energy-fit
+  title: Fit locally supervised and view-consistent decision energies
+  phase: 2
+  track: verification
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 60
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7757_v675_view_energy_fit.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp7754-sentence-protocol
+    artifact_field: sentence_protocol_ready_score
+    op: ==
+    value: 1
+  - upstream: exp7754-sentence-protocol
+    artifact_field: flagged_adversarial
+    op: ==
+    value: false
+  - upstream: exp7754-sentence-protocol
+    artifact_field: verdict_class
+    op: in
+    value:
+    - 'null'
+    - circular_positive
+    - positive
+  - upstream: exp7755-training-runtime
+    artifact_field: training_runtime_ready_score
+    op: ==
+    value: 1
+  - upstream: exp7755-training-runtime
+    artifact_field: flagged_adversarial
+    op: ==
+    value: false
+  - upstream: exp7755-training-runtime
+    artifact_field: verdict_class
+    op: in
+    value:
+    - 'null'
+    - circular_positive
+    - positive
+  - upstream: exp7756-evidence-view-protocol
+    artifact_field: evidence_view_ready_score
+    op: ==
+    value: 1
+  - upstream: exp7756-evidence-view-protocol
+    artifact_field: flagged_adversarial
+    op: ==
+    value: false
+  - upstream: exp7756-evidence-view-protocol
+    artifact_field: verdict_class
+    op: in
+    value:
+    - 'null'
+    - circular_positive
+    - positive
+  prior_failures:
+  - experiment_id: exp7730-set-energy-fit
+    verdict: complete_disqualified_set_energy_fit
+    addressed_by: Current producers repair temporary-directory validation and qualify small numerical
+      code; add a two-view objective with matched augmentation and MLP controls.
+    retire_if_same_verdict: true
+  - experiment_id: exp7730-v673-set-energy-fit
+    verdict: complete_disqualified_set_energy_fit
+    addressed_by: Current producers repair temporary-directory validation and qualify small numerical
+      code; add a two-view objective with matched augmentation and MLP controls.
+    retire_if_same_verdict: true
+  - experiment_id: exp7743-localized-energy-fit
+    verdict: GATE_BLOCK
+    addressed_by: The conductor log records GATE_BLOCK; no scientific producer honest_verdict exists.
+      Current producers repair temporary-directory validation and qualify small numerical code; add a
+      two-view objective with matched augmentation and MLP controls.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Compute raw response risk per view first. Average A/B risks for two-view arms, then apply one response-level temperature to the mean risk logit, then choose one typed decision. Tune selection uses uncalibrated deployed response NLL; temperature fits the same aggregated tune risk. Canonical arms use A; logistic averages features before its shared head. Never average losses as a substitute for this deployment rule. V674 fitting never ran after sentence validation failed. The new two-view objective is a changed method; it does not erase that missing evidence.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7730_v673_set_energy_fit.py
+    - {project_root}/python/carnot/verify/source_set_energy.py
+    - {project_root}/python/carnot/verify/source_alignment.py
+    - {project_root}/results/experiment_7727_v673_development_corpus.json
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Shared over-budget/invalid-view families use risk p=0.5 without temperature calibration and forced escalation in every arm. Include their Brier=0.25 and realized cost=0.25 in overall denominators; report eligible-only metrics separately. Use the frozen inference rule in online learning too: mean A/B risks then one decision, except canonical arms and averaged-feature logistic.
+    Train all nine frozen small heads. Consume future same-roadmap manifests from Exp7754, Exp7755 and Exp7756 only after their exact readiness fields pass. Train no generator weights.
+    Deliverable: {project_root}/results/experiment_7757_v675_view_energy_fit.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Authenticate all three current producers and their hashes. Open only fit labels initially. Reuse the 640-family roles. The future producer paths are results/experiment_7754_v675_sentence_protocol.json, results/experiment_7755_v675_training_runtime.json and results/experiment_7756_v675_evidence_view_protocol.json.
+    6. For matched MLP/logistic controls, pool the same source-window features separately for each answer sentence using the registered duplicate-group prior, including the null window. A shared per-sentence head outputs two logits. Use width 16 for the MLP and a linear head for logistic. Combine sentence support probabilities by the same product as the energy arm. Local loss sees the same known-sentence labels; response_set uses the same energy architecture without the auxiliary local loss. Test these shapes and masked padding explicitly. Run the registered nine arms with five seeds, two learning rates and at most 40 epochs. Use JAX on CPU with cached padded public features. Cap trainable parameters at 4096. Log loss, actual gradient steps, dual residuals and phase timing each epoch. Checkpoint arm/seed/config boundaries. Stop launching new fits at 3900 seconds and record incomplete owned work as partial.
+    7. For augmented/constrained arms average the two views of each family, retaining equal family weight. Each local supervised loss is response NLL plus mean known-sentence NLL with coefficient one. Constrained heads additionally apply Exp7755 dual constraints. The complete-static head gets all sixteen advisory predicates from the existing finite grammar at initial training.
+    8. Select learning rate by mean tune response NLL across seeds, without reading policy/evaluation/retention labels. Calibrate each seed on tune using the frozen temperature grid. Policy64 measures the already fixed cost rule; it cannot tune the loss, threshold or escalation cost.
+    9. Freeze checkpoints, feature schema and coefficients before any evaluation labels are opened. Store every fit/tune/policy family, seed and arm probability. Distinguish optimization failure, all-escalate decisions and actual missing data. An all-escalate head can be a qualified null.
+    10. Run real train/calibrate/save/reload/decide E2E and a cold checksum replay. Readiness requires completed finite fits and all checks, regardless of whether a head beats a control.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare verifier_ensemble_against_cached_candidates and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - view_heads_ready_score: 1 if all registered fits, frozen policy and validation complete; never depend on benefit. principle: A valid null must still permit independent evaluation.
+    - frozen_heads_manifest_path: All nine arm checkpoint hashes, features, role hashes, temperatures, counts and training receipts. principle: Evaluation must use the exact frozen models.
+    - training_rows: Per-family/seed/arm fit, tune and policy rows with losses and predictions. principle: Learning and model selection must be reproducible.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7757_v675_view_energy_fit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  agent_type: claude
+- id: exp7758-view-decision-measurement
+  title: Measure calibration and decision value across evidence views
+  phase: 2
+  track: verification
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 35
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7758_v675_view_decision_measurement.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp7757-view-energy-fit
+    artifact_field: view_heads_ready_score
+    op: ==
+    value: 1
+  - upstream: exp7757-view-energy-fit
+    artifact_field: flagged_adversarial
+    op: ==
+    value: false
+  - upstream: exp7757-view-energy-fit
+    artifact_field: verdict_class
+    op: in
+    value:
+    - 'null'
+    - circular_positive
+    - positive
+  prior_failures:
+  - experiment_id: exp7731-development-decisions
+    verdict: blocked_gate_check_failed
+    addressed_by: Evaluate only a newly qualified current fit; distinguish regularization from extra-view
+      supervision with matched controls and full family rows.
+    retire_if_same_verdict: true
+  - experiment_id: exp7744-decision-measurement
+    verdict: GATE_BLOCK
+    addressed_by: The conductor log records GATE_BLOCK; no scientific producer honest_verdict exists.
+      Evaluate only a newly qualified current fit; distinguish regularization from extra-view supervision
+      with matched controls and full family rows.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Compute raw response risk per view first. Average A/B risks for two-view arms, then apply one response-level temperature to the mean risk logit, then choose one typed decision. Tune selection uses uncalibrated deployed response NLL; temperature fits the same aggregated tune risk. Canonical arms use A; logistic averages features before its shared head. Never average losses as a substitute for this deployment rule. No qualified V674 decision comparison exists. V673 diagnostic Brier scores and exposed roles cannot establish fresh generalization.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/verify/source_set_energy.py
+    - {project_root}/python/carnot/experiment_7747_v674_independent_evidence_audit.py
+    - {project_root}/results/experiment_7727_v673_development_corpus.json
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Every claimed benefit gate also requires each registered Holm-adjusted paired p-value <=0.05. Confidence intervals and corrected tests must both pass.
+    Shared over-budget/invalid-view families use risk p=0.5 without temperature calibration and forced escalation in every arm. Include their Brier=0.25 and realized cost=0.25 in overall denominators; report eligible-only metrics separately. Use the frozen inference rule in online learning too: mean A/B risks then one decision, except canonical arms and averaged-feature logistic.
+    Evaluate the frozen Exp7757 heads on evaluation64 without changing any policy. Separate localized supervision, view regularization and energy-specific value.
+    Deliverable: {project_root}/results/experiment_7758_v675_view_decision_measurement.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Authenticate results/experiment_7757_v675_view_energy_fit.json and its frozen manifest. Evaluate all sixty-four registered families in both views. Shared over-budget cases escalate and remain in cost, coverage and effective-N accounting.
+    6. Emit risk, Brier, response NLL, accept/reject/escalate, realized cost, false accepts and view disagreement per family/seed/arm. Realized costs are 5 for unsupported accept, 1 for supported reject, 0.25 for escalation, and 0 otherwise.
+    7. Compute each seed's decision from its frozen inference rule, then average seed metrics within family before 10000 paired-family bootstrap draws. View-specific rows are diagnostics, not additional statistical units. Use five frozen seeds for training, not five independent datasets. Main contrasts: constrained_set versus augmented_set, constrained_mlp and local_logistic. Gate useful decisions on cost reduction >=0.02 with lower95>0, Brier reduction lower95>0 and non-escalation coverage>=0.20. Holm-correct the six cost/Brier paired tests at 0.05.
+    8. Report local_set versus response_set separately as the localized-supervision contrast. Report constrained_mlp versus augmented_mlp as the objective control. Source dependence requires Brier advantage over the trained source_erased_constrained_set on original labels. Add source intervention sensitivity only as a diagnostic, without inventing labels for changed evidence.
+    9. Call underpowered, all-escalate or failed-benefit comparisons null when execution is qualified. Do not convert a small p-value from correlated view rows into an independent result. Record CI widths and the minimum detectable effect under the observed family count.
+    10. Use a fresh evaluator process and a row-only reducer as E2E. Reject a shuffled label join, missing family and a headline that disagrees with row metrics. Return qualified evidence regardless of effect direction.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare verifier_ensemble_against_cached_candidates and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - decision_evidence_ready_score: 1 for a complete independently reduced evaluation, including a scientific null. principle: Evidence completeness is independent of benefit.
+    - paired_effects: Declared family-level contrasts, CI95, corrected p-values and coverage. principle: Every benefit claim needs an explicit comparator and uncertainty.
+    - development_only: true; source families were already exposed. principle: Role isolation does not restore historical novelty.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7758_v675_view_decision_measurement.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  agent_type: claude
+- id: exp7759-qwen-evidence-views
+  title: Measure bounded Qwen sensitivity to evidence-window presentation
+  phase: 2
+  track: verification
+  priority: high
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 35
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7759_v675_qwen_evidence_views.json
+  inference_substrate_class: model_bounded_generation
+  MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  prior_failures:
+  - experiment_id: exp7729-qwen-draft-pilot
+    verdict: complete_null_exposed_draft_pilot
+    addressed_by: Preserve the localization null; change only evidence-window presentation and measure
+      paired sensitivity rather than claim another localization improvement.
+    retire_if_same_verdict: true
+  - experiment_id: exp7716-qwen-semantic-pilot
+    verdict: complete_disqualified_required_checks
+    addressed_by: Preserve the localization null; change only evidence-window presentation and measure
+      paired sensitivity rather than claim another localization improvement.
+    retire_if_same_verdict: true
+  - experiment_id: exp7745-qwen-localization
+    verdict: complete_null_exposed_localization_pilot
+    addressed_by: Preserve the localization null; change only evidence-window presentation and measure
+      paired sensitivity rather than claim another localization improvement.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Exp7745 completed 48 calls on 24 exposed families with no localization benefit. This task changes source presentation, not error-localization instructions. It is an independent diagnostic.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7745_v674_qwen_localization.py
+    - {project_root}/tests/python/test_experiment_7745_v674_qwen_localization.py
+    - {project_root}/python/carnot/verify/source_alignment.py
+    - {project_root}/results/experiment_7745_v674_qwen_localization.json
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Compare Qwen predictions under canonical and paired evidence windows with unchanged original source and answer bytes. Include a source-withheld diagnostic. Do not gate learned-head experiments on this pilot.
+    Deliverable: {project_root}/results/experiment_7759_v675_qwen_evidence_views.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Use MODEL_SPECS=[{name: Qwen3.8-27B, hf_id: unsloth/Qwen3.8-27B-GGUF, model_path: resolved cached GGUF}]. Resolve through cached_sota_pair() and select the mandated model by exact id; never use a stale four-model list. Load by GGUF file through llama.cpp, not AutoTokenizer on the repo id.
+    6. Confirm llama.cpp CUDA support, owned available GPU memory, quantization and file hash before load. Record active-window offload evidence and model load timing. Do not evict another job. If the mandated cache or GPU is unavailable, emit blocked with exact operands; no smaller headline substitute.
+    7. Freeze the same 24 pilot family ids from Exp7745 before outcomes. Keep both complete original texts visible in the two evidence-view arms, with the same direct decision prompt and an indexed window list. Only the list uses singles-plus-triples versus singles-plus-pairs. Bound full prompt length before dispatch; record unstarted rows instead of truncating original evidence.
+    8. Run three arms with one fixed seed, at most 72 calls and 256 output tokens per call, total output ceiling 18432. The third arm withholds source text and is sensitivity-only. This is model_bounded_generation with a 10-second floor, not model_full_generation. Use unbuffered supervised inference and stop launching at 3300 seconds.
+    9. Keep malformed, truncated, censored and missing outputs in the denominator. Report paired probability disagreement, parse validity, Brier and typed decisions for the two complete-source arms. The source-withheld arm tests reliance on evidence; it has no invented source-support truth label or usefulness claim.
+    10. Run real GGUF transport and cold parsing of captured outputs as E2E. Report N=24 exposed source families, not 72 calls. A null or invalid-format result cannot be presented as a new hallucination-detection improvement.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare live_llm_inference and model_bounded_generation for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: ['unsloth/Qwen3.8-27B-GGUF']; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - pilot_evidence_ready_score: 1 only after complete accounting, actual Qwen provenance and validation; benefit not required. principle: A pilot tests transport and sensitivity, not headline generality.
+    - gpu_provenance: GGUF hash, quantization, CUDA support, offloaded layers and active-window memory receipts. principle: CPU inference cannot be relabeled live GPU evidence.
+    - token_budget_rows: Input/output tokens, stop reasons, elapsed and actual calls for each arm/family. principle: Bounded generation needs a truthful compute boundary.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7759_v675_qwen_evidence_views.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  agent_type: claude
+- id: exp7760-online-runner
+  title: Qualify prediction-before-feedback learning on the existing bank
+  phase: 3
+  track: self-learning
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 40
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7760_v675_online_runner.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  agent_type: codex
+  model: gpt-6-sol
+  prior_failures:
+  - experiment_id: exp7733-continuous-set-learning
+    verdict: blocked_gate_check_failed
+    addressed_by: Reuse the qualified Exp7742 bank; independently test the missing delayed-learning numerical
+      runner before natural fitting can gate it.
+    retire_if_same_verdict: true
+  - experiment_id: exp7720-continuous-acquisition
+    verdict: blocked_gate_check_failed
+    addressed_by: Reuse the qualified Exp7742 bank; independently test the missing delayed-learning numerical
+      runner before natural fitting can gate it.
+    retire_if_same_verdict: true
+  - experiment_id: exp7746-continuous-acquisition
+    verdict: GATE_BLOCK
+    addressed_by: The conductor log records GATE_BLOCK; no scientific producer honest_verdict exists.
+      Reuse the qualified Exp7742 bank; independently test the missing delayed-learning numerical runner
+      before natural fitting can gate it.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Exp7742 qualified durable bank mechanics. Exp7746 never ran because its fitting producer was absent. Rebuilding persistence would repeat completed work.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7742_v674_bank_qualification.py
+    - {project_root}/tests/python/test_experiment_7742_v674_bank_qualification.py
+    - {project_root}/python/carnot/experiment_7732_v673_causal_admission.py
+    - {project_root}/python/carnot/experiment_7730_v673_set_energy_fit.py
+    - {project_root}/results/experiment_7742_v674_bank_qualification.json
+    - {project_root}/openspec/capabilities/self-learning/spec.md
+
+    TASK:
+    Qualify the small online learning runner with real bank updates and synthetic delayed feedback. This fixture task has no natural-fit prerequisite.
+    Deliverable: {project_root}/results/experiment_7760_v675_online_runner.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Authenticate the qualified bank artifact and actual module hashes. Reuse its commit/rejection, duplicate and crash behavior. Add only the prediction-before-feedback scheduler and numerical update interface. Never treat fixture admissions as useful natural learning.
+    6. Freeze eight blocks, twelve update items and eight one-use admission items per block. Reveal each block label only after its predictions are saved. Delay feedback by one block with capacity twelve and at most eight proposal credits, one per block. Record overflow and expiration without silently dropping units.
+    7. Use the existing sixteen-predicate finite grammar. A new admission adds an absent predicate coefficient; it is not a renamed weight update. Compare adaptive additions, frozen, complete-static and delayed shuffled-feedback arms with matched starting weights, update calls and parameter ceilings.
+    8. Test a fixture where valid delayed feedback admits a predicate and changes a later decision. Test rejected proposals, empty complete-static control, premature label access, repeated credit, overflow, no admissions, corrupt state and process termination during commit. Complete-static must contain all eligible predicates from the beginning.
+    9. Cold-restart after block four in a new process. Verify bank, model, queue, credits and RNG parity through remaining decisions. Record separate lookup, update, serialization and durable acknowledgement times. CPU counters are the Tier-1 path; batch feature arithmetic is the later GPU/Rust path.
+    10. Run the actual production bank and runner entrypoint as E2E with private state files. Require 100% affected coverage and scoped checks. Set fixture success circular_positive. Natural benefit is unmeasured.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare verifier_ensemble_against_cached_candidates and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - online_runtime_ready_score: 1 only after causal scheduling, complete-static control and cold restart pass. principle: A bank file alone does not prove a working learning loop.
+    - online_protocol_path: Fixed queue, update, admission and complete-static rules with runtime hashes. principle: Natural learning must follow a tested causal contract.
+    - lifecycle_rows: Predictions, label arrival, updates, newly admitted predicates and restart hashes. principle: Every update needs a prior prediction and an authorized feedback event.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7760_v675_online_runner.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp7761-continuous-acquisition
+  title: Measure continuous constraint additions and retained decisions
+  phase: 3
+  track: self-learning
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 55
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7761_v675_continuous_acquisition.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp7757-view-energy-fit
+    artifact_field: view_heads_ready_score
+    op: ==
+    value: 1
+  - upstream: exp7757-view-energy-fit
+    artifact_field: flagged_adversarial
+    op: ==
+    value: false
+  - upstream: exp7757-view-energy-fit
+    artifact_field: verdict_class
+    op: in
+    value:
+    - 'null'
+    - circular_positive
+    - positive
+  - upstream: exp7760-online-runner
+    artifact_field: online_runtime_ready_score
+    op: ==
+    value: 1
+  - upstream: exp7760-online-runner
+    artifact_field: flagged_adversarial
+    op: ==
+    value: false
+  - upstream: exp7760-online-runner
+    artifact_field: verdict_class
+    op: in
+    value:
+    - 'null'
+    - circular_positive
+    - positive
+  prior_failures:
+  - experiment_id: exp7733-continuous-set-learning
+    verdict: blocked_gate_check_failed
+    addressed_by: Use current qualified fit and independently tested online scheduler; the durable bank
+      prerequisite already shipped in Exp7742.
+    retire_if_same_verdict: true
+  - experiment_id: exp7720-continuous-acquisition
+    verdict: blocked_gate_check_failed
+    addressed_by: Use current qualified fit and independently tested online scheduler; the durable bank
+      prerequisite already shipped in Exp7742.
+    retire_if_same_verdict: true
+  - experiment_id: exp7706-continuous-acquisition
+    verdict: blocked_gate_check_failed
+    addressed_by: Use current qualified fit and independently tested online scheduler; the durable bank
+      prerequisite already shipped in Exp7742.
+    retire_if_same_verdict: true
+  - experiment_id: exp7746-continuous-acquisition
+    verdict: GATE_BLOCK
+    addressed_by: The conductor log records GATE_BLOCK; no scientific producer honest_verdict exists.
+      Use current qualified fit and independently tested online scheduler; the durable bank prerequisite
+      already shipped in Exp7742.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Compute raw response risk per view first. Average A/B risks for two-view arms, then apply one response-level temperature to the mean risk logit, then choose one typed decision. Tune selection uses uncalibrated deployed response NLL; temperature fits the same aggregated tune risk. Canonical arms use A; logistic averages features before its shared head. Never average losses as a substitute for this deployment rule. FR-11 requires improvements from actual earlier errors. V674 proved bank mechanics but collected no eligible natural learning comparison.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7742_v674_bank_qualification.py
+    - {project_root}/python/carnot/experiment_7730_v673_set_energy_fit.py
+    - {project_root}/results/experiment_7742_v674_bank_qualification.json
+    - {project_root}/results/experiment_7727_v673_development_corpus.json
+    - {project_root}/openspec/capabilities/self-learning/spec.md
+
+    TASK:
+    Every claimed benefit gate also requires each registered Holm-adjusted paired p-value <=0.05. Confidence intervals and corrected tests must both pass.
+    Shared over-budget/invalid-view families use risk p=0.5 without temperature calibration and forced escalation in every arm. Include their Brier=0.25 and realized cost=0.25 in overall denominators; report eligible-only metrics separately. Use the frozen inference rule in online learning too: mean A/B risks then one decision, except canonical arms and averaged-feature logistic.
+    Run the registered delayed stream with the current qualified heads and online runner. Measure causal constraint acquisition and retained development performance.
+    Deliverable: {project_root}/results/experiment_7761_v675_continuous_acquisition.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Authenticate results/experiment_7757_v675_view_energy_fit.json and results/experiment_7760_v675_online_runner.json. Use constrained_set as the predeclared base. Use its frozen tune-selected checkpoint per seed; do not select a base from Exp7758 evaluation results.
+    6. Run the eight registered chronological blocks from online_update96 and online_admission64. Save forecasts before feedback. Keep pending capacity twelve and eight lifetime proposal credits. Each proposal uses one disjoint admission block once. Admit only if its block Brier improves >=0.01 with no extra false accept. This small-block admission rule is operational, not statistical significance.
+    7. Compare adaptive, frozen, complete-static and delayed shuffled-feedback arms. Fit admitted coefficients only from already released update labels. Never open evaluation or retention labels inside the learner. Record each rejected candidate and predicate definition. No admissions is a valid null, not a failed execution.
+    8. Restart after block four and preserve bank/model/queue/credit/RNG state. Charge feature work, fitting, lookup and durable acknowledgement to update latency. Use CPU counters and batch numerical updates; report measured scaling and Amdahl limits before suggesting a 100x hardware target.
+    9. After final freeze, send checkpoints to a separate evaluator for evaluation64 and retention32. Average seeds within family. Use 10000 paired-family bootstrap draws and Holm correction across four cost/Brier contrasts versus frozen and complete-static. Useful retained development learning requires cost reduction>=0.02 with lower95>0 and Brier reduction lower95>0 against both.
+    10. Require retention Brier-increase upper95<=0.02 and no extra false accept. Also require at least one admitted predicate demonstrably affecting later predictions. Compare shuffled feedback diagnostically. Independently replay label chronology and cold-restart state as E2E. External missing prerequisites are blocked, never partial.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare verifier_ensemble_against_cached_candidates and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - learning_evidence_ready_score: 1 for complete causal rows, frozen evaluation and validation, even if learning is null. principle: Failure to improve is a result when execution is valid.
+    - acquisition_rows: Proposal definition, credit, update source, label arrival, admission evidence and later affected predictions. principle: Constraint addition needs causal attribution.
+    - retention_results: Family-level loss and false-accept changes with uncertainty after restart. principle: Online gains cannot hide forgotten constraints.
+    - hardware_learning_path: Measured CPU/update costs and bounded GPU/Rust or fabric mapping; forecasts explicitly labeled. principle: Learning needs an acceleration path without an invented speedup.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7761_v675_continuous_acquisition.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  agent_type: claude
+- id: exp7762-independent-evidence-audit
+  title: Cold-reduce decision effects and feedback causality
+  phase: 3
+  track: verification
+  priority: high
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 25
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7762_v675_independent_evidence_audit.json
+  inference_substrate_class: aggregation
+  MODEL_SPECS: []
+  prior_failures:
+  - experiment_id: exp7734-independent-evidence-audit
+    verdict: complete_blocked_required_v673_evidence
+    addressed_by: Read the new validated decision and causal-learning producers; separately reduce their
+      raw rows instead of treating missing V674 artifacts as scientific nulls.
+    retire_if_same_verdict: true
+  - experiment_id: exp7747-independent-evidence-audit
+    verdict: complete_blocked_required_v674_evidence
+    addressed_by: Read the new validated decision and causal-learning producers; separately reduce their
+      raw rows instead of treating missing V674 artifacts as scientific nulls.
+    retire_if_same_verdict: true
+  - experiment_id: exp3348-independent-reproducer-pack-evidence-matrix-v40
+    verdict: 'blocked_evidence_missing_or_blocked: missing=0, blocked=2'
+    addressed_by: Read the new validated decision and causal-learning producers; separately reduce their
+      raw rows instead of treating missing V674 artifacts as scientific nulls.
+    retire_if_same_verdict: true
+  - experiment_id: exp7679-v669-independent-evidence-audit
+    verdict: complete_blocked_required_static_online_evidence
+    addressed_by: Read the new validated decision and causal-learning producers; separately reduce their
+      raw rows instead of treating missing V674 artifacts as scientific nulls.
+    retire_if_same_verdict: true
+  - experiment_id: exp7707-v671-independent-evidence-audit
+    verdict: complete_blocked_required_evidence
+    addressed_by: Read the new validated decision and causal-learning producers; separately reduce their
+      raw rows instead of treating missing V674 artifacts as scientific nulls.
+    retire_if_same_verdict: true
+  - experiment_id: exp7721-v672-independent-evidence-audit
+    verdict: complete_blocked_required_v672_evidence
+    addressed_by: Read the new validated decision and causal-learning producers; separately reduce their
+      raw rows instead of treating missing V674 artifacts as scientific nulls.
+    retire_if_same_verdict: true
+  - experiment_id: exp7734-v673-independent-evidence-audit
+    verdict: complete_blocked_required_v673_evidence
+    addressed_by: Read the new validated decision and causal-learning producers; separately reduce their
+      raw rows instead of treating missing V674 artifacts as scientific nulls.
+    retire_if_same_verdict: true
+  - experiment_id: exp7747-v674-independent-evidence-audit
+    verdict: complete_blocked_required_v674_evidence
+    addressed_by: Read the new validated decision and causal-learning producers; separately reduce their
+      raw rows instead of treating missing V674 artifacts as scientific nulls.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Exp7747 correctly reported missing required evidence. The new audit uses separately qualified current producers and runs whether they succeeded or blocked.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7747_v674_independent_evidence_audit.py
+    - {project_root}/results/experiment_7747_v674_independent_evidence_audit.json
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+
+    TASK:
+    Independently reduce raw decision and acquisition evidence from Exp7758 and Exp7761. Do not import producer headline-reduction functions.
+    Deliverable: {project_root}/results/experiment_7762_v675_independent_evidence_audit.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Load exact declared current producer paths. Check their class, hashes, scope and completeness. Locate separate pre-gate receipts only to explain absence; they cannot supply missing scientific rows. Continue the audit when one branch is absent.
+    6. Recompute family counts, seed/view averaging, paired uncertainty, corrected tests, coverage, false accepts and retention from raw rows in a fresh process. Reconstruct prediction/feedback/admission chronology and complete-static predicate coverage.
+    7. In private copies corrupt a label join, role, probability, family count, static predicate, update timestamp and raw hash. Require rejection or the corresponding loss of eligibility. A fixture-derived predictor cannot acquire positive independent-verification status.
+    8. Write separate eligible/null/blocked/disqualified findings for static decisions and online learning. Missing external evidence yields complete_blocked_required_v675_evidence with verdict_class blocked. Do not use partial for unchanged upstream absence.
+    9. Run row-to-verdict cold replay as the audit E2E. Preserve the source-erased boundary, exposed-development limit, and each prior null. Publish the completed audit even when its scientific eligibility is blocked.
+    10. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    11. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    12. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare aggregation_from_upstream_artifacts and aggregation for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - independent_static_eligible: Boolean after full independent decision reduction. principle: Producer self-report is insufficient for an evidence claim.
+    - independent_online_eligible: Boolean after causal, complete-static and retention checks. principle: A learning claim needs more than a saved bank.
+    - independent_findings: Rows, intervals, failures and producer/pre-gate distinctions. principle: An audit must explain missing evidence without inventing it.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7762_v675_independent_evidence_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  agent_type: claude
+- id: exp7763-arc-runner-qualification
+  title: Qualify organic-visit controls after the measured format failure
+  phase: 3
+  track: arc
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 40
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7763_v675_arc_runner_qualification.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  agent_type: codex
+  model: gpt-6-sol
+  prior_failures:
+  - experiment_id: exp7735-arc-organic-visits
+    verdict: complete_disqualified_required_validation_or_runner
+    addressed_by: Fix the exact CLI format defect; retain all successful functional and E2E checks and
+      resolve the skipped subprocess check without claiming new game solves.
+    retire_if_same_verdict: true
+  - experiment_id: exp7748-arc-runner-qualification
+    verdict: complete_disqualified_required_runner_validation
+    addressed_by: Fix the exact CLI format defect; retain all successful functional and E2E checks and
+      resolve the skipped subprocess check without claiming new game solves.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Exp7748 passed 49 functional tests and changed-module coverage but failed CLI formatting. Its organic runner is disqualified; the eight-game comparison never ran.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7748_v674_arc_runner_qualification.py
+    - {project_root}/scripts/experiments/experiment_7748_v674_arc_runner_qualification.py
+    - {project_root}/tests/python/test_experiment_7748_v674_arc_runner_qualification.py
+    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+    - {project_root}/python/carnot/agentic/arc_graph_explore.py
+    - {project_root}/python/carnot/agentic/arc_solver_kit.py
+    - {project_root}/results/experiment_7748_v674_arc_runner_qualification.json
+    - {project_root}/ops/arc_solve_registry.yaml
+    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+
+    TASK:
+    Requalify the existing adapter-withheld scored runner with its complete registered validation. Preserve organic versus replay observation semantics and freeze the existing eight-game schedule.
+    Deliverable: {project_root}/results/experiment_7763_v675_arc_runner_qualification.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Reproduce the failing format check, format the owned CLI and run every registered affected check before capture. Investigate the skipped coverage-path check and execute its real subprocess case outside coverage. Do not count a skip as proof or rewrite the old artifact.
+    6. Use make_carnot_agent/E3AgentPolicy, the actual scored wrapper and the shipped replay-landing repair. Disable per-game GameAdapters, stored solve routes and LLM calls. Instrument actual runtime observations, archive landings and source of each seen-count increment.
+    7. Prove on scripted fixtures that disabled selector, total-seen selector and organic-seen selector differ only in the intended archive policy. Negative controls must fail if organic counts include replay landings. Use actual SDK transitions for the transport check; scripted actions supply fixture evidence only.
+    8. Freeze games [cd82,dc22,lf52,m0r0,sk48,tn36,sb26,sc25], seeds [67501,67502], three arms and round-robin order. Preserve 2000 charged actions and 75-second maximum per episode. Record EnvironmentInfo.baseline_actions and both RESET charging conventions.
+    9. Registry-precheck every game and known level. This is leave-one-game-out generalization with adapters withheld, not re-solving for new credit. Do not read game source, build per-game adapters, run offline ground-truth BFS, submit or change default policy.
+    10. Run E2E-009, E2E-011, E2E-013 and E2E-009 actual offline smoke, writing smoke artifacts only under /tmp. Cold-reduce actual wrapper traces. Successful fixture mechanics are circular_positive; readiness requires every required check including format.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare offline_arcade_live_agent_runtime_self_discovery_no_llm and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - organic_runner_ready_score: 1 only after runner, provenance, format, coverage and all applicable E2E pass. principle: The next panel needs a qualified scored path.
+    - arc_panel_manifest_path: Frozen games, seeds, controls, versions, budgets, scores and ordered schedule. principle: Outcomes must not choose the panel.
+    - solve_provenance: development_proxy for scripted qualification; live_agent_self_discovery only for actual autonomous runtime evidence. principle: Fixture mechanics earn no hidden-game solve credit.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7763_v675_arc_runner_qualification.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp7764-arc-organic-measurement
+  title: Measure organic archive selection on the scored live path
+  phase: 3
+  track: arc
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 70
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7764_v675_arc_organic_measurement.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp7763-arc-runner-qualification
+    artifact_field: organic_runner_ready_score
+    op: ==
+    value: 1
+  - upstream: exp7763-arc-runner-qualification
+    artifact_field: flagged_adversarial
+    op: ==
+    value: false
+  - upstream: exp7763-arc-runner-qualification
+    artifact_field: verdict_class
+    op: in
+    value:
+    - 'null'
+    - circular_positive
+    - positive
+  prior_failures:
+  - experiment_id: exp5450-arc-measurement-access-live-levelup-v495
+    verdict: 'honest_null: ka59 L2 bounded_budget_no_levelup'
+    addressed_by: Execute the same unrun organic panel only after the concrete runner format failure is
+      fixed and current qualification passes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7100-adapter-withheld-arc-loo-measurement
+    verdict: blocked_gate_check_failed
+    addressed_by: Execute the same unrun organic panel only after the concrete runner format failure is
+      fixed and current qualification passes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7114-adapter-withheld-arc-loo-measurement
+    verdict: blocked_gate_check_failed
+    addressed_by: Execute the same unrun organic panel only after the concrete runner format failure is
+      fixed and current qualification passes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7612-v664-arc-history-measurement
+    verdict: complete_blocked_exp7611_protocol
+    addressed_by: Execute the same unrun organic panel only after the concrete runner format failure is
+      fixed and current qualification passes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7652-v667-arc-wrapper-measurement
+    verdict: complete_disqualified_wrapper_validation_failed
+    addressed_by: Execute the same unrun organic panel only after the concrete runner format failure is
+      fixed and current qualification passes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7736-arc-organic-measurement
+    verdict: blocked_gate_check_failed
+    addressed_by: Execute the same unrun organic panel only after the concrete runner format failure is
+      fixed and current qualification passes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7749-arc-organic-measurement
+    verdict: blocked_gate_check_failed
+    addressed_by: Execute the same unrun organic panel only after the concrete runner format failure is
+      fixed and current qualification passes.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Exp7749 was gate-blocked on runner validity. Prior inert-click, spacing and total-seen pilots did not establish overall score benefit. This panel measures the organic-observation mechanism.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7748_v674_arc_runner_qualification.py
+    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+    - {project_root}/python/carnot/agentic/arc_graph_explore.py
+    - {project_root}/ops/arc_solve_registry.yaml
+    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+
+    TASK:
+    Every claimed benefit gate also requires each registered Holm-adjusted paired p-value <=0.05. Confidence intervals and corrected tests must both pass.
+    Run the frozen adapter-withheld eight-game, two-seed, three-arm panel through make_carnot_agent. Measure live self-discovery and action efficiency without claiming new known-level solves.
+    Deliverable: {project_root}/results/experiment_7764_v675_arc_organic_measurement.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Authenticate results/experiment_7763_v675_arc_runner_qualification.json and its panel manifest. Recheck registry status immediately before dispatch. Preserve known-level credit boundaries and all adapter/route exclusions. No game-source reading or offline ground-truth solve is allowed.
+    6. Run exactly 48 scheduled autonomous SDK episodes in the frozen round-robin order: disabled, total-seen and organic-seen controls. Use the same seeds, budgets and wrapper. Disable LLM tiers so the actual substrate is offline_arcade_live_agent_runtime_self_discovery_no_llm with class no_model_load and MODEL_SPECS=[].
+    7. Cap each episode at 2000 charged actions and 75 seconds. Stop launching at 3900 seconds and retain every unstarted/censored scheduled row. Supervise each child, emit progress during episodes and kill only that owned episode at its limit. Record organic observations, replay visits, selector choices and supervisor redirect outcomes.
+    8. Reduce score using installed SDK baseline_actions and both RESET charging conventions. Average seed scores within game; N=8 independent games, not 48 episodes. Record score, levels reached, actions to first level, compute time and completeness for each arm/game/seed.
+    9. Continuation requires positive lower95 paired score effects versus both controls under both RESET conventions, Holm-corrected paired tests, no lost disabled-control winning seed and <=10% action regression on shared wins. Use exact paired randomization where eight-game N permits it. Missing pairs prevent a broad benefit claim.
+    10. Cold-replay action/observation provenance and SDK score reduction as E2E. Retain a valid null if no gain exists. Any reached level uses live_agent_self_discovery only when the live policy found its own actions. Registry-known levels earn zero new solve credit. Do not submit or enable a default.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare offline_arcade_live_agent_runtime_self_discovery_no_llm and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - arc_measurement_ready_score: 1 when the full registered panel and independent scoring validate; benefit can be null. principle: Execution completeness is distinct from better exploration.
+    - per_game_results: Every scheduled game/seed/arm with scores, actions, timings and censor reasons. principle: A complete denominator prevents favorable-episode selection.
+    - solve_provenance: live_agent_self_discovery for autonomous observed progress, with known levels separately marked no-new-credit. principle: Live reachability is required for any solve attribution.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7764_v675_arc_organic_measurement.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  agent_type: claude
+- id: exp7765-service-cost
+  title: Measure complete decision service and preserve hardware limits
+  phase: 4
+  track: hardware
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 35
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7765_v675_service_cost.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  prior_failures:
+  - experiment_id: exp7737-set-service-cost
+    verdict: blocked_gate_check_failed
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp3922-hardware-continuity-consolidated
+    verdict: 'success: hardware_continuity_gatemateblocked_gatemate_board_unreachable_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp3931-hardware-continuity-clean-rerun
+    verdict: 'success: hardware_continuity_clean_gatemateblocked_gatemate_board_unreachable_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_distinct_timers_no_fabric_claim'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp3972-hardware-continuity
+    verdict: 'complete: hardware_continuity_3972_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp3983-hardware-continuity
+    verdict: 'complete: hardware_continuity_3983_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp3995-hardware-continuity
+    verdict: 'complete: hardware_continuity_3995_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4006-hardware-continuity
+    verdict: 'complete: hardware_continuity_4006_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4017-hardware-continuity
+    verdict: 'complete: hardware_continuity_4017_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4027-hardware-continuity
+    verdict: 'complete: hardware_continuity_4027_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4040-hardware-continuity
+    verdict: 'complete: hardware_continuity_kv260_overlay_loaded_latency_step_blocked_4040_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4064-hardware-continuity
+    verdict: 'complete: hardware_continuity_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4074-hardware-continuity
+    verdict: 'complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4084-hardware-continuity
+    verdict: 'complete: hardware_continuity_gatemate_gatemate_existing_n16_bitstream_flash_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4096-hardware-continuity
+    verdict: 'complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4104-hardware-continuity
+    verdict: 'complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4113-hardware-continuity
+    verdict: 'complete: hardware_continuity_4113_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4123-hardware-continuity
+    verdict: 'complete: hardware_continuity_4123_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4132-hardware-continuity
+    verdict: 'complete: hardware_continuity_4132_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4143-hardware-continuity
+    verdict: 'complete: hardware_continuity_4143_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4154-hardware-continuity
+    verdict: 'complete: hardware_continuity_4154_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4164-hardware-continuity
+    verdict: 'complete: hardware_continuity_4164_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4172-hardware-continuity
+    verdict: 'complete: hardware_continuity_4172_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4182-hardware-continuity
+    verdict: 'complete: hardware_continuity_4182_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4194-hardware-continuity
+    verdict: 'complete: hardware_continuity_4194_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4205-hardware-continuity
+    verdict: 'complete: hardware_continuity_4205_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4217-hardware-continuity
+    verdict: 'complete: hardware_continuity_4217_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4228-hardware-continuity
+    verdict: 'complete: hardware_continuity_4228_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4240-hardware-continuity
+    verdict: 'complete: hardware_continuity_4240_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4253-hardware-continuity
+    verdict: 'complete: hardware_continuity_4253_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4267-hardware-continuity
+    verdict: 'complete: hardware_continuity_4267_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4278-hardware-continuity
+    verdict: 'complete: hardware_continuity_4278_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4288-hardware-continuity
+    verdict: 'complete: hardware_continuity_4288_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4300-hardware-continuity
+    verdict: 'complete: hardware_continuity_4300_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4311-hardware-continuity
+    verdict: 'complete: hardware_continuity_4311_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4322-hardware-continuity
+    verdict: 'complete: hardware_continuity_4322_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4334-hardware-continuity
+    verdict: 'complete: hardware_continuity_4334_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4345-hardware-continuity
+    verdict: 'complete: hardware_continuity_4345_kv260_kv260_xmutil_listapps_blocked_returncode_1_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_ssh_reachable_ssh_only_opportunistic'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4428-hardware-continuity
+    verdict: 'complete: hardware_continuity_4428_kv260_kv260_latency_transcript_recorded_gatemate_blocked_gatemate_dirtyjtag_unreachable_polarfire_polarfire_sampler_smoke_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4439-hardware-continuity
+    verdict: 'complete: hardware_continuity_4439_kv260_kv260_latency_transcript_recorded_gatemate_blocked_gatemate_dirtyjtag_unreachable_polarfire_polarfire_sampler_smoke_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4451-hardware-continuity
+    verdict: 'complete: hardware_continuity_4451_kv260_kv260_latency_transcript_recorded_gatemate_blocked_gatemate_dirtyjtag_unreachable_polarfire_polarfire_sampler_smoke_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4463-hardware-continuity
+    verdict: 'complete: hardware_continuity_4463_kv260_kv260_latency_transcript_recorded_gatemate_blocked_gatemate_dirtyjtag_unreachable_polarfire_polarfire_sampler_smoke_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4476-hardware-continuity
+    verdict: 'complete: hardware_continuity_4476_kv260_kv260_latency_transcript_recorded_gatemate_blocked_gatemate_dirtyjtag_unreachable_polarfire_polarfire_sampler_smoke_recorded'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4484-hardware-continuity-audit
+    verdict: 'complete: hardware_continuity_audit_4484_kv260_kv260_reachable_ssh_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_reachable_ssh'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4497-hardware-continuity-audit
+    verdict: 'complete: hardware_continuity_audit_4497_kv260_kv260_reachable_ssh_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_reachable_ssh'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4507-hardware-continuity-audit
+    verdict: 'complete: hardware_continuity_audit_4507_kv260_kv260_reachable_ssh_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_reachable_ssh'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp4519-hardware-continuity-audit
+    verdict: 'complete: hardware_continuity_audit_4519_kv260_kv260_reachable_ssh_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_reachable_ssh'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp5093-hardware-continuity-v467
+    verdict: complete_hardware_continuity_v467_partial_board_blockers
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp5166-hardware-continuity-board-timing-v473
+    verdict: complete_hardware_continuity_board_timing_gatemate:blocked_gatemate_dirtyjtag_idcode_no_speedup_claim
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp5179-hardware-continuity-board-timing-v474
+    verdict: complete_hardware_continuity_board_timing_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics_polarfire:reachable_no_speedup_claim
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp5201-hardware-continuity-gatemate-diagnostic-v476
+    verdict: complete_hardware_continuity_gatemate_diagnostic_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v476_narrowed_jtag_protocol_level_polarfire:reachable_no_speedup_claim
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp5217-hardware-continuity-v477
+    verdict: complete_hardware_continuity_v477_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v477_narrowed_cable_or_port_polarfire:reachable_no_speedup_claim
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp5231-hardware-continuity-pbit-boundary-v478
+    verdict: complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp5519-hardware-continuity-methodology-receipts
+    verdict: 'complete: hardware continuity receipts collected with blocked devices (cpu,cuda,kv260,gatemate);
+      matched_timing_available=false; speedup_claim_allowed=false'
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7751-hardware-continuity
+    verdict: complete_null_hardware_continuity_only
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7711-whole-service-cost
+    verdict: blocked_gate_check_failed
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7724-complete-service-cost
+    verdict: blocked_gate_check_failed
+    addressed_by: Time only current qualified heads through full service boundaries; preserve dated board
+      blockers as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  - experiment_id: exp7750-service-cost
+    verdict: GATE_BLOCK
+    addressed_by: The conductor log records GATE_BLOCK; no scientific producer honest_verdict exists.
+      Time only current qualified heads through full service boundaries; preserve dated board blockers
+      as inventory and compute bounded opportunity without repeating unchanged hardware probes.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. Compute raw response risk per view first. Average A/B risks for two-view arms, then apply one response-level temperature to the mean risk logit, then choose one typed decision. Tune selection uses uncalibrated deployed response NLL; temperature fits the same aggregated tune risk. Canonical arms use A; logistic averages features before its shared head. Never average losses as a substitute for this deployment rule. Exp7750 never ran; Exp7751 supplied a dated continuity inventory only. No full-service measurement or new board acceleration was established.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/verify/source_set_energy.py
+    - {project_root}/python/carnot/experiment_7742_v674_bank_qualification.py
+    - {project_root}/python/carnot/reporting/experiment_7751_v674_hardware_continuity.py
+    - {project_root}/results/experiment_7751_v674_hardware_continuity.json
+    - {project_root}/research-hardware-wishlist.md
+
+    TASK:
+    Shared over-budget/invalid-view families use risk p=0.5 without temperature calibration and forced escalation in every arm. Include their Brier=0.25 and realized cost=0.25 in overall denominators; report eligible-only metrics separately. Use the frozen inference rule in online learning too: mean A/B risks then one decision, except canonical arms and averaged-feature logistic.
+    Measure qualified current decision and update service cost, then bound hardware opportunities from authenticated prior receipts. Run the evidence accounting even when a timing prerequisite is absent.
+    Deliverable: {project_root}/results/experiment_7765_v675_service_cost.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Independently resolve Exp7757 heads and optional Exp7761 online state at their declared current paths. Check exact readiness, verdict_class and hashes. If fitting is missing, write terminal blocked timing eligibility with gate_check_summary and still carry forward the dated board evidence; never fabricate benchmark rows.
+    6. For every qualified arm, include parsing, both required view features, energy/MLP inference, calibration, typed decision and serialization. Measure cold load separately. After ten warmups, run thirty randomized paired timing blocks at batches 1,8,32 on a fixed public workload. Report p50/p95 and paired intervals; batches are timing units, not new scientific families.
+    7. Measure optional online update service through durable acknowledgement, including serialization and restart. Use the frozen inference rule: mean A/B risks before the policy for augmented/constrained arms, canonical A for canonical arms and averaged features for local logistic. Include the full cost of any extra view, even if accuracy is null.
+    8. Record the exploratory batch-1 p95 target <=100ms and <=2x matched MLP. Compute an Amdahl upper bound from measured fractions. Do not map nonlinear normalized set inference wholesale onto a quadratic sampler. No Rust, FPGA or TSU speedup is measured in this task.
+    9. Authenticate the existing KV260, PolarFire, GateMate, NPU and TSU receipts with dates and limits. KV260 qualified scope stays quadratic with k_max<=5 and SSH board access; PolarFire remains Linux CPU dispatch. Preserve GateMate 0xffffffff physical/JTAG block and unqualified NPU/TSU access. No new board probes, bitstreams, purchases or vendor contacts.
+    10. Use complete host request-to-response and update-to-durable-ack replay as E2E. State exact changed prerequisites required for any later hardware measurement. Vendor Z1T and FPGA-ASIC estimates remain external projections. Null hardware opportunity is acceptable.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare verifier_ensemble_against_cached_candidates and no_model_load for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - service_evidence_ready_score: 1 only for qualified complete-boundary timing; 0 when its producer is absent. principle: A fast kernel alone cannot establish service efficiency.
+    - service_cost_rows: Each arm/batch/block with complete and component times and cold-load receipts. principle: Timing exclusions must be visible and reproducible.
+    - hardware_continuity: Dated authenticated venue, scope, blocker and reopening condition per substrate. principle: Prior board availability does not prove current acceleration.
+    - cost_input_eligibility: Exact producer paths, fields, values and rejection reasons. principle: A missing current model cannot yield a measured service cost.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7765_v675_service_cost.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  agent_type: claude
+- id: exp7766-capstone
+  title: Reconcile fourteen outcomes and bound the next research decision
+  phase: 4
+  track: infrastructure
+  priority: high
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 30
+  per_unit_rows: true
+  milestone: 2026.09.675
+  deliverable: results/experiment_7766_v675_capstone.json
+  inference_substrate_class: aggregation
+  MODEL_SPECS: []
+  prior_failures:
+  - experiment_id: exp7738-capstone
+    verdict: complete_blocked_required_v673_evidence
+    addressed_by: Reconcile the new explicitly qualified evidence branches, preserve stable publication
+      scope, and classify external absence as terminal blocked.
+    retire_if_same_verdict: true
+  - experiment_id: exp7752-capstone
+    verdict: complete_blocked_required_v674_evidence
+    addressed_by: Reconcile the new explicitly qualified evidence branches, preserve stable publication
+      scope, and classify external absence as terminal blocked.
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Work in {project_root} on {date} for milestone 2026.09.675. V674 had a blocked new-science capstone while stable FoVer G1–G4 passed. Publication readiness for an older headline cannot validate this milestone.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md
+    - {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/e2e-test-plan.md
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/reporting/current_work_receipt.py
+    - {project_root}/python/carnot/reporting/experiment_7303_validation_scope.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/python/carnot/experiment_7752_v674_capstone.py
+    - {project_root}/results/experiment_7752_v674_capstone.json
+    - {project_root}/research-roadmap-next.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/scripts/publication_gate.py
+    - {project_root}/ops/status.md
+    - {project_root}/ops/changelog.md
+    - {project_root}/_bmad/traceability.md
+    - {project_root}/ops/north-star.md
+    - {project_root}/research-hardware-wishlist.md
+
+    TASK:
+    Reconcile exactly fourteen terminal task dispositions, scientific evidence and resource boundaries. Execute even when upstream science is absent. Preserve every null, disqualification and block.
+    Deliverable: {project_root}/results/experiment_7766_v675_capstone.json.
+
+    CONCRETE STEPS:
+    1. Print a flushed progress line at every phase boundary. Print before and after every model load, generation call, benchmark and subprocess. Include phase, elapsed seconds and completed units. Emit a real progress or supervised-child status line at least every 60 seconds inside long loops. Keep every silence gap below 600 seconds. Poll long children and terminate only owned processes at their declared timeout; never sleep-pad duration.
+    2. Write any file over about 200 lines in several tool calls of at most 150 lines. Send a progress message between calls. Keep each tool invocation bounded; poll running commands at intervals of at most 60 seconds. A long file-generation call can stall even with no shell command running.
+    3. Check declared paths, schemas, hashes, resources and exact upstream fields first. Record each failed check and observed value. Distinguish a missing declared producer from its separate conductor pre-gate receipt. External missing or disqualified prerequisites are terminal blocked, not partial. Freeze the affected-file validation manifest before implementation.
+    4. Add the task REQ-* and SCENARIO-* specification before implementation. Write meaningful failing tests first. Reuse qualified modules. Keep numerical logic, orchestration and thin CLI code separately testable. Fixtures write only to private temporary directories. Create every nested pytest basetemp parent before launching pytest; test that setup with a real child process.
+    5. Resolve staged or active .675 authority by exact milestone. Compare the literal document table, JSON and fourteen YAML tasks. Account for every declared deliverable and separate pre-gate receipts. A pre-gate receipt explains queue disposition; it never stands in for a scientific producer.
+    6. Require independent static and online eligibility from Exp7762 before claiming useful verification or retained learning. Report Exp7764 live-path findings and Exp7765 cost eligibility separately. The Qwen pilot is diagnostic; do not use it to rescue a failed learned-head claim.
+    7. Compute G1–G4 with scripts/publication_gate.py --json and record command exit and result hash. Preserve established FoVer AUROC 0.9131 and narrow paper_ready to the gate's original scope. No publication, submission, generator training or default policy change is authorized.
+    8. Record all fourteen ordered outcomes and changed prerequisites. Missing required science yields complete_blocked_required_v675_evidence with verdict_class blocked, even when administrative accounting is complete. Use partial only for owned unfinished work that a retry can fix.
+    9. Carry forward authenticated hardware dates and unresolved blockers. If view constraints improve disagreement but not calibration/cost, record that distinction. If no new predicates help future decisions, keep the self-learning null. Recommend only a minimal next question justified by observed evidence.
+    10. Run exact contract comparison, independent row reduction and publication-gate calculation as capstone E2E. Reconcile specs, traceability and ops without deleting history. The next milestone must not restage this scientific scope if the same failure has no changed prerequisite.
+    11. Run focused unit tests, 100% statement coverage over every new or changed implementation module, scoped Ruff check and format, scoped mypy, and scripts/check_spec_coverage.py with explicit affected test file paths. Use PYTHONPATH=python:. and pytest -n 0 -o addopts= --no-cov with private basetemp. Resolve worktree imports. Fix owned defects, including formatting, before capture. Record unrelated repository debt separately; never lower gates or omit affected files.
+    12. Run the applicable ops/e2e-test-plan.md checks and the task-specific real entrypoint check below. Independently reduce raw rows in a fresh process. Run scripts/adversarial_verify.py on the exact candidate and scripts/verdict_row_consistency_lint.py with its supported strict mode. Keep commands, exits and log hashes. Failed required validation disqualifies the result and sets readiness to 0; do not publish a positive claim.
+    13. Write the exact deliverable atomically after validation. Record per-unit rows even for null, rejected, censored or unstarted units. Reconcile the affected OpenSpec capability, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve old artifacts and verdicts. Retire matching failed scope if the same prior verdict recurs; do not edit conductor or guards.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id, milestone, run_date: Bind this task and {date} to 2026.09.675. principle: An artifact must have a unique current owner.
+    - honest_verdict: Use a terminal complete_* string. External blocks use complete_blocked_*. principle: A terminal record must not waste attempts on unchanged inputs.
+    - verdict_class: One of positive | circular_positive | null | blocked | disqualified | partial. Partial means only unfinished owned work that a retry can finish. principle: The claim class travels with the evidence.
+    - flagged_adversarial: Actual boolean from the terminal reader. principle: Invalid evidence must not open downstream gates.
+    - gate_check_summary: List every failed check with upstream id, artifact path/hash, field, expected, observed and operator; use [] when none fail. Required for every blocked verdict. principle: Missing producers and failed scientific thresholds are different causes.
+    - rows: Per-family/game/seed/arm or per-check rows with raw paths, metrics, labels where evaluator-authorized, exclusions and censoring. principle: Aggregates must be recomputable without rerunning science.
+    - acceptance_gate_results: Separate validity, readiness, probability_quality, decision_benefit, retention and efficiency; unmeasured values are null. principle: A working protocol is not evidence of benefit.
+    - duration_s, phase_spans: Measured monotonic total and phase times, including validation and cold replay. principle: Duration must describe actual work without padding.
+    - random_seed, reproducibility_checksum: Record seeds and hash exact inputs, code, roles and parameters. principle: A third party needs the same experiment inputs.
+    - sample_size_budget: Intended, eligible, started, completed, excluded, censored and effective independent N. principle: Repeated views and seeds do not increase independent family count.
+    - source_artifact_hashes: List exact source paths, hashes, dates, imported fields and eligibility. principle: A missing producer cannot be replaced with a convenient old result.
+    - preconditions_checked: Actual path, custody, backend and resource observations. principle: Access and validity must be established before expensive work.
+    - validation_receipts: Frozen affected scope, command argv, exit, log hash, coverage, real E2E, cold replay and terminal-reader results. principle: All registered checks must pass before readiness opens.
+    - verifier_is_oracle, claim_scope: Mark fixture or exact-authority success circular_positive. Natural annotation comparisons remain exposed-development evidence. principle: Execution truth and independent semantic verification are distinct claims.
+    - field_principles: Echo these principles and the rationale for each gate. principle: Downstream readers need the purpose of each check.
+    - inference_substrate, inference_substrate_class: Declare aggregation_from_upstream_artifacts and aggregation for actual work. Record planned and actual classes separately if blocked before compute. principle: Duration floors must match the invoked substrate.
+    - MODEL_SPECS, model_specs, model_invocation_counts: []; record actual calls, tokens and loaded files. Empty means no LLM load. principle: A cited upstream model is not a current model invocation.
+    - capstone_complete_score: 1 when required scientific evidence reconciles; blocked external evidence remains 0 with terminal accounting. principle: Completed bookkeeping cannot substitute for completed science.
+    - task_dispositions: Exactly fourteen ordered ids and separate producer/queue classifications. principle: The design and actual executed roster must agree.
+    - prd_gap_findings: Verification value, retained causal learning and live-path efficiency with source eligibility. principle: The milestone must advance or bound the three stated gaps.
+    - publication_gate_results: Actual G1-G4, paper_ready, unmet_gates, command exit and result hash. principle: Publication readiness keeps its fixed historical definition.
+    - next_question: Smallest changed-prerequisite follow-up, or stop if the mechanism is exhausted. principle: Repeated scope requires a reason beyond another version number.
+
+    Run command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7766_v675_capstone.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  agent_type: claude
