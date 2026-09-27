@@ -7033,5 +7033,13 @@ The critical path for milestone .250:
 - key result: honest operational negative — sentence output annotation binding consumed 25.38 of 84.1 total wall-time minutes; available records lack intra-task stage timing, and the snapshot showed single-model execution on GPU 1 without multi-model concurrency
 - acceptance: no data available this milestone
 
+### Milestone 2026.09.675
+
+- exp_range: no data available this milestone
+- theme: prediction-before-feedback learning, sentence annotation custody recovery, and bounded Qwen sensitivity dominated wall time across an all-compute milestone without sub-phase metrics
+- key result: honest operational negative — qualification of prediction-before-feedback learning consumed 11.32 of 32.3 total wall-time minutes; available records lack intra-task stage timing, and the snapshot showed single-model execution on GPU 1 without multi-model concurrency
+- acceptance: no data available this milestone
+
+
 
 

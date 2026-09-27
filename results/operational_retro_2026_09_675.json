@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.675",
+  "generated_at": "2026-09-27T12:49:54Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 32.3,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 10,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify prediction-before-feedback learning on the existing bank",
+      "duration_minutes": 11.32,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Recover sentence annotation custody with real child validation",
+      "duration_minutes": 7.52,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure bounded Qwen sensitivity to evidence-window presentation",
+      "duration_minutes": 3.93,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify organic-visit controls after the measured format failure",
+      "duration_minutes": 2.91,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify small energy training independently of natural labels",
+      "duration_minutes": 1.66,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Ten compute-bound experiments completed in 32.3 wall-time minutes (averaging 3 minutes per experiment) based on disk-mtime fallback reconstruction. The longest executions were 'Qualify prediction-before-feedback learning on the existing bank' at 11.32 minutes and 'Recover sentence annotation custody with real child validation' at 7.52 minutes, with the top three slowest tasks consuming 22.77 minutes combined. Available timing data lacks granular sub-phase profiling, while the monitor snapshot showed GPU 1 actively utilized at 97% by llama.cpp and Python with no concurrent multi-model workload requiring DualGPURunner.",
+  "bottlenecks_identified": [
+    "The top two compute-bound tasks ('Qualify prediction-before-feedback learning on the existing bank' at 11.32 minutes and 'Recover sentence annotation custody with real child validation' at 7.52 minutes) consumed 18.84 of the 32.3 total wall-time minutes (58.3%), but the records lack intra-task stage timing to identify specific phase overheads.",
+    "Total milestone wall time was derived via disk-mtime fallback reconstruction because the live git-log path found 0 commits, leaving explicit task boundaries and startup/teardown durations unrecorded.",
+    "The GPU monitor report provides an isolated point-in-time snapshot, preventing evaluation of accelerator utilization patterns and active-window efficiency across the full 32.3 minutes.",
+    "GPU monitoring observed single-request execution on GPU 1 without request batching, creating a potential throughput bottleneck for forward-pass operations."
+  ],
+  "improvements_suggested": [
+    "Persist structured task execution receipts containing monotonic start, finish, and intra-task phase timers to eliminate fallback timing reconstruction.",
+    "Implement continuous GPU metric sampling (utilization, VRAM allocation, and temperature) throughout task lifecycles linked to task identifiers.",
+    "Execute a controlled micro-benchmark evaluating inference request batching (8-16 queries per forward pass) to quantify throughput gains within memory limits.",
+    "Record explicit concurrent model load declarations in task definitions to enable verifiable DualGPURunner eligibility assessment."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic sub-phase timers to experiment receipts for long-running learning and validation routines to isolate intra-task overheads.",
+    "Implement continuous task-correlated GPU telemetry recording to evaluate active-window compute efficiency across the entire run.",
+    "Benchmark multi-query batching (batch size 8-16) against single-request inference to determine empirical throughput improvement before changing pipeline defaults."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The monitor snapshot demonstrates active accelerator engagement on GPU 1 at 97% utilization and 20475MB allocation running llama.cpp and a Python runner, which reflects single-model execution rather than an unengaged DualGPURunner configuration. Because accelerator metrics were not captured continuously across the 32.3 minutes and tasks omitted sub-phase timings, internal execution bottlenecks cannot be confirmed from available records. Estimated time savings remain 0% until proposed batching and telemetry tooling are empirically measured against established baselines."
+}
