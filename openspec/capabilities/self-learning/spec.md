@@ -1,5 +1,43 @@
 # Self-Learning Capability Specification
 
+## REQ-LEARN-7760: Run the bounded delayed-feedback fixture
+
+Exp7760 SHALL authenticate the qualified Exp7742 artifact and the actual bank
+module bytes before running. It SHALL freeze eight blocks with twelve update
+items and eight one-use admission items per block. A block label SHALL become
+accessible only after every prediction in that block is saved. Feedback SHALL
+arrive one block later through a twelve-slot queue. Overflow and expiration
+SHALL have explicit rows. A proposal SHALL spend at most one credit per block
+and at most eight credits in total. Its accepted predicate SHALL be absent
+from the adaptive model before admission and added as a new coefficient.
+Frozen, complete-static, and shuffled delayed-feedback controls SHALL use
+matched starts, update calls, and parameter ceilings. Complete-static SHALL
+contain all sixteen eligible predicates from the start. The production bank
+SHALL retain commit, rollback, duplicate, and crash semantics. A new process
+SHALL reopen state after block four and prove remaining decision, queue,
+credit, RNG, bank, and model parity. Fixture success is circular_positive;
+natural probability and decision benefit remain unmeasured.
+
+### SCENARIO-LEARN-7760-CAUSAL
+
+Given a positive conjunction hidden until its block predictions are saved,
+the delayed release admits an absent predicate and changes a later adaptive
+decision. Premature label access and repeated credit fail closed. Rejected
+proposals, no-admission runs, and empty complete-static controls retain rows.
+
+### SCENARIO-LEARN-7760-DURABLE
+
+Given a saved fourth block, a fresh process produces byte-identical remaining
+decisions and state hashes. Corrupt state and a process exit before durable
+commit cannot create an acknowledged admission. The bank ledger replays.
+
+### SCENARIO-LEARN-7760-TERMINAL
+
+The exact candidate SHALL pass full Python tests, complete affected module
+coverage, scoped lint and type checks, task E2E, a fresh raw-row reducer,
+adversarial verification, and strict verdict-row consistency before an atomic
+positive artifact is published. Failed required checks disqualify readiness.
+
 **Capability:** self-learning
 **Version:** 0.1.0
 **Status:** Draft
