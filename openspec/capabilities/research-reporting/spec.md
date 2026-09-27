@@ -82981,3 +82981,14 @@ and input hashes. Frozen affected checks, unchanged planning readers,
 adversarial verification and strict row consistency run before atomic
 publication. Failed current checks disqualify readiness; unrelated suite debt
 stays separate. No model is invoked for this aggregation task.
+## REQ-REPORT-7740: Freeze exposed sentence-label protocol
+
+Exp7740 SHALL authenticate the exact 640 Exp7727 families, roles, public and evaluator shards before measurement. It SHALL preserve prior exposure, V673 nulls and disqualifications, and development-only scope. It SHALL write label-free features and evaluator-owned sentence targets in separate files. The frozen manifest SHALL define binary response and sentence labels, source-window policy, equal paired budgets, local-supervised and response-only set-energy and pooled-MLP arms, pooled logistic, source-erased energy, complete-static dictionary, and response NLL plus mean known-sentence NLL with coefficient one. Unknown sentences contribute no auxiliary loss; every response stays in primary loss. Exp7740 SHALL make no learned-decision, retention, fresh-generalization or ARC selector claim.
+
+### SCENARIO-REPORT-7740-CUSTODY
+
+Changed shard hashes, source bytes, role membership, cross-role families, corrupt offsets or label-bearing feature rows fail qualification. Held-out target values remain evaluator-owned; coverage reports contain counts and reasons only.
+
+### SCENARIO-REPORT-7740-TERMINAL
+
+The task CLI SHALL pass a private fixture E2E and cold reduction, frozen scoped checks, adversarial verification and strict row consistency before atomic publication. Missing external inputs produce complete blocked evidence with exact gate operands. A valid completed protocol has a null scientific verdict and administrative readiness remains null.

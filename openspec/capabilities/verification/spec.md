@@ -46525,3 +46525,14 @@ timed-out, malformed, or crashed service output SHALL return unavailable and
 
 Implementation status: specified 2026-09-24. The conductor owns later status,
 changelog, and traceability reconciliation.
+### REQ-VERIFY-7740: Map character annotations to complete answer sentences
+
+The sentence mapper SHALL use original UTF-8 answer bytes and Exp7728 sentence boundaries. RAGTruth start and end are half-open Unicode character offsets. A sentence is annotation-unsupported when any eligible unsupported annotation has positive character overlap. Boundary-touching alone does not overlap. No eligible overlap is an annotation-derived target, not proof of truth. Missing annotation custody and empty answers yield unknown local targets. Changed or malformed offsets and annotation text fail closed. Source-window choice SHALL not read annotation spans, and input-limit abstentions remain escalation outcomes.
+
+#### SCENARIO-VERIFY-7740-OFFSETS
+
+Unicode, punctuation, multi-sentence overlaps, boundary touches, empty answers and unmappable annotations preserve exact original bytes and explicit unknown or failure semantics.
+
+#### SCENARIO-VERIFY-7740-ISOLATION
+
+Only the fit role may expose target values to the initial fitting path. Public feature rows reject labels and annotation fields; other role targets remain evaluator-owned.
