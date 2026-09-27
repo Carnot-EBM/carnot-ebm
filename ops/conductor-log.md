@@ -18868,3 +18868,5 @@ code |
 | 2026-09-27 21:45 UTC | Qualify numerical and online mechanics with bounde | OK | 90 passed, 1 warning in 21.11s |
 | 2026-09-27 21:47 UTC | Train normalized decision energies with matched vi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7783-source-view-qualification, exp7783-source-view-qualification, exp7783-source-view-qualification, exp7783-source-view-qualification) |
 | 2026-09-27 21:47 UTC | Measure source dependence calibration and typed de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7785-view-energy-fit, exp7785-view-energy-fit, exp7785-view-energy-fit) |
+| 2026-09-27 22:15 UTC | Measure bounded Qwen support risk with syntax and  | OK | 100 passed, 1 warning in 7.77s |
+| 2026-09-27 22:17 UTC | Test delayed constraint growth and memory write bo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7785-view-energy-fit, exp7785-view-energy-fit, exp7785-view-energy-fit) |
