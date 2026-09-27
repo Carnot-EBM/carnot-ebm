@@ -5,7 +5,8 @@ Go-Explore"): an IGECellSelector RANKS already-archived Go-Explore cells via an 
 judgement, returns the chosen cell index, and returns None (so the archive keeps its heuristic) on any
 failure — no GPU server, an unparseable reply, fewer than two cells, or disabled. The archive delegates
 cell choice to the selector when present and falls back to its min() heuristic otherwise. The selector is
-never an oracle (verifier_is_oracle=False) and cannot fabricate a solve. Spec: the IGE first-win lever.
+never an oracle (verifier_is_oracle=False) and cannot fabricate a solve.
+Spec: REQ-ARC-WMTE-7776 covers this frozen selector consumer during V676 qualification.
 """
 
 from __future__ import annotations
@@ -38,12 +39,20 @@ class _StubProposer:
 
 def _descriptors(n: int) -> list[dict]:
     return [
-        {"index": i, "level": 0, "depth": i + 1, "visits": 0, "seen": 1, "signature": (0, 1, i % 3, 2)}
+        {
+            "index": i,
+            "level": 0,
+            "depth": i + 1,
+            "visits": 0,
+            "seen": 1,
+            "signature": (0, 1, i % 3, 2),
+        }
         for i in range(n)
     ]
 
 
 # --- helper rendering / parsing -------------------------------------------------------------------
+
 
 def test_parse_index_takes_first_in_range():
     assert _parse_index("I would pick 2 here", 5) == 2
@@ -68,6 +77,7 @@ def test_build_prompt_lists_cells_and_demands_single_integer():
 
 
 # --- selector firing / fallback -------------------------------------------------------------------
+
 
 def test_selector_fires_and_returns_mapped_index():
     sel = IGECellSelector(proposer=_StubProposer(ok=True, text="1"))
@@ -119,6 +129,7 @@ def test_selector_truncates_to_max_cells_and_maps_back_to_original_index():
 
 # --- coerce -------------------------------------------------------------------------------------
 
+
 def test_coerce_ige_variants():
     assert coerce_ige_cell_selector(None) is None
     assert coerce_ige_cell_selector(False) is None
@@ -134,10 +145,21 @@ def test_coerce_ige_variants():
 
 # --- archive delegation --------------------------------------------------------------------------
 
+
 def _populate(arch: GoExploreReplayArchive) -> None:
     # two eligible cells with distinct prefixes; insertion order is the eligible order.
-    arch._cells[(0, (0, 0, 1, 1))] = {"prefix": [{"action": 1, "data": None}], "visits": 0, "depth": 5, "seen": 1}
-    arch._cells[(0, (1, 2, 3, 4))] = {"prefix": [{"action": 2, "data": None}], "visits": 0, "depth": 2, "seen": 1}
+    arch._cells[(0, (0, 0, 1, 1))] = {
+        "prefix": [{"action": 1, "data": None}],
+        "visits": 0,
+        "depth": 5,
+        "seen": 1,
+    }
+    arch._cells[(0, (1, 2, 3, 4))] = {
+        "prefix": [{"action": 2, "data": None}],
+        "visits": 0,
+        "depth": 2,
+        "seen": 1,
+    }
 
 
 def test_archive_delegates_cell_choice_to_selector():
@@ -148,7 +170,11 @@ def test_archive_delegates_cell_choice_to_selector():
     prefix = arch.select_prefix()
     assert prefix == [{"action": 2, "data": None}]
     diag = arch.diagnostics()
-    assert diag["selector_enabled"] is True and diag["selector_used"] == 1 and diag["selector_fallbacks"] == 0
+    assert (
+        diag["selector_enabled"] is True
+        and diag["selector_used"] == 1
+        and diag["selector_fallbacks"] == 0
+    )
 
 
 def test_archive_falls_back_to_heuristic_when_selector_declines():
