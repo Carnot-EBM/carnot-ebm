@@ -20870,3 +20870,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Qualify byte-preserving evidence windows and consistency targets (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7756_v675_evidence_view_protocol.json
 - 2026-09-27: Measure bounded Qwen sensitivity to evidence-window presentation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7759_v675_qwen_evidence_views.json
 - 2026-09-27: Qualify prediction-before-feedback learning on the existing bank (⚠️ Research Finding) — honest_verdict=complete_circular_positive_online_fixture; results/experiment_7760_v675_online_runner.json
+- 2026-09-27: Cold-reduce decision effects and feedback causality (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7762_v675_independent_evidence_audit.json
