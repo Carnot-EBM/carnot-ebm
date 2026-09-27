@@ -1,0 +1,81 @@
+{
+  "experiment": 7777,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-27",
+  "started_at": "2026-09-27T17:41:37.763614+00:00",
+  "finished_at": "2026-09-27T17:41:37.763614+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure adapter-withheld organic selection through the live wrapper",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7776-arc-runner-qualification",
+  "failed_field": "organic_runner_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7776_v676_arc_runner_qualification.json",
+  "failed_evidence_sha256": "sha256:f89c12386e43dadb2a3f3434ee9c401b33cdaf9fa9f6d810415a4561e1a01c47",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7776-arc-runner-qualification",
+    "failed_field": "organic_runner_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7776_v676_arc_runner_qualification.json",
+    "failed_evidence_sha256": "sha256:f89c12386e43dadb2a3f3434ee9c401b33cdaf9fa9f6d810415a4561e1a01c47"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7776-arc-runner-qualification.organic_runner_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7776-arc-runner-qualification",
+      "artifact_field": "organic_runner_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7776_v676_arc_runner_qualification.json",
+      "artifact_sha256": "sha256:f89c12386e43dadb2a3f3434ee9c401b33cdaf9fa9f6d810415a4561e1a01c47"
+    },
+    {
+      "upstream": "exp7776-arc-runner-qualification",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7776_v676_arc_runner_qualification.json",
+      "artifact_sha256": "sha256:f89c12386e43dadb2a3f3434ee9c401b33cdaf9fa9f6d810415a4561e1a01c47"
+    },
+    {
+      "upstream": "exp7776-arc-runner-qualification",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['null', 'circular_positive', 'positive']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7776_v676_arc_runner_qualification.json",
+      "artifact_sha256": "sha256:f89c12386e43dadb2a3f3434ee9c401b33cdaf9fa9f6d810415a4561e1a01c47"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
