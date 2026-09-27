@@ -18822,3 +18822,4 @@ code |
 | 2026-09-27 05:48 UTC | Compare bounded Qwen decisions with explicit error | OK | 93 passed, 1 warning in 12.49s |
 | 2026-09-27 05:50 UTC | Measure delayed constraint growth and retained loc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7743-localized-energy-fit, exp7743-localized-energy-fit, exp7743-localized-energy-fit) |
 | 2026-09-27 06:13 UTC | Independently reduce supervision value and feedbac | OK | 91 passed, 1 warning in 9.91s |
+| 2026-09-27 06:34 UTC | Qualify real organic-visit controls through the sc | OK | 84 passed, 1 warning in 20.71s |
