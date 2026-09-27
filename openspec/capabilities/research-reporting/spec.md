@@ -83749,3 +83749,42 @@ missing prior subfield or wrong model/substrate shall be rejected by the
 applicable reader or independent contract check. Existing input paths resolve.
 The active roadmap and conductor retain their original hashes. Planning
 executes no research model, live ARC panel, hardware operation or activation.
+
+## REQ-REPORT-7781: Bind V677 methods and exact authority
+
+Exp7781 SHALL compare the fourteen ordered Exp7781–Exp7794 rows in the literal
+design table, embedded JSON contract and matching staged or active V677 YAML.
+It SHALL preserve byte-hashed snapshots of both selected authorities, reject
+missing or changed task and gate fields, and keep historical V676 producers
+separate from conductor pre-gate receipts. Contract success is administrative
+and SHALL NOT open a scientific benefit gate.
+
+The current run SHALL retain per-task comparison rows, exact source hashes,
+private mutation outcomes, measured phase times, zero current model calls and
+a method map with explicit transfer assumptions and excluded theorem claims.
+It SHALL run the frozen affected suite, changed-module coverage, unchanged
+roadmap readers, broad Python suite diagnostic, cold replay, real entrypoint
+E2E, adversarial verification and strict row consistency before atomic output.
+Any failed required validation SHALL disqualify readiness and set every
+readiness score to zero without changing earlier verdicts.
+
+### SCENARIO-REPORT-7781-CONTRACT: Independent authorities and mutations
+
+Given matching V677 design and YAML, all fourteen rows match. A private
+missing or reordered task, title, upstream, gate field, model, substrate or
+missing prior subfield fails its exact check. A later active milestone does not
+invalidate cold replay from the immutable V677 snapshots.
+
+### SCENARIO-REPORT-7781-CUSTODY: Producer states stay distinct
+
+Given V676 declared deliverables, the reader records each producer path,
+byte hash, verdict class and any separate pre-gate receipt. Missing science
+remains missing, and source-test, coverage, full-suite and ARC traceability
+failures remain visible.
+
+### SCENARIO-REPORT-7781-TERMINAL: Current validation limits readiness
+
+Given raw rows and a candidate, a fresh process reproduces rows from the
+snapshots. Every required reader returns a durable argv, exit and log hash.
+Failed required checks yield a terminal disqualified verdict and zero
+readiness; scientific benefit fields remain null.

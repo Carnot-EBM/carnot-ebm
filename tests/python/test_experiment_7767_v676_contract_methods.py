@@ -12,11 +12,23 @@ import yaml
 from carnot import experiment_7767_v676_contract_methods as subject
 
 
+@pytest.fixture(autouse=True)
+def preserved_v676_design(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep historical assertions on the exact design bytes used by Exp7767."""
+    monkeypatch.setattr(
+        subject,
+        "DESIGN",
+        Path("openspec/change-proposals/research-roadmap-v676-preserved-20260927.md"),
+    )
+
+
 @pytest.fixture
 def authorities(tmp_path: Path) -> tuple[Path, str, dict]:
     """Use private copies so mutation tests cannot alter the active roadmap."""
     design = (subject.ROOT / subject.DESIGN).read_text()
-    roadmap = yaml.safe_load((subject.ROOT / "research-roadmap.yaml").read_text())
+    roadmap = yaml.safe_load(
+        (subject.ROOT / "tests/python/fixtures/roadmap_2026_09_676.yaml").read_text()
+    )
     (tmp_path / "research-roadmap.yaml").write_text(yaml.safe_dump(roadmap))
     return tmp_path, design, roadmap
 

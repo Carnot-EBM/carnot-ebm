@@ -8,12 +8,26 @@ import runpy
 import sys
 
 import pytest
+import yaml
 
 import carnot.experiment_7780_v676_capstone as capstone
 from carnot.experiment_7767_v676_contract_methods import compare_contract
 
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+@pytest.fixture(autouse=True)
+def preserved_v676_authorities(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Run historical V676 checks against the authenticated immutable bytes."""
+    roadmap_path = ROOT / "tests/python/fixtures/roadmap_2026_09_676.yaml"
+    design_path = ROOT / "openspec/change-proposals/research-roadmap-v676-preserved-20260927.md"
+    monkeypatch.setattr(capstone, "DESIGN", design_path)
+    monkeypatch.setattr(
+        capstone,
+        "resolve_authority",
+        lambda _root: (roadmap_path, yaml.safe_load(roadmap_path.read_text()), []),
+    )
 
 
 def load_cli():
