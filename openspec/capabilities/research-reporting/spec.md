@@ -83210,3 +83210,39 @@ The CLI SHALL run frozen scoped checks, applicable planning readers,
 fresh-process raw reduction, adversarial verification and strict row
 consistency before atomic publication. Failed required checks SHALL set
 readiness to zero and a terminal blocked or disqualified verdict.
+
+## REQ-REPORT-7754: Qualify the exposed sentence protocol
+
+Exp7754 SHALL authenticate the exact Exp7727 manifest, public source and answer
+hashes, seven original roles, and 640 exposed families. It SHALL preserve the
+Exp7740 disqualification and publish a separate V675 receipt. Public features
+and source windows SHALL be fixed before evaluator labels open. Output spans
+SHALL map from half-open Unicode character offsets to exact UTF-8 byte offsets
+and every complete answer sentence. Invalid offsets fail custody; empty and
+unmappable spans leave auxiliary sentence targets unknown. No annotation is a
+gold source-alignment claim. No unknown target contributes auxiliary loss and
+no hard family is removed. Scientific benefit and fresh generalization remain
+unmeasured and ineligible.
+
+### SCENARIO-REPORT-7754-CUSTODY
+
+Mutating a local label SHALL leave public features, windows, roles and family
+selection unchanged. Changed source bytes, answer bytes, shard hashes, role
+membership, offsets or missing files SHALL fail a fresh-process reduction.
+Every family SHALL retain a coverage and raw row, including abstentions.
+
+### SCENARIO-REPORT-7754-CHILD
+
+A private child pytest SHALL reproduce the absent nested basetemp parent
+failure. Exp7754 SHALL create nested parents before scoped command construction
+and dispatch, and its own real child pytest SHALL complete without setup errors.
+The affected Exp7730 test SHALL pass the same scoped format check.
+
+### SCENARIO-REPORT-7754-TERMINAL
+
+Frozen affected tests, full Python unit suite, 100% statement coverage of new
+implementation code, scoped Ruff, mypy, spec coverage, private CLI E2E, cold
+reduction, adversarial verification and strict row consistency SHALL pass before
+atomic publication. Failed required checks disqualify the result and set
+sentence protocol readiness to zero. A qualified execution has a terminal null
+scientific verdict with no probability, decision, retention or efficiency claim.

@@ -82,8 +82,16 @@ def test_private_producer_and_cold_replay(tmp_path: Path, monkeypatch: pytest.Mo
     monkeypatch.setattr(exp, "EPOCHS", 2)
 
     def fake_commands(_root: Path, commands: list, **_kwargs: object) -> list[dict]:
-        return [{"name": item.name, "passed": True, "exit_code": 0,
-                 "timed_out": False, "log_sha256": "sha256:private-test"} for item in commands]
+        return [
+            {
+                "name": item.name,
+                "passed": True,
+                "exit_code": 0,
+                "timed_out": False,
+                "log_sha256": "sha256:private-test",
+            }
+            for item in commands
+        ]
 
     monkeypatch.setattr(exp, "run_commands", fake_commands)
     artifact = exp.run_experiment(tmp_path, "20260926")
