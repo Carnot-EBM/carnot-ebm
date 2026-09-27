@@ -47443,3 +47443,64 @@ experiment scope stays fixed; these leads do not add tasks.
   hardware access or local Kona implementation was established.
 - Both Semantic Scholar seed citation endpoints again returned retrieval
   errors. The earlier citation-coverage limitation remains open.
+
+## 2026-09-26 — V674 planning research: local supervision and measured decisions
+
+Recorded before the V674 design. The review covers 2025–2026 work across all
+eight requested topics. Submission dates and review depth appear below.
+This is a focused review, not an exhaustive citation census.
+
+| Topic | Primary source | Review and decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025, revised 2026 | Abstracts rechecked. Compatibility energies and finite normalization remain useful. Learned low energy does not certify truth. Do not reopen the retired energy-as-generator program. |
+| Local hallucination evidence | [HalluSpan/EviAlign](https://arxiv.org/html/2608.15804v1), August 2026 | Read training, data, evaluation and limitations. The method uses output-span labels without gold input alignments. Conflict errors remain difficult despite high similarity. Proposed local adaptation: supervise sentence risk from existing output annotations, then test whole-answer calibration. This is not a reproduction of its trained encoder. |
+| Natural-error corpora | [HalluMix](https://arxiv.org/abs/2505.00506), May 2025 | Abstract checked. Mixed domains and long contexts are useful future tests. Availability, licensing, source overlap and label custody need qualification before claiming fresh data. Do not replace the current exposed cohort during a result-dependent run. |
+| Neural constraint satisfaction / Ising | [LagONN](https://arxiv.org/abs/2505.07179), May 2025 | Abstract rechecked. Lagrange dynamics address constraint optimization. They do not supply correct language constraints. Defer a new solver while extraction remains the bottleneck. |
+| Recursive energy selection | [Energy-guided Recursive Model](https://arxiv.org/abs/2607.10128), July 2026 | Abstract checked. Hopfield energies select recursive trajectories on structured tasks. Keep as a future selector lead, not evidence of hidden-game transfer or grounds to repeat retired generator work. |
+| Constrained generation | [DCCD](https://arxiv.org/abs/2603.03305), 2026; [structural/semantic gap](https://arxiv.org/abs/2609.23742), September 2026 | Abstracts checked. V673 already measured its bounded draft variant as null. Next test changes the information requested: localized error spans versus a response-level decision at equal token caps. Syntax, quotation validity and semantic accuracy remain separate outcomes. |
+| Energy-guided decoding | [Reward-guided decoding](https://arxiv.org/abs/2605.28020), May 2026 | Abstract checked. Frozen-model reward tilting is a different setting from this source-conditioned detector. No new external-text reward reranker is authorized by the citation. |
+| KANs / retention | [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828), November 2025; [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026 | Abstracts checked. Spline locality alone does not establish retention. Keep independent retention groups. Per-knot anchoring remains deferred under Carnot's prior mechanism retirements. |
+| Continuous online learning | [Capacity-Constrained OCO with Delayed Feedback](https://arxiv.org/abs/2606.11711), June 2026 | Abstract rechecked. Adopt explicit pending capacity and prediction-before-feedback records. A discrete advisory bank does not inherit the convex regret theorem. Test delayed constraint additions against a complete static dictionary. |
+| Hardware sampling | [FPGA–ASIC decomposition](https://arxiv.org/abs/2602.15985), February 2026 | Abstract rechecked. Preprocessing and communication can limit the solver. Measure the complete host decision service before projecting a board benefit. |
+
+### Secondary-source receipts
+
+- **OpenReview:** searched 2026 EBM reasoning submissions. Indexed primary
+  [EBT text](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  and [VFScale](https://openreview.net/pdf?id=8ta0xgtsJK) were accessible in
+  search. VFScale aligns energy with sample quality on structured diffusion
+  tasks; it does not establish Carnot transfer. The direct
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) required a browser
+  challenge. No new acceptance or full-paper review is inferred from indexing.
+- **Extropic:** opened [Writing](https://extropic.ai/writing) and read the
+  cost boundary in [Z1T](https://extropic.ai/writing/z1t). The vendor's main
+  projection excludes dense vocabulary readout. Its readout-inclusive estimate
+  differs greatly. This motivates complete-boundary accounting, not a local
+  TSU speed or access claim.
+- **Semantic Scholar:** attempted the [EBT citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both returned retrieval errors. Exact-title searches returned no usable
+  results. Citation coverage remains incomplete; no absence of citing work is claimed.
+- **Hugging Face:** inspected the [verification feed](https://huggingface.co/papers?q=verification).
+  It mixes publication dates and topics. Method decisions use primary papers.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending views.
+  Both returned cached views from two weeks earlier. No current new EBM,
+  constraint or KAN dependency was verified.
+- **Logical Intelligence:** reopened [Kona](https://logicalintelligence.com/kona).
+  The accessible page remains a vendor description. No reproducible model,
+  new local implementation or independent certainty result was established.
+
+### Local premise for the next tests
+
+V673 sealed 640 exposed source families and qualified finite normalization.
+Its training receipt failed coverage at 30%; its policy rows all escalated.
+Those rows diagnose weak discrimination but cannot support a qualified benefit
+claim. The next mechanism test must compare local output-span supervision
+with response-only supervision under identical features and budgets. Gold
+annotations stay outside inference; they are not evidence-location certificates.
+
+Two qualification defects have concrete causes: Exp7732 missed coverage at
+lines 490–491; Exp7735 measured 38% across a large scope using only four tests.
+These justify targeted tests and real runner qualification, not lower thresholds.
+The Qwen draft null stays recorded. The ARC counter comparison never ran.
