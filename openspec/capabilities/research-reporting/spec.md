@@ -1,5 +1,33 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7779: Bind hardware continuity to original evidence bytes
+
+Exp7779 SHALL authenticate each Exp7751 board receipt against its dated file
+and resolve historical literature by a Git blob with the recorded SHA-256.
+It SHALL never compare a historical digest to today's appended document as a
+condition of historical board validity. If original bytes are unavailable, the
+affected claim SHALL be `evidence_unresolved` and excluded from readiness.
+Current literature and wishlist bytes SHALL be immutable snapshots. Missing
+Exp7778 service science SHALL leave benefit unmeasured while allowing a
+complete historical continuity accounting. No board commands are authorized.
+
+### SCENARIO-REPORT-7779-CUSTODY
+
+Given matching dated board artifacts and a matching historical Git blob, all
+six substrate rows retain their actual venues and limits. Mutating today's
+research references does not invalidate the historical digest. A missing or
+mismatched historical blob is explicitly unresolved, never replaced by today's
+hash. KV260 remains fabric `k_max<=5`, PolarFire remains Linux CPU only, and
+GateMate remains blocked at `0xffffffff` pending a physical change.
+
+### SCENARIO-REPORT-7779-TERMINAL
+
+The task freezes affected files before implementation. Focused tests, complete
+new-code statement coverage, full Python suite, scoped static and spec checks,
+real CLI, fresh-process cold replay, adversarial verification, and strict row
+reader precede atomic publication. Failed required validation sets readiness
+to zero and yields a terminal disqualified verdict.
+
 ## REQ-REPORT-7775: Audit V676 decisions and acquisition from raw evidence
 
 Exp7775 SHALL inspect only the Exp7772 and Exp7774 paths declared by the
