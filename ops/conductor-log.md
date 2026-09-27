@@ -18815,3 +18815,4 @@ code |
 | 2026-09-27 03:54 UTC | Milestone 2026.09.674 activated | OK | 14 tasks queued |
 | 2026-09-27 04:13 UTC | Bind fourteen tasks and ingest localized-supervisi | OK | 93 passed, 1 warning in 14.59s |
 | 2026-09-27 04:39 UTC | Bind natural output annotations to complete answer | OK | 92 passed, 2 warnings in 12.10s |
+| 2026-09-27 04:42 UTC | Qualify normalized energy training and typed-decis | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7740-sentence-label-protocol.sentence_protocol_ready_score (actual=0 == expected=1) |
