@@ -18808,3 +18808,6 @@ code |
 | 2026-09-27 01:35 UTC | Reconcile thirteen outcomes and bound the next con | OK | 87 passed, 1 warning in 11.09s |
 | 2026-09-27 01:37 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 1675016 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
 | 2026-09-27 02:40 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 1716273 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
+| 2026-09-27 03:21 UTC | Plan milestone 2026.09.674 | OK | 14 tasks proposed |
+| 2026-09-27 03:32 UTC | Activation REFUSED: milestone 2026.09.674 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on exp7751-hardware-continuity. NEXT_ROADMAP_FILE left in place for operator inspection. |
+| 2026-09-27 03:32 UTC | Activation replan 1/2: 2026.09.674 | OK | refused roadmap quarantined to roadmap-2026.09.674-refusal1.yaml; replanning with lint report |

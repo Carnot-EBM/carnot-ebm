@@ -3299,3 +3299,18 @@ mutations, four incomplete-entry mutations and the original missing block.
 Focused guard tests: 124 pass; one unchanged legacy live-benchmark matcher
 test fails. No implementation or guard changed. This is planning evidence,
 not execution of Exp7726–Exp7738 or completion of their capability work.
+
+### 2026-09-27 — V674 hardware-continuity activation repair
+
+REQ-REPORT-V674-REPLAN and SCENARIO-REPORT-V674-REPLAN bind the fourteen
+ordered tasks, Exp7739–Exp7752, to the design table, JSON and staged YAML.
+Exp7751 preserves all 52 matched artifact verdicts with changed audit scopes
+and true retirement signals. All other parsed YAML fields match quarantine.
+The unchanged exclusion reader rejects quarantine and accepts the repair.
+Four incomplete-entry cases, one missing-block case and five contract
+mutations fail validation. Schema, ARC, gate, harness, scoped spec coverage
+and guard-source Ruff checks pass. Focused tests have 123 passes and two
+unchanged failures: legacy live-benchmark matching and active Exp7735
+matching its completed archive. Planning validation grants no experiment
+completion or runtime E2E credit. FR-11 retained-learning and ARC work remain
+registered under the original V674 tasks.

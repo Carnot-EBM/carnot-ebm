@@ -20828,3 +20828,23 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Separate organic exploration from archive replay visits (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation_or_runner; results/experiment_7735_v673_arc_organic_visits.json
 - 2026-09-27: Reconcile thirteen outcomes and bound the next continuation (⚠️ Blocked) — honest_verdict=complete_blocked_required_v673_evidence; results/experiment_7738_v673_capstone.json
 - 2026-09-27: Completed the 2026.09.673 operational retrospective. The 9 compute-bound experiments used 71.4 wall-time minutes; evidence-set probability training was longest at 25.83 minutes. One GPU snapshot showed GPU 1 at 97% utilization and GPU 0 idle, but it cannot establish run-wide efficiency or a DualGPURunner miss. The next tooling priority is task receipts with stage timing, GPU samples, and model concurrency; batching needs a measured trial. Savings could not be quantified. Artifact: results/operational_retro_2026_09_673.json.
+
+## 2026-09-27 — Repair the refused V674 proposal (REQ-REPORT-V674-REPLAN)
+
+- User requested the exact Exp7751 exclusion-manifest refusal repair.
+  Restored the quarantined proposal with all 52 matched artifact IDs and
+  exact verdicts. Each entry explains the evidence-audit scope and includes
+  `retire_if_same_verdict: true`. Unresolved board blockers remain recorded.
+- Preserved fourteen tasks, their prompts, gates, phases, deliverables and
+  model declarations. Updated the matching design with the refusal record.
+  Added a bounded literature recheck before emission; no new experiments.
+- The original quarantine still fails the unchanged exclusion reader.
+  The repaired staged file passes exclusion, ARC, schema/prior-failure,
+  gate and harness readers. Table/JSON/YAML comparison and ten private
+  negative cases pass. Scoped spec coverage, Ruff and whitespace checks pass.
+- Focused tests: 123 passed, two failed in unchanged checks: legacy
+  live-benchmark scope matching and the active Exp7735 self-match after
+  archival. Preserved both failures; no guard or test was weakened.
+- Active roadmap, conductor, exclusion/ARC guards and quarantine hashes
+  remain unchanged. No experiments, manual activation or push. Existing
+  pre-emission readers catch this omission; no new guard code was needed.

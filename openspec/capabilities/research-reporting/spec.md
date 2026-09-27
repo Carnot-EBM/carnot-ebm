@@ -82904,6 +82904,24 @@ A fresh process recomputes raw rows and bank state hashes. Adversarial and
 strict row readers inspect the exact terminal candidate. Invalid required
 checks cannot open the acquisition_protocol_ready_score.
 
+### REQ-REPORT-V674-REPLAN: Repair hardware continuity failure lineage
+
+The V674 repair SHALL preserve fourteen tasks, Exp7739–Exp7752, in order.
+Its design table and JSON contract SHALL agree with the staged YAML.
+Exp7751 SHALL record all 52 activation-matched hardware continuity artifacts.
+Each entry SHALL preserve the exact experiment ID and honest verdict.
+Each entry SHALL state the changed audit scope and true same-verdict retirement.
+The audit SHALL preserve unresolved board blockers without repeating probes.
+The exclusion reader, ARC reader, active roadmap and conductor SHALL remain unchanged.
+
+### SCENARIO-REPORT-V674-REPLAN: Replay the original refusal
+
+The unchanged exclusion reader rejects the quarantined V674 proposal.
+It accepts the repaired proposal with complete failure metadata.
+Removing that metadata from a private copy reproduces the original refusal.
+Removing any required entry field fails the existing failure validator.
+The fourteen ordered tasks, prompts, gates and deliverables remain unchanged.
+
 ### REQ-REPORT-V673-REPLAN: Preserve the refused task contract
 
 The V673 repair SHALL preserve thirteen tasks, Exp7726–Exp7738, in order.

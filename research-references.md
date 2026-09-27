@@ -47504,3 +47504,46 @@ Two qualification defects have concrete causes: Exp7732 missed coverage at
 lines 490–491; Exp7735 measured 38% across a large scope using only four tests.
 These justify targeted tests and real runner qualification, not lower thresholds.
 The Qwen draft null stays recorded. The ARC counter comparison never ran.
+
+## 2026-09-27 — V674 refusal repair: bounded literature recheck
+
+This recheck precedes the repaired roadmap emission. The operator requested
+an exact failure-lineage repair. Retain the fourteen registered experiments.
+The prior V674 review remains the experiment design basis.
+
+- Rechecked primary arXiv records for [EBT](https://arxiv.org/abs/2507.02092),
+  [ARM–EBM](https://arxiv.org/abs/2512.15605),
+  [HalluSpan](https://arxiv.org/abs/2608.15804),
+  [DCCD](https://arxiv.org/abs/2603.03305),
+  [delayed online learning](https://arxiv.org/abs/2606.11711), and
+  [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985).
+  These support the existing method questions; they establish no local benefit.
+- Additional lead: [CCHD](https://arxiv.org/abs/2606.08158), June 2026.
+  Its abstract describes training constraints for paraphrase consistency and
+  label preservation, using scalar dual variables without added inference work.
+  Consider a later matched consistency-loss control after local training qualifies.
+  This repair adds no arm, corpus exposure or experiment. Abstract reviewed;
+  transfer to Carnot's finite heads remains untested.
+- Neural constraints: [Ontology Neural Networks](https://arxiv.org/abs/2601.05304),
+  January 2026, combines graph topology and constraint projection. The abstract
+  reports problems up to twenty nodes. Defer pending reproducible baselines;
+  that scale does not establish general language verification.
+- Continual KAN work: [KAC](https://arxiv.org/abs/2503.21076), March 2025,
+  studies an RBF classifier. [KAN forgetting](https://arxiv.org/abs/2511.12828),
+  November 2025, reports limits in higher-dimensional settings. Retain explicit
+  retention controls; neither abstract establishes automatic forgetting immunity.
+- OpenReview search recovered the primary [EBT conference PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf).
+  This was an indexed-record check, not a fresh full-paper review.
+- Reopened [Extropic Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). Z1T describes heterogeneous FPGA/TSU
+  work and preliminary estimates. Preserve complete-service accounting and
+  the distinction between vendor estimates and authenticated local execution.
+- Reopened [Kona](https://logicalintelligence.com/kona), the
+  [Hugging Face verification feed](https://huggingface.co/papers?q=verification),
+  and [GitHub Python trending](https://github.com/trending/python?since=weekly).
+  The GitHub response was cached from two weeks earlier. These discovery
+  checks establish no new reproducible dependency or local hardware access.
+- Semantic Scholar citation requests for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
+  again returned retrieval errors. Citation coverage remains incomplete.

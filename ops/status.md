@@ -17333,3 +17333,26 @@ matcher expectation. This failure is not hidden or repaired by this task.
 ARC E2E-009/011/013 apply during experiment implementation; planning changes
 no runtime behavior. Active roadmap, conductor and activation guards retain
 their original hashes. Normal conductor activation is the next step.
+
+## 2026-09-27 — V674 hardware-continuity refusal repaired
+
+The operator requested the exact activation refusal repair. The staged
+2026.09.674 roadmap preserves all fourteen tasks, Exp7739–Exp7752, in four
+phases. Exp7751 now carries all 52 matched historical verdicts with complete
+failure entries and true same-verdict retirement. Its audit still preserves
+board blockers and does not repeat probes. No operator override was used.
+
+The updated design table, JSON contract and YAML agree. The unchanged
+exclusion reader reproduces the quarantine refusal and accepts the repaired
+file. Schema/prior-failure, ARC-floor, gate and harness readers pass.
+Prompt input paths and gate producer fields pass independent checks.
+Ten private negative cases reject missing metadata and contract divergence.
+Scoped spec coverage, guard-source Ruff and diff whitespace checks pass.
+
+Focused unit tests: 123 passed, two failed. The unchanged failure-ledger
+live-benchmark test expects a scope match the current matcher does not make.
+The legacy active-roadmap test now matches Exp7735 against its own completed
+archive entry. These failures do not come from the staged V674 proposal.
+No guards, tests, active roadmap or conductor were changed to hide them.
+Runtime E2E-009/011/013 remain assigned to future ARC implementation; this
+repair changes planning metadata only. Next: normal conductor activation.

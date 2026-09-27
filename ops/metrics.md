@@ -3569,3 +3569,5 @@ Writing an estimate would put an invented number in the metrics record.
 | V673-replan | 2026-09-26T21:59:36Z | 2026-09-26T22:07:16Z | User: repair V673 activation refusal with complete failure lineage; preserve thirteen tasks and complete the matching design; startup timestamp recorded after initial reads. |
 
 V673 replan: activation readers pass; 124 focused tests pass and one unchanged legacy matcher test fails. Token usage is unavailable: the documented `scripts/session-metrics.py` extractor is absent.
+
+| V674-replan | 2026-09-27T03:32:36Z | pending | User: repair only V674's hardware-continuity activation refusal; preserve fourteen tasks, reconcile both planning files, recheck research and unchanged guards. Startup timestamp follows initial reads. |

@@ -293,6 +293,32 @@ modified by this plan.
 
 ## Exact Task Contract
 
+### Activation-refusal repair — 2026-09-27
+
+The unchanged exclusion guard refused the first V674 proposal because
+Exp7751 lacked structured failure lineage. It matched 52 historical hardware
+continuity artifacts, including receipts that completed with board blockers.
+The repaired YAML records every matched artifact ID and exact verdict.
+Each entry includes the changed scope and `retire_if_same_verdict: true`.
+
+Exp7751 remains the registered evidence audit. It reads dated board receipts
+and eligible Exp7750 service fractions. It preserves unresolved blockers and
+requires changed prerequisites before later device execution. It does not
+repeat board probes or claim that this metadata repair fixes physical access.
+No operator override is used. The quarantined proposal remains the comparison
+source at `ops/roadmap-quarantine/roadmap-2026.09.674-refusal1.yaml`.
+
+The fourteen tasks, prompts, phases, gates, deliverables and model declarations
+remain unchanged. The table and JSON contract below still describe them exactly.
+The references file records the bounded literature recheck before re-emission.
+
+Repair validation: exclusion, ARC-floor, schema/prior-failure, gate and
+harness readers pass. Independent table/JSON/YAML checks and ten private
+negative cases pass. Scoped spec coverage and guard-source Ruff pass.
+Focused tests report 123 passes and two unchanged failures: the legacy
+live-benchmark matcher and the active Exp7735/archive self-match.
+These are recorded in ops; no guard, test or active roadmap was changed.
+
 The following table and JSON block are literal contracts, not an aspirational
 list. They contain the same fourteen tasks as `research-roadmap-next.yaml`.
 
