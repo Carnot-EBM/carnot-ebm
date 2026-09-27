@@ -1,5 +1,36 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7775: Audit V676 decisions and acquisition from raw evidence
+
+Exp7775 SHALL inspect only the Exp7772 and Exp7774 paths declared by the
+matching V676 roadmap. It SHALL check producer identity, date, verdict,
+adversarial flag, raw paths, and raw byte hashes before reduction. A conductor
+pre-gate receipt explains absence but never replaces a producer. A missing or
+disqualified producer yields `complete_blocked_required_v676_evidence` and
+readiness zero. The audit SHALL preserve per-producer failed operands.
+
+### SCENARIO-REPORT-7775-CUSTODY
+
+Given missing declared producers, the audit records both missing paths, hashes,
+null benefit gates, zero independent families, and a terminal blocked verdict.
+An unrelated artifact or pre-gate receipt cannot change eligibility.
+
+### SCENARIO-REPORT-7775-REDUCTION
+
+Given private primitive rows, the audit recomputes binary probability losses,
+fixed action costs, family means, paired intervals and tests. It compares the
+source-erased and constant-risk controls. It checks delayed feedback order,
+one-use admissions, proposal credits, later changed decisions, retention, and
+cold restart. A view disagreement alone cannot prove source dependence.
+
+### SCENARIO-REPORT-7775-TERMINAL
+
+The task SHALL freeze its affected scope, run focused tests, complete new-module
+statement coverage, scoped static and spec checks, and the full Python suite.
+It SHALL cold-replay exact inputs in a fresh process and run adversarial and
+strict row readers before atomic publication. A failed required check
+disqualifies the result and keeps readiness zero.
+
 ## REQ-REPORT-7770: Qualify a CPU fixture runner for bounded Qwen confidence
 
 Exp7770 SHALL freeze the exact 24 exposed Exp7745 family ids before capture.
