@@ -37546,6 +37546,7 @@ tests pass (17 focused tests total); scoped spec coverage, changed-file Ruff che
 changed-module mypy, and the ARC orphan solver lint pass. The archive remains
 off by default. No numbered `ops/e2e-test-plan.md` case covers this archive path;
 the focused tests drive its real `StepwiseExplorer`/archive action loop on CPU.
+
 ## REQ-ARC-WMTE-7735: Separate organic visits from return provenance
 
 The replay archive SHALL retain its existing total `seen` and default selector behavior while recording organic, replay, and reset observations independently. An opt-in selector SHALL rank eligible cells by the V8 visits-minus-seen rule with `organic_seen` replacing `seen`, with the same tie order and prefix eligibility. The scored `make_carnot_agent`/`E3AgentPolicy` path SHALL accept the option without enabling it by default. Return replay, including its landing frame, SHALL never raise `organic_seen`. Counters SHALL survive explicit snapshot reload; unsupported old snapshots SHALL fail clearly. The 400-action replay budget, spacing 20, and prefix preference at most 30 SHALL remain fixed in the paired runner. No game adapters, source inspection, stored routes, or LLM induction are allowed.
@@ -37577,3 +37578,62 @@ The requalification SHALL reuse the shipped replay-landing repair and the scored
 #### SCENARIO-ARC-WMTE-7763-PROVENANCE
 
 Given two scripted cells and repeated replay observations, the total and organic selectors choose different eligible prefixes; changing replay sightings never changes organic sightings. Real SDK transitions provide transport evidence separately from scripted selector evidence.
+
+## Induced-plan verified divergence and acceptance pilot — 2026-09-26
+
+### REQ-ARC-WMTE-10025: Live plan divergence halt and bounded acceptance pilot
+
+The live `E3AgentPolicy` SHALL, only when `CARNOT_ARC_PLAN_DIVERGENCE_HALT=1`, retain the accepted induced engine and compare each executed plan step's prediction `engine(pre_step_grid.copy(), action, data)` with the next real logical grid. A level-up step SHALL take precedence over grid mismatch. On a non-level-up mismatch, it SHALL clear unconsumed plan actions, enter explore phase, and let the explorer act from the current real frame. It SHALL record the one-based divergence step index and a verified-divergence abandonment count separately from observational `plans_abandoned` and `plans_consumed_fully`. An unset flag SHALL preserve current behavior.
+
+Only when `CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD` is set to a valid float in [0, 1], both live bounded re-induction call sites SHALL pass it as both `min_heldout_accuracy` and `min_goal_predicate_consistency`. Unset means 1.0 for both at both sites. Fixed measurement values are 1.0, 0.9, and 0.75; no post-result tuning is permitted.
+
+The pre-registered public panel SHALL use `su15`, `sp80`, `g50t` (an unwon ordered-history control), and `cd82` (an explorer-won regression control), with seeds 7491001 and 7491002. Each seed SHALL run threshold 1.0 without halt, threshold 1.0 with halt, threshold 0.9 with halt, and threshold 0.75 with halt: at most 32 real GPU LLM episodes. If wall time forces a cut, whole games SHALL be cut, retaining both seeds and all four arms. Physical GPU 1, cached `unsloth/Qwen3.8-27B-GGUF`, idle-GPU and llama.cpp offload preconditions SHALL be checked before inference. A failed precondition SHALL produce a `blocked_*` artifact without invented outcomes.
+
+Resource-bound amendment before any completed scored episode: the first 49,152-context dry run exhausted four 26,800-token generations, rejected its proposal, then attempted another induction after a real explorer level-up at action 312. Its incomplete evidence is preserved separately and is not an arm result. The scored panel SHALL therefore use one fully offloaded GPU-1 server slot with 98,304 context tokens, stop each episode at its first real level-up or 400 actions, and stop before a second induction attempt. These limits apply equally to every arm and seed; they preserve the first induction, any accepted plan, and its immediate real verification while bounding repeat-generation cost.
+
+Every completed episode SHALL report the installed `arc_agi.scorecard.EnvironmentScoreCalculator` game score, plan acceptance, executed action count, level-up, divergence step and halt cause, and induction rejection reason. A threshold is a promotion candidate only when its mean game score exceeds threshold 1.0 with halt and no same-game, same-seed score falls below that control. The threshold 1.0 no-halt arm is an identity control. The artifact SHALL identify live LLM inference, live agent self-discovery, model, seeds, duration, checked preconditions, checksum, raw evidence, and terminal honest verdict. `scripts/adversarial_verify.py` SHALL check it.
+
+#### SCENARIO-ARC-WMTE-10025-DIVERGENCE
+
+- **GIVEN** an accepted engine and a three-step live plan with a mismatch on step two
+- **WHEN** the second resulting real frame arrives without a level-up and the halt flag is on
+- **THEN** exactly two plan actions have run, the remaining plan is abandoned with verified step index two, and the next action comes from the explorer using that frame.
+
+#### SCENARIO-ARC-WMTE-10025-MATCH
+
+- **GIVEN** an accepted engine whose predictions match all real plan-step frames
+- **WHEN** the halt flag is on
+- **THEN** the plan executes fully and records no verified divergence abandonment.
+
+#### SCENARIO-ARC-WMTE-10025-THRESHOLDS
+
+- **GIVEN** either live bounded re-induction call site
+- **WHEN** the override is unset or set to 1.0, 0.9, or 0.75
+- **THEN** both gate arguments equal 1.0 or the selected value respectively, with the unset path behavior identical to main.
+
+#### SCENARIO-ARC-WMTE-10025-IDENTITY
+
+- **GIVEN** at least 100 deterministic E3 policy fixtures and both flags unset
+- **WHEN** run against this worktree and `main`
+- **THEN** action, phase, plan, and provenance traces are byte-identical.
+
+Implementation status (2026-09-27, updated after the fact): the two default-off
+mechanisms (`CARNOT_ARC_PLAN_DIVERGENCE_HALT`, `CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD`)
+are implemented and unit-tested (17 focused tests, plus 66 broader regression
+tests across the go-explore/provenance/live-path suites, all green against
+current `main`). The real GPU panel is INCOMPLETE, not the planned 32-episode
+sweep: the run took far longer than any prior pilot (individual inductions
+reaching 46,000-71,000 generated tokens each) and was stopped by the operator
+after roughly 11h47m wall time, past every prior checkpoint including the
+script's own `--max-hours 3` per-game budget (which only checks between full
+games, not mid-generation, so it did not actually bound the run the way it was
+assumed to). `su15` completed all 8 planned episodes (2 seeds x 4 arms).
+`sp80` completed all 4 arms for seed 7491001 and 2 of 4 arms
+(1.0-no-halt, 1.0-halt) for seed 7491002 before the kill; its 0.9-halt episode
+was mid-run and its 0.75-halt episode never started. `g50t` and `cd82` never
+ran. The artifact's own `honest_verdict` is `incomplete_measurement` and its
+`promotion` field is empty -- it does not claim a verdict for any threshold,
+correctly, since the panel never finished. No promotion decision can be made
+from this data. A future task should re-run the missing games/arms with a
+per-generation (not per-game) wall-clock guard, given how much longer each
+induction call took than expected.

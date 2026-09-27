@@ -24,9 +24,23 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import threading
 from pathlib import Path
 from typing import Any, Callable, Mapping, Optional, Sequence
+
+
+def _induction_accept_threshold() -> float:
+    """REQ-ARC-WMTE-10025 returns the opt-in shared live acceptance threshold."""
+
+    raw = os.environ.get("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD")
+    if raw is None:
+        return 1.0
+    value = float(raw)
+    if not 0.0 <= value <= 1.0:
+        raise ValueError("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD must be in [0, 1]")
+    return value
+
 
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
@@ -5557,6 +5571,11 @@ class E3AgentPolicy:
         from carnot.agentic.arc_action_provenance import maybe_make_recorder
 
         self._provenance = maybe_make_recorder(self.short, run_label=str(game_id))
+        if (
+            self._provenance is not None
+            and os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1"
+        ):
+            self._provenance.plans_abandoned_by_verified_divergence = 0
         # REQ-ARC-6859: construct the receipt transport only for an explicitly
         # opted-in run. It observes existing dispatch/action/outcome decisions;
         # it never selects a tool or changes an action.
@@ -5576,6 +5595,11 @@ class E3AgentPolicy:
         self.phase = "explore"
         self.plan: list = []
         self.pi = 0
+        self._plan_divergence_engine = None
+        self._plan_divergence_pending = None
+        self._plan_divergence_errors: list[str] = []
+        self.verified_divergence_events: list[dict[str, Any]] = []
+        self.plans_abandoned_by_verified_divergence = 0
         from carnot.agentic.arc_goal_confirmation import GoalConfirmation
 
         goal_confirmation_on = (
@@ -6695,6 +6719,77 @@ class E3AgentPolicy:
                 pass
         return move
 
+    def _verify_pending_plan_step(self, latest: Any) -> None:
+        """REQ-ARC-WMTE-10025 compare the last plan move with the returned real frame."""
+
+        if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") != "1":
+            return
+        pending = getattr(self, "_plan_divergence_pending", None)
+        self._plan_divergence_pending = None
+        engine = getattr(self, "_plan_divergence_engine", None)
+        if pending is None or engine is None or latest is None:
+            return
+        if _level_of(latest) > pending["level_before"]:
+            return
+        import numpy as np
+
+        from carnot.agentic.arc_agi3_world_model import grid_of
+        from carnot.agentic.arc_executable_world_model import to_logical
+
+        try:
+            pred = np.asarray(engine(pending["grid"].copy(), pending["action"], pending["data"]))
+            obs = np.asarray(to_logical(grid_of(latest), self.cell))
+        except Exception as exc:
+            self._plan_divergence_errors.append(repr(exc)[:200])
+            return
+        if pred.shape == obs.shape and np.array_equal(pred, obs):
+            return
+        remaining = max(0, len(self.plan) - self.pi)
+        event = {
+            "step_index": pending["step_index"],
+            "verified_divergence": True,
+            "predicted_shape": list(pred.shape),
+            "observed_shape": list(obs.shape),
+            "mismatched_cells": (
+                int(np.count_nonzero(pred != obs)) if pred.shape == obs.shape else None
+            ),
+            "stopped_by_divergence_halt": remaining > 0,
+            "remaining_steps": remaining,
+        }
+        self.verified_divergence_events.append(event)
+        if remaining == 0:
+            self._plan_divergence_engine = None
+            return
+        self.plans_abandoned_by_verified_divergence += 1
+        if self._provenance is not None:
+            self._provenance.plans_abandoned_by_verified_divergence = (
+                self.plans_abandoned_by_verified_divergence
+            )
+        self.plan = []
+        self.pi = 0
+        self.phase = "explore"
+        self._plan_divergence_engine = None
+
+    def _arm_plan_divergence_step(self, move: tuple, latest: Any) -> None:
+        """REQ-ARC-WMTE-10025 retain the pre-step grid for next-frame verification."""
+
+        if (
+            os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") != "1"
+            or getattr(self, "_plan_divergence_engine", None) is None
+            or latest is None
+        ):
+            return
+        from carnot.agentic.arc_agi3_world_model import grid_of
+        from carnot.agentic.arc_executable_world_model import to_logical
+
+        self._plan_divergence_pending = {
+            "grid": to_logical(grid_of(latest), self.cell).copy(),
+            "action": int(move[0]),
+            "data": move[1],
+            "step_index": self.pi,
+            "level_before": _level_of(latest),
+        }
+
     def _arm_executed_goal(self, latest: Any, frames_seen: int) -> None:
         """REQ-REPORT-7666: arm after the final action of an induced goal plan."""
         if (
@@ -7479,7 +7574,7 @@ class E3AgentPolicy:
         except Exception:
             cur_key = None
         explorer = getattr(self, "explorer", None)
-        return {
+        pre = {
             "phase_before": self.phase,
             "plan_len_before": len(self.plan),
             "plan_pi_before": int(self.pi),
@@ -7494,6 +7589,9 @@ class E3AgentPolicy:
             "explorer_pending_before": len(getattr(explorer, "pending", []) or []),
             "pending_induction_reason": self._pending_induction_reason,
         }
+        if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+            pre["verified_divergence_count_before"] = len(self.verified_divergence_events)
+        return pre
 
     def _provenance_post_state(self, pre, move, plan_before, frames, latest) -> dict[str, Any]:
         """Build the row: the action, the branch that chose it, and why that branch won."""
@@ -7632,6 +7730,17 @@ class E3AgentPolicy:
                     "belief_final_action": final_action,
                 }
             )
+        if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+            row["verified_divergence_this_action"] = len(self.verified_divergence_events) > int(
+                pre.get("verified_divergence_count_before") or 0
+            )
+            row["plans_abandoned_by_verified_divergence"] = (
+                self.plans_abandoned_by_verified_divergence
+            )
+            if row["verified_divergence_this_action"]:
+                row["verified_divergence_step_index"] = self.verified_divergence_events[-1][
+                    "step_index"
+                ]
         return row
 
     @staticmethod
@@ -7661,6 +7770,8 @@ class E3AgentPolicy:
 
     def _next_move_routed(self, frames, latest):
         from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
+
+        self._verify_pending_plan_step(latest)
 
         decision_telemetry = getattr(
             self,
@@ -7892,6 +8003,7 @@ class E3AgentPolicy:
             if self.plan and self.pi < len(self.plan):
                 if self._execute_plan_from_current:
                     mv = self._next_plan_move()
+                    self._arm_plan_divergence_step(mv, latest)
                     self._remember_active_probe_origin(mv, latest)
                     self._remember_reward_machine_origin(mv, latest)
                     self._track_prev_for_transition(mv, latest)
@@ -7904,6 +8016,7 @@ class E3AgentPolicy:
             return self.explorer.next_move(frames, latest)
         if self.phase == "execute" and self.pi < len(self.plan):
             mv = self._next_plan_move()
+            self._arm_plan_divergence_step(mv, latest)
             self._remember_active_probe_origin(mv, latest)
             self._remember_reward_machine_origin(mv, latest)
             self._track_prev_for_transition(mv, latest)
@@ -8217,6 +8330,8 @@ class E3AgentPolicy:
             diag["reason"] = "no_plan_in_carried_model"
             return diag
         self.plan = list(plan)
+        if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+            self._plan_divergence_engine = engine
         # Plan-found is the positive evidence that gates the bias install, matching the
         # ttt-prior branch's REQ-ARC-FCP-5699-38 gating -- never install on a flat search.
         self._install_goal_bias(goal)
@@ -8313,6 +8428,9 @@ class E3AgentPolicy:
         self.plan = []
         self.pi = 0
         self._goal_confirmation_predicate = None
+        if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+            self._plan_divergence_engine = None
+            self._plan_divergence_pending = None
 
         active_transitions = self._active_transitions()
         attempt = {
@@ -8459,6 +8577,8 @@ class E3AgentPolicy:
                         if nav_plan:
                             self._install_goal_bias(nav_isdone)
                             self.plan = nav_plan
+                            if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+                                self._plan_divergence_engine = nav_eng
                             attempt["planned"] = True
                             attempt["plan_length"] = len(nav_plan)
                             attempt["engine_source"] = "structured_nav_induced"
@@ -8519,6 +8639,8 @@ class E3AgentPolicy:
                         self._install_goal_bias(_isdone)
                     if _plan:
                         self.plan = _plan
+                        if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+                            self._plan_divergence_engine = _eng
                         attempt["planned"] = True
                         attempt["plan_length"] = len(_plan)
                         attempt["engine_source"] = "ttt_prior_warmstarted"
@@ -8647,8 +8769,8 @@ class E3AgentPolicy:
                     load_engine=reinduction_load_engine,
                     plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
                     max_rounds=MAX_REFINEMENT_ROUNDS,
-                    min_heldout_accuracy=1.0,
-                    min_goal_predicate_consistency=1.0,
+                    min_heldout_accuracy=_induction_accept_threshold(),
+                    min_goal_predicate_consistency=_induction_accept_threshold(),
                     previous_level_complete_grid=self._previous_level_complete_grid,
                     enable_subgoal_search=self.subgoal_search,
                     subgoal_budget=self.subgoal_budget,
@@ -8720,6 +8842,8 @@ class E3AgentPolicy:
                 if outcome.planned:
                     self.plan = list(outcome.plan)
                     self._goal_confirmation_predicate = outcome.goal_predicate
+                    if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+                        self._plan_divergence_engine = outcome.engine
                 return
             self._fit_dsl_model()
             # `_plan_start_grid`, not `self.root_grid`, is the start point for every planner call
@@ -8796,8 +8920,8 @@ class E3AgentPolicy:
                         load_engine=e3.load_engine,
                         plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
                         max_rounds=MAX_REFINEMENT_ROUNDS,
-                        min_heldout_accuracy=1.0,
-                        min_goal_predicate_consistency=1.0,
+                        min_heldout_accuracy=_induction_accept_threshold(),
+                        min_goal_predicate_consistency=_induction_accept_threshold(),
                         previous_level_complete_grid=self._previous_level_complete_grid,
                         enable_subgoal_search=self.subgoal_search,
                         subgoal_budget=self.subgoal_budget,
@@ -8856,6 +8980,8 @@ class E3AgentPolicy:
                     if stall_outcome.planned:
                         self.plan = list(stall_outcome.plan)
                         self._goal_confirmation_predicate = stall_outcome.goal_predicate
+                        if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+                            self._plan_divergence_engine = stall_outcome.engine
                         return
                 # else: fall through to active_probe_controller / plain single-shot path below
             if _plan_start_grid is not None and self._maybe_plan_reward_machine_probe(
@@ -9311,6 +9437,8 @@ class E3AgentPolicy:
             attempt["plan_diagnostics"] = _plan_diag2
             if plan:
                 self.plan = plan
+                if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+                    self._plan_divergence_engine = engine
                 self._goal_confirmation_predicate = is_done
                 attempt["planned"] = True
                 attempt["plan_length"] = len(plan)
@@ -9339,6 +9467,8 @@ class E3AgentPolicy:
                 attempt["hierarchical_plan_length"] = len(subgoal_result.plan)
                 if subgoal_result.planned:
                     self.plan = list(subgoal_result.plan)
+                    if os.environ.get("CARNOT_ARC_PLAN_DIVERGENCE_HALT") == "1":
+                        self._plan_divergence_engine = engine
                     attempt["planned"] = True
                     attempt["plan_length"] = len(self.plan)
             if self.factored_planner:

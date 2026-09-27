@@ -48,14 +48,10 @@
         can never propagate into the agent. A crashed measurement is a lost row; a
         crashed agent is a zeroed game.
 
-    WHAT IS NOT DONE HERE, DELIBERATELY. The recorder never calls the induced engine to
-    ask what it predicted. Executing induced (LLM-authored) code inside the measuring
-    process is forbidden in this repo, and it would also mean the instrument re-runs the
-    very computation it is measuring. Consequently the "did execution diverge from the
-    plan" question is answered with OBSERVATIONAL fields only -- did the frame change,
-    was the plan abandoned before it was consumed -- and those fields are named so that
-    no reader can mistake them for a model-prediction check. See
-    `ActionProvenanceRecorder.record`'s field notes.
+    The recorder itself never calls the induced engine; its existing plan-abandonment
+    count remains observational. REQ-ARC-WMTE-10025 adds a separate opt-in policy
+    verifier that calls the engine and records verified divergence. The recorder
+    only summarizes that policy-owned count when the flag is enabled.
 
 Spec: openspec/capabilities/arc-world-model-trust-energy/spec.md REQ-ARC-WMTE-6070
 """
@@ -283,7 +279,7 @@ class ActionProvenanceRecorder:
             )
         )
         overhead = _count(lambda r: r.get("explorer_serve_kind") in ("navigation", "reset"))
-        return {
+        summary = {
             "game": self.game,
             "run_label": self.run_label,
             "actions_recorded": n,
@@ -311,6 +307,14 @@ class ActionProvenanceRecorder:
             "unknown_explorer_branches": sorted(set(by_explorer) - set(EXPLORER_BRANCHES)),
             "recorder_errors": self.errors[:20],
         }
+        if hasattr(self, "plans_abandoned_by_verified_divergence"):
+            summary["plans_abandoned_by_verified_divergence"] = (
+                self.plans_abandoned_by_verified_divergence
+            )
+            summary["plans_abandoned_other_reason"] = max(
+                0, self.plans_abandoned - self.plans_abandoned_by_verified_divergence
+            )
+        return summary
 
     def to_dict(self) -> dict[str, Any]:
         return {"schema": SCHEMA, "summary": self.summary(), "rows": self.rows}

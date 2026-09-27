@@ -6,6 +6,23 @@ V674 capstone reducer and direct CLI to
 `tests/python/test_experiment_7752_v674_capstone.py`. The CLI now resolves the
 repository roadmap schema in a fresh process. Its six focused tests and the
 87-test conductor subset pass; the reducer has 97/97 statement coverage.
+**Operational Note:** REQ-ARC-WMTE-10025 maps the default-off live
+`CARNOT_ARC_PLAN_DIVERGENCE_HALT` verifier and the two-site
+`CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD` override to
+`python/carnot/agentic/arc_competition_agent.py`, the verified-versus-other
+abandonment counts to `arc_action_provenance.py`, and the pilot harness to
+`experiment_10025_induced_plan_divergence.py`. The CPU fixtures are in
+`tests/python/test_arc_plan_divergence_halt_10025.py` (17 focused tests, plus
+66 broader regression tests across the go-explore/provenance/live-path suites,
+all green against `main`). The two mechanisms are merged and tested; the
+real-GPU measurement panel is NOT complete. Individual inductions reached
+46,000-71,000 generated tokens each, far more than expected, and the operator
+stopped the run after roughly 11h47m wall time. `su15` completed all 8 planned
+episodes; `sp80` completed all 4 arms for seed 7491001 and 2 of 4 for seed
+7491002; `g50t` and `cd82` never ran. The artifact's own `honest_verdict` is
+`incomplete_measurement` with no promotion claim for any threshold. This is
+merged as a tested, default-off feature; the measurement is a separate,
+unfinished task.
 **Operational Note:** SCENARIO-REPORT-7708-TERMINAL now verifies that the CPU
 fixture preflight succeeds when `CODEX_SESSION_ID` is absent. The conductor's
 146-test subset passes with the variable unset; the changed Exp7708 runner and
