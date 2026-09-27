@@ -20824,3 +20824,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-26: Compare bounded draft-conditioned evidence decisions (⚠️ Research Finding) — honest_verdict=complete_null_exposed_draft_pilot; results/experiment_7729_v673_qwen_draft_pilot.json
 - 2026-09-26: Train evidence-set probabilities and freeze typed decisions (⚠️ Research Finding) — honest_verdict=complete_disqualified_set_energy_fit; results/experiment_7730_v673_set_energy_fit.json
 - 2026-09-27: Qualify advisory constraint growth with scoped validation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7732_v673_causal_admission.json
+- 2026-09-27: Cold-reduce development decisions and feedback causality (⚠️ Blocked) — honest_verdict=complete_blocked_required_v673_evidence; results/experiment_7734_v673_independent_evidence_audit.json
