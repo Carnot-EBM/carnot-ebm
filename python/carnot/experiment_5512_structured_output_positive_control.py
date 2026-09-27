@@ -21,7 +21,12 @@ from pathlib import Path
 from typing import Any
 
 from carnot import experiment_5499_preference_maxsat_minimal_fixture_v499 as fixture_mod
-from carnot.inference.sota_models import SOTA_GGUF_MODELS, cached_sota_pair, resolve_cached_gguf
+from carnot.inference.sota_models import (
+    LEGACY_COMPARATOR_GGUF_MODELS,
+    SOTA_GGUF_MODELS,
+    cached_sota_pair,
+    resolve_cached_gguf,
+)
 from carnot.verifiers.dccd_adapter import extract_json_object, validate_json_schema
 
 
@@ -47,7 +52,9 @@ RANDOM_SEED = 5512
 N_GPU_LAYERS = -1
 PREFERRED_QUANT = "Q4_K_M"
 INFERENCE_SUBSTRATE = "structured_output_fixture_or_live_llm_smoke"
-SCHEMA_PATH = "python/carnot/experiment_5512_structured_output_positive_control.py::candidate_schema"
+SCHEMA_PATH = (
+    "python/carnot/experiment_5512_structured_output_positive_control.py::candidate_schema"
+)
 PARSER_PATH = (
     "python/carnot/experiment_5512_structured_output_positive_control.py::classify_candidate_text"
 )
@@ -58,7 +65,7 @@ MANDATED_HEADLINE_MODEL_IDS = (
     "unsloth/gemma-4-31B-it-GGUF",
     "unsloth/gemma-4-26B-A4B-it-GGUF",
 )
-_REGISTRY_BY_ID = {row["hf_id"]: row for row in SOTA_GGUF_MODELS}
+_REGISTRY_BY_ID = {row["hf_id"]: row for row in (*SOTA_GGUF_MODELS, *LEGACY_COMPARATOR_GGUF_MODELS)}
 MODEL_SPECS: list[JsonDict] = [
     {
         "name": _REGISTRY_BY_ID[hf_id]["name"],
@@ -338,10 +345,7 @@ def evaluate_candidate_payloads(
 
     fixture_payload = dict(fixture or load_fixture_artifact()["fixture"])
     expected_ids = {str(row["instance_id"]) for row in fixture_payload["instances"]}
-    rows = [
-        classify_candidate_payload(payload, fixture=fixture_payload)
-        for payload in payloads
-    ]
+    rows = [classify_candidate_payload(payload, fixture=fixture_payload) for payload in payloads]
     parseable_rows = [row for row in rows if row["parseable"] is True]
     schema_valid_rows = [row for row in rows if row["schema_valid"] is True]
     parseable_ids = {str(row["instance_id"]) for row in parseable_rows if row.get("instance_id")}
@@ -432,7 +436,7 @@ def probe_structured_runtime(
 def build_llama_cpp_json_grammar() -> str:
     """Return a small GBNF grammar that constrains llama.cpp output to JSON."""
 
-    return r'''
+    return r"""
 root ::= object
 value ::= object | array | string | number | "true" | "false" | "null"
 object ::= "{" ws (string ws ":" ws value ("," ws string ws ":" ws value)*)? "}" ws
@@ -440,7 +444,7 @@ array ::= "[" ws (value ("," ws value)*)? "]" ws
 string ::= "\"" ([^"\\] | "\\" (["\\/bfnrt] | "u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]))* "\"" ws
 number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [-+]? [0-9]+)? ws
 ws ::= [ \t\n\r]*
-'''.strip()
+""".strip()
 
 
 def resolve_model_specs(cache_resolver: CacheResolver = resolve_cached_gguf) -> list[JsonDict]:
@@ -540,7 +544,9 @@ def build_artifact(
         "runtime_status": runtime,
         "runtime_blockers": list(runtime.get("runtime_blockers", [])),
         "live_smoke_rows": live_smoke_rows,
-        "live_smoke_parseable_rows": sum(int(row.get("parseable") is True) for row in live_smoke_rows),
+        "live_smoke_parseable_rows": sum(
+            int(row.get("parseable") is True) for row in live_smoke_rows
+        ),
         "no_autotokenizer_on_gguf": True,
         "research_conductor_modified": False,
         "tests_run": [dict(row) for row in tests_run],
@@ -593,7 +599,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
     _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
     _require(artifact.get("no_autotokenizer_on_gguf") is True, "no_autotokenizer_on_gguf")
     _require(artifact.get("research_conductor_modified") is False, "research_conductor_modified")
-    _require(str(artifact.get("honest_verdict", "")).startswith(("complete:", "blocked:")), "verdict")
+    _require(
+        str(artifact.get("honest_verdict", "")).startswith(("complete:", "blocked:")), "verdict"
+    )
     _require(
         [row.get("hf_id") for row in artifact.get("model_specs", [])]
         == list(MANDATED_HEADLINE_MODEL_IDS),
@@ -609,7 +617,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
     _require(isinstance(artifact.get("exact_validator_handoff_ready"), bool), "handoff_ready")
     _require(isinstance(artifact.get("structured_output_positive_control_ready"), bool), "ready")
     _require(isinstance(artifact.get("llama_cpp_cuda_available"), bool), "llama_cpp_cuda_available")
-    _require(isinstance(artifact.get("grammar_runtime_available"), bool), "grammar_runtime_available")
+    _require(
+        isinstance(artifact.get("grammar_runtime_available"), bool), "grammar_runtime_available"
+    )
     _require(isinstance(artifact.get("parser_only_fallback_used"), bool), "fallback")
     if artifact.get("parser_only_fallback_used") is True:
         _require(artifact.get("sota_panel_gate_open") is False, "sota_panel_gate_open")
@@ -638,7 +648,9 @@ def honest_verdict(
     return "complete: structured_output_positive_control_ready_no_live_smoke_sota_gate_closed"
 
 
-def default_smoke_runner(spec: Mapping[str, Any], prompt: str, grammar: str | None) -> str:  # pragma: no cover
+def default_smoke_runner(
+    spec: Mapping[str, Any], prompt: str, grammar: str | None
+) -> str:  # pragma: no cover
     """Run one tiny local GGUF smoke sample through llama.cpp."""
 
     from llama_cpp import Llama, LlamaGrammar  # noqa: PLC0415
@@ -759,9 +771,7 @@ def _score_assignment(
     hard_ok = fixture_mod.hard_constraints_pass(instance, assignment)
     soft_score = fixture_mod.soft_score(instance, assignment)
     soft_optimal = bool(
-        reference["status"] == "optimal"
-        and hard_ok
-        and soft_score == reference["objective_score"]
+        reference["status"] == "optimal" and hard_ok and soft_score == reference["objective_score"]
     )
     reference_agreement = bool(
         soft_optimal
@@ -889,7 +899,11 @@ def _run_live_smoke(
         return []
     target_payload = build_fixture_candidate_payloads()[0]
     prompt = build_smoke_prompt(target_payload)
-    grammar = build_llama_cpp_json_grammar() if runtime_status.get("llama_cpp_grammar_available") else None
+    grammar = (
+        build_llama_cpp_json_grammar()
+        if runtime_status.get("llama_cpp_grammar_available")
+        else None
+    )
     rows = []
     for spec in selected:
         try:

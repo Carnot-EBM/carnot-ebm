@@ -36,7 +36,7 @@ from carnot import experiment_6573_sequential_flagship_gguf_admission_v2 as runt
 from carnot import experiment_6581_qwen36_flagship_source_shard as stream_helpers
 from carnot import experiment_6583_gemma4_26b_a4b_flagship_source_shard as gemma_helpers
 from carnot import experiment_6604_exact_two_level_plan_corpus as corpus_helpers
-from carnot.inference.sota_models import SOTA_GGUF_MODELS, resolve_cached_gguf
+from carnot.inference.sota_models import LEGACY_COMPARATOR_GGUF_MODELS, resolve_cached_gguf
 
 
 JsonDict = dict[str, Any]
@@ -79,7 +79,7 @@ TELEMETRY_EVERY_ROWS = 12
 EXPECTED_TASK_COUNT = 72
 EXPECTED_ROW_COUNT = EXPECTED_TASK_COUNT * len(SEED_SCHEDULE)
 
-_middle_moe = SOTA_GGUF_MODELS[1]
+_middle_moe = next(row for row in LEGACY_COMPARATOR_GGUF_MODELS if row["hf_id"] == GEMMA26_HUB_ID)
 _resolved_model_path = resolve_cached_gguf(GEMMA26_HUB_ID) or ""
 MODEL_SPECS = [
     {

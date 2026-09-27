@@ -83788,3 +83788,29 @@ Given raw rows and a candidate, a fresh process reproduces rows from the
 snapshots. Every required reader returns a durable argv, exit and log hash.
 Failed required checks yield a terminal disqualified verdict and zero
 readiness; scientific benefit fields remain null.
+## REQ-REPORT-7782: Historical compatibility receipt
+
+Exp7782 SHALL preserve the eighteen V676 collection failures and five V675
+capstone failures as individually identified checks. It SHALL repair historical
+comparator lookup without changing the current Qwen3.8 mandate. It SHALL bind
+V675 tests to immutable V675 roadmap and design bytes. It SHALL restore missing
+historical implementations from their original tested contracts. The current
+receipt SHALL report collection, affected tests, coverage, and terminal readers
+separately. It SHALL make no model invocation or new science claim.
+
+### SCENARIO-REPORT-7782-HISTORICAL
+
+Given a later mutable roadmap, historical comparators and V675 contract tests
+retain their original inputs and assertions. A mismatched current contract
+still fails the strict current resolver.
+
+### SCENARIO-REPORT-7782-COLLECTION
+
+Given the frozen twenty-three nodes, each private replay records the old error,
+source owner, and current disposition. Full Python collection succeeds only
+when every test module imports. Collection success does not mean suite success.
+
+### SCENARIO-REPORT-7782-RECEIPT
+
+Given bounded validation logs, a cold reader recomputes rows and hashes. Any
+failed required check disqualifies the candidate and sets readiness to zero.

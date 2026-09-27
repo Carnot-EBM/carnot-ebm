@@ -5,7 +5,6 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
-import subprocess
 import sys
 
 import pytest
@@ -21,22 +20,17 @@ from carnot.experiment_7766_v675_capstone import (
 )
 
 ROOT = SOURCE_ROOT
-V675_SNAPSHOT = "b2423a1cca9d42c604cfe7e467a6258e0a200b18"
+V675_FIXTURES = SOURCE_ROOT / "tests/python/fixtures"
 
 
 @pytest.fixture(autouse=True)
 def historical_v675_authority(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Use frozen V675 design bytes after the live roadmap advances to V676."""
-    for relative in (
-        "research-roadmap.yaml",
-        "openspec/change-proposals/research-roadmap-vNEXT.md",
+    for relative, fixture in (
+        ("research-roadmap.yaml", "roadmap_2026_09_675.yaml"),
+        ("openspec/change-proposals/research-roadmap-vNEXT.md", "roadmap_design_2026_09_675.md"),
     ):
-        content = subprocess.run(
-            ["git", "show", f"{V675_SNAPSHOT}:{relative}"],
-            cwd=SOURCE_ROOT,
-            check=True,
-            capture_output=True,
-        ).stdout
+        content = (V675_FIXTURES / fixture).read_bytes()
         path = tmp_path / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(content)

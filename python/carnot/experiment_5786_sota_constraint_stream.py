@@ -30,7 +30,12 @@ import time
 from typing import Any
 
 from carnot import experiment_5785_hardness_surface_fixture as fixture
-from carnot.inference.sota_models import SOTA_GGUF_MODELS, cached_sota_pair, resolve_cached_gguf
+from carnot.inference.sota_models import (
+    LEGACY_COMPARATOR_GGUF_MODELS,
+    SOTA_GGUF_MODELS,
+    cached_sota_pair,
+    resolve_cached_gguf,
+)
 
 
 JsonDict = dict[str, Any]
@@ -142,7 +147,7 @@ DEFAULT_TEST_COMMANDS = (
     ".venv/bin/python scripts/root_clutter_sweep.py",
 )
 
-_REGISTRY = {row["hf_id"]: row for row in SOTA_GGUF_MODELS}
+_REGISTRY = {row["hf_id"]: row for row in (*SOTA_GGUF_MODELS, *LEGACY_COMPARATOR_GGUF_MODELS)}
 MODEL_SPECS: list[JsonDict] = []
 for _index, _hf_id in enumerate(MANDATED_MODEL_IDS):
     _base = dict(_REGISTRY[_hf_id])

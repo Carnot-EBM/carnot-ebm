@@ -33,7 +33,12 @@ from typing import Any
 from carnot import experiment_5785_hardness_surface_fixture as fixture
 from carnot import experiment_5786_sota_constraint_stream as stream
 from carnot import experiment_5798_sota_answer_channel_diagnostic as diagnostic
-from carnot.inference.sota_models import SOTA_GGUF_MODELS, cached_sota_pair, resolve_cached_gguf
+from carnot.inference.sota_models import (
+    LEGACY_COMPARATOR_GGUF_MODELS,
+    SOTA_GGUF_MODELS,
+    cached_sota_pair,
+    resolve_cached_gguf,
+)
 
 
 JsonDict = dict[str, Any]
@@ -149,7 +154,7 @@ DEFAULT_TEST_COMMANDS = (
     ".venv/bin/python scripts/root_clutter_sweep.py",
 )
 
-_REGISTRY = {row["hf_id"]: row for row in SOTA_GGUF_MODELS}
+_REGISTRY = {row["hf_id"]: row for row in (*SOTA_GGUF_MODELS, *LEGACY_COMPARATOR_GGUF_MODELS)}
 MODEL_SPECS: list[JsonDict] = []
 for _index, _hf_id in enumerate(MANDATED_MODEL_IDS):
     _base = dict(_REGISTRY[_hf_id])
@@ -284,7 +289,9 @@ def _enrich_model_specs_from_preconditions(
         row["runtime_hash"] = str(check.get("runtime_hash") or row.get("runtime_hash") or "")
         row["sampling"] = dict(check.get("sampling") or row.get("sampling") or SAMPLING_CONFIG)
         row["stop"] = list(check.get("stop") or row.get("stop") or STOP_STRINGS)
-        row["token_budget"] = int(check.get("token_budget") or row.get("token_budget") or DEFAULT_MAX_TOKENS)
+        row["token_budget"] = int(
+            check.get("token_budget") or row.get("token_budget") or DEFAULT_MAX_TOKENS
+        )
         row["reasoning_budget"] = int(
             check.get("reasoning_budget")
             or row.get("reasoning_budget")
@@ -408,9 +415,7 @@ def sample_size_justification(canary_rows: Sequence[Mapping[str, Any]]) -> JsonD
 
 
 def _candidate_lines(row: Mapping[str, Any]) -> str:
-    return "\n".join(
-        f"{item['label']}: {item['candidate']}" for item in row["label_mapping"]
-    )
+    return "\n".join(f"{item['label']}: {item['candidate']}" for item in row["label_mapping"])
 
 
 def build_prompt_cell(
@@ -456,9 +461,7 @@ def build_prompt_cell(
     }
 
 
-_FINAL_LINE_PATTERN = re.compile(
-    r"^\s*(?P<row_id>\S+)\s*:\s*(?P<label>[A-Z][A-Z0-9_-]*)\s*$"
-)
+_FINAL_LINE_PATTERN = re.compile(r"^\s*(?P<row_id>\S+)\s*:\s*(?P<label>[A-Z][A-Z0-9_-]*)\s*$")
 
 
 def split_response_text(raw_response_text: str) -> JsonDict:
@@ -777,9 +780,7 @@ def _rows_for_mode(
     rows: Sequence[Mapping[str, Any]], model_hf_id: str, mode_id: str
 ) -> list[JsonDict]:
     return [
-        dict(row)
-        for row in rows
-        if row["model_hf_id"] == model_hf_id and row["mode_id"] == mode_id
+        dict(row) for row in rows if row["model_hf_id"] == model_hf_id and row["mode_id"] == mode_id
     ]
 
 
@@ -822,11 +823,7 @@ def _mode_summary(
     accepted = sum(
         1 for row in rows if dict(row.get("taxonomy") or {}).get("valid_exact_output") is True
     )
-    reasons = [
-        name
-        for name, count in sorted(counts.items())
-        if count
-    ]
+    reasons = [name for name, count in sorted(counts.items()) if count]
     if len(rows) != expected_rows:
         reasons.append("missing_canary_rows")
     if not _runtime_authenticated(runtime_receipt):
@@ -896,7 +893,9 @@ def _metric_counts(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
     exact_label = sum(
         1
         for row in rows
-        if row.get("exact_label") and row.get("exact_certificate_hash") and row.get("exact_validator_result")
+        if row.get("exact_label")
+        and row.get("exact_certificate_hash")
+        and row.get("exact_validator_result")
     )
     return {
         "total": total,
@@ -916,13 +915,17 @@ def _total_generation_seconds(rows: Sequence[Mapping[str, Any]]) -> float:
 
 
 def _verified_outputs_per_second(rows: Sequence[Mapping[str, Any]]) -> float:
-    accepted = sum(1 for row in rows if dict(row.get("taxonomy") or {}).get("valid_exact_output") is True)
+    accepted = sum(
+        1 for row in rows if dict(row.get("taxonomy") or {}).get("valid_exact_output") is True
+    )
     seconds = _total_generation_seconds(rows)
     return round(accepted / seconds, 6) if accepted and seconds > 0 else 0.0
 
 
 def _verified_outputs_per_token(rows: Sequence[Mapping[str, Any]]) -> float:
-    accepted = sum(1 for row in rows if dict(row.get("taxonomy") or {}).get("valid_exact_output") is True)
+    accepted = sum(
+        1 for row in rows if dict(row.get("taxonomy") or {}).get("valid_exact_output") is True
+    )
     tokens = sum(int(row.get("output_tokens", 0) or 0) for row in rows)
     return round(accepted / tokens, 6) if accepted and tokens > 0 else 0.0
 
@@ -956,7 +959,11 @@ def adversarial_control_results(fixture_row: Mapping[str, Any]) -> JsonDict:
             "stop",
             8,
         ),
-        "stop_collision": (f"scratch <stop>\n{fixture_row['row_id']}: {fixture_row['exact_label']}", "stop", 8),
+        "stop_collision": (
+            f"scratch <stop>\n{fixture_row['row_id']}: {fixture_row['exact_label']}",
+            "stop",
+            8,
+        ),
         "truncation": ("partial reasoning", "length", DEFAULT_MAX_TOKENS),
         "protected_fact_mutation": (
             f"unit=mutated\n{fixture_row['row_id']}: {fixture_row['exact_label']}",
@@ -1100,12 +1107,16 @@ def answer_channel_ready_score_from_artifact(artifact: Mapping[str, Any]) -> flo
         and number("truncation_rate", 1.0) == 0.0
         and number("empty_final_content_rate", 1.0) == 0.0
         and number("invalid_candidate_rate", 1.0) == 0.0
-        and int(artifact["protected_fact_distortion_count"] if "protected_fact_distortion_count" in artifact else 1) == 0
+        and int(
+            artifact["protected_fact_distortion_count"]
+            if "protected_fact_distortion_count" in artifact
+            else 1
+        )
+        == 0
         and _adversarial_controls_pass(artifact)
         and artifact.get("inference_substrate") == INFERENCE_SUBSTRATE
         and all(
-            dict(row).get("acceptable") is True
-            for row in artifact.get("mode_execution_matrix", [])
+            dict(row).get("acceptable") is True for row in artifact.get("mode_execution_matrix", [])
         )
     )
     return 1.0 if ready else 0.0
@@ -1191,7 +1202,9 @@ def build_artifact(
         "models_used": list(MANDATED_MODEL_IDS),
         "model_runtime_receipts": _model_runtime_receipts(selected, runtime_receipts),
         "gpu_offload_receipts": _gpu_offload_receipts(selected, runtime_receipts),
-        "embedded_template_receipts": _embedded_template_receipts(preconditions_checked, model_specs),
+        "embedded_template_receipts": _embedded_template_receipts(
+            preconditions_checked, model_specs
+        ),
         "canary_fixture_hash": canary_fixture_hash(canary_rows),
         "independent_unit_count": int(
             sample_size_justification(canary_rows)["independent_unit_count"]
@@ -1211,7 +1224,9 @@ def build_artifact(
         "stop_collision_rate": _rate(int(counts["stop_collision"]), total),
         "timeout_rate": _rate(int(counts["timeout"]), total),
         "protected_fact_distortion_count": int(counts["protected_fact_distortion"]),
-        "adversarial_control_results": adversarial_control_results(canary_rows[0]) if canary_rows else {},
+        "adversarial_control_results": adversarial_control_results(canary_rows[0])
+        if canary_rows
+        else {},
         "verified_outputs_per_second": _verified_outputs_per_second(response_rows),
         "verified_outputs_per_token": _verified_outputs_per_token(response_rows),
         "wasted_token_count": _wasted_token_count(response_rows),
@@ -1251,7 +1266,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
     for field in artifact.get("producer_gate_fields", []):
         if field not in artifact or isinstance(artifact[field], Mapping):
             raise ValueError("producer_gate_fields")
-    if artifact.get("answer_channel_ready_score") != answer_channel_ready_score_from_artifact(artifact):
+    if artifact.get("answer_channel_ready_score") != answer_channel_ready_score_from_artifact(
+        artifact
+    ):
         raise ValueError("answer_channel_ready_score")
     verdict = str(artifact.get("honest_verdict") or "")
     if artifact.get("status") == "complete" and not verdict.startswith("complete:"):
@@ -1264,7 +1281,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> bool:
 
 
 def _resume_runtime_receipt(
-    model_spec: Mapping[str, Any], mode: Mapping[str, Any], existing_rows: Sequence[Mapping[str, Any]]
+    model_spec: Mapping[str, Any],
+    mode: Mapping[str, Any],
+    existing_rows: Sequence[Mapping[str, Any]],
 ) -> JsonDict:
     return {
         "model_hf_id": str(model_spec["hf_id"]),
@@ -1311,7 +1330,10 @@ def _prior_runtime_receipt(
     receipt = dict(dict(model.get("mode_runtime_receipts") or {}).get(str(mode["mode_id"])) or {})
     if not receipt or _runtime_receipt_is_resume_only(receipt):
         return {}
-    if receipt.get("model_hf_id") != model_spec["hf_id"] or receipt.get("mode_id") != mode["mode_id"]:
+    if (
+        receipt.get("model_hf_id") != model_spec["hf_id"]
+        or receipt.get("mode_id") != mode["mode_id"]
+    ):
         return {}  # pragma: no cover - defensive stale-prior fallback.
     receipt["replayed_from_prior_artifact"] = True
     return receipt
@@ -1338,7 +1360,9 @@ def run(
     base_specs = normalize_model_specs(model_specs)
     preconditions = dict(preconditions_checked or collect_preconditions())
     specs = _enrich_model_specs_from_preconditions(base_specs, preconditions)
-    source_rows = list(fixture_rows or fixture.read_row_file(REPO_ROOT / EXP5785_ROWS_RELATIVE_PATH))
+    source_rows = list(
+        fixture_rows or fixture.read_row_file(REPO_ROOT / EXP5785_ROWS_RELATIVE_PATH)
+    )
     diag = dict(
         diagnostic_artifact
         or json.loads((REPO_ROOT / EXP5798_ARTIFACT_RELATIVE_PATH).read_text(encoding="utf-8"))
@@ -1360,7 +1384,9 @@ def run(
             output_rows_path.parent.mkdir(parents=True, exist_ok=True)
             output_rows_path.touch(exist_ok=True)
         for model_spec in specs:
-            for mode in _preferred_modes_for_model(modes, str(model_spec["hf_id"]))[:max_modes_per_model]:
+            for mode in _preferred_modes_for_model(modes, str(model_spec["hf_id"]))[
+                :max_modes_per_model
+            ]:
                 attempted_modes.append(mode)
                 pending_cells = []
                 for row in canary_rows:
@@ -1373,7 +1399,10 @@ def run(
                 if pending_cells:
 
                     def emit_response(
-                        raw_response: Mapping[str, Any], *, spec: Mapping[str, Any] = model_spec, active_mode: Mapping[str, Any] = mode
+                        raw_response: Mapping[str, Any],
+                        *,
+                        spec: Mapping[str, Any] = model_spec,
+                        active_mode: Mapping[str, Any] = mode,
                     ) -> None:
                         nonlocal rows_written
                         fixture_row = next(
@@ -1402,7 +1431,9 @@ def run(
                         emit_response,
                     )
                 else:
-                    mode_rows = _rows_for_mode(all_rows, str(model_spec["hf_id"]), str(mode["mode_id"]))
+                    mode_rows = _rows_for_mode(
+                        all_rows, str(model_spec["hf_id"]), str(mode["mode_id"])
+                    )
                     runtime_receipts[receipt_key] = _prior_runtime_receipt(
                         result_path,
                         model_spec,
@@ -1431,7 +1462,9 @@ def run(
         "checkpoint_after_every_response": all(
             row.get("checkpoint_after_response") is True for row in all_rows
         ),
-        "replayed_row_hashes_match": all(canary_row_hash(row) == row.get("row_hash") for row in all_rows),
+        "replayed_row_hashes_match": all(
+            canary_row_hash(row) == row.get("row_hash") for row in all_rows
+        ),
         "duplicate_cells_present": len(existing) != len(all_rows),
         "resume_supported": True,
     }
@@ -1470,13 +1503,21 @@ def _memory_probe() -> JsonDict:  # pragma: no cover - host-dependent preflight.
         available_mb = int(
             os.sysconf("SC_AVPHYS_PAGES") * os.sysconf("SC_PAGE_SIZE") / (1024 * 1024)
         )
-    return {"available_mb": available_mb, "required_mb": required_mb, "ok": available_mb >= required_mb}
+    return {
+        "available_mb": available_mb,
+        "required_mb": required_mb,
+        "ok": available_mb >= required_mb,
+    }
 
 
 def _disk_probe() -> JsonDict:  # pragma: no cover - host-dependent preflight.
     required_mb = 4096
     available_mb = int(shutil.disk_usage(REPO_ROOT).free / (1024 * 1024))
-    return {"available_mb": available_mb, "required_mb": required_mb, "ok": available_mb >= required_mb}
+    return {
+        "available_mb": available_mb,
+        "required_mb": required_mb,
+        "ok": available_mb >= required_mb,
+    }
 
 
 def _hash_optional_file(path: str | Path) -> str:  # pragma: no cover - host-dependent preflight.
@@ -1500,7 +1541,9 @@ def _runtime_hash() -> str:  # pragma: no cover - host-dependent preflight.
     return sha256_json(parts)
 
 
-def _chat_template_probe(model_path: str) -> JsonDict:  # pragma: no cover - host-dependent preflight.
+def _chat_template_probe(
+    model_path: str,
+) -> JsonDict:  # pragma: no cover - host-dependent preflight.
     try:
         from llama_cpp import Llama
 
@@ -1544,7 +1587,11 @@ def _replay_exp5798(path: str | Path) -> JsonDict:  # pragma: no cover - host-de
             "gate_receipts": receipts,
         }
     except Exception as exc:
-        return {"ok": False, "artifact_path": str(EXP5798_ARTIFACT_RELATIVE_PATH), "error": repr(exc)}
+        return {
+            "ok": False,
+            "artifact_path": str(EXP5798_ARTIFACT_RELATIVE_PATH),
+            "error": repr(exc),
+        }
 
 
 def _replay_fixture(
@@ -1592,7 +1639,11 @@ def _replay_fixture(
             "gate_receipts": receipts,
         }
     except Exception as exc:
-        return {"ok": False, "artifact_path": str(EXP5785_ARTIFACT_RELATIVE_PATH), "error": repr(exc)}
+        return {
+            "ok": False,
+            "artifact_path": str(EXP5785_ARTIFACT_RELATIVE_PATH),
+            "error": repr(exc),
+        }
 
 
 def collect_preconditions(
@@ -1638,9 +1689,13 @@ def collect_preconditions(
             "reasoning_budget": DEFAULT_REASONING_BUDGET_TOKENS,
             "gpu": spec["gpu"],
             "seed": RANDOM_SEEDS["runner_seed"] + int(spec["sequence_index"]),
-            "free_vram_mb": max((int(row.get("memory_free_mb", 0) or 0) for row in devices), default=0),
+            "free_vram_mb": max(
+                (int(row.get("memory_free_mb", 0) or 0) for row in devices), default=0
+            ),
             "min_vram_mb": int(float(spec["min_vram_gb"]) * 1000),
-            "ok": bool(spec["local_model_present"] and spec["model_hash"] and chat.get("ok") is True),
+            "ok": bool(
+                spec["local_model_present"] and spec["model_hash"] and chat.get("ok") is True
+            ),
         }
     third_added = next((row for row in specs if row["hf_id"] == GEMMA31_ID), {})
     blocked: list[str] = []

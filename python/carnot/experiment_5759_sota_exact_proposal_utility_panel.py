@@ -29,7 +29,12 @@ from typing import Any
 
 from carnot import experiment_5733_sota_finite_choice_proposal_channel as exp5733
 from carnot import experiment_5746_exact_proposal_utility_benchmark as exp5746
-from carnot.inference.sota_models import SOTA_GGUF_MODELS, cached_sota_pair, resolve_cached_gguf
+from carnot.inference.sota_models import (
+    LEGACY_COMPARATOR_GGUF_MODELS,
+    SOTA_GGUF_MODELS,
+    cached_sota_pair,
+    resolve_cached_gguf,
+)
 
 
 JsonDict = dict[str, Any]
@@ -96,7 +101,7 @@ CONTROL_NAMES = (
     "exact_search_only",
 )
 
-_REGISTRY = {row["hf_id"]: row for row in SOTA_GGUF_MODELS}
+_REGISTRY = {row["hf_id"]: row for row in (*SOTA_GGUF_MODELS, *LEGACY_COMPARATOR_GGUF_MODELS)}
 MODEL_SPECS: list[JsonDict] = []
 for _gpu, _hf_id in zip((0, 1, 0), HEADLINE_MODEL_IDS, strict=True):
     _base = dict(_REGISTRY[_hf_id])
