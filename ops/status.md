@@ -1,6 +1,17 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-26
+**Last Updated:** 2026-09-27
+
+## 2026-09-27 — Exp7752 direct CLI test gate repaired
+
+- The capstone CLI now adds the repository root to its import path when run as
+  a script, so its fresh reader can load `scripts.roadmap_schema`.
+- The conductor-equivalent subset passes 87/87, and the capstone reducer has
+  97/97 statement coverage. Its scientific result remains blocked by missing
+  required upstream evidence.
+- Repository-wide collection still stops on the unrelated Exp5512 Qwen model
+  registry lookup. The reconciliation check still reports its existing global
+  spec-reference backlog; the capstone's scoped spec check passes.
 
 ## 2026-09-26 — Exp7708 session-independent fixture gate repaired
 

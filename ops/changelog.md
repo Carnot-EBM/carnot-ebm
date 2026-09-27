@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-09-27 — Exp7752 fresh-process import repair
+
+- Resolved the repository root before capstone CLI imports, allowing direct
+  execution to load the roadmap schema. The existing cold-reader test now
+  passes unchanged; the conductor-equivalent subset passes 87/87 and changed
+  reducer coverage is 100%.
+
 ## 2026-09-26 — Exp7708 fixture preflight repair
 
 - Removed the coding-session-ID requirement from CPU fixture preflight; the ID

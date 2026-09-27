@@ -1,6 +1,11 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-26
+**Last Updated:** 2026-09-27
+**Operational Note:** REQ-REPORT-7752 and SCENARIO-REPORT-7752-REPLAY map the
+V674 capstone reducer and direct CLI to
+`tests/python/test_experiment_7752_v674_capstone.py`. The CLI now resolves the
+repository roadmap schema in a fresh process. Its six focused tests and the
+87-test conductor subset pass; the reducer has 97/97 statement coverage.
 **Operational Note:** SCENARIO-REPORT-7708-TERMINAL now verifies that the CPU
 fixture preflight succeeds when `CODEX_SESSION_ID` is absent. The conductor's
 146-test subset passes with the variable unset; the changed Exp7708 runner and

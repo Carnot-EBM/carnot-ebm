@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7752: Reconcile the V674 evidence without promotion
+
+Exp7752 SHALL compare the active V674 roadmap against the independent table and
+JSON design, enumerate exactly Exp7739 through Exp7752, and cold-read each
+present producer and its raw rows. The planned Exp7752 output SHALL not count
+as an upstream input. Conductor pre-gate receipts SHALL remain distinct from
+producer artifacts. Missing, blocked, retired, flagged, or disqualified
+Exp7744, Exp7746, or Exp7747 SHALL produce
+`complete_blocked_required_v674_evidence`, with exact failed operands and
+null scientific benefit gates. Exp7745, Exp7749, and Exp7750 SHALL bound their
+separate Qwen, ARC, and efficiency claims. No exposed development or fixture
+result may become fresh generalization or retained self-learning evidence.
+
+### SCENARIO-REPORT-7752-CUSTODY
+
+Given unavailable required producers and a pre-gate receipt, the fourteen
+ordered dispositions preserve their actual verdicts and hashes, including raw
+row hashes, while the required scientific gates remain null. Every block names
+the smallest changed upstream prerequisite.
+
+### SCENARIO-REPORT-7752-REPLAY
+
+Given a private fixture run, a fresh reader recomputes task rows, source
+hashes, summary and raw-row hashes from exact bytes. A changed source byte or
+summary fails. A candidate passes adversarial and strict verdict readers
+before atomic publication. Direct invocation of the capstone CLI SHALL resolve
+the repository's roadmap schema without relying on pytest's import path.
+
+### SCENARIO-REPORT-7752-TERMINAL
+
+The capstone records actual G1-G4 output, established FoVer AUROC 0.9131,
+separate validity/readiness/probability/decision/retention/efficiency gates,
+actual aggregation provenance, frozen affected validation, and a draft
+publication disposition. It never changes live ARC defaults or roadmap state.
+
 ## REQ-REPORT-7751: Audit V674 hardware continuity without promotion
 
 Exp7751 SHALL hash dated inventory and board evidence, preserve the actual
