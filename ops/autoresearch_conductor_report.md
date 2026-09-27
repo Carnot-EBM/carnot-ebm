@@ -1,6 +1,6 @@
 # Autoresearch conductor round
 
-- started: 2026-09-27T19:21:17.937122+00:00
+- started: 2026-09-27T19:54:07.117243+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
@@ -9,8 +9,8 @@
 - rejected: 5
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 249
-- breaker_historical_tail_at_start: 9
+- breaker_invocation_start_position: 254
+- breaker_historical_tail_at_start: 14
 - breaker_invocation_local_tail_at_start: 0
 - breaker_invocation_local_tail_at_end: 5
 - generator_exhausted: False
@@ -18,25 +18,20 @@
 
 
 ## Generator failure reasons
-- Implementation: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7f8b8407b1a0>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
-- Implementation: Energy regression on: verifier_auroc
-- Proposed Optimization:**
-We optimize `verifier_auroc` using a robust, cross-validated probe weight search:
-- **Automatic Orientation Alignment:** We evaluate the baseline weights `(0.5, 0.5)` on the training rows to determine whether `"incorrect"` or `"correct"` corresponds to the high-score class ($AUROC \approx 0.732$).
-- **Linearity & Feature Extraction:** We probe the unit directions `(1.0, 0.0)` and `(0.0, 1.0)` and verify if score composition is linear, allowing rapid scanning of candidate weight ratios.
-- **Stratified 5-Fold Cross-Validation:** Instead of evaluating solely on the training set (which causes overfitting and held-out test regressions), we evaluate candidate weight directions across 5 stratified folds.
-- **Fine Grid & Simplex Search:** We evaluate normalized convex combinations $\alpha \in [0.0, 1.0]$ ($w_e = \alpha, w_f = 1 - \alpha$) as well as angular sweeps on the unit circle $\theta \in [0, 2\pi)$ to cover all relative weightings.
-- **Strict Baseline Fallback:** If no candidate strictly improves the cross-validated AUROC over the baseline `(0.5, 0.5)` by a statistically meaningful margin, we default to the baseline, guaranteeing no energy regression.: Energy regression on: verifier_auroc
-- Proposed Optimization Procedure
-We implement a **Multi-Method Regularized Consensus** search over the convex simplex $w_e = \alpha, w_f = 1 - \alpha$ ($\alpha \in [0.05, 0.95]$):
-- **Orientation & Baseline Calibrator:** We evaluate baseline weights `(0.5, 0.5)` using exact rank-sum AUROC with fractional tie-breaking to automatically identify the target positive class (`"incorrect"` vs `"correct"`), matching baseline energy ($E \approx 0.2675 \implies \text{AUROC} \approx 0.7325$).
-- **Parametric Fisher Linear Discriminant (LDA):** Leveraging the raw PCIB signal corpus (`calibrated_decision_train_correct` and `calibrated_decision_train_incorrect`), we compute the regularized Fisher discriminant direction $w_{\text{LDA}} = (\Sigma_{\text{pooled}} + \lambda I)^{-1}(\mu_{\text{target}} - \mu_{\text{other}})$. As an analytical moment-based estimator, LDA has minimal estimation variance and is mathematically optimal under elliptical distributions without rank-overfitting.
-- **Kernel-Smoothed Stratified Cross-Validation:** We perform 5-fold stratified cross-validation across a candidate grid $\alpha \in [0.05, 0.95]$ and apply Gaussian kernel smoothing ($\sigma = 0.06$) to the fold-averaged validation AUROC curve. This penalizes sharp, isolated sample spikes and isolates the broad, stable performance plateau.
-- **Empirical Probe Verification & Shrinkage:** We synthesize the estimates into a consensus weight $\alpha^*$, shrink conservatively towards the baseline $0.5$ if the cross-validated gain is modest, and verify that the constructed `Probe(w_e, w_f)` achieves non-degenerate, improved separation on the training set prior to returning.: Energy regression on: verifier_auroc
-- We optimize `calibrated_decision` through a stable, autodiff-independent procedure:
-1. **Model Parameter Decoupling:** We extract the 17 parameters ($W_1 \in \mathbb{R}^{4 \times 2}$, $b_1 \in \mathbb{R}^4$, $w_{\text{out}} \in \mathbb{R}^4$, $b_{\text{out}} \in \mathbb{R}$) from the initialized `GibbsModel` and parameterize the optimization space over a flat 17-dimensional vector.
-2. **PyTree-Safe Forward Evaluation:** By evaluating `benchmark_data["nce_loss"](model, correct_array, incorrect_array)` in native execution mode, we bypass JAX tracer restrictions and eliminate any PyTree type errors.
-3. **Quasi-Newton L-BFGS Optimization with Central Differences:** Because the parameter space is small (17 parameters), central finite differences ($h = 10^{-4}$) provide accurate gradients without float32 underflow. We employ quasi-Newton L-BFGS-B with line search (and an Adam fallback), guaranteeing monotonic loss reduction.
-4. **Calibration-Preserving Regularization:** We incorporate light weight regularization ($\lambda = 10^{-4}$) and moderate iteration limits to prevent logit explosion, ensuring superior probability calibration alongside low NCE energy.
-5. **Strict Schema Formatting:** The optimized weights are checked against the initial baseline and formatted to the exact required shapes (`w1` as $4 \times 2$ nested list, `b1` and `w_out` as 4-element lists, `b_out` as a float).: Energy regression on: calibrated_decision
+- ---: Energy regression on: verifier_auroc
+- Implementation: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7f0cd0d938c0>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
+- Optimization Strategy
+1. **Empirical Baseline Calibration**: We evaluate the default probe `Probe(entity_weight=0.5, falsifiability_weight=0.5)` on `verifier_auroc_train_rows` to calibrate the positive label direction ($y_{\text{target}}$) such that the baseline AUROC $\ge 0.50$ (matching the baseline energy of 0.2675).
+2. **Fast Feature Precomputation via Linearity Verification**: We probe `(1.0, 0.0)` and `(0.0, 1.0)` to verify linear combination behavior. If linear, feature projections for all training rows are precomputed once, enabling thousands of candidate evaluations in milliseconds.
+3. **5-Fold Stratified Cross-Validation on the Weight Simplex**: We sweep $\alpha \in [0.01, 0.99]$ where $w_e = \alpha$ and $w_f = 1 - \alpha$ (ensuring strictly positive, non-degenerate weights summing to 1.0). We also search negative weights if supported by the probe. Candidates are scored using their mean out-of-fold validation AUROC with a gentle L2 penalty toward the proven $(0.5, 0.5)$ prior.
+4. **Guaranteed Regression Safeguard**: If no candidate reliably beats the baseline's cross-validation AUROC, the optimizer falls back to `[0.5, 0.5]`, mathematically guaranteeing no regression while locking in genuine separation gains.: Energy regression on: verifier_auroc
+- ---: Energy regression on: calibrated_decision
+- Proposed Strategy
+We optimize `verifier_auroc` by searching over the weight simplex $(w_e, w_f)$ with $w_e + w_f = 1$ ($w_e, w_f \in [0.01, 0.99]$) using:
+1. **Target Calibration**: Evaluate baseline `Probe(0.5, 0.5)` to identify the positive label orientation ($y=1$) yielding baseline $\text{AUROC} \ge 0.50$ (matching the $0.267537$ baseline energy).
+2. **Dual-Path Feature Extraction & Linearity Verification**: Extract the component scores $s_{\text{entity}}$ and $s_{\text{falsif}}$ using `Probe(1.0, 0.0)` and `Probe(0.0, 1.0)`. Verify linearity against `Probe(0.5, 0.5)`; if linear, evaluate all combinations via precomputed projections, and verify all final selections against live `Probe.score(step_text, "")` calls.
+3. **Stratified 5-Fold Cross-Validation**: Evaluate candidate weights across 5 balanced folds to measure out-of-fold generalization rather than in-sample fit.
+4. **Moving-Window Smoothing (Overfitting Prevention)**: Apply local moving-average smoothing across adjacent simplex candidates to eliminate point-sample AUROC ripples and select the center of the widest high-separation plateau.
+5. **Fisher Linear Discriminant Analysis (LDA)**: Compute the Bayes-optimal linear discriminant direction $w_{\text{LDA}} = \Sigma^{-1} (\mu_1 - \mu_0)$ from the pooled feature covariance to provide a parametric, sample-efficient benchmark.
+6. **Strict Non-Degeneracy**: Enforce non-zero variance and strictly distinct predictions across the training set before returning `final_state`.: Energy regression on: verifier_auroc
 No hypothesis both won this round and committed cleanly.
