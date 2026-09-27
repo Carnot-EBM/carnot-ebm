@@ -8945,3 +8945,34 @@ one typed decision. Canonical arms SHALL use A; logistic SHALL average
 per-sentence pooled features before its shared head. Invalid or over-budget
 families SHALL use p=0.5, force escalation, and contribute Brier=0.25 and
 realized cost=0.25 to overall metrics. Eligible-only metrics stay separate.
+
+## REQ-VERIFY-7784: Requalify bounded training and durable online mechanics
+
+Exp7784 SHALL identify the stalled Exp7769 coverage node with verbose node
+progress and retain its exact command. It SHALL run every affected assertion
+in supervised coverage shards, combine distinct data files, and require 100%
+statement coverage for new implementation code. The original Exp7769 verdict
+SHALL remain unchanged. Broad collection SHALL be a separate observation.
+
+### SCENARIO-VERIFY-7784-NUMERICAL
+
+All nine fixture arm shapes SHALL train, save, reload and decide through the
+existing normalized runtime. Tests SHALL check nonzero gradients, finite
+differences, masking, stable normalization, projected duals, paired risk
+aggregation before temperature, sixteen trained static coefficients, and the
+4096 parameter ceiling including dual variables.
+
+### SCENARIO-VERIFY-7784-ONLINE
+
+The natural-head adapter SHALL use the real durable bank. Feedback SHALL
+follow prediction. Rejections, queue overflow, duplicate labels, restart and
+owned hard-exit recovery SHALL be observed. The protocol SHALL offer queued
+commit and between-query commit, and hold bank version fixed within a query.
+
+### SCENARIO-VERIFY-7784-TERMINAL
+
+An exact current artifact SHALL retain each fixture row, protocol paths,
+preflight failures, coverage shard receipts, fresh-process reduction, and
+terminal reader results. An external failed producer SHALL block before
+compute. A failed owned validation SHALL disqualify and set readiness zero.
+Fixture success SHALL be circular_positive with null natural benefit gates.
