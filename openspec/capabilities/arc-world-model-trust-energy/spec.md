@@ -37569,3 +37569,11 @@ Given two eligible cells with equal visits and different replay sightings, the m
 #### SCENARIO-ARC-WMTE-7748-PARITY
 
 Given archive-off agents and fixed randomness, 300 decisions and ten episodes retain exact actions and random state. Ordinary frontier pending frames remain organic; empty prefixes cannot schedule a return.
+
+### REQ-ARC-WMTE-7763: Preserve observation-source semantics on the scored path
+
+The requalification SHALL reuse the shipped replay-landing repair and the scored `make_carnot_agent` E3 policy. Disabled, total-seen, and organic-seen arms SHALL differ only in archive selection policy. Replay and reset landings SHALL increment their source counters without incrementing organic sightings. Current LLM calls, stored solve routes, per-game adapters, game-source reads, and offline truth searches SHALL be absent.
+
+#### SCENARIO-ARC-WMTE-7763-PROVENANCE
+
+Given two scripted cells and repeated replay observations, the total and organic selectors choose different eligible prefixes; changing replay sightings never changes organic sightings. Real SDK transitions provide transport evidence separately from scripted selector evidence.

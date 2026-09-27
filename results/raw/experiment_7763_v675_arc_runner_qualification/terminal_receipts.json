@@ -1,0 +1,43 @@
+{
+  "candidate_sha256": "sha256:6dbe20fe7e044e87dd36d7574c3721d3fd48a9d05677a9a97b3206073dff1d1d",
+  "commands": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7763_v675_arc_runner_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7763_v675_arc_runner_qualification/terminal_candidate.json"
+      ],
+      "duration_s": 0.7488006250059698,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7763_v675_arc_runner_qualification/terminal_logs/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "terminal_reader",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7763_v675_arc_runner_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7763_v675_arc_runner_qualification/terminal_candidate.json"
+      ],
+      "duration_s": 0.030940893018851057,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7763_v675_arc_runner_qualification/terminal_logs/01_strict_row_lint.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_row_lint",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "terminal_reader",
+      "timed_out": false
+    }
+  ],
+  "duration_s": 0.7805190660001244
+}

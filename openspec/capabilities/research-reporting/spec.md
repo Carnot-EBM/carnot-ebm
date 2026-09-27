@@ -83136,6 +83136,18 @@ Given raw fixture rows in a fresh process, the reducer recomputes event counts a
 The artifact records separate validity, readiness, Brier, decision cost, coverage, retention and efficiency gates, actual model-call counts, affected check receipts, exact candidate-reader exits and hashes, and an oracle-fixture claim limit.
 ## V674 contract and method custody — 2026-09-27
 
+### REQ-REPORT-7763: Requalify the scored organic ARC runner
+
+Exp7763 SHALL freeze the eight named games, seeds 67501 and 67502, three ordered arms, 2000 charged actions, 75 seconds, SDK baseline actions, registry exposure, and both RESET charging conventions before observing outcomes. It SHALL retain all 48 schedule rows even when no comparison episode starts. A disqualified Exp7748 receipt is historical diagnostic evidence; a missing Exp7749 panel producer is a distinct downstream absence. Readiness SHALL remain zero unless the current runner passes format, full affected coverage, applicable E2E, real SDK transport, cold reduction, and terminal readers. Scripted fixtures support only circular-positive mechanics.
+
+#### SCENARIO-REPORT-7763-CUSTODY
+
+Given frozen schedule rows and raw probe traces, a fresh process rejects a dropped row, changed raw hash, or false action count. A blocked dependency records the exact producer path, field, expected value, observed value, and hash where present.
+
+#### SCENARIO-REPORT-7763-VALIDATION
+
+Given a current candidate, readiness is one only after every registered affected command exits zero, the coverage-path skip is exercised outside coverage, and the actual scored SDK transition and terminal readers pass. Unmeasured benefit gates remain null.
+
 ### REQ-REPORT-7748: Qualify the organic ARC runner before game comparison
 
 Exp7748 SHALL freeze the Exp7749 eight-game, two-seed, three-arm schedule and actual SDK baseline actions before scored episodes. It SHALL preserve unstarted and censored rows, use observation-time counter provenance, withhold target adapters and stored routes, and report zero current model calls. A real offline SDK transition through the scored `choose_action` and `is_done` path, distinct matched enabled selectors, 100 percent coverage of new implementation code, affected checks, cold reduction, and terminal readers SHALL all pass before `organic_runner_ready_score` can equal one. Fixture success alone is `circular_positive`; it gives no new solve credit. Missing upstream inputs or unchanged external failures produce a terminal blocked result with exact gate operands.
