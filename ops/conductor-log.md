@@ -18799,3 +18799,4 @@ code |
 | 2026-09-27 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::main age-week 0: OPEN 1 days: SILENT_NON_FIRING on advers |
 | 2026-09-27 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_positive_control_failed_or_unchecked age-week 0: OPEN 1  |
 | 2026-09-27 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7708_v671_arc_generalization_runner.json age-week 0: OPEN 1 days: CLA |
+| 2026-09-27 00:40 UTC | Qualify advisory constraint growth with scoped val | OK | 91 passed, 1 warning in 27.99s |
