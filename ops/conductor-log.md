@@ -18801,3 +18801,4 @@ code |
 | 2026-09-27 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7708_v671_arc_generalization_runner.json age-week 0: OPEN 1 days: CLA |
 | 2026-09-27 00:40 UTC | Qualify advisory constraint growth with scoped val | OK | 91 passed, 1 warning in 27.99s |
 | 2026-09-27 00:43 UTC | Measure delayed constraint additions and retained  | GATE_BLOCK | gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7730-set-energy-fit.set_heads_ready_score (actual=0 == expected=1) |
+| 2026-09-27 01:00 UTC | Cold-reduce development decisions and feedback cau | OK | 105 passed, 2 warnings in 7.48s |
