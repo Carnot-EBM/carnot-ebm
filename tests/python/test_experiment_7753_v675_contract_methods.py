@@ -17,10 +17,23 @@ from carnot import experiment_7753_v675_contract_methods as subject
 
 
 @pytest.fixture
-def inputs(tmp_path: Path) -> tuple[Path, str, dict]:
-    """Keep every mutated authority outside the public repository."""
+def inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, str, dict]:
+    """Read the preserved V675 authorities after the active roadmap advances."""
+    monkeypatch.setattr(
+        subject,
+        "DESIGN",
+        Path("openspec/change-proposals/research-roadmap-v675-preserved-20260927.md"),
+    )
     design = (subject.ROOT / subject.DESIGN).read_text()
-    roadmap = yaml.safe_load((subject.ROOT / "research-roadmap.yaml").read_text())
+    historical = subprocess.run(
+        ["git", "show", "b2423a1cca:research-roadmap.yaml"],
+        cwd=subject.ROOT,
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=True,
+    ).stdout
+    roadmap = yaml.safe_load(historical)
     (tmp_path / "research-roadmap.yaml").write_text(yaml.safe_dump(roadmap))
     return tmp_path, design, roadmap
 

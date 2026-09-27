@@ -83481,3 +83481,42 @@ Every existing read-first path SHALL resolve. Every readiness gate SHALL
 name a current producer field. Private mutations SHALL not alter repository
 artifacts. Validation results SHALL be recorded without masking unrelated
 legacy test failures.
+
+## REQ-REPORT-7767: Bind the V676 contract with current scoped evidence
+
+Exp7767 SHALL select only a staged or active roadmap for milestone
+2026.09.676. It SHALL compare fourteen ordered tasks, Exp7767–Exp7780,
+against the V676 design table and JSON contract. Each gate SHALL refer to
+an earlier producer and a field in that producer's REQUIRED ARTIFACT FIELDS.
+Each prior failure SHALL retain all four required fields. A missing or
+disqualified V675 scientific producer SHALL stay separate from a conductor
+pre-gate receipt. The contract task SHALL not gate scientific tasks.
+
+The reader SHALL freeze its affected module, direct test, CLI and consumer
+scope before implementation. It SHALL record exact input hashes, per-task
+rows, private mutation failures, subprocess receipts and a fresh-process
+reduction. Current readiness requires passing affected tests, complete
+changed-module statement coverage, static checks, unchanged roadmap readers,
+real entrypoint execution and terminal readers. Repository collection health
+SHALL remain false until a clean full collection. Historical V675 verdicts
+and full-suite requirements SHALL remain unchanged.
+
+### SCENARIO-REPORT-7767-CONTRACT: Three authorities agree
+
+Given a matching V676 roadmap, the independent design table, JSON block and
+YAML agree on each field and gate. Removing, reordering or changing any task,
+producer, gate field, substrate or prior-failure subfield fails the reader.
+
+### SCENARIO-REPORT-7767-CUSTODY: Missing science stays missing
+
+Given V675 producer paths and conductor receipts, the inventory records each
+actual declared producer path and hash. A queue receipt never fills a missing
+scientific producer. A mutable source document uses current bytes or a frozen
+historical blob when its hash is checked.
+
+### SCENARIO-REPORT-7767-TERMINAL: Evidence limits readiness
+
+Given raw task rows and a candidate receipt, a fresh process reproduces the
+rows and checks source hashes. Failed required validation yields a terminal
+disqualified verdict and readiness zero. A passing administrative contract
+has null scientific benefit gates and cannot certify repository health.

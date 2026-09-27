@@ -1,0 +1,18 @@
+{
+  "experiment_id": 7767,
+  "frozen_before_implementation": true,
+  "milestone": "2026.09.676",
+  "changed_modules": ["python/carnot/experiment_7767_v676_contract_methods.py"],
+  "direct_tests": ["tests/python/test_experiment_7767_v676_contract_methods.py"],
+  "entrypoints": ["scripts/experiments/experiment_7767_v676_contract_methods.py"],
+  "reused_imports": [
+    "python/carnot/experiment_7753_v675_contract_methods.py",
+    "python/carnot/reporting/current_work_receipt.py",
+    "python/carnot/reporting/experiment_7303_validation_scope.py",
+    "python/carnot/experiment_7573_v662_contract_methods.py"
+  ],
+  "transitive_consumer_tests": ["tests/python/test_experiment_7753_v675_contract_methods.py"],
+  "consumer_closure_evidence": "No existing source imports experiment_7767_v676_contract_methods before implementation; the new CLI and direct test are its only planned consumers. The reused V675 reader is covered by its existing test file.",
+  "required_checks": ["worktree_imports", "focused_pytest", "changed_module_coverage", "changed_module_coverage_report", "ruff_check", "ruff_format", "changed_module_mypy", "scoped_spec_coverage", "real_entrypoint_e2e", "cold_replay", "adversarial_verify", "verdict_row_consistency_strict"],
+  "repository_collection": "separate diagnostic; retain false until a clean full collection"
+}
