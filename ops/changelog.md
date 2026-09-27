@@ -20872,3 +20872,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Qualify prediction-before-feedback learning on the existing bank (⚠️ Research Finding) — honest_verdict=complete_circular_positive_online_fixture; results/experiment_7760_v675_online_runner.json
 - 2026-09-27: Cold-reduce decision effects and feedback causality (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7762_v675_independent_evidence_audit.json
 - 2026-09-27: Qualify organic-visit controls after the measured format failure (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_runner_validation; results/experiment_7763_v675_arc_runner_qualification.json
+- 2026-09-27: Measure complete decision service and preserve hardware limits (⚠️ Blocked) — honest_verdict=complete_blocked_missing_qualified_fit; results/experiment_7765_v675_service_cost.json
