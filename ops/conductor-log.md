@@ -18766,3 +18766,4 @@ code |
 | 2026-09-26 22:54 UTC | Seal exposed source families without relabeling th | OK | 90 passed, 2 warnings in 17.32s |
 | 2026-09-26 23:08 UTC | Qualify per-sentence evidence sets and exact finit | OK | 92 passed, 2 warnings in 9.15s |
 | 2026-09-26 23:32 UTC | Compare bounded draft-conditioned evidence decisio | OK | 98 passed, 1 warning in 11.31s |
+| 2026-09-26 23:58 UTC | Train evidence-set probabilities and freeze typed  | OK | 86 passed, 1 warning in 73.57s (0:01:13) |
