@@ -18823,3 +18823,5 @@ code |
 | 2026-09-27 05:50 UTC | Measure delayed constraint growth and retained loc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7743-localized-energy-fit, exp7743-localized-energy-fit, exp7743-localized-energy-fit) |
 | 2026-09-27 06:13 UTC | Independently reduce supervision value and feedbac | OK | 91 passed, 1 warning in 9.91s |
 | 2026-09-27 06:34 UTC | Qualify real organic-visit controls through the sc | OK | 84 passed, 1 warning in 20.71s |
+| 2026-09-27 06:37 UTC | Measure organic replay selection on adapter-withhe | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7748-arc-runner-qualification.organic_runner_ready_score (actual=0 == expected=1) |
+| 2026-09-27 06:39 UTC | Measure complete host service cost of qualified en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7743-localized-energy-fit, exp7743-localized-energy-fit, exp7743-localized-energy-fit) |
