@@ -9,11 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| BLOCKED_WITHOUT_DIAGNOSTIC | 1 |
-| CANNOT_DETERMINE | 1 |
+| CHECKABLE | 8 |
 
-## experiment_7757_view_energy_fit.json
+## experiment_7770_v676_qwen_runner_qualification.json
 
 **CHECKABLE**
 
@@ -21,7 +19,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because 6 of 9 upstream gate checks failed, starting with exp7754 sentence_protocol_ready_score returning 0 instead of 1.
+The CPU fixture completed its protocol, but the result was disqualified for readiness and claims no semantic benefit.
 
 ## WHAT IS MISSING
 nothing
@@ -29,39 +27,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7759_v675_qwen_evidence_views.json
-
-**BLOCKED_WITHOUT_DIAGNOSTIC**
-
-## VERDICT
-BLOCKED_WITHOUT_DIAGNOSTIC
-
-## WHAT THE CLAIM IS
-The 72-row diagnostic completed but was disqualified because required checks did not pass.
-
-## WHAT IS MISSING
-The failed required check’s name and observed value. `honest_verdict` says `complete_disqualified_required_checks`, `acceptance_gate_results.readiness.measured_operands.required_checks_passed` is `false`, and `gate_check_summary` is empty.
-
-## THE CHECK A READER CANNOT DO
-Which required check caused the disqualification, and what value did it observe?
-
-## experiment_7760_v675_online_runner.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The synthetic delayed-feedback fixture completed and met its readiness and validity gates; natural benefit is unmeasured.
-
-## WHAT IS MISSING
-The supplied artifact ends mid-entry in `"rows"`. It reports `"acceptance_gate_results"` and `"online_runtime_ready_score"`, but the remaining per-unit rows needed to check those results are not available.
-
-## THE CHECK A READER CANNOT DO
-Do the outcomes across all measured units support the reported readiness result?
-
-## experiment_7762_v675_independent_evidence_audit.json
+## experiment_7771_view_energy_fit.json
 
 **CHECKABLE**
 
@@ -69,7 +35,7 @@ Do the outcomes across all measured units support the reported readiness result?
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment is disqualified and blocked because required upstream producer artifacts for Exp7758 and Exp7761 are missing.
+The experiment was blocked at the conductor pre-gate because 6 of 9 upstream qualification gate checks failed, starting with `sentence_protocol_ready_score` in upstream `exp7768-source-view-qualification` observing 0 instead of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -77,7 +43,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7763_v675_arc_runner_qualification.json
+## experiment_7773_qwen_event_confidence.json
 
 **CHECKABLE**
 
@@ -85,15 +51,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was disqualified because required runner validation failed.
+The experiment was blocked before comparison because two upstream gates failed.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary` identifies `full_pytest` as failed, with `observed: 2` against `expected: 0`.
+nothing; `gates_evaluated` records each check, its expected and actual values, and whether it passed.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7764_arc_organic_measurement.json
+## experiment_7775_v676_independent_evidence_audit.json
 
 **CHECKABLE**
 
@@ -101,7 +67,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked prior to execution because upstream prerequisite exp7763 failed its qualification gate checks (organic_runner_ready_score was 0 instead of 1, and verdict_class was disqualified).
+The audit was blocked because the required Exp7772 and Exp7774 producer artifacts were missing.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` names both failed `producer_path` checks and records `observed: "missing"`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7776_v676_arc_runner_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The runner qualification was disqualified because required validation checks failed.
 
 ## WHAT IS MISSING
 nothing
@@ -109,7 +91,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7765_v675_service_cost.json
+## experiment_7777_arc_organic_measurement.json
 
 **CHECKABLE**
 
@@ -125,7 +107,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7766_v675_capstone.json
+## experiment_7779_v676_hardware_evidence.json
 
 **CHECKABLE**
 
@@ -133,10 +115,26 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V675 capstone validation is disqualified with a completion score of 0 and failed acceptance gates due to upstream validation and producer check failures.
+no claim
 
 ## WHAT IS MISSING
 nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7780_v676_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The v676 capstone is disqualified, with readiness 0 and validity false.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` records the failed checks, expected values, and observed values, while `rows` identifies the affected producers.
 
 ## THE CHECK A READER CANNOT DO
 none

@@ -83714,3 +83714,38 @@ An own failed validation check disqualifies the candidate and closes readiness.
 Given the real entrypoint output, a fresh process independently checks raw rows
 and source hashes. The adversarial and strict row readers check the exact
 candidate before atomic publication.
+
+## REQ-REPORT-V677-PLAN: Executable research after milestone rollover
+
+The staged milestone 2026.09.677 shall contain exactly fourteen tasks,
+Exp7781 through Exp7794, across four phases. The design table, embedded JSON
+contract and YAML shall agree on IDs, order, titles, phases, deliverables,
+model lists, substrates and structured gates.
+
+The plan shall preserve V676 determinations. It shall address historical
+import compatibility, mutable roadmap test inputs, terminated coverage and
+named ARC validation failures before dependent science. It shall distinguish
+full collection, affected tests and historical full-suite requirements.
+Historical requirements shall not be rewritten as satisfied.
+
+Each prompt shall require flushed phase/long-call progress, loop heartbeats,
+bounded file writes, exact artifact paths, per-unit rows, closed verdict
+classes and principle annotations. Every retry shall identify its prior
+verdict, concrete changed premise and true same-verdict retirement signal.
+All gate fields shall be declared by an earlier task in this same roadmap.
+
+The plan shall include normalized calibrated decisions, continuous constraint
+learning with fixed query state, adapter-withheld live ARC measurement and
+hardware continuity. Current LLM use shall require Qwen3.8-27B GGUF and the
+workload-appropriate generation class. All natural source families remain
+exposed development evidence. Fixture success shall not imply semantic value.
+
+### SCENARIO-REPORT-V677-PLAN: Staged contract and refusal checks
+
+Given the V677 staged files, unchanged schema, lineage, exclusion, gate,
+harness-fit, ARC-floor and priority readers shall accept the plan. A private
+copy with a missing/reordered task, field mismatch, retired-ID dependency,
+missing prior subfield or wrong model/substrate shall be rejected by the
+applicable reader or independent contract check. Existing input paths resolve.
+The active roadmap and conductor retain their original hashes. Planning
+executes no research model, live ARC panel, hardware operation or activation.

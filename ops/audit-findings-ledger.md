@@ -248,3 +248,4 @@ of truth, not this line.)
 | 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_inference_substrate_value_matches | REAL_BUG | OPEN | |
 | 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_classify_inference_substrate | SILENT_NON_FIRING | OPEN | |
 | 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_typed_invocation_evidence | SILENT_NON_FIRING | OPEN | |
+| 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_verifier_scoring_only | REAL_BUG | OPEN | |

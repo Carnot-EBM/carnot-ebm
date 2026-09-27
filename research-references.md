@@ -47736,3 +47736,108 @@ its reusable code under the new contract; the natural stream remains unmeasured.
 Exp7765 also compared a
 mutable references file with an old digest. Hardware continuity needs immutable
 historical evidence, not a hash of a document that planning must append to.
+
+## V677 planning review — 2026-09-27 (recorded before design)
+
+Primary paper pages and the secondary sources below were checked for this
+review. External results remain external evidence. Dates below come from paper
+pages, not search-engine age estimates. This review adds method details and a
+working citation lookup to the preceding reviews.
+
+### Methods to carry into the next experiments
+
+- **Constrained hallucination training:** [CCHD, 2606.08158v1](https://arxiv.org/html/2606.08158v1),
+  June 6, 2026, sections 2.1–2.2. The consistency penalty uses symmetric
+  Jeffreys divergence. A separate label-preservation constraint prevents
+  agreement on wrong answers. Both use nonnegative dual multipliers. Carnot
+  can test these constraints on complete, unchanged-byte evidence views.
+  This differs from the paper's back-translated claims. Include matched view
+  augmentation and source-erased controls. Agreement alone cannot pass the
+  correctness gate. Review depth: methods and experimental controls.
+- **Structure and meaning need separate tests:** [Chavan, 2609.23742v1](https://arxiv.org/html/2609.23742v1),
+  September 20, 2026, evaluates grammar-constrained output on small models.
+  Its structural/semantic split is useful for the bounded Qwen pilot. Its
+  model-size findings do not establish results on the mandated 27B model.
+  Count malformed and truncated outputs in the full denominator. Review
+  depth: full HTML, including evaluation protocol and limitations.
+- **Memory writes need a timing control:** [Memoir, 2607.20792v1](https://arxiv.org/html/2607.20792v1),
+  July 22, 2026, compares writable and read-only latent recurrence under
+  matched budgets. The short-budget result favors read-only recurrence;
+  the longer run saturates. It does not prove long-term retention. Local
+  transfer: keep scoring state immutable within each query. Compare the
+  same delayed verified updates committed between queries or between
+  blocks. Test persistence after restart. Do not change generator weights.
+  Review depth: method, paired controls, and limitations.
+- **Finite feedback capacity:** [Ryabchenko et al., 2606.11711v1](https://arxiv.org/html/2606.11711v1),
+  June 10, 2026. Tracking capacity and lost feedback are explicit parts of
+  delayed online learning. Record pending depth, dropped feedback and the
+  clock at which each label becomes available. Carnot's predicate admission
+  is not convex OCO; the paper's regret bounds do not transfer automatically.
+  Review depth: setup and scheduling method.
+- **Confidence must name its event:** [Ravikumar, 2608.10008v3](https://arxiv.org/abs/2608.10008v3),
+  August 22 revision. Preserve the corrected matcher and conclusions from
+  v3. Explicit source-support probability remains an unmeasured local
+  hypothesis. Generic confidence is a matched control, not a truth label.
+  Review depth: current abstract and revision notes.
+
+### Coverage of the eight research areas
+
+| Area | Checked primary work | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://openreview.net/pdf?id=ZBj3Qp1bYg), ICLR 2026; [ARM–EBM v4](https://arxiv.org/abs/2512.15605v4), May 25, 2026 | Retain normalized conditional energies. Neither compatibility nor the ARM bijection certifies factual correctness. |
+| Neural constraint satisfaction | [Certified Correctness position paper](https://arxiv.org/abs/2608.14569); [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), 2026 | Separate symbolic certificates from learned semantic risk. Keep instance and representation controls. Abstract-level review; no solver architecture adoption. |
+| Ising applications in ML | [Probabilistic Computers for Neural Quantum States](https://arxiv.org/abs/2512.24558), December 31, 2025 | Sparse Boltzmann sampling has a real FPGA path. Quantum-state results do not establish text-verification value. |
+| Hallucination detection/mitigation | CCHD and corrected confidence paper above | Measure source dependence, calibration and decision cost separately. |
+| Kolmogorov–Arnold Networks | [Dynamic Grid Adaptation](https://arxiv.org/abs/2601.18672), January 26, 2026; [physical analog KAN](https://arxiv.org/abs/2602.07518), February 7, 2026 | Curvature-based knots and physical nonlinear units remain leads. Defer another KAN arm until the current small-head baseline is measured. Abstract-level review. |
+| Energy-guided/constrained generation | [Energy-Guided Decoding](https://arxiv.org/abs/2507.07731), July 2025; September structural/semantic study above | VLM layer selection needs internals absent from this GGUF pilot. Adopt only separate syntax/meaning metrics. |
+| FPGA/thermodynamic sampling | Neural quantum states above; [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Include host preparation, transfer, sampling and readout. Vendor estimates do not establish local service speedup. |
+| Continual/online constraint learning | Memoir and finite delayed-feedback work above | Register write boundaries, matched update budgets, retention and durable restart controls. |
+
+### Secondary-source receipts
+
+- **OpenReview:** checked the [EBT ICLR 2026 PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg).
+  The indexed paper states conference publication. A separate
+  [intrinsic-optimizer submission](https://openreview.net/pdf?id=UGB6JCl9lz)
+  is marked under review. Do not treat submission status as acceptance.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). The index exposes little text.
+  Z1T describes a sparse model split across TSU and FPGA components. Hardware
+  efficiency figures are preliminary vendor estimates, not Carnot measurements.
+- **Semantic Scholar:** browser access failed, but direct bounded HTTPS GET
+  succeeded for both citation endpoints:
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  EBT returned 20 rows and a next-page marker; coverage is partial. ARM–EBM
+  returned eight rows without a next marker. Followed Memoir, Solver-Hard,
+  [Cross-Block Conditioning](https://arxiv.org/abs/2609.14934) and
+  [Distributional EBMs](https://arxiv.org/abs/2605.18871) to primary pages.
+  The latter does not reopen Carnot's retired external-text scorer family.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  Used it for discovery only. Primary versions determine the method record.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) lists. Returned
+  pages were cached two weeks earlier. No new trending dependency is adopted.
+  Memoir's paper links its [author repository](https://github.com/RightNow-AI/Memoir);
+  this establishes a code lead, not a local reproduction.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Vendor claims remain architectural inspiration. No reproducible new SDK,
+  local model access or independent certainty result was established.
+
+### Local evidence that changes the plan
+
+V676's source qualification failed five historical capstone tests because
+V675 no longer occupied the mutable staged or active roadmap. This is a
+historical-fixture ownership defect, not a sentence-custody result. Its own
+138 statements had coverage, but the affected test command failed.
+Training qualification passed its functional run in 167.7 seconds. The
+coverage run was terminated at 900.1 seconds and saved no coverage data.
+That timeout does not identify the slow test. Locate it before changing code.
+The ARC qualification names one format-failing test file and sixteen missing
+spec references in that same file. Qwen qualification still requires a passing
+full suite; its current disqualification must remain unchanged.
+
+The logged eighteen collection errors comprise fourteen old-model registry
+lookups, one empty legacy-model selection and three missing module imports.
+Repair historical compatibility without changing the current model mandate.
+Do not relabel the old full-suite requirements as satisfied. New experiments
+must register executable, bounded validation before scientific capture.
