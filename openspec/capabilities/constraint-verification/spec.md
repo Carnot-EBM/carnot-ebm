@@ -8976,3 +8976,23 @@ preflight failures, coverage shard receipts, fresh-process reduction, and
 terminal reader results. An external failed producer SHALL block before
 compute. A failed owned validation SHALL disqualify and set readiness zero.
 Fixture success SHALL be circular_positive with null natural benefit gates.
+## REQ-VERIFY-7787: Bound event-probability transport independently
+
+The Exp7787 protocol SHALL use the tested low-level request, parser and HTTP
+transport without invoking Exp7770 readiness or its entrypoint. It SHALL
+check a CPU fake server and real child server for model identity, strict JSON
+schema, probability range, timeout, truncation, malformed output and cold
+reduction before model capture. Invalid outputs remain denominator rows with
+risk 0.5 and forced escalation. The imported consumer closure SHALL be frozen
+before implementation and all affected tests SHALL pass.
+
+### SCENARIO-VERIFY-7787-TRANSPORT
+
+The same input bytes and grammar reach both arms. A wrong model, ignored
+schema, late reply, missing probability, out-of-range probability or length
+finish fails validity without dropping the unit.
+
+### SCENARIO-VERIFY-7787-REPLAY
+
+A fresh reader reopens exact raw request and response bytes, recomputes the
+paired rows, and rejects a changed hash, duplicate key or changed metric.

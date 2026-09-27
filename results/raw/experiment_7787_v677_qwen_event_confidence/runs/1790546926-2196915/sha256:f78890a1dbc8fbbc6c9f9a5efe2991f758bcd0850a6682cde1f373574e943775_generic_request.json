@@ -1,0 +1,49 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nGive the probability that the original answer is correct given the complete source.\nReturn one JSON object with probability and optional evidence_sentence_ids. Use no other fields.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"address\\\":\\\"532 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Performing Arts, Nightlife, Comedy Clubs, Arts & Entertainment\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Comedy Hideaway - Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-10-14 04:18:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great comedy venue at a great price!  Just what SB needed. I highly recommend it - the drink service is a bit slow, I would order 2 when you first arrive. I never got a chance to order a 2nd cocktail :-(\\\"},{\\\"review_date\\\":\\\"2014-07-31 04:43:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I've come here for a few girls nights, and on dates.  It's really fun!  I like the food, the regular comics are all fun and talented, and the headliners are consistently hilarious.  I can always count on Comedy Hideaway for a fun downtown activity!  Highly Recommend!\\\"},{\\\"review_date\\\":\\\"2014-07-14 22:41:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"If you want to laugh this is the place to go. Good comedians and a great night out in Santa Barbara\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Comedy Hideaway - Santa Barbara is a performing arts, nightlife, comedy club, arts, and entertainment venue located at 532 State St, Santa Barbara, CA. The establishment is rated at 4.5 stars overall. However, it does not offer amenities like business parking, outdoor seating, WiFi, music, or a specific ambience. It is a good place for groups. Customers specifically recommend Comedy Hideaway for its excellent comedy acts, though some have noted that the drink service can be slow. Others have commented that it is a fun venue for girls' nights out and dates, and they appreciate the talent of regular comics and headliners. The venue does not have mentioned hours of operation.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "json_schema": {
+      "name": "bounded_confidence",
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_sentence_ids": {
+            "items": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "probability": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "probability"
+        ],
+        "type": "object"
+      },
+      "strict": true
+    },
+    "type": "json_schema"
+  },
+  "seed": 67701,
+  "stream": false,
+  "temperature": 0
+}

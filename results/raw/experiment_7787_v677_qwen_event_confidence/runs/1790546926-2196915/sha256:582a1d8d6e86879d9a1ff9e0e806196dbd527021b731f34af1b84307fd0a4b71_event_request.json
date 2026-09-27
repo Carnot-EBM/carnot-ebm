@@ -1,0 +1,49 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nGive the probability that at least one claim in the original answer lacks support in the complete source.\nReturn one JSON object with probability and optional evidence_sentence_ids. Use no other fields.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Removing an Andersen Sliding Stationary Patio Door. To remove an Andersen stationary patio door, you must first remove the sliding door as in the previous step, and get a helper. Located at the bottom of the stationary door is a screw or screws that secure the door to the bottom sill.liding Glass Shower Doors. Step inside the shower or bathtub. Turn and face the sliding doors. Grasp the door that is closest to the inside of the tub or shower. Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.\\\\n\\\\npassage 2:Sliding Glass Shower Doors. Step inside the shower or bathtub. Turn and face the sliding doors. Grasp the door that is closest to the inside of the tub or shower. Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.Lift up on the door until the rollers clear the bottom rail, and pull inward.liding Glass Shower Doors. Step inside the shower or bathtub. Turn and face the sliding doors. Grasp the door that is closest to the inside of the tub or shower. Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.\\\\n\\\\npassage 3:1 Use the pry bar to lift the sliding glass door upward until the rollers clear the bottom track. 2  Pull the bottom toward you until the door clears the upper track. 3  If the door will not clear the rollers on the lower track, you may need to adjust the rollers. Pull the door toward you until it has cleared the top tracks. 2  Remove the stationary door. 3  To remove the stationary door, use your screwdriver to remove the retaining screws from the top and sides. 4  Once again, you may have to use the pry bar to lift the door upward until the door clears the lower track.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to remove a sliding glass door\\\"}\", \"original_answer\": \"To remove a sliding glass door, first use a pry bar to lift the door upward until the rollers clear the bottom track. Then, pull the door towards you until it clears the upper track. If the door is not able to clear the rollers on the lower track, you may need to adjust the rollers. Once the sliding door is removed, you can then remove the stationary door. To do this, use your screwdriver to remove the retaining screws from the top and sides. You may have to use the pry bar again to lift the stationary door upward until it clears the lower track. It might be helpful to have a helper during this process.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "json_schema": {
+      "name": "bounded_confidence",
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_sentence_ids": {
+            "items": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "probability": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "probability"
+        ],
+        "type": "object"
+      },
+      "strict": true
+    },
+    "type": "json_schema"
+  },
+  "seed": 67701,
+  "stream": false,
+  "temperature": 0
+}

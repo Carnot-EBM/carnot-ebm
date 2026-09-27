@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7787: Compare paired event and generic Qwen probabilities
+
+Exp7787 SHALL authenticate the eligible Exp7745 producer and its exact 24
+exposed source and answer families. Exp7759 and Exp7770 failed readiness SHALL
+remain historical observations, not capture prerequisites or retroactive passes.
+The producer SHALL freeze family order, complete input bytes, two prompts, one
+JSON grammar, seed 67701, and Qwen3.8 Q4_K_M identity before inference. It
+SHALL retain every intended family and arm, including invalid and unstarted
+units. Syntax failures SHALL receive risk 0.5 and forced escalation. Natural
+source-support labels SHALL enter only the evaluator. Paired Brier and action
+cost differences SHALL use 24 independent families and report intervals.
+
+### SCENARIO-REPORT-7787-CUSTODY
+
+A missing or disqualified declared producer yields a terminal blocked result
+with exact failed operands. A conductor pre-gate receipt cannot replace it.
+The frozen panel preserves every source and answer byte and its original hash.
+
+### SCENARIO-REPORT-7787-CAPTURE
+
+Two 32-token schema canaries precede at most 48 paired 256-token calls. A
+task-owned model server must show the pinned GGUF hash, chat template, CUDA
+offload, and GPU memory. Each call has a 90-second limit; capture has an
+1800-second limit. Raw requests, replies, tokens, finish reasons and timings
+are checkpointed after every family pair without repair or resampling.
+
+### SCENARIO-REPORT-7787-TERMINAL
+
+The complete affected tests, full Python suite diagnostic, 100 percent
+new-code statement coverage, scoped static and spec checks, real CLI, fresh
+cold replay and both terminal readers precede atomic publication. A failed
+required check disqualifies readiness. Exploratory benefit requires 90 percent
+parse coverage in each arm, positive lower 95 percent cost and Brier gains,
+and no new false accepts. No result activates a production default.
+
 ## REQ-REPORT-7779: Bind hardware continuity to original evidence bytes
 
 Exp7779 SHALL authenticate each Exp7751 board receipt against its dated file

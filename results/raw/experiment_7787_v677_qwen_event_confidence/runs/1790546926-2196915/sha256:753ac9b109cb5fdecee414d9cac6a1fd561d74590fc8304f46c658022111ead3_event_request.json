@@ -1,0 +1,49 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nGive the probability that at least one claim in the original answer lacks support in the complete source.\nReturn one JSON object with probability and optional evidence_sentence_ids. Use no other fields.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:0am:The Mount Washington, NH forecast for Mar 23 is 21 degrees and Partly cloudy. There is 53 percentage chance of rain and 7 mph winds from the North-Northwest. 3am:The Mount Washington, NH forecast for Mar 23 is 20 degrees and Overcast. There is 57 percentage chance of rain and 6 mph winds from the Northwest.\\\\n\\\\npassage 2:Mount Washington Weather Forecast for Thursday, March 23. The Mount Washington, NH forecast for Mar 23 is 32 degrees and Sunny . There is 40 percentage chance of rain and 4 mph winds from the North-Northwest.\\\\n\\\\npassage 3:6pm:The Mount Washington, NH forecast for Mar 23 is 40 degrees and Sunny. There is 35 percentage chance of rain and 2 mph winds from the West-Southwest. 9pm:The Mount Washington, NH forecast for Mar 23 is 34 degrees and Clear. There is 42 percentage chance of rain and 3 mph winds from the East-Southeast.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather in mount washington nh\\\"}\", \"original_answer\": \"Based on the given passages, the weather in Mount Washington, NH on March 23 will be partly cloudy in the morning with a chance of rain and temperatures around 21-20 degrees. Later in the day, it will become sunny with temperatures around 32-40 degrees. Winds will be generally light, ranging from 2-7 mph and coming from different directions throughout the day.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "json_schema": {
+      "name": "bounded_confidence",
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_sentence_ids": {
+            "items": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "probability": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "probability"
+        ],
+        "type": "object"
+      },
+      "strict": true
+    },
+    "type": "json_schema"
+  },
+  "seed": 67701,
+  "stream": false,
+  "temperature": 0
+}

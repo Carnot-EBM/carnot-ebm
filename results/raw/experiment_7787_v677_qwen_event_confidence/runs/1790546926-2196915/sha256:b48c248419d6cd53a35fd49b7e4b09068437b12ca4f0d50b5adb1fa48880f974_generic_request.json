@@ -1,0 +1,49 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nGive the probability that the original answer is correct given the complete source.\nReturn one JSON object with probability and optional evidence_sentence_ids. Use no other fields.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3849 State St, Ste I157\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Food, Juice Bars & Smoothies, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-17:0\\\",\\\"Monday\\\":\\\"7:0-17:0\\\",\\\"Saturday\\\":\\\"7:0-17:0\\\",\\\"Sunday\\\":\\\"7:0-17:0\\\",\\\"Thursday\\\":\\\"7:0-17:0\\\",\\\"Tuesday\\\":\\\"7:0-17:0\\\",\\\"Wednesday\\\":\\\"7:0-17:0\\\"},\\\"name\\\":\\\"Backyard Bowls\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-10 00:15:45\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Always so good bowls and great service though it can take some time to get your order and they are pretty good at messing up orders though always very helpful when you are pointing it out\\\"},{\\\"review_date\\\":\\\"2021-12-31 19:07:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bowls taste great, but the service was painfully slow. It took over 30 minutes for me to get my order: 1 a\u00e7a\u00ed bowl. Even worse was people who ordered significantly after me got theirs first! It was a frustrating experience for an otherwise great location.\\\"},{\\\"review_date\\\":\\\"2021-12-18 12:27:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Legendary BYB opened a location at La Cumbre plaza and that makes me happy! Best a\u00e7a\u00ed bowls & smoothies ever; some have tried to recreate but couldn't get close. Think quality ingredients and no bullshit; it tastes straight out of heaven!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Backyard Bowls is a popular restaurant located in Santa Barbara, CA, known for its delicious acai bowls and smoothies. The restaurant has a casual atmosphere and offers both indoor and outdoor seating options. While the service can be slow at times, the friendly staff is always willing to help and ensure that customers have a positive experience. The menu includes a variety of options, including vegan and gluten-free choices, and the prices are reasonable. The restaurant is well-liked by locals and visitors alike, with an average rating of 4.0 stars based on customer reviews. Some customers have noted that the service can be slow, but the high-quality ingredients and delicious flavors make up for the wait. Overall, Backyard Bowls is a great spot for anyone looking for a healthy and tasty meal or snack in a relaxed setting.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "json_schema": {
+      "name": "bounded_confidence",
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_sentence_ids": {
+            "items": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "probability": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "probability"
+        ],
+        "type": "object"
+      },
+      "strict": true
+    },
+    "type": "json_schema"
+  },
+  "seed": 67701,
+  "stream": false,
+  "temperature": 0
+}

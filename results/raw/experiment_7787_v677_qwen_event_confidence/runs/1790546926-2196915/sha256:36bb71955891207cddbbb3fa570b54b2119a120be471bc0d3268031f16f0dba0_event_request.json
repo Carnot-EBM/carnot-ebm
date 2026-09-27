@@ -1,0 +1,49 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nGive the probability that at least one claim in the original answer lacks support in the complete source.\nReturn one JSON object with probability and optional evidence_sentence_ids. Use no other fields.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Vitamins to Prevent Bruising. Bruises are purple and blue dark discolored spots on the skin that can be painful to the touch. People who bruise easily may be suffering from vitamin deficiencies; other causes of easy bruising include aging, thin skin and inadequate blood vessel function.\\\\n\\\\npassage 2:Bruising occurs when the blood vessels break under the skin, usually as a result of a fall or a blow to the body. Bruising may also occur after surgery or after cosmetic treatments, such as Botox or Juvederm injections.\\\\n\\\\npassage 3:Bruises are often the first sign of abuse. You may be able to prevent further abuse by reporting it and seeking help. 1  Call your local child or adult protective agency, police, or clergy or a health professional (such as a doctor, nurse, or counselor) if you suspect abuse.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prevent bruising\\\"}\", \"original_answer\": \"Passages 1 and 2 provide relevant information on how to prevent bruising. Taking vitamins, especially those that address vitamin deficiencies, may help prevent bruising (passage 1). Additionally, being cautious to avoid falls or blows to the body can help prevent bruising (passage 2).\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "json_schema": {
+      "name": "bounded_confidence",
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_sentence_ids": {
+            "items": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "probability": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "probability"
+        ],
+        "type": "object"
+      },
+      "strict": true
+    },
+    "type": "json_schema"
+  },
+  "seed": 67701,
+  "stream": false,
+  "temperature": 0
+}

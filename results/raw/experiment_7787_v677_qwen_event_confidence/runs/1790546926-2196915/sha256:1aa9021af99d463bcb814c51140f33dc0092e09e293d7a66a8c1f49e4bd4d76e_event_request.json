@@ -1,0 +1,49 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nGive the probability that at least one claim in the original answer lacks support in the complete source.\nReturn one JSON object with probability and optional evidence_sentence_ids. Use no other fields.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Concentration is very important and also an important tool to revise the subject quickly. 2  You can record your revision on your phone, so when you get to bed you can listen to the problems you cannot remember repeatedly. 3  This will help it to stay in your head. Make revision cards and highlight the information; do not copy everything from the textbook! 2  Do past paper questions. 3  See how to answer the exam questions to gain as much marks as possible. 4  Teach what you're trying to revise to someone else-you learn 95% of what you teach someone else. 5  Relax. 6  Don't Rush anything.\\\\n\\\\npassage 2:Revision gives you a greater understanding of your work and helps you use the information you know when you're doing your exams. There are different types of people, and different ways to revise. 1  Don't panic.2  Don't worry.evision gives you a greater understanding of your work and helps you use the information you know when you're doing your exams. There are different types of people, and different ways to revise. 1  Don't panic.\\\\n\\\\npassage 3:1 Make revision cards and highlight the information; do not copy everything from the textbook! 2  Do past paper questions. 3  See how to answer the exam questions to gain as much marks as possible. 4  Teach what you're trying to revise to someone else-you learn 95% of what you teach someone else. 5  Relax.6  Don't Rush anything. Make revision cards and highlight the information; do not copy everything from the textbook! 2  Do past paper questions. 3  See how to answer the exam questions to gain as much marks as possible. 4  Teach what you're trying to revise to someone else-you learn 95% of what you teach someone else. 5  Relax. 6  Don't Rush anything.\\\\n\\\\n\\\",\\\"question\\\":\\\"good ways to revise\\\"}\", \"original_answer\": \"Here are some good ways to revise based on the provided passages:\\n\\n1. Concentrate and focus while revising (Passage 1)\\n\\t* Use tools such as recording your revision on your phone to help retain the information (Passage 1)\\n\\t* Make revision cards and highlight important information (Passage 3)\\n2. Practice past paper questions (Passage 2 & Passage 3)\\n\\t* Doing past paper questions can help you understand how to apply the information you've revised (Passage 2)\\n\\t* See how to answer exam questions to gain maximum marks (Passage 3)\\n3. Teach someone else what you're revising (Passage 3)\\n\\t* Revising and teaching someone else can help solidify your understanding of the material (Passage 3)\\n4. Take breaks and relax during revision (Passage 5)\\n\\t* Don't rush through your revision and take breaks to relax and avoid burnout (Passage 5)\\n\\nUnable to answer based on given passages. The passages do not provide additional information on how to revise.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "json_schema": {
+      "name": "bounded_confidence",
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_sentence_ids": {
+            "items": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "probability": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "probability"
+        ],
+        "type": "object"
+      },
+      "strict": true
+    },
+    "type": "json_schema"
+  },
+  "seed": 67701,
+  "stream": false,
+  "temperature": 0
+}
