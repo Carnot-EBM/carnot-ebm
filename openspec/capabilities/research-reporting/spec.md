@@ -1,5 +1,45 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7770: Qualify a CPU fixture runner for bounded Qwen confidence
+
+Exp7770 SHALL freeze the exact 24 exposed Exp7745 family ids before capture.
+It SHALL preserve complete source and answer bytes in two paired prompts.
+The generic arm requests answer correctness probability and converts it to
+unsupported risk as one minus the reply. The event arm requests probability
+that any answer claim lacks source support. Both arms SHALL use one strict JSON
+schema, one seed, disabled thinking, and a 256 output token ceiling. Invalid,
+missing, or truncated replies SHALL remain in the denominator with risk 0.5
+and forced escalation. The task SHALL make zero model loads or model calls.
+
+### SCENARIO-REPORT-7770-CUSTODY
+
+Given the Exp7745 producer and frozen panel, the runner checks exact fields,
+hashes, and family ids. It records Exp7759 raw parse counts of 1, 2, and 9
+for canonical, paired, and withheld arms. A missing producer is distinct from
+its pre-gate panel and yields a terminal blocked record.
+
+### SCENARIO-REPORT-7770-TRANSPORT
+
+A private CPU server must accept the exact chat request and enforce the schema.
+The client checks model identity, streaming chunks, timeout, malformed replies,
+and owned server teardown. A server that silently ignores schema constraints
+fails qualification. Atomic checkpoints resume completed rows only.
+
+### SCENARIO-REPORT-7770-TERMINAL
+
+The real CLI, fresh-process row reduction, focused tests, full Python suite,
+complete changed-module statement coverage, scoped static and spec checks,
+adversarial verification, and strict row consistency SHALL pass before runner
+readiness is one. Fixture conformance is circular evidence. Probability quality,
+decision benefit, retention, and efficiency remain unmeasured.
+
+## Implementation Status (REQ-REPORT-7770)
+
+The CPU fixture, raw paired rows, checkpoint, and cold reader are implemented.
+The required validation roster now includes `full_python_suite`. The 2026-09-27
+collection reports 18 errors, so Exp7770 records `qwen_runner_ready_score=0`
+and `complete_disqualified_required_checks` while retaining its 48 fixture rows.
+
 ## REQ-REPORT-7762: Audit V675 decisions and acquisition independently
 
 Exp7762 SHALL inspect the exact declared Exp7758 and Exp7761 producer paths,

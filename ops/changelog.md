@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-09-27 — Exp7770 full-suite readiness fix
+
+- Required a passing `full_python_suite` receipt for Qwen fixture runner
+  readiness. Added a failed-suite regression assertion and regenerated the
+  result with readiness zero while the 18 collection errors persist.
+- Verified 106/106 conductor tests, 36/36 focused tests, 100% changed-module
+  coverage, cold replay, adversarial verification, and row consistency.
+
 ## 2026-09-27 — Exp7752 fresh-process import repair
 
 - Resolved the repository root before capstone CLI imports, allowing direct

@@ -1,5 +1,15 @@
 # Carnot — Operational Status
 
+## 2026-09-27 — Exp7770 readiness gate repaired
+
+- Added the missing `full_python_suite` requirement to the CPU Qwen runner.
+  Its real result now records `qwen_runner_ready_score=0` and
+  `complete_disqualified_required_checks`, with the failed full-suite receipt
+  preserved. The 48 fixture calls and 24 independent families cold-replay.
+- The conductor subset passes 106/106; focused Exp7770/Exp7759 tests pass
+  36/36 with 260/260 changed-module and CLI statements covered. Full Python
+  collection still has 18 legacy collection errors; no full-suite pass is claimed.
+
 ## 2026-09-27 -- sc25 lattice-cell pilot: diagnosis corrected, no promotion
 - Original claim (candidates missing) was wrong: sc25's 9 cast-region clicks were already generated,
   just stamped tier 1 and never picked over tier-0 candidates. Confirmed on a real frame and the

@@ -3356,3 +3356,14 @@ registered under the original V674 tasks.
 - Planning E2E: staged-reader and rejection paths exercised. Runtime
   E2E-009/011/013 remain required for the planned ARC implementation.
 - No experiment, model load, board operation, activation or push occurred.
+
+## Exp7770 Qwen fixture qualification — 2026-09-27
+
+- REQ-REPORT-7770 and its CUSTODY, TRANSPORT, and TERMINAL scenarios map to
+  `python/carnot/experiment_7770_v676_qwen_runner_qualification.py` and
+  `tests/python/test_experiment_7770_v676_qwen_runner_qualification.py`.
+- The terminal gate now requires `full_python_suite` in the exact passing
+  receipt roster. The conductor subset passes 106/106; the focused Exp7770 and
+  Exp7759 tests pass 36/36; the changed module and CLI have 260/260 statements
+  covered. Full Python collection has 18 errors, so the artifact records
+  readiness zero. The CPU fixture establishes transport conformance only.

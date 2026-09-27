@@ -1,0 +1,27 @@
+{
+  "tests": [
+    "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py",
+    "tests/python/test_experiment_7759_v675_qwen_evidence_views.py"
+  ],
+  "changed_modules": [
+    "python/carnot/experiment_7770_v676_qwen_runner_qualification.py"
+  ],
+  "static_paths": [
+    "scripts/experiments/experiment_7770_v676_qwen_runner_qualification.py"
+  ],
+  "transitive_consumers": [
+    "scripts/adversarial_verify.py",
+    "scripts/verdict_row_consistency_lint.py",
+    "scripts/check_spec_coverage.py"
+  ],
+  "specs": [
+    "REQ-REPORT-7770"
+  ],
+  "e2e": [
+    "private_cpu_fixture_server",
+    "cold_replay",
+    "independent_reduction",
+    "adversarial_verify",
+    "strict_row_consistency"
+  ]
+}

@@ -221,3 +221,15 @@ report a no-headroom oracle result honestly.
 This CPU check uses scripted inputs. Experiment 7531 is the separate live GPU
 check. It completed 56 episodes and retained the 88 budget-excluded schedule
 rows as unstarted rather than dropping them.
+
+### E2E-014: Exp7770 Qwen fixture transport and terminal replay (CPU)
+
+Spec ref: REQ-REPORT-7770. Run
+`tests/python/test_experiment_7770_v676_qwen_runner_qualification.py` with
+`-n 0 --no-cov -o addopts=`. The test drives the real CLI, a local HTTP peer,
+strict schema rejection, timeout and malformed replies, then cold replay.
+Run the CLI with `--cold-replay results/experiment_7770_v676_qwen_runner_qualification.json`
+and check the result with `scripts/adversarial_verify.py --json` and
+`scripts/verdict_row_consistency_lint.py --strict`. Require 48 calls from 24
+families and zero model loads. Runner readiness requires a passing full Python
+suite receipt; a collection failure keeps readiness zero.
