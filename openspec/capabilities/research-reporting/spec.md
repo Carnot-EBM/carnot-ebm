@@ -83180,3 +83180,33 @@ proposal. A private independent checker compares table, JSON and YAML.
 Removing a task, changing its order or gate field, omitting a required prior
 field, or declaring the wrong Qwen substrate SHALL fail that contract check.
 Planning checks do not constitute execution of the proposed experiments.
+
+## REQ-REPORT-7753: Bind the V675 administrative contract and method limits
+
+Exp7753 SHALL select only a matching staged or active 2026.09.675 roadmap and
+independently compare fourteen ordered IDs, titles, phases, deliverables,
+substrate classes, MODEL_SPECS and gates with the literal design table and
+machine contract. It SHALL preserve the V674 design bytes and distinguish
+missing declared scientific producers, conductor pre-gate receipts,
+disqualified execution and measured nulls. Current and future inputs SHALL
+have separate custody roles. Contract readiness SHALL require passing
+registered validation and terminal readers; scientific benefit remains null.
+
+### SCENARIO-REPORT-7753-CONTRACT
+
+Private copies with a dropped task, reordered IDs, title drift, absent gate
+producer field, wrong substrate, missing prior-failure field or false
+retirement flag SHALL fail. The design table is parsed separately from JSON.
+
+### SCENARIO-REPORT-7753-CUSTODY
+
+The reducer SHALL retain one row per task, exact source paths and hashes,
+field-level failed checks, and an independent V674 producer inventory.
+Missing future producers SHALL not block this administrative task.
+
+### SCENARIO-REPORT-7753-TERMINAL
+
+The CLI SHALL run frozen scoped checks, applicable planning readers,
+fresh-process raw reduction, adversarial verification and strict row
+consistency before atomic publication. Failed required checks SHALL set
+readiness to zero and a terminal blocked or disqualified verdict.
