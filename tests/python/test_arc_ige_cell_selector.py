@@ -55,22 +55,26 @@ def _descriptors(n: int) -> list[dict]:
 
 
 def test_parse_index_takes_first_in_range():
+    """SCENARIO-ARC-WMTE-7790-IGE: take an in-range reply."""
     assert _parse_index("I would pick 2 here", 5) == 2
     assert _parse_index("cell 3.", 5) == 3
 
 
 def test_parse_index_rejects_out_of_range_and_nonnumeric():
+    """SCENARIO-ARC-WMTE-7790-IGE: reject invalid replies."""
     assert _parse_index("99", 3) is None
     assert _parse_index("none of them", 4) is None
     assert _parse_index("", 4) is None
 
 
 def test_render_signature_lays_out_square_grid():
+    """REQ-ARC-WMTE-7790: render a square signature."""
     # a 4-element signature renders as a 2x2 grid of single-char colours
     assert _render_signature((0, 1, 2, 3)) == "01\n23"
 
 
 def test_build_prompt_lists_cells_and_demands_single_integer():
+    """REQ-ARC-WMTE-7790: list cells and request one index."""
     prompt = _build_prompt(_descriptors(3))
     assert "CELL 0:" in prompt and "CELL 2:" in prompt
     assert "integer index" in prompt.lower()
@@ -80,6 +84,7 @@ def test_build_prompt_lists_cells_and_demands_single_integer():
 
 
 def test_selector_fires_and_returns_mapped_index():
+    """SCENARIO-ARC-WMTE-7790-IGE: map the selected descriptor."""
     sel = IGECellSelector(proposer=_StubProposer(ok=True, text="1"))
     choice = sel(_descriptors(3))
     assert choice == 1
@@ -89,6 +94,7 @@ def test_selector_fires_and_returns_mapped_index():
 
 
 def test_selector_returns_none_below_two_cells():
+    """SCENARIO-ARC-WMTE-7790-IGE: one cell needs no model call."""
     sel = IGECellSelector(proposer=_StubProposer(ok=True, text="0"))
     assert sel(_descriptors(1)) is None
     # no LLM call should be spent on a trivial single-cell choice
@@ -96,6 +102,7 @@ def test_selector_returns_none_below_two_cells():
 
 
 def test_selector_counts_server_unavailable_and_falls_back():
+    """SCENARIO-ARC-WMTE-7790-IGE: unavailable service falls back."""
     sel = IGECellSelector(proposer=_StubProposer(ok=False, text="no server"))
     assert sel(_descriptors(3)) is None
     diag = sel.diagnostics()
@@ -103,6 +110,7 @@ def test_selector_counts_server_unavailable_and_falls_back():
 
 
 def test_selector_counts_parse_failure_and_falls_back():
+    """SCENARIO-ARC-WMTE-7790-IGE: bad text falls back."""
     sel = IGECellSelector(proposer=_StubProposer(ok=True, text="I cannot decide"))
     assert sel(_descriptors(3)) is None
     diag = sel.diagnostics()
@@ -110,6 +118,7 @@ def test_selector_counts_parse_failure_and_falls_back():
 
 
 def test_selector_disabled_returns_none_without_calling_llm():
+    """SCENARIO-ARC-WMTE-7790-IGE: disabled selector makes no call."""
     stub = _StubProposer(ok=True, text="0")
     sel = IGECellSelector(proposer=stub, enabled=False)
     assert sel(_descriptors(3)) is None
@@ -117,6 +126,7 @@ def test_selector_disabled_returns_none_without_calling_llm():
 
 
 def test_selector_truncates_to_max_cells_and_maps_back_to_original_index():
+    """REQ-ARC-WMTE-7790: bound the prompt and map the archive index."""
     # 5 cells but only 3 shown to the LLM; the model says "2" -> the 3rd SHOWN cell, whose original
     # descriptor index is also 2 here. Confirms the prompt is bounded and the mapping uses the index field.
     stub = _StubProposer(ok=True, text="2")
@@ -131,6 +141,7 @@ def test_selector_truncates_to_max_cells_and_maps_back_to_original_index():
 
 
 def test_coerce_ige_variants():
+    """REQ-ARC-WMTE-7790: coerce enabled and disabled IGE forms."""
     assert coerce_ige_cell_selector(None) is None
     assert coerce_ige_cell_selector(False) is None
     assert coerce_ige_cell_selector("") is None
@@ -163,6 +174,7 @@ def _populate(arch: GoExploreReplayArchive) -> None:
 
 
 def test_archive_delegates_cell_choice_to_selector():
+    """SCENARIO-ARC-WMTE-7790-IGE: archive uses a valid choice."""
     # selector returns index 1 -> the SECOND cell (action 2) must be returned, NOT the heuristic's pick
     # (the heuristic would prefer the deeper depth=5 first cell).
     arch = GoExploreReplayArchive(selector=lambda descs: 1)
@@ -178,6 +190,7 @@ def test_archive_delegates_cell_choice_to_selector():
 
 
 def test_archive_falls_back_to_heuristic_when_selector_declines():
+    """SCENARIO-ARC-WMTE-7790-IGE: decline keeps the archive heuristic."""
     # selector returns None -> heuristic picks min(visits, -depth, ...) = the DEEPER cell (depth 5, action 1).
     arch = GoExploreReplayArchive(selector=lambda descs: None)
     _populate(arch)
@@ -187,6 +200,7 @@ def test_archive_falls_back_to_heuristic_when_selector_declines():
 
 
 def test_archive_falls_back_on_out_of_range_selector_index():
+    """SCENARIO-ARC-WMTE-7790-IGE: bad index keeps the heuristic."""
     arch = GoExploreReplayArchive(selector=lambda descs: 99)
     _populate(arch)
     prefix = arch.select_prefix()
@@ -195,6 +209,8 @@ def test_archive_falls_back_on_out_of_range_selector_index():
 
 
 def test_archive_selector_exception_falls_back():
+    """SCENARIO-ARC-WMTE-7790-IGE: selector error keeps the heuristic."""
+
     def _boom(descs):
         raise RuntimeError("selector blew up")
 
@@ -206,6 +222,7 @@ def test_archive_selector_exception_falls_back():
 
 
 def test_coerce_go_explore_archive_accepts_callable_and_ige_string():
+    """REQ-ARC-WMTE-7790: archive accepts callable and IGE selectors."""
     called = {}
 
     def _sel(descs):
