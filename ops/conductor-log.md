@@ -18850,3 +18850,5 @@ code |
 | 2026-09-27 15:26 UTC | Qualify sentence custody and complete evidence vie | OK | 108 passed, 1 warning in 10.60s |
 | 2026-09-27 16:29 UTC | Qualify normalized training under a frozen affecte | OK | 99 passed, 1 warning in 55.70s |
 | 2026-09-27 16:58 UTC | Complete Qwen transport and reducer tests before G | OK | 106 passed, 1 warning in 16.68s |
+| 2026-09-27 17:01 UTC | Train calibrated view energies against matched aug | GATE_BLOCK | gate-unsat(final): 6 of 9 gate(s) failed; first failure: exp7768-source-view-qualification.sentence_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-27 17:03 UTC | Measure source-dependent probabilities and typed d | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7771-view-energy-fit, exp7771-view-energy-fit, exp7771-view-energy-fit) |
