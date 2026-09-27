@@ -83386,3 +83386,22 @@ A fresh process verifies panel identity, request and response byte hashes,
 prompt reconstruction, row metrics, and aggregate reduction. A changed raw
 byte or row fails replay. Missing upstream evidence yields a terminal blocked
 record, not a partial scientific result.
+## REQ-REPORT-7765: Bound V675 complete service cost from qualified heads
+
+Exp7765 SHALL authenticate the declared current Exp7757 fit and optional Exp7761 online state independently. A conductor pre-gate receipt SHALL not substitute for a fitted head. Missing or disqualified fitting SHALL produce a terminal blocked artifact with exact failed operands, zero timing rows, and dated authenticated hardware continuity. It SHALL not claim a measured kernel or hardware speedup.
+
+When fitting is eligible, each response SHALL combine raw A/B view risks before one response-level temperature and one typed decision. Canonical arms SHALL use A; logistic SHALL average features before its shared head. Tune selection SHALL use uncalibrated deployed response NLL, and temperature SHALL fit the same aggregated tune risk. Shared invalid or over-budget families SHALL use uncalibrated risk 0.5, forced escalation, Brier 0.25, and realized cost 0.25 in overall denominators. Eligible-only metrics SHALL be separate. Online updates SHALL obey the same inference rule.
+
+Qualified service timing SHALL include parsing, required features, energy or MLP inference, calibration, decision, serialization, cold load, and durable update acknowledgement. It SHALL use ten warmups and thirty randomized paired blocks at batch sizes 1, 8, and 32. Each measured row SHALL retain components, p50/p95, intervals, exclusions, and independent-family count. Hardware opportunity SHALL use only a measured applicable fraction, with a bounded Amdahl calculation; nonlinear normalized set inference SHALL not be mapped wholesale to quadratic sampling.
+
+### SCENARIO-REPORT-7765-BLOCKED
+
+Given an Exp7757 conductor pre-gate receipt without fitted heads, the current service artifact has `complete_blocked_*`, readiness zero, per-check rows, and no fabricated timing observations. Exp7751 board evidence remains dated and hash authenticated.
+
+### SCENARIO-REPORT-7765-DECISION
+
+Given two distinct risks, calibration applies once to their mean. Given a shared invalid view, policy escalates at raw risk 0.5 without calibration and includes its fixed Brier and cost in overall metrics.
+
+### SCENARIO-REPORT-7765-REPLAY
+
+A fresh process SHALL verify source byte hashes and independently reduce check rows. A changed input, missing row, or promoted timing claim SHALL fail replay. Required validation failure SHALL set readiness to zero.
