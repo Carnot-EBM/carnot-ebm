@@ -18865,3 +18865,6 @@ code |
 | 2026-09-27 20:26 UTC | Bind fourteen tasks and register causal evidence m | OK | 128 passed, 1 warning in 19.82s |
 | 2026-09-27 21:03 UTC | Repair historical imports and isolate roadmap test | OK | 170 passed, 1 warning in 28.23s |
 | 2026-09-27 21:06 UTC | Qualify source custody with stable historical cons | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7782-historical-compatibility.historical_fixture_ready_score (actual=0 == expected=1) |
+| 2026-09-27 21:45 UTC | Qualify numerical and online mechanics with bounde | OK | 90 passed, 1 warning in 21.11s |
+| 2026-09-27 21:47 UTC | Train normalized decision energies with matched vi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7783-source-view-qualification, exp7783-source-view-qualification, exp7783-source-view-qualification, exp7783-source-view-qualification) |
+| 2026-09-27 21:47 UTC | Measure source dependence calibration and typed de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7785-view-energy-fit, exp7785-view-energy-fit, exp7785-view-energy-fit) |
