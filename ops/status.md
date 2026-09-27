@@ -1,5 +1,21 @@
 # Carnot — Operational Status
 
+## 2026-09-27 -- Real divergence-halt merged; GPU measurement panel killed incomplete after 11h47m
+- Merged two default-off mechanisms to main (f3d355c58b): CARNOT_ARC_PLAN_DIVERGENCE_HALT (the live
+  execute loop now checks its plan against reality and abandons on mismatch, instead of blindly
+  finishing a wrong plan) and CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD (relax the two hardcoded 1.0/1.0
+  exact-match induction gates). 25/25 tests pass, no regression on the conductor's own concurrent
+  organic_visits feature (35030105ed), which landed in the same functions mid-pilot and had to be
+  reconciled by hand -- confirmed byte-identical to what the conductor shipped.
+- The real GPU measurement panel is INCOMPLETE, not merged as a result. Individual inductions ran
+  46,000-71,000 tokens each -- far more than expected. Operator authorized letting it run, then a
+  1-hour extension, then a hard stop; killed at ~11h47m. su15 completed all 8 planned episodes; sp80
+  completed seed 1 fully and 2 of 4 arms for seed 2; g50t and cd82 never ran. honest_verdict:
+  incomplete_measurement, no promotion claim for any threshold.
+- Found and fixed along the way: codex's `--sandbox workspace-write` cannot reach the NVIDIA driver at
+  all (real GPU tasks need `--dangerously-bypass-approvals-and-sandbox`, matching how the conductor
+  itself launches codex) -- saved to memory (feedback_codex_sandbox_no_gpu.md).
+
 **Last Updated:** 2026-09-27
 
 ## 2026-09-27 — Exp7752 direct CLI test gate repaired

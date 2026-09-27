@@ -3597,3 +3597,10 @@ V673 replan: activation readers pass; 124 focused tests pass and one unchanged l
 | Turn | Start | End | Description | Tokens |
 |---|---|---|---|---|
 | 1 | 2026-09-27T08:26:18Z | pending | Plan next research milestone; research sources; emit matching design and staged YAML; preserve active roadmap and conductor. | unavailable |
+
+## Outer-loop note (2026-09-27, appended by a separate session)
+
+Real plan-divergence-halt pilot (REQ-ARC-WMTE-10025): launched ~2026-09-26T21:25Z (worktree
+induced-plan-divergence), killed by operator authorization ~2026-09-27T08:53Z (~11h28m wall, GPU 1).
+Code merged (f3d355c58b); measurement panel incomplete (su15 full, sp80 half, g50t/cd82 unrun). See
+ops/changelog.md and ops/status.md 2026-09-27 entries for detail.

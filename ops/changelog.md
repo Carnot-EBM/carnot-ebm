@@ -20875,3 +20875,17 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Measure complete decision service and preserve hardware limits (⚠️ Blocked) — honest_verdict=complete_blocked_missing_qualified_fit; results/experiment_7765_v675_service_cost.json
 - 2026-09-27: Reconcile fourteen outcomes and bound the next research decision (⚠️ Research Finding) — honest_verdict=complete_disqualified_v675_capstone_validation; results/experiment_7766_v675_capstone.json
 - 2026-09-27: Completed the 2026.09.675 operational retrospective. The 10 compute-bound experiments used 32.3 wall-time minutes (averaging 3 minutes per experiment); qualification of prediction-before-feedback learning was longest at 11.32 minutes, followed by sentence annotation custody recovery at 7.52 minutes and bounded Qwen sensitivity measurement at 3.93 minutes. The point-in-time snapshot showed GPU 1 at 97% utilization running llama.cpp and GPU 0 idle, aligning with single-model inference rather than a DualGPURunner omission. Recommended tooling improvements include structured receipts with intra-task stage timing, continuous GPU sampling, and measured inference batching benchmarks. Savings could not be quantified. Artifact: results/operational_retro_2026_09_675.json.
+
+## 2026-09-27 — Real plan-divergence halt merged; GPU panel killed incomplete (operator: "start item 3")
+
+- Merged two default-off mechanisms to main (f3d355c58b): CARNOT_ARC_PLAN_DIVERGENCE_HALT (the live
+  execute loop now checks its plan against reality, abandoning on mismatch) and
+  CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD (relax the two hardcoded 1.0/1.0 exact-match induction gates).
+  Reconciled by hand against a concurrent conductor commit (35030105ed) that landed in the same
+  functions mid-pilot; confirmed byte-identical, no regression, 25/25 tests pass.
+- The real GPU measurement panel (su15/sp80/g50t/cd82 x 2 seeds x 4 arms) is INCOMPLETE: individual
+  inductions ran 46,000-71,000 tokens each; the operator authorized letting it run, then one more hour,
+  then a hard stop at ~11h47m. su15 fully done (8/8); sp80 seed 1 fully done, seed 2 half done; g50t and
+  cd82 never ran. honest_verdict: incomplete_measurement, no promotion claim -- not merged as a result.
+- Found codex `--sandbox workspace-write` cannot reach the NVIDIA driver at all; real GPU codex tasks
+  need `--dangerously-bypass-approvals-and-sandbox`. Saved to memory.
