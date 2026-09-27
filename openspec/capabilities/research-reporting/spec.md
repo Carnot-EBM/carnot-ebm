@@ -83034,6 +83034,18 @@ Given raw fixture rows in a fresh process, the reducer recomputes event counts a
 The artifact records separate validity, readiness, Brier, decision cost, coverage, retention and efficiency gates, actual model-call counts, affected check receipts, exact candidate-reader exits and hashes, and an oracle-fixture claim limit.
 ## V674 contract and method custody — 2026-09-27
 
+### REQ-REPORT-7748: Qualify the organic ARC runner before game comparison
+
+Exp7748 SHALL freeze the Exp7749 eight-game, two-seed, three-arm schedule and actual SDK baseline actions before scored episodes. It SHALL preserve unstarted and censored rows, use observation-time counter provenance, withhold target adapters and stored routes, and report zero current model calls. A real offline SDK transition through the scored `choose_action` and `is_done` path, distinct matched enabled selectors, 100 percent coverage of new implementation code, affected checks, cold reduction, and terminal readers SHALL all pass before `organic_runner_ready_score` can equal one. Fixture success alone is `circular_positive`; it gives no new solve credit. Missing upstream inputs or unchanged external failures produce a terminal blocked result with exact gate operands.
+
+#### SCENARIO-REPORT-7748-CUSTODY
+
+Given frozen game, seed, arm rows, an interrupted or unstarted episode remains in the raw schedule and cold reduction rejects a changed row count, altered input hash, or fabricated action count.
+
+#### SCENARIO-REPORT-7748-TERMINAL
+
+Given a terminal candidate and owned raw rows, fresh-process reduction, adversarial verification, and strict row consistency run before atomic publication. Readiness is one only when all required checks and real SDK reachability pass; probability quality, decision benefit, retention, and efficiency stay null when unmeasured.
+
 ### REQ-REPORT-7739: Certify the fourteen-task administrative contract
 
 Exp7739 SHALL independently parse the V674 design table and JSON block and

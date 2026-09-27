@@ -37557,3 +37557,15 @@ Given an organic cell and repeated reset and replay frames, total observations r
 ### SCENARIO-ARC-WMTE-7735-PARITY
 
 With the option off, 300 fixed decisions and ten reset/replay episodes have identical actions and random state. With the option on, descriptors rank by visits minus organic sightings and return prefixes remain eligible under the frozen V8 settings.
+
+### REQ-ARC-WMTE-7748: Match three scored ARC archive configurations
+
+One task-owned adapter SHALL construct the scored `make_carnot_agent`/`E3AgentPolicy` path in archive-off, visits-minus-total-seen, and visits-minus-organic-seen arms. Both enabled arms SHALL share observation handling, coarse cells, spacing 20, replay cap 400, and prefix limit 30. The total arm SHALL rank by recorded total `seen`; the organic arm SHALL rank by `organic_seen`. Observation provenance SHALL be captured when `observe` executes, including reset and the final replay landing, and SHALL not be inferred from the action's later pending queue. The production default and shipped replay repair SHALL remain intact.
+
+#### SCENARIO-ARC-WMTE-7748-DISTINCT
+
+Given two eligible cells with equal visits and different replay sightings, the matched selectors choose different prefixes while their archive settings and observation path remain equal. Snapshot reload preserves counters and selector behavior.
+
+#### SCENARIO-ARC-WMTE-7748-PARITY
+
+Given archive-off agents and fixed randomness, 300 decisions and ten episodes retain exact actions and random state. Ordinary frontier pending frames remain organic; empty prefixes cannot schedule a return.

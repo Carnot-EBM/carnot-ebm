@@ -1,0 +1,61 @@
+{
+  "candidate_sha256": "sha256:1d8bba03154557fb5f85fab316693e938b74d03ba758c2c817120c545c7bce49",
+  "commands": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7748_v674_arc_runner_qualification.py --cold /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7748_v674_arc_runner_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7748_v674_arc_runner_qualification.py",
+        "--cold",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7748_v674_arc_runner_qualification/terminal_candidate.json"
+      ],
+      "duration_s": 1.8741347080213018,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7748_v674_arc_runner_qualification/terminal_logs/00_cold_reduce.log",
+      "log_sha256": "sha256:3c827b0f818a2f266306e0a564552e12da334ab7874aa9b7a1cf9dba9b1b6ba2",
+      "name": "cold_reduce",
+      "output_tail": "[exp7748] startup before elapsed_s=0.00 {'root': '/home/ianblenke/github.com/ianblenke/carnot', 'pid': 1814855}\n[exp7748] cold_reduce before elapsed_s=0.00 {'candidate': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7748_v674_arc_runner_qualification/terminal_candidate.json'}\n[exp7748] cold_reduce after elapsed_s=0.00 {'intended': 6, 'started': 6, 'completed': 6, 'actions': 45}\n",
+      "passed": true,
+      "scope": "terminal_reader",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7748_v674_arc_runner_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7748_v674_arc_runner_qualification/terminal_candidate.json"
+      ],
+      "duration_s": 0.6942767520085908,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7748_v674_arc_runner_qualification/terminal_logs/01_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "terminal_reader",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7748_v674_arc_runner_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7748_v674_arc_runner_qualification/terminal_candidate.json"
+      ],
+      "duration_s": 0.02814675500849262,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7748_v674_arc_runner_qualification/terminal_logs/02_strict_row_lint.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_row_lint",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "terminal_reader",
+      "timed_out": false
+    }
+  ]
+}
