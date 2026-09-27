@@ -146,6 +146,28 @@ def test_7732_reader_rejects_unknown_source_and_broken_bank(tmp_path: Path) -> N
     assert result["bank_valid"] is False
 
 
+@pytest.mark.parametrize("damage", ["unreadable", "malformed", "hash_mismatch"])
+def test_7732_cold_bank_exception_paths(
+    measured: tuple[dict, Path], tmp_path: Path, damage: str
+) -> None:
+    """SCENARIO-REPORT-7742-REPLAY: old cold bank handler fails closed."""
+    payload = dict(measured[0])
+    payload["bank_state_paths"] = dict(payload["bank_state_paths"])
+    bank = tmp_path / "damaged.json"
+    if damage == "unreadable":
+        bank.mkdir()
+    elif damage == "malformed":
+        bank.write_text("{")
+    else:
+        original = json.loads(Path(payload["bank_state_paths"]["growth"]).read_text())
+        original["budget"]["proposal_credits_spent"] += 1
+        bank.write_text(json.dumps(original))
+    payload["bank_state_paths"]["growth"] = str(bank)
+    candidate = tmp_path / "candidate.json"
+    candidate.write_text(json.dumps(payload))
+    assert cold_reduce(candidate)["bank_valid"] is False
+
+
 @pytest.mark.parametrize("failed_group", [None, "terminal"])
 def test_7732_validation_gate_is_affected_only(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failed_group: str | None

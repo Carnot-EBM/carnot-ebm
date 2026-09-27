@@ -1,5 +1,28 @@
 # Continuous Learning Capability Specification
 
+## REQ-CL-7742-BANK: Bound sentence-risk advisory admission
+
+Exp7742 SHALL carry all 16 declared sentence-risk predicates with development
+fitted static weights and exactly-once feedback IDs. The production BoundedBank
+SHALL retain its twelve-pending cap; at most one proposal follows each completed
+feedback block and at most eight proposals are spent. Frozen control makes no
+additions. A new predicate changes advisory probability only, never hard truth.
+Readiness depends on durable lifecycle checks and affected validation, not a
+fixture accuracy threshold.
+
+### SCENARIO-CL-7742-LIFECYCLE
+
+Commit, rejection, duplicate feedback, overflow, and interrupted write are
+observed through the production bank API. Owned hard exits before and after
+durable acknowledgement replay the same state, probability, proposal credits,
+and pending handles. Missing, malformed, or hash-mismatched state closes the
+gate.
+
+### SCENARIO-CL-7742-STATIC
+
+All 16 dictionary names have fitted weights. A cold reader checks them against
+development-only fixtures and rejects an empty or truncated control.
+
 ## REQ-CL-7734-AUDIT: Independently check retained learning evidence
 
 Exp7734 SHALL reduce Exp7732 raw rows and event logs without using its summary

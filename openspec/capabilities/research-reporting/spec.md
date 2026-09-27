@@ -1,5 +1,34 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7742: Publish bounded V674 bank qualification
+
+Exp7742 SHALL hash required bank producers and the V674 predicate manifest before
+measurement, separate disqualified historical results from eligible inputs, and
+freeze affected tests and checks. It SHALL retain raw family rows, lifecycle
+rows, bank ledgers, fitted static weights, input hashes, and honest scope. A
+fresh process SHALL reject changed source bytes, corrupt bank state, or mismatched
+summaries. All affected tests, complete changed-module coverage, static checks,
+task E2E, and terminal readers SHALL pass before readiness is one. Fixture
+success is circular_positive; natural decision benefit remains null.
+
+### SCENARIO-REPORT-7742-CUSTODY
+
+Given missing or malformed required input, the artifact is complete_blocked_*
+and names each failed operand. Historical V673 and V674 disqualifications stay
+visible and cannot become evidence of retained learning or fresh generalization.
+
+### SCENARIO-REPORT-7742-REPLAY
+
+A private CLI run writes raw rows, then a fresh process recomputes row hashes,
+summary counts and bank ledgers. A changed input hash, missing or malformed
+state, or changed summary fails the cold reader.
+
+### SCENARIO-REPORT-7742-TERMINAL
+
+The exact terminal candidate passes a cold reader, adversarial verification,
+and strict verdict-row consistency before atomic publication. A failed current
+check closes readiness while unrelated repository debt remains separate.
+
 ## V673 capstone custody — 2026-09-27
 
 ### REQ-REPORT-7738: Reconcile thirteen tasks without promoting blocked science
