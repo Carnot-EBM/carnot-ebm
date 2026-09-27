@@ -20850,3 +20850,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   pre-emission readers catch this omission; no new guard code was needed.
 - 2026-09-27: Bind fourteen tasks and ingest localized-supervision methods (⚠️ Research Finding) — honest_verdict=complete_null_v674_contract_methods; results/experiment_7739_v674_contract_methods.json
 - 2026-09-27: Bind natural output annotations to complete answer sentences (⚠️ Research Finding) — honest_verdict=complete_disqualified_sentence_label_protocol; results/experiment_7740_v674_sentence_label_protocol.json
+- 2026-09-27: Qualify causal bank failures and durable constraint admission (⚠️ Research Finding) — honest_verdict=complete_circular_positive_bank_lifecycle; results/experiment_7742_v674_bank_qualification.json
