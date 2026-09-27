@@ -20826,3 +20826,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Qualify advisory constraint growth with scoped validation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7732_v673_causal_admission.json
 - 2026-09-27: Cold-reduce development decisions and feedback causality (⚠️ Blocked) — honest_verdict=complete_blocked_required_v673_evidence; results/experiment_7734_v673_independent_evidence_audit.json
 - 2026-09-27: Separate organic exploration from archive replay visits (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation_or_runner; results/experiment_7735_v673_arc_organic_visits.json
+- 2026-09-27: Reconcile thirteen outcomes and bound the next continuation (⚠️ Blocked) — honest_verdict=complete_blocked_required_v673_evidence; results/experiment_7738_v673_capstone.json
