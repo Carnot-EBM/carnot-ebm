@@ -46536,3 +46536,16 @@ Unicode, punctuation, multi-sentence overlaps, boundary touches, empty answers a
 #### SCENARIO-VERIFY-7740-ISOLATION
 
 Only the fit role may expose target values to the initial fitting path. Public feature rows reject labels and annotation fields; other role targets remain evaluator-owned.
+# REQ-VERIFY-7745: Resolve localization against answer spans
+
+The V674 localizer SHALL parse a binary unsupported/supported decision with
+abstention, a source quotation, and, for the localized arm, unsupported answer
+spans. Exact text offsets SHALL resolve uniquely against unchanged source and
+answer bytes. Human response labels score decisions; human sentence targets
+score localization. Malformed or unresolved spans SHALL remain errors and never
+be silently repaired.
+
+## SCENARIO-VERIFY-7745-OFFSETS
+
+Given ambiguous quotations, absent answer spans, or malformed JSON, the
+reducer records invalid syntax or address and preserves the family denominator.

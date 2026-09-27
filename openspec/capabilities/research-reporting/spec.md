@@ -1,5 +1,32 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7745: Measure exposed Qwen answer localization
+
+Exp7745 SHALL authenticate the original source and answer bytes for the same
+24 exposed Exp7729 families, cached Qwen3.8 Q4 GGUF bytes, embedded chat
+template, and idle owned CUDA capacity before measurement. It SHALL randomize
+direct and localized one-call arms with seed 67445 and identical context,
+decoding, JSON schema strength, and 256-output-token limits. At most 48 calls
+and 12288 output tokens are permitted. Raw request, response, token, latency,
+PID, GPU, offload, checkpoint, and source hashes SHALL survive cold reduction.
+The result is development_only with no promotion, learning, ARC, or fresh
+generalization claim. A valid null can complete the diagnostic pilot.
+
+### SCENARIO-REPORT-7745-PAIRED
+
+Given 24 authenticated natural families, both arms retain malformed, truncated,
+abstained, and unknown results in family denominators. The reducer reports
+binary accuracy, false accepts and rejects, unknown rate, exact quote and
+answer-span validity, sentence localization precision and recall, tokens,
+latency, and paired family intervals. A valid quote does not prove entailment.
+
+### SCENARIO-REPORT-7745-TERMINAL
+
+Missing inputs or capacity produce complete_blocked_* with exact operands and
+no invented call. Failed owned checks disqualify. Only all 24 current paired
+families and passing affected validation, cold replay, adversarial and strict
+row readers set qwen_localization_complete_score=1.
+
 ## REQ-REPORT-7742: Publish bounded V674 bank qualification
 
 Exp7742 SHALL hash required bank producers and the V674 predicate manifest before

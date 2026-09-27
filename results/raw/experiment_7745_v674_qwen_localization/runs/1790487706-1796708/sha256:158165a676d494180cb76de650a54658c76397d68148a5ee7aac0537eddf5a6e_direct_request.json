@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the complete source. Return one JSON object. decision must be unsupported, supported, or abstain. quote must be one exact, unique substring of the source; a quote alone does not prove support. Abstain if the source does not permit a confident decision.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"Texas Police Could Arrest Illegal Immigrants In New Bill\\nLast Thursday, the House of Representatives passed a crucial bill to stop illegal immigrants from staying in Texas. The bill would allow police to arrest illegal immigrants and send them back to Mexico.\\nAccording to KERA News, House Bill 4 passed 83 to 63 after much disagreement. The House vote was around 4 a.m. on Thursday, October 26.\\nDemocrats tried to derail the bill, but the House of Representatives eventually passed the bill.\\nState Representative Cody Harris, R-Palestine tried to limit the number of amendments representatives could make, but the bill was approved.\\nState Representative Armando Walle, D-Houston warned Harris about his actions.\\nWalle said according to KERA News:\\n\u201cY\u2019all don\u2019t understand the s**t that y\u2019all do. It hurts our community, it hurts us personally.\u201d\\nDemocrats and immigrant rights groups tried to limit the bill's passage.\\nHB 4, sponsored by state Rep. David Spiller, R-Jacksboro, would create a new state crime for illegally entering Texas from Mexico, authorize state police to arrest violators, and allow officers to return migrants to a port of entry and order them to return to Mexico.\\nRepresentative Spiller said according to The New York Post:\\n\u201cOur cries for help in the enforcement of existing federal immigration laws have been ignored by President Biden. We have had enough.\u201d\\nSpiller also said according to the Texas Tribune:\\n\u201cThere is nothing unfair about ordering someone back from where they came if they arrived here illegally.\u201d\\nHouse Bill 4 is now headed to the Senate for approval.\\nThe bill could come under scrutiny from the Biden administration. Spiller said:\\n\u201cThere is nothing unfair about ordering someone back from where they came if they arrived here illegally.\u201d\\nAnother immigration bill was recently declared legal after two years as Governor Greg Abbott\u2019s executive order was declared lawful mentioned here.\\nDo you think Texas police should arrest illegal immigrants?\", \"original_answer\": \"The House of Representatives has passed House Bill 4, which allows Texas police to arrest illegal immigrants and sends them back to Mexico. The bill aims to enforce existing federal immigration laws and address a surge of illegal immigrants in the state. State Representative David Spiller, sponsor of the bill, stated that there is nothing unfair about ordering someone back from where they came if they arrived illegally. The bill will now head to the Senate for approval. However, its implementation may come under scrutiny from the Biden administration.\"}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 67445,
+  "temperature": 0
+}
