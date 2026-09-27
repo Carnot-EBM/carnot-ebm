@@ -20848,3 +20848,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - Active roadmap, conductor, exclusion/ARC guards and quarantine hashes
   remain unchanged. No experiments, manual activation or push. Existing
   pre-emission readers catch this omission; no new guard code was needed.
+- 2026-09-27: Bind fourteen tasks and ingest localized-supervision methods (⚠️ Research Finding) — honest_verdict=complete_null_v674_contract_methods; results/experiment_7739_v674_contract_methods.json
