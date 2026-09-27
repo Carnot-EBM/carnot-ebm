@@ -1,5 +1,21 @@
 # Hardware Evidence Reporting Capability Specification
 
+## REQ-HW-7751: Preserve substrate boundaries in continuity audits
+
+A read-only continuity audit SHALL credit KV260 only for authenticated
+SSH-based quadratic fabric work within k_max<=5 and measured transport
+limits. PolarFire Linux CPU dispatch SHALL not become FPGA sampling.
+GateMate's 0xffffffff JTAG failure SHALL remain blocked until a dated physical
+change and valid IDCODE appear. Extropic vendor projections SHALL remain
+separate from dense readout, local silicon access, and reproducible SDK work;
+Kona disclosure SHALL not imply a local runner. TSU and NPU remain
+unqualified without operator-provided execution evidence.
+
+### SCENARIO-HW-7751-NO-PROBE
+
+An unchanged board state yields a dated hash-backed inventory row and a
+specific next test, with zero board commands, purchases, or bitstream changes.
+
 **Capability:** Hardware evidence accounting for attached and proprietary substrates
 **Status:** In Progress
 **Owner:** Ian Blenke

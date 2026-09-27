@@ -1,0 +1,550 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "decision_benefit": null,
+    "efficiency": null,
+    "probability_quality": null,
+    "readiness": null,
+    "retention": null,
+    "validity": true
+  },
+  "claim_scope": {
+    "ARC": "adapter_withheld_public",
+    "RAGTruth": "development_only",
+    "constructed_truth": "fixture_only"
+  },
+  "continuous_learning_throughput_claimed": false,
+  "cost_input_eligibility": {
+    "eligible": false,
+    "observed_missing_field": "service_fractions.quadratic_ising_kernel",
+    "path": "results/experiment_7750_v674_service_cost.json",
+    "reason": "missing",
+    "sha256": null
+  },
+  "execution_venue": "host",
+  "execution_venue_details": {
+    "gpu_uuid": null,
+    "pid": 1820790
+  },
+  "experiment_id": 7751,
+  "field_principles": {
+    "MODEL_SPECS": "The experiment model is distinct from the coding backend.",
+    "acceptance_gate_results": "Negative science may be valid while invalid execution never qualifies.",
+    "claim_scope": "Historical exposure cannot become fresh generalization.",
+    "continuous_learning_throughput_claimed": "Exact observed value and scope are retained.",
+    "cost_input_eligibility": "Missing service timing cannot become projection.",
+    "decision_benefit_gate": "Unmeasured science stays null.",
+    "efficiency_gate": "Unmeasured science stays null.",
+    "execution_venue": "Host work is not fabric work.",
+    "execution_venue_details": "Exact observed value and scope are retained.",
+    "experiment_id": "Exact observed value and scope are retained.",
+    "flagged_adversarial": "A clean label cannot replace independent checks.",
+    "fresh_generalization_eligible": "Exact observed value and scope are retained.",
+    "gate_check_summary": "A missing field is a broken contract, not a scientific null.",
+    "hardware_advantage_claimed": "Exact observed value and scope are retained.",
+    "hardware_continuity": "Hardware credit belongs to the measured boundary.",
+    "hardware_continuity_complete_score": "Inventory completeness is not acceleration.",
+    "hardware_operations_issued": "Exact observed value and scope are retained.",
+    "honest_verdict": "Completion and scientific benefit are different facts.",
+    "inference_substrate": "Cached evidence does not claim live generation.",
+    "inference_substrate_class": "Duration checks match actual work.",
+    "invocation_counts": "Exact observed value and scope are retained.",
+    "model_invoked": "Names alone are not invocation evidence.",
+    "model_specs": "Exact observed value and scope are retained.",
+    "nfr01_claimed": "Exact observed value and scope are retained.",
+    "phase_spans": "Real timings and bounded silence expose stalled work.",
+    "planned_MODEL_SPECS": "Exact observed value and scope are retained.",
+    "planned_inference_substrate_class": "Exact observed value and scope are retained.",
+    "preconditions_checked": "Missing access blocks before measurement.",
+    "probability_quality_gate": "Unmeasured science stays null.",
+    "random_seed": "Replay uses fixed inputs and parameters.",
+    "readiness_gate": "Administrative accounting does not promote hardware.",
+    "reproducibility_checksum": "Replay binds bytes, parameters, and reducer code.",
+    "retention_gate": "Unmeasured science stays null.",
+    "rows": "Every comparison must be independently recomputable.",
+    "rows_checksum": "Exact observed value and scope are retained.",
+    "run_date": "Exact observed value and scope are retained.",
+    "sample_size_budget": "Board and service counts are not multiplied by requests.",
+    "schema": "Exact observed value and scope are retained.",
+    "source_artifact_hashes": "An artifact cannot authenticate itself as upstream.",
+    "validation_receipts": "Registered checks control use of the result.",
+    "validity_gate": "Inventory validity is separate from scientific value.",
+    "verdict_class": "Unchanged external failures do not trigger identical attempts.",
+    "verifier_is_oracle": "Circular success cannot establish independent value."
+  },
+  "flagged_adversarial": false,
+  "fresh_generalization_eligible": false,
+  "gate_check_summary": [
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7750_v674_service_cost.json",
+      "check": "eligible_service_fractions",
+      "expected": "eligible measured quadratic kernel fraction",
+      "field": "service_fractions.quadratic_ising_kernel",
+      "observed": "missing",
+      "op": "measured",
+      "passed": false,
+      "upstream_id": "Exp7750"
+    }
+  ],
+  "hardware_advantage_claimed": false,
+  "hardware_continuity": {
+    "AMD XDNA NPU": {
+      "blocker": "No qualified provider or device run",
+      "bounded_next_experiment": "Operator-provided SDK/provider and device-side workload receipt",
+      "changed_prerequisite": "Operator-provided SDK/provider and device-side workload receipt",
+      "evidence_date": "20260927",
+      "evidence_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "supported_workload": "no qualified local NPU execution",
+      "venue": "none"
+    },
+    "Extropic Z1T/TSU": {
+      "blocker": "No local silicon or reproducible SDK execution",
+      "bounded_next_experiment": "Operator access plus end-to-end SDK run including dense readout and transfers",
+      "changed_prerequisite": "Operator access plus end-to-end SDK run including dense readout and transfers",
+      "evidence_date": "20260927",
+      "evidence_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "supported_workload": "vendor projected sparse energy; dense readout and transfers excluded",
+      "venue": "none"
+    },
+    "GateMate": {
+      "blocker": "0xffffffff",
+      "bounded_next_experiment": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "changed_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "evidence_date": "20260915",
+      "evidence_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "supported_workload": "no qualified execution; physical JTAG IDCODE blocked",
+      "venue": "none_read_only"
+    },
+    "KV260": {
+      "blocker": null,
+      "bounded_next_experiment": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "changed_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "evidence_date": "20260913",
+      "evidence_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "k_max": 5,
+      "supported_workload": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "transport_limit": "SSH/UIO bounded; no complete-service speedup",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    "Kona": {
+      "blocker": "No weights, recipe, or local runner",
+      "bounded_next_experiment": "Reproducible local runner, weights, recipe and matched benchmark",
+      "changed_prerequisite": "Reproducible local runner, weights, recipe and matched benchmark",
+      "evidence_date": "20260927",
+      "evidence_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "supported_workload": "public product disclosure only",
+      "venue": "none"
+    },
+    "PolarFire": {
+      "blocker": null,
+      "bounded_next_experiment": "A distinct FPGA workload with device-side execution and timing transcript",
+      "changed_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "evidence_date": "20260913",
+      "evidence_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "supported_workload": "hash-matched Linux CPU dispatch only",
+      "venue": "polarfire_linux_cpu_historical"
+    }
+  },
+  "hardware_continuity_complete_score": 1,
+  "hardware_operations_issued": [],
+  "honest_verdict": "complete_null_hardware_continuity_only",
+  "inference_substrate": "aggregation",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "cancellations": 0,
+    "failures": 0,
+    "forwards": 0,
+    "generations": 0,
+    "loads": 0,
+    "tokens": 0
+  },
+  "model_invoked": false,
+  "model_specs": [],
+  "nfr01_claimed": false,
+  "phase_spans": [
+    {
+      "checkpoint_hash": "sha256:163f861a084263ef918073e7c999c5e0bb6e4f20d3b183b2d5015cebb865764d",
+      "completed_units": 6,
+      "duration_s": 0.006592766992980614,
+      "end_monotonic_s": 152421.885749217,
+      "heartbeat_times": [],
+      "phase": "inventory",
+      "run_date": "20260927",
+      "start_monotonic_s": 152421.87915654
+    }
+  ],
+  "planned_MODEL_SPECS": [],
+  "planned_inference_substrate_class": "aggregation",
+  "preconditions_checked": {
+    "coding_backend": "codex",
+    "host_storage_required_for_kv260": false,
+    "required_checks": [
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 1165,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "AGENTS.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 2697,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "CODEX.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 318291,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "CLAUDE.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 28560,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "research-program.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/research-hardware-wishlist.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 29485,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "research-hardware-wishlist.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 3716140,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "research-references.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 64270,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 11084,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "ops/e2e-test-plan.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 4870677,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "openspec/capabilities/research-reporting/spec.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/hardware/spec.md",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 127094,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "openspec/capabilities/hardware/spec.md"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7599_v663_board_continuity.json",
+        "check": "required_source_bytes",
+        "expected": 0,
+        "field": "byte_count",
+        "observed": 93021,
+        "op": ">",
+        "passed": true,
+        "upstream_id": "results/experiment_7599_v663_board_continuity.json"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "check": "dated_board_evidence_hash",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "op": "==",
+        "passed": true,
+        "upstream_id": "KV260"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7231_v636_board_continuity.json",
+        "check": "dated_board_evidence_hash",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "op": "==",
+        "passed": true,
+        "upstream_id": "PolarFire"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6559_gatemate_changed_state_continuity.json",
+        "check": "dated_board_evidence_hash",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "op": "==",
+        "passed": true,
+        "upstream_id": "GateMate"
+      },
+      {
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7750_v674_service_cost.json",
+        "check": "eligible_service_fractions",
+        "expected": "eligible measured quadratic kernel fraction",
+        "field": "service_fractions.quadratic_ising_kernel",
+        "observed": "missing",
+        "op": "measured",
+        "passed": false,
+        "upstream_id": "Exp7750"
+      }
+    ],
+    "root": "/home/ianblenke/github.com/ianblenke/carnot"
+  },
+  "random_seed": {
+    "inventory": null,
+    "reason": "deterministic read-only reduction"
+  },
+  "reproducibility_checksum": "sha256:82c83e912788ad957df30c7149a07cb7d69253d2f29d59efdbdc7ca6b8174e73",
+  "rows": [
+    {
+      "arm": "historical_inventory",
+      "blocker": null,
+      "bounded_next_experiment": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "censored": false,
+      "changed_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "denominator": 1,
+      "evidence_date": "20260913",
+      "evidence_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "evidence_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "excluded": false,
+      "input_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "measured_service_fraction": null,
+      "numerator": 1,
+      "seed": null,
+      "substrate": "KV260",
+      "supported_workload": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    {
+      "arm": "historical_inventory",
+      "blocker": null,
+      "bounded_next_experiment": "A distinct FPGA workload with device-side execution and timing transcript",
+      "censored": false,
+      "changed_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "denominator": 1,
+      "evidence_date": "20260913",
+      "evidence_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "evidence_path": "results/experiment_7231_v636_board_continuity.json",
+      "excluded": false,
+      "input_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "measured_service_fraction": null,
+      "numerator": 1,
+      "seed": null,
+      "substrate": "PolarFire",
+      "supported_workload": "hash-matched Linux CPU dispatch only",
+      "venue": "polarfire_linux_cpu_historical"
+    },
+    {
+      "arm": "historical_inventory",
+      "blocker": "0xffffffff",
+      "bounded_next_experiment": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "censored": false,
+      "changed_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "denominator": 1,
+      "evidence_date": "20260915",
+      "evidence_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "evidence_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "excluded": true,
+      "input_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "measured_service_fraction": null,
+      "numerator": 0,
+      "seed": null,
+      "substrate": "GateMate",
+      "supported_workload": "no qualified execution; physical JTAG IDCODE blocked",
+      "venue": "none_read_only"
+    },
+    {
+      "arm": "disclosure_inventory",
+      "blocker": "No local silicon or reproducible SDK execution",
+      "bounded_next_experiment": "Operator access plus end-to-end SDK run including dense readout and transfers",
+      "censored": false,
+      "changed_prerequisite": "Operator access plus end-to-end SDK run including dense readout and transfers",
+      "denominator": 1,
+      "evidence_date": "20260927",
+      "evidence_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "evidence_path": "research-references.md",
+      "excluded": true,
+      "input_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "measured_service_fraction": null,
+      "numerator": 0,
+      "seed": null,
+      "substrate": "Extropic Z1T/TSU",
+      "supported_workload": "vendor projected sparse energy; dense readout and transfers excluded",
+      "venue": "none"
+    },
+    {
+      "arm": "disclosure_inventory",
+      "blocker": "No weights, recipe, or local runner",
+      "bounded_next_experiment": "Reproducible local runner, weights, recipe and matched benchmark",
+      "censored": false,
+      "changed_prerequisite": "Reproducible local runner, weights, recipe and matched benchmark",
+      "denominator": 1,
+      "evidence_date": "20260927",
+      "evidence_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "evidence_path": "research-references.md",
+      "excluded": true,
+      "input_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "measured_service_fraction": null,
+      "numerator": 0,
+      "seed": null,
+      "substrate": "Kona",
+      "supported_workload": "public product disclosure only",
+      "venue": "none"
+    },
+    {
+      "arm": "disclosure_inventory",
+      "blocker": "No qualified provider or device run",
+      "bounded_next_experiment": "Operator-provided SDK/provider and device-side workload receipt",
+      "censored": false,
+      "changed_prerequisite": "Operator-provided SDK/provider and device-side workload receipt",
+      "denominator": 1,
+      "evidence_date": "20260927",
+      "evidence_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "evidence_path": "research-references.md",
+      "excluded": true,
+      "input_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "measured_service_fraction": null,
+      "numerator": 0,
+      "seed": null,
+      "substrate": "AMD XDNA NPU",
+      "supported_workload": "no qualified local NPU execution",
+      "venue": "none"
+    }
+  ],
+  "rows_checksum": "sha256:163f861a084263ef918073e7c999c5e0bb6e4f20d3b183b2d5015cebb865764d",
+  "run_date": "20260927",
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 6,
+    "effective_independent_n": 3,
+    "eligible": 2,
+    "excluded": 4,
+    "intended": 6,
+    "started": 6
+  },
+  "schema": "carnot.experiment_7751.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "path": "AGENTS.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "path": "CLAUDE.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+    },
+    "CODEX.md": {
+      "path": "CODEX.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+    },
+    "openspec/capabilities/hardware/spec.md": {
+      "path": "openspec/capabilities/hardware/spec.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:6e402bfbd470c193f33473bde927b7f1548a59e9b03919ba9e8bf2e3e1cad9f2"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:dca94318f1bf794294214406284df2cd3e359c2fdd5e66fbd9e41e8244ef25aa"
+    },
+    "ops/e2e-test-plan.md": {
+      "path": "ops/e2e-test-plan.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:f3dd2fcd465c57d89f2d2ad5669f5370a6bcf07fad545791d5c2c3bc9a24a892"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "path": "ops/exclusion_manifest.yaml",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:f7beb6b3481cd5b3fe02208fe7814e9dfa99cc6fef739c1f5594bd6b4468ca90"
+    },
+    "research-hardware-wishlist.md": {
+      "path": "research-hardware-wishlist.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    "research-program.md": {
+      "path": "research-program.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "research-references.md": {
+      "path": "research-references.md",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811"
+    },
+    "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json": {
+      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "scope": "historical_board_evidence",
+      "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+    },
+    "results/experiment_6559_gatemate_changed_state_continuity.json": {
+      "path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "scope": "historical_board_evidence",
+      "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66"
+    },
+    "results/experiment_7231_v636_board_continuity.json": {
+      "path": "results/experiment_7231_v636_board_continuity.json",
+      "scope": "historical_board_evidence",
+      "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+    },
+    "results/experiment_7599_v663_board_continuity.json": {
+      "path": "results/experiment_7599_v663_board_continuity.json",
+      "scope": "eligible_inventory",
+      "sha256": "sha256:da78b882068a89fb63717c28081bd84e185a7f95927b010763a84c4280426547"
+    }
+  },
+  "validation_receipts": {
+    "checks": [],
+    "frozen_scope": [
+      "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+      "python/carnot/reporting/experiment_7751_v674_hardware_continuity.py"
+    ],
+    "repository_debt": []
+  },
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

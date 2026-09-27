@@ -1,5 +1,37 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7751: Audit V674 hardware continuity without promotion
+
+Exp7751 SHALL hash dated inventory and board evidence, preserve the actual
+execution venue and supported operation for each substrate, and state the
+changed prerequisite and bounded experiment needed to reopen it. It SHALL
+read eligible Exp7750 service fractions when present, mark absent or unmapped
+fractions unmeasured, and leave learning, ARC, NFR-01, and hardware advantage
+gates null. Exp7750 absence SHALL appear in gate_check_summary without
+blocking a complete inventory null. A fresh process SHALL reject changed
+input bytes or mismatched raw-row summaries. Scoped checks and terminal
+readers SHALL precede atomic publication.
+
+### SCENARIO-REPORT-7751-CUSTODY
+
+Given historical KV260, PolarFire, GateMate, Extropic, and Kona records, the
+audit records exact dates, hashes, venues, operations, blockers, and reopening
+conditions without running a board command. Missing host storage is never a
+KV260 failure. Missing Exp7750 is recorded as a failed optional cost gate.
+
+### SCENARIO-REPORT-7751-REPLAY
+
+Given private fixture sources, the CLI writes raw rows and a summary. A fresh
+process recomputes both from the same bytes and rejects a changed input hash,
+changed row, or changed summary.
+
+### SCENARIO-REPORT-7751-TERMINAL
+
+The artifact separates validity, readiness, probability, decisions, retention,
+and efficiency. Every new module has complete changed-module coverage, and
+the exact terminal candidate passes cold replay, adversarial verification,
+and strict row consistency before publication.
+
 ## REQ-REPORT-7747: Independently audit V674 evidence
 
 Exp7747 SHALL resolve the declared Exp7744 and Exp7746 deliverables and
