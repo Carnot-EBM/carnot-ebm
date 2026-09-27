@@ -83273,3 +83273,21 @@ reduces raw rows. Full Python tests, 100-percent new-module statement coverage,
 scoped Ruff, mypy, spec coverage, E2E, adversarial verification and strict row
 consistency precede atomic publication. A failed required validation sets
 readiness to zero and yields a terminal disqualified verdict.
+
+## REQ-REPORT-7756: Qualify two byte-preserving evidence views
+
+Exp7756 SHALL freeze nine named arms and parameter ceilings before fixture
+evaluation. It SHALL record source hashes and external prerequisite failures
+without replacing an absent producer with a conductor pre-gate receipt.
+It SHALL retain per-family rows, including abstentions, and report fixture
+success as circular evidence only. Natural probability quality, decision
+benefit, retention, and efficiency remain unmeasured.
+
+### SCENARIO-REPORT-7756-TERMINAL
+
+The real entrypoint SHALL run direct preparation to distribution. A fresh
+process SHALL replay serialized views and independently reduce raw rows.
+Full Python tests, complete new-module statement coverage, scoped Ruff,
+mypy, spec coverage, adversarial verification, and strict row consistency
+SHALL pass before readiness equals one. Failed required validation SHALL
+set readiness to zero and produce a terminal disqualified verdict.

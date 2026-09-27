@@ -1,0 +1,96 @@
+{
+  "arms": {
+    "augmented_mlp": {
+      "head": "mlp_local",
+      "mode": "ordinary",
+      "paired": true,
+      "parameters": 2162
+    },
+    "augmented_set": {
+      "head": "energy_local",
+      "mode": "ordinary",
+      "paired": true,
+      "parameters": 266
+    },
+    "complete_static_constrained_set": {
+      "head": "energy_local",
+      "mode": "constrained",
+      "paired": true,
+      "parameters": 268
+    },
+    "constrained_mlp": {
+      "head": "mlp_local",
+      "mode": "constrained",
+      "paired": true,
+      "parameters": 2164
+    },
+    "constrained_set": {
+      "head": "energy_local",
+      "mode": "constrained",
+      "paired": true,
+      "parameters": 268
+    },
+    "local_logistic": {
+      "head": "logistic_local",
+      "mode": "canonical",
+      "paired": false,
+      "parameters": 266
+    },
+    "local_set": {
+      "head": "energy_local",
+      "mode": "canonical",
+      "paired": false,
+      "parameters": 266
+    },
+    "response_set": {
+      "head": "energy_local",
+      "mode": "canonical",
+      "paired": false,
+      "parameters": 266
+    },
+    "source_erased_constrained_set": {
+      "head": "energy_local",
+      "mode": "constrained",
+      "paired": true,
+      "parameters": 268
+    }
+  },
+  "augmentation": "mean of A/B supervised losses",
+  "constraints": {
+    "dual_range": [
+      0,
+      10
+    ],
+    "dual_step": 0.01,
+    "symmetric_bernoulli_kl_half_max": 0.01,
+    "view_b_label_ce_max": 0.7
+  },
+  "empty_source": "explicit null location",
+  "feature_dim": 132,
+  "feature_source": "source_alignment.pair_features",
+  "local_loss": "mean known-sentence NLL once per response; response_set has no local term",
+  "logistic": "average per-sentence pooled features before shared linear head",
+  "max_answer_units": 16,
+  "max_windows": 128,
+  "normalization": "finite location-label softmax with equal duplicate-group and null mass",
+  "online_learning": "same frozen inference and cost rule as offline deployment",
+  "parameter_max": 4096,
+  "policy": {
+    "accept": "5p",
+    "escalate": 0.25,
+    "reject": "1-p",
+    "ties": "escalate"
+  },
+  "predictor_exclusions": [
+    "labels",
+    "annotation_offsets",
+    "source_ids",
+    "roles",
+    "generator_ids"
+  ],
+  "shared_abstention": true,
+  "temperature": "one response-level temperature after raw A/B arithmetic mean",
+  "tune_selection": "uncalibrated deployed response NLL",
+  "view_a": "all original sentences plus adjacent triples",
+  "view_b": "all original sentences plus adjacent pairs"
+}

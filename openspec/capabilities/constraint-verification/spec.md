@@ -8866,3 +8866,30 @@ the symmetric Bernoulli KL, requires J <= 0.01 and second-view label CE <=
 loss calculations clip probabilities to [1e-6, 1-1e-6]. Identical views have
 zero consistency divergence. Divergence failures and save/reload differences
 disqualify fixture qualification.
+
+## REQ-VERIFY-7756: Preserve complete bytes across two evidence views
+
+View A SHALL contain every source sentence and each adjacent triple. View B
+SHALL contain every source sentence and each adjacent pair. Both views SHALL
+retain the original source and answer bytes, half-open UTF-8 offsets, and
+byte hashes. Neither view may use labels, paraphrases, retrieval, or text
+rewrites. Each view SHALL use the same 132 features, null location, exact
+normalization, and duplicate-group prior. A limit failure in either view
+SHALL force both views to abstain.
+
+### SCENARIO-VERIFY-7756-WITNESS
+
+Punctuation, Unicode, final fragments, empty sources, and duplicate windows
+SHALL retain exact bytes. A fixture with at least three source sentences
+SHALL show different pair and triple features. Changing only labels SHALL
+leave both views byte-identical. Duplicate and permutation checks remain
+regressions, not evidence of a new learning signal.
+
+### SCENARIO-VERIFY-7756-DECISION
+
+Each eligible view SHALL yield raw response risk before aggregation. Paired
+arms SHALL average A/B risks, then scale the mean-risk logit once and choose
+one typed decision. Canonical arms SHALL use A; logistic SHALL average
+per-sentence pooled features before its shared head. Invalid or over-budget
+families SHALL use p=0.5, force escalation, and contribute Brier=0.25 and
+realized cost=0.25 to overall metrics. Eligible-only metrics stay separate.
