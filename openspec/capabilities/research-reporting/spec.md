@@ -83446,3 +83446,38 @@ Exp7762 eligibility and absent Exp7764 results cannot open benefit gates.
 A fresh process independently reduces the raw task rows and reopens each source
 byte hash. Changing a row, producer, or declared authority makes replay fail.
 Required validation failure disqualifies the artifact and forces readiness zero.
+
+## REQ-REPORT-V676-PLAN: Measured decisions with explicit qualification scope
+
+The V676 proposal SHALL contain fourteen ordered tasks, Exp7767–Exp7780,
+across four phases. The design table, JSON contract and next-roadmap YAML
+SHALL agree on IDs, titles, phases, deliverables, model lists, substrates and
+gates. Each prompt SHALL require flushed progress, bounded tool calls,
+per-unit evidence, terminal verdict classes and exact blocked-check details.
+Every matching prior failure SHALL carry all four retirement fields.
+
+The plan SHALL preserve V675's disqualifications and unmet full-suite
+requirements. Current qualification SHALL define its complete affected and
+transitive consumer scope before work. A passing current scope SHALL NOT
+claim repository-wide health or retroactive satisfaction of a historical
+contract. Exp7769 SHALL requalify the online runtime because Exp7760's
+reported readiness conflicts with its failed required full-suite receipt.
+
+The plan SHALL compare calibrated small energy heads with matched controls.
+It SHALL measure retained causal constraint additions and adapter-withheld
+ARC exploration. Exp7770 SHALL qualify the Qwen producer before Exp7773
+loads unsloth/Qwen3.8-27B-GGUF using model_bounded_generation. Invalid model
+outputs SHALL remain in primary metric denominators. Hardware history SHALL
+bind immutable evidence. Planning SHALL leave the active roadmap, conductor,
+guards and existing result artifacts unchanged.
+
+### SCENARIO-REPORT-V676-PLAN: Reject a mismatched or unexecutable proposal
+
+Given the staged V676 files, unchanged readers SHALL validate schema,
+failure lineage, exclusion, gates and harness fit. An independent reader
+SHALL reject missing or reordered tasks, title or deliverable drift, an
+unknown producer, a missing producer field and a wrong model substrate.
+Every existing read-first path SHALL resolve. Every readiness gate SHALL
+name a current producer field. Private mutations SHALL not alter repository
+artifacts. Validation results SHALL be recorded without masking unrelated
+legacy test failures.

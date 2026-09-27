@@ -17383,3 +17383,28 @@ archive entry. These failures do not come from the staged V674 proposal.
 No guards, tests, active roadmap or conductor were changed to hide them.
 Runtime E2E-009/011/013 remain assigned to future ARC implementation; this
 repair changes planning metadata only. Next: normal conductor activation.
+
+## 2026-09-27 — Milestone 2026.09.676 planned; not activated
+
+Staged fourteen tasks, Exp7767–Exp7780, across four phases. The design and
+YAML agree on ordered IDs, titles, phases, deliverables, models, substrates
+and all gates. The V675 design is preserved unchanged.
+
+The plan qualifies source/view and numerical prerequisites under new,
+prospectively fixed affected scopes. It preserves V675's failed full-suite
+requirements and repository collection debt. It also addresses Exp7760's
+spec/readiness mismatch and Exp7759's 22% owned coverage plus low parse rate.
+Current readiness must precede natural decisions and causal constraint growth.
+The Qwen pilot compares generic confidence with explicit source-support risk.
+It uses the mandated Qwen3.8-27B GGUF and bounded generation. The independent
+ARC branch measures the existing organic selector through the scored wrapper.
+Service timing includes all host work. Hardware history uses immutable evidence.
+
+Validation: schema/prior-failure, exclusion, 30 gate conditions, harness-fit,
+ARC-floor and priority readers pass. Independent table/JSON/YAML checks pass;
+twelve private contract mutations fail as intended. All existing input paths
+and gate fields resolve. Relevant unit tests pass 107/107; Ruff check passes.
+Existing format debt remains in two unchanged guard files. Spec coverage
+reports 20 existing untraced priority-lint tests. These are not claimed green.
+Planning E2E exercised staged-reader rejection. ARC runtime E2E is assigned
+inside the relevant future tasks. No experiment, activation or push occurred.

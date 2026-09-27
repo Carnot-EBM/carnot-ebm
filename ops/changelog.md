@@ -20889,3 +20889,29 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   cd82 never ran. honest_verdict: incomplete_measurement, no promotion claim -- not merged as a result.
 - Found codex `--sandbox workspace-write` cannot reach the NVIDIA driver at all; real GPU codex tasks
   need `--dangerously-bypass-approvals-and-sandbox`. Saved to memory.
+
+## 2026-09-27 — Plan research milestone 2026.09.676
+
+- Staged fourteen experiments, Exp7767–Exp7780, in four phases. The new
+  design, its table and JSON contract, and `research-roadmap-next.yaml`
+  agree on task order, deliverables, models, substrates and gates. Preserved
+  the V675 design before replacing the proposal document.
+- Added the literature review to `research-references.md` before designing
+  experiments. Registered evidence-view comparisons, an explicit Qwen
+  support-probability pilot, delayed constraint acquisition with cold restart,
+  organic ARC exploration and complete host service timing. Recorded access
+  limits for secondary discovery sources and hardware vendor claims.
+- Require fresh qualification of reused V675 code. Preserve its historical
+  disqualifications, full-suite collection debt and online-fixture spec
+  mismatch. All gates name current producers and their exact artifact fields.
+  Independent review found no remaining planning blockers.
+- Schema/prior-failure, exclusion, all 30 gate conditions, harness-fit,
+  ARC-floor and priority readers pass. Independent table/JSON/YAML checks
+  pass; twelve private contract mutations are rejected. Relevant guard tests:
+  107 passed. Ruff check passes. Existing format debt affects two unchanged
+  guard files; spec coverage reports 20 existing untraced priority-lint tests.
+  These checks are recorded as failures, not waived or reported green.
+- Planning E2E exercised staged-reader acceptance and rejection. Runtime
+  E2E remains required in the future experiment prompts. No experiments or
+  activation performed; active roadmap and conductor remain unchanged.
+  No push.

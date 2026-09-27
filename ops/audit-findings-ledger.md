@@ -247,3 +247,4 @@ of truth, not this line.)
 | 2026-09-26 | experiment_claim_audit | experiment_7708_v671_arc_generalization_runner.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_inference_substrate_value_matches | REAL_BUG | OPEN | |
 | 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_classify_inference_substrate | SILENT_NON_FIRING | OPEN | |
+| 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_typed_invocation_evidence | SILENT_NON_FIRING | OPEN | |

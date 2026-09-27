@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-27
 
-Scanned 7 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -13,132 +13,30 @@ Scanned 7 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): 
 |---|---|
 | `CLEAN` | 1 |
 | `MINOR_RISK` | 0 |
-| `REAL_BUG` | 2 |
-| `SILENT_NON_FIRING` | 4 |
+| `REAL_BUG` | 0 |
+| `SILENT_NON_FIRING` | 5 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_has_compute_bound_marker` — [results/experiment_4416_hidden_state_localizer_falsification_audit.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4416_hidden_state_localizer_falsification_audit.json:112) contains `model_id: Qwen/Qwen2.5-0.5B`. This function returns false.
-- `adversarial_verify.py::_inference_substrate_text` — [results/experiment_3091_ebt_arm_sidecar_adapter_schema_prototype_v1.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3091_ebt_arm_sidecar_adapter_schema_prototype_v1.json): `inference_substrate.kind = "deterministic_cached_sidecar_replay"` and `duration_s = 0.0`.
-- `adversarial_verify.py::_inference_substrate_value_matches` — "aggregation_from_upstream_artifacts\n100us floor."
-- `adversarial_verify.py::_substrate_leading_token` — A real artifact declares `owned_native_cuda_llama_cpp_qwen3.8_27b_gguf`. With no trailing note to remove, this helper returns `owned_native_cuda_llama_cpp_qwen3`.
-- `adversarial_verify.py::_emit_no_llm_by_name_warning` — results/experiment_7660_v668_atom_energy.json`: `inference_substrate` is `cpu_conditional_energy_on_cached_source_atoms_no_llm`.
-- `adversarial_verify.py::_classify_inference_substrate` — results/experiment_4026_verifier_vs_judge_efficiency.json`: `duration_s=0.0`, `inference_substrate=verifier_ensemble_against_cached_candidates`.
+- `adversarial_verify.py::_claim_path_tokens` — gpu0.offloaded_layers = 20` — gpu0 and offloaded_layers are both field names used in project artifacts.
+- `adversarial_verify.py::_claim_evidence_scope` — "scope": "historical_model_receipts"` under `archived_model_event_sidecars` — both names occur in `results/experiment_7434_v652_contract_methods.json`.
+- `adversarial_verify.py::_methodology_claims_live_inference` — "No LLM was used for preprocessing. Current task invoked llama.cpp for scoring."` returns `False` despite the explicit current-task invocation.
+- `adversarial_verify.py::_identity_claims_live_inference` — Actual title in `results/experiment_1079_live_sota_benchmark_v2.json`: `"Live SOTA benchmark v2: GSM8K + HumanEval with Qwen3.6-35B-A3B"`. This function returns `None`.
+- `adversarial_verify.py::_typed_invocation_evidence` — results/experiment_1464_repair_validation_error_context_ab.json`: `live_inference_evidence.generation_calls = 3`. The function returns empty live, negative, and external evidence lists for that artifact.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_has_compute_bound_marker` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_inference_substrate_text` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_inference_substrate_value_matches` — **REAL_BUG**
-- `adversarial_verify.py::_substrate_leading_token` — **REAL_BUG**
-- `adversarial_verify.py::_emit_no_llm_by_name_warning` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_classify_inference_substrate` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claim_path_tokens` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claim_evidence_scope` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_methodology_claims_live_inference` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_identity_claims_live_inference` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_typed_invocation_evidence` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_has_compute_bound_marker
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Is this artifact subject to the compute-bound duration and methodology rules?` The docstring says naming a model, framework, or runner anywhere in the artifact qualifies it.
-
-## FINDINGS
-1. **Field shape:** There is no individual field read or bare-scalar assumption. `text = json.dumps(d)` handles wrapped dictionaries, lists, and null values, but also searches their keys and explanatory text as if they were evidence of compute.
-2. **Silent miss:** `if any(m in text for m in COMPUTE_BOUND_MARKERS):` uses a case-sensitive, incomplete marker list. A committed artifact names Qwen/Qwen2.5-0.5B and this function returns false. The fallback, `return _claims_compute_in_own_identity(d)`, does not recognize that artifact’s forward-pass claim. The implementation is narrower than its docstring.
-3. **False positive and negation blindness:** The same substring scan matches torch inside torchless and inside a false `torch_cuda_available` key. It treats “no model invoked” plus that key as compute-bound; the duration caller then raises DURATION_TOO_SHORT for a 0.1-second preflight. The implementation is also broader than its intended compute claim.
-4. **Default and tests:** When neither branch recognizes an input, the result is simply false, indistinguishable here from a genuine non-compute artifact. The torch.cuda marker is behaviorally redundant because torch already matches every occurrence; 28 focused tests passed with torch.cuda removed.
-5. **Other classes:** This function has no numeric threshold, absolute path, write, or measurement. There is no off-by-one, fixed-write-target, or measure-before-work finding in this excerpt.
-
-## COUNTEREXAMPLE
-`{"honest_verdict":"complete: no model invoked","torch_cuda_available":false,"duration_s":0.1}` — false positive; the duration caller emits DURATION_TOO_SHORT.
-
-## MISSED INPUT
-[results/experiment_4416_hidden_state_localizer_falsification_audit.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4416_hidden_state_localizer_falsification_audit.json:112) contains `model_id: Qwen/Qwen2.5-0.5B`. This function returns false.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-A real model name silently misses this detector, while negative evidence can trigger its compute floor. Typed model and invocation evidence, plus an explicit unrecognized outcome, would address both failures; regression cases should cover the committed model ID and the false availability field.
-
-
-## adversarial_verify.py::_inference_substrate_text
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The helper claims to return the top-level substrate declaration as stripped text, unwrapping a principle-annotated value and treating dictionaries without a value key as missing.
-
-## FINDINGS
-1. `value = value.get("value")` discards a substrate named under kind. In a real completed artifact, that leaves the duration check with no floor: the verifier emits a malformed-declaration warning, but no duration flag for a recorded duration of zero.
-2. `return str(value or "").strip()` also treats null, false, zero, and empty collections as missing, while turning a nonempty list into a Python representation. I found no list-valued corpus example, so this is an unvalidated shape gap, not a second demonstrated miss.
-
-## COUNTEREXAMPLE
-A fragment from the historical artifact:
-
-```json
-{
-  "honest_verdict": "complete: ebt_arm_sidecar_schema_and_replay_scorer_prototype_only_no_live_inference",
-  "inference_substrate": {
-    "kind": "deterministic_cached_sidecar_replay",
-    "live_model_inference": false
-  },
-  "duration_s": 0.0
-}
-```
-
-The helper returns an empty string. The verifier produces a shape warning but no duration flag.
-
-## MISSED INPUT
-[results/experiment_3091_ebt_arm_sidecar_adapter_schema_prototype_v1.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3091_ebt_arm_sidecar_adapter_schema_prototype_v1.json): `inference_substrate.kind = "deterministic_cached_sidecar_replay"` and `duration_s = 0.0`.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The value-key rule is narrower than the substrate descriptions present in the corpus, and its missing result lets this completed, zero-duration run evade a duration floor. The shape warning makes the malformed declaration visible, but does not perform the duration check. This helper has no substring scan, numeric threshold, absolute path, write, or measurement; existing direct tests cover its two dictionary branches.
-
-
-## adversarial_verify.py::_inference_substrate_value_matches
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-The function claims to recognize a canonical substrate value even when a human principle explanation follows it.
-
-## FINDINGS
-1. **Silent non-firing and narrow separator list:** `raw[len(canonical) : len(canonical) + 1] in {" ", "-", ";", ",", ":", "."}` omits newline. `prefix = raw.split("--", 1)[0].strip()` does not recover a value followed by a newline and explanatory text. The documented annotation case therefore fails to match.
-2. **Untested redundant branch:** `if raw == canonical:` is fully covered by the later `if prefix == canonical:`. Deleting the exact-match branch would leave its behavior unchanged; tests exercising only an exact value cannot establish that branch matters.
-3. **Other requested classes:** This function has no artifact-field read, negation scan, numeric threshold, absolute path, write, or measurement. Its unmatched path is `return False`; the caller reports an unrecognized substrate as a no-floor warning, so this is not indistinguishable from a clean pass.
-
-## COUNTEREXAMPLE
-`{"inference_substrate": {"value": "aggregation_from_upstream_artifacts\n100us floor.", "principle": "Synthesis over checked-in artifacts"}, "duration_s": 0.0000001}`
-
-The canonical aggregation value is missed, so its 0.0001-second duration floor is not applied.
-
-## MISSED INPUT
-`"aggregation_from_upstream_artifacts\n100us floor."`
-
-## RECOMMENDATION
-ADD_TOKEN
-
-## RATIONALE
-The newline annotation returns false in a direct call; with the artifact fragment above, the caller emits a no-floor warning instead of applying the aggregation floor. The warning exposes the gap, but the duration check it describes still does not run.
-
-
-## adversarial_verify.py::_match_declared_substrate
+## adversarial_verify.py::_claim_field_name
 
 **Verdict:** `CLEAN`
 
@@ -146,7 +44,7 @@ The newline annotation returns false in a direct call; with the artifact fragmen
 CLEAN
 
 ## CLAIM
-“Return the allowlisted substrate value matched by the top-level declaration.”
+`Normalize a field name without reading its arbitrary value as a claim.`
 
 ## FINDINGS
 none found
@@ -161,39 +59,10 @@ none found
 KEEP
 
 ## RATIONALE
-This function reads no artifact fields, defines no text pattern or numeric threshold, and performs no writes or measurements. Its `return None` means no candidate matched; this lookup does not itself decide whether an artifact passes a check.
+The shown function reads no artifact fields, searches no free text, applies no threshold, and performs no writes. `str(value)` could include a wrapped artifact’s contents if a caller passed that wrapper as a field name, but the supplied code gives no evidence that this happens.
 
 
-## adversarial_verify.py::_substrate_leading_token
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-The helper claims to “Strip a trailing human note so only the declared value is matched.”
-
-## FINDINGS
-1. `token = token.split(sep, 1)[0]` also splits **inside** a declared value. The separator list includes a period, so the real substrate value in MISSED INPUT is truncated at the model version’s decimal point. The implementation is broader than the docstring’s claim to strip a trailing note.
-2. There is no dict-field read here. `if not isinstance(raw, str):` returns an empty string for a wrapped dict, list, or None; the inspected callers unwrap principle-annotated fields before calling this helper.
-3. The separator list represents human-note boundaries but omits a tab. I found no corpus example using one. Existing tests cover malformed inputs and several note separators, but I found no test for a period *within* a declared value and no rule I can establish as deletable with the suite still green.
-4. This function has no phrase scan, numeric threshold, absolute write path, tracked-state write, or measurement. Its empty-string return for malformed input does not itself report a pass.
-
-## COUNTEREXAMPLE
-`{"inference_substrate":"qwen3.8_header_audit_no_llm","duration_s":0.01,"honest_verdict":"complete: read the Qwen3.8 GGUF header; no model loaded"}`. The helper returns `qwen3`; the inspected caller fails to recognize the no-LLM name and applies a 60-second live-model floor, producing a critical duration flag for the described header read.
-
-## MISSED INPUT
-A real artifact declares `owned_native_cuda_llama_cpp_qwen3.8_27b_gguf`. With no trailing note to remove, this helper returns `owned_native_cuda_llama_cpp_qwen3`.
-
-## RECOMMENDATION
-ADD_WORD_BOUNDARY
-
-## RATIONALE
-The period split confuses model-version punctuation with a note boundary. It demonstrably loses part of a real declaration and can make an honest no-model audit receive a false critical duration flag.
-
-
-## adversarial_verify.py::_emit_no_llm_by_name_warning
+## adversarial_verify.py::_claim_path_tokens
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -201,27 +70,27 @@ The period split confuses model-version punctuation with a note boundary. It dem
 SILENT_NON_FIRING
 
 ## CLAIM
-`Keep a name-shape match auditable instead of silent.`
+The docstring claims to return whole path words so `resource` does not accidentally count as `source`.
 
 ## FINDINGS
-1. **A/F — real silent miss.** The condition `if floor is None or floor.get("reason") != "no_llm_declared_by_name":` makes the warning depend on which floor won, rather than whether an unreviewed substrate name matched. In a committed artifact, the name matches the no-LLM suffix rule, but a declared substrate class supplies the floor with a different reason. The function returns without a warning.
-2. **1–5/B — scope of the miss.** There is no direct artifact-field read, free-text substring search, negation scan, numeric threshold, or pattern list in this function. The internally produced `floor` supplies the two keys it reads. The implementation is narrower than its docstring’s auditability claim because an exact reason check stands in for name-match provenance.
-3. **C–E/G — other checks.** Removing the warning emission would fail an existing positive test; the tests found do not pair an unreviewed suffix with a declared substrate class. This function has no absolute path, write, or measurement.
+1. `for token in _claim_field_name(segment).split("_")` keeps gpu0 as one token. The downstream GPU evidence check therefore misses a positive offloaded_layers receipt under gpu0. Reproduced: changing only the container name from gpu0 to gpu changes the classification from non-live to contradictory.
+2. The same split misses camelCase boundaries: sourceRows yields no source token. A cited invocation under that name is treated as unattributed evidence. This is a plausible naming variant, not one I found in the corpus.
+3. `not token.isdigit()` appears deletable without changing downstream decisions: the marker sets contain no numeric tokens, and I found no direct test of numeric-token exclusion. The supplied function has no field read, free-text scan, threshold, write target, default recognizer branch, or measurement.
 
 ## COUNTEREXAMPLE
-`{"inference_substrate":"cpu_conditional_energy_on_cached_source_atoms_no_llm","inference_substrate_class":"no_model_load","duration_s":11.793012335998355}`. The substrate classifier reports a name-suffix match; the floor reason is `substrate_class`; this function emits no warning.
+`{"inference_substrate":"deterministic_z3_and_bounded_enumeration_reducer","gpu0":{"offloaded_layers":20}}` is classified as non-live despite the positive GPU offloading receipt.
 
 ## MISSED INPUT
-`results/experiment_7660_v668_atom_energy.json`: `inference_substrate` is `cpu_conditional_energy_on_cached_source_atoms_no_llm`.
+`gpu0.offloaded_layers = 20` — gpu0 and offloaded_layers are both field names used in project artifacts.
 
 ## RECOMMENDATION
 WIDEN_PATTERN_TO_CONCEPT
 
 ## RATIONALE
-The warning’s `floor.get("reason")` gate loses the name-match provenance when a substrate class selects the floor first. Check that provenance directly and make the warning detail accurately name the floor that was applied.
+An indexed GPU container is a real project naming pattern, but the tokenizer never produces the GPU word from it. That makes this evidence check silent on a plausible contradictory artifact; the reproduced classification confirms the consequence.
 
 
-## adversarial_verify.py::_classify_inference_substrate
+## adversarial_verify.py::_claim_evidence_scope
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -229,23 +98,129 @@ The warning’s `floor.get("reason")` gate loses the name-match provenance when 
 SILENT_NON_FIRING
 
 ## CLAIM
-`Classify substrate from explicit top-level provenance only.`
+`Attribute typed evidence to this task, an upstream source, or neither.`
 
 ## FINDINGS
-1. **A — real silent miss in the caller.** For the committed Exp4026 artifact, `matched = _match_declared_substrate(raw, candidates)` correctly selects the no-LLM substrate. Its duration is 0.0 seconds, below the selected 1.0-second verifier-scoring floor, yet the verifier returns **no flags**. The duration caller skips the floor when it finds no compute marker; this is a caller integration defect, not a failure of this helper to recognize the name.
-2. **B/F — the lists are narrower than the work they describe.** The aggregation, no-LLM, and live-model alias tuples omit real declarations cpu_aggregation, no_model_load, and model_bounded_generation, respectively. This helper returns `SUBSTRATE_KIND_UNKNOWN` for them. The separate class-floor check covers the inspected artifacts, so those omissions alone are not proven duration bypasses; the helper’s unknown result is explicit, while a verifier report need not expose it.
-3. **3/5 — the first matched name can misstate the executed path.** `if matched is not None:` returns live-model for the committed Exp4752 artifact, whose declaration says a cache hit may aggregate an existing result. Its recorded cache-hit flag is true; the verifier nevertheless emits a critical short-duration flag for live inference. The implementation classifies the leading declaration, a narrower claim than classifying what ran.
-4. **1/2/4/C/D/E/G — no further defect established in this function.** It has no direct field read, numeric comparison, absolute path, write, or measurement. The delegated substrate reader handles principle wrappers; the shown branches do not contain an unbounded free-text substring scan. I found no branch I can credibly say is deletable while the existing tests stay green.
+1. **A/B — Missed provenance.** `if scope in {"cited", "external", "historical", "source", "upstream"}:` recognizes only exact labels. It misses the corpus’s compound historical scope; `if tokens & _EXTERNAL_PROVENANCE_TOKENS:` also misses the archived container name. The explicit upstream classification never fires.
+2. **3/5 — Historical evidence becomes current evidence.** `tokens = _claim_path_tokens(path)` includes the evidence field itself. Consequently, `if len(path) == 1 or tokens & _CURRENT_TASK_CONTAINER_TOKENS:` treats a generation count inside an archived receipt as current task evidence, even when the receipt says it is not a current invocation. That contradicts `nested data is not trusted as current-task evidence`.
+3. **1 — Field fallback.** `scope_raw = _unwrapped_scalar(container.get("scope", container.get("provenance_scope")))` handles a principle wrapped scalar, but a present null or list valued scope masks a valid provenance scope and silently falls through.
+4. **B/C — Narrow and untested current scope rule.** `if scope in {"current", "current_run", "current_task", "self", "this_task"}:` omits compound current scope labels used in artifacts. Removing this branch in memory left all 15 focused provenance tests green; their current scope fixture is also classified by its path.
+5. **2/4/D–G — No additional finding.** This function uses exact set membership, with no free text substring search or numeric floor. `len(path) == 1` has no demonstrated boundary error. It contains no absolute path, write, or measurement; `return "nested_unattributed"` is an explicit fallback, not a pass.
 
 ## COUNTEREXAMPLE
-`{"honest_verdict":"success: verifier_parity_wallclock_95.3x_judge_over_verifier","inference_substrate":"verifier_ensemble_against_cached_candidates","duration_s":0.0}` — from `results/experiment_4026_verifier_vs_judge_efficiency.json`. The verifier returns no flags despite selecting a 1.0-second floor.
+```json
+{
+  "inference_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
+  "duration_s": 1.864951312,
+  "archived_model_event_sidecars": [{
+    "counted_as_current_invocation": false,
+    "scope": "historical_model_receipts",
+    "generation_calls_attempted": 2
+  }]
+}
+```
+The classifier reports current task evidence and a contradiction; the duration check emits two critical flags. This is a false positive for an archived invocation.
 
 ## MISSED INPUT
-`results/experiment_4026_verifier_vs_judge_efficiency.json`: `duration_s=0.0`, `inference_substrate=verifier_ensemble_against_cached_candidates`.
+`"scope": "historical_model_receipts"` under `archived_model_event_sidecars` — both names occur in `results/experiment_7434_v652_contract_methods.json`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A real success artifact passes silently with a duration below its selected floor because the caller requires an unrelated compute marker before enforcing it. The cache-hit artifact shows a separate false positive when a conditional declaration is treated as proof that live inference ran.
+The scope allowlist fails to recognize a historical label already used by the project, while path matching promotes the receipt’s generation field to current task evidence. The reproduced fragment falsely triggers `INFERENCE_PROVENANCE_CONTRADICTION` and `DURATION_TOO_SHORT`; the focused tests do not protect the explicit current scope branch.
+
+
+## adversarial_verify.py::_methodology_claims_live_inference
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Recognize an affirmative live-inference statement in task methodology.` The docstring also says common explicit negations take precedence.
+
+## FINDINGS
+
+1. **Silent non-firing and negation scope:** `if any(marker in text for marker in negated):` returns `False` for the entire field. In the MISSED INPUT, a statement about preprocessing suppresses an exact affirmative claim about scoring. The Boolean result cannot distinguish that missed claim from a genuinely negative statement.
+2. **Field shape:** There is no dict-field read in this function. `if not isinstance(value, str):` rejects lists, `None`, and wrapped dictionaries passed directly. The repository caller unwraps principle-annotated fields before calling it, so a wrapped field is not a demonstrated linter failure here; a list of methodology statements still goes unread.
+3. **Substring and context matching:** Both marker lists use `marker in text` without boundaries or clause scope. `"live llm inference"` matches the non-live statement in COUNTEREXAMPLE, and affirmative wording can be accepted even when prose describes another context.
+4. **Pattern lists versus claim:** `negated` stands in for denials of invocation but omits contractions such as *didn't invoke*. `affirmative` stands in for current-task live inference but omits ordinary first-person and hyphenated phrasings. The implementation is narrower than its claim for those statements and broader for substring matches.
+5. **Untested individual rules:** In-memory deletion of `"current task invoked llama.cpp"` left the relevant 15 tests green because its positive fixture also contains `"live model inference"`. Deleting `"did not invoke"` likewise left them green: the negative fixture matches no affirmative marker anyway. This establishes decorative coverage in that test file, not the outcome of the full suite.
+6. **Other classes:** The function has no numeric threshold, absolute path, write, or measurement. Running the relevant tests did not change tracked files.
+
+## COUNTEREXAMPLE
+`"This was non-live LLM inference on cached outputs."` returns `True`, falsely classifying non-live work as live inference.
+
+## MISSED INPUT
+`"No LLM was used for preprocessing. Current task invoked llama.cpp for scoring."` returns `False` despite the explicit current-task invocation.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+A negation about one phase can silently erase an exact positive claim about another, while substring matching can turn a non-live description into positive evidence. The check needs clause-level scope and tests that isolate each accepted and rejected phrase.
+
+
+## adversarial_verify.py::_identity_claims_live_inference
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`"""Return an explicit current-task live claim from its title or verdict."""`
+
+## FINDINGS
+1. **Real missed claim.** The alternatives in `live_pattern = re.compile(r"(?:^|[_ -])live[_ -](?:eval|inference|llm|model)(?:$|[_ -])")` omit “benchmark” and require it to follow “live” immediately. The title in MISSED INPUT describes a genuine live benchmark, but this function returns `None`. The same pattern misses a verdict ending “live inference.” because a period is not an allowed trailing boundary.
+2. **Real false positive.** That pattern matches live_eval inside the unrelated field name minimum_live_eval_count. On the offline artifact in COUNTEREXAMPLE, the helper calls this a current-task live claim; the duration check then emits a critical DURATION_TOO_SHORT flag.
+3. **Negation is blind to scope and order.** `live_pattern.search(text) and not negated_pattern.search(text.replace("_", " "))` rejects an entire verdict if any qualifying negation appears anywhere in it. “No live model in baseline; live inference ran in candidate” is therefore missed. Conversely, “live_eval_not_run” is treated as a live claim. The `r"\b(?:no|not|without)\b.{0,32}\blive\b"` list omits “never” and stops matching after 32 intervening characters.
+4. **Field extraction is not the wrapper bug.** `value = _unwrapped_scalar(d.get(key))` handles a principle-wrapped scalar. `if not isinstance(value, str):` silently skips lists and None; the supplied code does not establish that either is a valid title or verdict. `for key in SELF_DESCRIBING_FIELDS:` also makes the field scope broader than the docstring’s “title or verdict.”
+5. **Focused tests leave rules removable.** In memory mutations removing the negation clause, or separately removing the inference, llm, or model alternative, each left the two focused test files green: 96 passed. That does not establish that the full suite would remain green.
+6. **No path, write, or timing defect appears in this helper.** It has no absolute write target, tracked-state write, or measurement. It has no numeric floor comparison; the 32-character regex limit is inclusive. Its final `return None` does, however, make an unrecognized live claim look like no claim.
+
+## COUNTEREXAMPLE
+Actual `results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json` fragment: `{"honest_verdict":"complete: eval_protocol_ready=true; usable_fixture_count=72; rejected_fixture_count=0; minimum_live_eval_count=48","duration_s":0.05142251297365874,"inference_substrate":{"kind":"offline_checked_in_fixture_audit","executes_models":false,"live_llm_calls":0}}`. The helper reports a live claim, and the duration check emits a critical DURATION_TOO_SHORT flag.
+
+## MISSED INPUT
+Actual title in `results/experiment_1079_live_sota_benchmark_v2.json`: `"Live SOTA benchmark v2: GSM8K + HumanEval with Qwen3.6-35B-A3B"`. This function returns `None`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The matcher both promotes an offline protocol threshold into a live-run claim and misses an actual live benchmark title. Its field-wide negation can also erase a genuine candidate run because a baseline was described as non-live. These are observed classification failures, and the focused tests do not protect several of the rules involved.
+
+
+## adversarial_verify.py::_typed_invocation_evidence
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The docstring claims to “Collect typed live, no-invocation, and cited evidence at every depth.”
+
+## FINDINGS
+1. **Silent miss:** `key in _INVOCATION_COUNT_FIELDS` excludes generation_calls. A committed artifact records three calls under live_inference_evidence, yet this function returns no live evidence for it. With a declared non-live substrate, the same field yields an apparent no-live classification.
+2. **Pattern lists are narrower than their concepts:** `key in _INVOCATION_BOOLEAN_FIELDS` omits the real field current_task_model_invoked; `key in _INVOCATION_COUNT_FIELDS` omits generation_calls and current_llm_calls; `key in _LIVE_DURATION_FIELDS` omits model_call_wall_s; `key in _GPU_MODEL_EVIDENCE_FIELDS` omits gpu_layers_offloaded; and `key in _METHODOLOGY_FIELDS` omits methodology_notes. These are, respectively, lists of invocation booleans, call counts, live timings, GPU model receipts, and methodology fields—not complete definitions of those concepts.
+3. **Depth and substring errors:** `parent = _claim_field_name(path[-1]) if path else ""` makes a list index the parent of an `invoked` field, so a real model_specs list entry with invoked=true is missed. Conversely, `token in parent` accepts model inside a longer, unrelated parent name without a boundary.
+4. **Negation and zero are misread:** `_methodology_claims_live_inference(scalar)` treated a negated statement about live inference as positive evidence in a direct probe. `positive = float(scalar) > 0.0` also turns a zero live-duration or GPU receipt into *negative invocation evidence*; zero offloaded GPU layers does not establish that a model was never invoked.
+5. **The docstring is broader and narrower than the logic:** “at every depth” fails for list-contained `invoked` fields. “Only field names with invocation meaning are read” is inaccurate because `_identity_claims_live_inference(d)` also examines identity text.
+6. **Untested rule:** Removing generation_duration_s from `_LIVE_DURATION_FIELDS` left the focused claim-provenance suite green: 15 tests passed. That establishes a coverage gap in that suite, not a result for the full test suite. The standard principle wrapper is handled by `scalar = _unwrapped_scalar(nested)`. This function has no absolute write path, tracked-file write, or measurement computation.
+
+## COUNTEREXAMPLE
+`{"inference_substrate":"deterministic_z3_and_bounded_enumeration_reducer","invocation_counts":{"generation_calls":3},"duration_s":2.0}` produces no live invocation evidence and is classified as no-live despite recording three generation calls.
+
+## MISSED INPUT
+`results/experiment_1464_repair_validation_error_context_ab.json`: `live_inference_evidence.generation_calls = 3`. The function returns empty live, negative, and external evidence lists for that artifact.
+
+## RECOMMENDATION
+WIDEN_PATTERN_TO_CONCEPT
+
+## RATIONALE
+The field-name allowlists silently discard invocation evidence already present in committed artifacts, while the empty result gives no indication that a relevant field went unrecognized. The list-parent, negation, and zero-value cases also create false decisions, so adding one missing token alone would leave the collector unreliable.
 

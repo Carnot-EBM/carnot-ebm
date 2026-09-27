@@ -47640,3 +47640,99 @@ specific execution defects, not evidence against the proposed mechanisms.
 Exp7742 qualified the bank lifecycle. Reuse that bank instead of rebuilding it.
 The exposed 640-family corpus retains its roles and exposure status.
 The two-view objective is new; any benefit must beat matched augmentation.
+
+## V676 planning review — 2026-09-27 (before experiment design)
+
+This review covers the eight requested research areas. Primary paper pages
+were checked against the search summaries. Results below describe external
+work. They do not establish Carnot performance. Existing entries remain intact.
+
+### Findings to use
+
+- **Target-specific confidence, corrected evidence.**
+  [Ravikumar, arXiv:2608.10008v3](https://arxiv.org/abs/2608.10008v3),
+  submitted August 7 and revised August 22, 2026, studies catalog faithfulness.
+  Its corrected matcher changes both error rates and calibration conclusions.
+  The search result still returned the superseded v1 conclusion. Use v3.
+  The paper attributes weak discrimination to generic confidence elicitation.
+  Local hypothesis: ask for the probability of one explicit source-support
+  event, rather than generic answer confidence. Compare both on identical
+  complete evidence and answer bytes. This is a transfer hypothesis, not a
+  reproduction of the catalog experiment. Review depth: current abstract,
+  revision note, and superseded full-text comparison; no independent replication.
+- **Evidence sufficiency.**
+  [Kumar, arXiv:2608.00585v1](https://arxiv.org/abs/2608.00585v1), August 1,
+  2026, reports that per-chunk entailment filtering fails on multi-hop RAG.
+  Decomposition helps only when it obtains the needed premises. Preserve all
+  source sentences in the planned evidence views. Add a joint-premise fixture
+  where neither sentence alone suffices. Do not infer a response label from a
+  single window or invent gold evidence locations from output-error spans.
+  Review depth: abstract and linked author repository metadata.
+- **Consistency-constrained training.**
+  [CCHD, arXiv:2606.08158](https://arxiv.org/abs/2606.08158), June 6, 2026,
+  formulates hallucination detection with consistency constraints. Carnot's
+  unchanged-byte view experiment is still unmeasured after V675 qualification
+  failures. Compare its constraint loss with ordinary view augmentation and a
+  matched MLP. A valid protocol alone cannot establish a training benefit.
+- **Delayed online updates.**
+  [Ryabchenko et al., arXiv:2606.11711](https://arxiv.org/abs/2606.11711),
+  June 10, 2026, analyzes online convex learning with finite pending-feedback
+  capacity. Carry explicit queue limits and prediction-before-feedback order
+  into the retained-constraint experiment. Its regret theorem does not extend
+  automatically to Carnot's discrete predicate-admission rule.
+
+### Reviewed leads and boundaries
+
+| Area | Primary source and date | Local use or reason to defer |
+|---|---|---|
+| EBM reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4), May 2026 revision | Input/candidate energies and normalized decision probabilities remain relevant. Neither implies semantic correctness or authorizes generator weight updates. |
+| Neural constraints | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461), December 2025; [PAL, 2503.19466](https://arxiv.org/abs/2503.19466), March 2025 | Explicit feasible sets support mathematical guarantees. Free-text entailment does not supply those sets. Defer a new solver until a real constraint workload requires it. |
+| Ising in ML | [Correspondence Between Ising Machines and Neural Networks, 2511.00746](https://arxiv.org/abs/2511.00746), November 2025 | Spin-average readout is a possible mapping. Measure host work and readout before proposing hardware transfer. |
+| KAN and retention | [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306), May 2026; [KAC, 2503.21076](https://arxiv.org/abs/2503.21076), March 2025 | Local spline importance motivates retention controls. Defer a new KAN arm until base training and causal acquisition run. |
+| Constrained generation | [DCCD, 2603.03305](https://arxiv.org/abs/2603.03305), March 2026; [primal-dual discrete diffusion, 2605.09749](https://arxiv.org/abs/2605.09749), May 2026 | Keep output grammar identical between confidence prompts. Diffusion guidance does not transfer directly to the local GGUF autoregressive backend. |
+| Hardware sampling | [FPGA/Ising co-design, 2602.15985](https://arxiv.org/abs/2602.15985), February 2026 | Include decomposition, transport and readout in service cost. No local FPGA or TSU speedup follows from the external result. |
+| Verification frequency | [VG-Search, 2505.11730](https://arxiv.org/abs/2505.11730), May 2025 | Verification frequency is a compute tradeoff. Retain per-call costs in ARC measurement; do not add another frequency sweep before the existing selector panel runs. |
+| Verifier robustness | [Verification Horizon, 2606.26300](https://arxiv.org/abs/2606.26300), June 2026 | Keep negative controls, an independent evaluator and explicit limits on proxy rewards. |
+
+These leads received abstract-level review unless stated otherwise. The
+milestone's method-ingestion task must read the adopted method sections.
+
+### Secondary source checks and access limits
+
+- **OpenReview:** the [EBT ICLR 2026 paper](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  is indexed. Its forum returned a browser challenge. Search also surfaced
+  [CRETTA](https://openreview.net/pdf?id=OdWkyqnkiS), a residual-energy
+  test-time adaptation submission. Its indexed excerpt concerns image
+  classification. Record it as a lead; do not claim venue acceptance or
+  language-verification transfer.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). The vendor discusses a hybrid
+  FPGA/TSU pipeline. Vendor estimates do not prove Carnot access or latency.
+- **Semantic Scholar:** requested citation lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both were inaccessible through the browser tool. Targeted site search did
+  not recover a usable citation graph. Citation coverage remains incomplete.
+- **Hugging Face:** the [verification feed](https://huggingface.co/papers?q=verification)
+  surfaced sufficiency, verification horizon and granularity papers. Their
+  arXiv pages above were checked. Feed dates are not publication dates.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) lists. Both returned
+  cached views from two weeks earlier. No newly trending dependency is adopted.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The vendor describes energy constraints under generation. This check did
+  not establish an independently reproducible architecture update or local SDK.
+
+### Planning implication from local evidence
+
+V675 repeatedly appended full-repository pytest to otherwise scoped checks.
+Those runs stopped on the same 18 historical collection errors. Exp7759 has a
+separate owned defect: its changed module measured only 22% statement coverage.
+Preserve both findings. Specify affected tests before work starts, including
+all transitive consumers. Record broad collection debt separately. Complete
+owned tests before spending more GPU time. Exp7760's online fixture reported
+qualification despite failing its original full-suite requirement. Requalify
+its reusable code under the new contract; the natural stream remains unmeasured.
+Exp7765 also compared a
+mutable references file with an old digest. Hardware continuity needs immutable
+historical evidence, not a hash of a document that planning must append to.

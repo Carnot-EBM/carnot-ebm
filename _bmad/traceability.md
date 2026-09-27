@@ -3336,3 +3336,23 @@ unchanged failures: legacy live-benchmark matching and active Exp7735
 matching its completed archive. Planning validation grants no experiment
 completion or runtime E2E credit. FR-11 retained-learning and ARC work remain
 registered under the original V674 tasks.
+
+## V676 research plan — 2026-09-27
+
+- Requirement: REQ-REPORT-V676-PLAN and SCENARIO-REPORT-V676-PLAN.
+- Design: openspec/change-proposals/research-roadmap-vNEXT.md.
+- Execution contract: research-roadmap-next.yaml, fourteen tasks Exp7767–Exp7780.
+- Literature: research-references.md, V676 review written before design.
+- History: V675 design preserved byte-for-byte. Old scientific verdicts and
+  full-suite qualification requirements remain unchanged.
+- Planning verification: unchanged schema/prior-failure, exclusion, all 30
+  gate conditions, harness-fit, ARC-floor and priority readers pass. Independent
+  table/JSON/YAML replay passes; twelve private mutations are rejected. Every
+  existing prompt path and exact producer field resolves.
+- Relevant guard unit tests: 107 passed. Guard-source Ruff check passes.
+  Format check finds pre-existing debt in exclusion_manifest_lint.py and
+  overdue_priority_lint.py. Spec coverage finds 20 pre-existing untraced tests
+  in test_overdue_priority_lint.py. No guard or test was changed to hide this.
+- Planning E2E: staged-reader and rejection paths exercised. Runtime
+  E2E-009/011/013 remain required for the planned ARC implementation.
+- No experiment, model load, board operation, activation or push occurred.
