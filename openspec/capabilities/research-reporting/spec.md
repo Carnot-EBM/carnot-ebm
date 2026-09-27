@@ -83405,3 +83405,44 @@ Given two distinct risks, calibration applies once to their mean. Given a shared
 ### SCENARIO-REPORT-7765-REPLAY
 
 A fresh process SHALL verify source byte hashes and independently reduce check rows. A changed input, missing row, or promoted timing claim SHALL fail replay. Required validation failure SHALL set readiness to zero.
+
+## REQ-REPORT-7766: Reconcile the V675 scientific capstone
+
+Exp7766 SHALL compare the literal V675 task table, JSON contract, and matching
+roadmap. It SHALL account for fourteen ordered declared producers. A conductor
+pre-gate receipt SHALL remain separate from a missing scientific producer.
+Every absent, disqualified, blocked, null, or censored unit SHALL retain its
+source path, byte hash when present, verdict, and changed prerequisite.
+
+The capstone SHALL require independent static and online eligibility from
+Exp7762 before it claims useful verification or retained causal learning.
+It SHALL report Exp7764 live selector evidence and Exp7765 complete service
+cost separately. The Qwen pilot SHALL remain diagnostic. Missing required
+science SHALL produce `complete_blocked_required_v675_evidence`, class
+`blocked`, readiness zero, and capstone score zero. Administrative completion
+SHALL not turn the result into `partial` or a benefit claim.
+
+The capstone SHALL run the unchanged publication gate, preserving its FoVer
+headline scope and AUROC 0.9131. It SHALL record exact command exits, log hashes,
+100% changed-module coverage, a full Python suite run, an independent raw-row
+reduction, cold replay, and both terminal readers before atomic publication.
+It SHALL carry dated board boundaries without a speedup claim. It SHALL never
+publish, train generator weights, or change a production default.
+
+### SCENARIO-REPORT-7766-CONTRACT
+
+Given a matching active V675 roadmap and no staged V675 roadmap, fourteen
+literal table, JSON, and YAML records agree in order and declared fields.
+Changing one contract field makes the comparison fail.
+
+### SCENARIO-REPORT-7766-BLOCKED
+
+Given missing fit, decision, learning, and ARC producers plus separate pre-gate
+receipts, the result retains each operand and remains terminal blocked. False
+Exp7762 eligibility and absent Exp7764 results cannot open benefit gates.
+
+### SCENARIO-REPORT-7766-REPLAY
+
+A fresh process independently reduces the raw task rows and reopens each source
+byte hash. Changing a row, producer, or declared authority makes replay fail.
+Required validation failure disqualifies the artifact and forces readiness zero.
