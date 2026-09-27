@@ -18811,3 +18811,5 @@ code |
 | 2026-09-27 03:21 UTC | Plan milestone 2026.09.674 | OK | 14 tasks proposed |
 | 2026-09-27 03:32 UTC | Activation REFUSED: milestone 2026.09.674 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on exp7751-hardware-continuity. NEXT_ROADMAP_FILE left in place for operator inspection. |
 | 2026-09-27 03:32 UTC | Activation replan 1/2: 2026.09.674 | OK | refused roadmap quarantined to roadmap-2026.09.674-refusal1.yaml; replanning with lint report |
+| 2026-09-27 03:41 UTC | Plan milestone 2026.09.674 | OK | 14 tasks proposed |
+| 2026-09-27 03:54 UTC | Milestone 2026.09.674 activated | OK | 14 tasks queued |
