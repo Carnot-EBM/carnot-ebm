@@ -18836,3 +18836,4 @@ code |
 | 2026-09-27 10:18 UTC | Qualify byte-preserving evidence windows and consi | OK | 86 passed, 1 warning in 10.22s |
 | 2026-09-27 10:21 UTC | Fit locally supervised and view-consistent decisio | GATE_BLOCK | gate-unsat(final): 6 of 9 gate(s) failed; first failure: exp7754-sentence-protocol.sentence_protocol_ready_score (actual=0 == expected=1) |
 | 2026-09-27 10:23 UTC | Measure calibration and decision value across evid | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7757-view-energy-fit, exp7757-view-energy-fit, exp7757-view-energy-fit) |
+| 2026-09-27 10:41 UTC | Measure bounded Qwen sensitivity to evidence-windo | OK | 92 passed, 1 warning in 8.75s |
