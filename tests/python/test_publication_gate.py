@@ -4,7 +4,7 @@ Focus: the G3 narrowing lint's retraction-context whitelist (the false-positive
 class that the first implementation tripped on — flagging the project's own
 honest retraction narrative), and the evaluate() composition.
 
-Spec: ops/north-star.md §2 (stable gate replacing publication_blocker_count).
+Spec: REQ-REPORT-7780 uses the stable gate in ops/north-star.md §2.
 """
 
 from __future__ import annotations
@@ -42,7 +42,8 @@ class TestG3RetractionContextWhitelist:
         # 0.9857 asserted as a live headline — no retraction marker nearby
         g3 = self._g3_on_text(
             "The ensemble reaches AUROC 0.9857 on the FoVer corpus, our headline result.",
-            monkeypatch, tmp_path,
+            monkeypatch,
+            tmp_path,
         )
         assert g3["pass"] is False
         assert any("0.9857" in h for h in g3["hits"])
@@ -51,7 +52,8 @@ class TestG3RetractionContextWhitelist:
         # same number, but explaining the retraction — must be allowed
         g3 = self._g3_on_text(
             "This repins the earlier v2 headline of 0.9857 downward to 0.9131 after audit.",
-            monkeypatch, tmp_path,
+            monkeypatch,
+            tmp_path,
         )
         assert g3["pass"] is True, f"retraction context should pass; hits={g3['hits']}"
 
@@ -59,28 +61,32 @@ class TestG3RetractionContextWhitelist:
         g3 = self._g3_on_text(
             "These are deterministic samples, not Boltzmann-thermalized samples; "
             "we remove the implication of equilibrium.",
-            monkeypatch, tmp_path,
+            monkeypatch,
+            tmp_path,
         )
         assert g3["pass"] is True, f"negated thermalization should pass; hits={g3['hits']}"
 
     def test_live_thermalization_claim_fails(self, monkeypatch, tmp_path):
         g3 = self._g3_on_text(
             "The KV260 sampler produces thermalized equilibrium samples at 24 microseconds.",
-            monkeypatch, tmp_path,
+            monkeypatch,
+            tmp_path,
         )
         assert g3["pass"] is False
 
     def test_unsupported_humaneval_claim_fails(self, monkeypatch, tmp_path):
         g3 = self._g3_on_text(
             "Carnot lifts HumanEval pass@1 from 0% to 36% on a 35B model.",
-            monkeypatch, tmp_path,
+            monkeypatch,
+            tmp_path,
         )
         assert g3["pass"] is False
 
     def test_clean_prose_passes(self, monkeypatch, tmp_path):
         g3 = self._g3_on_text(
             "The verifier ensemble reaches AUROC 0.9131 (5-seed, dual-condition).",
-            monkeypatch, tmp_path,
+            monkeypatch,
+            tmp_path,
         )
         assert g3["pass"] is True
 

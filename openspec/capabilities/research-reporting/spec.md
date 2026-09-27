@@ -83674,3 +83674,43 @@ Given raw task rows and a candidate receipt, a fresh process reproduces the
 rows and checks source hashes. Failed required validation yields a terminal
 disqualified verdict and readiness zero. A passing administrative contract
 has null scientific benefit gates and cannot certify repository health.
+
+## REQ-REPORT-7780: Reconcile V676 terminal evidence without promoting absent science
+
+Exp7780 SHALL compare the fourteen ordered Exp7767–Exp7780 task rows in the
+V676 design table, JSON contract and matching roadmap. It SHALL cold-read
+current declared producer bytes, raw evidence, and separate conductor receipts.
+The unpublished Exp7780 output SHALL be an accounting row, never an input.
+Every absent or disqualified producer and failed registered gate SHALL retain
+its path, hash when present, expected and observed operand. Independent static,
+online, ARC and service eligibility SHALL gate their respective benefit claims.
+Readiness alone SHALL not establish probability quality, decisions, retention
+or efficiency. A complete accounting with missing required science SHALL be
+`complete_blocked_required_v676_evidence`, class `blocked`, readiness zero and
+capstone score zero. Failed owned validation SHALL instead be disqualified.
+
+Exp7780 SHALL freeze the affected validation scope before implementation, run
+the full Python suite once as separate repository health evidence, and require
+focused tests, 100 percent changed-module statement coverage, scoped static
+and spec checks, a real CLI entrypoint, fresh-process raw reduction and both
+terminal readers. It SHALL preserve Exp7760's historical spec mismatch and
+Exp7759's low parse counts. The older FoVer G1–G4 publication gate SHALL be
+reported separately. It SHALL not publish, activate a roadmap or change defaults.
+
+### SCENARIO-REPORT-7780-CUSTODY
+
+Given a missing declared producer and a separate queue receipt, the capstone
+records two paths and never counts the receipt as scientific output. Changing
+one source byte or contract field fails cold replay.
+
+### SCENARIO-REPORT-7780-GATES
+
+Given blocked fit, decision, learning and ARC evidence, each benefit gate stays
+null, the scientific score stays zero, and the terminal verdict stays blocked.
+An own failed validation check disqualifies the candidate and closes readiness.
+
+### SCENARIO-REPORT-7780-REPLAY
+
+Given the real entrypoint output, a fresh process independently checks raw rows
+and source hashes. The adversarial and strict row readers check the exact
+candidate before atomic publication.
