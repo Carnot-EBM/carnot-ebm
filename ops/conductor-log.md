@@ -18872,3 +18872,5 @@ code |
 | 2026-09-27 22:17 UTC | Test delayed constraint growth and memory write bo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7785-view-energy-fit, exp7785-view-energy-fit, exp7785-view-energy-fit) |
 | 2026-09-27 23:02 UTC | Cold-reduce decision value and causal memory evide | OK | 91 passed, 1 warning in 24.87s |
 | 2026-09-27 23:45 UTC | Repair organic-runner formatting and specification | OK | 100 passed, 1 warning in 9.61s |
+| 2026-09-27 23:48 UTC | Measure organic selection on adapter-withheld live | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7790-arc-runner-qualification.organic_runner_ready_score (actual=0 == expected=1) |
+| 2026-09-27 23:50 UTC | Measure complete decision and durable-update servi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7785-view-energy-fit, exp7785-view-energy-fit, exp7785-view-energy-fit) |
