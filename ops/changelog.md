@@ -20945,3 +20945,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Qualify numerical and online mechanics with bounded coverage shards (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7784_v677_training_runtime.json
 - 2026-09-27: Measure bounded Qwen support risk with syntax and meaning controls (⚠️ Research Finding) — honest_verdict=complete_null_exposed_pilot; results/experiment_7787_v677_qwen_event_confidence.json
 - 2026-09-27: Cold-reduce decision value and causal memory evidence (⚠️ Blocked) — honest_verdict=complete_blocked_required_v677_evidence; results/experiment_7789_v677_independent_evidence_audit.json
+- 2026-09-27: Repair organic-runner formatting and specification traceability (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_runner_validation; results/experiment_7790_v677_arc_runner_qualification.json
