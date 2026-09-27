@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7762: Audit V675 decisions and acquisition independently
+
+Exp7762 SHALL inspect the exact declared Exp7758 and Exp7761 producer paths,
+their verdict class, adversarial flag, dated scope, raw paths and byte hashes.
+Conductor pre-gate receipts SHALL explain absence but never supply scientific
+rows. Each present eligible branch SHALL be reduced from primitive family rows
+in a fresh process without importing producer headline reducers. Missing or
+disqualified external evidence SHALL yield `complete_blocked_required_v675_evidence`
+and separate static and online findings; an absent branch SHALL not prevent
+inspection of the other. Fixture truth SHALL never become independent positive
+semantic verification.
+
+### SCENARIO-REPORT-7762-CUSTODY
+
+Given absent producers, the audit records both exact paths and missing values,
+per-producer rows, zero independent families, null benefit gates, and a terminal
+blocked verdict. A separate pre-gate receipt cannot change either state.
+
+### SCENARIO-REPORT-7762-REDUCTION
+
+Given private raw rows, static reduction checks family, seed, view and arm
+rosters, label joins, source-erased separation, probabilities, coverage, fixed
+costs, paired family uncertainty and Holm tests. Online reduction checks
+prediction, feedback, admission and later-update chronology, one-use credits,
+complete-static predicate coverage, false accepts and retention. Corrupt labels,
+roles, probabilities, family counts, predicates, timestamps or raw bytes SHALL
+be rejected or lose eligibility.
+
+### SCENARIO-REPORT-7762-TERMINAL
+
+The task freezes affected validation scope before implementation, executes the
+full Python suite and focused coverage/static/spec checks, cold-replays the
+exact candidate in a child, and passes adversarial and strict row readers
+before atomic publication. Failed required checks disqualify readiness.
+
 ## REQ-REPORT-7752: Reconcile the V674 evidence without promotion
 
 Exp7752 SHALL compare the active V674 roadmap against the independent table and
