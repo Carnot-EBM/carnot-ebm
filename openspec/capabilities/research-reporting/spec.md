@@ -1,5 +1,37 @@
 # Research Reporting Capability Specification
 
+## V673 capstone custody — 2026-09-27
+
+### REQ-REPORT-7738: Reconcile thirteen tasks without promoting blocked science
+
+Exp7738 SHALL parse the matching V673 roadmap, design table, and design JSON
+independently and account for all thirteen ordered tasks. It SHALL hash each
+eligible producer, flagged historical artifact, conductor pre-gate receipt,
+and absent planned result. Its own planned result is a disposition, never a
+required input. Registered upstream gates and required Exp7731 static,
+Exp7733 continuous, and Exp7734 independent evidence SHALL be evaluated from
+exact producer fields. Missing, flagged, blocked, or disqualified required
+evidence SHALL produce `complete_blocked_required_v673_evidence` with exact
+failed operands. A complete scientific null is eligible, but no V673 result
+is fresh generalization evidence.
+
+#### SCENARIO-REPORT-7738-CUSTODY
+
+Given missing planned producer output and an alternate conductor pre-gate
+receipt, both paths and their distinct states are recorded. Every task has
+one row with raw verdict, gate operands, exclusions, censoring, and hashes.
+Changed source bytes or a changed row fail a fresh-process cold replay.
+
+#### SCENARIO-REPORT-7738-TERMINAL
+
+The capstone freezes its affected validation scope, runs focused tests,
+changed-module coverage, Ruff, mypy, spec coverage, cold replay, adversarial
+verification, and strict row consistency before atomic publication. Failed
+owned checks disqualify the result. The unchanged publication gate and FoVer
+AUROC 0.9131 are reported without publication. Scientific Brier, decision
+cost, retention, and efficiency are null where required evidence is absent.
+ARC, Qwen, and service custody remain separate, with no default promotion.
+
 ## V673 independent evidence audit — 2026-09-27
 
 ### REQ-REPORT-7734: Publish a cold, bounded evidence audit
