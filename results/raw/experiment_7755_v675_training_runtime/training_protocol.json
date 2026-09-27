@@ -1,0 +1,60 @@
+{
+  "architecture": {
+    "energy": "two_state_per_sentence_with_null",
+    "logistic": "prior_pooled_per_sentence_shared_head",
+    "mlp": "prior_pooled_per_sentence_width_16_shared_head"
+  },
+  "epochs_max": 40,
+  "fixture_epochs": 12,
+  "learning_rates": [
+    0.01,
+    0.05
+  ],
+  "losses": {
+    "local": "mean_known_sentence_NLL",
+    "other_local_coefficient": 1,
+    "primary": "response_NLL_of_mean_raw_view_risk",
+    "response_set_local_coefficient": 0
+  },
+  "parameter_max_including_duals": 4096,
+  "risk_order": "view_risk_then_average_then_one_response_temperature_then_one_decision",
+  "seeds": [
+    67501,
+    67502,
+    67503,
+    67504,
+    67505
+  ],
+  "selection": "uncalibrated_deployed_response_NLL",
+  "temperature_grid": [
+    0.25,
+    0.29730177875068026,
+    0.3535533905932738,
+    0.42044820762685725,
+    0.5,
+    0.5946035575013605,
+    0.7071067811865475,
+    0.8408964152537145,
+    1.0,
+    1.189207115002721,
+    1.4142135623730951,
+    1.6817928305074292,
+    1.9999999999999998,
+    2.378414230005442,
+    2.82842712474619,
+    3.363585661014858,
+    4.0
+  ],
+  "two_view": {
+    "J": "symmetric_bernoulli_KL_divided_by_two",
+    "J_max": 0.01,
+    "constrained": "mean_raw_risk_plus_duals",
+    "dual_eta": 0.01,
+    "dual_range": [
+      0,
+      10
+    ],
+    "ordinary": "mean_raw_risk",
+    "second_view_CE_max": 0.7
+  }
+}

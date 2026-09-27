@@ -8846,3 +8846,23 @@ adversarial verification, strict row consistency, and atomic publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7467 and SCENARIO-VERIFY-7467-* | Implemented in a focused V654 contract module and thin entrypoint that reuse the qualified span engine and owned-process lifecycle. | Verified by nine spec-linked focused tests, 100-percent changed-module coverage, scoped validation, live entrypoint E2E, cold replay, independent reduction, adversarial verification, and strict row consistency. |
+## REQ-VERIFY-7755: Normalize and optimize sentence evidence views
+
+The energy arm SHALL normalize finite binary states over each visible or null
+source location with the registered duplicate-group prior. Matched logistic
+and width-16 MLP controls SHALL pool the same locations separately for each
+answer sentence and use one shared two-logit head. The response risk is one
+minus the product of sentence support. Padding has zero probability and zero
+loss weight. Local supervision adds mean known-sentence NLL once per response;
+unknown targets add no auxiliary loss. Response-only energy has no local term.
+
+### SCENARIO-VERIFY-7755-LOSS
+
+Finite enumeration, extreme logits, masks, finite-difference gradients and a
+separable fit SHALL agree with the differentiable runtime. Two-view ordinary
+augmentation uses the deployed mean risk. Constrained augmentation uses half
+the symmetric Bernoulli KL, requires J <= 0.01 and second-view label CE <=
+0.70, and projects dual ascent into [0, 10] with step 0.01 from zero. Only
+loss calculations clip probabilities to [1e-6, 1-1e-6]. Identical views have
+zero consistency divergence. Divergence failures and save/reload differences
+disqualify fixture qualification.

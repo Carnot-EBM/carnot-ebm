@@ -83246,3 +83246,30 @@ reduction, adversarial verification and strict row consistency SHALL pass before
 atomic publication. Failed required checks disqualify the result and set
 sentence protocol readiness to zero. A qualified execution has a terminal null
 scientific verdict with no probability, decision, retention or efficiency claim.
+
+## REQ-REPORT-7755: Qualify a reusable fixture training runtime
+
+Exp7755 SHALL qualify a compact train, calibrate, save, reload and typed-decision
+runtime on private fixtures without opening natural labels. It SHALL record
+exact upstream custody, a frozen affected validation scope, per-fixture rows,
+measured phase spans, and current command and terminal-reader receipts.
+Missing or disqualified natural producers SHALL remain separate observations;
+they do not block fixture qualification. The scientific verdict SHALL be
+`circular_positive` only for a fully validated fixture learner, and natural
+probability quality and decision benefit SHALL remain unmeasured.
+
+### SCENARIO-REPORT-7755-DEPLOYMENT
+
+For a paired response, raw risk is computed per view and the two risks are
+averaged before one response-level temperature scales the mean-risk logit.
+Tune selection uses uncalibrated deployed response NLL. Canonical responses
+use view A. A single typed decision minimizes costs 5p, 1-p, and 0.25, with
+escalation winning ties. Cold replay reproduces saved decisions exactly.
+
+### SCENARIO-REPORT-7755-TERMINAL
+
+The real entrypoint runs only fixture fitting. A fresh process independently
+reduces raw rows. Full Python tests, 100-percent new-module statement coverage,
+scoped Ruff, mypy, spec coverage, E2E, adversarial verification and strict row
+consistency precede atomic publication. A failed required validation sets
+readiness to zero and yields a terminal disqualified verdict.
