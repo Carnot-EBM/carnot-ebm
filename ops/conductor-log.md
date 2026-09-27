@@ -18843,3 +18843,4 @@ code |
 | 2026-09-27 12:09 UTC | Qualify organic-visit controls after the measured  | OK | 85 passed, 1 warning in 15.16s |
 | 2026-09-27 12:12 UTC | Measure organic archive selection on the scored li | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7763-arc-runner-qualification.organic_runner_ready_score (actual=0 == expected=1) |
 | 2026-09-27 12:29 UTC | Measure complete decision service and preserve har | OK | 84 passed, 1 warning in 9.19s |
+| 2026-09-27 12:45 UTC | Reconcile fourteen outcomes and bound the next res | OK | 87 passed, 1 warning in 9.47s |
