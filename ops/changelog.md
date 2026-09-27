@@ -20943,3 +20943,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Bind fourteen tasks and register causal evidence methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v677_contract_methods; results/experiment_7781_v677_contract_methods.json
 - 2026-09-27: Repair historical imports and isolate roadmap test fixtures (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7782_v677_historical_compatibility.json
 - 2026-09-27: Qualify numerical and online mechanics with bounded coverage shards (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7784_v677_training_runtime.json
+- 2026-09-27: Measure bounded Qwen support risk with syntax and meaning controls (⚠️ Research Finding) — honest_verdict=complete_null_exposed_pilot; results/experiment_7787_v677_qwen_event_confidence.json
