@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.673",
+  "generated_at": "2026-09-27T01:40:43Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 71.4,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Train evidence-set probabilities and freeze typed decisions",
+      "duration_minutes": 25.83,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Separate organic exploration from archive replay visits",
+      "duration_minutes": 15.58,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify per-sentence evidence sets and exact finite normalization",
+      "duration_minutes": 13.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify advisory constraint growth with scoped validation",
+      "duration_minutes": 8.25,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Compare bounded draft-conditioned evidence decisions",
+      "duration_minutes": 5.83,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Nine compute-bound experiments occupied 71.4 wall-time minutes. The longest were evidence-set probability training at 25.83 minutes, archive replay separation at 15.58 minutes, and per-sentence normalization qualification at 13.42 minutes; the timing record does not explain which stages caused those durations.",
+  "bottlenecks_identified": [
+    "The three longest compute-bound experiments account for 54.83 of 71.4 wall-time minutes. No stage timings identify why any one of them ran long.",
+    "The milestone clock was reconstructed from disk modification times because the live git-log path found 0 commits. Direct task start and finish receipts were unavailable.",
+    "The GPU report is a point-in-time view. It cannot establish utilization throughout the compute-bound runs, whether requests were batched, or whether any task loaded multiple models concurrently."
+  ],
+  "improvements_suggested": [
+    "Write task receipts with monotonic start, finish, and stage durations so the next slow run can be attributed to a measured stage.",
+    "Sample GPU utilization and memory during each task, joined to process and task identifiers, and record overlapping model loads before evaluating DualGPURunner eligibility.",
+    "Run a bounded batching benchmark for independent GGUF questions and adopt a batch size only if measured throughput improves within memory limits.",
+    "Persist execution timestamps at task boundaries so milestone timing does not depend on disk modification times."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add stage timers and task-linked GPU samples to the execution receipt for evidence-set training and archive replay separation.",
+    "Measure GGUF throughput with and without batching before changing inference defaults.",
+    "Record task lifecycle timestamps and concurrent model loads so timing and DualGPURunner assessments can be verified."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU snapshot shows GPU 1 active at 97% and GPU 0 idle, but it does not measure utilization across task lifetimes. The supplied records do not establish whether a task had concurrent models, so a DualGPURunner miss cannot be determined. Savings cannot be quantified without timing an intervention against a baseline."
+}

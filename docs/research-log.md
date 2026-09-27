@@ -7019,4 +7019,11 @@ The critical path for milestone .250:
 - key result: honest operational negative — natural source family sealing and sentence window qualification consumed 36.50 of 58.3 total wall-time minutes (62.6%), while available records lack intra-task sub-phase telemetry, continuous active-window accelerator monitoring, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
 
+### Milestone 2026.09.673
+
+- exp_range: no data available this milestone
+- theme: evidence-set training and archive replay separation led the measured wall time
+- key result: the longest task used 25.83 of 71.4 minutes; stage timing is absent, and one active GPU snapshot cannot establish run-wide efficiency or a parallel-model dispatch failure
+- acceptance: no data available this milestone
+
 
