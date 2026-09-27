@@ -18839,3 +18839,4 @@ code |
 | 2026-09-27 10:41 UTC | Measure bounded Qwen sensitivity to evidence-windo | OK | 92 passed, 1 warning in 8.75s |
 | 2026-09-27 11:33 UTC | Qualify prediction-before-feedback learning on the | OK | 93 passed, 1 warning in 54.85s |
 | 2026-09-27 11:35 UTC | Measure continuous constraint additions and retain | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7757-view-energy-fit, exp7757-view-energy-fit, exp7757-view-energy-fit) |
+| 2026-09-27 11:52 UTC | Cold-reduce decision effects and feedback causalit | OK | 94 passed, 1 warning in 9.21s |
