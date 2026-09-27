@@ -1,5 +1,45 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7789: Independently audit V677 decision and learning rows
+
+Exp7789 SHALL resolve the exact V677 Exp7786 and Exp7788 producer paths and
+their declared raw inputs. It SHALL distinguish science from conductor pre-gate
+receipts, authenticate identity, dates, role and head manifests, raw hashes and
+rejection records, and keep Exp7787 Qwen evidence optional. Missing or
+disqualified required science SHALL yield `complete_blocked_required_v677_evidence`,
+class `blocked`, with zero readiness and null unmeasured benefit gates.
+
+### SCENARIO-REPORT-7789-CUSTODY
+
+Given absent producers, the audit records exact paths, hashes, observed missing
+values and separate receipt roles. Given changed producer or raw bytes, replay
+fails. An eligible Qwen pilot never substitutes for CPU decisions or learning.
+
+### SCENARIO-REPORT-7789-ROWS
+
+Given primitive evaluation64 and retention32 rows, the audit recomputes risk,
+proper losses, fixed action cost, coverage, family-level paired contrasts,
+intervals and Holm decisions without producer headline functions. It rejects
+missing arms or families, duplicate seeds, changed head digest, wrong label
+join, future feedback, a commit inside a query, forged aggregate, and any
+predicate selected with evaluation or retention labels. A no-admission result
+is a valid null. Identical learned and frozen versions do not prove learning.
+
+### SCENARIO-REPORT-7789-TERMINAL
+
+The CLI SHALL retain every custody and raw unit row, measured phases, exact
+validation receipts and a reproducibility hash. Focused tests, complete new
+code coverage, the full Python suite, scoped static and spec checks, a real
+entrypoint, fresh-process replay, adversarial verification and strict row
+consistency precede atomic publication. Failed required validation closes all
+readiness scores and disqualifies the candidate.
+
+The broad Python suite SHALL be recorded as separate repository health with
+its actual exit or timeout. The entrypoint SHALL reuse an authenticated
+task-owned diagnostic receipt instead of running that broad suite twice.
+An unrelated broad failure SHALL remain visible and SHALL NOT be called a
+passing required scoped check.
+
 ## REQ-REPORT-7787: Compare paired event and generic Qwen probabilities
 
 Exp7787 SHALL authenticate the eligible Exp7745 producer and its exact 24

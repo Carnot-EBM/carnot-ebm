@@ -1,0 +1,6 @@
+argv: .venv/bin/pytest tests/python -q -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7789-v677/basetemp/full
+observed: multiple failures and one error before 18 percent; Fatal Python error: Segmentation fault
+current test at crash: tests/python/test_experiment_1747_diagnostic.py::test_main
+stack: python/carnot/models/ebt_gradient_refinement.py:30 -> jax.value_and_grad -> jax interpreters/ad.py backward_pass3
+process exit: 139
+log scope: supervisor summary of observed output; full stdout was not redirected
