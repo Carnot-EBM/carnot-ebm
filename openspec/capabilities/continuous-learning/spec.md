@@ -1,5 +1,19 @@
 # Continuous Learning Capability Specification
 
+## REQ-CL-7734-AUDIT: Independently check retained learning evidence
+
+Exp7734 SHALL reduce Exp7732 raw rows and event logs without using its summary
+helpers. The audit SHALL verify one-use admission, chronological prediction,
+disjoint development/admission/retention groups, restart parity, corrected
+confidence, false-accept costs, and complete-static closure. Exp7733 is
+eligible for retained-learning claims only when its terminal producer and
+these independent checks pass.
+
+### SCENARIO-CL-7734-MUTATIONS
+
+Each private mutation of label chronology, source identity, paired-arm
+support, aggregate arithmetic, or a flagged producer fails its named gate.
+
 ## REQ-CL-7732-CAUSAL-ADMISSION: Bound advisory feature admission
 
 Exp7732 SHALL use the frozen eight primitive and 28 pair predicates with 96

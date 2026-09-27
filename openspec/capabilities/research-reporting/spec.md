@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## V673 independent evidence audit — 2026-09-27
+
+### REQ-REPORT-7734: Publish a cold, bounded evidence audit
+
+Exp7734 SHALL hash exact V673 producer and raw bytes, independently reduce
+family or game rows, and report pre-gate, disqualified, eligible, and absent
+sources separately. Exp7731 and Exp7733 are required science inputs. An absent,
+blocked, flagged, or disqualified required producer SHALL yield
+`complete_blocked_required_v673_evidence`, `verdict_class=blocked`, and exact
+failed gate operands. A complete scientific null remains eligible. Exposed
+RAGTruth is development-only, exact fixtures are circular, and public ARC is
+adapter-withheld; none permits a fresh generalization claim in this milestone.
+The audit itself invokes no LLM.
+
+#### SCENARIO-REPORT-7734-CUSTODY
+
+Given missing or flagged upstream bytes, the terminal artifact records exact
+path, hash, field, expected and observed value. A byte change fails cold replay.
+Pilot Qwen receipts are historical inputs, separate from current model counts.
+
+#### SCENARIO-REPORT-7734-REDUCTION
+
+Given raw family predictions and event rows, an independent reducer checks
+source identity, paired input support, prediction before feedback, one-use
+admission, disjoint retained groups, restart parity, false-accept costs,
+corrected confidence, and complete-static closure. It recomputes observed
+metrics from rows and rejects a producer aggregate that disagrees with rows.
+
+#### SCENARIO-REPORT-7734-TERMINAL
+
+The audit SHALL freeze affected scope, run scoped checks, cold replay the exact
+candidate, and run adversarial and strict row readers before atomic publication.
+Failed current validation disqualifies; absent science blocks readiness without
+turning incomplete external work into a retryable partial task.
+
 ## REQ-REPORT-7732: Publish bounded causal admission evidence
 
 Exp7732 SHALL authenticate V671, V672 and Exp7728 input bytes and exact
