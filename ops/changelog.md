@@ -20934,3 +20934,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Bind fourteen tasks and freeze evidence and validation contracts (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v676_contract_methods; results/experiment_7767_v676_contract_methods.json
 - 2026-09-27: Qualify sentence custody and complete evidence views together (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7768_v676_source_view_qualification.json
 - 2026-09-27: Qualify normalized training under a frozen affected scope (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7769_v676_training_qualification.json
+- 2026-09-27: Complete Qwen transport and reducer tests before GPU capture (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7770_v676_qwen_runner_qualification.json
