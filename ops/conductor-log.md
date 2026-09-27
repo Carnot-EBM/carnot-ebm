@@ -18805,3 +18805,5 @@ code |
 | 2026-09-27 01:15 UTC | Separate organic exploration from archive replay v | OK | 106 passed, 1 warning in 11.08s |
 | 2026-09-27 01:18 UTC | Measure organic archive selection through the scor | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7735-arc-organic-visits.organic_runner_ready_score (actual=0 == expected=1) |
 | 2026-09-27 01:21 UTC | Measure complete evidence-set service and update c | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7730-set-energy-fit.set_heads_ready_score (actual=0 == expected=1) |
+| 2026-09-27 01:35 UTC | Reconcile thirteen outcomes and bound the next con | OK | 87 passed, 1 warning in 11.09s |
+| 2026-09-27 01:37 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 1675016 serves '7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e |
