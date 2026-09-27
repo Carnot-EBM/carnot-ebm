@@ -7026,4 +7026,12 @@ The critical path for milestone .250:
 - key result: the longest task used 25.83 of 71.4 minutes; stage timing is absent, and one active GPU snapshot cannot establish run-wide efficiency or a parallel-model dispatch failure
 - acceptance: no data available this milestone
 
+### Milestone 2026.09.674
+
+- exp_range: no data available this milestone
+- theme: natural output annotation binding, ARC organic-visit runner qualification, and hardware continuity dominated wall time across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — sentence output annotation binding consumed 25.38 of 84.1 total wall-time minutes; available records lack intra-task stage timing, and the snapshot showed single-model execution on GPU 1 without multi-model concurrency
+- acceptance: no data available this milestone
+
+
 

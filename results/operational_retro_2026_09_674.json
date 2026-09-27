@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.674",
+  "generated_at": "2026-09-27T07:17:31Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 84.1,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Bind natural output annotations to complete answer sentences",
+      "duration_minutes": 25.38,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify real organic-visit controls through the scored ARC wrapper",
+      "duration_minutes": 20.75,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bound hardware next steps by authenticated service evidence",
+      "duration_minutes": 15.52,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently reduce supervision value and feedback causality",
+      "duration_minutes": 10.21,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify causal bank failures and durable constraint admission",
+      "duration_minutes": 7.81,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Eight compute-bound experiments completed in 84.1 wall-time minutes, averaging 11 minutes per experiment under disk-mtime reconstruction. The longest executions were 'Bind natural output annotations to complete answer sentences' at 25.38 minutes, 'Qualify real organic-visit controls through the scored ARC wrapper' at 20.75 minutes, and 'Bound hardware next steps by authenticated service evidence' at 15.52 minutes. Available timing records do not provide intra-task stage breakdowns, and the snapshot recorded GPU 1 active at 96% utilization with no evidence of multi-model concurrency.",
+  "bottlenecks_identified": [
+    "The top three compute-bound experiments account for 61.65 of the 84.1 total wall-time minutes, but the timing record lacks intra-task stage measurements to isolate specific execution overheads.",
+    "Milestone wall time was reconstructed from disk modification times via fallback because the live git-log path found 0 commits, leaving task boundaries and granular phase receipts unrecorded.",
+    "The GPU monitor report provides a single point-in-time snapshot, which cannot evaluate active accelerator utilization across the 84.1 minutes of task execution, verify model concurrency, or substantiate batching behavior."
+  ],
+  "improvements_suggested": [
+    "Persist structured execution receipts with monotonic start, completion, and intra-task phase timings to remove reliance on disk-mtime reconstruction.",
+    "Sample GPU utilization and memory throughout task lifespans, correlated with task and process IDs, to evaluate accelerator efficiency across entire runs.",
+    "Run a controlled benchmark evaluating inference request batching (8-16 queries per forward pass) against the single-question baseline before altering pipeline defaults.",
+    "Record concurrent model load declarations at task initiation to reliably determine DualGPURunner dispatch eligibility."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic sub-phase timers and task-linked continuous GPU monitoring to experiment execution receipts.",
+    "Run a bounded batching benchmark for GGUF inference to evaluate throughput improvements within VRAM limits before modifying defaults.",
+    "Emit explicit task lifecycle timestamps and concurrent model count telemetry to verify DualGPURunner eligibility and avoid fallback timing reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU monitor snapshot shows GPU 1 active at 96% utilization running llama.cpp while GPU 0 remains idle, which aligns with single-model inference rather than an unengaged DualGPURunner configuration. Because accelerator metrics were not monitored continuously across the 84.1 minutes and intra-task phase timings were omitted, internal bottlenecks cannot be isolated from available records. Estimated time savings remain 0% in the absence of counterfactual measurements evaluated against an established baseline."
+}
