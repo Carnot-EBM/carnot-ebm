@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Based on the given passages, the drawer on the bottom of an oven stove is called a \\\"warming drawer\\\" and is designed to keep hot foods at serving temperature. It is intended to be used for warming food, rather than for storage. Therefore, the correct answer is:\\n\\nThe drawer on the bottom of an oven stove is for warming food.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

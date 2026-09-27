@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Comedy Hideaway - Santa Barbara is a performing arts, nightlife, comedy club, arts, and entertainment venue located at 532 State St, Santa Barbara, CA. The establishment is rated at 4.5 stars overall. However, it does not offer amenities like business parking, outdoor seating, WiFi, music, or a specific ambience. It is a good place for groups. Customers specifically recommend Comedy Hideaway for its excellent comedy acts, though some have noted that the drink service can be slow. Others have commented that it is a fun venue for girls' nights out and dates, and they appreciate the talent of regular comics and headliners. The venue does not have mentioned hours of operation.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

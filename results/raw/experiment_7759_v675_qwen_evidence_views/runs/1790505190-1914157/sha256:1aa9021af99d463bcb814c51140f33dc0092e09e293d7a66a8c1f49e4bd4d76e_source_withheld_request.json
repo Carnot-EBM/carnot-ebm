@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Here are some good ways to revise based on the provided passages:\\n\\n1. Concentrate and focus while revising (Passage 1)\\n\\t* Use tools such as recording your revision on your phone to help retain the information (Passage 1)\\n\\t* Make revision cards and highlight important information (Passage 3)\\n2. Practice past paper questions (Passage 2 & Passage 3)\\n\\t* Doing past paper questions can help you understand how to apply the information you've revised (Passage 2)\\n\\t* See how to answer exam questions to gain maximum marks (Passage 3)\\n3. Teach someone else what you're revising (Passage 3)\\n\\t* Revising and teaching someone else can help solidify your understanding of the material (Passage 3)\\n4. Take breaks and relax during revision (Passage 5)\\n\\t* Don't rush through your revision and take breaks to relax and avoid burnout (Passage 5)\\n\\nUnable to answer based on given passages. The passages do not provide additional information on how to revise.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

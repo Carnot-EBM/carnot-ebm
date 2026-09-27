@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Subway, located at 5146 Hollister Ave in Goleta, CA, is a fast food restaurant specializing in sandwiches. It is open every day of the week, with slightly shorter hours on Sundays. Amenities include a parking lot, take-out service, and accommodation for groups. However, it does not offer Wi-Fi, outdoor seating, or reservations. The overall ambiance is not specified. \\n\\nCustomer reviews, however, are largely negative, resulting in a low average rating of 1.5 stars. Common complaints include perceived poor food quality, with meats and cheeses appearing old or crusty, and a lack of fresh vegetables. Customers also criticize the lack of cleanliness in terms of both the store and the ice machine. The staff are frequently described as unfriendly, unresponsive, and unprofessional. Consequently, many reviewers express a strong preference to avoid dining at this location in the future.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

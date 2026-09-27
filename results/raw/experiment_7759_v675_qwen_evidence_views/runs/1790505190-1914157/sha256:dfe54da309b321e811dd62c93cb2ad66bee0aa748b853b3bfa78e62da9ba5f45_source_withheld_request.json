@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Xanax, also known as Alprazolam, is commonly prescribed for anxiety, but its effectiveness has been debated. It works by enhancing the effects of the neurotransmitter GABA in the brain, providing quick relief for acute anxiety. However, the body may develop tolerance over time, leading to increased dosages and potential dependence. While it can be useful for short-term use, other treatment options such as therapy, lifestyle changes, or alternative medications may be more sustainable for chronic anxiety management. Long-term use of Xanax requires careful monitoring and addressing the root causes of anxiety. It's important to approach its use with caution and under the guidance of a healthcare professional.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

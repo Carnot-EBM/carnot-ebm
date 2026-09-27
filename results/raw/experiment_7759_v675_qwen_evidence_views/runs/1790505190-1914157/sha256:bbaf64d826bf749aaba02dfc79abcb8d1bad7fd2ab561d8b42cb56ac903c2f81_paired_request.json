@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Model Manuela Arbelaez accidentally revealed the correct answer on \\\"The Price is Right,\\\" leading to hilarious moment as host Drew Carey couldn't stop laughing.\", \"complete_source\": \"What do we have for the contestant on \\\"The Price Is Right\\\"? A brand-new car! Whoops. That wasn't supposed to happen. On Thursday's edition of the popular game show, model Manuela Arbelaez accidentally revealed the correct answer to a guessing game for a new Hyundai Sonata. Host Drew Carey couldn't stop laughing. \\\"Congratulations! Manuela just gave you a car!\\\" he exulted. Arbelaez was mortified, attempting to hide behind the display. But everything turned out OK, she tweeted later. It's been a busy week for \\\"The Price Is Right.\\\" On Wednesday, former host Bob Barker, 91, showed up to run his old show.\\n\", \"source_windows\": [{\"index\": 0, \"text\": \"What do we have for the contestant on \\\"The Price Is Right\\\"? \"}, {\"index\": 1, \"text\": \"A brand-new car! \"}, {\"index\": 2, \"text\": \"Whoops. \"}, {\"index\": 3, \"text\": \"That wasn't supposed to happen. \"}, {\"index\": 4, \"text\": \"On Thursday's edition of the popular game show, model Manuela Arbelaez accidentally revealed the correct answer to a guessing game for a new Hyundai Sonata. \"}, {\"index\": 5, \"text\": \"Host Drew Carey couldn't stop laughing. \"}, {\"index\": 6, \"text\": \"\\\"Congratulations! \"}, {\"index\": 7, \"text\": \"Manuela just gave you a car!\\\" he exulted. \"}, {\"index\": 8, \"text\": \"Arbelaez was mortified, attempting to hide behind the display. \"}, {\"index\": 9, \"text\": \"But everything turned out OK, she tweeted later. \"}, {\"index\": 10, \"text\": \"It's been a busy week for \\\"The Price Is Right.\\\" On Wednesday, former host Bob Barker, 91, showed up to run his old show.\\n\"}, {\"index\": 11, \"text\": \"What do we have for the contestant on \\\"The Price Is Right\\\"? A brand-new car! \"}, {\"index\": 12, \"text\": \"A brand-new car! Whoops. \"}, {\"index\": 13, \"text\": \"Whoops. That wasn't supposed to happen. \"}, {\"index\": 14, \"text\": \"That wasn't supposed to happen. On Thursday's edition of the popular game show, model Manuela Arbelaez accidentally revealed the correct answer to a guessing game for a new Hyundai Sonata. \"}, {\"index\": 15, \"text\": \"On Thursday's edition of the popular game show, model Manuela Arbelaez accidentally revealed the correct answer to a guessing game for a new Hyundai Sonata. Host Drew Carey couldn't stop laughing. \"}, {\"index\": 16, \"text\": \"Host Drew Carey couldn't stop laughing. \\\"Congratulations! \"}, {\"index\": 17, \"text\": \"\\\"Congratulations! Manuela just gave you a car!\\\" he exulted. \"}, {\"index\": 18, \"text\": \"Manuela just gave you a car!\\\" he exulted. Arbelaez was mortified, attempting to hide behind the display. \"}, {\"index\": 19, \"text\": \"Arbelaez was mortified, attempting to hide behind the display. But everything turned out OK, she tweeted later. \"}, {\"index\": 20, \"text\": \"But everything turned out OK, she tweeted later. It's been a busy week for \\\"The Price Is Right.\\\" On Wednesday, former host Bob Barker, 91, showed up to run his old show.\\n\"}]}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

@@ -83291,3 +83291,51 @@ Full Python tests, complete new-module statement coverage, scoped Ruff,
 mypy, spec coverage, adversarial verification, and strict row consistency
 SHALL pass before readiness equals one. Failed required validation SHALL
 set readiness to zero and produce a terminal disqualified verdict.
+## REQ-REPORT-7759: Compare byte-preserving Qwen evidence views
+
+Exp7759 SHALL freeze the same 24 exposed source families as Exp7745 and
+authenticate its exact panel, result, mandated Qwen GGUF, and owned CUDA
+capacity before inference. It SHALL use one direct decision prompt and one
+seed across canonical singles plus triples, paired singles plus pairs, and a
+source-withheld sensitivity arm. Both complete-source arms SHALL retain the
+unchanged original source and answer bytes; only their indexed window list
+differs. It SHALL reject an over-budget full prompt before dispatch rather
+than truncate evidence. Missing external prerequisites SHALL yield a terminal
+complete blocked artifact with exact operands and zero current calls.
+
+The run SHALL use task-owned llama.cpp CUDA inference, at most 72 calls,
+256 output tokens per call, 18432 total output tokens, and a 3300-second
+launch stop. Every planned unit SHALL have a row, including malformed,
+truncated, censored, missing, and unstarted units. The two complete-source
+arms SHALL report strict parse validity, stated unsupported probability,
+Brier score against available human binary labels, typed decisions, and
+paired probability disagreement. The source-withheld arm SHALL report
+sensitivity only, with no assigned source-support truth label. Independent
+families, not repeated views, define N. No pilot result SHALL gate learned
+heads or claim fresh generalization.
+
+Affected tests, 100-percent changed-module statement coverage, scoped static
+checks, real GGUF transport, fresh-process cold reduction, adversarial
+verification, and strict verdict-row consistency SHALL precede atomic
+publication. Required validation failure SHALL set readiness to zero and
+disqualify benefit claims.
+
+### SCENARIO-REPORT-7759-VIEWS
+
+Given one frozen original source and answer, both complete-source requests
+retain their exact bytes and identical instructions; canonical windows are
+singles plus adjacent triples and paired windows are singles plus adjacent
+pairs. The withheld request contains no source text.
+
+### SCENARIO-REPORT-7759-DENOMINATOR
+
+Given malformed, censored, and unstarted outputs, all three arm denominators
+remain 24 and only valid stated probabilities contribute a numeric Brier
+component. Invalid output never counts as a detection improvement.
+
+### SCENARIO-REPORT-7759-REPLAY
+
+A fresh process verifies panel identity, request and response byte hashes,
+prompt reconstruction, row metrics, and aggregate reduction. A changed raw
+byte or row fails replay. Missing upstream evidence yields a terminal blocked
+record, not a partial scientific result.

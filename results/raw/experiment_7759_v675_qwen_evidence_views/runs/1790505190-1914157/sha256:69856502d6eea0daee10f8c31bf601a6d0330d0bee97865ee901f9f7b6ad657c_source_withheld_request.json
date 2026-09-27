@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Located at 320 S Kellogg Ave, Goleta, CA, The Imperial is a trendy 4.5-star cocktail bar known for its arts, entertainment, and nightlife. It is open from 5 PM to 1 AM from Wednesday to Saturday, providing a cozy and classy ambience with outdoor seating and street parking. The Imperial does not offer Wi-Fi and reservations are not required. Feedback from customers is generally positive, with many praising the bar's relaxed, speakeasy vibe, friendly staff, and strong drinks, though some critique the attitude of the bartenders. The bar is also noted for its impressive vinyl collection and its diverse cocktail offerings. Despite not offering food, there are plenty of food options in the vicinity.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

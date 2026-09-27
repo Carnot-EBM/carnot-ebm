@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Northstar Coffee, located at 918 State St, Santa Barbara, CA, is a popular spot for coffee lovers, as well as those who enjoy sandwiches and other food items. The establishment, which once went by the name Zoma, has a 4-star rating. It is well-loved for its cozy ambiance, good coffee, and a vibe that appeals to college students and others. It is also recognized for its urban decorations, and posters promoting movies and local art events. Although it has been noted that the coffee is pricier than other places around State St., customers appreciate the change from regular chain coffee joints. The caf\u00e9 offers outdoor seating, free WiFi, and is good for groups. It also offers take-out but does not accept reservations. Street parking is available.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"The House of Representatives has passed House Bill 4, which allows Texas police to arrest illegal immigrants and sends them back to Mexico. The bill aims to enforce existing federal immigration laws and address a surge of illegal immigrants in the state. State Representative David Spiller, sponsor of the bill, stated that there is nothing unfair about ordering someone back from where they came if they arrived illegally. The bill will now head to the Senate for approval. However, its implementation may come under scrutiny from the Biden administration.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

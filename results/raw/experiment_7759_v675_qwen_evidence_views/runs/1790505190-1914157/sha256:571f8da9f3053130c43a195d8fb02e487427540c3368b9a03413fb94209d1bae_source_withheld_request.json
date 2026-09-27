@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Based on the given passages, the following statements are true about slaves in Athens:\\n\\n1. Slaves were common in ancient Athens and performed much of the domestic work needed in the household. (Passage 3)\\n2. Slaves had no rights whatsoever and were at the mercy of their masters and mistresses with no legal recourse available. (Passage 3)\\n3. Some slaves were able to bring a civil suit to trial and receive income. (Passage 1)\\n4. Slaves worked in many different fields and could even run a merchant shop, with most of the profits going to the owner. (Passage 1)\\n\\nHowever, it is important to note that these passages do not provide information on the living conditions or treatment of slaves in Athens, so it cannot be determined how well slaves were treated compared to other societies or whether they were treated more humanely than other groups.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}

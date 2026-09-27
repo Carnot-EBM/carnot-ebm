@@ -1,0 +1,22 @@
+{
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "max_tokens": 256,
+  "messages": [
+    {
+      "content": "/no_think\nDecide whether the original answer contains unsupported content from the available source evidence. Return exactly one JSON object with decision (unsupported, supported, or abstain), probability_unsupported (a number from 0 to 1), and quote (an exact source substring or empty string). An index is a locator, not proof. Abstain when uncertain.",
+      "role": "system"
+    },
+    {
+      "content": "{\"original_answer\": \"Australian cinematographer, Andrew Lesnie, who worked with Peter Jackson on \\\"Lord of the Rings\\\" and \\\"The Hobbit\\\", has died of a heart attack aged 59. Lesnie won an Oscar for his work on \\\"The Fellowship of the Ring\\\" and was known for balancing technology with artistic considerations. His body of work also includes \\\"King Kong\\\", \\\"The Lovely Bones\\\", \\\"Rise of the Planet of the Apes\\\", \\\"The Water Diviner\\\", \\\"I Am Legend\\\" and \\\"The Last Airbender\\\". He was inducted into the Australian Cinematographers Society Hall of Fame in 2002.\", \"source_windows\": []}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "response_format": {
+    "type": "json_object"
+  },
+  "seed": 7759,
+  "temperature": 0
+}
