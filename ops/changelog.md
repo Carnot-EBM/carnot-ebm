@@ -20867,3 +20867,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Bind fourteen tasks and register evidence-view methods (⚠️ Research Finding) — honest_verdict=complete_null_v675_contract_methods; results/experiment_7753_v675_contract_methods.json
 - 2026-09-27: Recover sentence annotation custody with real child validation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7754_v675_sentence_protocol.json
 - 2026-09-27: Qualify small energy training independently of natural labels (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7755_v675_training_runtime.json
+- 2026-09-27: Qualify byte-preserving evidence windows and consistency targets (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7756_v675_evidence_view_protocol.json
