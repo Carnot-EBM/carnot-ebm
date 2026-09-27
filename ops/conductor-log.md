@@ -18819,3 +18819,5 @@ code |
 | 2026-09-27 05:24 UTC | Qualify causal bank failures and durable constrain | OK | 105 passed, 1 warning in 117.35s (0:01:57) |
 | 2026-09-27 05:26 UTC | Train locally supervised energy probabilities and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7741-training-qualification, exp7741-training-qualification, exp7741-training-qualification) |
 | 2026-09-27 05:26 UTC | Measure localized decision value and source depend | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7743-localized-energy-fit, exp7743-localized-energy-fit, exp7743-localized-energy-fit) |
+| 2026-09-27 05:48 UTC | Compare bounded Qwen decisions with explicit error | OK | 93 passed, 1 warning in 12.49s |
+| 2026-09-27 05:50 UTC | Measure delayed constraint growth and retained loc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7743-localized-energy-fit, exp7743-localized-energy-fit, exp7743-localized-energy-fit) |
