@@ -3641,3 +3641,9 @@ REQ-ARC-WMTE-10026: lattice-cell candidate promotion for sc25. Corrected the "ca
 diagnosis (they were tier-1, not absent). No promotion: 25-game mean real score 0.171888 -> 0.149261.
 sc25 gets confirmed real cast-panel clicks but no win. Branch 5601df3eb6, not merged. Closes out
 today's ARC session per Fable 5.1's recommendation list.
+
+## Session: 2026-09-28 V679 research planning
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-09-28T10:15:59Z | pending | User requested literature-informed successor to .678 with matching design and execution YAML; preserve active roadmap and conductor. | pending authoritative extraction |

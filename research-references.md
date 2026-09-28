@@ -47942,3 +47942,103 @@ The September 28 corrigendum reopens `GAP-ORACLE-DISTINCT`: leaked confidence,
 self-labeling and the wrong confidence-interval unit invalidate the old
 Exp4245/5151/5160/5171 win. All current decision claims need independent
 labels and family-level intervals. No result here reopens retired PHASE D.
+
+## V679 planning review — 2026-09-28 (recorded before design)
+
+This review checks 2025–2026 primary work before selecting V679 experiments.
+Earlier reviews remain historical records. Methods listed as adaptations do
+not reproduce the cited paper or inherit its theorem or headline numbers.
+
+### Promising methods and limits
+
+- [Constrained Online Learning with Noisy Constraint Values](https://arxiv.org/html/2609.06921v1),
+  September 7, 2026. Read the setting and Ledger discussion. The paper separates
+  cumulative hard violations from the largest overspend within a time window.
+  Local adaptation: log delayed feedback and worst-window false-accept excess
+  in the continuous-learning experiment. This detects bursts that an average
+  hides. Discrete predicate admission and classification labels do not satisfy
+  its convex, unbiased-noise assumptions. No regret guarantee transfers.
+- [Softmax is not Enough (for Adaptive Conformal Classification)](https://arxiv.org/abs/2602.19498),
+  February 23, 2026; also indexed in the
+  [ICLR 2026 proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/2f5e4c7013a6b810c27c347e8ef57d15-Abstract-Conference.html).
+  Abstract and indexed method checked. Free energy reweights conformal scores.
+  Retain as a lead, not a new arm now: Carnot must first measure its trained
+  probabilities, fix the additive energy convention, and obtain a defensible
+  exchangeable calibration split. The exposed corpus cannot support a fresh
+  distribution-free deployment guarantee.
+- [An FPGA-ASIC Co-Design Framework for Capacity-Constrained Physics-Based Ising Chips](https://arxiv.org/abs/2602.15985),
+  February 2026, current title. Search still exposes the earlier title,
+  “Decomposing Large-Scale Ising Problems on FPGAs.” The abstract motivates
+  accelerating decomposition as well as solving. Include preparation and
+  transfer in service accounting. Its custom ASIC result is not a KV260 result.
+- [CoEV](https://arxiv.org/html/2606.18609v1), June 17, 2026.
+  Rechecked evidence intervention and limits. Compare predicted-witness removal
+  with matched unrelated removal in text. A probability shift measures source
+  sensitivity, not entailment or improved factual accuracy. Keep intact labels
+  separate from modified-source rows.
+- [CCHD](https://arxiv.org/abs/2606.08158), June 6, 2026.
+  Rechecked separate consistency and label-preservation penalties. Compare a
+  small constrained energy head with matched augmentation and MLP controls.
+  Consistent wrong views remain possible; require independent family labels.
+- [Memoir](https://arxiv.org/abs/2607.20792), July 22, 2026, and
+  [capacity-constrained delayed feedback](https://arxiv.org/abs/2606.11711),
+  June 2026. Rechecked abstracts. Retain query-immutable reads, delayed commits,
+  matched update budgets and cold-restart retention controls. These are local
+  constraint-bank tests, not generator-weight learning.
+
+### Required topic scan
+
+| Area | Primary work checked | Disposition |
+|---|---|---|
+| Energy-based verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025, revised May 25, 2026 | Learned compatibility and the ARM/EBM bijection motivate normalized policies; neither certifies semantic truth. |
+| Neural constraint satisfaction | [HardNet++](https://arxiv.org/abs/2604.19669), April 2026, revised May; [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), July 2026 | Abstract-level review. Constraint regularity and benchmark hardness must be explicit. Defer a new projection stack. |
+| Ising applications in ML | [Probabilistic Computers for Neural Quantum States](https://arxiv.org/abs/2512.24558), December 2025 | Sparse Boltzmann sampling is relevant to the hardware path; quantum-state quality does not establish text-verifier quality. |
+| Hallucination detection/mitigation | CCHD and CoEV above; [catalog confidence audit](https://arxiv.org/abs/2608.10008), August 2026 | Event-specific confidence, calibration and decision cost are distinct outcomes. Preserve V677's qualified null. |
+| Kolmogorov–Arnold Networks | [KAC](https://arxiv.org/abs/2503.21076), March 2025; [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828), November 2025 | Abstracts checked. Architecture alone does not guarantee retention; prioritize a retained-learning measurement over another spline sweep. |
+| Energy-guided/constrained generation | [Primal-Dual Guided Decoding for Constrained Discrete Diffusion](https://arxiv.org/html/2605.09749v1), May 2026 | Method checked. Adaptive multipliers are a lead; discrete diffusion is not the mandated autoregressive GGUF runtime. No direct logit-bias port is assumed. |
+| Hardware-accelerated sampling | FPGA-ASIC work above; [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Z1T combines sparse probabilistic and digital stages. Vendor energy/latency estimates remain distinct from local measured service cost. |
+| Continual/online constraint learning | September noisy-constraint paper, Memoir and delayed-feedback paper above | Adopt delayed-label clocks, retained evaluation and worst-window diagnostics; defer theorem claims. |
+
+### Secondary sources and access receipts
+
+- **OpenReview:** searched ICLR 2026 energy-based submissions and checked the
+  [conformal paper forum](https://openreview.net/forum?id=zCwTMRtASZ).
+  The forum returned a browser challenge; its indexed PDF and the official
+  ICLR proceedings supplied the method/publication lead. Other indexed
+  submissions are not treated as accepted papers.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and Z1T.
+  The index exposes August stochastic-programming updates and September Z1T.
+  No authenticated Carnot TSU execution or local hardware access was established.
+- **Semantic Scholar:** bounded direct Graph API GETs to the
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=100)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=100)
+  returned 37 and eight rows respectively, without next-page markers.
+  These are indexed records, not exhaustive citation counts. Followed Memoir
+  and Solver-Hard to their primary papers; architecture-training leads remain
+  deferred because they would change the fixed generator or require new data.
+- **Hugging Face:** checked the [verification papers feed](https://huggingface.co/papers?q=verification).
+  It is a discovery feed, not independent validation or publication authority.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trends. Returned pages
+  were crawled two weeks earlier. No current trending EBM/KAN dependency was
+  established. Avoid adding a dependency from popularity alone.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Vendor constraint-layer framing supplies inspiration. This scan established
+  no reproducible new SDK, weights or correctness result to integrate.
+
+### Local findings that constrain design
+
+V678 produced eight declared artifacts: one circular-positive contract, six
+ disqualified results and one blocked capstone. Six science outputs are absent.
+The archive currently ends at V677; use V678's active roster, raw logs and
+artifacts to establish these dispositions. A conductor `OK` means task execution
+completed, not scientific acceptance.
+
+Exp7796's cold process raised `candidate_roster_mismatch`. Exp7797 has five
+receipt hash mismatches, a failed format check and a terminated broad suite.
+Exp7800 and Exp7803 each made a terminated broad suite a readiness condition.
+Exp7806 failed tests while creating a nested pytest temporary directory whose
+parent did not exist. New work must name and reproduce these concrete defects.
+A renamed wrapper alone does not change the premise. Preserve historical
+failures; new required validation must be fixed prospectively, complete for the
+affected code, and tested through the actual command-dispatch path.

@@ -84229,3 +84229,31 @@ end-to-end run, a fresh-process cold reduction, adversarial verification, and
 strict row consistency. It SHALL retain exact argv, exits, and durable log
 hashes. Failed required validation disqualifies the artifact and zeros all
 readiness fields. The output SHALL be written atomically after validation.
+
+## REQ-REPORT-V679-PLAN: Match the successor plan to executable evidence
+
+The V679 design and staged YAML SHALL contain exactly fourteen ordered tasks,
+Exp7809–Exp7822. IDs, titles, phases, deliverables, model lists, substrates and
+gates SHALL agree. The plan SHALL preserve V678's one circular-positive,
+six disqualified and one blocked artifact plus six absent science producers.
+Literature review SHALL precede design and cover the requested sources.
+
+The proposal SHALL include calibrated energy-policy training, continuous
+constraint learning with delayed feedback and worst-window error accounting,
+adapter-withheld scored ARC evaluation, and complete-service hardware bounds.
+Qwen generation SHALL use unsloth/Qwen3.8-27B-GGUF with bounded-generation
+substrate. First-sentence probabilities SHALL use aligned independent labels.
+Every task SHALL require progress lines, bounded file writes, exact gate
+fields, per-unit rows, closed verdict classes and complete prior-failure records.
+Validation scopes SHALL be prospective, complete for affected code, tested
+through actual dispatch, and backed by immutable per-attempt receipts.
+Historical full-suite failures and terminal artifacts SHALL remain unchanged.
+
+### SCENARIO-REPORT-V679-PLAN
+
+Unchanged schema, failure/exclusion, gate, harness-fit, ARC-floor and priority
+readers accept the staged plan. An independent reader compares its literal
+table and embedded JSON with the YAML. Private changes to count, ID, order,
+title, phase, output, model, substrate, gate producer or field fail. Planning
+E2E validates this reader boundary; future tasks own runtime E2E. Planning
+SHALL NOT modify research-roadmap.yaml or scripts/research_conductor.py.

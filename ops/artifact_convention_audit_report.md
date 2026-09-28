@@ -9,11 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 1 |
+| CHECKABLE | 8 |
 
-## experiment_7783_source_view_qualification.json
+## experiment_7798_view_energy_fit.json
 
 **CHECKABLE**
 
@@ -21,7 +19,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked from executing because upstream dependency `exp7782-historical-compatibility` failed required pre-flight gate checks.
+The experiment was blocked from executing because 5 of 7 upstream gate checks failed, starting with `sentence_protocol_ready_score` observing 0 instead of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -29,23 +27,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7787_v677_qwen_event_confidence.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-This exposed pilot found no demonstrated decision benefit; the decision-benefit and probability-quality gates failed.
-
-## WHAT IS MISSING
-The artifact ends mid-field in `panel`, so the rest of the record is unavailable. `paired_improvements.brier.per_family` and `paired_improvements.cost.per_family` are present, but I cannot tell whether per-arm unit rows appear later.
-
-## THE CHECK A READER CANNOT DO
-Do the per-arm results for each family support the reported gate failures?
-
-## experiment_7784_v677_training_runtime.json
+## experiment_7800_v678_counter_evidence_protocol.json
 
 **CHECKABLE**
 
@@ -53,7 +35,23 @@ Do the per-arm results for each family support the reported gate failures?
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The training runtime candidate is disqualified from qualification readiness (`honest_verdict`: "complete_disqualified_required_validation") due to failed validation gate checks.
+The experiment was disqualified because a required validation check failed.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` identifies `full_python_suite.exit_code` as the failed check, with `observed: -15` against `expected: 0`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7801_qwen_counter_evidence.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the conductor pre-gate because upstream checks on experiment 7800 failed.
 
 ## WHAT IS MISSING
 nothing
@@ -61,7 +59,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7789_v677_independent_evidence_audit.json
+## experiment_7803_v678_arc_runner_qualification.json
 
 **CHECKABLE**
 
@@ -69,55 +67,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run is blocked from readiness because the required Exp7786 and Exp7788 producer artifacts are missing.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` identifies both failed `producer_path` checks and records `observed: "missing"`, while `rows` contains per-unit metrics for the available comparison.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7790_v677_arc_runner_qualification.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The runner was disqualified because required validation failed.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` identifies `full_python_suite` as the failed check, with `observed: -15` versus `expected: 0`, and `probe_rows` records per-unit results.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7791_arc_organic_measurement.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because two upstream gate checks failed.
-
-## WHAT IS MISSING
-nothing; `gates_evaluated` records each check and its observed value, and `gate_check_summary` identifies the failures.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7793_v677_hardware_evidence.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-No comparative claim; the evaluation is blocked because upstream producer Exp7792 failed the service producer eligibility check (`eligible_service_producer == false`).
+The runner qualification was disqualified because the required validation check `full_python_suite` failed with an observed return code of -15 against an expected value of 0.
 
 ## WHAT IS MISSING
 nothing
@@ -125,18 +75,66 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7794_v677_capstone.json
+## experiment_7804_arc_organic_measurement.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The exposed Qwen event-confidence arm showed no qualified benefit over the generic arm, so its unchanged scope should be retired.
+no claim
 
 ## WHAT IS MISSING
-Per-family Brier and cost values for **each arm** are missing. `paired_improvements.brier.per_family` and `paired_improvements.cost.per_family` give differences, while `semantic_comparison_rows` gives arm-level aggregates; the `rows` array accounts for tasks rather than recording each family’s arm metrics. `gate_check_summary` does record the failed checks, so the block has a diagnostic.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-For each of the 24 families, was the generic arm already at a metric floor or ceiling, leaving no headroom for the event arm?
+none
+
+## experiment_7806_v678_hardware_evidence.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+No qualified local whole-service board benefit was measured, so acquisition is deferred and the result is disqualified by failed required checks.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7807_v678_independent_evidence_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact claims disqualification (`verdict_class: "disqualified"`) due to missing upstream science producers and failed required validation commands.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7808_v678_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V678 capstone is blocked due to missing and disqualified required upstream evidence.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
