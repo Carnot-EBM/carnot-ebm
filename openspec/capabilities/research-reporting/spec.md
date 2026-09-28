@@ -84510,3 +84510,56 @@ episodes, are the independent units. Missing pairs cannot yield broad benefit.
 Fresh raw reduction and terminal readers agree with the candidate. Required
 failure produces disqualified zero readiness; missing external science produces
 blocked with the exact artifact field and hash. Model calls remain zero.
+
+## REQ-REPORT-7820: Repair the V678 validation path and account for attached boards
+
+Exp7820 SHALL authenticate the three original board transcripts and retain their
+historical venues and verdicts. It SHALL inspect the Exp7819 science producer by
+exact path, hash, schema, verdict, adversarial flag, readiness, and stage times.
+A conductor receipt has no science authority. Missing or disqualified service
+cost SHALL end as `complete_blocked_missing_service_evidence` with the failed
+operand. The acquisition decision SHALL use only qualified whole-service cost.
+No board operation or purchase is part of this audit.
+
+The task-owned dispatcher SHALL read an immutable command manifest before any
+child starts. Its affected closure is the new module and CLI, the V674, V676,
+V677, V678 board reducers, the current-work receipt, and validation-scope
+helper with their direct tests. The manifest SHALL freeze each command name,
+exact argv, required or diagnostic class, and scope. Required commands are
+focused tests, changed-code coverage, Ruff check and format, mypy, explicit
+spec coverage, a real CLI E2E, cold replay, adversarial verification, and strict
+row consistency. Repository-wide Python tests are diagnostic. No inherited
+required check may be omitted. No undeclared child may run. Each command SHALL
+use a unique private root. Every pytest basetemp parent SHALL exist before
+launch. Every child log SHALL be sealed once to an attempt-specific durable
+content-addressed path after exit. Replay SHALL reject changed log bytes.
+Required failures SHALL disqualify and set every readiness field to zero.
+
+### SCENARIO-REPORT-7820-PARENT
+
+Given a nested pytest basetemp with an absent parent, the old failure is
+reproduced privately. The dispatcher creates the parent before its own child
+starts. A later retry gets a distinct root and distinct sealed log.
+
+### SCENARIO-REPORT-7820-CUSTODY
+
+Given authentic V674 raw rows and original board bytes, the audit retains
+KV260 fabric at k_max<=5, PolarFire Linux CPU dispatch, and GateMate's
+0xffffffff physical/JTAG block. Wrong venue, source digest, and sealed log
+mutations fail replay. GateMate reopens only after dated changed physical
+conditions. NPU and TSU local access remains unqualified.
+
+### SCENARIO-REPORT-7820-SERVICE
+
+Given a qualified Exp7819, the audit recomputes host fraction and optimistic
+Amdahl bound. Preparation, transfer, and readout remain unknown without
+measurement. Given absent current service evidence, three board rows survive
+and the service gate is blocked with its exact missing operand.
+
+### SCENARIO-REPORT-7820-DISPATCH
+
+The real CLI with a recording child executor SHALL dispatch exactly the
+manifest commands, including terminal commands appended after helper calls.
+It SHALL reject undeclared children and retain diagnostic repository-health
+failure separately. A cold process SHALL replay raw rows and sealed receipts
+before atomic terminal publication.
