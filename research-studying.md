@@ -1,5 +1,19 @@
 # Research Studying — Ranked Ideas for Future Experiments
 
+<!-- EXP7837-V681-METHOD-INGESTION-START -->
+## Exp7837 — V681 bounded method controls — INGESTED
+
+Primary methods read on 2026-09-28: arXiv:2508.08285 (length baseline and
+repetition control), 2608.15804 (separate span detection and evidence
+alignment), 2606.11711 (finite delayed-feedback tracking), 2609.06921
+(signed versus worst-window constraint budgets), and 2605.18871
+(distributional energy and matched abstention). Local adaptations, fixed
+controls and claim limits are in `docs/research-notes/v681-method-map.md`.
+This is a continuation of the fixed-generator calibrated-decision program.
+All 640 families remain exposed development data; method ingestion supplies
+no scientific readiness or fresh generalization claim.
+<!-- EXP7837-V681-METHOD-INGESTION-END -->
+
 **Purpose:** Claude (outer loop) continuously researches novel ideas from
 online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner

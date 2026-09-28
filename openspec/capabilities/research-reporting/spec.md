@@ -85075,3 +85075,38 @@ Given the V681 pair, unchanged schema, prior-failure, exclusion, gate, harness,
 ARC and priority readers accept it. A private reordered, shortened, stale,
 wrong-model or misspelled-gate variant fails contract validation. Planning
 readiness does not establish any experiment's scientific result.
+
+## REQ-REPORT-7837: Bind V681 authority and preregister bounded controls
+
+Exp7837 SHALL compare the fourteen V681 tasks in order across the visible
+table, embedded JSON, staged YAML and active YAML. It SHALL compare identity,
+title, phase, deliverable, MODEL_SPECS, substrate and exact gate operands,
+including prior-failure retirement flags. Immutable byte snapshots SHALL
+preserve the design and both YAML authorities. A failed unchanged reader or
+required check SHALL set contract readiness to zero. Administrative agreement
+SHALL never count as scientific decision benefit.
+
+The affected implementation closure is
+`python/carnot/reporting/roadmap_contract.py` and
+`scripts/experiments/experiment_7837_v681_contract_methods.py`; the affected
+tests are `tests/python/test_experiment_7837_v681_contract_methods.py`.
+Before execution Exp7837 SHALL freeze exact argv and deadlines for
+worktree_imports, affected_pytest, changed_coverage, ruff_check, ruff_format,
+mypy, scoped_spec, cli_e2e, cold_replay, adversarial_verify and strict_rows.
+One separate 180-second repository health diagnostic cannot replace a failed
+historical full-suite obligation. No numbered historical dispatcher may enter
+the import or call closure.
+
+### SCENARIO-REPORT-7837-AUTHORITY
+
+Given the complete V681 pair, all fourteen rows match and unchanged readers
+pass. Private missing, reordered, stale-document, retirement-flag, wrong-model
+and misspelled-gate variants fail before contract readiness is granted.
+
+### SCENARIO-REPORT-7837-REPLAY
+
+Given a real private CLI run, the terminal artifact has numeric experiment_id,
+separate task_id, raw per-task rows, exact byte hashes, explicit validation
+receipts and no scientific benefit claim. Cold replay rejects changed source,
+row or sealed-log bytes. A missing external prerequisite terminates blocked;
+failed owned validation terminates disqualified.

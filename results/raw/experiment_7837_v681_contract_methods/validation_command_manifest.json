@@ -1,0 +1,258 @@
+{
+  "affected_sources": [
+    "python/carnot/reporting/roadmap_contract.py",
+    "scripts/experiments/experiment_7837_v681_contract_methods.py"
+  ],
+  "affected_tests": [
+    "tests/python/test_experiment_7837_v681_contract_methods.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib,json,pathlib; names=[\"carnot.reporting.roadmap_contract\",\"carnot.reporting.current_work_receipt\",\"carnot.reporting.experiment_7303_validation_scope\"]; resolved={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({\"resolved_imports\":resolved})); assert all(pathlib.Path(p).is_relative_to(pathlib.Path(\"python\").resolve()) for p in resolved.values())"
+      ],
+      "classification": "required",
+      "name": "worktree_imports",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import yaml; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(open(\"research-roadmap-next.yaml\"))); print(\"schema_ok\")"
+      ],
+      "classification": "required",
+      "name": "schema",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/validate_prior_failures.py",
+        "research-roadmap-next.yaml"
+      ],
+      "classification": "required",
+      "name": "prior_failures",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/exclusion_manifest_lint.py",
+        "research-roadmap-next.yaml"
+      ],
+      "classification": "required",
+      "name": "exclusion",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/audit_roadmap_gates.py",
+        "research-roadmap-next.yaml"
+      ],
+      "classification": "required",
+      "name": "gates",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/harness_fit_lint.py",
+        "research-roadmap-next.yaml"
+      ],
+      "classification": "required",
+      "name": "harness_fit",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/arc_levelup_guarantee_lint.py",
+        "research-roadmap-next.yaml"
+      ],
+      "classification": "required",
+      "name": "arc_floor",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/overdue_priority_lint.py",
+        "--strict"
+      ],
+      "classification": "required",
+      "name": "priority",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7837_v681_contract_methods.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/.coverage.unit",
+        "--include=*/roadmap_contract.py,*/experiment_7837_v681_contract_methods.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7837_v681_contract_methods.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "coverage_unit",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/.coverage.cli",
+        "--include=*/roadmap_contract.py,*/experiment_7837_v681_contract_methods.py",
+        "scripts/experiments/experiment_7837_v681_contract_methods.py",
+        "--date",
+        "20260928",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/cli.json",
+        "--raw",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/rows.json",
+        "--no-validation"
+      ],
+      "classification": "required",
+      "name": "cli_e2e",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import coverage; c=coverage.Coverage(data_file='/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/.coverage',include=[\"*/roadmap_contract.py\",\"*/experiment_7837_v681_contract_methods.py\"]); c.combine(['/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods'],strict=True); c.load(); c.report(include=[\"*/roadmap_contract.py\",\"*/experiment_7837_v681_contract_methods.py\"],show_missing=True,fail_under=100)"
+      ],
+      "classification": "required",
+      "name": "changed_coverage",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/roadmap_contract.py",
+        "scripts/experiments/experiment_7837_v681_contract_methods.py",
+        "tests/python/test_experiment_7837_v681_contract_methods.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/roadmap_contract.py",
+        "scripts/experiments/experiment_7837_v681_contract_methods.py",
+        "tests/python/test_experiment_7837_v681_contract_methods.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/roadmap_contract.py",
+        "scripts/experiments/experiment_7837_v681_contract_methods.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7837_v681_contract_methods.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7837_v681_contract_methods.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/cli.json",
+        "--raw",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/rows.json"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_rows",
+      "timeout_s": 120
+    }
+  ],
+  "historical_required_failures": [
+    "Exp7824: 27% changed coverage and required full-suite timeout",
+    "Exp7828: missing resolved_imports",
+    "Exp7835: integer/task-slug mismatch, coverage and full-suite failure",
+    "Exp7823: prior-failure and gate audits"
+  ],
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "tests/python",
+      "-q"
+    ],
+    "classification": "diagnostic",
+    "name": "repository_health_180s",
+    "timeout_s": 180
+  },
+  "schema": "v681_validation_manifest_v1"
+}
