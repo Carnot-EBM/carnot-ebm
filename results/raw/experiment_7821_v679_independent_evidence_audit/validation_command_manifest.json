@@ -1,0 +1,217 @@
+{
+  "affected_tests": [
+    "tests/python/test_experiment_7821_v679_independent_evidence_audit.py",
+    "tests/python/test_experiment_7807_v678_independent_evidence_audit.py",
+    "tests/python/test_experiment_7789_v677_independent_evidence_audit.py",
+    "tests/python/test_experiment_7747_v674_independent_evidence_audit.py",
+    "tests/python/test_experiment_7814_v679_counter_evidence_protocol.py",
+    "tests/python/test_experiment_7303_v642_validation_scope.py"
+  ],
+  "attempt_id": "20260928-a01",
+  "changed_modules": [
+    "python/carnot/experiment_7821_v679_independent_evidence_audit.py",
+    "scripts/experiments/experiment_7821_v679_independent_evidence_audit.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        ".venv/bin/pytest",
+        "tests/python/test_experiment_7821_v679_independent_evidence_audit.py",
+        "tests/python/test_experiment_7807_v678_independent_evidence_audit.py",
+        "tests/python/test_experiment_7789_v677_independent_evidence_audit.py",
+        "tests/python/test_experiment_7747_v674_independent_evidence_audit.py",
+        "tests/python/test_experiment_7814_v679_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7821-v679-20260928-a01/commands/affected_pytest/basetemp"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/affected_pytest",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--include=python/carnot/experiment_7821_v679_independent_evidence_audit.py,scripts/experiments/experiment_7821_v679_independent_evidence_audit.py",
+        "--data-file=/tmp/exp7821-v679-20260928-a01/commands/changed_code_coverage/.coverage",
+        "-m",
+        "pytest",
+        "tests/python/test_experiment_7821_v679_independent_evidence_audit.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7821-v679-20260928-a01/commands/changed_code_coverage/basetemp"
+      ],
+      "classification": "required",
+      "name": "changed_code_coverage",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/changed_code_coverage",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--data-file=/tmp/exp7821-v679-20260928-a01/commands/changed_code_coverage/.coverage",
+        "--include=python/carnot/experiment_7821_v679_independent_evidence_audit.py,scripts/experiments/experiment_7821_v679_independent_evidence_audit.py",
+        "--fail-under=100",
+        "-m"
+      ],
+      "classification": "required",
+      "name": "coverage_report",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/coverage_report",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7821_v679_independent_evidence_audit.py",
+        "scripts/experiments/experiment_7821_v679_independent_evidence_audit.py",
+        "tests/python/test_experiment_7821_v679_independent_evidence_audit.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/ruff_check",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7821_v679_independent_evidence_audit.py",
+        "scripts/experiments/experiment_7821_v679_independent_evidence_audit.py",
+        "tests/python/test_experiment_7821_v679_independent_evidence_audit.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/ruff_format",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7821_v679_independent_evidence_audit.py",
+        "scripts/experiments/experiment_7821_v679_independent_evidence_audit.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/mypy",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7821_v679_independent_evidence_audit.py"
+      ],
+      "classification": "required",
+      "name": "spec_coverage",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/spec_coverage",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/pytest",
+        "tests/python/test_experiment_7821_v679_independent_evidence_audit.py::test_real_cli_e2e",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7821-v679-20260928-a01/commands/task_e2e/basetemp"
+      ],
+      "classification": "required",
+      "name": "task_e2e",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/task_e2e",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7821_v679_independent_evidence_audit.py",
+        "--cold",
+        "/tmp/exp7821-v679-20260928-a01/candidate.json"
+      ],
+      "classification": "required",
+      "name": "fresh_reduction",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/fresh_reduction",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7821-v679-20260928-a01/commands/repository_health/basetemp"
+      ],
+      "classification": "diagnostic",
+      "name": "repository_health",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/repository_health",
+      "timeout_s": 1800
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/exp7821-v679-20260928-a01/candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/adversarial_verify",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/exp7821-v679-20260928-a01/candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_row_lint",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/strict_row_lint",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7821_v679_independent_evidence_audit.py",
+        "--cold",
+        "/tmp/exp7821-v679-20260928-a01/candidate.json"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "private_root": "/tmp/exp7821-v679-20260928-a01/commands/cold_replay",
+      "timeout_s": 300
+    }
+  ],
+  "private_root": "/tmp/exp7821-v679-20260928-a01",
+  "schema": "exp7821_validation_manifest_v1",
+  "scope_rationale": "Current independent V679 reducer and its direct historical audit, intervention, and validation consumers; no historical experiment main."
+}

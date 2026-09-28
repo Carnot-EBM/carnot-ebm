@@ -84563,3 +84563,64 @@ manifest commands, including terminal commands appended after helper calls.
 It SHALL reject undeclared children and retain diagnostic repository-health
 failure separately. A cold process SHALL replay raw rows and sealed receipts
 before atomic terminal publication.
+## REQ-REPORT-7821: Independently audit V679 scientific branches
+
+Exp7821 SHALL read the exact declared Exp7813, Exp7815, and Exp7816 science
+paths. It SHALL identify conductor pre-gate receipts as explanations only.
+Absent external science SHALL yield `complete_blocked_required_v679_evidence`
+with exact failed operands, while retaining every available branch. A valid
+scientific null stays null. Failed owned validation SHALL disqualify and set
+all readiness fields to zero. No older producer can substitute for V679.
+
+The complete affected closure is the new module and CLI, direct tests for
+Exp7747, Exp7789, Exp7807, Exp7814, the validation-scope helper, and the new
+Exp7821 tests. The frozen command manifest is
+`results/raw/experiment_7821_v679_independent_evidence_audit/validation_command_manifest.json`.
+Its frozen SHA-256 is
+`0d37a89c8882177908a668ab0c4f85a0571546928c01f2b098212f89e7b7347f`.
+It contains thirteen ordered commands: twelve required and one diagnostic.
+The scope correction before terminal measurement removes branch coverage from
+the changed-code shard. The task requires 100 percent statement coverage;
+branch coverage was an unintended stronger setting. No command was removed.
+Its ordered exact argv and required or diagnostic class SHALL be checked by
+the real CLI before child dispatch, including terminal commands. Required
+children cover explicit affected tests, changed-code coverage, scoped Ruff,
+mypy, explicit spec coverage, task E2E, fresh reduction, cold replay, and
+terminal readers. Repository-wide pytest is bounded diagnostic health. Each
+child SHALL use a unique private root and a sealed attempt-specific log copied
+after exit and handle close. Replay SHALL detect changed final log bytes.
+
+Available raw rows SHALL be checked without producer metric reducers. The
+reader SHALL verify source roles, public features, source and answer bytes,
+annotation joins, checkpoint parameters, prediction chronology, and family
+rosters. It SHALL recompute Brier, typed costs, fallback counts, family-mean
+seed scores, paired intervals, and multiplicity corrections. It SHALL replay
+arrival and commit clocks, arm-local shuffles, one-time admissions, queued
+restart state, final frozen-bank evaluation, and retention. Qwen scoring SHALL
+bind `unsupported_probability` to the first original answer sentence byte
+span. Unknown or whole-answer-only labels SHALL remain unscored. Modified
+sources SHALL have null labels. Actual GGUF token-count receipts SHALL govern
+witness/control matching. The worst-window diagnostic SHALL enumerate every
+contiguous family-time interval and equal the running-balance peak, not final
+net debt. Seeds and views do not increase independent N.
+
+### SCENARIO-REPORT-7821-CUSTODY
+
+Missing and malformed producers, a valid null producer, and a conductor receipt
+have distinct branch rows with exact paths, hashes, and failed operands.
+Historical fixture bytes cannot qualify current science.
+
+### SCENARIO-REPORT-7821-RAW
+
+Private authentic-schema rows pass independent reduction. Leaked label or
+confidence features, self-labels, missing unfavorable rows, altered
+predictions, seed-as-sample intervals, future feedback, wrong sentence joins,
+word-count substitutes for GGUF token receipts, and a final-net-debt mutant
+are rejected. The `+1,+1,-1,-1` sequence has peak debt two and final net zero.
+
+### SCENARIO-REPORT-7821-DISPATCH
+
+A recording executor sees exactly the frozen ordered names, argv, and classes
+through the real CLI. An appended child, changed argv, missing pytest parent,
+later retry log reuse, and one-byte sealed-log change fail. Required validation
+failure disqualifies; diagnostic repository-health failure stays visible.
