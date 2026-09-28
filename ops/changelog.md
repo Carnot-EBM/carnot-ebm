@@ -20955,3 +20955,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-28: Qualify source views through an explicit bounded entrypoint (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7796_v678_source_view_qualification.json
 - 2026-09-28: Qualify numerical updates and durable memory with isolated validation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7797_v678_training_runtime.json
 - 2026-09-28: Qualify byte-preserving counter-evidence interventions (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7800_v678_counter_evidence_protocol.json
+- 2026-09-28: Qualify scored ARC transitions without inherited benchmark orchestration (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_runner_validation; results/experiment_7803_v678_arc_runner_qualification.json
