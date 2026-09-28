@@ -24,6 +24,19 @@ repos:
     hooks:
       - id: gitleaks
 
+  # Large-file guard. 2026-09-28 incident: exp7597/exp7611/exp7740 committed
+  # raw episode logs up to 613MB straight to results/raw/. GitHub hard-blocks
+  # any file over 100MB, and the mirror silently failed to push for 490
+  # commits before anyone noticed (gitea has no such limit and kept
+  # accepting pushes). Fixed by a git-filter-repo history rewrite; this hook
+  # is the check that stops it from happening again. 90MB cap leaves margin
+  # under GitHub's 100MB hard limit.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: ["--maxkb=90000"]
+
   # Rust formatting
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0

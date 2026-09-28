@@ -27770,3 +27770,34 @@ progress` every 5 s.
 **RESOLVED 2026-09-25 12:26 UTC:** operator power-cycled; after reboot (kernel 7.2.7) `nvidia-smi -L` lists both cards with their original indices (GPU 0 = b52387a2, GPU 1 = 7971baff), no Xid or nvidia-modeset errors this boot; conductor active with AGENT_MODEL=gpt-6-sol.
 
 - [AUTO-QUARANTINE 2026-09-26T13:39:33Z] tests/python/test_experiment_7708_v671_arc_generalization_runner.py moved to tests/python/quarantine/ after 3 consecutive pre-test gate failures (poison-test cascade guard). The experiment script is unaffected; the TEST setup is broken. Fix the test and move it back to tests/python/ to restore its regression coverage.
+
+### RESOLVED 2026-09-28: GitHub mirror was silently 490 commits behind for a long time
+
+`origin`'s dual push URL (gitea + github) had been failing to github on every push for an
+unknown number of milestones. Gitea always succeeded, so `git push origin main` reported
+overall failure (some callers likely ignored the non-zero exit) but nobody noticed the
+github half was actually failing every time.
+
+Cause: `exp7597`, `exp7611`, and `exp7740` each committed raw episode/feature dump files
+into `results/raw/` up to 613MB. GitHub hard-rejects any file over 100MB; gitea has no such
+limit. Once one of these landed on `main`, every subsequent push to github failed outright.
+
+Fix: backed up the 8.6GB of affected raw evidence to
+`/home/ianblenke/carnot-oversized-raw-backup-20260928` (outside git, nothing deleted from
+disk), ran `git filter-repo --strip-blobs-bigger-than 90M` on an isolated clone (not the
+live checkout — the 3 in-flight agent worktree branches were left untouched and confirmed to
+still share a valid, unchanged ancestor commit with the rewritten `main`), and force-pushed
+the rewritten history to both gitea and github. All three (local `main`, `origin/main`,
+`github/main`) now point at the same commit.
+
+**Check added (the actual fix, not just this note):** `.pre-commit-config.yaml` now runs
+`pre-commit/pre-commit-hooks`'s `check-added-large-files` at `--maxkb=90000` (90MB) on every
+commit. This is the thing that stops a repeat — a future oversized file gets refused at
+commit time, on this machine, before it ever reaches a push.
+
+**What this does not cover:** a commit made from a machine without this pre-commit hook
+installed (a fresh clone that skips `pre-commit install`), or a commit made through the
+conductor's checkpoint-commit path, which is documented elsewhere
+(`incident_checkpoint_commit_bypasses_claims_and_hooks` memory) as skipping all hooks. If
+this recurs specifically from a checkpoint commit, the guard needs to move into that code
+path directly, not just pre-commit.
