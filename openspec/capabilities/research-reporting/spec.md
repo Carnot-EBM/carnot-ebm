@@ -84117,3 +84117,37 @@ Scripted transport shows exact HTTP payload construction, strict reply parsing, 
 ### SCENARIO-REPORT-7800-REDUCTION
 
 The reducer applies pilot labels only to intact rows, retains invalid and unmatched units, and freezes 48-family paired bootstrap and coverage rules before later GPU capture. Qualified CPU fixtures can establish protocol readiness, not semantic benefit.
+
+## REQ-REPORT-7806: Bound attached boards by current whole-service evidence
+
+Exp7806 SHALL keep one authenticated row for each attached board. It SHALL
+retain the historical KV260 fabric limit at k_max<=5, PolarFire Linux CPU
+dispatch, and GateMate's 0xffffffff physical block. It SHALL qualify a current
+Exp7805 science producer by exact gate fields and source bytes before it uses
+service timing. A conductor pre-gate receipt SHALL not replace that producer.
+If current service evidence is absent, it SHALL end as
+complete_blocked_missing_service_evidence with the failed operand. Historical
+board evidence SHALL not establish current acceleration or acquisition value.
+
+### SCENARIO-REPORT-7806-CUSTODY
+
+Given authentic historical raw rows and source hashes, three board rows keep
+their original venues and next prerequisites. A changed source hash, wrong
+venue, or absent source fails the private cold replay. No board command runs.
+
+### SCENARIO-REPORT-7806-SERVICE
+
+Given qualified Exp7805 stage times, the reducer recomputes the host-stage
+fraction and Amdahl bound. It leaves unmeasured preparation, transfer and
+readout costs unknown. Without qualified current times, it defers acquisition
+and leaves efficiency null.
+
+### SCENARIO-REPORT-7806-TERMINAL
+
+The new entrypoint freezes explicit affected tests and validation argv. It
+requires complete changed-code statement coverage, static and spec checks,
+real entrypoint, cold replay, adversarial verification and strict row
+consistency before atomic publication. The full Python suite runs as a
+separate repository-health diagnostic. Its real exit and log stay visible.
+Failed required current-task checks disqualify the current artifact and set
+readiness to zero.

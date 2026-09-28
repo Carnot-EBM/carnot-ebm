@@ -1,0 +1,24 @@
+[exp7806] phase=entrypoint event=start elapsed_s=0.000 completed_units=0
+[exp7806] phase=cold_replay event=before_reduction elapsed_s=0.000 completed_units=0
+[exp7806] phase=preconditions event=start elapsed_s=0.000 completed_units=0
+[exp7806] phase=preconditions event=inputs_complete elapsed_s=0.004 completed_units=15
+[exp7793] phase=preflight event=start elapsed_s=0.000 completed_units=0
+[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0
+[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.011 completed_units=1
+[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0
+[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.011 completed_units=1
+[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0
+[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.013 completed_units=1
+[exp7793] phase=preflight event=complete elapsed_s=0.042 completed_units=28
+[exp7806] phase=preconditions event=complete elapsed_s=0.047 completed_units=15
+[exp7806] phase=reduction event=complete elapsed_s=0.047 completed_units=3
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7806_v678_hardware_evidence.py", line 8, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7806_v678_hardware_evidence.py", line 513, in main
+    print(json.dumps(cold_reduce(args.cold_replay, root), sort_keys=True), flush=True)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7806_v678_hardware_evidence.py", line 423, in cold_reduce
+    raise ValueError(f"summary_mismatch:{field}")
+ValueError: summary_mismatch:claim_scope
