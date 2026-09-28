@@ -84875,3 +84875,49 @@ alter or validate an earlier sealed receipt.
 A fresh process reduces current raw rows and closed logs before the strict
 terminal readers inspect the candidate. The one-owner artifact records exact
 source and code hashes, actual timing, complete gates, and no model calls.
+
+## REQ-REPORT-7828: Requalify byte-preserving counter-evidence custody
+
+Exp7828 SHALL preserve Exp7814's disqualified result and exact first-answer-
+sentence event. It SHALL authenticate the V673 producer, public and evaluator
+shards, GGUF vocabulary, and the completed Exp7814 coverage shard exits before
+compute. It SHALL choose 48 evaluation families by source-byte hash with seed
+68001. It SHALL retain every source and answer byte, original source ID,
+target span, unknown intact label, and unstarted arm. Treatment removes only
+the predicted witness bytes. Control uses a disjoint source sentence within
+25 percent of witness GGUF token length, ordered by seeded hash. The CPU
+fixture SHALL accept an injected token counter and SHALL make no model call.
+
+The prospective affected closure is the new Exp7828 module, CLI, and direct
+tests; Exp7814's module, CLI and direct tests; Exp7800, Exp7727, Exp7759,
+Exp7787, and Exp7303 consumer tests. The task-owned command manifest SHALL
+freeze exact argv and required or diagnostic class before implementation.
+Required children SHALL cover focused tests, separate branch-compatible
+module and CLI shards, explicit-file coverage combine and 100-percent report,
+Ruff check and format, mypy, explicit-file spec coverage, task CLI E2E,
+fresh cold replay, adversarial verification, and strict row lint. The full
+Python suite SHALL run once as a 180-second serial diagnostic. Child logs
+SHALL be sealed after exit in unique attempt paths and cold hash-checked.
+Missing external inputs block with exact failed operands. Required failure
+disqualifies and zeros readiness. Fixture success is circular-positive only.
+
+### SCENARIO-REPORT-7828-SHARDS
+
+The old directory operands reproduce `No data to combine`. The new combine
+names the two completed Exp7814 files and both current files explicitly.
+Missing files, failed shard exits, absent CLI coverage, altered logs, and
+undeclared children fail qualification. A later retry cannot rewrite a log.
+
+### SCENARIO-REPORT-7828-EVENT
+
+The first answer sentence span and independent overlapping annotation alone
+produce an intact label. Whole-answer-only and unknown annotations remain
+unscored. A UTF-8-safe deletion preserves answer bytes and surviving source
+IDs. Every planned family and arm remains visible through cold reconstruction.
+
+### SCENARIO-REPORT-7828-TERMINAL
+
+The real CLI observes exactly the frozen command names, argv and classes.
+Fresh reduction and terminal readers inspect the exact candidate. The final
+artifact records separate validity, readiness, probability, benefit,
+retention and efficiency gates, exact hashes, timing and zero model calls.
