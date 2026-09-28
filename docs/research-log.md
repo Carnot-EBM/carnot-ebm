@@ -7061,4 +7061,12 @@ The critical path for milestone .250:
 - key result: honest operational negative — numerical updates qualification and counter-evidence interventions consumed 115.04 of 162.9 total wall-time minutes (70.6%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
 
+### Milestone 2026.09.679
+
+- exp_range: no data available this milestone
+- theme: calibration replay, command allowlist interventions, and outcome reconciliation led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — calibration replay, evidence interventions, and outcome reconciliation consumed 66.22 of 116.2 total wall-time minutes (57.0%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+
 
