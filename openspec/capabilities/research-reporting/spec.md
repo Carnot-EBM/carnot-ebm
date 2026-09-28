@@ -83901,3 +83901,33 @@ when every test module imports. Collection success does not mean suite success.
 
 Given bounded validation logs, a cold reader recomputes rows and hashes. Any
 failed required check disqualifies the candidate and sets readiness to zero.
+## REQ-REPORT-7793: Prospective board evidence accounting
+
+Exp7793 SHALL authenticate the Exp7751 and Exp7779 raw rows, their declared
+board artifacts, and historical reference bytes by exact Git blob or immutable
+digest. It SHALL preserve Exp7779's failed full-suite receipt and disqualification
+as history. Its own affected-test contract SHALL be prospective and independent.
+Absent or ineligible Exp7792 service science SHALL terminate blocked, retain
+historical board evidence, and keep acceleration and benefit unmeasured.
+
+### SCENARIO-REPORT-7793-CUSTODY
+
+The three board rows retain exact dates, hashes and venues. KV260 fabric is
+limited to k_max<=5; PolarFire dispatch is Linux CPU only; GateMate stays
+blocked on 0xffffffff until dated operator physical-change evidence arrives.
+NPU and TSU need measured device-side preparation, transfer and readout before
+any acquisition or speed claim. Missing historical bytes yield evidence_unresolved.
+
+### SCENARIO-REPORT-7793-REPLAY
+
+A fresh reducer checks every source digest and recomputes all rows. Private
+changed-digest and missing-source cases fail closed. Raw null, rejected,
+censored and unstarted units remain in their denominators.
+
+### SCENARIO-REPORT-7793-TERMINAL
+
+The frozen affected suite, complete new-code statement coverage, full Python
+suite, scoped static and spec checks, real entrypoint, cold replay, adversarial
+reader and strict row reader precede atomic publication. A failed required
+validation disqualifies the current artifact and sets every readiness score to
+zero; optional missing service science yields complete_blocked_*.

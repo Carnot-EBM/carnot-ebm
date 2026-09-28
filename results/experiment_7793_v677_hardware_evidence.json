@@ -1,0 +1,1276 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "decision_benefit": null,
+    "efficiency": null,
+    "probability_quality": null,
+    "readiness": 0,
+    "retention": null,
+    "validity": true
+  },
+  "actual_inference_substrate_class": "aggregation",
+  "board_rows": [
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "KV260",
+      "censored": false,
+      "completed": false,
+      "excluded": false,
+      "expected_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "historical_verdict": "historical_fabric_k_max<=5",
+      "k_max": 5,
+      "last_authenticated_evidence_date": "20260913",
+      "metric": null,
+      "next_missing_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "processor_class": "fpga_fabric",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "source_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "started": false,
+      "state": "historical_fabric_k_max<=5",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "PolarFire",
+      "censored": false,
+      "completed": false,
+      "excluded": false,
+      "expected_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "historical_verdict": "historical_linux_cpu_only",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260913",
+      "metric": null,
+      "next_missing_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "processor_class": "linux_cpu",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "hash-matched Linux CPU dispatch only",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "source_path": "results/experiment_7231_v636_board_continuity.json",
+      "started": false,
+      "state": "historical_linux_cpu_only",
+      "venue": "polarfire_linux_cpu_historical"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "historical_verdict": "blocked_physical_change_0xffffffff",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260915",
+      "metric": null,
+      "next_missing_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified execution; physical JTAG IDCODE blocked",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "started": false,
+      "state": "blocked_physical_change_0xffffffff",
+      "venue": "none_read_only"
+    }
+  ],
+  "claim_scope": {
+    "NPU": "no qualified local device run",
+    "TSU": "vendor projection only; no local silicon or SDK run",
+    "acquisition": "defer expensive board or NPU install until complete service fractions and local benefit are measured",
+    "decision": "unmeasured",
+    "hardware_advantage": "unmeasured",
+    "learning": "unmeasured",
+    "probability": "unmeasured"
+  },
+  "duration_s": 1701.84744670699,
+  "evidence_unresolved": [],
+  "experiment_id": 7793,
+  "field_principles": {
+    "MODEL_SPECS": "Cited models are not current invocations.",
+    "acceptance_gate_results": "Working custody does not establish benefit.",
+    "actual_inference_substrate_class": "Exact provenance and scope remain visible.",
+    "board_rows": "Every attached board retains its physical prerequisite.",
+    "claim_scope": "Historical access does not prove current speedup.",
+    "decision_benefit_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "duration_s": "Only actual elapsed work determines duration.",
+    "efficiency_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "evidence_unresolved": "Unrecovered bytes stay unresolved with both hashes.",
+    "experiment_id": "Each record needs a unique owner.",
+    "field_principles": "The rationale for every field and gate travels with the result.",
+    "flagged_adversarial": "Invalid evidence cannot open a downstream gate.",
+    "gate_check_summary": "A missing producer differs from a scientific null.",
+    "hardware_advantage_claimed": "Exact provenance and scope remain visible.",
+    "hardware_continuity_accounted": "Inventory completeness is not fresh execution.",
+    "hardware_operations_issued": "Exact provenance and scope remain visible.",
+    "honest_verdict": "Unchanged external inputs must not consume retries.",
+    "inference_substrate": "Aggregation invokes no model or board.",
+    "inference_substrate_class": "Duration floors follow actual invoked work.",
+    "literature_to_future_requirements": "Exact provenance and scope remain visible.",
+    "milestone": "The milestone binds the current acceptance contract.",
+    "model_invocation_counts": "Loaded-file hashes and tokens are zero without calls.",
+    "model_specs": "Only current calls enter model metadata.",
+    "phase_spans": "Real phase times expose stalled work.",
+    "planned_inference_substrate_class": "Exact provenance and scope remain visible.",
+    "preconditions_checked": "Cheap custody and resource failures precede computation.",
+    "probability_quality_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "random_seed": "A deterministic audit draws no random sample.",
+    "readiness_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "repository_health": "Broad repository failures are reported separately from the frozen affected contract.",
+    "reproducibility_checksum": "Exact code, inputs, roles and parameters bind replay.",
+    "retention_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "rows": "Individual units make the headline reproducible.",
+    "rows_checksum": "Exact provenance and scope remain visible.",
+    "run_date": "Dates separate historical and current observations.",
+    "sample_size_budget": "Historical views do not multiply independent boards.",
+    "schema": "Exact provenance and scope remain visible.",
+    "service_measured": "Vendor estimates cannot open a local speed gate.",
+    "source_artifact_hashes": "Old bytes cannot be replaced by current prose.",
+    "validation_receipts": "Required checks control readiness.",
+    "validity_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "verdict_class": "Claim strength travels with the result.",
+    "verifier_is_oracle": "Fixture truth does not establish semantic accuracy."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7792_v677_service_cost.json",
+      "expected": true,
+      "field": "eligible_service_producer",
+      "observed": false,
+      "operator": "==",
+      "passed": false,
+      "upstream_id": "Exp7792"
+    }
+  ],
+  "hardware_advantage_claimed": false,
+  "hardware_continuity_accounted": true,
+  "hardware_operations_issued": [],
+  "honest_verdict": "complete_blocked_missing_service_evidence",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "literature_to_future_requirements": [
+    {
+      "historical_git_blob": "7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "requirement": "Measure local preparation, transfer, sampling, dense readout and durable result on an accessible TSU.",
+      "source": "https://extropic.ai/writing/z1t"
+    },
+    {
+      "historical_git_blob": "7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "requirement": "Measure sparse Boltzmann setup, transfer, readout and complete local service cost before proposing FPGA acquisition.",
+      "source": "https://doi.org/10.1038/s41467-026-75119-0"
+    }
+  ],
+  "milestone": "2026.09.677",
+  "model_invocation_counts": {
+    "generations": 0,
+    "loaded_files": [],
+    "loads": 0,
+    "tokens": 0
+  },
+  "model_specs": [],
+  "phase_spans": [
+    {
+      "completed_units": 6,
+      "duration_s": 0.0503573709866032,
+      "end_monotonic_s": 216200.193759136,
+      "phase": "preflight_and_reduction",
+      "start_monotonic_s": 216200.143401765
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 7.9790432669979054,
+      "end_monotonic_s": 216180.496269313,
+      "phase": "affected_pytest",
+      "start_monotonic_s": 216172.517226046
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 6.323688845004654,
+      "end_monotonic_s": 216186.820494866,
+      "phase": "new_core_coverage",
+      "start_monotonic_s": 216180.496806021
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.916361092007719,
+      "end_monotonic_s": 216187.737224089,
+      "phase": "new_cli_coverage",
+      "start_monotonic_s": 216186.820862997
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.06439087199396454,
+      "end_monotonic_s": 216187.802081246,
+      "phase": "coverage_combine",
+      "start_monotonic_s": 216187.737690374
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.06442590701044537,
+      "end_monotonic_s": 216187.86688868,
+      "phase": "coverage_report",
+      "start_monotonic_s": 216187.802462773
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.01607004599645734,
+      "end_monotonic_s": 216187.883436213,
+      "phase": "ruff_check",
+      "start_monotonic_s": 216187.867366167
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.015780242014443502,
+      "end_monotonic_s": 216187.899505117,
+      "phase": "ruff_format",
+      "start_monotonic_s": 216187.883724875
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.16446082401671447,
+      "end_monotonic_s": 216188.064271164,
+      "phase": "mypy",
+      "start_monotonic_s": 216187.89981034
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.03246236700215377,
+      "end_monotonic_s": 216188.097608003,
+      "phase": "spec_coverage",
+      "start_monotonic_s": 216188.065145636
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 47.443542905995855,
+      "end_monotonic_s": 214578.91461185,
+      "phase": "broad_collection",
+      "start_monotonic_s": 214531.471068944
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 1473.8290730559966,
+      "end_monotonic_s": 216052.75242208,
+      "phase": "full_python_suite",
+      "start_monotonic_s": 214578.923349024
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.5683129889948759,
+      "end_monotonic_s": 216232.747814928,
+      "phase": "cold_replay",
+      "start_monotonic_s": 216232.179501939
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.5389821749995463,
+      "end_monotonic_s": 216233.286926857,
+      "phase": "adversarial_verify",
+      "start_monotonic_s": 216232.747944682
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 0.031266639998648316,
+      "end_monotonic_s": 216233.318405054,
+      "phase": "strict_row_consistency",
+      "start_monotonic_s": 216233.287138414
+    }
+  ],
+  "planned_inference_substrate_class": "aggregation",
+  "preconditions_checked": {
+    "backend": "host_cpu_read_only",
+    "board_operations_issued": [],
+    "conductor_pre_gate_receipt": {
+      "is_science_producer": false,
+      "path": "results/experiment_7792_service_cost.json",
+      "sha256": null
+    },
+    "current_board_reachability": "not_probed",
+    "custody_checks": [
+      {
+        "artifact_hash": "sha256:f23ee469ffa99c6c4df7e161b032d526f4c1f5627b0548b07aa991e72211081c",
+        "artifact_path": "results/experiment_7751_v674_hardware_continuity.json",
+        "expected": true,
+        "field": "raw_rows",
+        "observed": true,
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751"
+      },
+      {
+        "artifact_hash": "sha256:c603c6b5b1e859090289be1831e180e0ea0c29986e6a3b6181b21278c6823573",
+        "artifact_path": "results/experiment_7779_v676_hardware_evidence.json",
+        "expected": true,
+        "field": "raw_rows",
+        "observed": true,
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779"
+      },
+      {
+        "artifact_hash": "sha256:c603c6b5b1e859090289be1831e180e0ea0c29986e6a3b6181b21278c6823573",
+        "artifact_path": "results/experiment_7779_v676_hardware_evidence.json",
+        "expected": "disqualified",
+        "field": "verdict_class",
+        "observed": "disqualified",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:KV260"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "raw_expected_hash",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:KV260"
+      },
+      {
+        "artifact_hash": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+        "artifact_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "inventory_raw_evidence_sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:KV260"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "inventory_source_sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:KV260"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "raw_source_sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:KV260"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "kv260_fpga_fabric_historical",
+        "field": "raw_venue",
+        "observed": "kv260_fpga_fabric_historical",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:KV260"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "raw_expected_hash",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+        "artifact_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "inventory_raw_evidence_sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "inventory_source_sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "raw_source_sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "polarfire_linux_cpu_historical",
+        "field": "raw_venue",
+        "observed": "polarfire_linux_cpu_historical",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "raw_expected_hash",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+        "artifact_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "inventory_raw_evidence_sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "inventory_source_sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "raw_source_sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "none_read_only",
+        "field": "raw_venue",
+        "observed": "none_read_only",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:AMD XDNA NPU"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "raw_expected_hash",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:AMD XDNA NPU"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:Extropic Z1T/TSU"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "raw_expected_hash",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:Extropic Z1T/TSU"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:Kona"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "raw_expected_hash",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:Kona"
+      },
+      {
+        "artifact_hash": null,
+        "artifact_path": "results/experiment_7792_v677_service_cost.json",
+        "expected": true,
+        "field": "eligible_service_producer",
+        "observed": false,
+        "operator": "==",
+        "passed": false,
+        "upstream_id": "Exp7792"
+      }
+    ],
+    "declared_science_producer": "results/experiment_7792_v677_service_cost.json",
+    "full_suite_diagnostic": {
+      "exit_code": -11,
+      "log_sha256": "sha256:da06c1bb8a9b0440e59c9791ecfbe6034d0903a8f2ea0cbd3e3f7d5daa9b1ffd"
+    },
+    "historical_exp7779_full_suite_exit": 2,
+    "historical_exp7779_verdict": "complete_disqualified_required_checks",
+    "resource_status": "local files and Git object only",
+    "root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "service_pre_gate_is_producer": false
+  },
+  "random_seed": null,
+  "reproducibility_checksum": "sha256:3a203e552a8bb794f4cacfdfe9edfb85f74513706979f1dbb4e03858e108b3ef",
+  "rows": [
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "KV260",
+      "censored": false,
+      "completed": false,
+      "excluded": false,
+      "expected_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "historical_verdict": "historical_fabric_k_max<=5",
+      "k_max": 5,
+      "last_authenticated_evidence_date": "20260913",
+      "metric": null,
+      "next_missing_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "processor_class": "fpga_fabric",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "source_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "started": false,
+      "state": "historical_fabric_k_max<=5",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "PolarFire",
+      "censored": false,
+      "completed": false,
+      "excluded": false,
+      "expected_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "historical_verdict": "historical_linux_cpu_only",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260913",
+      "metric": null,
+      "next_missing_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "processor_class": "linux_cpu",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "hash-matched Linux CPU dispatch only",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "source_path": "results/experiment_7231_v636_board_continuity.json",
+      "started": false,
+      "state": "historical_linux_cpu_only",
+      "venue": "polarfire_linux_cpu_historical"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "historical_verdict": "blocked_physical_change_0xffffffff",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260915",
+      "metric": null,
+      "next_missing_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified execution; physical JTAG IDCODE blocked",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "started": false,
+      "state": "blocked_physical_change_0xffffffff",
+      "venue": "none_read_only"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": "No qualified provider or device run",
+      "board": "AMD XDNA NPU",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "historical_verdict": "no_local_execution",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260927",
+      "metric": null,
+      "next_missing_prerequisite": "Operator-provided SDK/provider and device-side workload receipt",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified local NPU execution",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "source_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "started": false,
+      "state": "no_local_execution",
+      "venue": "none"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": "No local silicon or reproducible SDK execution",
+      "board": "Extropic Z1T/TSU",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "historical_verdict": "no_local_execution",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260927",
+      "metric": null,
+      "next_missing_prerequisite": "Operator access plus end-to-end SDK run including dense readout and transfers",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "vendor projected sparse energy; dense readout and transfers excluded",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "source_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "started": false,
+      "state": "no_local_execution",
+      "venue": "none"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": "No weights, recipe, or local runner",
+      "board": "Kona",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "historical_verdict": "no_local_execution",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260927",
+      "metric": null,
+      "next_missing_prerequisite": "Reproducible local runner, weights, recipe and matched benchmark",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "public product disclosure only",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "source_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "started": false,
+      "state": "no_local_execution",
+      "venue": "none"
+    }
+  ],
+  "rows_checksum": "sha256:0bb7d17ff68fc6512972b117331655e26d231ef877a1c40c62b60c0a6c35776b",
+  "run_date": "20260927",
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 0,
+    "effective_independent_n": 2,
+    "eligible": 2,
+    "excluded": 4,
+    "intended": 6,
+    "started": 0
+  },
+  "schema": "carnot.experiment_7793.v1",
+  "service_measured": false,
+  "source_artifact_hashes": {
+    "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173": {
+      "date": "20260927",
+      "eligible": true,
+      "expected_sha256": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "imported_fields": [
+        "historical_disclosure"
+      ],
+      "path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "scope": "immutable_git_blob",
+      "sha256": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811"
+    },
+    "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json": {
+      "date": "20260913",
+      "eligible": true,
+      "expected_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "imported_fields": [
+        "board",
+        "venue"
+      ],
+      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "scope": "dated_board_receipt",
+      "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+    },
+    "results/experiment_6559_gatemate_changed_state_continuity.json": {
+      "date": "20260915",
+      "eligible": true,
+      "expected_sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "imported_fields": [
+        "board",
+        "venue"
+      ],
+      "path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "scope": "dated_board_receipt",
+      "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66"
+    },
+    "results/experiment_7231_v636_board_continuity.json": {
+      "date": "20260913",
+      "eligible": true,
+      "expected_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "imported_fields": [
+        "board",
+        "venue"
+      ],
+      "path": "results/experiment_7231_v636_board_continuity.json",
+      "scope": "dated_board_receipt",
+      "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+    },
+    "results/experiment_7751_v674_hardware_continuity.json": {
+      "date": "20260927",
+      "eligible": true,
+      "imported_fields": [
+        "rows",
+        "hardware_continuity"
+      ],
+      "path": "results/experiment_7751_v674_hardware_continuity.json",
+      "scope": "historical_inventory",
+      "sha256": "sha256:f23ee469ffa99c6c4df7e161b032d526f4c1f5627b0548b07aa991e72211081c"
+    },
+    "results/experiment_7779_v676_hardware_evidence.json": {
+      "date": "20260927",
+      "eligible": false,
+      "imported_fields": [
+        "rows",
+        "validation_receipts"
+      ],
+      "path": "results/experiment_7779_v676_hardware_evidence.json",
+      "scope": "disqualified_historical_context",
+      "sha256": "sha256:c603c6b5b1e859090289be1831e180e0ea0c29986e6a3b6181b21278c6823573"
+    },
+    "results/experiment_7792_v677_service_cost.json": {
+      "date": null,
+      "eligible": false,
+      "imported_fields": [
+        "service_fractions"
+      ],
+      "path": "results/experiment_7792_v677_service_cost.json",
+      "scope": "declared_science_producer",
+      "sha256": null
+    },
+    "results/raw/experiment_7751_v674_hardware_continuity/rows.json": {
+      "date": null,
+      "eligible": true,
+      "imported_fields": [],
+      "path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "scope": "historical_raw_rows",
+      "sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a"
+    },
+    "results/raw/experiment_7779_v676_hardware_evidence/rows.json": {
+      "date": null,
+      "eligible": true,
+      "imported_fields": [],
+      "path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "scope": "disqualified_historical_raw_rows",
+      "sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6"
+    }
+  },
+  "validation_receipts": {
+    "checks": [
+      {
+        "command_argv": [
+          ".venv/bin/pytest",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7779_v676_hardware_evidence.py",
+          "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+          "tests/python/test_experiment_7765_v675_service_cost.py",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7793/revalidate/pytest/affected"
+        ],
+        "duration_s": 7.9790432669979054,
+        "end_monotonic_s": 216180.496269313,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/affected_pytest.log",
+        "log_sha256": "sha256:409995ed6373e71f79f025ec8b2fce2b6e01a2a83dc9a7e2a2f8f63df8c2af57",
+        "name": "affected_pytest",
+        "output_tail": "..............................                                           [100%]\n30 passed in 5.51s\n",
+        "start_monotonic_s": 216172.517226046,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/coverage",
+          "run",
+          "--data-file=/tmp/carnot-7793/revalidate/coverage/shards/.coverage.core",
+          "--include=*/experiment_7793_v677_hardware_evidence.py",
+          "-m",
+          "pytest",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7793/revalidate/pytest/coverage"
+        ],
+        "duration_s": 6.323688845004654,
+        "end_monotonic_s": 216186.820494866,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/new_core_coverage.log",
+        "log_sha256": "sha256:89ef90164f43aace897201bef71707c7fd4740e69eb086ba1168e9eca03f323a",
+        "name": "new_core_coverage",
+        "output_tail": "........                                                                 [100%]\n8 passed in 2.70s\n",
+        "start_monotonic_s": 216180.496806021,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/coverage",
+          "run",
+          "--data-file=/tmp/carnot-7793/revalidate/coverage/shards/.coverage.cli",
+          "--include=*/experiment_7793_v677_hardware_evidence.py",
+          "scripts/experiments/experiment_7793_v677_hardware_evidence.py",
+          "--date",
+          "20260927",
+          "--prepare",
+          "/tmp/carnot-7793/revalidate/coverage_candidate.json"
+        ],
+        "duration_s": 0.916361092007719,
+        "end_monotonic_s": 216187.737224089,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/new_cli_coverage.log",
+        "log_sha256": "sha256:1cd88186712aacef55d30e942a218ce4e3e2b275b0a5b5da4874ed5e3b7f39d4",
+        "name": "new_cli_coverage",
+        "output_tail": "[exp7793] phase=entrypoint event=start elapsed_s=0.000 completed_units=0\n[exp7793] phase=preflight event=start elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.014 completed_units=1\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.007 completed_units=1\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.012 completed_units=1\n[exp7793] phase=preflight event=complete elapsed_s=0.040 completed_units=28\n[exp7793] phase=prepare event=complete elapsed_s=0.044 completed_units=6\n",
+        "start_monotonic_s": 216186.820862997,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/coverage",
+          "combine",
+          "--data-file=/tmp/carnot-7793/revalidate/coverage/.coverage",
+          "/tmp/carnot-7793/revalidate/coverage/shards"
+        ],
+        "duration_s": 0.06439087199396454,
+        "end_monotonic_s": 216187.802081246,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/coverage_combine.log",
+        "log_sha256": "sha256:c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0",
+        "name": "coverage_combine",
+        "output_tail": "Combined 2 files\n",
+        "start_monotonic_s": 216187.737690374,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/coverage",
+          "report",
+          "--data-file=/tmp/carnot-7793/revalidate/coverage/.coverage",
+          "--include=*/experiment_7793_v677_hardware_evidence.py",
+          "-m",
+          "--fail-under=100"
+        ],
+        "duration_s": 0.06442590701044537,
+        "end_monotonic_s": 216187.86688868,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/coverage_report.log",
+        "log_sha256": "sha256:5ff7fc7bcd372d9995b4bc031907886497b47a4f9115cef696b717200e96a39d",
+        "name": "coverage_report",
+        "output_tail": "Name                                                                Stmts   Miss  Cover   Missing\n-------------------------------------------------------------------------------------------------\npython/carnot/reporting/experiment_7793_v677_hardware_evidence.py     167      0   100%\nscripts/experiments/experiment_7793_v677_hardware_evidence.py           3      0   100%\n-------------------------------------------------------------------------------------------------\nTOTAL                                                                 170      0   100%\n",
+        "start_monotonic_s": 216187.802462773,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/ruff",
+          "check",
+          "python/carnot/reporting/experiment_7793_v677_hardware_evidence.py",
+          "scripts/experiments/experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py"
+        ],
+        "duration_s": 0.01607004599645734,
+        "end_monotonic_s": 216187.883436213,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/ruff_check.log",
+        "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "name": "ruff_check",
+        "output_tail": "All checks passed!\n",
+        "start_monotonic_s": 216187.867366167,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/ruff",
+          "format",
+          "--check",
+          "python/carnot/reporting/experiment_7793_v677_hardware_evidence.py",
+          "scripts/experiments/experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py"
+        ],
+        "duration_s": 0.015780242014443502,
+        "end_monotonic_s": 216187.899505117,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/ruff_format.log",
+        "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+        "name": "ruff_format",
+        "output_tail": "3 files already formatted\n",
+        "start_monotonic_s": 216187.883724875,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/mypy",
+          "python/carnot/reporting/experiment_7793_v677_hardware_evidence.py",
+          "scripts/experiments/experiment_7793_v677_hardware_evidence.py"
+        ],
+        "duration_s": 0.16446082401671447,
+        "end_monotonic_s": 216188.064271164,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/mypy.log",
+        "log_sha256": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+        "name": "mypy",
+        "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+        "start_monotonic_s": 216187.89981034,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/python",
+          "scripts/check_spec_coverage.py",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7779_v676_hardware_evidence.py",
+          "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+          "tests/python/test_experiment_7765_v675_service_cost.py"
+        ],
+        "duration_s": 0.03246236700215377,
+        "end_monotonic_s": 216188.097608003,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/revalidate/logs/spec_coverage.log",
+        "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+        "name": "spec_coverage",
+        "output_tail": "OK: All tests reference specification requirements.\n",
+        "start_monotonic_s": 216188.065145636,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "import json,sys; from pathlib import Path; from carnot.reporting.experiment_7793_v677_hardware_evidence import cold_reduce; print(json.dumps(cold_reduce(Path(sys.argv[1]),Path(sys.argv[2])),sort_keys=True))",
+          "/tmp/carnot-7793/candidate.json",
+          "/home/ianblenke/github.com/ianblenke/carnot"
+        ],
+        "duration_s": 0.5683129889948759,
+        "end_monotonic_s": 216232.747814928,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/logs/cold_replay_first.log",
+        "log_sha256": "sha256:c96867cb6565536a93d4b448bddc0cde9a7b932540a015def2e5914a2d3fbc3b",
+        "name": "cold_replay",
+        "start_monotonic_s": 216232.179501939,
+        "stderr_log_path": "/tmp/carnot-7793/logs/cold_replay_first.stderr.log",
+        "stderr_log_sha256": "sha256:1b76a5fad3ad3133fedb01507e7167739edde5c4b972fff6244b28742a44cc36"
+      },
+      {
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/carnot-7793/candidate.json"
+        ],
+        "duration_s": 0.5389821749995463,
+        "end_monotonic_s": 216233.286926857,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/logs/adversarial_verify_first.log",
+        "log_sha256": "sha256:9f748a9f61ef514d56923634fb94d658f9f66bd237a8d7153f1f4463c3b1ceb9",
+        "name": "adversarial_verify",
+        "start_monotonic_s": 216232.747944682,
+        "stderr_log_path": "/tmp/carnot-7793/logs/adversarial_verify_first.stderr.log",
+        "stderr_log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-7793/candidate.json"
+        ],
+        "duration_s": 0.031266639998648316,
+        "end_monotonic_s": 216233.318405054,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/logs/strict_row_consistency_first.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_row_consistency",
+        "start_monotonic_s": 216233.287138414,
+        "stderr_log_path": "/tmp/carnot-7793/logs/strict_row_consistency_first.stderr.log",
+        "stderr_log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "cold_replay": {
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import json,sys; from pathlib import Path; from carnot.reporting.experiment_7793_v677_hardware_evidence import cold_reduce; print(json.dumps(cold_reduce(Path(sys.argv[1]),Path(sys.argv[2])),sort_keys=True))",
+        "/tmp/carnot-7793/candidate.json",
+        "/home/ianblenke/github.com/ianblenke/carnot"
+      ],
+      "duration_s": 0.5683129889948759,
+      "end_monotonic_s": 216232.747814928,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-7793/logs/cold_replay_first.log",
+      "log_sha256": "sha256:c96867cb6565536a93d4b448bddc0cde9a7b932540a015def2e5914a2d3fbc3b",
+      "name": "cold_replay",
+      "start_monotonic_s": 216232.179501939,
+      "stderr_log_path": "/tmp/carnot-7793/logs/cold_replay_first.stderr.log",
+      "stderr_log_sha256": "sha256:1b76a5fad3ad3133fedb01507e7167739edde5c4b972fff6244b28742a44cc36"
+    },
+    "frozen_scope": {
+      "changed_modules": [
+        "python/carnot/reporting/experiment_7793_v677_hardware_evidence.py",
+        "scripts/experiments/experiment_7793_v677_hardware_evidence.py"
+      ],
+      "direct_tests": [
+        "tests/python/test_experiment_7793_v677_hardware_evidence.py"
+      ],
+      "transitive_consumers": [
+        "tests/python/test_experiment_7779_v676_hardware_evidence.py",
+        "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+        "tests/python/test_experiment_7765_v675_service_cost.py"
+      ],
+      "validation": [
+        "affected_pytest",
+        "new_code_coverage",
+        "ruff_check",
+        "ruff_format",
+        "mypy",
+        "spec_coverage",
+        "full_python_suite",
+        "real_entrypoint",
+        "cold_replay",
+        "adversarial_verify",
+        "strict_row_consistency"
+      ]
+    },
+    "frozen_scope_path": "/tmp/carnot-7793/frozen_scope.json",
+    "frozen_scope_sha256": "sha256:efa5c4002c37e9bdc17234d0d92a84ce6cf4a6def2e02516b25130b4e5d54f5c",
+    "historical_exp7779_full_suite_receipt": {
+      "command_argv": [
+        ".venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7779/pytest/full_final"
+      ],
+      "duration_s": 47.69152524400852,
+      "exit_code": 2,
+      "log_path": "/tmp/carnot-7779/validation/full_python_suite.log",
+      "log_sha256": "sha256:4667e9ae1fb85d0776daaa2bb428ee1e672a676ceddfbf08dbc01e04f215115e",
+      "name": "full_python_suite",
+      "passed": false
+    },
+    "repository_health": [
+      {
+        "command_argv": [
+          ".venv/bin/pytest",
+          "tests/python",
+          "--collect-only",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7793/pytest/collection"
+        ],
+        "duration_s": 47.443542905995855,
+        "end_monotonic_s": 214578.91461185,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/logs/broad_collection.log",
+        "log_sha256": "sha256:97e0c4c2fb23aa9ab7b54feb3f12597d063fd0810e09399ae08fca1e91c0e13f",
+        "name": "broad_collection",
+        "output_tail": "PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\ntests/python/test_respawn_queue.py:97\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\npython/carnot/verify/python_types.py:305\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)\n    class TestPassConstraint(BaseConstraint):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n72631 tests collected in 24.94s\n",
+        "start_monotonic_s": 214531.471068944,
+        "timed_out": false
+      },
+      {
+        "command_argv": [
+          ".venv/bin/pytest",
+          "tests/python",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7793/pytest/full"
+        ],
+        "duration_s": 1473.8290730559966,
+        "end_monotonic_s": 216052.75242208,
+        "exit_code": -11,
+        "log_path": "/tmp/carnot-7793/logs/full_python_suite.log",
+        "log_sha256": "sha256:da06c1bb8a9b0440e59c9791ecfbe6034d0903a8f2ea0cbd3e3f7d5daa9b1ffd",
+        "name": "full_python_suite",
+        "output_tail": "._sparse, torch._C._special, regex._regex, markupsafe._speedups, PIL._imaging, pyformula, pysolvers, simplejson._speedups, requests.packages.charset_normalizer.md, requests.packages.chardet.md, requests.packages.charset_normalizer.cd, requests.packages.chardet.cd, kiwisolver._cext, scipy.signal._sigtools, scipy.signal._max_len_seq_inner, scipy.signal._upfirdn_apply, scipy.signal._spline, scipy.signal._sosfilt, scipy.signal._peak_finding_utils, PIL._imagingft, pyarrow._acero, pyarrow._fs, pyarrow._csv, pyarrow._json, pyarrow._substrait, pyarrow._dataset, pyarrow._dataset_orc, pyarrow._parquet, pyarrow._azurefs, pyarrow._hdfs, pyarrow._gcsfs, pyarrow._s3fs, pyarrow._parquet_encryption, pyarrow._dataset_parquet_encryption, pyarrow._dataset_parquet, multidict._multidict, yarl._quoting_c, propcache._helpers_c, aiohttp._http_writer, aiohttp._http_parser, aiohttp._websocket.mask, aiohttp._websocket.reader_c, frozenlist._frozenlist, xxhash._xxhash, _cffi_backend, PIL._imagingmath (total: 255)\n",
+        "start_monotonic_s": 214578.923349024,
+        "timed_out": false
+      }
+    ],
+    "required_checks_passed": true,
+    "terminal_readers": [
+      {
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/carnot-7793/candidate.json"
+        ],
+        "duration_s": 0.5389821749995463,
+        "end_monotonic_s": 216233.286926857,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/logs/adversarial_verify_first.log",
+        "log_sha256": "sha256:9f748a9f61ef514d56923634fb94d658f9f66bd237a8d7153f1f4463c3b1ceb9",
+        "name": "adversarial_verify",
+        "start_monotonic_s": 216232.747944682,
+        "stderr_log_path": "/tmp/carnot-7793/logs/adversarial_verify_first.stderr.log",
+        "stderr_log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-7793/candidate.json"
+        ],
+        "duration_s": 0.031266639998648316,
+        "end_monotonic_s": 216233.318405054,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7793/logs/strict_row_consistency_first.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_row_consistency",
+        "start_monotonic_s": 216233.287138414,
+        "stderr_log_path": "/tmp/carnot-7793/logs/strict_row_consistency_first.stderr.log",
+        "stderr_log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
