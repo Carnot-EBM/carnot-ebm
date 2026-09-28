@@ -1,0 +1,121 @@
+{
+  "arms": {
+    "augmented_mlp": {
+      "head": "mlp_local",
+      "mode": "ordinary",
+      "paired": true,
+      "parameters": 2162
+    },
+    "augmented_set": {
+      "head": "energy_local",
+      "mode": "ordinary",
+      "paired": true,
+      "parameters": 266
+    },
+    "complete_static_constrained_set": {
+      "head": "energy_local",
+      "mode": "constrained",
+      "paired": true,
+      "parameters": 268
+    },
+    "constrained_mlp": {
+      "head": "mlp_local",
+      "mode": "constrained",
+      "paired": true,
+      "parameters": 2164
+    },
+    "constrained_set": {
+      "head": "energy_local",
+      "mode": "constrained",
+      "paired": true,
+      "parameters": 268
+    },
+    "local_logistic": {
+      "head": "logistic_local",
+      "mode": "canonical",
+      "paired": false,
+      "parameters": 266
+    },
+    "local_set": {
+      "head": "energy_local",
+      "mode": "canonical",
+      "paired": false,
+      "parameters": 266
+    },
+    "response_set": {
+      "head": "energy_local",
+      "mode": "canonical",
+      "paired": false,
+      "parameters": 266
+    },
+    "source_erased_constrained_set": {
+      "head": "energy_local",
+      "mode": "constrained",
+      "paired": true,
+      "parameters": 268
+    }
+  },
+  "development_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/development_manifest.json",
+  "development_manifest_sha256": "sha256:c9097c7e39dd76ba3150059432e5e6a8889c37fc755079f48dff135bef4370f9",
+  "evaluator_paths": {
+    "evaluation": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+    "fit": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/fit_evaluator.jsonl",
+    "online_admission": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_admission_evaluator.jsonl",
+    "online_update": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_update_evaluator.jsonl",
+    "policy": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/policy_evaluator.jsonl",
+    "retention": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/retention_evaluator.jsonl",
+    "tune": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/tune_evaluator.jsonl"
+  },
+  "fresh_generalization_eligible": false,
+  "output_span_authority": "local_response_only",
+  "prior_exposure": true,
+  "role_counts": {
+    "evaluation": 64,
+    "fit": 256,
+    "online_admission": 64,
+    "online_update": 96,
+    "policy": 64,
+    "retention": 32,
+    "tune": 64
+  },
+  "role_hashes": {
+    "evaluation": {
+      "evaluator": "sha256:06e473d5b1aa3d8e2f8ec430b4fde3918abd32be9fa170ac49b797cde91c6898",
+      "public": "sha256:b2d46b025db4a257558e6cf6261fa24f5c6e15c31788d74a135f3ced06a5def4"
+    },
+    "fit": {
+      "evaluator": "sha256:a0b9ac73a46c0af6d58bb9890192d9db1b58d41f503fd2ceadcbebd6eb630138",
+      "public": "sha256:e42e127429e5281956fafc17b012edad41a836b661ce03d7bf6a5d6eef21414d"
+    },
+    "online_admission": {
+      "evaluator": "sha256:08289d7508cd5ab9cf44c66ed98f520b6d1af2408a673233eadebaa15380d611",
+      "public": "sha256:d2f43109aef64c0fabbadf298336ada58858b818f256ff2f7dfe6d89546e468d"
+    },
+    "online_update": {
+      "evaluator": "sha256:2c94bdb952214a0eb89f81df2e404508645f73124bc7d997c0a90f90aa23339e",
+      "public": "sha256:a409a5e7717dee3610a9fd9113364f63a0d9fdb4f4b7790e80d04980835a79ad"
+    },
+    "policy": {
+      "evaluator": "sha256:5cdfa7b835de69e84a30395a5af02898dd2e4af461438c9550172dfda259264e",
+      "public": "sha256:dad6a55db702d6202b35b1b426e63fc5d56e859d5a2e94cc1e79b1e0fe556d88"
+    },
+    "retention": {
+      "evaluator": "sha256:678a2f6b6116f5107109cabd32dad1e30b6253f7216133c8ee371258c1d91a77",
+      "public": "sha256:7f55761ceda1bdde6adf965b60d51160dfd17921c790bd92a8d2edf1c2995497"
+    },
+    "tune": {
+      "evaluator": "sha256:29b3aa9ae0ac0a863879cb94942dc01ce15ce4a28ad59ee846332d45fb3b4843",
+      "public": "sha256:d20421f4ed510c8325e3a4cf22e258d11fa4aa00d49c63acea4e126383855454"
+    }
+  },
+  "rows_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7796_v678_source_view_qualification/rows.jsonl",
+  "rows_sha256": "sha256:a7f0562d9ba3de4b37e459cc13850428abe99e5e83861e65d59785923b91c72c",
+  "schema": "carnot.exp7768.source_view_manifest.v1",
+  "window_policy": {
+    "a": "singles_and_adjacent_triples",
+    "b": "singles_and_adjacent_pairs",
+    "max_answer_units": 16,
+    "max_windows": 128,
+    "null": "one_per_view"
+  }
+}

@@ -84039,3 +84039,46 @@ The current bounded entrypoint records explicit validation argv, real exits,
 100 percent changed-code statement coverage, log hashes, real E2E, cold replay
 and adversarial and strict row readers. Only an accepted exact contract earns
 circular-positive administrative readiness. Scientific benefit stays null.
+## REQ-REPORT-7796: Qualify current source custody and complete evidence views
+
+Exp7796 SHALL authenticate the Exp7727 science producer and its exact 640
+exposed families, seven frozen roles, public and evaluator shard hashes, and
+family and duplicate-group identities before preparation. A conductor pre-gate
+receipt SHALL remain a distinct input. Missing external input SHALL produce a
+terminal complete_blocked record with the failed path and operand. The new
+entrypoint SHALL call preparation primitives with explicit paths and SHALL not
+invoke the historical Exp7782 or Exp7768 experiment entrypoints.
+
+Public rows SHALL preserve complete UTF-8 source and answer bytes, all 132
+label-free pair features, single-sentence and adjacent-triple view A, and
+single-sentence and adjacent-pair view B. Each view SHALL preserve one null
+location. The shared limits are 128 windows and 16 answer units. Over-budget
+families SHALL remain in the 640-family denominator with risk 0.5, Brier 0.25,
+cost 0.25, and forced escalation. Evaluator labels and output-error spans
+SHALL never choose public windows or become source-support witnesses.
+
+Only a complete prospective affected suite, 100-percent statement coverage of
+new code, scoped static and spec checks, real entrypoint preparation, fresh
+process reduction, and terminal readers MAY open sentence and view readiness.
+The exact validation argv and affected file scope SHALL be sealed before
+implementation. Broad collection SHALL remain a separate diagnostic. Prior
+failed full-suite obligations and Exp7782's disqualification SHALL not change.
+
+### SCENARIO-REPORT-7796-CUSTODY
+
+Missing or changed producer, pre-gate, shard, role, family, or duplicate-group
+bytes yields the exact failed operand. Private evaluator label mutations leave
+public roles, features, and windows unchanged. Unauthorized public labels fail.
+
+### SCENARIO-REPORT-7796-VIEWS
+
+Joint premises remain reachable in both complete views. UTF-8 offsets, null
+evidence, duplicate sentences, truncation, unknown annotations, and every
+over-budget family remain visible and correctly classified.
+
+### SCENARIO-REPORT-7796-VALIDATION
+
+An orchestration test records every child argv. Directory-wide pytest targets,
+old qualification mains, and changed scope manifests fail before launch. A
+required failed child sets both readiness scores to zero and disqualifies the
+candidate. Fresh process readers recompute sealed raw rows and reject drift.
