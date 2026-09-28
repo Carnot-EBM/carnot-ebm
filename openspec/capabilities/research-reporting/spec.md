@@ -84768,3 +84768,59 @@ missing pytest parent, undeclared command, changed log byte or failed required
 exit fails readiness. A retry cannot alter an earlier sealed receipt. A fresh
 process reduces raw rows and strict readers inspect the exact candidate before
 atomic publication.
+
+## REQ-REPORT-7824: Isolate source features and observed local labels
+
+Exp7824 SHALL cold-read the qualified Exp7810 manifest and all 640 exposed
+development families in their frozen fit256, tune64, policy64, online_update96,
+online_admission64, evaluation64, retention32 roles. It SHALL verify exact
+source, answer, role-shard and independent annotation bytes before use. A
+missing or changed external operand yields complete_blocked_* and an exact
+gate_check_summary record. It SHALL publish separate hashed public and evaluator
+manifests without replacing or relabeling historical corpus records.
+
+The scorer process SHALL receive only typed source/answer bytes and view
+structure from an explicit allowlist. Family IDs may join output but SHALL
+never become tensor input. Gold labels, error annotations, confidence,
+generator identity, role names and family IDs remain in evaluator custody.
+Every forbidden field SHALL be mutated and omitted for each family while public
+bytes stay fixed; all 132-feature tensors SHALL remain equal. Text sensitivity
+is descriptive because feature collisions are possible. Unknown local labels
+SHALL contribute zero loss and gradient under either hidden 0/1 placeholder;
+known-label flips SHALL change a nonzero-gradient fixture loss. No natural
+calibration or independent generalization follows from these invariants.
+
+The frozen affected closure is
+`python/carnot/experiment_7824_v680_source_feature_isolation.py`,
+`scripts/experiments/experiment_7824_v680_source_feature_isolation.py`,
+`tests/python/test_experiment_7824_v680_source_feature_isolation.py`,
+`tests/python/test_experiment_7810_v679_source_view_qualification.py`, and
+`tests/python/test_experiment_7756_v675_evidence_view_protocol.py`.
+`results/raw/experiment_7824_v680_source_feature_isolation/validation_command_manifest.json`
+freezes the exact required and diagnostic child argv before implementation.
+The dispatcher SHALL reject undeclared children, seal completed logs at
+attempt-specific content addresses, and cold-check hashes after a later retry
+and byte mutation. Required validation includes focused and full Python tests,
+100-percent changed-code coverage, scoped Ruff and mypy, explicit-file spec
+coverage, real CLI E2E, cold reduction, adversarial verification and strict row
+lint. A 180-second serial broad health probe is diagnostic only. Required
+failure disqualifies readiness; fixture success is circular_positive.
+
+### SCENARIO-REPORT-7824-ISOLATION
+
+For every canonical family, mutating or omitting each forbidden field leaves
+the scorer projection and 132-feature tensors unchanged; malformed public
+types fail before extraction. A fresh process receives only public records.
+
+### SCENARIO-REPORT-7824-MASK
+
+Unknown placeholders 0 and 1 with the same mask give exactly equal local
+loss and gradient. A known label flip changes loss on a fixture with a
+nonzero gradient.
+
+### SCENARIO-REPORT-7824-TERMINAL
+
+The current CLI runs the frozen names, argv and classes. Missing inputs block;
+failed required checks disqualify. A fresh reducer reopens all 640 raw rows,
+public and sidecar manifests, source hashes and sealed validation logs before
+accepting a candidate. Retried logs cannot rewrite earlier bytes.
