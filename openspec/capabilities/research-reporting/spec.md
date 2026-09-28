@@ -84257,3 +84257,75 @@ table and embedded JSON with the YAML. Private changes to count, ID, order,
 title, phase, output, model, substrate, gate producer or field fail. Planning
 E2E validates this reader boundary; future tasks own runtime E2E. Planning
 SHALL NOT modify research-roadmap.yaml or scripts/research_conductor.py.
+
+## REQ-REPORT-7809: Bind V679 authority and method ownership
+
+Exp7809 SHALL compare the literal V679 design table, embedded JSON and matching
+staged or active YAML for fourteen ordered Exp7809–Exp7822 tasks. Every title,
+phase, output, model, substrate and gate SHALL agree independently. Immutable
+copies of exact design and YAML bytes SHALL permit cold replay after rollover.
+Private missing, reordered, stale, changed-model, malformed-producer and
+incomplete-prior-failure copies SHALL be refused. Current V678 declared output
+custody SHALL retain one circular-positive, six disqualified and one blocked
+artifact, six absent science producers, and separate conductor pre-gate receipts.
+The completed archive still ends at V677. The method map SHALL assign causal
+contrasts and validation owners to adopted literature without claiming science.
+
+The complete affected closure is
+`python/carnot/experiment_7809_v679_contract_methods.py`,
+`scripts/experiments/experiment_7809_v679_contract_methods.py`,
+`tests/python/test_experiment_7809_v679_contract_methods.py`,
+`tests/python/test_experiment_7795_v678_contract_methods.py`, and
+`tests/python/test_experiment_7303_v642_validation_scope.py`.
+The exact command names, argv, required/diagnostic classes and sequence are
+frozen before implementation in
+`results/raw/experiment_7809_v679_contract_methods/validation_command_manifest.json`.
+The real dispatcher SHALL compare its complete child list with this manifest,
+including commands appended after helper calls, and reject undeclared children.
+Required commands are focused pytest, changed-code coverage and report,
+scoped Ruff check and format, mypy, explicit spec coverage, unchanged roadmap
+schema/prior-failure/exclusion/gate/harness-fit/ARC-floor/priority readers,
+real CLI E2E, fresh-process cold replay, adversarial verification and strict
+row consistency. Full Python pytest is diagnostic repository health; its exit
+and immutable log SHALL remain visible and cannot satisfy a failed required
+check. Every command gets a unique private root. Pytest base parents SHALL
+exist before launch. Receipt logs SHALL be hashed only after child exit and
+copied to attempt-specific immutable storage. A later retry and one-byte log
+mutation SHALL not alter a sealed receipt.
+
+The result SHALL report exact failed operands, per-task rows, source hashes,
+command receipts, measured duration, zero model invocations and separate
+scientific gates. Exact-authority success SHALL be circular-positive only.
+External missing inputs SHALL be terminal blocked. Failed required validation
+SHALL be terminal disqualified with all readiness fields zero. The contract
+SHALL not qualify any scientific producer or repair historical failed checks.
+
+### SCENARIO-REPORT-7809-CONTRACT
+
+Authentic frozen V679 bytes pass all fourteen rows. Private mutations in task
+count, order, design, models, gates and prior failures fail with named operands.
+Cold replay remains valid when the active roadmap moves to a later milestone.
+
+### SCENARIO-REPORT-7809-CUSTODY
+
+The V678 ledger preserves eight exact declared artifacts and six absent science
+outputs. It records candidate_roster_mismatch, five stale receipt hashes, Ruff
+format failure, terminated broad-suite readiness and the missing pytest parent
+as distinct historical failures with current prospective repairs and negative
+checks. The oracle-distinct corrigendum remains open.
+
+### SCENARIO-REPORT-7809-TERMINAL
+
+A recording executor sees the exact frozen real-CLI child argv and classes.
+Undeclared commands, missing pytest parents, failed required exits and changed
+sealed log bytes fail. Fresh-process row replay, adversarial and strict readers
+run on the exact candidate before atomic publication. Only complete validation
+opens administrative readiness; probability, decision, retention and efficiency
+remain null.
+
+The frozen manifest is SHA-256
+`19aa0ef7ca0ad61a425ffb8a9ca714a32747ac8a502bbf640b033f7a762132ed`.
+Its exact argv bytes, 21 ordered command records, and private root
+`/tmp/exp7809-v679-01aa6d41af704f5890cffb66f740a473` are part of
+REQ-REPORT-7809. The dispatcher SHALL reject a different manifest, name,
+argument, sequence, or classification before any child starts.
