@@ -48042,3 +48042,100 @@ parent did not exist. New work must name and reproduce these concrete defects.
 A renamed wrapper alone does not change the premise. Preserve historical
 failures; new required validation must be fixed prospectively, complete for the
 affected code, and tested through the actual command-dispatch path.
+
+## V680 planning review — 2026-09-28 (recorded before design)
+
+This scan precedes the V680 design. The sources below are primary papers or
+publisher/vendor pages; discovery indexes do not validate their claims.
+Rechecked leads are identified as such, rather than presented as new papers.
+
+### Methods to test or retain
+
+- [Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning](https://arxiv.org/html/2605.18871v1),
+  May 15, 2026. Re-read the method, selective prediction and confounding sections;
+  earlier reviews retained this as background. It separates learned scores from
+  exact penalties and examines uncertainty-based abstention and style shortcuts.
+  Adopt two limited tests: a metadata/label isolation challenge for the existing
+  source features, and a calibrated abstention comparison. Carnot's repeated-seed
+  heads are not the paper's heterogeneous adapters, and their disagreement is
+  only a candidate signal. Do not revive the retired generic text-ranker scope.
+- [Cross-Block Conditioning in Deep Boltzmann Machines for Statistical Data Fusion](https://arxiv.org/abs/2609.14934),
+  September 14, revised September 16, 2026. Newly followed from the EBT citation
+  list. Its observed-block objective uses only labels actually present in each
+  row and distinguishes representation from conditioning. Adopt a missing-label
+  invariance test: an unknown sentence label must contribute no supervised loss.
+  This is a test of Carnot's existing local objective, not a DBM reproduction.
+- [A scalable and resource-efficient pipelined p-computer for probabilistic Ising machines](https://arxiv.org/abs/2607.21077),
+  July 23, 2026. The abstract identifies coupling-memory traffic as a dense-Ising
+  bottleneck and presents a pipelined FPGA implementation. Record coupling bytes,
+  update frequency and host preparation in the hardware opportunity map. Do not
+  infer that the published design fits KV260 or accelerates a deterministic head.
+- [RECAP](https://arxiv.org/abs/2606.06698), June 4, revised August 31, 2026.
+  Rechecked its proactive adaptation setting and regression metrics. Retain
+  per-constraint retention and forward-transfer reporting. Carnot's delayed-label
+  experiment is reactive and must not claim RECAP's adapt-before-test protocol.
+- Rechecked [CCHD](https://arxiv.org/abs/2606.08158), June 2026, and
+  [CoEV](https://arxiv.org/abs/2606.18609), June 2026. Continue the unexecuted
+  matched-consistency and source-deletion hypotheses only after their concrete
+  qualification defects are repaired. Text deletion is a local adaptation of
+  visual counter-evidence, not a semantic correctness certificate.
+- Rechecked [Memoir](https://arxiv.org/abs/2607.20792), July 2026, and
+  [capacity-constrained delayed feedback](https://arxiv.org/abs/2606.11711),
+  June 2026. Keep query-immutable memory, release clocks, equal update budgets,
+  restart retention and future-feedback controls. No generator weight updates.
+
+### Coverage of the requested research areas
+
+| Area | Primary sources checked | Decision |
+|---|---|---|
+| Energy-based verification and reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025; distributional EBM above | Train the existing small normalized head; independently test calibration and selective decisions. |
+| Neural constraint satisfaction | [HardNet++](https://arxiv.org/abs/2604.19669), April 2026 | Abstract-level check; retain projection methods as leads. Hard validity needs actual constraints, not low learned energy alone. |
+| Ising applications in ML | [Probabilistic Computers for Neural Quantum States](https://arxiv.org/abs/2512.24558), December 2025 | Sampling/learning reference only; quantum-state evidence does not establish text-verifier value. |
+| Hallucination detection and mitigation | CCHD, CoEV and distributional EBM | Independent label custody, event alignment and source sensitivity remain separate tests. |
+| Kolmogorov–Arnold Networks | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026; [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828), November 2025 | Architecture alone does not establish retention. Do not reopen the retired unchanged importance-anchor experiment. |
+| Energy-guided/constrained generation | [Primal-Dual Guided Decoding](https://arxiv.org/abs/2605.09749), May 2026; [Thinking Before Constraining](https://arxiv.org/abs/2601.07525), January 2026 | Defer new decoding machinery; preserve fixed Qwen transport and bounded token budgets. Diffusion results do not directly transfer to autoregressive GGUF. |
+| Hardware sampling | Pipelined p-computer above; [Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Count whole-service and data-movement costs before accelerator selection. Vendor measurements are not local results. |
+| Continual/online constraints | RECAP, Memoir, delayed-feedback work above | Measure causal constraint additions, retention and update cost with frozen controls. |
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** searched 2026 EBM work and read the indexed
+  [Transformers as Intrinsic Optimizers submission](https://openreview.net/pdf/ad584f45228e8bd1149252ee938a3c7a4d38dc4e.pdf).
+  It offers an energy interpretation of attention; its PDF says under review.
+  Do not call it accepted or use it to justify replacing the fixed generator.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and the Z1T
+  article. The index returned a minimal navigation page; the article exposes
+  open weights and a training recipe. These do not establish local TSU access.
+- **Semantic Scholar:** browser access to both citation endpoints failed.
+  Bounded direct Graph API requests succeeded: 37 EBT records and eight ARM–EBM
+  records, neither with a next-page marker. These are returned records, not an
+  exhaustive citation count. Followed the September DBM paper and distributional
+  EBM to arXiv. Endpoints:
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=100),
+  [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=100).
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  It supplies verification-horizon and tool-verifier leads. No feed claim is
+  treated as a replicated result or an adopted dependency.
+- **GitHub:** checked [weekly Python trending](https://github.com/trending/python?since=weekly)
+  and searched EBM/verifier repositories. The trending page was crawled two weeks
+  earlier; no current trending EBM/constraint/KAN dependency was established.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The page describes an energy-based constraint layer. This check found no
+  technical disclosure sufficient to reproduce its architecture or guarantees.
+
+### Local evidence that constrains the next design
+
+V679 has nine declared artifacts: two circular-positive readiness results,
+four disqualified records and three blocked reducers. Five science producers
+are absent. The completed archive ends at V678; V679's active roster, exact
+artifacts and conductor log provide the current record.
+
+Exp7810 source replay and the repaired Exp7817 scored runner are qualified.
+Exp7809 and Exp7811 failed required formatting on named files. Exp7814 combined
+coverage directories without discovering its completed data files. Exp7818
+ran 48 episodes but had only 32% owned coverage and strict row-lint warnings;
+its quarantined raw reduction loses a baseline-winning seed and gives an
+organic-versus-off score delta of about -0.196. This is no qualified benefit,
+and changing its reporting would not make the unchanged selector worth rerunning.
+The September 28 oracle-distinct corrigendum remains binding. All 640 source
+families are exposed development data, even when withheld from a new fit.

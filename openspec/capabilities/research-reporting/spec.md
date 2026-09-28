@@ -84678,3 +84678,40 @@ prior log path, or absent pytest basetemp parent is rejected.
 The result and note carry fourteen decisions, raw provenance, qualified nulls,
 publication gates, source limits, board prerequisites, measured phase timing,
 and the exact validation receipts. No successor activation or publication occurs.
+
+## REQ-REPORT-V680-PLAN: Stage a matching evidence-bound research milestone
+
+The V680 proposal SHALL contain exactly fourteen ordered tasks, Exp7823 through
+Exp7836, across four phases. Its literal design table, embedded JSON contract
+and staged YAML SHALL agree on IDs, titles, phases, outputs, model lists,
+substrate classes and gates. Each gate producer SHALL precede its consumer and
+name the exact field in its required artifact fields. Prior failures SHALL
+carry all four required fields and a concrete changed premise. No retired ID
+or retired dependency SHALL be reused.
+
+The plan SHALL preserve V679's nine declared artifacts, five absent producers,
+and the disqualified organic-selector result. It SHALL include source-feature
+isolation, genuine small-head training, independent decision measurement,
+bounded mandated-Qwen inference, causal continuous constraint acquisition,
+frozen selective-abstention controls, the explicit ARC supervisor-ledger
+amendment, complete service cost and all three attached-board dispositions.
+It SHALL not imply fresh generalization on the 640 exposed source families.
+
+Each prompt SHALL require flushed phase and long-call progress, loop/child
+heartbeats within 60 seconds, gaps below 600 seconds, and file writes in bounded
+chunks across tool calls. Each comparative result SHALL retain per-unit rows.
+Artifact fields SHALL state their evidence principles, closed verdict class,
+actual substrate and exact failed gate operands. External absence is blocked;
+only unfinished owned work is partial. Required validation includes affected
+unit/static/spec checks, 100% changed-code coverage and applicable E2E. Existing
+failed obligations cannot be discarded by renaming a runner.
+
+### SCENARIO-REPORT-V680-PLAN
+
+The planning check SHALL load the staged YAML through unchanged schema,
+prior-failure, exclusion, gate, harness-fit, ARC-floor and priority readers.
+An independent check SHALL compare the literal table and JSON contract to YAML,
+verify prompt input paths and producer fields, and reject private missing-task,
+reordering, stale-design, changed-model, wrong-gate and incomplete-prior mutants.
+Planning-only changes require this staged-reader E2E; future runtime E2E is
+assigned in the task prompts and does not count as executed during planning.

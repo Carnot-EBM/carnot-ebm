@@ -11,32 +11,34 @@ Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): 
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 1 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 5 |
+| `SILENT_NON_FIRING` | 6 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::offline_arc_methodology_descriptor` — [results/experiment_4460_submission_package_prep.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4460_submission_package_prep.json) contains 20 `per_game_replay_validation[].reproduction_result` records, including successful `arc_solver_kit.reproduce` gates. It declares the recognized verifier substrate and has a checksum, but this function returns `None`.
-- `adversarial_verify.py::_validated_substrate_class_floor` — inference_substrate_class=model_load_no_generation` paired with `generation_calls_completed=48` and `duration_s=2.0`.
-- `adversarial_verify.py::duration_floor_for_artifact` — results/experiment_6152_typed_stochastic_constraint_ir.json`: `inference_substrate` is `jax_cpu_exact_stochastic_program` and `duration_s` is `0.0`. The function returns `None`; no duration floor tests that zero.
-- `adversarial_verify.py::check_execution_venue` — "execution_venue": null
-- `adversarial_verify.py::_artifact_run_date` — results/experiment_10005_jev_tetris_semif_overflow_fix_check.json`: `created_at` is `2026-09-22T11:56:48Z`, `inference_substrate` is `live_llm_inference`, and both `run_date` and `inference_substrate_class` are absent. The missing-class check emits no flag.
+- `adversarial_verify.py::check_substrate_class` — honest_verdict="complete: blocked_result_upload_after_generation"` with `inference_substrate_class="blocked_no_run"` and `generation_calls_completed=1`.
+- `adversarial_verify.py::check_duration_vs_claim` — results/experiment_5757_proposal_benchmark_scalar_bridge.json`: `inference_substrate="cached_fixture_replay_no_llm"` and `duration_s=0.0`. Its selected floor is 0.0001 seconds; the full verifier reports no flags.
+- `adversarial_verify.py::check_sample_size` — results/experiment_3346_kv260_mmd_vs_cpu_sequential_gibbs_v1.json` — sample_count_cpu=512, sample_count_kv260=512, and KS results under mmd_vs_cpu.per_seed.
+- `adversarial_verify.py::check_gate_passed_without_data` — acceptance_gate_passed: true` beside `validation_auroc: null` is a concrete missed case recorded in `ops/known-issues.md`.
+- `adversarial_verify.py::check_preconditions_declared` — results/experiment_2919_constraintbench_mini_direct_optimization_v1.json` declares `inference_substrate: live_llm_inference_plus_exact_verifier`, reports live local model use, and has no `preconditions_checked` field. The function emits no `PRECONDITIONS_UNDECLARED` warning.
+- `adversarial_verify.py::check_methodology_present` — [experiment_4884_levelup_attempt.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4884_levelup_attempt.json): `inference_substrate` is `offline_arcade_reproduction_gate_no_llm`, the verdict is `success_g50t_levelup_banked`, and top-level `duration_s` is absent. The methodology check emits no flag.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::offline_arc_methodology_descriptor` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_validated_substrate_class_floor` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::duration_floor_for_artifact` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_execution_venue` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_artifact_run_date` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_substrate_class` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_duration_vs_claim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_sample_size` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_gate_passed_without_data` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_preconditions_declared` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_methodology_present` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::offline_arc_methodology_descriptor
+## adversarial_verify.py::check_substrate_class
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -44,83 +46,49 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-`Return the recognized offline ARC methodology descriptor, if present.` The docstring also claims a live inference artifact cannot use that descriptor to avoid naming its model.
+The function claims to hold a declared inference_substrate_class to a closed enum and duration floor, while checking it against blocked verdicts and typed invocation evidence.
 
 ## FINDINGS
-1. **A/B — real evidence is omitted.** `OFFLINE_ARC_METHOD_DESCRIPTOR_KEYS` excludes the reproduction-result field used by a committed offline ARC artifact. Despite a recognized substrate, a checksum, and 20 recorded reproduction results, this function reaches `return None`.
-2. **False negative — the live-model gate fails.** The condition `if not (_is_verifier_scoring_only(d) or _is_aggregation_only(d)):` trusts recognizers that also accept legacy schema prefixes. A matching schema makes the function return an offline descriptor even when the explicit substrate says live inference. I reproduced the resulting suppression of the missing-model-spec flag.
-3. **Field shape and negation blindness.** `not d.get("reproducibility_checksum")` tests truthiness, so a principle-only wrapped dict or a nonempty list counts as a checksum; `None` is rejected. `if _descriptor_key_present(d, key)` tests whether a named field exists, so a false reproduction status, an empty gate, or a mention under field provenance can count as methodology evidence.
-4. **C — the named suppression test does not exercise the exemption.** For its offline fixture, the caller returns on the non-live claim before invoking this helper. Replacing this helper with one that always returns `None` left that fixture’s methodology result unchanged; this does not establish that the whole suite would remain green.
-5. **Other classes.** The shown function has no direct free-text substring scan, numeric threshold, absolute path, write, or measurement. Its `return None` gives no descriptor-level distinction between unrecognized substrate and missing evidence, although that return alone does not waive the caller’s methodology check.
 
-## COUNTEREXAMPLE
-A constructed live-run fragment with a reused verifier-matrix schema:
+1. **A — silent non-firing; B — incomplete class set.** `if substrate_class in _NO_MODEL_SUBSTRATE_CLASSES and live_evidence:` never applies to blocked_no_run, although that class asserts nothing ran. `if substrate_class == SUBSTRATE_CLASS_BLOCKED_NO_RUN and not blocked:` checks only the verdict. A blocked verdict paired with positive model invocation evidence therefore passes; the full verifier returned zero flags for the counterexample below.
 
-```json
-{
-  "schema": "carnot.cross_corpus_verifier_matrix_live_llm.v2",
-  "inference_substrate": "live_llm_inference",
-  "honest_verdict": "complete: live_verifier_matrix_scored",
-  "duration_s": 120.0,
-  "random_seed": 4587,
-  "solver_module": "python/carnot/agentic/arc_solver_kit.py",
-  "reproducibility_checksum": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-}
-```
+2. **A — another silent non-firing; B — evidence rule narrower than the class distinction.** `if substrate_class in _MODEL_SUBSTRATE_CLASSES and negative_evidence:` applies one test to all model classes. A load-only class with 48 completed generation calls passes this function at its 2-second floor. Conversely, a load-only class with zero completed calls is flagged critical even when positive model evidence is present. The rule confuses “no generation completed” with “no model ran.”
 
-With no model specification, the helper nevertheless returns an offline descriptor and the methodology check emits no missing-model-spec flag.
+3. **1 — field extraction.** `raw_class = d.get(SUBSTRATE_CLASS_FIELD)` followed by `if raw_class is None:` conflates an absent field with an explicitly null field. For a pre-cutover artifact with a recognized substrate name, null produces no flag, despite the docstring’s claim that a non-string value is critical. `duration = d.get("duration_s")` also skips a principle-wrapped number when this function is called directly; the full verifier unwraps top-level fields before calling it. The two `row.get("field", "?")` reads affect diagnostic text only.
 
-## MISSED INPUT
-[results/experiment_4460_submission_package_prep.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4460_submission_package_prep.json) contains 20 `per_game_replay_validation[].reproduction_result` records, including successful `arc_solver_kit.reproduce` gates. It declares the recognized verifier substrate and has a checksum, but this function returns `None`.
+4. **2 and 3 — text matching.** The enum membership checks are exact; this body has no substring match inside a longer word. Its blocked-verdict predicate is delegated through `blocked = _is_precondition_check_only_blocked(d)` and treats a blocked prefix as proof that compute never ran, even when the verdict says the block happened after generation.
 
-## RECOMMENDATION
-NEEDS_REDESIGN
+5. **4 and 5 — boundaries and claim mismatch.** `float(duration) < floor` correctly permits equality with the floor, and `run_date >= SUBSTRATE_CLASS_CUTOVER_DATE` includes the cutover date. The docstring says an absent class draws a narrow warning, but the post-cutover branch issues a critical flag for every absent class. That behavior is broader than the stated rule.
 
-## RATIONALE
-The evidence list misses a field already used for genuine offline reproduction, while mere field presence can certify failed or empty evidence. More dangerously, a legacy schema match can override an explicit live-model declaration and silently waive model naming. Validate the declared substrate first, then recognize and validate actual evidence values.
+6. **C and F — test and default behavior.** The focused tests exercise the individual rejection branches, but omit the blocked-plus-live and load-only generation combinations above; no branch is established as deletable with the suite still green. An unrecognized explicit class is rejected, so there is no permissive unknown-enum default. An absent class with an unparseable date can still return without a flag for a recognized substrate, a gap the code states.
 
-
-## adversarial_verify.py::_validated_substrate_class_floor
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-“Return a class floor only when the existing typed checks accept the class.”
-
-## FINDINGS
-1. **Silent non-firing:** `if substrate_class in _MODEL_SUBSTRATE_CLASSES and negative_evidence:` rejects negative evidence but never asks whether positive evidence fits the specific class. A load-only class with 48 completed generation calls receives its 2-second floor. The full verifier issued no critical flag for this input.
-2. **False positive:** The same branch rejects a load-only run with a loaded model and zero completed generation calls. It falls back to the 60-second live-model floor and issues critical flags, although zero generations agrees with the class.
-3. **Redundant rule:** `if substrate_class == SUBSTRATE_CLASS_BLOCKED_NO_RUN:` has the same result as the later `if floor is None:` for the current enum. All 12 focused class tests passed with the early return deleted in memory.
-4. **Other checks:** `substrate_class = d.get(SUBSTRATE_CLASS_FIELD)` is followed by an explicit string and enum check; the full verifier unwraps principle-annotated fields before calling it. This function has no free-text matching, numeric comparison, absolute path, write, or measurement. The closed class sets show no established missing enum member; their defect here is treating distinct model classes as one evidence category. An unknown class falls through to the legacy reader and is separately flagged as invalid.
+7. **D, E, and G — none found.** This function has no absolute path, file write, or measurement computation. The inspected focused tests write artifacts under temporary paths.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "run_date": "20260928",
-  "honest_verdict": "complete: bounded canary finished",
-  "inference_substrate": "live_llm_inference",
-  "inference_substrate_class": "model_load_no_generation",
+  "run_date": "2026-09-28",
+  "inference_substrate": "precondition_check_only",
+  "inference_substrate_class": "blocked_no_run",
+  "honest_verdict": "complete: blocked_result_upload_after_generation",
   "model_invoked": true,
-  "generation_calls_completed": 48,
-  "duration_s": 2.0
+  "generation_calls_completed": 1,
+  "duration_s": 0.1
 }
 ```
-The helper selects the 2-second load-only floor despite the recorded generations. The full verifier produced warnings only.
+Both this function and the full verifier returned zero flags.
 
 ## MISSED INPUT
-`inference_substrate_class=model_load_no_generation` paired with `generation_calls_completed=48` and `duration_s=2.0`.
+`honest_verdict="complete: blocked_result_upload_after_generation"` with `inference_substrate_class="blocked_no_run"` and `generation_calls_completed=1`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The evidence check distinguishes model activity from no model activity, but does not distinguish loading from generation. That makes zero generations look contradictory to a load-only claim while 48 generations look acceptable. Validate generation evidence against each model class and test both directions.
+A verdict prefix can currently override typed evidence that compute ran, leaving a direct contradiction unreported. The check also needs class-specific generation evidence and must distinguish an absent class from an explicitly null declaration.
 
 
-## adversarial_verify.py::duration_floor_for_artifact
+## adversarial_verify.py::check_duration_vs_claim
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -128,63 +96,114 @@ The evidence check distinguishes model activity from no model activity, but does
 SILENT_NON_FIRING
 
 ## CLAIM
-The function claims to select an artifact’s duration floor from its declared substrate and provide that floor for reviewer diagnostics.
+The docstring says `Compute-bound artifact with implausibly short duration.`
 
 ## FINDINGS
-1. **A, 3, 5 — wrong floor for a real ARC substrate.** `if _is_deterministic_verifier(d) or claim["reason"] == "deterministic_substrate_claim":` runs before `if _is_arc_live_agent_no_llm(d):`. The substrate used by two checked-in ARC artifacts describes live environment stepping *and* offline replay. The deterministic helper treats the replay mention as decisive, selecting a 0.0001-second floor instead of the ARC live-agent floor of 0.01 seconds. A 0.002-second claim therefore receives no duration flag.
-2. **5 — a contradictory class can suppress the live floor.** `class_floor = _validated_substrate_class_floor(d)` followed by `if class_floor is not None:` returns before the live-inference claim is classified. The counterexample below selects the no-model floor despite declaring live LLM inference; both the duration check and class-consistency check emit no flag for that conflict.
-3. **B, F — declared work can remain unfloored.** The recognizer chain ends in `return None`. The checked-in CPU exact-program artifact named below reports zero duration and receives no duration floor. The caller emits an unknown-substrate warning for this finite-duration case, so the *full verifier* makes the missing check visible; the floor selector and reviewer summary still provide no tested minimum. A separate checked-in tokenization artifact is instead assigned `COMPUTE_BOUND_MIN_DURATION_S` and flagged at 51.742794 seconds, although it declares tokenization without inference.
-4. **C — later branches are behaviorally redundant.** The second occurrences of `_is_llm_embedding_extraction(d)`, `_is_local_sota_gguf_small_n(d)`, and `_is_native_gguf_backend_bisect(d)` are shadowed by `if requires_live_floor:`. The final `_is_live_llm_inference(d)` and `_has_compute_bound_marker(d)` branches are likewise shadowed by that branch or by earlier non-live returns. They appear deletable without changing behavior; I did not run a whole-suite deletion mutation.
-5. **1, 2, 4, D, E, G — no further defect established in this function.** It has no direct artifact-field read, free-text substring operator, numeric threshold comparison, absolute path, write, or measurement. The replay substring and its context error are in a called helper; that helper can also match replay inside the longer word *replayability*. The duration caller treats exact equality with a selected floor as passing.
+1. **A/B/F — A selected floor can go unenforced.** The guard ending in `return` checks compute markers, live inference, and one ARC no-LLM case, but omits other substrates for which `duration_floor_for_artifact(d)` returns a floor. The committed exp5757 artifact declares cached fixture replay, records 0.0 seconds against a 0.0001-second floor, and receives no flags from the full verifier. The warning only covers a missing floor, so it cannot expose this skipped floor.
+2. **Negation/context blindness — “blocked” is treated as “nothing ran.”** `if _is_precondition_check_only_blocked(d):` returns before the `INFERENCE_PROVENANCE_CONTRADICTION` check. The committed exp7150 artifact says its canary was blocked but records a live generation duration and declares no run; the full verifier reports no flags. Here the blocked verdict describes the outcome of a canary that ran.
+3. **Field extraction — the sole direct field read is shape sensitive.** `duration = d.get("duration_s")` followed by `if not _is_finite_number(duration):` silently skips a wrapped dict, list, or None in direct calls. The main verifier unwraps principle-annotated top-level fields first, which limits the wrapper risk there; a missing duration on a recognized no-LLM artifact can still pass without a duration finding.
+4. **C — a decorative guard term.** `and not _is_live_llm_inference(d)` is logically covered by `and not _claim_requires_live_floor`: that recognized live declaration already gives the claim a live or contradictory state. Deleting this term would not change the guard’s result; I did not run a mutation suite.
+5. **Other checks.** The function contains no free-text substring search, absolute path, write, or timing operation. Its floor comparisons use `if float(duration) < min_duration:`, so equality passes as the stated minimum implies; the zero-duration miss is caused by the earlier return.
+
+## COUNTEREXAMPLE
+From `results/experiment_7150_v628_grounding_preflight.json`:
+
+```json
+{
+  "honest_verdict": "blocked_real_qwen_canary",
+  "inference_substrate_class": "blocked_no_run",
+  "duration_s": 25.485034,
+  "canary_token_rows": [{"generation_duration_s": 0.4598615800496191}]
+}
+```
+
+The verifier reports no flags despite the recorded live generation contradicting the no-run declaration.
+
+## MISSED INPUT
+`results/experiment_5757_proposal_benchmark_scalar_bridge.json`: `inference_substrate="cached_fixture_replay_no_llm"` and `duration_s=0.0`. Its selected floor is 0.0001 seconds; the full verifier reports no flags.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Read-only probes of both committed artifacts returned clean full-verifier reports. Floor enforcement needs to follow the selected floor, and a blocked verdict needs to be reconciled with typed evidence that work ran before it can exempt the artifact.
+
+
+## adversarial_verify.py::check_sample_size
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Distributional claims with sample size below statistical threshold.`
+
+## FINDINGS
+
+1. **A / F — real silent miss.** The committed artifact results/experiment_3346_kv260_mmd_vs_cpu_sequential_gibbs_v1.json reports 512 samples per side and per-seed KS results for an n=64 comparison. Its count fields are sample_count_cpu and sample_count_kv260. `n = d.get("n_samples") or d.get("n_examples")` finds neither, so `if n is None:` returns without a sample-size flag or an “unverified” indication. An isolated evaluation of this function confirmed zero flags.
+
+2. **Field types.** `n = int(n)` silently skips a wrapped dict or list when conversion fails; zero n_samples also falls through to n_examples because of `or`. The production caller unwraps principle-annotated top-level fields before calling this function, so wrapping alone is not a demonstrated production miss. `n_spins = d.get("n_spins")` accepts only bare numeric values for the larger floor; a string such as `"64"` receives the 1,000-sample floor.
+
+3. **Pattern coverage and context.** `has_kl = "kl_divergence" in d or "kl" in d` misses the corpus field kl_divergence_vs_boltzmann. `has_ks = "ks_p_value" in d or "ks_statistic" in d` misses ks_pvalue when reported alone. `has_dist_mean = any(k.startswith("mean_") and "delta" in k for k in d)` misses delta_mean and variance estimates; its substring could also match “delta” inside an unrelated longer key. These checks inspect key presence, not metric values: a null KL value with 100 samples still produces a warning. There is no free-text scan here, so no demonstrated negation error.
+
+4. **Thresholds and claim.** `if n < min_required:` correctly passes a count exactly equal to its floor; the `>= 64` boundary applies at 64. The comment’s `At minimum, 10k samples` claim conflicts with `min_required = 1000` for smaller substrates. The implementation is narrower than its docstring because missing or unrecognized counts and metric names result in no check.
+
+5. **C / D / E / G.** No test directly names this function or its flag. The `n_spins >= 32` branch changes no result for the current corpus’s top-level numeric spin counts, which reach at most 256; its deletion is a likely suite-green mutation, though I did not run that mutation. This function has no absolute path, file write, or measurement of work.
+
+## COUNTEREXAMPLE
+`{"n_samples": 512, "n_spins": 64, "ks_pvalue": 4.463035912707121e-307}` produces no flag: ks_pvalue is not a recognized key.
+
+## MISSED INPUT
+`results/experiment_3346_kv260_mmd_vs_cpu_sequential_gibbs_v1.json` — sample_count_cpu=512, sample_count_kv260=512, and KS results under mmd_vs_cpu.per_seed.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The real artifact supplies both a sample count and a distributional test, yet the function silently skips the check because their field paths are unfamiliar. Missing or invalid evidence currently looks the same as a genuine pass. Sample-count and metric extraction need to recognize the artifact’s declared structure and report when a claim cannot be checked.
+
+
+## adversarial_verify.py::check_gate_passed_without_data
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The docstring claims to detect `acceptance_gate_passed=true but key metric fields are null/missing/0.`
+
+## FINDINGS
+1. **A passed gate can receive no check.** `if d.get("acceptance_gate_passed") is not True:` silently returns for a principle-wrapped true value. The later `if v is None:` and `elif _is_finite_number(v) and float(v) == 0.0:` also miss wrapped null and zero metric values, as well as lists. None of these cases is reported as unverified.
+2. **The metric recognizer is narrower than its claim.** `if any(s in kl for s in ("threshold", "delta", "rate", "score", "lift", "ratio")):` stands in for fields relevant to an acceptance gate. It omits validation_auroc, accuracy, and the explicitly mentioned gate token. `for k, v in d.items():` cannot detect a required field that is absent altogether. If no key matches, the function emits nothing, indistinguishable from a pass.
+3. **The same recognizer is broader than its claim.** Its substring test matches rate inside inference_substrate and ratio inside duration_s. A null inference_substrate can therefore be reported as a missing gate metric. An honestly measured zero false_positive_rate can also be flagged merely because it is zero; whether zero is bad depends on the gate criterion.
+4. **No negated free text is scanned.** This function does not read a verdict, so there is no phrase-negation trigger to identify. `float(v) == 0.0` includes exact zero, as the docstring says; there is no off-by-one comparison.
+5. **Coverage is not established.** I found no repository test that directly calls this function or checks an individual token in its tuple. No branch is demonstrably redundant from the source, and I cannot honestly claim a deletion would leave the full suite green.
+6. **No path or measurement side effect appears here.** The function writes only to the supplied flags list; it contains no absolute write target, tracked-file write, duration measurement, or recognizer chain that explicitly returns permission.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "honest_verdict": "complete: local GGUF inference completed",
-  "inference_substrate": "live_llm_inference",
-  "inference_substrate_class": "no_model_load",
-  "duration_s": 0.01
+  "acceptance_gate_passed": true,
+  "honest_verdict": "success: validation AUROC met the 0.80 target",
+  "validation_auroc": null,
+  "validation_auroc_threshold": 0.80
 }
 ```
-The function returns the 0.0001-second no-model floor. The duration and class-consistency checks emit no flag for the conflicting live-inference declaration.
+This function emits no flag: the null metric name matches none of its tokens, while the threshold is nonzero.
 
 ## MISSED INPUT
-`results/experiment_6152_typed_stochastic_constraint_ir.json`: `inference_substrate` is `jax_cpu_exact_stochastic_program` and `duration_s` is `0.0`. The function returns `None`; no duration floor tests that zero.
+`acceptance_gate_passed: true` beside `validation_auroc: null` is a concrete missed case recorded in `ops/known-issues.md`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A real live-agent substrate gets a floor calibrated for deterministic replay, and a contradictory class can lower a declared live-inference floor without a flag. The selector also leaves a checked-in zero-duration CPU artifact unfloored, though the caller warns that its substrate is unrecognized. Floor selection needs to resolve conflicting declarations and the work actually claimed before returning a minimum.
+A substring list cannot establish which measurements a particular acceptance gate requires, whether one is missing, or whether zero is a valid result. The silent return for wrapped gate values and unrecognized metric names makes an unchecked artifact look the same as a checked one.
 
 
-## adversarial_verify.py::check_substrate_declaration_shape
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-Warn when `inference_substrate` is a dict with no `value` key because it is not a declaration.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The field read is type checked before the key check; the function performs no free-text matching, numeric comparison, file write, or measurement. Its direct and full-verifier regression cases both passed. Other field shapes produce no flag, consistent with the function’s stated scope.
-
-
-## adversarial_verify.py::check_execution_venue
+## adversarial_verify.py::check_preconditions_declared
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -192,25 +211,27 @@ The field read is type checked before the key check; the function performs no fr
 SILENT_NON_FIRING
 
 ## CLAIM
-The docstring claims to “Hold a declared `execution_venue` to a closed set, and give it NO floor.”
+The docstring claims to “WARN when a compute-bound artifact lacks `preconditions_checked`.”
 
 ## FINDINGS
-1. **A — silent non-firing:** `raw_venue = d.get(EXECUTION_VENUE_FIELD)` followed by `if raw_venue is None: return` treats a present null exactly like an absent field. A declared null is neither a bare string nor a member of the closed set, yet the function emits no flag. The normal verifier path also emits no venue flag for this input.
+1. The three-name `_PRECONDITIONS_REQUIRED_SUBSTRATES` list stands in for compute-bound work but omits a committed artifact that performed live LLM inference with an exact verifier. The line `if _match_declared_substrate(raw, _PRECONDITIONS_REQUIRED_SUBSTRATES) is None:` followed by `return` emits no preconditions warning for it. This is narrower than the docstring’s compute-bound claim, even though the docstring acknowledges the three-name restriction.
+2. `if d.get("preconditions_checked") is not None:` accepts a bare `False` as a record of checked resources. A committed blocked artifact contains exactly that value. The function handles a principle-wrapped substrate through its helper; the field-shape failure here is treating a bare boolean as sufficient evidence.
+3. The focused tests cover each listed substrate and the present, absent, and noncompute branches, but neither missed case. No listed rule appears deletable while those tests remain green. This function has no direct free-text substring or negation scan, numeric threshold, hardcoded path, tracked-file write, or measurement computed before work.
 
 ## COUNTEREXAMPLE
-`{"inference_substrate": "aggregation_from_upstream_artifacts", "inference_substrate_class": "aggregation", "execution_venue": null, "duration_s": 1.0, "honest_verdict": "complete_board_audit"}` — the venue check silently passes the declared null.
+`results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json` contains `{"inference_substrate":"live_llm_inference","honest_verdict":"blocked_no_free_gpu","preconditions_checked":false}`. The function emits no warning, although `false` records none of the resources verified or unavailable.
 
 ## MISSED INPUT
-`"execution_venue": null`
+`results/experiment_2919_constraintbench_mini_direct_optimization_v1.json` declares `inference_substrate: live_llm_inference_plus_exact_verifier`, reports live local model use, and has no `preconditions_checked` field. The function emits no `PRECONDITIONS_UNDECLARED` warning.
 
 ## RECOMMENDATION
-ADD_TEST_CASE
+NEEDS_REDESIGN
 
 ## RATIONALE
-Exact set membership has no substring or negation trap, and the documented host and three boards are covered; the type and membership branches have separate tests. This function has no numeric threshold, absolute write target, tracked-state write, recognizer fallback, or measurement; the normal verifier unwraps supported principle/value fields before calling it. All nine existing venue tests pass, but none tests a present null: distinguish key absence from null and add a full-verifier regression test.
+Both inputs are committed artifacts, and direct calls produced no preconditions warning. The recognizer silently treats an omitted compute substrate like a pass, while the presence check treats `False` like a resource record. The five focused tests pass but do not exercise either case.
 
 
-## adversarial_verify.py::_artifact_run_date
+## adversarial_verify.py::check_methodology_present
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -218,29 +239,31 @@ Exact set membership has no substring or negation trap, and the documented host 
 SILENT_NON_FIRING
 
 ## CLAIM
-The function returns an artifact’s own run date, or None when its date cannot be parsed.
+`Compute-bound artifact missing methodology evidence.`
 
 ## FINDINGS
 
-1. **A/F — a real gate skip.** The committed artifact `results/experiment_10005_jev_tetris_semif_overflow_fix_check.json` has a September 22, 2026 creation timestamp, declares live LLM inference, and has neither a run date nor a substrate class. `raw = d.get("run_date")` leads to `return None`; the caller emits no missing-class flag. That outcome is indistinguishable from a pass. The helper’s return is documented, but its use in the post-cutover gate leaves a real artifact unchecked.
+1. **A/F — real missed input.** `if claim["state"] in {CLAIM_STATE_BLOCKED, CLAIM_STATE_NON_LIVE}:` exits for declared no-LLM work before checking seed, checksum, or duration. This contradicts the function’s own comment that `random_seed and reproducibility_checksum are` still required for a no-LLM measurement. The checked-in reproduction-gate artifact named below has no duration and receives no methodology flag. An unrecognized substrate with no compute marker also exits silently through the ambiguous-claim branch; this function gives no indication that it did not check methodology.
 
-2. **Field extraction.** `if isinstance(raw, dict):` and `raw = raw.get("value")` correctly handle a principle wrapper. `if not isinstance(raw, str):` silently collapses absent, malformed, list, and numeric values into the same None result. There are no other field reads in this function.
+2. **B — field lists narrower than their concepts.** The seed reads `d.get("random_seed")`, `d.get("seed")`, `d.get("random_seeds_used")`, and `d.get("seeds")` omit the corpus’s `random_seeds` field. A checked-in live experiment records three seeds under that name and is falsely warned that its seed is missing. The model-description reads `d.get("model_specs")`, `d.get("MODEL_SPECS")`, `d.get("target_model")`, and `d.get("models_tested")` likewise omit the corpus’s `models_used`.
 
-3. **Parsing boundaries.** `text[:width]` validates only a prefix. It accepts trailing garbage, including an impossible time on an otherwise valid date prefix. There is no free-text substring or negation rule here, and no numeric cutoff comparison in this function.
+3. **Field types.** Those four model reads and `has_repro = d.get("reproducibility_checksum")` accept any truthy object as evidence. `d.get("random_seed") is not None` and `d.get("seed") is not None` accept empty containers, booleans, and nonnumeric strings as seeds; the plural seed reads and `preconditions.get("seeds")` rely on truthiness without validating contents. `has_duration = _is_finite_number(d.get("duration_s"))` rejects a principle-wrapped duration when this function is called directly. The full verifier unwraps top-level principle fields first, so that last problem does **not** misclassify them on its normal file path.
 
-4. **Pattern coverage.** `("%Y-%m-%d", 10)` and `("%Y%m%d", 8)` stand in for supported run-date representations. The corpus also contains ISO timestamps; the function accepts them through prefix truncation without validating the timestamp.
+4. **Substring and context.** The shown body has no direct free-text substring test, but `if _is_deterministic_verifier(d):` delegates to a helper that treats replay anywhere in a substrate name as deterministic-verifier work. On a checked-in substrate declaring live inference with metamorphic replay, that return suppresses a missing-seed warning; disabling that helper makes the warning appear. `if _is_precondition_check_only_blocked(d):` also trusts a blocked-prefixed verdict as meaning no measurement happened, although a checked-in blocked verdict explicitly says a local fallback ran.
 
-5. **Tests and side effects.** Both named date formats and the wrapper have focused tests. Deleting `raw.strip()` left all eight focused cutover tests passing; I did not establish that the full suite would pass. This function has no absolute path, write target, or measurement.
+5. **C — double-covered rule.** For ordinary recognized QA no-LLM artifacts, the initial non-live return runs before `if _is_artifact_qa_lint_tests(d):`. That named branch is a strong candidate for deletion while its existing ordinary-case tests stay green. I did not run a full-suite deletion mutation, so full-suite survival is unproven.
+
+6. **Thresholds and side effects.** This function contains no numeric floor comparison to assess for an equality error; zero duration is treated as present and left to the duration check. It contains no baked-in absolute write path, tracked-file write, or measurement computed before work. Its visible mutation is `flags.append(`.
 
 ## COUNTEREXAMPLE
-`{"run_date": "2026-09-07T12:60:00Z"}` returns September 7 despite the invalid timestamp.
+A fragment of the checked-in Exp6329 artifact has `random_seeds: [632900, 632901, 632902]`, `MODEL_SPECS`, a reproducibility checksum, and `duration_s: 109.57251852191985`. The full verifier emits `METHODOLOGY_MISSING` for `random_seed` despite the recorded seeds.
 
 ## MISSED INPUT
-`results/experiment_10005_jev_tetris_semif_overflow_fix_check.json`: `created_at` is `2026-09-22T11:56:48Z`, `inference_substrate` is `live_llm_inference`, and both `run_date` and `inference_substrate_class` are absent. The missing-class check emits no flag.
+[experiment_4884_levelup_attempt.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4884_levelup_attempt.json): `inference_substrate` is `offline_arcade_reproduction_gate_no_llm`, the verdict is `success_g50t_levelup_banked`, and top-level `duration_s` is absent. The methodology check emits no flag.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-`return None` conflates an unparseable date with no date, and the caller treats that result as grounds to skip the cutover check. The real artifact demonstrates the silent gap; `text[:width]` separately admits malformed date values as valid.
+The early return equates no LLM invocation with no measurement, making a real missing-duration case silent. The field-name lists also warn on honest recorded seeds, while the replay exemption can hide a missing seed on a declared live substrate. These are confirmed against checked-in artifacts; the principle-wrapper concern is limited to direct calls because the full verifier normalizes top-level fields.
 

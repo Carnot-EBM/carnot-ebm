@@ -251,3 +251,4 @@ of truth, not this line.)
 | 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_verifier_scoring_only | REAL_BUG | OPEN | |
 | 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_descriptor_key_present | REAL_BUG | OPEN | |
 | 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_validated_substrate_class_floor | SILENT_NON_FIRING | OPEN | |
+| 2026-09-28 | experiment_claim_audit | experiment_7817_v679_arc_runner_qualification.json | CLAIM_OVERSTATED | OPEN | |
