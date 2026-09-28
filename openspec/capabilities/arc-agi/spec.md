@@ -3608,3 +3608,37 @@ registry SHALL remain unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7625 and SCENARIO-ARC-7625-* | `python/carnot/experiment_7625_v665_arc_supervisor_transfer.py` and `scripts/experiments/experiment_7625_v665_arc_supervisor_transfer.py` | `tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py` |
+
+## REQ-ARC-7831: Inspect new supervisor redirect outcomes without replay
+
+Exp7831 SHALL inventory outcome-bearing live trajectory-supervisor source files newer than Exp7625. It SHALL authenticate exact source bytes against producer hashes, retain the Exp7625 source set only for deduplication, and distinguish science producers from pre-gate receipts. A goal firing or a summary named supervisor_outcomes SHALL not substitute for a trajectory_supervisor redirect receipt. Flagged or disqualified producers SHALL remain visible as unqualified diagnostics and SHALL never support arm benefit.
+
+The reducer SHALL use the existing receipt classifier. It SHALL count only applied redirect rows with complete arm_outcomes and outcome fields. Shadow rows SHALL remain controls. It SHALL retain level-up resolution, actions to level-up, censoring, per-arm fired/helped counts, and unredirected stagnation. Missing outcome schema in an otherwise eligible new receipt SHALL produce a blocked verdict with an exact failed operand. No new eligible receipts SHALL produce `complete_null_no_new_eligible_receipts`; eligible receipts with zero actual firings SHALL produce `complete_null_no_firings_nothing_to_refine`. Both are terminal, valid no-change results.
+
+An arm MAY be recommended for retirement only after at least eight uncensored firings across three games with zero helped outcomes. Priority consideration MAY be recommended only after the same support and a helped-rate Wilson lower 95% bound above 0.25. These screens are observational and SHALL not change the live arm table. Exhaustion MAY produce only a written game-blind mechanism requirement.
+
+The current CLI SHALL freeze its explicit validation command names and classes before running children, reject undeclared children, use private pytest parents and unique attempt logs, seal log bytes at content-addressed paths, and cold-check them. The terminal artifact SHALL record the source inventory, null or blocked distinction, exact checks, timings, raw rows, and no model calls. It SHALL not run gameplay, the old selector panel, or a historical experiment main.
+
+### SCENARIO-ARC-7831-INVENTORY: Sources are authenticated and classified
+
+**Given** post-Exp7625 producer and raw receipt paths with exact hashes
+**When** the inventory is reduced
+**Then** duplicates, flagged sources, missing paths, and goal-only telemetry remain separate from eligible redirects.
+
+### SCENARIO-ARC-7831-OUTCOMES: Applied and shadow receipts stay separate
+
+**Given** applied, shadow, censored, and malformed synthetic receipts
+**When** the current reader reduces them
+**Then** only applied complete redirects count, and missing outcome operands block.
+
+### SCENARIO-ARC-7831-NULL: Empty inventory and zero firings remain distinct
+
+**Given** no new eligible receipts, or eligible receipts with no firings
+**When** the current CLI runs
+**Then** it emits the corresponding terminal null and recommends no arm change.
+
+### SCENARIO-ARC-7831-VALIDATION: Declared commands and sealed logs replay
+
+**Given** a frozen command manifest and completed child logs
+**When** the CLI validates a candidate or replays a later attempt
+**Then** it rejects undeclared children, missing or mutated logs, and any failed required check.

@@ -1,0 +1,172 @@
+{
+  "schema": "carnot.exp7831.validation_manifest.v1",
+  "frozen_before_implementation": true,
+  "affected_tests": [
+    "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+    "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+    "tests/python/test_arc_supervisor_refinement.py",
+    "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+  ],
+  "changed_modules": [
+    "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py"
+  ],
+  "static_paths": [
+    "scripts/experiments/experiment_7831_v680_arc_supervisor_refinement.py"
+  ],
+  "commands": [
+    {
+      "name": "worktree_imports",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7831_v680_arc_supervisor_refinement"
+      ],
+      "class": "required",
+      "scope": "changed_modules"
+    },
+    {
+      "name": "focused_pytest",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7831-attempt/fixed/focused",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py",
+        "-q"
+      ],
+      "class": "required",
+      "scope": "explicit_tests"
+    },
+    {
+      "name": "changed_module_coverage",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7831-attempt/.coverage",
+        "--include=*/experiment_7831_v680_arc_supervisor_refinement.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7831-attempt/fixed/coverage",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py",
+        "-q"
+      ],
+      "class": "required",
+      "scope": "explicit_tests_and_changed_modules"
+    },
+    {
+      "name": "changed_module_coverage_report",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7831-attempt/.coverage",
+        "--include=*/experiment_7831_v680_arc_supervisor_refinement.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "class": "required",
+      "scope": "changed_modules"
+    },
+    {
+      "name": "ruff_check",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py",
+        "scripts/experiments/experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "class": "required",
+      "scope": "changed_files"
+    },
+    {
+      "name": "ruff_format",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py",
+        "scripts/experiments/experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "class": "required",
+      "scope": "changed_files"
+    },
+    {
+      "name": "changed_module_mypy",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py"
+      ],
+      "class": "required",
+      "scope": "changed_modules"
+    },
+    {
+      "name": "scoped_spec_coverage",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "class": "required",
+      "scope": "explicit_tests"
+    },
+    {
+      "name": "all_python_tests",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "class": "required",
+      "scope": "user_mandated_full_suite"
+    },
+    {
+      "name": "repository_health_180s",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "class": "diagnostic",
+      "scope": "historical_repository_health"
+    }
+  ]
+}

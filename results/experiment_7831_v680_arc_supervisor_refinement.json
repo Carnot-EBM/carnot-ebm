@@ -1,0 +1,572 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "decision_benefit": null,
+    "efficiency": null,
+    "probability_quality": null,
+    "readiness": 0,
+    "retention": null,
+    "validity": false
+  },
+  "arc_generalization_activity": "supervisor_refinement_from_outcome_bearing_redirect_ledger",
+  "arm_statistics": {},
+  "claim_scope": "observational_redirect_outcome_ledger_no_solve_or_causal_claim",
+  "duration_s": 29.498556354024913,
+  "experiment_id": 7831,
+  "field_principles": {
+    "MODEL_SPECS": "Preserve the stated evidence boundary.",
+    "acceptance_gate_results": "Preserve the stated evidence boundary.",
+    "arc_generalization_activity": "Preserve the stated evidence boundary.",
+    "arm_statistics": "Preserve the stated evidence boundary.",
+    "claim_scope": "Preserve the stated evidence boundary.",
+    "duration_s": "Preserve the stated evidence boundary.",
+    "experiment_id": "Preserve the stated evidence boundary.",
+    "field_principles": "Preserve the stated evidence boundary.",
+    "flagged_adversarial": "Preserve the stated evidence boundary.",
+    "gate_check_summary": "Preserve the stated evidence boundary.",
+    "general_mechanism_requirement": "Preserve the stated evidence boundary.",
+    "honest_verdict": "Preserve the stated evidence boundary.",
+    "inference_substrate": "Preserve the stated evidence boundary.",
+    "inference_substrate_class": "Preserve the stated evidence boundary.",
+    "milestone": "Preserve the stated evidence boundary.",
+    "model_invocation_counts": "Preserve the stated evidence boundary.",
+    "model_specs": "Preserve the stated evidence boundary.",
+    "new_source_count": "Preserve the stated evidence boundary.",
+    "observed_child_commands": "Preserve the stated evidence boundary.",
+    "per_game_results": "Preserve the stated evidence boundary.",
+    "phase_spans": "Preserve the stated evidence boundary.",
+    "planned_inference_substrate_class": "Preserve the stated evidence boundary.",
+    "preconditions_checked": "Preserve the stated evidence boundary.",
+    "production_defaults_changed": "Preserve the stated evidence boundary.",
+    "random_seed": "Preserve the stated evidence boundary.",
+    "recommendation_rows": "Preserve the stated evidence boundary.",
+    "repository_health": "Preserve the stated evidence boundary.",
+    "reproducibility_checksum": "Preserve the stated evidence boundary.",
+    "rows": "Preserve the stated evidence boundary.",
+    "run_date": "Preserve the stated evidence boundary.",
+    "sample_size_budget": "Preserve the stated evidence boundary.",
+    "schema": "Preserve the stated evidence boundary.",
+    "schema_missing_rows": "Preserve the stated evidence boundary.",
+    "shadow_control_count": "Preserve the stated evidence boundary.",
+    "solve_claim": "Preserve the stated evidence boundary.",
+    "source_artifact_hashes": "Preserve the stated evidence boundary.",
+    "source_inventory": "Preserve the stated evidence boundary.",
+    "stagnations_unredirected": "Preserve the stated evidence boundary.",
+    "supervisor_inventory_ready_score": "Preserve the stated evidence boundary.",
+    "validation_command_manifest_path": "Preserve the stated evidence boundary.",
+    "validation_errors": "Preserve the stated evidence boundary.",
+    "validation_receipts": "Preserve the stated evidence boundary.",
+    "verdict_class": "Preserve the stated evidence boundary.",
+    "verifier_is_oracle": "Preserve the stated evidence boundary."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [],
+  "general_mechanism_requirement": null,
+  "honest_verdict": "complete_disqualified_required_validation",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "milestone": "2026.09.680",
+  "model_invocation_counts": {
+    "calls": 0,
+    "file_hashes": [],
+    "tokens": 0
+  },
+  "model_specs": [],
+  "new_source_count": 0,
+  "observed_child_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7831_v680_arc_supervisor_refinement"
+      ],
+      "class": "required",
+      "name": "worktree_imports"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7831-attempt/fixed/focused",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py",
+        "-q"
+      ],
+      "class": "required",
+      "name": "focused_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7831-attempt/.coverage",
+        "--include=*/experiment_7831_v680_arc_supervisor_refinement.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7831-attempt/fixed/coverage",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py",
+        "-q"
+      ],
+      "class": "required",
+      "name": "changed_module_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7831-attempt/.coverage",
+        "--include=*/experiment_7831_v680_arc_supervisor_refinement.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "class": "required",
+      "name": "changed_module_coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py",
+        "scripts/experiments/experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "class": "required",
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py",
+        "scripts/experiments/experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "class": "required",
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py"
+      ],
+      "class": "required",
+      "name": "changed_module_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "class": "required",
+      "name": "scoped_spec_coverage"
+    }
+  ],
+  "per_game_results": {},
+  "phase_spans": [
+    {
+      "duration_s": 29.022926878067665,
+      "phase": "validation"
+    },
+    {
+      "duration_s": 0.47562947595724836,
+      "phase": "other_owned_work"
+    }
+  ],
+  "planned_inference_substrate_class": "aggregation",
+  "preconditions_checked": {
+    "explicit_paths": [
+      "results/experiment_7722_v672_arc_evidence_recovery.json",
+      "results/experiment_7817_v679_arc_runner_qualification.json",
+      "results/experiment_7818_v679_arc_organic_measurement.json"
+    ],
+    "manifest_sha256": "sha256:98f5a96572bb3a382a6e1b587e76278aed973662cf6eaf6e1fd8cdef4c882108",
+    "models_required": false
+  },
+  "production_defaults_changed": false,
+  "random_seed": 7831,
+  "recommendation_rows": [],
+  "repository_health": {
+    "historical_full_suite_obligations_open": true,
+    "status": "degraded_open"
+  },
+  "reproducibility_checksum": "sha256:5c238c0759ddefa2e2f59047476e94a871c8ccd9573984698e5e2802f4baa235",
+  "rows": [
+    {
+      "check": "new_redirect_receipt_inventory",
+      "disposition": "disqualified",
+      "duplicate_receipt_count": 0,
+      "eligible_receipt_count": 0,
+      "source_path": "results/experiment_7722_v672_arc_evidence_recovery.json",
+      "source_sha256": "sha256:da0062982fdbda51fa0be462a3a0eabdee386c28708ce242df50f2042ad6cba6",
+      "unit": "results/experiment_7722_v672_arc_evidence_recovery.json"
+    },
+    {
+      "check": "new_redirect_receipt_inventory",
+      "disposition": "unqualified_no_redirect_schema",
+      "duplicate_receipt_count": 0,
+      "eligible_receipt_count": 0,
+      "source_path": "results/experiment_7817_v679_arc_runner_qualification.json",
+      "source_sha256": "sha256:62e8825f50a6466128948eac4c4513986329646b2e0adcda9da1da1435dfe100",
+      "unit": "results/experiment_7817_v679_arc_runner_qualification.json"
+    },
+    {
+      "check": "new_redirect_receipt_inventory",
+      "disposition": "disqualified",
+      "duplicate_receipt_count": 0,
+      "eligible_receipt_count": 0,
+      "source_path": "results/raw/experiment_7818_v679_arc_organic_measurement/raw_rows.json",
+      "source_sha256": "sha256:b06589669d311b76d5b4a0ed1b8f08965fd45e6770fa97fdb822d0c4beac69d8",
+      "unit": "results/experiment_7818_v679_arc_organic_measurement.json"
+    }
+  ],
+  "run_date": "20260928",
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 3,
+    "eligible": 0,
+    "excluded": 3,
+    "independent_n": 0,
+    "intended": 3,
+    "started": 3
+  },
+  "schema": "carnot.experiment_7831_v680_arc_supervisor_refinement.v1",
+  "schema_missing_rows": [],
+  "shadow_control_count": 0,
+  "solve_claim": false,
+  "source_artifact_hashes": [
+    {
+      "date": "20260926",
+      "eligibility": "disqualified",
+      "path": "results/experiment_7722_v672_arc_evidence_recovery.json",
+      "role": "science_producer",
+      "sha256": "sha256:da0062982fdbda51fa0be462a3a0eabdee386c28708ce242df50f2042ad6cba6"
+    },
+    {
+      "date": "20260928",
+      "eligibility": "unqualified_no_redirect_schema",
+      "path": "results/experiment_7817_v679_arc_runner_qualification.json",
+      "role": "runner_qualification",
+      "sha256": "sha256:62e8825f50a6466128948eac4c4513986329646b2e0adcda9da1da1435dfe100"
+    },
+    {
+      "date": "20260928",
+      "eligibility": "disqualified",
+      "path": "results/experiment_7818_v679_arc_organic_measurement.json",
+      "role": "science_producer",
+      "sha256": "sha256:36cda87dd8a3efde86b5fa508b5e6b6037d4356d0fdd5f7ddb71780a7497ab0c"
+    },
+    {
+      "date": "20260928",
+      "eligibility": "disqualified",
+      "path": "results/raw/experiment_7818_v679_arc_organic_measurement/raw_rows.json",
+      "role": "raw_receipt",
+      "sha256": "sha256:b06589669d311b76d5b4a0ed1b8f08965fd45e6770fa97fdb822d0c4beac69d8"
+    },
+    {
+      "date": "20260924",
+      "eligibility": "not_current_benefit",
+      "path": "results/experiment_7625_v665_arc_supervisor_transfer.json",
+      "role": "historical_dedup_baseline",
+      "sha256": "sha256:b3a28ab5bb97766b18cc6adf6b29d0f5c9f5b2357cc812e50b56bdc2ac176f25"
+    }
+  ],
+  "source_inventory": [
+    {
+      "disposition": "disqualified",
+      "producer": "results/experiment_7722_v672_arc_evidence_recovery.json",
+      "producer_sha256": "sha256:da0062982fdbda51fa0be462a3a0eabdee386c28708ce242df50f2042ad6cba6",
+      "raw": null,
+      "raw_organic_selector_comparison": null,
+      "raw_sha256": "sha256:da0062982fdbda51fa0be462a3a0eabdee386c28708ce242df50f2042ad6cba6",
+      "role": "science_producer",
+      "run_date": "20260926"
+    },
+    {
+      "disposition": "unqualified_no_redirect_schema",
+      "duplicate_rows": 0,
+      "eligible_rows": 0,
+      "producer": "results/experiment_7817_v679_arc_runner_qualification.json",
+      "producer_sha256": "sha256:62e8825f50a6466128948eac4c4513986329646b2e0adcda9da1da1435dfe100",
+      "raw": null,
+      "raw_sha256": "sha256:62e8825f50a6466128948eac4c4513986329646b2e0adcda9da1da1435dfe100",
+      "role": "runner_qualification",
+      "run_date": "20260928"
+    },
+    {
+      "disposition": "disqualified",
+      "producer": "results/experiment_7818_v679_arc_organic_measurement.json",
+      "producer_sha256": "sha256:36cda87dd8a3efde86b5fa508b5e6b6037d4356d0fdd5f7ddb71780a7497ab0c",
+      "raw": "results/raw/experiment_7818_v679_arc_organic_measurement/raw_rows.json",
+      "raw_organic_selector_comparison": {
+        "complete_pairs": true,
+        "independent_n": 8,
+        "lost_baseline_winning_seed": true,
+        "organic_benefit_score": 0,
+        "shared_win_action_regression": 0.0036801605888256983,
+        "tests": {
+          "organic_vs_off_charged": {
+            "lower95": -0.6559973735205032,
+            "mean_difference": -0.1955191228655847,
+            "p_holm": 1.0,
+            "p_one_sided": 1.0,
+            "sign_assignments": 256,
+            "upper95": 0.26495912778933384
+          },
+          "organic_vs_off_uncharged": {
+            "lower95": -0.7207618189025322,
+            "mean_difference": -0.21475327160154237,
+            "p_holm": 1.0,
+            "p_one_sided": 1.0,
+            "sign_assignments": 256,
+            "upper95": 0.29125527569944754
+          },
+          "organic_vs_total_charged": {
+            "lower95": -0.03083090096254642,
+            "mean_difference": 0.022586740631902136,
+            "p_holm": 1.0,
+            "p_one_sided": 0.5,
+            "sign_assignments": 256,
+            "upper95": 0.0760043822263507
+          },
+          "organic_vs_total_uncharged": {
+            "lower95": -0.033548453525773805,
+            "mean_difference": 0.024577621630603515,
+            "p_holm": 1.0,
+            "p_one_sided": 0.5,
+            "sign_assignments": 256,
+            "upper95": 0.08270369678698083
+          }
+        }
+      },
+      "raw_sha256": "sha256:b06589669d311b76d5b4a0ed1b8f08965fd45e6770fa97fdb822d0c4beac69d8",
+      "role": "science_producer",
+      "run_date": "20260928"
+    }
+  ],
+  "stagnations_unredirected": 0,
+  "supervisor_inventory_ready_score": 0,
+  "validation_command_manifest_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/validation_command_manifest.json",
+  "validation_errors": [
+    "failed_required:all_python_tests"
+  ],
+  "validation_receipts": [
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7831_v680_arc_supervisor_refinement"
+      ],
+      "duration_s": 0.5016478130128235,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/3a2ecff3c00e85ba0e28cb14e97c2e2be6f38895253a15dbccf61272d9733e02.log",
+      "log_sha256": "sha256:3a2ecff3c00e85ba0e28cb14e97c2e2be6f38895253a15dbccf61272d9733e02",
+      "name": "worktree_imports"
+    },
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7831-attempt/fixed/focused",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py",
+        "-q"
+      ],
+      "duration_s": 10.50440603896277,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/caf9ecc4c5d54f19ca8d094e77bc94d51bc849015081424600e246fcc1a8c533.log",
+      "log_sha256": "sha256:caf9ecc4c5d54f19ca8d094e77bc94d51bc849015081424600e246fcc1a8c533",
+      "name": "focused_pytest"
+    },
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7831-attempt/.coverage",
+        "--include=*/experiment_7831_v680_arc_supervisor_refinement.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7831-attempt/fixed/coverage",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py",
+        "-q"
+      ],
+      "duration_s": 15.50698518101126,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/65bffbd79498bb7434704485cbf3fa8f70b95980eb2c0e8b4b47327164a2fa44.log",
+      "log_sha256": "sha256:65bffbd79498bb7434704485cbf3fa8f70b95980eb2c0e8b4b47327164a2fa44",
+      "name": "changed_module_coverage"
+    },
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7831-attempt/.coverage",
+        "--include=*/experiment_7831_v680_arc_supervisor_refinement.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.5020279760356061,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/80678cea79a254b317e71cdf4cc17dadf2d33e0c0c7a2e37c086f9e5962c4621.log",
+      "log_sha256": "sha256:80678cea79a254b317e71cdf4cc17dadf2d33e0c0c7a2e37c086f9e5962c4621",
+      "name": "changed_module_coverage_report"
+    },
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py",
+        "scripts/experiments/experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "duration_s": 0.5014432480093092,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check"
+    },
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py",
+        "scripts/experiments/experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "duration_s": 0.5022057500318624,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209.log",
+      "log_sha256": "sha256:ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+      "name": "ruff_format"
+    },
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7831_v680_arc_supervisor_refinement.py"
+      ],
+      "duration_s": 0.5023861179943196,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy"
+    },
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7831_v680_arc_supervisor_refinement.py",
+        "tests/python/test_experiment_7625_v665_arc_supervisor_transfer.py",
+        "tests/python/test_arc_supervisor_refinement.py",
+        "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+      ],
+      "duration_s": 0.5018247530097142,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage"
+    },
+    {
+      "class": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "duration_s": 900.4666908450308,
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/9f862e7e26df67e3ca6f868490e281f7d854c3116e7fb837fc4c24346b56bca0.log",
+      "log_sha256": "sha256:9f862e7e26df67e3ca6f868490e281f7d854c3116e7fb837fc4c24346b56bca0",
+      "name": "all_python_tests",
+      "reused_from_prior_attempt": true
+    },
+    {
+      "class": "diagnostic",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "duration_s": 180.203273310035,
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_7831_v680_arc_supervisor_refinement/sealed_logs/e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a.log",
+      "log_sha256": "sha256:e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a",
+      "name": "repository_health_180s",
+      "reused_from_prior_attempt": true
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}
