@@ -1,0 +1,182 @@
+{
+  "affected_source_closure": [
+    "python/carnot/verify/source_projection.py",
+    "scripts/experiments/experiment_7838_v681_source_boundary.py",
+    "python/carnot/verify/evidence_views.py",
+    "python/carnot/verify/source_alignment.py",
+    "python/carnot/reporting/current_work_receipt.py",
+    "python/carnot/reporting/experiment_7303_validation_scope.py"
+  ],
+  "affected_tests": [
+    "tests/python/test_source_projection_7838.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib,json,pathlib; names=[\"carnot.verify.source_projection\",\"carnot.verify.evidence_views\",\"carnot.verify.source_alignment\",\"carnot.reporting.current_work_receipt\",\"carnot.reporting.experiment_7303_validation_scope\"]; resolved={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({\"resolved_imports\":resolved},sort_keys=True)); assert all(pathlib.Path(p).is_relative_to(pathlib.Path.cwd()) for p in resolved.values())"
+      ],
+      "classification": "required",
+      "name": "worktree_imports",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_source_projection_7838.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7838_v681_source_boundary/attempts/current/unit.coverage",
+        "--source=carnot.verify.source_projection",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_source_projection_7838.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "changed_coverage",
+      "timeout_s": 150
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/source_projection.py",
+        "scripts/experiments/experiment_7838_v681_source_boundary.py",
+        "tests/python/test_source_projection_7838.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/source_projection.py",
+        "scripts/experiments/experiment_7838_v681_source_boundary.py",
+        "tests/python/test_source_projection_7838.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/verify/source_projection.py",
+        "scripts/experiments/experiment_7838_v681_source_boundary.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_source_projection_7838.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7838_v681_source_boundary.py",
+        "--fixture-public",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7838_v681_source_boundary/fixture_public.jsonl",
+        "--fixture-output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7838_v681_source_boundary/attempts/current/fixture_features.jsonl"
+      ],
+      "classification": "required",
+      "name": "cli_e2e",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.verify.source_projection",
+        "replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7838_v681_source_boundary/attempts/current/public.jsonl",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7838_v681_source_boundary/attempts/current/features.jsonl"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7838_v681_source_boundary/attempts/current/candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7838_v681_source_boundary/attempts/current/candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_rows",
+      "timeout_s": 60
+    }
+  ],
+  "inapplicable_e2e": [
+    {
+      "id": "E2E-001-through-004",
+      "reason": "No training or cross-language binding is changed."
+    },
+    {
+      "id": "E2E-005-through-008",
+      "reason": "No package repair, hardware, or learning service is changed."
+    }
+  ],
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "tests/python",
+      "-q"
+    ],
+    "classification": "diagnostic",
+    "name": "repository_health_180s",
+    "timeout_s": 180
+  },
+  "schema": "carnot.exp7838.validation.v1",
+  "task_id": "exp7838-source-boundary"
+}

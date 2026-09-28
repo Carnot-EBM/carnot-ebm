@@ -1,5 +1,43 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7838: Qualify an independent public source projection
+
+Exp7838 SHALL authenticate the qualified Exp7810 science artifact, its canonical
+manifest, every public and evaluator role shard, and all 640 family joins before
+computing. Missing or disqualified external evidence SHALL produce a complete
+blocked verdict with exact failed operands. Exp7824 stays disqualified and is
+never a source of qualified features or orchestration. The public projection
+SHALL contain original source and answer bytes, complete sentence and window
+offsets, and 132 dimensional features from unnumbered libraries. Family IDs
+join records but do not enter feature tensors. Roles, labels, confidence,
+generator identity, annotation spans and unknown sentinels stay in a separate
+evaluator sidecar. All families remain historically exposed.
+
+### SCENARIO-REPORT-7838-ISOLATION
+
+Given a public row and arbitrary changes to its evaluator metadata, a fresh
+extractor receiving only public files returns identical feature bytes. Malformed
+offsets, extra public fields, duplicate IDs and dropped families fail closed.
+View A uses singles and adjacent triples; view B uses singles and adjacent
+pairs. Both retain the 128 window and sixteen answer unit limits.
+
+### SCENARIO-REPORT-7838-MASK
+
+Unknown labels contribute exactly zero supervised loss and gradient, regardless
+of sentinel value. Known label changes affect the loss or gradient; changing the
+known mask changes supervision.
+
+### SCENARIO-REPORT-7838-TERMINAL
+
+The CLI SHALL freeze exact affected source and test paths and required command
+argv before validation. It SHALL execute a real private-root CLI, reach 100
+percent statement coverage for new module and CLI code, preserve each required
+exit and sealed log, and cold-replay public, sidecar, role, feature, and hash
+bytes. A failed required check disqualifies and sets readiness to zero. A
+separate 180 second repository-health diagnostic never erases Exp7824 failure.
+Only current passing checks can yield circular-positive boundary readiness;
+probability quality, decision benefit, retention and efficiency remain null.
+
 ## REQ-REPORT-7789: Independently audit V677 decision and learning rows
 
 Exp7789 SHALL resolve the exact V677 Exp7786 and Exp7788 producer paths and
