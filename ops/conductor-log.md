@@ -18901,3 +18901,5 @@ code |
 | 2026-09-28 12:16 UTC | Train calibrated energy heads after replay and rec | GATE_BLOCK | gate-unsat(final): 2 of 7 gate(s) failed; first failure: exp7811-training-runtime.training_runtime_ready_score (actual=0 == expected=1) |
 | 2026-09-28 12:18 UTC | Measure source-grounded probabilities and typed de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7812-view-energy-fit, exp7812-view-energy-fit, exp7812-view-energy-fit) |
 | 2026-09-28 12:54 UTC | Validate evidence interventions through an explici | OK | 97 passed, 1 warning in 7.74s |
+| 2026-09-28 12:56 UTC | Measure bounded Qwen source sensitivity with match | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7814-counter-evidence-protocol.counter_evidence_ready_score (actual=0 == expected=1) |
+| 2026-09-28 12:58 UTC | Measure retained constraint learning and worst-win | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7812-view-energy-fit, exp7812-view-energy-fit, exp7812-view-energy-fit) |
