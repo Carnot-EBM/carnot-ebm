@@ -84151,3 +84151,46 @@ consistency before atomic publication. The full Python suite runs as a
 separate repository-health diagnostic. Its real exit and log stay visible.
 Failed required current-task checks disqualify the current artifact and set
 readiness to zero.
+
+## REQ-REPORT-7807: Independently audit current V678 evidence
+
+Exp7807 SHALL inspect the exact declared Exp7799, Exp7801, and Exp7802 science
+deliverables before reducing claims. A conductor pre-gate receipt SHALL be
+identified separately and SHALL never stand in for science. Missing or
+disqualified producers SHALL retain path, byte hash when present, failed field,
+operator, expected value, and observed value in the terminal record. A missing
+external producer SHALL yield `complete_blocked_required_v678_evidence`, with
+readiness zero and unmeasured benefit gates null. Prior artifacts SHALL not
+replace current producers.
+
+Available qualified science SHALL be reduced from raw examples, exact source
+and answer bytes, annotation joins, family roles, and frozen parameters.
+Predictions SHALL precede labels. Costs, Brier scores, fallback counts, paired
+intervals, and Holm corrections SHALL be recomputed by family; seeds and views
+SHALL not increase independent N. Delayed feedback SHALL be ordered by arrival
+and commit clocks, with one opening per admission family, arm-local shuffles,
+and restart preservation of queued commits. Source removal SHALL retain the
+original answer and SHALL not inherit the intact-source label.
+
+### SCENARIO-REPORT-7807-CUSTODY
+
+Absent Exp7799 and Exp7802 producers and an Exp7801 pre-gate receipt yield
+three distinct blocked branch rows. A forged science headline, wrong milestone,
+missing raw file, or failed gate remains disqualified or blocked with the exact
+operand. Authentic historical fixture bytes may test the reader but cannot
+qualify the current milestone.
+
+### SCENARIO-REPORT-7807-MUTATIONS
+
+The same primitive reader rejects leaked label or confidence features, copied
+self-labels, seed-as-sample intervals, removed unfavorable families, altered
+predictions, and future feedback. A fixture success is circular evidence only.
+
+### SCENARIO-REPORT-7807-TERMINAL
+
+The task entrypoint SHALL freeze explicit affected tests and validation argv,
+run complete changed-code statement coverage and scoped checks, execute the
+real CLI, cold replay the candidate in a fresh process, and run adversarial and
+strict row readers. Each child exit and log hash SHALL be retained. Failed
+required checks SHALL disqualify the terminal artifact and zero readiness.
+The full Python suite SHALL run once as a separate repository-health check.
