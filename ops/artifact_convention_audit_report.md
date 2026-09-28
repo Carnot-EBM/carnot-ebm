@@ -12,7 +12,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 | CHECKABLE | 7 |
 | CANNOT_DETERMINE | 1 |
 
-## experiment_7812_view_energy_fit.json
+## experiment_7825_v680_training_runtime.json
 
 **CHECKABLE**
 
@@ -20,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked from running at the conductor pre-gate because upstream qualification checks in exp7811-training-runtime failed.
+The training and online runtime checks passed on six public fixture families; the artifact claims no natural or held-out benefit.
 
 ## WHAT IS MISSING
 nothing
@@ -28,7 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7814_v679_counter_evidence_protocol.json
+## experiment_7826_view_energy_fit.json
 
 **CHECKABLE**
 
@@ -36,7 +36,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was disqualified from acceptance due to required validation failures (`complete_disqualified_required_validation`), specifically failing coverage combine and report steps.
+The experiment was blocked prior to execution because upstream experiment `exp7824-source-feature-isolation` failed two pre-execution gate requirements (`source_isolation_ready_score` was 0 instead of 1, and `verdict_class` was `disqualified`).
 
 ## WHAT IS MISSING
 nothing
@@ -44,23 +44,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7815_qwen_counter_evidence.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked prior to execution because 2 of 3 upstream gate checks failed on experiment 7814.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7817_v679_arc_runner_qualification.json
+## experiment_7828_v680_counter_evidence_protocol.json
 
 **CANNOT_DETERMINE**
 
@@ -68,31 +52,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The circular positive runner qualified the readiness gate, while claiming no benefit.
+The fixture completed but was disqualified by required validation, with no claim of generalization or benefit.
 
 ## WHAT IS MISSING
-The artifact cuts off inside the second `probe_rows` entry. The remaining per-probe results needed to check `organic_runner_ready_score` and `acceptance_gate_results.readiness` are not visible. `gate_check_summary` is present and empty, but `honest_verdict` does not say the task was blocked.
+The supplied JSON cuts off inside `preconditions_checked`. The visible `gate_check_summary` records only a passing `worktree_imports.exit_code`; any later `validation_receipts` or failed check and observed value are unavailable.
 
 ## THE CHECK A READER CANNOT DO
-Did the results for all six scored probes support the reported readiness gate?
+Which required validation failed, and what value did it report?
 
-## experiment_7818_v679_arc_organic_measurement.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was disqualified due to failed required validation checks (`coverage_report` and `strict_row_lint`), with no positive comparative benefit claimed (`organic_benefit_score`: 0).
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7820_v679_hardware_evidence.json
+## experiment_7829_qwen_counter_evidence.json
 
 **CHECKABLE**
 
@@ -108,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7821_v679_independent_evidence_audit.json
+## experiment_7831_v680_arc_supervisor_refinement.json
 
 **CHECKABLE**
 
@@ -116,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The evaluation is blocked due to missing required upstream V679 science evidence artifacts and failed upstream counter-evidence checks.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -124,7 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7822_v679_capstone.json
+## experiment_7834_v680_hardware_evidence.json
 
 **CHECKABLE**
 
@@ -132,10 +100,42 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment is blocked on missing or disqualified upstream evidence with zero readiness (honest_verdict: "complete_blocked_required_v679_evidence", capstone_complete_score: 0).
+The artifact disqualifies the run and defers acquisition because service evidence is missing and a required coverage check failed.
 
 ## WHAT IS MISSING
 nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7835_v680_independent_evidence_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The independent evidence audit is disqualified due to required validation failures and missing or disqualified upstream experiment artifacts.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7836_v680_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The capstone is disqualified because required validation and upstream evidence checks failed.
+
+## WHAT IS MISSING
+nothing — `gate_check_summary` and `preconditions_checked.failed_operands` name the failed checks and give their expected and observed values.
 
 ## THE CHECK A READER CANNOT DO
 none

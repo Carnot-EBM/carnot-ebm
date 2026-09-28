@@ -16,9 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR:** No recent ARC solve artifacts were supplied, so there is no demonstrated self-discovery advance to credit.
+**TL;DR:** No recent ARC solve artifacts were supplied, so there is no solve to credit as self-discovery or flag as outer-loop work.
 
-**Per-artifact verdicts:** None. The last-7-day artifact list is empty.
+**Per-artifact verdicts:** None (0 artifacts in the last 7 days).
 
-**Pattern watch:** The pre-pass confirms that all 97 solver-like modules are reachable from a live entrypoint. Reachability alone does not establish that the live agent discovered a solve through its own attempts; there is no recent artifact here to assess for outer-loop solving.
+**Pattern watch:** The reachability check passed for 97 modules, but reachability does not show that the live agent discovered a hidden-game solution through its own attempts. There is no recent artifact here to assess for outer-loop drift.
 

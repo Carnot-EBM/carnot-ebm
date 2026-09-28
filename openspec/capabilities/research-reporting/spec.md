@@ -85057,3 +85057,21 @@ cannot rewrite an earlier sealed log, and byte mutation fails cold replay.
 The publication reader remains G1 through G4; exposed source families never
 clear fresh generalization. Each mechanism decision names a falsifiable
 trigger and retires only an exactly repeated listed scope.
+## REQ-REPORT-7851: V681 planning contract
+
+The V681 design and staged YAML SHALL describe exactly fourteen ordered tasks,
+Exp7837 through Exp7850, across four phases for milestone 2026.09.681.
+Each task SHALL declare its deliverable, actual substrate, model list, explicit
+gate operands, complete prior-failure entries, progress cadence and bounded
+file-writing steps. The literal task table and embedded JSON SHALL equal the
+YAML on IDs, titles, phases, deliverables, models, substrate classes and gates.
+The planning record SHALL preserve V680 evidence, record literature before
+design, include calibrated decisions and continuous learning, and satisfy the
+ARC generalization floor. Active roadmap and conductor bytes SHALL not change.
+
+### SCENARIO-REPORT-7851: Reject a mismatched staged plan
+
+Given the V681 pair, unchanged schema, prior-failure, exclusion, gate, harness,
+ARC and priority readers accept it. A private reordered, shortened, stale,
+wrong-model or misspelled-gate variant fails contract validation. Planning
+readiness does not establish any experiment's scientific result.

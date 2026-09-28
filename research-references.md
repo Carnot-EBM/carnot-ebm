@@ -48139,3 +48139,96 @@ organic-versus-off score delta of about -0.196. This is no qualified benefit,
 and changing its reporting would not make the unchanged selector worth rerunning.
 The September 28 oracle-distinct corrigendum remains binding. All 640 source
 families are exposed development data, even when withheld from a new fit.
+## V681 planning review — 2026-09-28 (recorded before design)
+
+This review precedes the V681 experiment design. Sources were searched again;
+rechecked papers below are not presented as newly published discoveries.
+Primary papers support method claims. Indexes support discovery only.
+
+### Methods selected for bounded tests
+
+- [The Illusion of Progress: Re-evaluating Hallucination Detection in LLMs](https://arxiv.org/html/2508.08285v2),
+  August 2025, revised August 13. Read the evaluation and length-control sections.
+  Length can compete with complex detectors when labels or metrics reward
+  lexical overlap. Add a fitted length-only baseline and a within-length-stratum
+  source-permutation test. Retain independent human source annotations; do not
+  replace them with ROUGE or the evaluated generator's own judgments.
+- [Hallucination Span Detection with Input-Side Evidence Alignment](https://arxiv.org/html/2608.15804v1),
+  August 16, 2026. Read the task and method. Detection and input alignment are
+  distinct outputs. Keep sentence-label scoring separate from witness-removal
+  sensitivity; unannotated source edits have no assumed correctness label.
+  Carnot's bounded Qwen intervention is an adaptation, not a reproduction of
+  the paper's masked-token encoder.
+- [Capacity-Constrained Online Convex Optimization with Delayed Feedback](https://arxiv.org/html/2606.11711v1),
+  June 10, 2026. Read the capacity and scheduling setup. Test pending-label
+  capacity explicitly, with equal feedback budgets and recorded admission
+  probabilities. A full pending queue may lose feedback; it must not receive
+  labels retrospectively. Predicate-bank learning is not convex OCO, so no
+  regret bound transfers.
+- [Constrained Online Learning with Noisy Constraint Values](https://arxiv.org/abs/2609.06921),
+  September 7, revised September 13, 2026. Rechecked the distinction between
+  cumulative signed budget and worst-window overspend. Retain burst-error
+  diagnostics in delayed learning; empirical classification feedback does not
+  establish the paper's unbiased-noise assumptions.
+- [Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning](https://arxiv.org/html/2605.18871v1),
+  May 15, 2026. Rechecked shortcut and abstention sections. Compare ensemble
+  disagreement with calibrated confidence and random abstention at matched
+  coverage. A repeated-seed small head is not its heterogeneous adapter system.
+- [Cross-Block Conditioning in Deep Boltzmann Machines for Statistical Data Fusion](https://arxiv.org/abs/2609.14934),
+  September 14, 2026. Rechecked from EBT's citation list. Use only observed
+  local labels in loss; unknown placeholders must change neither loss nor
+  gradient. This tests an existing objective, not a new DBM architecture.
+
+### Required topic coverage and deferred work
+
+| Area | Primary source checked | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), 2025–2026; distributional EBM above | Small normalized decision energies remain appropriate. Compatibility and likelihood are not semantic proofs. |
+| Neural constraint satisfaction | [HardNet++](https://arxiv.org/abs/2604.19669), April 2026; [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), July 2026 | Abstracts checked. Keep hardness and constraint validity separate. No reopening of the retired projection/repair stack. |
+| Ising applications in ML | [Pipelined p-computer](https://arxiv.org/abs/2607.21077), July 2026; [energy and reconstruction](https://arxiv.org/abs/2608.14186), August 2026 | Coupling traffic and complementary signals are leads. Tabular anomaly results do not validate text fidelity. |
+| Hallucination detection | Length-control and input-alignment papers above; [CoEV](https://arxiv.org/abs/2606.18609), June 2026 | Test shortcuts and source interventions without circular relabeling. |
+| KAN | [Ultrafast On-Chip Online Learning via Spline Locality](https://arxiv.org/abs/2602.02056), February, revised June 2026; [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026 | Count sparse update bytes in the hardware path; no new importance-anchor sweep or borrowed FPGA speed claim. |
+| Energy-guided generation | [Primal-Dual Guided Decoding for Constrained Discrete Diffusion](https://arxiv.org/abs/2605.09749), May 2026 | Adaptive constraints remain a lead. No direct transfer to autoregressive GGUF or generator weight changes. |
+| Hardware sampling | Pipelined p-computer above; [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Z1T uses sparse chip/digital partitioning. Include transfer and host work; its efficiency estimates are not local measurements. |
+| Continual learning | Delayed-feedback and noisy-constraint papers above; [Memoir](https://arxiv.org/abs/2607.20792), July 2026 | Pin state during each query, release labels on schedule, test restart and retention. |
+
+### Secondary-source receipts
+
+- **OpenReview:** searched NeurIPS/ICML/ICLR EBM submissions. The direct
+  [HardNet forum](https://openreview.net/forum?id=3Imf21Jvwh) returned a browser
+  challenge. Checked indexed PDFs and the official
+  [EBT ICLR 2026 proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html).
+  A submission is not evidence of acceptance.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and Z1T.
+  No authenticated Carnot TSU access was established.
+- **Semantic Scholar:** browser API reads failed. Bounded direct HTTPS GETs
+  then returned 37 EBT citing records and eight ARM–EBM citing records, with
+  no next-page marker. Followed the September DBM, August tabular anomaly,
+  July hardness and Memoir leads to arXiv. These are indexed records, not an
+  exhaustive census or a citation-quality judgment.
+- **Hugging Face:** checked the [verification papers feed](https://huggingface.co/papers?q=verification).
+  Method claims use primary papers, not feed summaries.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Returned
+  pages were crawled two weeks earlier; no current new EBM/KAN dependency
+  was established. Popularity supplies no validation.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  This scan established no reproducible new SDK, weights or training recipe.
+
+### Local evidence that limits the next design
+
+V680 has eight declared producers: one circular-positive training/memory
+qualification and seven disqualified results. Six science producers are absent.
+Exp7825's training and online runtime readiness both equal one. Exp7824 has
+27% owned-module coverage and a required full-suite timeout with test failures
+already visible. Exp7828 prints `worktree_imports_ok`, but the shared reader
+requires a nonempty JSON `resolved_imports` map; exit zero alone cannot pass it.
+Exp7823 fails the prior-failure and gate audits because Exp7832 omitted prior
+failures. Exp7835 also confuses a string task ID with an integer experiment ID.
+No natural-data probability, decision, learning or latency benefit was measured.
+
+Future qualification must keep these historical failures intact. New reusable
+code needs a prospective, complete affected-test closure and real CLI coverage.
+A renamed historical wrapper cannot erase its inherited full-suite obligation.
+The existing 640-family corpus is exposed development data, even when its roles
+are withheld from the current fit. It cannot establish fresh generalization.
