@@ -20958,3 +20958,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-28: Qualify scored ARC transitions without inherited benchmark orchestration (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_runner_validation; results/experiment_7803_v678_arc_runner_qualification.json
 - 2026-09-28: Bind attached-board continuity to complete service evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7806_v678_hardware_evidence.json
 - 2026-09-28: Independently replay decision calibration and feedback causality (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7807_v678_independent_evidence_audit.json
+- 2026-09-28: Reconcile fourteen outcomes and set falsifiable continuation decisions (⚠️ Blocked) — honest_verdict=complete_blocked_required_v678_evidence; results/experiment_7808_v678_capstone.json
