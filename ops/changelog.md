@@ -20947,3 +20947,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-27: Cold-reduce decision value and causal memory evidence (⚠️ Blocked) — honest_verdict=complete_blocked_required_v677_evidence; results/experiment_7789_v677_independent_evidence_audit.json
 - 2026-09-27: Repair organic-runner formatting and specification traceability (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_runner_validation; results/experiment_7790_v677_arc_runner_qualification.json
 - 2026-09-28: Preserve board obligations with immutable evidence and service bounds (⚠️ Blocked) — honest_verdict=complete_blocked_missing_service_evidence; results/experiment_7793_v677_hardware_evidence.json
+- 2026-09-28: Reconcile fourteen outcomes and decide evidence-based continuation (⚠️ Research Finding) — honest_verdict=complete_disqualified_v677_capstone_validation; results/experiment_7794_v677_capstone.json
