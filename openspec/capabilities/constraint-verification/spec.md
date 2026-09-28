@@ -9044,3 +9044,11 @@ Given a frozen current candidate, omission of a transitive consumer, failed
 coverage, stale log or undeclared broad test child forces both readiness scores
 to zero. A fresh process reduces raw rows, and both terminal readers inspect
 the exact candidate before atomic publication.
+
+The frozen scope SHALL name every numerical, evidence-view, bank, online and
+CLI consumer before implementation. Coverage shards SHALL use one branch
+setting, keep their original exit codes and data files, and combine at one
+explicit destination. A missing transitive test, changed log byte, failed
+shard or undeclared broad child SHALL fail the current gate. The historical
+Exp7784 failed exits and receipt hashes remain evidence of that verdict; its
+mutable temporary logs SHALL not be used to infer a past failure cause.

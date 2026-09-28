@@ -269,6 +269,7 @@ def online_protocol(names: list[str]) -> dict[str, Any]:
 
 def exercise_online(folder: Path, names: list[str]) -> dict[str, Any]:
     """Measure bank versions, feedback delay and a cold pending-queue restart."""
+    folder = folder / f"run_{time.time_ns()}"
     folder.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
     query_rows: list[dict[str, Any]] = []

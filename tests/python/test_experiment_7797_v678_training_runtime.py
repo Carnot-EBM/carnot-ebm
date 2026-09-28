@@ -75,6 +75,26 @@ def test_online_query_modes_and_restart(tmp_path: Path) -> None:
     assert result["false_admission_rolled_back"] is True
 
 
+def test_online_repeated_task_run_uses_fresh_state(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-7797-ONLINE: prior task state cannot break a fresh run."""
+    checks, _, names = online.preflight(exp.ROOT)
+    assert all(row["passed"] for row in checks)
+    first = exp.exercise_online(tmp_path, names)
+    second = exp.exercise_online(tmp_path, names)
+    assert first["valid"] and second["valid"]
+    assert first["summaries"]["next_query"]["decision_hash"] == second["summaries"]["next_query"]["decision_hash"]
+
+
+def test_frozen_full_suite_argv_is_explicit() -> None:
+    """SCENARIO-VERIFY-7797-TERMINAL: broad health runs with exact test flags."""
+    scope = json.loads(exp.SCOPE.read_text())
+    full = next(row for row in scope["commands"] if row["name"] == "full_python_suite")
+    argv = full["argv"]
+    assert argv[:3] == [str(exp.ROOT / ".venv/bin/pytest"), "tests/python", "-q"]
+    assert all(flag in argv for flag in ("-n", "0", "-o", "addopts=", "--no-cov"))
+    assert any(arg.startswith("--basetemp=/tmp/exp7797-private/") for arg in argv)
+
+
 @pytest.mark.parametrize("failure", ["coverage", "consumer", "stale_log", "broad_child"])
 def test_gate_fails_closed(failure: str, tmp_path: Path) -> None:
     """SCENARIO-VERIFY-7797-TERMINAL: four invalid receipts close both scores."""
