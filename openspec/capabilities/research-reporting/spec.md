@@ -83998,3 +83998,44 @@ Private mutations of count, ID, order, title, phase, deliverable, model,
 substrate, gate producer or gate field fail. Planning does not edit the active
 roadmap, conductor or activation guards. Runtime E2E belongs to the future
 implementation tasks; planning E2E exercises the staged-reader boundary.
+
+## REQ-REPORT-7795: Bind V678 authority and method ownership
+
+Exp7795 SHALL compare fourteen ordered Exp7795–Exp7808 tasks in the literal
+design table, embedded JSON and matching staged or active YAML. It SHALL check
+each title, phase, output, model, substrate and gate independently. It SHALL
+copy exact design and YAML bytes to immutable historical snapshots. A later
+roadmap SHALL not replace those bytes. Missing external authority SHALL produce
+a blocked verdict with the failed path and field. Private mutations of count,
+order, design, model, gate producer, gate field and prior-failure metadata SHALL
+be rejected. Unchanged roadmap readers SHALL be run on the selected YAML.
+
+Exp7795 SHALL register the completed V678 literature review, causal controls
+and validation owners without running science. It SHALL preserve the V677
+producer ledger, pre-gate receipt distinction and oracle-distinct corrigendum.
+New entrypoints SHALL validate their own explicit affected scope. Inherited
+entrypoints retain their historical full-suite obligations. The contract SHALL
+not qualify a science producer. The real entrypoint SHALL record bounded child
+exits, durable log hashes, coverage of changed code, cold replay and terminal
+readers before atomic publication. Failed required validation SHALL set every
+readiness field to zero and classify the result as disqualified.
+
+### SCENARIO-REPORT-7795-CONTRACT
+
+Given authentic V678 design and YAML bytes, fourteen independent task rows
+agree. Missing or reordered tasks, stale design, changed models, misspelled
+producers and incomplete prior failures fail on private copies. Cold replay
+uses snapshots after the live roadmap changes.
+
+### SCENARIO-REPORT-7795-CUSTODY
+
+Given the V677 declared outputs, eight producer artifacts and six missing
+science producers remain distinct from conductor pre-gate receipts. Historical
+verdicts and the oracle-distinct corrigendum remain unchanged.
+
+### SCENARIO-REPORT-7795-TERMINAL
+
+The current bounded entrypoint records explicit validation argv, real exits,
+100 percent changed-code statement coverage, log hashes, real E2E, cold replay
+and adversarial and strict row readers. Only an accepted exact contract earns
+circular-positive administrative readiness. Scientific benefit stays null.
