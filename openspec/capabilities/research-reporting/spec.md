@@ -83310,6 +83310,22 @@ Given raw fixture rows in a fresh process, the reducer recomputes event counts a
 The artifact records separate validity, readiness, Brier, decision cost, coverage, retention and efficiency gates, actual model-call counts, affected check receipts, exact candidate-reader exits and hashes, and an oracle-fixture claim limit.
 ## V674 contract and method custody — 2026-09-27
 
+### REQ-REPORT-7803: Publish current scored runner evidence without benefit credit
+
+Exp7803 SHALL own a new entrypoint and artifact. It SHALL freeze explicit affected tests, changed modules, validation argument vectors, and the 48-row panel before execution. No historical qualification main or undeclared full-suite child may run. Required checks SHALL include the affected unit suite, 100 percent coverage of new code, Ruff, mypy, scoped spec coverage, E2E-009/011/013, the private LLM-off E3 smoke, fresh-process reduction, and both terminal readers. A separate repository-wide diagnostic SHALL remain separate from current affected validation. Failed required validation SHALL set all readiness fields to zero and disqualify; absent external inputs SHALL block with an exact failed operand. No solve, probability, retention, efficiency, or decision benefit follows from transport qualification.
+
+#### SCENARIO-REPORT-7803-GATE
+
+Given one missing, failed, duplicate, or timed-out required receipt, readiness remains zero. A passing real scored transition in each arm and every current required receipt permits readiness one while unmeasured benefit gates stay null.
+
+#### SCENARIO-REPORT-7803-CUSTODY
+
+Given an absent science producer and a conductor pre-gate receipt, the producer stays absent and the pre-gate receipt cannot substitute. The artifact records each exact path, hash, field, expected and observed value, plus a fresh-process reduction of raw actions and provenance.
+
+#### SCENARIO-REPORT-7803-CLI
+
+Given the new entrypoint, its frozen command list contains only task-owned execution and explicit affected tests. No command invokes an older qualification main or an undeclared full Python suite.
+
 ### REQ-REPORT-7790: Repair and qualify the V677 scored ARC runner
 
 Exp7790 SHALL retain the Exp7776 format and spec failures as historical evidence, fix the owned selector test file without deleting assertions, and freeze changed code, direct tests, transitive consumers, and commands before capture. It SHALL run the complete affected suite, 100 percent statement coverage of new code, the full Python suite as a separate health receipt, scoped Ruff/mypy/spec checks, E2E-009/011/013, the real offline E3 smoke, fresh-process reduction, and both terminal readers. The fixed panel SHALL remain unmeasured until qualification opens; all 48 scheduled rows remain in the artifact. Missing external science is blocked, not a substitute pre-gate receipt. A required validation failure disqualifies and sets every readiness score to zero.
