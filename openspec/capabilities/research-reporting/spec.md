@@ -84394,3 +84394,71 @@ Both complete-byte views retain joint-premise windows, UTF-8 offsets, null
 location, duplicate groups, all 132 label-free features, and 128-window and
 16-answer-unit limits. Unknown annotations, truncation, label poisoning, and
 all over-budget escalations are tested without deleting a family.
+
+## REQ-REPORT-7814: Qualify current counter-evidence intervention custody
+
+Exp7814 SHALL authenticate the V673 science producer, sealed 64-family public
+evaluation shard, GGUF tokenizer identity, CPU backend, and required resources
+before preparing 48 exposed families by seeded source hash. A conductor pre-gate
+receipt cannot replace the science producer. Missing external evidence SHALL
+produce complete_blocked_* with the failed path, hash, field, operator, and
+operands. Exp7800's disqualified full-suite result remains unchanged.
+
+The complete affected closure is `python/carnot/experiment_7814_v679_counter_evidence_protocol.py`,
+`scripts/experiments/experiment_7814_v679_counter_evidence_protocol.py`,
+`tests/python/test_experiment_7814_v679_counter_evidence_protocol.py`,
+`tests/python/test_experiment_7800_v678_counter_evidence_protocol.py`,
+`tests/python/test_experiment_7727_v673_development_corpus.py`,
+`tests/python/test_experiment_7759_v675_qwen_evidence_views.py`,
+`tests/python/test_experiment_7787_v677_qwen_event_confidence.py`, and
+`tests/python/test_experiment_7303_v642_validation_scope.py`.
+The task-owned command manifest at
+`results/raw/experiment_7814_v679_counter_evidence_protocol/validation_command_manifest.json`
+freezes exact argv, order, and required or diagnostic class before code.
+Its SHA-256 is `1c7774d813c614ae53ebe5b3a0af051ef84a1cf94bbc9183245fb62329e223f8`.
+It contains fifteen ordered child commands and is immutable for this attempt.
+It covers worktree imports, affected pytest, changed module and CLI coverage,
+100-percent coverage report, scoped Ruff check and format, mypy, explicit spec
+coverage, real CLI E2E, fresh-process cold replay, adversarial verification,
+and strict row consistency. Full Python pytest is a bounded diagnostic health
+command; its nonzero or timeout cannot become current readiness or erase its
+historical obligation. No historical experiment main or undeclared child runs.
+Every command has a private root and a closed, attempt-specific, immutable
+content-addressed log. Cold replay follows receipt sealing.
+
+### SCENARIO-REPORT-7814-DISPATCH
+
+The real CLI dispatcher with a recording child executor observes exactly the
+frozen manifest bytes, including all commands after helper calls. It rejects
+an appended child, a changed argv, a missing parent, and one-byte log drift.
+A later retry has distinct private and durable paths. Failed required commands
+disqualify and zero readiness; diagnostic broad-suite failures stay visible.
+
+## REQ-REPORT-7814-INTERVENTION: Preserve the original event and source IDs
+
+The intact prompt SHALL ask for unsupported_probability for the first original
+answer sentence and one supporting original source_sentence_id. The exact answer
+and its first sentence byte span SHALL be frozen. A citation is only a proposed
+witness. Treatment deletes only the predicted original sentence bytes. Control
+deletes a disjoint sentence within 25 percent of its GGUF token length by seed
+67815 hash order. Original IDs survive deletion. Every family remains in the
+manifest, including invalid, unmatched, over-budget, and unstarted families.
+The pure CPU protocol accepts an injected token counter; live preparation uses
+an authenticated GGUF tokenizer and chat template, not byte or word counts.
+Each arm uses the same answer, schema, sampling settings, 256 output tokens,
+8192 context tokens without truncation, and two frozen 32-token canaries.
+
+### SCENARIO-REPORT-7814-BYTES
+
+Scripted transport checks exact HTTP bodies, strict parsing, UTF-8 offsets,
+byte deletion, empty source, budget overflow, injected instructions, invalid
+witnesses, and missing controls. No answer-correctness retry is permitted.
+
+### SCENARIO-REPORT-7814-LABELS
+
+The separate reducer scores intact Brier or cost only when independent
+annotations identify the first original answer sentence's label. Whole-answer
+labels and unknown labels cannot be substituted. Modified-source labels stay
+null. A 48-family paired bootstrap, its seed, and every coverage rule are
+frozen before GPU capture. CPU fixture success is circular-positive protocol
+evidence only; probability, decision, retention, and efficiency remain null.
