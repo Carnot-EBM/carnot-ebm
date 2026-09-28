@@ -84971,3 +84971,50 @@ cannot reopen from a repeated probe. A retry cannot rewrite the earlier log.
 
 The real CLI dispatches only the frozen exact argv and required/diagnostic
 classes. Required failures disqualify, while diagnostic health remains open.
+
+## REQ-REPORT-7835: Independently audit current V680 science custody
+
+Exp7835 SHALL bind date 20260928 and milestone 2026.09.680. It SHALL inspect
+the exact planned Exp7824, Exp7826, Exp7827, Exp7829, Exp7830 and Exp7832
+science paths before reduction. A conductor gate receipt is explanation only.
+Every branch SHALL have a disposition even when its producer is absent. Missing
+external science SHALL produce a complete blocked artifact with failed gate
+operands, zero readiness and null unmeasured benefit. Exp7824's disqualified
+validation SHALL remain disqualified even if its raw custody is readable.
+
+The reader SHALL hash exact inputs; join the 640 source families, public
+features and label sidecar by family ID; and reject private label, confidence,
+gold or unknown-label sentinel fields in public features. Original source and
+answer hashes and role custody SHALL be checked from raw bytes. Scientific
+metrics SHALL be computed only from qualified primitive predictions and labels.
+Neither a producer summary nor a fixture SHALL qualify oracle-distinct benefit.
+Exposure-limited development families SHALL never open the oracle-distinct gate.
+
+The affected closure is the new Exp7835 reducer, CLI, direct tests, and the
+Exp7821 raw-reader and Exp7303 validation-scope consumer tests. The prospectively
+frozen required commands are focused pytest, full Python pytest, changed-code
+coverage at 100 percent, scoped Ruff check and format, mypy, explicit-file spec
+coverage, real CLI E2E, fresh cold replay, adversarial verify and strict row
+lint. A 180-second serial broad health check is diagnostic. Command names,
+argument vectors and classes SHALL match the frozen manifest. Logs SHALL be
+written under unique attempt paths, sealed only after child exit, and checked
+by hash on replay; later retries cannot rewrite earlier log bytes. Required
+failures disqualify and zero readiness. Prior full-suite failures remain open.
+
+### SCENARIO-REPORT-7835-MISSING
+
+Given the current Exp7826 and Exp7829 gate receipts and absent Exp7827,
+Exp7830 and Exp7832 science, every branch remains visible with exact path,
+hash, role and failed operand. No old or simulated producer substitutes.
+
+### SCENARIO-REPORT-7835-CUSTODY
+
+The reader derives Exp7824 family, role, feature and label joins from raw
+sidecars. Mutated public confidence, gold, unknown sentinel, mismatched family,
+and changed source bytes fail independent custody checks.
+
+### SCENARIO-REPORT-7835-DISPATCH
+
+The real CLI accepts only frozen command names, argv and classes. A later retry
+and changed sealed log fail cold replay. Required failures disqualify; diagnostic
+health stays separate.
