@@ -1131,6 +1131,17 @@ selection delta.
 - priority: high
 <!-- exp4252-oracle-distinct-a3:end -->
 
+<!-- corrigendum-20260928-oracle-distinct:start -->
+### GAP-ORACLE-DISTINCT (correction 2026-09-28): status reverts from filled to open
+- status: open_leaked_feature_and_self_labeled_positives_found_by_adversarial_reaudit
+- evidence: a fresh adversarial re-check re-ran the real training code on the real stored data for Exp 4245, 5151, 5160, and 5171 (a worktree audit, instructed to find reasons the claim is wrong, not confirm it; see `ops/known-issues.md` CORRIGENDUM 2026-09-28 for the full writeup). Found: (1) the Exp 5160/5171 "cross-corpus" win comes from a hard-coded confidence value the correct-answer candidate always carries (`arcgen_cross_generator_nondegenerate_4291.py:202`, copied to `cell_confidence_mean` at `oracle_distinct_arc_aggregator_4231.py:383`) — a "pick the highest-confidence candidate" rule with no model gets the identical score; (2) 20 of Exp 4245's 23 net wins over vote occur only on tasks whose sole positive candidate is the model's own guessed answer, not a gold-verified one (`experiment_4243_arc_candidate_pool_grow.py:192,203`); on gold-verified-positive tasks alone the win shrinks from +44.2pp to a real but much smaller +5.8pp (16 vs 13 of 20); (3) Exp 5160's reported zero-width CI [0.5, 0.5] measures agreement across 5 seeds on the SAME 24 fixed tasks, not task-level variance — a real task-level bootstrap gives roughly [0.29, 0.71]; (4) "cross-corpus" retrained a fresh model rather than testing the original trained model on new data, so it does not show transfer; (5) a fresh `adversarial_verify.py` run flags Exp 4245 CRITICAL on `MOAT_CLAIM_RIGOR` (missing `headroom_present=true`, missing paired significance evidence) — flags that existed before and were never acted on.
+- failure mode: this is the same failure mode the original gap named (nothing converts an existing signal into a genuinely oracle-distinct, non-circular decision) — it was marked filled prematurely. The Deep-Sets architecture (`arc_set_encoder_aggregator_4244.py`) is domain-agnostic and not itself discredited; the defect is in how the ARC candidate pools were built and labeled, and in how the confidence interval was computed.
+- missing discriminator: a confidence/context feature the model does not derive from information leaking the answer; gold-verified-only positive labels; evaluation of a fixed trained model (not a retrain) on a held-out corpus; a task-level (not seed-level) bootstrap CI.
+- candidate design: rebuild the candidate pool with no answer-derived confidence feature, gold-verified positives only, and re-test the SAME trained model (no retrain) against a genuinely independent task set, reporting a task-level bootstrap CI.
+- priority: high
+- action: the exp4252 blocks above (`GAP-ORACLE-DISTINCT`, `GAP-ORACLE-DISTINCT-A3-4245`) are left unedited per this file's own historical-record convention; this block is the correction of record. CLAUDE.md's DiffusionGemma gate needed no edit — it already read STILL-PENDING and was never flipped by the retracted recommendation.
+<!-- corrigendum-20260928-oracle-distinct:end -->
+
 <!-- exp4252-code-replication:start -->
 ### GAP-CODE-REPLICATION-4246: Exp 4252 .393 code replication status
 - status: blocked_code_second_corpus_missing

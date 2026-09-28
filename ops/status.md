@@ -17429,3 +17429,23 @@ Existing format debt remains in two unchanged guard files. Spec coverage
 reports 20 existing untraced priority-lint tests. These are not claimed green.
 Planning E2E exercised staged-reader rejection. ARC runtime E2E is assigned
 inside the relevant future tasks. No experiment, activation or push occurred.
+
+## 2026-09-28 — Corrected the record: the .393 "oracle-distinct verifier" win does not hold up
+
+An adversarial re-check (worktree audit, told to try to disprove the claim)
+found the Exp 4245/5151/5160/5171 "Set-Encoder beats vote, oracle-distinct"
+result does not survive scrutiny. Three real defects: a leaked confidence
+feature drives the "perfect" cross-corpus result, most of the original win
+comes from self-labeled (not gold-verified) positive candidates, and the
+reported confidence interval measures the wrong thing (seed agreement, not
+task variance). Full evidence and citations: `ops/known-issues.md`
+CORRIGENDUM 2026-09-28. Corrected `ops/verifier_gaps.md`'s GAP-ORACLE-DISTINCT
+status from filled back to open (new append-only block; history untouched).
+
+What this means for next steps: the DiffusionGemma gate in CLAUDE.md stays
+STILL-PENDING (it was never actually flipped, so nothing needs undoing
+there). GAP-ORACLE-DISTINCT is open again — a genuinely oracle-distinct,
+non-circular verifier win is still needed before that gate or any Jev-style
+calibrated-decision claim can cite this line of work. The Deep-Sets model
+architecture itself is not discredited; the defect is in how the ARC
+candidate pools were built and labeled.
