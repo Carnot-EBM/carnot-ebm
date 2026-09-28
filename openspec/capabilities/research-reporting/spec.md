@@ -84715,3 +84715,56 @@ verify prompt input paths and producer fields, and reject private missing-task,
 reordering, stale-design, changed-model, wrong-gate and incomplete-prior mutants.
 Planning-only changes require this staged-reader E2E; future runtime E2E is
 assigned in the task prompts and does not count as executed during planning.
+
+## REQ-REPORT-7823: Bind V680 authority and register methods
+
+Exp7823 SHALL compare fourteen literal table rows, embedded JSON rows and the
+matching staged or active YAML, including ordered IDs, titles, phases, outputs,
+model lists, substrate classes and complete gates. It SHALL validate schema,
+prior-failure retirement flags, producer order and exact producer fields using
+existing readers. Private missing, reordered, stale, wrong-model and misspelled
+gate-field copies SHALL fail. It SHALL snapshot exact design and roadmap bytes
+and preserve the V679 producer inventory separately from pre-gate receipts.
+The method map SHALL preregister source-shortcut, observed-label, CCHD, CoEV,
+abstention, delayed-memory and bandwidth controls without claiming science.
+
+The affected closure is `python/carnot/experiment_7823_v680_contract_methods.py`,
+`scripts/experiments/experiment_7823_v680_contract_methods.py`,
+`tests/python/test_experiment_7823_v680_contract_methods.py`,
+`tests/python/test_experiment_7809_v679_contract_methods.py`, and
+`tests/python/test_experiment_7303_v642_validation_scope.py`. The exact
+required command argv and diagnostic class SHALL be frozen in
+`results/raw/experiment_7823_v680_contract_methods/validation_command_manifest.json`
+before implementation. The CLI SHALL reject any undeclared child, create pytest
+parents before launch, seal logs after child exit at attempt-specific content
+addresses, and reject changed sealed bytes. Required checks comprise focused
+tests, changed-code coverage, Ruff check and format, mypy, scoped spec coverage,
+unchanged roadmap readers, real CLI E2E, cold replay, adversarial verification
+and strict row consistency. Serial broad Python health is a bounded 180-second
+diagnostic and cannot cancel old failed required-suite evidence.
+
+Exact-authority success SHALL be circular-positive with contract readiness one
+and all scientific gates null. External missing inputs SHALL be terminal blocked
+with exact failed operands. A failed required check SHALL be disqualified with
+readiness zero. No science producer, publication or activation follows from this
+administrative receipt.
+
+### SCENARIO-REPORT-7823-CONTRACT
+
+Authentic V680 sources match on fourteen rows; each private mutation fails,
+and cold replay uses preserved bytes after active-roadmap rollover.
+
+### SCENARIO-REPORT-7823-CUSTODY
+
+Nine V679 artifacts remain two circular-positive, four disqualified and three
+blocked; five declared science outputs stay absent. The prior formatting,
+coverage-combine and organic-selector failures remain visible and map to the
+current tasks that address them. The 640 families stay exposed development data.
+
+### SCENARIO-REPORT-7823-TERMINAL
+
+The real dispatcher matches every frozen command name, argv and class. A
+missing pytest parent, undeclared command, changed log byte or failed required
+exit fails readiness. A retry cannot alter an earlier sealed receipt. A fresh
+process reduces raw rows and strict readers inspect the exact candidate before
+atomic publication.

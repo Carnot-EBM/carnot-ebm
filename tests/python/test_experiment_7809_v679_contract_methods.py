@@ -22,6 +22,17 @@ def load_cli():
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    if (
+        yaml.safe_load((ROOT / "research-roadmap.yaml").read_text())["milestone"]
+        != subject.MILESTONE
+    ):
+        preserved = ROOT / subject.YAML_SNAPSHOT
+        module.resolve_authority = lambda root: (
+            preserved,
+            yaml.safe_load(preserved.read_text()),
+            [{"path": str(subject.YAML_SNAPSHOT), "exists": True, "milestone": subject.MILESTONE}],
+        )
+        module.DESIGN = subject.DESIGN_SNAPSHOT
     return module
 
 
