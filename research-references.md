@@ -47841,3 +47841,104 @@ lookups, one empty legacy-model selection and three missing module imports.
 Repair historical compatibility without changing the current model mandate.
 Do not relabel the old full-suite requirements as satisfied. New experiments
 must register executable, bounded validation before scientific capture.
+
+## V678 planning review — 2026-09-27 (recorded before design)
+
+This review precedes the V678 experiment design. Existing references remain
+historical records. Dates below refer to primary publications, not search age.
+The local conductor log already contains V677 completions dated September 28.
+This review uses those available records without changing their dates.
+
+### Findings that warrant a local test
+
+- **Counter-Evidence Verification (CoEV)**, June 17, 2026:
+  [primary paper](https://arxiv.org/html/2606.18609v1).
+  The method tests whether a claim depends on its proposed visual evidence.
+  Read the method and limitations. A text analogue could remove a predicted
+  supporting sentence and compare an equal-length unrelated removal.
+  This would test source dependence. It would not prove that the selected
+  sentence entails the claim. Do not transfer medical or visual accuracy
+  claims to text. Do not reuse original labels for modified sources.
+  Status: new local reference; candidate for a bounded Qwen diagnostic.
+- **HallDetect**, August 6, 2026:
+  [method and limitations](https://arxiv.org/html/2608.05823v1).
+  Rechecked decomposition, independent entailment/contradiction selection,
+  and response aggregation. The authors disclose confounded ablations,
+  missing close discriminative baselines, single runs and unmeasured latency.
+  Keep source, features and budgets equal when comparing local decision heads.
+  Claim-to-span output is an audit trail, not a verified semantic certificate.
+- **CCHD**, June 6, 2026:
+  [primary abstract](https://arxiv.org/abs/2606.08158).
+  Rechecked separate consistency and label-preservation constraints.
+  A matched augmentation control remains essential. Agreement across two
+  evidence views cannot establish correctness when both views are wrong.
+- **Memoir**, July 22, 2026:
+  [primary paper](https://arxiv.org/abs/2607.20792).
+  Rechecked its paired read-only versus within-recurrence memory comparison.
+  The fixed-budget penalty disappears at the longer, saturated budget.
+  Test query-immutable constraint state and delayed commits locally. Compare
+  retained accuracy and service cost at equal feedback and update budgets.
+- **Capacity-Constrained Online Convex Optimization with Delayed Feedback**,
+  June 2026: [primary record](https://arxiv.org/abs/2606.11711).
+  Record release times, pending capacity and dropped feedback. Admission of
+  discrete constraints does not inherit the paper's convex regret theorem.
+
+### Required topic coverage
+
+| Area | Primary source checked | Local disposition |
+|---|---|---|
+| EBM verification and reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, v4 May 25, 2026](https://arxiv.org/abs/2512.15605) | Compatibility learning and the ARM/EBM bijection motivate normalized energies. Neither proves semantic correctness. |
+| Neural constraint satisfaction | [HardNet++, April 2026](https://arxiv.org/abs/2604.19669); [Solver-Hard Is Not Model-Hard, July 2026](https://arxiv.org/abs/2607.17047) | Abstracts checked. Projection assumptions and solver hardness must remain explicit. No new projection stack until current evidence is measured. |
+| Ising applications in ML | [Probabilistic Computers for Neural Quantum States, December 2025](https://arxiv.org/abs/2512.24558) | Abstract checked. Sparse Boltzmann hardware is relevant to sampling. Quantum-state quality is not text-verification evidence. |
+| Hallucination detection | CoEV, HallDetect and CCHD above | Separate source dependence, annotation accuracy, calibration and decision benefit. |
+| Kolmogorov–Arnold Networks | [Catastrophic Forgetting in KANs, November 2025 / AAAI 2026](https://arxiv.org/abs/2511.12828); [KAC, March 2025](https://arxiv.org/abs/2503.21076) | Abstracts checked. Local spline support does not guarantee retention. Defer another architecture sweep; test retained constraint additions first. |
+| Energy-guided and constrained generation | [Energy-Guided Decoding, July 2025](https://arxiv.org/abs/2507.07731); [structural/semantic gap, September 20, 2026](https://arxiv.org/abs/2609.23742) | Layer selection needs internal VLM states. JSON grammar only controls syntax. Measure syntax failures separately from semantic errors on Qwen3.8. |
+| Hardware-accelerated sampling | [Extropic Z1T, September 4, 2026](https://extropic.ai/writing/z1t); sparse Boltzmann paper above | Z1T separates probabilistic sampling and digital work. Include preparation, transfer and readout before projecting speedups. Vendor estimates are not local measurements. |
+| Continuous constraint learning | Memoir and delayed-feedback paper above | Freeze state during each query. Test equal-budget update timing, restart and untouched retention examples. |
+
+### Secondary-source coverage and access limits
+
+- **OpenReview:** the [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg)
+  and PDF returned a browser challenge. Indexed ICLR 2026 PDF results were
+  available. Primary arXiv content supports the methods review. No fresh
+  acceptance or review claim is inferred from an inaccessible forum.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and Z1T.
+  The search index exposes August software updates and September Z1T.
+  No authenticated Carnot TSU execution or newly available local device was found.
+- **Semantic Scholar:** browser requests failed. Bounded direct HTTPS calls
+  to the Graph API succeeded. The [EBT citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=100)
+  returned 37 records; the [ARM–EBM endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=100)
+  returned eight. Neither response had a next-page marker. These are returned
+  records, not exhaustive citation counts. Followed Memoir, Solver-Hard and
+  [world-model tool use](https://arxiv.org/abs/2601.03905) to primary sources.
+- **Hugging Face:** checked the [verification papers feed](https://huggingface.co/papers?q=verification).
+  It mixes old and recent papers. Used it for discovery, not publication dates
+  or independent validation.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trends. Both returned
+  pages crawled two weeks earlier. No new dependency is justified by this scan.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The page describes a constraint layer beneath AI applications. It provides
+  no reproducible model or SDK evidence for this review. Treat it as vendor
+  framing, not a demonstrated correctness guarantee.
+
+### Local evidence that changes the research premise
+
+V677 produced eight declared artifacts; six science producers are absent.
+The queue's `OK` rows must not substitute for artifact verdicts. Exp7787 is a
+qualified null on 24 exposed families. Explicit support-risk prompting parsed
+24/24 calls; generic confidence parsed 18/24. The paired Brier and cost
+intervals include zero. Another unchanged confidence pilot is unjustified.
+
+Exp7782 fixed historical imports and fixtures, but then executed a required
+whole-repository suite and terminated it. Exp7784 and Exp7790 did likewise.
+Their `full_python_suite` exit was -15, not a collection-only failure.
+Current temporary coverage logs for Exp7784 differ from the recorded failure
+receipt. Their mutable paths cannot overturn the historical artifact.
+New protocols must use explicit affected tests and durable validation logs.
+If an old entrypoint is invoked, its full-suite requirement still applies.
+
+The September 28 corrigendum reopens `GAP-ORACLE-DISTINCT`: leaked confidence,
+self-labeling and the wrong confidence-interval unit invalidate the old
+Exp4245/5151/5160/5171 win. All current decision claims need independent
+labels and family-level intervals. No result here reopens retired PHASE D.

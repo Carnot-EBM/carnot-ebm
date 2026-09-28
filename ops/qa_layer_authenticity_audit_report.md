@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-27
 
-Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 5 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -14,31 +14,30 @@ Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): 
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 1 |
-| `SILENT_NON_FIRING` | 5 |
+| `SILENT_NON_FIRING` | 3 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 0 |
+| `UNKNOWN` | 1 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_substrate_declares_deterministic_non_live` — deterministic_oracle_audit_no_live_llm` — the actual substrate in `results/experiment_3002_metamorphic_repair_oracle_audit_v1.json`; the recognizer returns false and no duration floor is applied.
-- `adversarial_verify.py::_classify_current_task_inference_claim` — [results/experiment_7150_v628_grounding_preflight.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7150_v628_grounding_preflight.json:480): `blocked_real_qwen_canary` with a five-token generation receipt. The full verifier returns **zero flags**.
-- `adversarial_verify.py::_strip_verdict_terminal_prefix` — The checked-in artifact `results/experiment_2883_thrml_sampler_portability_smoke_v2.json` has `"honest_verdict": "complete: blocked_thrml_unavailable_local_fallback_ran_no_hardware_claim"` and `"local_fallback_ran": true`. It is classified as precondition-only, so its duration floor is skipped.
-- `adversarial_verify.py::_is_precondition_check_only_blocked` — results/experiment_5006_moat_second_corpus.json`: `inference_substrate` is `precondition_check_only`, but the function returns false because its verdict is `running_moat_second_corpus_mmlu_pro_hard_skeleton`.
-- `adversarial_verify.py::_is_verifier_scoring_only` — At this function’s direct-call boundary, a principle-annotated version of the real historical schema value is missed: ```json { "schema": { "principle": "Identifies the historical verifier-scoring schema", "value": "carnot.fover_memory_leakage_v3" } } ``` With no explicit substrate field, the function returns false.
-- `adversarial_verify.py::_cheap_learned_value_marker` — model_specs.architecture = "linear ridge regression with bias"` — an actual value in `results/experiment_4353_learned_action_cost_heuristic_efficiency.json`. Scanning that field returns `None` despite its linear scoring method.
+- `adversarial_verify.py::_cheap_learned_value_floor_descriptor` — An ordinary cached-verifier artifact reporting `duration_s: 0.01` and `methodology_note: "No CNN or learned value head was used; only cached verifier scores were computed."` The tested fragment produced no `DURATION_TOO_SHORT` flag.
+- `adversarial_verify.py::_is_aggregation_only` — results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json` — schema `carnot.flag_hygiene.matrix_capstone.v1`.
+- `adversarial_verify.py::_is_deterministic_verifier` — deterministic_state_verifier` — the top-level substrate in `results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json`.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_substrate_declares_deterministic_non_live` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_classify_current_task_inference_claim` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_strip_verdict_terminal_prefix` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_precondition_check_only_blocked` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_verifier_scoring_only` — **REAL_BUG**
-- `adversarial_verify.py::_cheap_learned_value_marker` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_cheap_learned_value_floor_descriptor` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_aggregation_only` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_deterministic_verifier` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_descriptor_key_present` — **REAL_BUG**
 
 ---
 
-## adversarial_verify.py::_substrate_declares_deterministic_non_live
+## adversarial_verify.py::_has_cheap_learned_value_methodology
+
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed o)
+
+## adversarial_verify.py::_cheap_learned_value_floor_descriptor
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -46,76 +45,39 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-“Recognize the declared deterministic-work concept without a name allowlist.”
+The docstring promises to `Return the calibrated sub-1s floor for method-bearing cheap value scoring.` when the artifact declares a cheap scoring method and has replay methodology.
 
 ## FINDINGS
-
-1. **A / F — real missed input:** `return not any(marker in token for marker in live_markers)` rejects the actual substrate value shown under MISSED INPUT: the marker `live_llm` matches inside an explicit no-live declaration. The caller classifies that artifact as ambiguous and applies no duration floor. It emits a warning, but this recognizer has failed to identify the declared work.
-2. **B / negation and context:** `live_markers = ("live_llm", "live_model", "llama_cpp", "gguf")` stands in for current live-model execution. It omits live inference named as such, while treating a GGUF receipt reference as execution. An actual artifact declaring deterministic replay over GGUF receipts was given a critical too-short-duration flag.
-3. **Boundaries / claim mismatch:** `if "deterministic" not in token.split("_"):` requires a whole underscore-delimited token, which avoids matches inside longer words but accepts a negated two-token name. `token = _claim_field_name(_substrate_leading_token(raw))` also limits recognition to the leading value: the real declaration “fresh-process deterministic memory and transaction replay” returns false. The implementation is both narrower and broader than its docstring’s concept.
-4. **C — untested marker:** Removing `llama_cpp` from the tuple left 108 scoped adversarial tests green. Those tests do not isolate that exclusion; I did not run the full suite with the mutation.
-5. **Other requested checks:** This function reads no dict field directly and contains no numeric threshold, absolute path, write, or measurement. A wrapped dict, list, or None passed directly as `raw` is unrecognized; the observed caller unwraps principle-annotated substrate fields.
-
-## COUNTEREXAMPLE
-`results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json` contains `{"honest_verdict":"complete: offline repair acceptance controller ready","inference_substrate":"deterministic_cached_replay_no_live_llm","duration_s":0.008284,"live_llm_inference_run":false}`. The recognizer returns false, and the duration check raises a critical `DURATION_TOO_SHORT` flag against a 60-second live-model floor.
-
-## MISSED INPUT
-`deterministic_oracle_audit_no_live_llm` — the actual substrate in `results/experiment_3002_metamorphic_repair_oracle_audit_v1.json`; the recognizer returns false and no duration floor is applied.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Substring exclusions cannot distinguish an invocation from a negated declaration or a reference to model files. Real artifacts demonstrate both a missed deterministic classification and a critical false positive; adding one more marker would leave those errors intact.
-
-
-## adversarial_verify.py::_classify_current_task_inference_claim
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Classify live inference from attributable current-task provenance.`
-
-## FINDINGS
-
-1. **A — real missed input.** The `if _is_precondition_check_only_blocked(d):` branch sets `state = CLAIM_STATE_BLOCKED` before considering `live_evidence`. A committed artifact reports a blocked verdict and a completed five-token model generation. The classifier calls it blocked, and the full adversarial verifier reports no flags.
-
-2. **Attribution is lost when evidence is mixed.** `if negative_evidence:` treats an unattributed nested “model not invoked” record as contradicting an explicit current-task live claim. Conversely, `elif any(row["scope"] == "nested_unattributed" for row in live_evidence):` makes a claim ambiguous even when another row explicitly attributes invocation to the current task. The latter also prevents the backfill stamp from recognizing the live claim.
-
-3. **B — the delegated field list is narrower than model-execution evidence.** Real artifacts use the count fields generation_attempted and model_load_completed; the typed-evidence collector omits both. A payload containing those positive counts and a 0.0001-second duration receives no evidence, no floor, and no duration flag. The excerpt’s `{SUBSTRATE_KIND_AGGREGATION, SUBSTRATE_KIND_NO_LLM}` set has no demonstrated omission; its deterministic case is handled separately.
-
-4. **String boundaries and context.** The called methodology recognizer finds “live llm inference” inside the longer phrase “nonlive llm inference,” producing a false live claim. It also lets “did not invoke” anywhere in a methodology suppress a later statement that the current task invoked the model. The supplied function itself performs no free-text substring match.
-
-5. **Other requested checks.** This function has no direct artifact-field read, numeric threshold, absolute path, write, or measurement. Its unrecognized fallthrough is explicitly ambiguous, although missed typed fields can cause its caller to apply no floor. No branch is proven deletable with the existing tests; they omit the blocked-plus-live and mixed-scope cases.
+1. **A, 2, 3, 5 — silent false negative.** `marker = _cheap_learned_value_marker(d)` searches the whole artifact. Its marker matching treats no_cnn and value_headless as positive markers, and cannot distinguish “No CNN or learned value head was used” from an affirmative method declaration. That selects the cheap floor for ordinary cached verifier scoring. I verified that the counterexample below receives no duration flag at 0.01 seconds, although the ordinary verifier floor is 1 second.
+2. **1 — field shape.** The sole direct field read, `duration = d.get("duration_s")`, is followed by `_is_finite_number(duration)`. A principle-wrapped number, list, or None returns no cheap descriptor. The full verifier normalizes valid top-level wrappers first, but direct floor-selector callers do not; a wrapped, honest 0.44-second cheap run receives the 1-second floor.
+3. **B, C — list and test gap.** The `methodology_fields` list stands for replay methodology but names random_seed while the methodology check also accepts a seed field. It is output metadata, not a selection rule; removing it would leave floor selection unchanged, and the cheap-floor tests I found do not assert it. Those tests also contain overlapping positive markers and no negated-marker case. I did not establish that any selection branch is deletable with the full suite green.
+4. **4, D, E, F, G — no further defect established here.** `float(duration) < VERIFIER_SCORING_MIN_DURATION_S` excludes exactly 1 second as the docstring says. This function has no absolute path, write, or measurement operation. Its no-match return falls back to the ordinary verifier floor for a recognized verifier substrate.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "honest_verdict": "blocked_real_qwen_canary",
-  "inference_substrate": "live_llm_inference: source-grounding runtime canary and frozen schedule",
-  "inference_substrate_class": "blocked_no_run",
-  "duration_s": 25.485034,
-  "canary_token_rows": [
-    {"completion_tokens": 5, "generation_duration_s": 0.4598615800496191}
-  ]
+  "experiment": "experiment_4623_cached_verifier_scores",
+  "honest_verdict": "complete: cached_verifier_scores_without_learned_model",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "duration_s": 0.01,
+  "model_specs": {"architecture": "cached rule-based verifier ensemble"},
+  "random_seed": 4623,
+  "reproducibility_checksum": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "methodology_note": "No CNN or learned value head was used; only cached verifier scores were computed."
 }
 ```
-This is drawn from a committed artifact. It is classified as blocked despite recorded current-task generation.
 
 ## MISSED INPUT
-[results/experiment_7150_v628_grounding_preflight.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7150_v628_grounding_preflight.json:480): `blocked_real_qwen_canary` with a five-token generation receipt. The full verifier returns **zero flags**.
+An ordinary cached-verifier artifact reporting `duration_s: 0.01` and `methodology_note: "No CNN or learned value head was used; only cached verifier scores were computed."` The tested fragment produced no `DURATION_TOO_SHORT` flag.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The blocked branch can erase direct evidence that compute ran, and the duration gate independently exempts that result. Evidence priority and blocked-run handling must agree across classification and floor selection; the typed-field and methodology recognizers also need coverage for the demonstrated misses.
+A negated explanatory note selects the 0.0001-second cheap floor, allowing an implausibly short ordinary verifier claim to pass silently. Require affirmative, typed evidence of the method that actually ran, and test negated markers and direct calls with wrapped duration fields.
 
 
-## adversarial_verify.py::_strip_verdict_terminal_prefix
+## adversarial_verify.py::_is_aggregation_only
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -123,65 +85,80 @@ The blocked branch can erase direct evidence that compute ran, and the duration 
 SILENT_NON_FIRING
 
 ## CLAIM
-The helper claims to `Strip a leading terminal-prefix marker` so downstream `blocked_` recognition sees the same verdict text with or without that marker.
+The docstring claims the function returns `True if the artifact is a synthesis / aggregation over upstream` artifacts rather than a compute-bound experiment.
 
 ## FINDINGS
-1. **Real silent skip:** `return stripped[len(prefix) :].lstrip()` turns a checked-in verdict saying a local fallback ran into text beginning with `blocked_`. The downstream precondition-only check treats that as proof that no compute ran. For that artifact, the duration floor is absent and the duration check emits no flag.
-2. **No field-shape or substring bug demonstrated here:** This helper has no dict-field reads. `verdict.strip()` requires a string, which matches its declared argument and the caller’s unwrapping. `if lowered.startswith(prefix):` is anchored, and the configured prefixes have separators; no inside-word match was found.
-3. **Pattern and test coverage:** The terminal-prefix list covers the documented terminal markers; no omitted marker was found. Removing its complete-space member left the focused 16-test suite green. That does not establish that the full suite would pass.
-4. **Other classes:** There are no numeric thresholds, absolute write targets, tracked-state writes, or measurements in this helper. Its `return stripped` fallback does not itself disable a check.
+1. **Confirmed missed input:** `return any(schema.startswith(p) for p in AGGREGATION_SCHEMA_PREFIXES)` misses a committed matrix capstone. The function returns false for it; the duration check then applies a 60-second floor to its 0.001577-second run and emits a critical DURATION_TOO_SHORT flag. The prefix list is narrower than the aggregation concept it represents.
+2. **Field shape:** `schema = str(d.get("schema") or d.get("schema_version") or "")` turns a wrapped dict or list into text that cannot match the prefixes. A truthy, unrecognized schema also prevents a recognized schema_version from being read. None is handled. The main verification entrypoint unwraps conventional principle-annotated fields, so that particular failure remains a direct-helper risk.
+3. **Boundary and test coverage:** `schema.startswith(p)` has no end boundary, but I found no real artifact it falsely accepts. The explicit aggregation test supplies both a recognized schema and a recognized substrate; its assertion would still pass if the schema-prefix rule were deleted. I did not establish that the full suite would remain green.
+4. **Other requested classes:** This function has no negation-sensitive phrase scan, numeric threshold, absolute write path, tracked-state write, or measurement. When both recognizers miss, it returns false without distinguishing an unknown aggregation from a genuine non-aggregation; other caller checks can still run.
+
+## COUNTEREXAMPLE
+The committed `results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json` contains this fragment:
+
+```json
+{
+  "schema": "carnot.flag_hygiene.matrix_capstone.v1",
+  "inference_substrate": {
+    "kind": "aggregation_from_upstream_artifacts",
+    "executes_models": false,
+    "source": "checked_in_artifacts"
+  },
+  "duration_s": 0.001577
+}
+```
+
+The function classifies the artifact as non-aggregation. Its complete payload receives a critical DURATION_TOO_SHORT flag.
+
+## MISSED INPUT
+`results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json` — schema `carnot.flag_hygiene.matrix_capstone.v1`.
+
+## RECOMMENDATION
+WIDEN_PATTERN_TO_CONCEPT
+
+## RATIONALE
+This is a verified false positive on a historical artifact, not a speculative naming variant. The function’s aggregation claim exceeds its schema prefix list, and the explicit test’s recognized substrate hides that gap.
+
+
+## adversarial_verify.py::_is_deterministic_verifier
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`True when the artifact declares replay / reconciliation over checked-in evidence.`
+
+## FINDINGS
+1. **Missed real input:** The checked-in artifact results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json declares `deterministic_state_verifier` for deterministic checks over fixtures. This function returns false: the name is absent from the exact-name list and contains neither searched substring. Its false result gives callers no way to distinguish an unrecognized verifier from a genuine non-verifier. A separate classifier supplies that artifact’s duration floor, so this is a failure of this helper, not proof that its duration went unchecked.
+2. **Live work classified as deterministic:** `return any(tok in sub for tok in ("replay", "reconciliation"))` accepts a real corpus substrate, live_llm_inference_with_metamorphic_replay. The word describes one part of the workflow; it does not establish the docstring’s `NO live LLM call of their own` condition. The methodology caller uses a true result to skip its evidence check, which can silently admit missing model, seed, and checksum fields.
+3. **Boundaries and negation:** The same substring rule matches *replay* inside *replayability* and accepts a declaration saying *without reconciliation*. It checks neither word boundaries nor whether the declaration affirms the work.
+4. **Field shapes:** `sub = _inference_substrate_text(d)` is the only field read here. That helper handles a principle/value wrapper and None, but stringifies a list; text inside the resulting list representation can trigger the substring rule. This function has no numeric threshold or equality boundary.
+5. **Pattern coverage and mutation:** `DETERMINISTIC_VERIFIER_SUBSTRATES` stands in for recognized deterministic verifiers but omits the real deterministic_state_verifier declaration. Entries containing *replay* are behaviorally double-covered by the substring rule. I cannot establish a deletion that leaves the suite green: an exact-only member has a direct test, and a tuple-size test would catch removal of a redundant entry.
+6. **Other failure classes:** This function has no absolute path, write target, side effect, or measurement. Its unrecognized default is an indistinguishable false result.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "honest_verdict": "complete: blocked_gpu_model_unavailable_cpu_fallback_ran",
-  "inference_substrate": "live_llm_inference",
-  "model_specs": [{"model": "Qwen3.6-27B"}],
-  "duration_s": 0.0001
+  "inference_substrate": "live_llm_inference_with_replayability_check",
+  "live_model_invoked": true,
+  "duration_s": 120.0
 }
 ```
-The duration check emits no flag. Changing only the verdict to `complete: cpu_fallback_ran` selects a 60-second floor and emits `DURATION_TOO_SHORT`.
+The function returns true. In the methodology caller, that result skips checks for absent model specifications, seed, and reproducibility checksum. The negated variant `live_llm_inference_without_reconciliation` also returns true.
 
 ## MISSED INPUT
-The checked-in artifact `results/experiment_2883_thrml_sampler_portability_smoke_v2.json` has `"honest_verdict": "complete: blocked_thrml_unavailable_local_fallback_ran_no_hardware_claim"` and `"local_fallback_ran": true`. It is classified as precondition-only, so its duration floor is skipped.
+`deterministic_state_verifier` — the top-level substrate in `results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The helper strips the prefix as claimed; the silent failure is in treating the remaining `blocked_` text as proof that *nothing* ran. A blocked primary path can coexist with completed fallback work, as the checked-in artifact shows. The skip needs to account for recorded execution before suppressing duration checks.
+An arbitrary substring is insufficient evidence that the current task was an LLM-free verifier, while the exact-name list misses a verifier already present in the corpus. Classification should use a validated substrate declaration and current-task invocation evidence before allowing callers to waive methodology checks.
 
 
-## adversarial_verify.py::_is_precondition_check_only_blocked
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring says the function returns true when an artifact stopped before compute and recognizes either an explicit `precondition_check_only` substrate or a blocked verdict.
-
-## FINDINGS
-1. **Field extraction:** `verdict = str(_unwrapped_scalar(d.get("honest_verdict")) or "")` handles a principle-wrapped verdict and None. A list or other non-scalar value becomes text and silently returns false; the supplied convention does not establish those as valid verdict values.
-2. **Promised route missing:** The body never reads the substrate declaration. A committed artifact, `results/experiment_5006_moat_second_corpus.json`, declares `precondition_check_only` but has a non-blocked verdict; the function returns false. The test named for explicit substrate recognition also supplies a blocked verdict, and still passes when its substrate field is removed.
-3. **Post-compute block mistaken for precondition block:** `return stripped.startswith("blocked_") or stripped.startswith("blocked:")` has sound string boundaries, but ignores *when* the block occurred. A committed artifact, `results/experiment_3471_p01_headroom_corpus_builder_hard_math_v1.json`, reports 31 newly generated problems and live inference, yet its post-run blocked verdict makes this function return true. In a direct probe, changing only its duration to 0.1 seconds produced no duration flag; changing the verdict to a non-blocked post-run description produced `DURATION_TOO_SHORT`.
-4. **Other classes:** There is no numeric threshold, absolute path, write, or measurement in this function. An unrecognized verdict returns false, so its default does not itself grant the exemption. The two prefix checks are separately exercised; the decorative test is the claimed substrate test.
-
-## COUNTEREXAMPLE
-`{"honest_verdict": "complete: blocked_no_headroom_benchmark_sc_outside_band", "inference_substrate": "live_llm_inference", "n_problems_added_this_run": 31, "duration_s": 0.1}` — classified as precondition-only despite claiming generated work, so the short duration escapes the duration check.
-
-## MISSED INPUT
-`results/experiment_5006_moat_second_corpus.json`: `inference_substrate` is `precondition_check_only`, but the function returns false because its verdict is `running_moat_second_corpus_mmlu_pro_hard_skeleton`.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The function both misses a recognition route its docstring promises and treats a demonstrated post-compute block as proof that no compute ran. The latter silently disables a fabrication check; the current substrate test cannot reveal the former.
-
-
-## adversarial_verify.py::_is_verifier_scoring_only
+## adversarial_verify.py::_descriptor_key_present
 
 **Verdict:** `REAL_BUG`
 
@@ -189,72 +166,34 @@ The function both misses a recognition route its docstring promises and treats a
 REAL_BUG
 
 ## CLAIM
-The docstring claims the function recognizes artifacts that scored `cached candidate triples without invoking LLM inference.`
+The function claims to find a real artifact field named `wanted` outside metadata, including fields in nested result rows.
 
 ## FINDINGS
-1. **Silent non-firing at the function boundary:** `schema = str(d.get("schema") or d.get("schema_version") or "")` stringifies a principle-wrapped schema or a list, so a valid value inside it cannot match. A truthy but unusable `schema` also prevents checking `schema_version`. `None` is handled by the fallback. The main verifier unwraps top-level fields before calling this helper, which limits the wrapped-field failure in that path.
-2. **Real false positive and context blindness:** `return any(schema.startswith(p) for p in VERIFIER_SCORING_SCHEMA_PREFIXES)` returns true for the committed experiment_2889_mbpp_humaneval_generated_code_clean_row_v1 artifact. Its verdict says bounded SOTA GGUF generation executed. The function never checks that contrary evidence. It also returns true for the blocked experiment_2838_mbpp_dual_condition_v3 artifact, which scored nothing.
-3. **Unbounded prefix:** `schema.startswith(p)` accepts every suffix after a listed prefix, including schema variants for different workloads. `VERIFIER_SCORING_SCHEMA_PREFIXES` stands for historical verifier-only schemas, yet one listed prefix already covers the live-generation artifact above. I found no defensible omitted verifier-only schema to add to the list.
-4. **Coverage and other classes:** I found no direct test of any of the five legacy prefixes in the adversarial-verifier tests; deletion of that branch appears untested there, but I did not run a full-suite mutation. This function has no numeric threshold, absolute path, write, or measurement. An unknown schema returns false without explanation from this helper; the caller has separate duration checks, so that result alone does not prove a skipped floor.
+1. **A — silent non-firing:** None found for an exact, non-null key in a JSON dict or list outside the excluded metadata. The demonstrated failure is false evidence, not a missed key.
+2. **Field shape and claim mismatch:** `if key == wanted and nested is not None:` checks the wrapper, not its value. A principle-wrapped null, false value, or empty reproduction gate counts as methodology evidence. A bare null does not. That is broader than the claimed “real” evidence.
+3. **Context and pattern scope:** `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` excludes only selected metadata containers. It omits preconditions_checked and tests_added. The committed experiment_4430_capstone_409 artifact contains false offline reproduction statuses inside a precondition audit; the helper treats such copied statuses as method fields. There is no free-text substring match or negation scan here—the context error comes from recursive key matching.
+4. **Untested rules:** Removing the metadata exclusion left all 10 focused regression tests green. Replacing nested dict and list traversal—including `if _descriptor_key_present(nested, wanted):`—with a top-level-only check left all 85 tests in the two relevant test files green. Those results do not establish that the full repository suite would pass.
+5. **Other classes:** There is no numeric threshold, absolute path, write, or measurement in this function. Its terminal `return False` also covers unsupported input shapes, but no plausible missed JSON artifact was established from that branch.
 
 ## COUNTEREXAMPLE
-Actual fragment from experiment_2889_mbpp_humaneval_generated_code_clean_row_v1:
-
 ```json
 {
-  "schema": "carnot.mbpp_humaneval_generated_code_clean_row.v1",
-  "honest_verdict": "complete: bounded SOTA GGUF generation executed cleanly but no candidate passed tests"
-}
-```
-
-The function returns true: it labels a live-generation run verifier-scoring-only.
-
-## MISSED INPUT
-At this function’s direct-call boundary, a principle-annotated version of the real historical schema value is missed:
-
-```json
-{
-  "schema": {
-    "principle": "Identifies the historical verifier-scoring schema",
-    "value": "carnot.fover_memory_leakage_v3"
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "reproducibility_checksum": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "reproduction_gate": {
+    "principle": "Record replay evidence when a gate runs.",
+    "value": null
   }
 }
 ```
-
-With no explicit substrate field, the function returns false.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-A committed live-generation artifact proves that a schema prefix alone cannot establish the function’s no-inference claim. Current live-provenance logic protects that artifact’s duration floor, but this helper also gates an offline methodology exemption. Legacy recognition needs contradictory-evidence checks and a regression case for each retained schema rule.
-
-
-## adversarial_verify.py::_cheap_learned_value_marker
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring claims to `Return a cheap learned-value/CNN/linear marker from real fields.`
-
-## FINDINGS
-1. **A/B/F — a real linear scorer is missed.** An architecture value present in the project’s artifacts, “linear ridge regression with bias,” has no matching entry in `CHEAP_LEARNED_VALUE_MARKERS`; this function reaches `return None`. In a direct probe, a verifier-scoring artifact using that description and reporting a one-microsecond duration received no duration flag from the caller. The unrecognized case was silent.
-2. **Field shape — wrappers are traversed, but their meaning is ignored.** There is no bare-scalar `d.get` assumption here. Instead, `found = _cheap_learned_value_marker(nested)` scans a principle annotation as though it described work performed, while `if marker in key_text:` can treat a false-valued field name as affirmative evidence. The exact-key exclusion via `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` omits the project’s actual tests-added metadata field.
-3. **Substring and context — both text paths are unsafe.** `if marker in key_text:` and `if marker in text:` impose no word boundary and do not interpret negation. A nonlinear-value description contains the linear-value marker; a verdict explicitly saying no CNN or value head was used still returns a cheap-method marker. The metadata-key membership check is exact and has no substring-boundary issue.
-4. **C — one listed pattern is decorative.** The cached-candidate linear-forward-pass marker is always shadowed by the earlier linear-forward marker. Removing that entry at runtime left all 18 relevant tests green.
-
-## COUNTEREXAMPLE
-A verifier-scoring artifact with `duration_s` of `0.02`, valid methodology fields, `model_specs.architecture` of “full transformer verifier,” and `honest_verdict` of “complete: cached candidates scored with full transformer verifier; no CNN or linear value head used.” The function returns “value head” from the denial. A direct probe selected the 0.0001-second cheap floor and emitted no duration flag, bypassing the ordinary 1-second verifier floor.
+The helper reports the reproduction gate as present, and the caller constructs an offline methodology descriptor, although the gate has no value.
 
 ## MISSED INPUT
-`model_specs.architecture = "linear ridge regression with bias"` — an actual value in `results/experiment_4353_learned_action_cost_heuristic_efficiency.json`. Scanning that field returns `None` despite its linear scoring method.
+none found
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A recursive scan of arbitrary keys and prose cannot establish what computation ran: it misses a real linear method and accepts descriptions that deny or merely discuss a cheap method. Use explicit positive execution evidence and test both missed methods and false exemptions. This function has no numeric threshold, absolute path, write, or measurement; the examined tests write fixtures under temporary paths.
+The helper equates a non-null container with usable methodology evidence and searches copied audit data as though it described the current artifact’s work. Value-aware unwrapping and provenance-aware scope are both needed. The focused regression tests currently fail to protect either distinction.
 

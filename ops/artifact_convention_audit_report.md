@@ -9,9 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 8 |
+| CHECKABLE | 6 |
+| AGGREGATE_ONLY | 1 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_7770_v676_qwen_runner_qualification.json
+## experiment_7783_source_view_qualification.json
 
 **CHECKABLE**
 
@@ -19,7 +21,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The CPU fixture completed its protocol, but the result was disqualified for readiness and claims no semantic benefit.
+The experiment was blocked from executing because upstream dependency `exp7782-historical-compatibility` failed required pre-flight gate checks.
 
 ## WHAT IS MISSING
 nothing
@@ -27,7 +29,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7771_view_energy_fit.json
+## experiment_7787_v677_qwen_event_confidence.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+This exposed pilot found no demonstrated decision benefit; the decision-benefit and probability-quality gates failed.
+
+## WHAT IS MISSING
+The artifact ends mid-field in `panel`, so the rest of the record is unavailable. `paired_improvements.brier.per_family` and `paired_improvements.cost.per_family` are present, but I cannot tell whether per-arm unit rows appear later.
+
+## THE CHECK A READER CANNOT DO
+Do the per-arm results for each family support the reported gate failures?
+
+## experiment_7784_v677_training_runtime.json
 
 **CHECKABLE**
 
@@ -35,7 +53,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because 6 of 9 upstream qualification gate checks failed, starting with `sentence_protocol_ready_score` in upstream `exp7768-source-view-qualification` observing 0 instead of 1.
+The training runtime candidate is disqualified from qualification readiness (`honest_verdict`: "complete_disqualified_required_validation") due to failed validation gate checks.
 
 ## WHAT IS MISSING
 nothing
@@ -43,7 +61,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7773_qwen_event_confidence.json
+## experiment_7789_v677_independent_evidence_audit.json
 
 **CHECKABLE**
 
@@ -51,15 +69,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked before comparison because two upstream gates failed.
+The run is blocked from readiness because the required Exp7786 and Exp7788 producer artifacts are missing.
 
 ## WHAT IS MISSING
-nothing; `gates_evaluated` records each check, its expected and actual values, and whether it passed.
+nothing; `gate_check_summary` identifies both failed `producer_path` checks and records `observed: "missing"`, while `rows` contains per-unit metrics for the available comparison.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7775_v676_independent_evidence_audit.json
+## experiment_7790_v677_arc_runner_qualification.json
 
 **CHECKABLE**
 
@@ -67,15 +85,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The audit was blocked because the required Exp7772 and Exp7774 producer artifacts were missing.
+The runner was disqualified because required validation failed.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary` names both failed `producer_path` checks and records `observed: "missing"`.
+nothing; `gate_check_summary` identifies `full_python_suite` as the failed check, with `observed: -15` versus `expected: 0`, and `probe_rows` records per-unit results.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7776_v676_arc_runner_qualification.json
+## experiment_7791_arc_organic_measurement.json
 
 **CHECKABLE**
 
@@ -83,15 +101,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The runner qualification was disqualified because required validation checks failed.
+The experiment was blocked because two upstream gate checks failed.
 
 ## WHAT IS MISSING
-nothing
+nothing; `gates_evaluated` records each check and its observed value, and `gate_check_summary` identifies the failures.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7777_arc_organic_measurement.json
+## experiment_7793_v677_hardware_evidence.json
 
 **CHECKABLE**
 
@@ -99,23 +117,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7779_v676_hardware_evidence.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
+No comparative claim; the evaluation is blocked because upstream producer Exp7792 failed the service producer eligibility check (`eligible_service_producer == false`).
 
 ## WHAT IS MISSING
 nothing
@@ -123,18 +125,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7780_v676_capstone.json
+## experiment_7794_v677_capstone.json
 
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The v676 capstone is disqualified, with readiness 0 and validity false.
+The exposed Qwen event-confidence arm showed no qualified benefit over the generic arm, so its unchanged scope should be retired.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary` records the failed checks, expected values, and observed values, while `rows` identifies the affected producers.
+Per-family Brier and cost values for **each arm** are missing. `paired_improvements.brier.per_family` and `paired_improvements.cost.per_family` give differences, while `semantic_comparison_rows` gives arm-level aggregates; the `rows` array accounts for tasks rather than recording each family’s arm metrics. `gate_check_summary` does record the failed checks, so the block has a diagnostic.
 
 ## THE CHECK A READER CANNOT DO
-none
+For each of the 24 families, was the generic arm already at a metric floor or ceiling, leaving no headroom for the event arm?

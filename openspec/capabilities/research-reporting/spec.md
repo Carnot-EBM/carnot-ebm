@@ -83973,3 +83973,28 @@ rows, and compare task dispositions and hashes. The real entrypoint SHALL run
 the frozen affected suite, complete changed-module coverage, scoped static
 checks, full Python suite, publication gate and terminal readers before atomic
 output. Each subprocess exit and log hash SHALL be retained.
+
+## REQ-REPORT-V678-PLAN: Bind the next milestone to executable evidence
+
+The V678 design and staged YAML SHALL name exactly fourteen ordered tasks,
+Exp7795 through Exp7808. Their IDs, titles, phases, deliverables, model lists,
+substrate classes and gates SHALL agree. The design SHALL retain V677 outcomes
+and identify the three gaps against the PRD. Literature review SHALL precede
+experiment design. Every comparative task SHALL retain individual result rows.
+
+The plan SHALL include calibrated decision training, delayed constraint
+acquisition, scored-path ARC generalization and attached-board continuity.
+LLM work SHALL use unsloth/Qwen3.8-27B-GGUF. Bounded generation SHALL declare
+model_bounded_generation. Every prompt SHALL contain numbered progress and
+bounded-write steps, explicit preconditions, exact gate fields, artifact
+principles and the run command. Historical failures SHALL remain unchanged.
+
+### SCENARIO-REPORT-V678-PLAN
+
+The unchanged roadmap schema, exclusion, failure-lineage, gate, harness-fit,
+ARC-floor and priority readers accept the staged proposal. An independent
+reader compares the literal table and embedded JSON against all YAML tasks.
+Private mutations of count, ID, order, title, phase, deliverable, model,
+substrate, gate producer or gate field fail. Planning does not edit the active
+roadmap, conductor or activation guards. Runtime E2E belongs to the future
+implementation tasks; planning E2E exercises the staged-reader boundary.
