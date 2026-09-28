@@ -5020,3 +5020,34 @@ Source: `docs/research-notes/b2-positive-control-2026-09-23.md` (workflow `wf_1b
   prerequisites. E0 and Kaggle confirmation remain operator-held. No readiness
   value, artifact completion, or historical hash satisfies those external
   conditions.
+
+### GAP-SEMIF-ACCEPT-ENERGY-COLLAPSES-REJECT-SIGNAL-7750: A1 readout energy has real signal the chosen scalar throws away
+
+- status: open
+- evidence: `results/experiment_semif_readout_ebm_eval_a1.json` (REQ-VERIFY-7750, A1). A real
+  single-forward-pass SemIf-style readout over `unsloth/Qwen3.8-27B-GGUF` scored all 6,548
+  `data/fover_corpus_v4.json` rows. The registered feature, `E_readout = -log p(accept)`, gave a
+  raw (unscaled) AUROC of 0.335 against the true label -- BELOW chance in the assumed direction,
+  meaning it is anti-correlated with the sign this project's Gibbs verifier uses (high energy =
+  likely incorrect). In every one of 5 grouped out-of-fold cross-validation folds the non-negative
+  product-of-experts fit chose `alpha=0.0` -- the readout was dropped entirely, and PoE Brier
+  equaled verifier-only Brier exactly. A post-hoc diagnostic (not part of the registered gate)
+  found the readout's OWN three-way decision correlates strongly with real error: rows where the
+  readout argmax was `reject` were actually incorrect 11.4 percent of the time versus a 1.7 percent
+  corpus base rate, a 6.7x lift. Rows decided `escalate` were incorrect only 0.2 percent of the time
+  (cleaner than base rate). So the readout demonstrably discriminates -- the failure is specific to
+  the single-scalar projection chosen.
+- failure mode: `-log p(accept)` rises whenever the model favors EITHER `reject` OR `escalate` over
+  `accept`, collapsing two option-probability channels with opposite informativeness (favoring
+  `reject` predicts real error; favoring `escalate` predicts a CLEANER row) into one number. The
+  two effects partially cancel and invert the net rank-ordering, so a linear product-of-experts over
+  this one scalar cannot recover the real `reject`-channel signal.
+- missing discriminator: the `reject`-specific log-probability (or `p(reject) - p(accept)`) as its
+  own feature, kept separate from the `escalate` channel, so a PoE or downstream classifier can use
+  the reject signal without the escalate channel canceling it.
+- candidate design: re-run A1 (or a follow-up experiment) with a 2-dimensional readout feature
+  vector `[-log p(accept), -log p(reject)]` (or the 2 independent log-odds) joined to the existing
+  PCIB features and Gibbs energy, instead of collapsing to one scalar before the PoE fit. Re-run the
+  same pre-registered gate, positive control, and degenerate-case checks unchanged.
+- priority: high -- this is a real, measured signal (6.7x lift on the `reject` decision) going
+  unused by the exact mechanism (REQ-VERIFY-7750's PoE) built to capture it.

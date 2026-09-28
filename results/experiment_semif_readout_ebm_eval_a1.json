@@ -1,0 +1,288 @@
+{
+  "schema": "carnot.semif_readout_ebm_eval.a1.v1",
+  "experiment": "semif_readout_ebm_eval_a1",
+  "requirement": "REQ-VERIFY-7750",
+  "run_date": "20260928",
+  "run_timestamp_utc": "2026-09-28T03:41:19.472110+00:00",
+  "honest_verdict": "complete: a1_readout_poe_failed_pre_registered_gate",
+  "inference_substrate": "live_llm_single_token_logit_readout",
+  "inference_substrate_class": "model_load_no_generation",
+  "execution_venue": "host",
+  "inference_substrate_note": "Not yet a registered value in CLAUDE.md's Inference-Substrate Declaration table. Closest registered analog is `live_llm_embedding_extraction` (a real GGUF load, one prefill pass per row, no autoregressive decoding) -- this substrate differs only in WHAT is read from that one pass (the final-position output logits for three declared option tokens, not a hidden-state embedding vector). Proposed honestly rather than mis-declared as either `live_llm_inference` (implies full generation, which this never does) or `verifier_ensemble_against_cached_candidates` (implies no model load at all, which is false here).",
+  "model_specs": [
+    {
+      "name": "Qwen3.8-27B",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "gpu": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "selection_role": "current_headline"
+    }
+  ],
+  "verifier_is_oracle": false,
+  "random_seed": 7750,
+  "reproducibility_checksum": "sha256:97389de3ecb27c8bf328f4702c39e7df68e79d2faf5c4e18d451ddbce60861a9",
+  "duration_s": 1005.9138289809925,
+  "preconditions_checked": [
+    {
+      "resource": "fover_corpus_v4_json",
+      "available": true
+    },
+    {
+      "resource": "qwen3_8_27b_gguf_cached",
+      "available": true
+    },
+    {
+      "resource": "llama_cpp_cuda_gpu_offload",
+      "available": true
+    }
+  ],
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Real compute takes wall-clock time; a fabricated result would show an implausibly short duration for 6,548 real forward passes.",
+      "satisfied_by": "wall_clock measurement across the full driver run, including model load and every row's forward pass"
+    },
+    "random_seed": {
+      "principle": "Determinism is the precondition for reproducibility; a fixed seed lets a third party re-run the Gibbs training, positive control, and bootstrap and get the same numbers.",
+      "satisfied_by": "random_seed=7750 threaded through Gibbs init, the positive control, and the bootstrap"
+    },
+    "reproducibility_checksum": {
+      "principle": "A content-addressed hash of the corpus file and key config catches silent corpus or config drift between this artifact and any future replication attempt.",
+      "satisfied_by": "sha256 over the corpus bytes, the random seed, the weight grid, and k"
+    }
+  },
+  "corpus": {
+    "path": "data/fover_corpus_v4.json",
+    "n_rows_total": 6548,
+    "n_train": 1945,
+    "n_held_out": 4603,
+    "n_scored_for_real_fit": 4603,
+    "n_readout_forced_escalate_and_excluded": 2809,
+    "readout_cache_hits": 0,
+    "readout_cache_misses": 6548
+  },
+  "degenerate_case_checks": {
+    "case_a_uniform_readout_spearman_corr_vs_verifier": 1.0,
+    "case_a_passes": true,
+    "case_b_degenerate_verifier_fit_result": null,
+    "case_b_passes": true,
+    "case_c_missing_logit_decision": "escalate",
+    "case_c_nan_logit_decision": "escalate",
+    "case_c_passes": true
+  },
+  "positive_control": {
+    "alpha": 2.0,
+    "beta": 0.125,
+    "brier_poe": 0.08178747564374604,
+    "brier_verifier_only_no_signal": 0.2498366909979091,
+    "alpha_is_positive": true,
+    "poe_beats_no_signal_verifier": true,
+    "passed": true,
+    "n": 2000
+  },
+  "oof_cross_validation": {
+    "k": 5,
+    "per_fold": [
+      {
+        "fold": 0,
+        "status": "ok",
+        "n_train": 3686,
+        "n_eval": 917,
+        "alpha": 0.0,
+        "beta": 4.0,
+        "readout_only_scale": 0.0,
+        "verifier_only_scale": 4.0,
+        "brier_poe": 0.17980694356617907,
+        "brier_readout_only": 0.25,
+        "brier_verifier_only": 0.17980694356617907,
+        "log_loss_poe": 0.5502023968119816,
+        "log_loss_readout_only": 0.6931471805599453,
+        "log_loss_verifier_only": 0.5502023968119816,
+        "ece_poe": 0.3123679887163899,
+        "ece_readout_only": 0.480370774263904,
+        "ece_verifier_only": 0.3123679887163899,
+        "auroc_poe": 0.656964528488444,
+        "auroc_readout_only": 0.5,
+        "auroc_verifier_only": 0.656964528488444,
+        "poe_aurc": 0.2887296700294911,
+        "poe_coverage_at_5pct_risk": 0.0010905125408942203
+      },
+      {
+        "fold": 1,
+        "status": "ok",
+        "n_train": 3613,
+        "n_eval": 990,
+        "alpha": 0.0,
+        "beta": 4.0,
+        "readout_only_scale": 0.0,
+        "verifier_only_scale": 4.0,
+        "brier_poe": 0.16724003444014848,
+        "brier_readout_only": 0.25,
+        "brier_verifier_only": 0.16724003444014848,
+        "log_loss_poe": 0.5236083810182729,
+        "log_loss_readout_only": 0.6931471805599453,
+        "log_loss_verifier_only": 0.5236083810182729,
+        "ece_poe": 0.2949377054638303,
+        "ece_readout_only": 0.48383838383838385,
+        "ece_verifier_only": 0.2949377054638303,
+        "auroc_poe": 0.6107225359342916,
+        "auroc_readout_only": 0.5,
+        "auroc_verifier_only": 0.6107225359342916,
+        "poe_aurc": 0.2823648949714068,
+        "poe_coverage_at_5pct_risk": 0.0030303030303030303
+      },
+      {
+        "fold": 2,
+        "status": "ok",
+        "n_train": 3706,
+        "n_eval": 897,
+        "alpha": 0.0,
+        "beta": 4.0,
+        "readout_only_scale": 0.0,
+        "verifier_only_scale": 4.0,
+        "brier_poe": 0.18162313336561256,
+        "brier_readout_only": 0.25,
+        "brier_verifier_only": 0.18162313336561256,
+        "log_loss_poe": 0.5567883983945864,
+        "log_loss_readout_only": 0.6931471805599453,
+        "log_loss_verifier_only": 0.5567883983945864,
+        "ece_poe": 0.31810411549681755,
+        "ece_readout_only": 0.4821627647714604,
+        "ece_verifier_only": 0.31810411549681755,
+        "auroc_poe": 0.766777809307605,
+        "auroc_readout_only": 0.5,
+        "auroc_verifier_only": 0.766777809307605,
+        "poe_aurc": 0.3011471970493793,
+        "poe_coverage_at_5pct_risk": 0.002229654403567447
+      },
+      {
+        "fold": 3,
+        "status": "ok",
+        "n_train": 3715,
+        "n_eval": 888,
+        "alpha": 0.0,
+        "beta": 4.0,
+        "readout_only_scale": 0.0,
+        "verifier_only_scale": 4.0,
+        "brier_poe": 0.1738926069776243,
+        "brier_readout_only": 0.25,
+        "brier_verifier_only": 0.1738926069776243,
+        "log_loss_poe": 0.5347011289345438,
+        "log_loss_readout_only": 0.6931471805599454,
+        "log_loss_verifier_only": 0.5347011289345438,
+        "ece_poe": 0.30670979289678746,
+        "ece_readout_only": 0.48536036036036034,
+        "ece_verifier_only": 0.30670979289678746,
+        "auroc_poe": 0.5919120879120879,
+        "auroc_readout_only": 0.5,
+        "auroc_verifier_only": 0.5919120879120879,
+        "poe_aurc": 0.2784373032471689,
+        "poe_coverage_at_5pct_risk": 0.0022522522522522522
+      },
+      {
+        "fold": 4,
+        "status": "ok",
+        "n_train": 3692,
+        "n_eval": 911,
+        "alpha": 0.0,
+        "beta": 4.0,
+        "readout_only_scale": 0.0,
+        "verifier_only_scale": 4.0,
+        "brier_poe": 0.17183791531900172,
+        "brier_readout_only": 0.25,
+        "brier_verifier_only": 0.17183791531900172,
+        "log_loss_poe": 0.5319163009120615,
+        "log_loss_readout_only": 0.6931471805599453,
+        "log_loss_verifier_only": 0.5319163009120615,
+        "ece_poe": 0.29777326105106416,
+        "ece_readout_only": 0.4835345773874863,
+        "ece_verifier_only": 0.29777326105106416,
+        "auroc_poe": 0.6980282738095238,
+        "auroc_readout_only": 0.5,
+        "auroc_verifier_only": 0.6980282738095238,
+        "poe_aurc": 0.3004825661497188,
+        "poe_coverage_at_5pct_risk": 0.0
+      }
+    ],
+    "n_ok_folds": 5
+  },
+  "paired_group_bootstrap": {
+    "n_boot": 2000,
+    "n_groups": 4603,
+    "n_rows": 4603,
+    "brier_delta_vs_readout_only": {
+      "point": -0.07526015037440176,
+      "ci95": [
+        -0.08221499414965201,
+        -0.06858061733005885
+      ]
+    },
+    "brier_delta_vs_verifier_only": {
+      "point": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "brier_delta_vs_better_single_expert": {
+      "point": 0.0
+    },
+    "ece_delta_vs_better_single_expert": {
+      "point": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "headroom_check": {
+    "applicable_as_a_selection_experiment": false,
+    "reason": "data/fover_corpus_v4.json has one row per decision, not multiple candidates per question -- there is no top-k pool to select over. Per the plan's own headroom rule, a saturated single-row corpus cannot support a selection-lift claim; see ops/verifier_gaps.md GAP-DECISION-PCIB-OBSERVABLES-7396 (22 conflicting cells among 3,950 rows, near-universal accept).",
+    "always_accept_baseline_accuracy": 0.9825901038485033,
+    "oracle_accuracy": 1.0,
+    "oracle_minus_incumbent_accuracy_gap": 0.017409896151496684,
+    "selection_claim_status": "FALSE_NEGATIVE_RISK_not_applicable"
+  },
+  "acceptance_gates": {
+    "poe_brier_delta_vs_readout_only_ci95_upper_below_zero": {
+      "value": -0.06858061733005885,
+      "passed": true,
+      "principle": "A PoE win over the readout alone must survive a 95 percent paired group bootstrap, not just a point estimate, before it counts as a real calibration gain."
+    },
+    "poe_brier_delta_vs_verifier_only_ci95_upper_below_zero": {
+      "value": 0.0,
+      "passed": false,
+      "principle": "Same bound against the verifier-only expert -- the PoE must beat BOTH single experts, not just the weaker one."
+    },
+    "ece_does_not_worsen_by_more_than_0_01": {
+      "value": 0.0,
+      "passed": true,
+      "principle": "A calibration win in Brier that comes with a large ECE regression is not a usable calibration improvement."
+    },
+    "positive_control_passed": {
+      "value": true,
+      "passed": true,
+      "principle": "If the PoE cannot even detect a noisy copy of the gold label, its fitting machinery cannot be trusted on the real, much weaker signal."
+    },
+    "degenerate_case_a_passed": true,
+    "degenerate_case_b_passed": true,
+    "degenerate_case_c_passed": true
+  },
+  "gate_passed": false,
+  "methodology_note": "Verifier-only energy is a real 2-4-1 GibbsModel trained via NCE on the fixed calibrated_decision_benchmark train split (30 percent of question groups). Readout energy is a genuine single forward pass per row over unsloth/Qwen3.8-27B-GGUF on GPU 1, reading the three declared option logits -- no text is generated. alpha and beta are fit only on the k-1 training folds of each out-of-fold split, never on the evaluation fold.",
+  "post_hoc_diagnostic_not_part_of_registered_gate": {
+    "note": "Computed after the registered gate decision, from the same cached readout logits. Does not change gate_passed or any acceptance_gates value above -- reported for honesty per CLAUDE.md's cross-check-surprising-results discipline, and logged as GAP-SEMIF-ACCEPT-ENERGY-COLLAPSES-REJECT-SIGNAL-7750 in ops/verifier_gaps.md.",
+    "raw_unscaled_readout_energy_auroc_vs_true_label": 0.3352117863720074,
+    "readout_decision_counts": {
+      "accept": 2425,
+      "escalate": 1977,
+      "reject": 201
+    },
+    "fraction_actually_incorrect_by_readout_decision": {
+      "accept": 0.021,
+      "reject": 0.1144,
+      "escalate": 0.002
+    },
+    "corpus_base_rate_incorrect": 0.016945470345426896,
+    "interpretation": "The registered scalar feature (-log p(accept)) is anti-correlated with the assumed sign because it conflates two option-probability channels with opposite informativeness: leaning toward `reject` predicts real error (11.4% vs 1.7% base rate, a 6.7x lift); leaning toward `escalate` predicts a CLEANER row (0.2%). A single scalar collapsing both channels cancels the real reject-channel signal, which is why the PoE fit correctly chose alpha=0.0 in every fold -- the fitting machinery is not broken (see the passing positive control); the chosen feature projection is."
+  }
+}
