@@ -1,0 +1,981 @@
+{
+  "schema": "carnot.semif_readout_ebm_eval.a2.v1",
+  "experiment": "semif_readout_ebm_eval_a2",
+  "requirement": "REQ-VERIFY-7751",
+  "run_date": "20260928",
+  "run_timestamp_utc": "2026-09-28T18:06:04.586695+00:00",
+  "honest_verdict": "complete: a2_calibrator_tournament_usable_on_reject_escalate",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "inference_substrate_note": "CPU-only calibrator fitting and grouped bootstrap over A1's cached readout logits. No model is loaded and no forward pass is made -- confirmed by asserting `llama_cpp` is never imported in this code path.",
+  "model_specs": [],
+  "verifier_is_oracle": false,
+  "random_seed": 7751,
+  "reproducibility_checksum": "sha256:6cc27d5018f45b14d0125624f86e11693b0ada78731a17bf2f4b1e276b0498fa",
+  "duration_s": 39.16439467802411,
+  "preconditions_checked": [
+    {
+      "resource": "fover_corpus_v4_json",
+      "available": true
+    },
+    {
+      "resource": "a1_readout_logits_cache",
+      "available": true
+    },
+    {
+      "resource": "a1_readout_cache_non_empty",
+      "available": true
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "semif_readout_ebm_eval_a1",
+      "fields_imported": [
+        "readout_logits_cache (all 6548 rows' raw per-option logits)"
+      ],
+      "sha256": "sha256:e5057c5e1af834c54638b69ac139b5c94bfc7614ac576a67f12944d8fb4ee23f",
+      "cache_sha256": "sha256:a4c3145f744bc961aff72492213618eb065627798b3454f7ba27bdf24b0faf3b"
+    }
+  ],
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Even a CPU-only aggregation should report a real wall-clock duration so a reader can distinguish a genuine run from a stub.",
+      "satisfied_by": "wall_clock measurement across the full driver run"
+    },
+    "random_seed": {
+      "principle": "Determinism lets a third party re-run the tournament, bootstrap, and positive controls and get the same numbers.",
+      "satisfied_by": "random_seed=7751 threaded through the tournament, bootstrap, and positive controls"
+    },
+    "reproducibility_checksum": {
+      "principle": "A content-addressed hash of the corpus and cache files catches silent drift between this artifact and a future rerun.",
+      "satisfied_by": "sha256 over the corpus bytes, the cache bytes, the seed, and k"
+    }
+  },
+  "corpus": {
+    "path": "data/fover_corpus_v4.json",
+    "n_held_out_rows": 4603,
+    "n_scored_rows": 4603,
+    "n_missing_cache_entry": 0,
+    "n_degenerate_logits_excluded": 0,
+    "n_question_groups": 4603
+  },
+  "degenerate_case_checks": {
+    "constant_probability": {
+      "temperature_stays_constant": true,
+      "platt2_stays_constant": true,
+      "isotonic_stays_constant": true,
+      "passes": true
+    },
+    "isotonic_no_false_rank_improvement": {
+      "order_preserved": true,
+      "passes": true
+    },
+    "hard_failures_raised": {
+      "empty_probabilities_raises": true,
+      "one_class_fold_raises": true,
+      "out_of_range_probability_raises": true,
+      "passes": true
+    }
+  },
+  "positive_controls": {
+    "temperature_recovery": {
+      "true_temperature": 3.0,
+      "fitted_temperature": 1.5091360807418823,
+      "brier_raw_overconfident": 0.2024038619533681,
+      "brier_temperature_calibrated": 0.1873933015807623,
+      "passed": true,
+      "n": 2000
+    },
+    "platt_affine_recovery": {
+      "true_scale": 2.0,
+      "true_shift": -1.5,
+      "fitted_a": 0.5206952691078186,
+      "fitted_b": 0.7171201705932617,
+      "brier_temperature_only": 0.21108182322277116,
+      "brier_two_parameter_platt": 0.17990398302916252,
+      "passed": true,
+      "n": 2000
+    }
+  },
+  "tournament": {
+    "accept": {
+      "per_fold": [
+        {
+          "fold": 0,
+          "status": "ok",
+          "n_train": 3686,
+          "n_eval": 917,
+          "temperature": 1.0301352739334106,
+          "platt_a": 0.6491074562072754,
+          "platt_b": -2.4013895988464355,
+          "isotonic_fit": true,
+          "brier_raw": 0.22409574066548255,
+          "brier_temperature": 0.2241584713357416,
+          "brier_platt2": 0.02260010799634352,
+          "brier_isotonic": 0.01885456831189432,
+          "ece_raw": 0.4281569663387825,
+          "ece_temperature": 0.42961792246465985,
+          "ece_platt2": 0.06120043754681362,
+          "ece_isotonic": 0.003431738174571287,
+          "log_loss_raw": 0.6477202050054195,
+          "log_loss_temperature": 0.647186584553381,
+          "log_loss_platt2": 0.12463774334297248,
+          "log_loss_isotonic": 0.09024587968940818,
+          "mce_raw": 0.7586585840300027,
+          "mce_temperature": 0.940752387046814,
+          "mce_platt2": 0.365272717055742,
+          "mce_isotonic": 0.125
+        },
+        {
+          "fold": 1,
+          "status": "ok",
+          "n_train": 3613,
+          "n_eval": 990,
+          "temperature": 1.0408543348312378,
+          "platt_a": 0.6430919170379639,
+          "platt_b": -2.4067065715789795,
+          "isotonic_fit": true,
+          "brier_raw": 0.21396893178001677,
+          "brier_temperature": 0.2144171757193257,
+          "brier_platt2": 0.020456655563527205,
+          "brier_isotonic": 0.015856122747214076,
+          "ece_raw": 0.41748132857927683,
+          "ece_temperature": 0.41989749344912447,
+          "ece_platt2": 0.06078898952557722,
+          "ece_isotonic": 0.000895858010341118,
+          "log_loss_raw": 0.6256984352219185,
+          "log_loss_temperature": 0.6259234667347476,
+          "log_loss_platt2": 0.11932097879917751,
+          "log_loss_isotonic": 0.08184432912674322,
+          "mce_raw": 0.8360689506134357,
+          "mce_temperature": 0.8399938535690308,
+          "mce_platt2": 0.30749813401520953,
+          "mce_isotonic": 0.025442152000867718
+        },
+        {
+          "fold": 2,
+          "status": "ok",
+          "n_train": 3706,
+          "n_eval": 897,
+          "temperature": 1.03153657913208,
+          "platt_a": 0.6683326959609985,
+          "platt_b": -2.4041566848754883,
+          "isotonic_fit": true,
+          "brier_raw": 0.2214824348660079,
+          "brier_temperature": 0.22170089180028266,
+          "brier_platt2": 0.022920183539158288,
+          "brier_isotonic": 0.01808445609041667,
+          "ece_raw": 0.42472493133218575,
+          "ece_temperature": 0.4246547291742652,
+          "ece_platt2": 0.06142255935483611,
+          "ece_isotonic": 0.0038647259091622505,
+          "log_loss_raw": 0.6456656941912818,
+          "log_loss_temperature": 0.6452129429032221,
+          "log_loss_platt2": 0.12761402191712928,
+          "log_loss_isotonic": 0.10792678598863144,
+          "mce_raw": 0.9232945146353739,
+          "mce_temperature": 0.9255005717277527,
+          "mce_platt2": 0.4404014005614936,
+          "mce_isotonic": 0.6458820355435775
+        },
+        {
+          "fold": 3,
+          "status": "ok",
+          "n_train": 3715,
+          "n_eval": 888,
+          "temperature": 1.0271075963974,
+          "platt_a": 0.666566014289856,
+          "platt_b": -2.392831325531006,
+          "isotonic_fit": true,
+          "brier_raw": 0.22388182124285003,
+          "brier_temperature": 0.22397026524012506,
+          "brier_platt2": 0.01978217203620803,
+          "brier_isotonic": 0.014476816011061875,
+          "ece_raw": 0.4297425794371453,
+          "ece_temperature": 0.43116646802036074,
+          "ece_platt2": 0.06712400143782161,
+          "ece_isotonic": 0.003036188387086837,
+          "log_loss_raw": 0.6513498982213395,
+          "log_loss_temperature": 0.6506657825116924,
+          "log_loss_platt2": 0.1164667725787285,
+          "log_loss_isotonic": 0.07243591736100206,
+          "mce_raw": 0.9171740550266192,
+          "mce_temperature": 0.9225694537162781,
+          "mce_platt2": 0.35380725657277323,
+          "mce_isotonic": 0.14583333333333331
+        },
+        {
+          "fold": 4,
+          "status": "ok",
+          "n_train": 3692,
+          "n_eval": 911,
+          "temperature": 1.0255967378616333,
+          "platt_a": 0.6718177199363708,
+          "platt_b": -2.396282196044922,
+          "isotonic_fit": true,
+          "brier_raw": 0.22608555165822644,
+          "brier_temperature": 0.2260850940695181,
+          "brier_platt2": 0.021216693202519118,
+          "brier_isotonic": 0.016141392425409466,
+          "ece_raw": 0.42832598021808754,
+          "ece_temperature": 0.42962685186501787,
+          "ece_platt2": 0.06618502193358822,
+          "ece_isotonic": 0.001342806277961575,
+          "log_loss_raw": 0.6538267398812772,
+          "log_loss_temperature": 0.6530960137033388,
+          "log_loss_platt2": 0.12204842804138426,
+          "log_loss_isotonic": 0.08136713678101519,
+          "mce_raw": 0.7811742132951905,
+          "mce_temperature": 0.8112123512452649,
+          "mce_platt2": 0.4847110115086324,
+          "mce_isotonic": 0.04438405797101448
+        }
+      ],
+      "isotonic_omitted": [],
+      "reliability_table_raw": [
+        {
+          "lo": 0.0,
+          "hi": 0.1,
+          "count": 4,
+          "mean_confidence": 0.05778130393101938,
+          "mean_accuracy": 0.25,
+          "gap": 0.19221869606898062
+        },
+        {
+          "lo": 0.1,
+          "hi": 0.2,
+          "count": 94,
+          "mean_confidence": 0.17374479758908026,
+          "mean_accuracy": 0.02127659574468085,
+          "gap": 0.1524682018443994
+        },
+        {
+          "lo": 0.2,
+          "hi": 0.30000000000000004,
+          "count": 787,
+          "mean_confidence": 0.261408679632175,
+          "mean_accuracy": 0.008894536213468869,
+          "gap": 0.25251414341870615
+        },
+        {
+          "lo": 0.30000000000000004,
+          "hi": 0.4,
+          "count": 1426,
+          "mean_confidence": 0.34813474625669655,
+          "mean_accuracy": 0.008415147265077139,
+          "gap": 0.3397195989916194
+        },
+        {
+          "lo": 0.4,
+          "hi": 0.5,
+          "count": 894,
+          "mean_confidence": 0.445241482027804,
+          "mean_accuracy": 0.0145413870246085,
+          "gap": 0.4307000950031955
+        },
+        {
+          "lo": 0.5,
+          "hi": 0.6000000000000001,
+          "count": 531,
+          "mean_confidence": 0.5459676807350349,
+          "mean_accuracy": 0.013182674199623353,
+          "gap": 0.5327850065354115
+        },
+        {
+          "lo": 0.6000000000000001,
+          "hi": 0.7000000000000001,
+          "count": 389,
+          "mean_confidence": 0.6474973910016445,
+          "mean_accuracy": 0.03598971722365039,
+          "gap": 0.6115076737779941
+        },
+        {
+          "lo": 0.7000000000000001,
+          "hi": 0.8,
+          "count": 290,
+          "mean_confidence": 0.7460849053949022,
+          "mean_accuracy": 0.034482758620689655,
+          "gap": 0.7116021467742126
+        },
+        {
+          "lo": 0.8,
+          "hi": 0.9,
+          "count": 163,
+          "mean_confidence": 0.8418883334798959,
+          "mean_accuracy": 0.05521472392638037,
+          "gap": 0.7866736095535155
+        },
+        {
+          "lo": 0.9,
+          "hi": 1.0,
+          "count": 25,
+          "mean_confidence": 0.9189789141204475,
+          "mean_accuracy": 0.12,
+          "gap": 0.7989789141204475
+        }
+      ]
+    },
+    "reject": {
+      "per_fold": [
+        {
+          "fold": 0,
+          "status": "ok",
+          "n_train": 3686,
+          "n_eval": 917,
+          "temperature": 0.44921138882637024,
+          "platt_a": 1.918198823928833,
+          "platt_b": -1.0500521659851074,
+          "isotonic_fit": true,
+          "brier_raw": 0.06666274488532672,
+          "brier_temperature": 0.02676511456567009,
+          "brier_platt2": 0.019456890968209472,
+          "brier_isotonic": 0.01818039565351734,
+          "ece_raw": 0.21736340997977757,
+          "ece_temperature": 0.06230536371695727,
+          "ece_platt2": 0.025104883177781433,
+          "ece_isotonic": 0.004759146442233604,
+          "log_loss_raw": 0.28787389207133773,
+          "log_loss_temperature": 0.1346428263220086,
+          "log_loss_platt2": 0.10042721725406507,
+          "log_loss_isotonic": 0.08547414448216269,
+          "mce_raw": 0.4184315359677592,
+          "mce_temperature": 0.6663979887962341,
+          "mce_platt2": 0.4155052617237263,
+          "mce_isotonic": 0.10006894614621079
+        },
+        {
+          "fold": 1,
+          "status": "ok",
+          "n_train": 3613,
+          "n_eval": 990,
+          "temperature": 0.44914841651916504,
+          "platt_a": 1.9217772483825684,
+          "platt_b": -1.028319239616394,
+          "isotonic_fit": true,
+          "brier_raw": 0.0680930452268569,
+          "brier_temperature": 0.029166079826135255,
+          "brier_platt2": 0.019597911896298288,
+          "brier_isotonic": 0.01542173073550215,
+          "ece_raw": 0.22159766596705002,
+          "ece_temperature": 0.07180283991290687,
+          "ece_platt2": 0.03359487835426756,
+          "ece_isotonic": 0.0023144020447985205,
+          "log_loss_raw": 0.290215809626094,
+          "log_loss_temperature": 0.137098039108031,
+          "log_loss_platt2": 0.09492172230250431,
+          "log_loss_isotonic": 0.07359844359064036,
+          "mce_raw": 0.8367040631239341,
+          "mce_temperature": 0.9491592446962992,
+          "mce_platt2": 0.8529440691271155,
+          "mce_isotonic": 0.3558062925125986
+        },
+        {
+          "fold": 2,
+          "status": "ok",
+          "n_train": 3706,
+          "n_eval": 897,
+          "temperature": 0.4508998394012451,
+          "platt_a": 1.9161385297775269,
+          "platt_b": -1.035885214805603,
+          "isotonic_fit": true,
+          "brier_raw": 0.06610565936834678,
+          "brier_temperature": 0.026282283586174772,
+          "brier_platt2": 0.019050354129963885,
+          "brier_isotonic": 0.015901321688473472,
+          "ece_raw": 0.21786925340209765,
+          "ece_temperature": 0.06932447760569921,
+          "ece_platt2": 0.03179194348331106,
+          "ece_isotonic": 0.0022627337835043906,
+          "log_loss_raw": 0.285826954156004,
+          "log_loss_temperature": 0.1307648576086032,
+          "log_loss_platt2": 0.09096337172760732,
+          "log_loss_isotonic": 0.06962231498761047,
+          "mce_raw": 0.9347826889107731,
+          "mce_temperature": 0.8780728578567505,
+          "mce_platt2": 0.983143262658897,
+          "mce_isotonic": 0.06792622582096264
+        },
+        {
+          "fold": 3,
+          "status": "ok",
+          "n_train": 3715,
+          "n_eval": 888,
+          "temperature": 0.4520756006240845,
+          "platt_a": 1.912177562713623,
+          "platt_b": -1.0439261198043823,
+          "isotonic_fit": true,
+          "brier_raw": 0.06403890770445562,
+          "brier_temperature": 0.02417637292726525,
+          "brier_platt2": 0.016242947193868554,
+          "brier_isotonic": 0.014045428236490718,
+          "ece_raw": 0.2150401562323318,
+          "ece_temperature": 0.06559925037855703,
+          "ece_platt2": 0.027863270004985813,
+          "ece_isotonic": 0.0015294867073013581,
+          "log_loss_raw": 0.2804694629307065,
+          "log_loss_temperature": 0.12412873322517866,
+          "log_loss_platt2": 0.0874602826824483,
+          "log_loss_isotonic": 0.07075069823426333,
+          "mce_raw": 0.8114621527269538,
+          "mce_temperature": 0.9618938565254211,
+          "mce_platt2": 0.8515704209242547,
+          "mce_isotonic": 0.375
+        },
+        {
+          "fold": 4,
+          "status": "ok",
+          "n_train": 3692,
+          "n_eval": 911,
+          "temperature": 0.4420595169067383,
+          "platt_a": 1.9414520263671875,
+          "platt_b": -1.0211635828018188,
+          "isotonic_fit": true,
+          "brier_raw": 0.06962278418997835,
+          "brier_temperature": 0.030683701647652314,
+          "brier_platt2": 0.02146055038924625,
+          "brier_isotonic": 0.01599488405651343,
+          "ece_raw": 0.22151056433177138,
+          "ece_temperature": 0.07011882186019486,
+          "ece_platt2": 0.03279277805176386,
+          "ece_isotonic": 0.004152958306606708,
+          "log_loss_raw": 0.2960594646096556,
+          "log_loss_temperature": 0.15060010273905053,
+          "log_loss_platt2": 0.10696183910470107,
+          "log_loss_isotonic": 0.0925329464443101,
+          "mce_raw": 0.966122097875373,
+          "mce_temperature": 0.8594679236412048,
+          "mce_platt2": 0.9558912821394034,
+          "mce_isotonic": 0.18389057750759877
+        }
+      ],
+      "isotonic_omitted": [],
+      "reliability_table_raw": [
+        {
+          "lo": 0.0,
+          "hi": 0.1,
+          "count": 36,
+          "mean_confidence": 0.07962093031052339,
+          "mean_accuracy": 0.1111111111111111,
+          "gap": 0.031490180800587714
+        },
+        {
+          "lo": 0.1,
+          "hi": 0.2,
+          "count": 1554,
+          "mean_confidence": 0.17551788671210547,
+          "mean_accuracy": 0.009652509652509652,
+          "gap": 0.1658653770595958
+        },
+        {
+          "lo": 0.2,
+          "hi": 0.30000000000000004,
+          "count": 2440,
+          "mean_confidence": 0.23550779820151813,
+          "mean_accuracy": 0.006557377049180328,
+          "gap": 0.2289504211523378
+        },
+        {
+          "lo": 0.30000000000000004,
+          "hi": 0.4,
+          "count": 377,
+          "mean_confidence": 0.3344599962404735,
+          "mean_accuracy": 0.03978779840848806,
+          "gap": 0.29467219783198545
+        },
+        {
+          "lo": 0.4,
+          "hi": 0.5,
+          "count": 111,
+          "mean_confidence": 0.4370348066988145,
+          "mean_accuracy": 0.09009009009009009,
+          "gap": 0.3469447166087244
+        },
+        {
+          "lo": 0.5,
+          "hi": 0.6000000000000001,
+          "count": 39,
+          "mean_confidence": 0.5450343498748058,
+          "mean_accuracy": 0.20512820512820512,
+          "gap": 0.3399061447466007
+        },
+        {
+          "lo": 0.6000000000000001,
+          "hi": 0.7000000000000001,
+          "count": 25,
+          "mean_confidence": 0.6457564723901202,
+          "mean_accuracy": 0.24,
+          "gap": 0.40575647239012025
+        },
+        {
+          "lo": 0.7000000000000001,
+          "hi": 0.8,
+          "count": 13,
+          "mean_confidence": 0.7443868358317564,
+          "mean_accuracy": 0.15384615384615385,
+          "gap": 0.5905406819856025
+        },
+        {
+          "lo": 0.8,
+          "hi": 0.9,
+          "count": 6,
+          "mean_confidence": 0.8280473474391155,
+          "mean_accuracy": 0.3333333333333333,
+          "gap": 0.49471401410578214
+        },
+        {
+          "lo": 0.9,
+          "hi": 1.0,
+          "count": 2,
+          "mean_confidence": 0.9504523933930731,
+          "mean_accuracy": 0.0,
+          "gap": 0.9504523933930731
+        }
+      ]
+    },
+    "escalate": {
+      "per_fold": [
+        {
+          "fold": 0,
+          "status": "ok",
+          "n_train": 3686,
+          "n_eval": 917,
+          "temperature": 0.8071067929267883,
+          "platt_a": 1.054292917251587,
+          "platt_b": -1.8925930261611938,
+          "isotonic_fit": true,
+          "brier_raw": 0.1465614198429721,
+          "brier_temperature": 0.13707843465055644,
+          "brier_platt2": 0.02715249967608703,
+          "brier_isotonic": 0.017398132528389388,
+          "ece_raw": 0.31837374935953267,
+          "ece_temperature": 0.2986250108569016,
+          "ece_platt2": 0.05402442327568653,
+          "ece_isotonic": 0.008740397599868107,
+          "log_loss_raw": 0.48293435223942244,
+          "log_loss_temperature": 0.46947257095611583,
+          "log_loss_platt2": 0.18781282338619862,
+          "log_loss_isotonic": 0.06708119801868936,
+          "mce_raw": 0.7249071135152595,
+          "mce_temperature": 0.7299423019091288,
+          "mce_platt2": 0.23010078617382743,
+          "mce_isotonic": 0.10934908268409146
+        },
+        {
+          "fold": 1,
+          "status": "ok",
+          "n_train": 3613,
+          "n_eval": 990,
+          "temperature": 0.821027398109436,
+          "platt_a": 0.9851105213165283,
+          "platt_b": -1.8858833312988281,
+          "isotonic_fit": true,
+          "brier_raw": 0.1464289242608132,
+          "brier_temperature": 0.137865148590756,
+          "brier_platt2": 0.023572963046868275,
+          "brier_isotonic": 0.015129289524168244,
+          "ece_raw": 0.3208151848668231,
+          "ece_temperature": 0.29920144763238954,
+          "ece_platt2": 0.0626469995690408,
+          "ece_isotonic": 0.0056134323991850164,
+          "log_loss_raw": 0.4715501048017336,
+          "log_loss_temperature": 0.45415077147699895,
+          "log_loss_platt2": 0.15567628702570857,
+          "log_loss_isotonic": 0.10250223583830789,
+          "mce_raw": 0.7032591670519143,
+          "mce_temperature": 0.7262699007987976,
+          "mce_platt2": 0.23325288761659743,
+          "mce_isotonic": 0.2352941176470588
+        },
+        {
+          "fold": 2,
+          "status": "ok",
+          "n_train": 3706,
+          "n_eval": 897,
+          "temperature": 0.8210650682449341,
+          "platt_a": 0.9916154742240906,
+          "platt_b": -1.8957631587982178,
+          "isotonic_fit": true,
+          "brier_raw": 0.1451736655280927,
+          "brier_temperature": 0.13682598244513242,
+          "brier_platt2": 0.02526927988829896,
+          "brier_isotonic": 0.016939618829587284,
+          "ece_raw": 0.3111983221097977,
+          "ece_temperature": 0.295374256808808,
+          "ece_platt2": 0.05815655336480268,
+          "ece_isotonic": 0.007405040105973245,
+          "log_loss_raw": 0.4661083021126848,
+          "log_loss_temperature": 0.4485570298632906,
+          "log_loss_platt2": 0.1605789110984225,
+          "log_loss_isotonic": 0.07122595740370082,
+          "mce_raw": 0.6258152467261199,
+          "mce_temperature": 0.634185296647689,
+          "mce_platt2": 0.213967263176162,
+          "mce_isotonic": 0.25
+        },
+        {
+          "fold": 3,
+          "status": "ok",
+          "n_train": 3715,
+          "n_eval": 888,
+          "temperature": 0.8189837336540222,
+          "platt_a": 0.9907482266426086,
+          "platt_b": -1.8850922584533691,
+          "isotonic_fit": true,
+          "brier_raw": 0.1462937972554987,
+          "brier_temperature": 0.1382116801555183,
+          "brier_platt2": 0.022773677825383483,
+          "brier_isotonic": 0.01439512406952098,
+          "ece_raw": 0.3169998524668691,
+          "ece_temperature": 0.30138645515838,
+          "ece_platt2": 0.06339383205605321,
+          "ece_isotonic": 0.007944235867066156,
+          "log_loss_raw": 0.4669710142896286,
+          "log_loss_temperature": 0.44998617649236605,
+          "log_loss_platt2": 0.15204168840354496,
+          "log_loss_isotonic": 0.061050572692587346,
+          "mce_raw": 0.6346294223731543,
+          "mce_temperature": 0.7311210632324219,
+          "mce_platt2": 0.22253463056603268,
+          "mce_isotonic": 0.11027037247116656
+        },
+        {
+          "fold": 4,
+          "status": "ok",
+          "n_train": 3692,
+          "n_eval": 911,
+          "temperature": 0.8202306032180786,
+          "platt_a": 0.9904313087463379,
+          "platt_b": -1.8969720602035522,
+          "isotonic_fit": true,
+          "brier_raw": 0.14170731324582006,
+          "brier_temperature": 0.13326633283885617,
+          "brier_platt2": 0.023659574960319424,
+          "brier_isotonic": 0.01555030321424459,
+          "ece_raw": 0.30855694902019276,
+          "ece_temperature": 0.2882578514107942,
+          "ece_platt2": 0.0582695245012255,
+          "ece_isotonic": 0.002228011686512211,
+          "log_loss_raw": 0.4584229764071049,
+          "log_loss_temperature": 0.441117888879605,
+          "log_loss_platt2": 0.15565342097085227,
+          "log_loss_isotonic": 0.06991899330155563,
+          "mce_raw": 0.6265988177954083,
+          "mce_temperature": 0.7007560729980469,
+          "mce_platt2": 0.21389474018257532,
+          "mce_isotonic": 0.25
+        }
+      ],
+      "isotonic_omitted": [],
+      "reliability_table_raw": [
+        {
+          "lo": 0.0,
+          "hi": 0.1,
+          "count": 652,
+          "mean_confidence": 0.047368978886226376,
+          "mean_accuracy": 0.07822085889570553,
+          "gap": 0.030851880009479152
+        },
+        {
+          "lo": 0.1,
+          "hi": 0.2,
+          "count": 542,
+          "mean_confidence": 0.14977937529575663,
+          "mean_accuracy": 0.03136531365313653,
+          "gap": 0.11841406164262011
+        },
+        {
+          "lo": 0.2,
+          "hi": 0.30000000000000004,
+          "count": 616,
+          "mean_confidence": 0.25287068107525856,
+          "mean_accuracy": 0.008116883116883116,
+          "gap": 0.24475379795837546
+        },
+        {
+          "lo": 0.30000000000000004,
+          "hi": 0.4,
+          "count": 953,
+          "mean_confidence": 0.353962062799378,
+          "mean_accuracy": 0.001049317943336831,
+          "gap": 0.3529127448560411
+        },
+        {
+          "lo": 0.4,
+          "hi": 0.5,
+          "count": 1241,
+          "mean_confidence": 0.44838468227151834,
+          "mean_accuracy": 0.0032232070910556,
+          "gap": 0.44516147518046273
+        },
+        {
+          "lo": 0.5,
+          "hi": 0.6000000000000001,
+          "count": 539,
+          "mean_confidence": 0.5371319104124341,
+          "mean_accuracy": 0.0,
+          "gap": 0.5371319104124341
+        },
+        {
+          "lo": 0.6000000000000001,
+          "hi": 0.7000000000000001,
+          "count": 58,
+          "mean_confidence": 0.6295554552213771,
+          "mean_accuracy": 0.0,
+          "gap": 0.6295554552213771
+        },
+        {
+          "lo": 0.7000000000000001,
+          "hi": 0.8,
+          "count": 2,
+          "mean_confidence": 0.7140831402835869,
+          "mean_accuracy": 0.0,
+          "gap": 0.7140831402835869
+        }
+      ]
+    }
+  },
+  "bootstrap": {
+    "accept": {
+      "temperature": {
+        "brier_point": 0.22192942393057202,
+        "brier_delta_vs_raw": {
+          "point": 0.0001684472737029652,
+          "ci95": [
+            4.57288573947022e-05,
+            0.00029403245376605837
+          ]
+        },
+        "ece_point": 0.4268605976830662,
+        "ece_ci95": [
+          0.4210916852550802,
+          0.43266967564476067
+        ]
+      },
+      "platt2": {
+        "brier_point": 0.02138404713248133,
+        "brier_delta_vs_raw": {
+          "point": -0.20037692952438774,
+          "ci95": [
+            -0.20554774907912576,
+            -0.1947609010224662
+          ]
+        },
+        "ece_point": 0.06328451115801044,
+        "ece_ci95": [
+          0.05931064362352293,
+          0.06690451430825717
+        ]
+      },
+      "isotonic": {
+        "brier_point": 0.016678074927704484,
+        "brier_delta_vs_raw": {
+          "point": -0.20508290172916457,
+          "ci95": [
+            -0.21075829915163097,
+            -0.19879910235277914
+          ]
+        },
+        "ece_point": 0.0018331337666419776,
+        "ece_ci95": [
+          0.0006494027408236561,
+          0.005785142310715428
+        ],
+        "n_rows_isotonic_available": 4603
+      },
+      "brier_raw_point": 0.22176097665686906,
+      "ece_raw_point": 0.4255198277357759,
+      "n_boot": 2000,
+      "n_groups": 4603,
+      "n_rows": 4603
+    },
+    "reject": {
+      "temperature": {
+        "brier_point": 0.027463547430331293,
+        "brier_delta_vs_raw": {
+          "point": -0.03947791134144078,
+          "ci95": [
+            -0.04067662855465734,
+            -0.038198830749499486
+          ]
+        },
+        "ece_point": 0.06789773354450053,
+        "ece_ci95": [
+          0.06353657734098495,
+          0.07244176762372992
+        ]
+      },
+      "platt2": {
+        "brier_point": 0.019184524866938866,
+        "brier_delta_vs_raw": {
+          "point": -0.04775693390483321,
+          "ci95": [
+            -0.04923765468718285,
+            -0.0462483498618198
+          ]
+        },
+        "ece_point": 0.029525462702982376,
+        "ece_ci95": [
+          0.025981017060961342,
+          0.03347152678522797
+        ]
+      },
+      "isotonic": {
+        "brier_point": 0.015912687692042307,
+        "brier_delta_vs_raw": {
+          "point": -0.051028771079729765,
+          "ci95": [
+            -0.053339785300369785,
+            -0.048634448916794824
+          ]
+        },
+        "ece_point": 0.0012797583222636068,
+        "ece_ci95": [
+          0.0008658369407038655,
+          0.005745540939489787
+        ],
+        "n_rows_isotonic_available": 4603
+      },
+      "brier_raw_point": 0.06694145877177207,
+      "ece_raw_point": 0.21791792774048846,
+      "n_boot": 2000,
+      "n_groups": 4603,
+      "n_rows": 4603
+    },
+    "escalate": {
+      "temperature": {
+        "brier_point": 0.13666259594329583,
+        "brier_delta_vs_raw": {
+          "point": -0.008587564674287174,
+          "ci95": [
+            -0.00896530017132392,
+            -0.008195694851646541
+          ]
+        },
+        "ece_point": 0.29659642652296764,
+        "ece_ci95": [
+          0.2898587157139116,
+          0.3025534504648991
+        ]
+      },
+      "platt2": {
+        "brier_point": 0.024479582528126674,
+        "brier_delta_vs_raw": {
+          "point": -0.12077057808945632,
+          "ci95": [
+            -0.12352687728982924,
+            -0.11800538996674982
+          ]
+        },
+        "ece_point": 0.05933187351113939,
+        "ece_ci95": [
+          0.05532126521885022,
+          0.0636527160611179
+        ]
+      },
+      "isotonic": {
+        "brier_point": 0.015875758994028,
+        "brier_delta_vs_raw": {
+          "point": -0.129374401623555,
+          "ci95": [
+            -0.1323520354496224,
+            -0.12630296883290143
+          ]
+        },
+        "ece_point": 0.0011104474788330375,
+        "ece_ci95": [
+          0.0009398560760934105,
+          0.00539078043008864
+        ],
+        "n_rows_isotonic_available": 4603
+      },
+      "brier_raw_point": 0.145250160617583,
+      "ece_raw_point": 0.31529261474284387,
+      "n_boot": 2000,
+      "n_groups": 4603,
+      "n_rows": 4603
+    }
+  },
+  "gates": {
+    "accept": {
+      "selected": "isotonic",
+      "verdict": "selected_isotonic",
+      "eligible": [
+        "isotonic"
+      ]
+    },
+    "reject": {
+      "selected": "isotonic",
+      "verdict": "selected_isotonic",
+      "eligible": [
+        "platt2",
+        "isotonic"
+      ]
+    },
+    "escalate": {
+      "selected": "isotonic",
+      "verdict": "selected_isotonic",
+      "eligible": [
+        "isotonic"
+      ]
+    }
+  },
+  "kill_checks": {
+    "accept": {
+      "prevalence_brier": 0.016658321380199154,
+      "best_calibrator_brier": 0.016678074927704484,
+      "no_method_clears_ece": false,
+      "brier_no_better_than_prevalence": true,
+      "fold_to_fold_calibration_reverses": false,
+      "kill": true
+    },
+    "reject": {
+      "prevalence_brier": 0.016658321380199154,
+      "best_calibrator_brier": 0.015912687692042307,
+      "no_method_clears_ece": false,
+      "brier_no_better_than_prevalence": false,
+      "fold_to_fold_calibration_reverses": false,
+      "kill": false
+    },
+    "escalate": {
+      "prevalence_brier": 0.016658321380199154,
+      "best_calibrator_brier": 0.015875758994028,
+      "no_method_clears_ece": false,
+      "brier_no_better_than_prevalence": false,
+      "fold_to_fold_calibration_reverses": false,
+      "kill": false
+    }
+  },
+  "any_channel_selected": true,
+  "selected_channels": [
+    "accept",
+    "reject",
+    "escalate"
+  ],
+  "usable_channels": [
+    "reject",
+    "escalate"
+  ],
+  "gate_selected_but_killed_channels": [
+    "accept"
+  ],
+  "any_isotonic_omitted_in_any_fold": false,
+  "gate_passed": true,
+  "isotonic_omitted_by_channel": {
+    "accept": [],
+    "reject": [],
+    "escalate": []
+  },
+  "breakdown_by_option_count": {
+    "3": {
+      "n_rows": 4603,
+      "note": "every row declares exactly 3 options (accept/reject/escalate) -- there is no varying option count in this corpus"
+    }
+  },
+  "breakdown_by_source_family": {
+    "fover_corpus_v4_single_family": {
+      "n_rows": 4603,
+      "note": "data/fover_corpus_v4.json carries no field distinguishing sub-sources; treated as one family"
+    }
+  },
+  "methodology_note": "Three calibrators (scalar temperature scaling, true two-parameter Platt scaling, and sample-size-gated isotonic regression) were fit per option channel (accept, reject, escalate), independently, on the k-1 training folds of a grouped out-of-fold cross-validation split over A1's cached readout logits for the FoVer corpus's held-out rows. No calibrator was ever fit on its own evaluation fold. Zero new model forward passes were made; every logit was read from A1's on-disk cache."
+}

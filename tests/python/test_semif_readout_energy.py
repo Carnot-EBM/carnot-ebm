@@ -7,7 +7,9 @@ real `llama.cpp` forward pass produces), and the corpus-split tests read the
 real `data/fover_corpus_v4.json` file -- a plain file read, not an LLM call.
 
 Spec: REQ-VERIFY-7750, SCENARIO-VERIFY-7750-POE, SCENARIO-VERIFY-7750-POSITIVE-CONTROL,
-SCENARIO-VERIFY-7750-DEGENERATE, SCENARIO-VERIFY-7750-HEADROOM
+SCENARIO-VERIFY-7750-DEGENERATE, SCENARIO-VERIFY-7750-HEADROOM,
+REQ-VERIFY-7751, SCENARIO-VERIFY-7751-TOURNAMENT, SCENARIO-VERIFY-7751-POSITIVE-CONTROL,
+SCENARIO-VERIFY-7751-DEGENERATE, SCENARIO-VERIFY-7751-GATE
 """
 
 from __future__ import annotations
@@ -547,3 +549,612 @@ class TestPairedGroupBootstrapBrierDelta:
         result = sre.paired_group_bootstrap_brier_delta(pooled, n_boot=50, seed=3)
         lo, hi = result["brier_delta_vs_readout_only"]["ci95"]
         assert lo == pytest.approx(hi, abs=1e-9)
+
+
+# ==========================================================================
+# A2: target-workload calibrator tournament -- REQ-VERIFY-7751.
+#
+# No test below makes a live model call. Every test either builds hand-made
+# logit fixtures (the exact shape A1's cache stores) or generates synthetic
+# data with a known ground truth, per the SCENARIO-VERIFY-7751-POSITIVE-
+# CONTROL and SCENARIO-VERIFY-7751-DEGENERATE requirements.
+#
+# Spec: REQ-VERIFY-7751, SCENARIO-VERIFY-7751-TOURNAMENT,
+# SCENARIO-VERIFY-7751-POSITIVE-CONTROL, SCENARIO-VERIFY-7751-DEGENERATE,
+# SCENARIO-VERIFY-7751-GATE
+# ==========================================================================
+
+
+class TestFitTwoParameterPlatt:
+    def test_recovers_a_reasonable_scale_and_shift_on_separable_data(self) -> None:
+        rng = np.random.default_rng(100)
+        n = 1000
+        z_true = rng.normal(scale=1.5, size=n)
+        labels = (rng.uniform(size=n) < 1.0 / (1.0 + np.exp(-z_true))).astype(np.float64)
+        z_observed = 2.0 * z_true - 1.0
+        fit = sre.fit_two_parameter_platt(z_observed, labels)
+        # a should be positive (the sign of the true relationship is preserved)
+        # and roughly of order 1/2 given the true scale of 2.0.
+        assert fit["a"] > 0.0
+        assert 0.1 < fit["a"] < 2.0
+
+    def test_calibrate_output_is_always_in_unit_interval(self) -> None:
+        logits = np.array([-100.0, -1.0, 0.0, 1.0, 100.0])
+        out = sre.calibrate_two_parameter_platt(logits, a=3.0, b=-2.0)
+        assert np.all(out >= 0.0)
+        assert np.all(out <= 1.0)
+
+    def test_a_equals_one_b_equals_zero_matches_plain_sigmoid(self) -> None:
+        logits = np.array([-2.0, 0.0, 1.5])
+        out = sre.calibrate_two_parameter_platt(logits, a=1.0, b=0.0)
+        expected = 1.0 / (1.0 + np.exp(-logits))
+        assert np.allclose(out, expected)
+
+
+class TestEnoughExamplesForIsotonic:
+    def test_below_floor_on_positives_is_false(self) -> None:
+        labels = [1] * 10 + [0] * 30
+        assert sre.enough_examples_for_isotonic(labels) is False
+
+    def test_below_floor_on_negatives_is_false(self) -> None:
+        labels = [1] * 30 + [0] * 10
+        assert sre.enough_examples_for_isotonic(labels) is False
+
+    def test_at_floor_on_both_is_true(self) -> None:
+        labels = [1] * 20 + [0] * 20
+        assert sre.enough_examples_for_isotonic(labels) is True
+
+    def test_just_below_floor_by_one_is_false(self) -> None:
+        labels = [1] * 19 + [0] * 20
+        assert sre.enough_examples_for_isotonic(labels) is False
+
+
+class TestFitIsotonicCalibrator:
+    def test_returns_none_below_the_sample_size_floor(self) -> None:
+        rng = np.random.default_rng(101)
+        scores = rng.uniform(size=30)
+        labels = [1] * 5 + [0] * 25
+        assert sre.fit_isotonic_calibrator(scores, labels) is None
+
+    def test_returns_a_fitted_calibrator_at_or_above_the_floor(self) -> None:
+        rng = np.random.default_rng(102)
+        n = 100
+        scores = rng.uniform(size=n)
+        labels = (rng.uniform(size=n) < scores).astype(int)
+        reg = sre.fit_isotonic_calibrator(scores, labels)
+        assert reg is not None
+        preds = reg.predict(scores)
+        assert np.all(preds >= 0.0) and np.all(preds <= 1.0)
+
+
+class TestValidateProbabilities:
+    def test_empty_array_raises(self) -> None:
+        with pytest.raises(ValueError, match="empty"):
+            sre.validate_probabilities([])
+
+    def test_out_of_range_high_raises(self) -> None:
+        with pytest.raises(ValueError, match=r"\[0, 1\]"):
+            sre.validate_probabilities([0.1, 1.2])
+
+    def test_out_of_range_low_raises(self) -> None:
+        with pytest.raises(ValueError, match=r"\[0, 1\]"):
+            sre.validate_probabilities([-0.1, 0.5])
+
+    def test_nan_raises(self) -> None:
+        with pytest.raises(ValueError, match="non-finite"):
+            sre.validate_probabilities([0.5, float("nan")])
+
+    def test_valid_probabilities_do_not_raise(self) -> None:
+        sre.validate_probabilities([0.0, 0.5, 1.0])
+
+
+class TestValidateTwoClassFold:
+    def test_one_class_raises(self) -> None:
+        with pytest.raises(ValueError, match="one-class fold"):
+            sre.validate_two_class_fold([1, 1, 1])
+
+    def test_two_classes_does_not_raise(self) -> None:
+        sre.validate_two_class_fold([0, 1, 0, 1])
+
+
+class TestMaxCalibrationError:
+    def test_zero_for_perfectly_calibrated_bins(self) -> None:
+        probs = [0.0, 0.0, 1.0, 1.0]
+        labels = [0, 0, 1, 1]
+        assert sre.max_calibration_error(probs, labels) == pytest.approx(0.0, abs=1e-9)
+
+    def test_positive_when_a_bin_is_miscalibrated(self) -> None:
+        # Every prediction says 0.9 confident-incorrect, but only half are.
+        probs = [0.9] * 10
+        labels = [1] * 5 + [0] * 5
+        assert sre.max_calibration_error(probs, labels) > 0.3
+
+    def test_empty_input_is_zero(self) -> None:
+        assert sre.max_calibration_error([], []) == 0.0
+
+    def test_mce_is_at_least_the_overall_ece(self) -> None:
+        # MCE is the WORST bin gap; ECE is the weighted-AVERAGE bin gap.
+        # The worst single bin can never be smaller than the weighted average.
+        rng = np.random.default_rng(103)
+        probs = rng.uniform(size=200)
+        labels = rng.integers(0, 2, size=200)
+        mce = sre.max_calibration_error(probs, labels)
+        ece = sre.ece_fixed_bins(probs, labels)
+        assert mce >= ece - 1e-9
+
+
+class TestReliabilityTable:
+    def test_rows_only_for_non_empty_bins(self) -> None:
+        probs = [0.05, 0.05, 0.95]
+        labels = [0, 0, 1]
+        table = sre.reliability_table(probs, labels, n_bins=10)
+        assert len(table) == 2  # only the two bins that actually contain data
+
+    def test_each_row_has_the_expected_keys(self) -> None:
+        table = sre.reliability_table([0.1, 0.9], [0, 1], n_bins=10)
+        for row in table:
+            assert set(row.keys()) == {
+                "lo",
+                "hi",
+                "count",
+                "mean_confidence",
+                "mean_accuracy",
+                "gap",
+            }
+
+    def test_counts_sum_to_total_rows(self) -> None:
+        rng = np.random.default_rng(104)
+        probs = rng.uniform(size=100)
+        labels = rng.integers(0, 2, size=100)
+        table = sre.reliability_table(probs, labels, n_bins=10)
+        assert sum(row["count"] for row in table) == 100
+
+
+class TestIsotonicPreservesOrder:
+    def test_true_when_calibrated_output_matches_raw_order(self) -> None:
+        raw = [0.1, 0.5, 0.9]
+        calibrated = [0.05, 0.4, 0.95]  # same relative order, increasing
+        assert sre.isotonic_preserves_order(raw, calibrated, increasing=True) is True
+
+    def test_false_when_an_order_inversion_is_injected(self) -> None:
+        raw = [0.1, 0.5, 0.9]
+        calibrated = [0.05, 0.95, 0.4]  # middle and last swapped -> inversion
+        assert sre.isotonic_preserves_order(raw, calibrated, increasing=True) is False
+
+    def test_ties_in_raw_score_do_not_count_as_an_inversion(self) -> None:
+        raw = [0.5, 0.5, 0.9]
+        calibrated = [0.3, 0.3, 0.8]
+        assert sre.isotonic_preserves_order(raw, calibrated, increasing=True) is True
+
+    def test_decreasing_direction_is_checked_correctly(self) -> None:
+        raw = [0.1, 0.5, 0.9]
+        calibrated = [0.9, 0.5, 0.1]  # decreasing with raw
+        assert sre.isotonic_preserves_order(raw, calibrated, increasing=False) is True
+
+
+class TestChannelProbability:
+    def test_matches_readout_from_logits_probs(self) -> None:
+        raw_logits = {"accept": 2.0, "reject": -1.0, "escalate": -1.0}
+        expected = sre.readout_from_logits(raw_logits).probs
+        assert expected is not None
+        for channel in sre.OPTIONS:
+            assert sre.channel_probability(raw_logits, channel) == pytest.approx(expected[channel])
+
+    def test_none_when_a_logit_is_missing(self) -> None:
+        raw_logits = {"accept": 1.0, "reject": None, "escalate": 0.0}
+        assert sre.channel_probability(raw_logits, "accept") is None
+
+
+# ==========================================================================
+# SCENARIO-VERIFY-7751-TOURNAMENT.
+# ==========================================================================
+
+
+class TestRunCalibratorTournament:
+    def _make_rows(self, seed: int, n: int) -> list[sre.A2ScoredRow]:
+        rng = np.random.default_rng(seed)
+        labels = rng.integers(0, 2, size=n)
+        # A `reject`-leaning readout: higher reject logit for incorrect rows.
+        z_reject = (2.0 * labels - 1.0) * 1.5 + rng.normal(scale=1.0, size=n)
+        z_accept = -z_reject * 0.5 + rng.normal(scale=0.5, size=n)
+        z_escalate = rng.normal(scale=0.5, size=n)
+        return [
+            sre.A2ScoredRow(
+                question_id=f"q{i}",
+                label=int(labels[i]),
+                raw_logits={
+                    "accept": float(z_accept[i]),
+                    "reject": float(z_reject[i]),
+                    "escalate": float(z_escalate[i]),
+                },
+            )
+            for i in range(n)
+        ]
+
+    def test_produces_a_result_for_every_declared_channel(self) -> None:
+        rows = self._make_rows(200, 500)
+        result = sre.run_calibrator_tournament(rows, k=5)
+        assert set(result.keys()) == set(sre.OPTIONS)
+
+    def test_every_channel_has_pooled_predictions_covering_every_row(self) -> None:
+        rows = self._make_rows(201, 500)
+        result = sre.run_calibrator_tournament(rows, k=5)
+        for channel in sre.OPTIONS:
+            assert len(result[channel]["pooled"]["question_id"]) == len(rows)
+
+    def test_reject_channel_has_a_learnable_signal_and_beats_chance_brier(self) -> None:
+        rows = self._make_rows(202, 800)
+        result = sre.run_calibrator_tournament(rows, k=5)
+        ok_folds = [f for f in result["reject"]["per_fold"] if f["status"] == "ok"]
+        assert ok_folds
+        mean_brier_raw = float(np.mean([f["brier_raw"] for f in ok_folds]))
+        assert mean_brier_raw < 0.25  # meaningfully better than the always-0.5 baseline
+
+    def test_isotonic_omitted_when_a_fold_has_too_few_examples_of_one_class(self) -> None:
+        rng = np.random.default_rng(203)
+        n = 100
+        # Only 5 positives total -- every fold's training split will be
+        # well below the 20-positive floor.
+        labels = np.array([1] * 5 + [0] * 95)
+        rng.shuffle(labels)
+        rows = [
+            sre.A2ScoredRow(
+                question_id=f"q{i}",
+                label=int(labels[i]),
+                raw_logits={
+                    "accept": float(rng.normal()),
+                    "reject": float(rng.normal()),
+                    "escalate": float(rng.normal()),
+                },
+            )
+            for i in range(n)
+        ]
+        result = sre.run_calibrator_tournament(rows, k=5)
+        for channel in sre.OPTIONS:
+            assert len(result[channel]["isotonic_omitted"]) > 0
+            for entry in result[channel]["isotonic_omitted"]:
+                assert entry["reason"] == "sample_size_floor"
+
+
+class TestPairedGroupBootstrapCalibratorDeltas:
+    def _pooled(self, seed: int, n: int) -> dict[str, list]:
+        rng = np.random.default_rng(seed)
+        labels = rng.integers(0, 2, size=n)
+        raw = rng.uniform(size=n)
+        temperature = np.clip(raw + rng.normal(scale=0.01, size=n), 0.0, 1.0)
+        return {
+            "question_id": [f"q{i}" for i in range(n)],
+            "label": labels.tolist(),
+            "raw": raw.tolist(),
+            "temperature": temperature.tolist(),
+            "platt2": temperature.tolist(),
+            "isotonic": [None] * n,
+        }
+
+    def test_reports_ci_for_temperature_and_platt2(self) -> None:
+        pooled = self._pooled(300, 300)
+        result = sre.paired_group_bootstrap_calibrator_deltas(pooled, n_boot=200, seed=1)
+        assert "ci95" in result["temperature"]["brier_delta_vs_raw"]
+        assert "ci95" in result["platt2"]["brier_delta_vs_raw"]
+
+    def test_isotonic_omitted_entirely_when_never_fit_in_any_fold(self) -> None:
+        pooled = self._pooled(301, 300)
+        result = sre.paired_group_bootstrap_calibrator_deltas(pooled, n_boot=100, seed=2)
+        assert result["isotonic"]["omitted_entirely"] is True
+
+    def test_isotonic_bootstrap_only_uses_rows_where_it_was_fit(self) -> None:
+        pooled = self._pooled(302, 100)
+        # Isotonic fit for half the rows only.
+        pooled["isotonic"] = [0.5] * 50 + [None] * 50
+        result = sre.paired_group_bootstrap_calibrator_deltas(pooled, n_boot=100, seed=3)
+        assert result["isotonic"]["n_rows_isotonic_available"] == 50
+
+    def test_a_clearly_better_calibrator_has_a_negative_interval(self) -> None:
+        n = 600
+        labels = [0, 1] * (n // 2)
+        pooled = {
+            "question_id": [f"q{i}" for i in range(n)],
+            "label": labels,
+            "raw": [0.5] * n,
+            "temperature": [0.02 if lbl == 0 else 0.98 for lbl in labels],
+            "platt2": [0.5] * n,
+            "isotonic": [None] * n,
+        }
+        result = sre.paired_group_bootstrap_calibrator_deltas(pooled, n_boot=300, seed=4)
+        assert result["temperature"]["brier_delta_vs_raw"]["ci95"][1] < 0.0
+
+
+# ==========================================================================
+# SCENARIO-VERIFY-7751-GATE.
+# ==========================================================================
+
+
+class TestSelectCalibrator:
+    def _bootstrap_with(self, **arms: dict) -> dict:
+        base = {
+            "temperature": {
+                "brier_point": 0.20,
+                "brier_delta_vs_raw": {"ci95": [0.01, 0.02]},
+                "ece_ci95": [0.01, 0.02],
+            },
+            "platt2": {
+                "brier_point": 0.21,
+                "brier_delta_vs_raw": {"ci95": [0.01, 0.02]},
+                "ece_ci95": [0.01, 0.02],
+            },
+            "isotonic": {"omitted_entirely": True},
+        }
+        base.update(arms)
+        return base
+
+    def test_selects_the_only_eligible_calibrator(self) -> None:
+        bootstrap = self._bootstrap_with(
+            temperature={
+                "brier_point": 0.15,
+                "brier_delta_vs_raw": {"ci95": [-0.05, -0.02]},
+                "ece_ci95": [0.01, 0.02],
+            }
+        )
+        result = sre.select_calibrator(bootstrap)
+        assert result["selected"] == "temperature"
+
+    def test_no_eligible_calibrator_is_diagnostic_only(self) -> None:
+        bootstrap = self._bootstrap_with()  # both temperature and platt2 have ci95 upper > 0
+        result = sre.select_calibrator(bootstrap)
+        assert result["selected"] is None
+        assert result["verdict"] == "diagnostic_only_no_method_cleared_gate"
+
+    def test_a_tie_prefers_temperature_over_platt2(self) -> None:
+        bootstrap = self._bootstrap_with(
+            temperature={
+                "brier_point": 0.15,
+                "brier_delta_vs_raw": {"ci95": [-0.05, -0.02]},
+                "ece_ci95": [0.01, 0.02],
+            },
+            platt2={
+                "brier_point": 0.150005,  # within the default 1e-4 tie tolerance
+                "brier_delta_vs_raw": {"ci95": [-0.05, -0.02]},
+                "ece_ci95": [0.01, 0.02],
+            },
+        )
+        result = sre.select_calibrator(bootstrap)
+        assert result["selected"] == "temperature"
+
+    def test_a_clear_platt2_win_selects_platt2_not_temperature(self) -> None:
+        bootstrap = self._bootstrap_with(
+            temperature={
+                "brier_point": 0.20,
+                "brier_delta_vs_raw": {"ci95": [-0.01, -0.005]},
+                "ece_ci95": [0.01, 0.02],
+            },
+            platt2={
+                "brier_point": 0.10,  # clearly better, outside the tie tolerance
+                "brier_delta_vs_raw": {"ci95": [-0.10, -0.08]},
+                "ece_ci95": [0.01, 0.02],
+            },
+        )
+        result = sre.select_calibrator(bootstrap)
+        assert result["selected"] == "platt2"
+
+    def test_ece_ceiling_disqualifies_an_otherwise_winning_calibrator(self) -> None:
+        bootstrap = self._bootstrap_with(
+            temperature={
+                "brier_point": 0.10,
+                "brier_delta_vs_raw": {"ci95": [-0.10, -0.05]},
+                "ece_ci95": [0.04, 0.06],  # upper bound above the 0.05 ceiling
+            },
+            platt2={
+                "brier_point": 0.20,
+                "brier_delta_vs_raw": {"ci95": [0.01, 0.02]},
+                "ece_ci95": [0.01, 0.02],
+            },
+        )
+        result = sre.select_calibrator(bootstrap)
+        assert result["selected"] is None
+
+
+class TestCalibratorKillCheck:
+    def test_kill_true_when_no_method_clears_ece(self) -> None:
+        bootstrap = {
+            "temperature": {"brier_point": 0.10, "ece_ci95": [0.06, 0.08]},
+            "platt2": {"brier_point": 0.10, "ece_ci95": [0.06, 0.08]},
+            "isotonic": {"omitted_entirely": True},
+            "brier_raw_point": 0.25,
+        }
+        labels = [0, 1] * 50
+        per_fold = [{"fold": 0, "status": "ok", "temperature": 1.0}]
+        result = sre.calibrator_kill_check(bootstrap, labels, per_fold)
+        assert result["kill"] is True
+        assert result["no_method_clears_ece"] is True
+
+    def test_kill_true_when_no_better_than_prevalence(self) -> None:
+        labels = [1] * 20 + [0] * 80  # prevalence 0.2
+        bootstrap = {
+            "temperature": {
+                "brier_point": 0.30,
+                "ece_ci95": [0.01, 0.02],
+            },  # worse than 0.2*0.8=0.16
+            "platt2": {"brier_point": 0.30, "ece_ci95": [0.01, 0.02]},
+            "isotonic": {"omitted_entirely": True},
+            "brier_raw_point": 0.30,
+        }
+        per_fold = [{"fold": 0, "status": "ok", "temperature": 1.0}]
+        result = sre.calibrator_kill_check(bootstrap, labels, per_fold)
+        assert result["brier_no_better_than_prevalence"] is True
+        assert result["kill"] is True
+
+    def test_kill_true_on_fold_to_fold_temperature_reversal(self) -> None:
+        bootstrap = {
+            "temperature": {"brier_point": 0.05, "ece_ci95": [0.01, 0.02]},
+            "platt2": {"brier_point": 0.05, "ece_ci95": [0.01, 0.02]},
+            "isotonic": {"omitted_entirely": True},
+            "brier_raw_point": 0.25,
+        }
+        labels = [0, 1] * 50
+        per_fold = [
+            {"fold": 0, "status": "ok", "temperature": 0.5},
+            {"fold": 1, "status": "ok", "temperature": 2.0},
+        ]
+        result = sre.calibrator_kill_check(bootstrap, labels, per_fold)
+        assert result["fold_to_fold_calibration_reverses"] is True
+        assert result["kill"] is True
+
+    def test_kill_false_on_a_clean_pass(self) -> None:
+        bootstrap = {
+            "temperature": {"brier_point": 0.05, "ece_ci95": [0.01, 0.02]},
+            "platt2": {"brier_point": 0.06, "ece_ci95": [0.01, 0.02]},
+            "isotonic": {"omitted_entirely": True},
+            "brier_raw_point": 0.25,
+        }
+        labels = [0, 1] * 50  # prevalence brier = 0.25
+        per_fold = [
+            {"fold": 0, "status": "ok", "temperature": 1.0},
+            {"fold": 1, "status": "ok", "temperature": 1.05},
+        ]
+        result = sre.calibrator_kill_check(bootstrap, labels, per_fold)
+        assert result["kill"] is False
+
+
+# ==========================================================================
+# SCENARIO-VERIFY-7751-POSITIVE-CONTROL.
+# ==========================================================================
+
+
+class TestTemperatureRecoveryPositiveControl:
+    def test_temperature_scaling_beats_the_raw_overconfident_probability(self) -> None:
+        result = sre.run_temperature_recovery_positive_control(seed=1, n=2000)
+        assert result["passed"] is True
+        assert result["brier_temperature_calibrated"] < result["brier_raw_overconfident"]
+
+    def test_is_deterministic_given_a_fixed_seed(self) -> None:
+        r1 = sre.run_temperature_recovery_positive_control(seed=42, n=500)
+        r2 = sre.run_temperature_recovery_positive_control(seed=42, n=500)
+        assert r1 == r2
+
+    def test_never_touches_the_real_corpus_or_readout_paths(self) -> None:
+        import inspect
+
+        source = inspect.getsource(sre.run_temperature_recovery_positive_control)
+        assert "load_corpus_rows_with_features(" not in source
+        assert "read_option_logits(" not in source
+
+
+class TestPlattAffineRecoveryPositiveControl:
+    def test_two_parameter_platt_beats_temperature_only(self) -> None:
+        result = sre.run_platt_affine_recovery_positive_control(seed=2, n=2000)
+        assert result["passed"] is True
+        assert result["brier_two_parameter_platt"] < result["brier_temperature_only"]
+
+    def test_is_deterministic_given_a_fixed_seed(self) -> None:
+        r1 = sre.run_platt_affine_recovery_positive_control(seed=7, n=500)
+        r2 = sre.run_platt_affine_recovery_positive_control(seed=7, n=500)
+        assert r1 == r2
+
+    def test_never_touches_the_real_corpus_or_readout_paths(self) -> None:
+        import inspect
+
+        source = inspect.getsource(sre.run_platt_affine_recovery_positive_control)
+        assert "load_corpus_rows_with_features(" not in source
+        assert "read_option_logits(" not in source
+
+
+# ==========================================================================
+# SCENARIO-VERIFY-7751-DEGENERATE.
+# ==========================================================================
+
+
+class TestCalibratorDegenerateCases:
+    def test_constant_probability_stays_constant_under_every_calibrator(self) -> None:
+        result = sre.check_constant_probability_calibration_is_a_no_op()
+        assert result["passes"] is True
+        assert result["temperature_stays_constant"] is True
+        assert result["platt2_stays_constant"] is True
+        assert result["isotonic_stays_constant"] is True
+
+    def test_isotonic_never_introduces_a_false_rank_improvement(self) -> None:
+        result = sre.check_isotonic_no_false_rank_improvement()
+        assert result["passes"] is True
+        assert result["order_preserved"] is True
+
+    def test_hard_failures_all_raise(self) -> None:
+        result = sre.check_hard_failures_are_raised()
+        assert result["passes"] is True
+        assert result["empty_probabilities_raises"] is True
+        assert result["one_class_fold_raises"] is True
+        assert result["out_of_range_probability_raises"] is True
+
+
+class TestProbabilityToLogit:
+    def test_identity_at_temperature_one(self) -> None:
+        # sigmoid(probability_to_logit(p)) must recover p exactly -- an
+        # unfit (temperature=1) calibrator must be a pass-through.
+        probs = np.array([0.01, 0.2, 0.5, 0.8, 0.99])
+        z = sre.probability_to_logit(probs)
+        recovered = 1.0 / (1.0 + np.exp(-z))
+        assert np.allclose(recovered, probs, atol=1e-5)
+
+    def test_clips_away_from_zero_and_one(self) -> None:
+        z = sre.probability_to_logit([0.0, 1.0])
+        assert np.all(np.isfinite(z))
+
+    def test_zero_point_five_maps_to_zero(self) -> None:
+        z = sre.probability_to_logit([0.5])
+        assert z[0] == pytest.approx(0.0, abs=1e-9)
+
+
+class TestCalibratorTournamentOnLargeMagnitudeRawLogits:
+    """Regression test for the incident found running the real A1 cache:
+    raw per-option vocabulary logits are ~15-20 units in magnitude (a real
+    example from the cache: accept=17.007, reject=17.348, escalate=17.575).
+    Feeding those raw values straight into temperature/Platt scaling
+    saturated the sigmoid and produced a catastrophic Brier score (0.93,
+    far worse than the 0.22 raw baseline) and NaN Platt fits. The fix
+    calibrates the log-odds of the softmaxed channel probability instead
+    (`probability_to_logit`), which is well-scaled regardless of the raw
+    vocabulary logit's absolute magnitude.
+    """
+
+    def _make_large_magnitude_rows(self, seed: int, n: int) -> list[sre.A2ScoredRow]:
+        rng = np.random.default_rng(seed)
+        labels = rng.integers(0, 2, size=n)
+        base = 17.0
+        # `reject` logit meaningfully higher than the others for incorrect
+        # rows -- a real, learnable signal riding on top of a large shared
+        # baseline, exactly like the real cache's near-uniform-but-shifted
+        # option logits.
+        reject_shift = (2.0 * labels - 1.0) * 0.8 + rng.normal(scale=0.3, size=n)
+        return [
+            sre.A2ScoredRow(
+                question_id=f"q{i}",
+                label=int(labels[i]),
+                raw_logits={
+                    "accept": base + float(rng.normal(scale=0.2)),
+                    "reject": base + float(reject_shift[i]),
+                    "escalate": base + float(rng.normal(scale=0.2)),
+                },
+            )
+            for i in range(n)
+        ]
+
+    def test_temperature_and_platt2_produce_finite_brier_no_worse_than_raw(self) -> None:
+        rows = self._make_large_magnitude_rows(500, 800)
+        result = sre.run_calibrator_tournament(rows, k=5)
+        for fold in result["reject"]["per_fold"]:
+            if fold["status"] != "ok":
+                continue
+            assert math.isfinite(fold["brier_temperature"])
+            assert math.isfinite(fold["brier_platt2"])
+            # Neither calibrator should ever be worse than the raw,
+            # uncalibrated probability by a wide margin -- at temperature
+            # 1 (the unfit default) they are a pass-through, so a fit can
+            # only do as well or better on the training data's own scale.
+            assert fold["brier_temperature"] < 0.5
+            assert fold["brier_platt2"] < 0.5
+
+    def test_reject_channel_beats_chance_after_the_fix(self) -> None:
+        rows = self._make_large_magnitude_rows(501, 800)
+        result = sre.run_calibrator_tournament(rows, k=5)
+        ok_folds = [f for f in result["reject"]["per_fold"] if f["status"] == "ok"]
+        assert ok_folds
+        mean_brier_temp = float(np.mean([f["brier_temperature"] for f in ok_folds]))
+        assert mean_brier_temp < 0.25  # meaningfully better than the always-0.5 baseline
