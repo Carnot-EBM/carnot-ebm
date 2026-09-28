@@ -18888,3 +18888,5 @@ code |
 | 2026-09-28 06:54 UTC | Measure Qwen source sensitivity with matched evide | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7800-counter-evidence-protocol.counter_evidence_ready_score (actual=0 == expected=1) |
 | 2026-09-28 06:56 UTC | Measure delayed constraint additions and retained | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7798-view-energy-fit, exp7798-view-energy-fit, exp7798-view-energy-fit) |
 | 2026-09-28 07:36 UTC | Qualify scored ARC transitions without inherited b | OK | 85 passed, 1 warning in 8.17s |
+| 2026-09-28 07:38 UTC | Measure adapter-withheld organic selection on the  | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7803-arc-runner-qualification.organic_runner_ready_score (actual=0 == expected=1) |
+| 2026-09-28 07:40 UTC | Measure complete decision service and durable upda | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7798-view-energy-fit, exp7798-view-energy-fit, exp7798-view-energy-fit) |
