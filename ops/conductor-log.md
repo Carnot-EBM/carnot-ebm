@@ -18918,3 +18918,5 @@ code |
 | 2026-09-28 19:35 UTC | Fit normalized source energies and freeze selectiv | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7824-source-feature-isolation.source_isolation_ready_score (actual=0 == expected=1) |
 | 2026-09-28 19:37 UTC | Measure calibrated decision value and source depen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7826-view-energy-fit, exp7826-view-energy-fit, exp7826-view-energy-fit) |
 | 2026-09-28 19:55 UTC | Repair explicit coverage-file collection for sourc | OK | 91 passed, 1 warning in 7.66s |
+| 2026-09-28 19:57 UTC | Measure bounded Qwen sensitivity to matched source | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7828-counter-evidence-protocol.counter_evidence_ready_score (actual=0 == expected=1) |
+| 2026-09-28 19:59 UTC | Measure causal constraint additions with delayed f | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7826-view-energy-fit, exp7826-view-energy-fit, exp7826-view-energy-fit) |
