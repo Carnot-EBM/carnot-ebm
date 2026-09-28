@@ -85018,3 +85018,42 @@ and changed source bytes fail independent custody checks.
 The real CLI accepts only frozen command names, argv and classes. A later retry
 and changed sealed log fail cold replay. Required failures disqualify; diagnostic
 health stays separate.
+
+## REQ-REPORT-7836: Reconcile every V680 task without upgrading queue receipts
+
+Exp7836 SHALL use the immutable Exp7823 design and YAML snapshots when the
+administrative Exp7823 result is disqualified. It SHALL compare fourteen
+ordered IDs, titles, phases, deliverables, model lists, substrate classes and
+exact gates. It SHALL inspect every declared producer path before reduction,
+distinguish conductor receipts, retain exact failed gate operands, and mark its
+own output planned. The Exp7835 independent audit SHALL control scientific
+interpretation. Unstarted science has null benefit; missing external evidence
+ends as complete_blocked_required_v680_evidence with zero readiness.
+
+The affected closure is `python/carnot/experiment_7836_v680_capstone.py`,
+`scripts/experiments/experiment_7836_v680_capstone.py`, and
+`tests/python/test_experiment_7836_v680_capstone.py`. The frozen required
+commands are focused pytest, full Python pytest, changed-code coverage at
+100 percent, scoped Ruff check and format, mypy, explicit-file spec coverage,
+real CLI E2E, cold replay, publication gate, adversarial verify and strict
+row lint. A 180-second serial broad repository health run is diagnostic and
+does not erase any required failure. The manifest freezes names, argv and
+classes before code changes. Validation logs SHALL be unique per attempt,
+sealed after child exit and hash checked on replay. Required failures
+disqualify. No publication, activation or production change follows.
+
+### SCENARIO-REPORT-7836-QUEUE
+
+Given the current queue, all fourteen dispositions appear in order. Missing
+Exp7826, Exp7827, Exp7829, Exp7830, Exp7832 and Exp7833 producers remain
+unstarted even when conductor receipts exist. Exp7824 and the independent
+Exp7835 audit retain their failed validation. The ARC slot is a ledger
+refinement without an organic-selector promotion or new level solve.
+
+### SCENARIO-REPORT-7836-REPLAY
+
+The real dispatcher rejects undeclared names, argv or classes. A later retry
+cannot rewrite an earlier sealed log, and byte mutation fails cold replay.
+The publication reader remains G1 through G4; exposed source families never
+clear fresh generalization. Each mechanism decision names a falsifiable
+trigger and retires only an exactly repeated listed scope.
