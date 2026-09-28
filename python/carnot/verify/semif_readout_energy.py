@@ -533,24 +533,45 @@ def auroc_score(labels: Sequence[int], scores: Sequence[float]) -> float | None:
 
 
 def aurc_and_coverage_at_risk(
-    labels: Sequence[int], probs: Sequence[float], target_risk: float = 0.05
-) -> dict[str, float]:
+    labels: Sequence[int],
+    probs: Sequence[float],
+    target_risk: float = 0.05,
+    confidence: Sequence[float] | None = None,
+    fixed_coverages: Sequence[float] = (),
+) -> dict[str, float | dict[str, float]]:
     """Area under the risk-coverage curve, and the largest coverage at which
     cumulative selective risk stays at or below `target_risk`.
 
-    Confidence is `max(p, 1-p)` (how far the predicted probability is from a
-    coin flip); the decision at threshold 0.5 is "incorrect" when p >= 0.5.
-    Rows are ranked by confidence, most confident first, and risk is the
-    running error rate over the retained prefix -- the standard selective-
-    classification construction (Geifman & El-Yaniv, 2017 shape).
+    Confidence defaults to `max(p, 1-p)` (how far the predicted probability
+    is from a coin flip); the decision at threshold 0.5 is "incorrect" when
+    p >= 0.5. Rows are ranked by confidence, most confident first, and risk
+    is the running error rate over the retained prefix -- the standard
+    selective-classification construction (Geifman & El-Yaniv, 2017 shape).
+
+    `confidence` (added for REQ-VERIFY-7752 / A3) lets a caller rank rows by
+    a DIFFERENT signal than the classification probability itself -- for
+    example, `three_way_entropy_confidence` ranks by the raw 3-way readout's
+    own predictive entropy while still classifying with a 2-way probability.
+    Passing `None` (the default) preserves A1/A2's original behaviour
+    exactly, so every existing caller is unaffected.
+
+    `fixed_coverages` (also added for A3) reports selective risk at each
+    named coverage level (e.g. 0.50, 0.80, 0.90) in an added
+    `risk_at_fixed_coverage` key. An empty tuple (the default) omits that
+    key entirely, so existing callers see the same two-key dict as before.
     """
     y = np.asarray(labels, dtype=np.float64)
     p = np.asarray(probs, dtype=np.float64)
     n = len(y)
     if n == 0:
-        return {"aurc": 0.0, "coverage_at_5pct_risk": 0.0}
-    confidence = np.maximum(p, 1.0 - p)
-    order = np.argsort(-confidence, kind="stable")
+        out: dict[str, float | dict[str, float]] = {"aurc": 0.0, "coverage_at_5pct_risk": 0.0}
+        if fixed_coverages:
+            out["risk_at_fixed_coverage"] = {f"{c:.2f}": 0.0 for c in fixed_coverages}
+        return out
+    conf = (
+        np.maximum(p, 1.0 - p) if confidence is None else np.asarray(confidence, dtype=np.float64)
+    )
+    order = np.argsort(-conf, kind="stable")
     y_sorted = y[order]
     pred_sorted = (p[order] >= 0.5).astype(np.float64)
     errors = (pred_sorted != y_sorted).astype(np.float64)
@@ -560,7 +581,17 @@ def aurc_and_coverage_at_risk(
     aurc = float(np.trapezoid(cum_risk, coverage))
     within_target = np.where(cum_risk <= target_risk)[0]
     coverage_at_risk = float(coverage[within_target[-1]]) if within_target.size else 0.0
-    return {"aurc": aurc, "coverage_at_5pct_risk": coverage_at_risk}
+    result: dict[str, float | dict[str, float]] = {
+        "aurc": aurc,
+        "coverage_at_5pct_risk": coverage_at_risk,
+    }
+    if fixed_coverages:
+        risk_at_fixed: dict[str, float] = {}
+        for c in fixed_coverages:
+            k = max(1, min(n, int(round(c * n))))
+            risk_at_fixed[f"{c:.2f}"] = float(cum_risk[k - 1])
+        result["risk_at_fixed_coverage"] = risk_at_fixed
+    return result
 
 
 # ==========================================================================
@@ -1538,3 +1569,449 @@ def check_hard_failures_are_raised() -> dict[str, Any]:
         results["out_of_range_probability_raises"] = True
 
     return {**results, "passes": all(results.values())}
+
+
+# ==========================================================================
+# A3: calibrated accept/reject/escalate policy (REQ-VERIFY-7752).
+#
+# A1 found the registered scalar readout feature collapses to alpha=0 in
+# every fold -- there is no separate "A1 signal" to route with. A2 found
+# real, usable calibration on the `reject` and `escalate` option channels
+# (isotonic regression cleared the gate on both) but correctly SELF-KILLED
+# the `accept` channel (its best calibrated Brier was no better than the
+# trivial prevalence baseline). A3's honest input set is therefore:
+#
+#   - the verifier-only probability (the Gibbs energy alone -- unchanged by
+#     A1's collapse, since alpha=0 makes the PoE numerically equal to the
+#     verifier-only expert)
+#   - A2's calibrated `reject` probability (isotonic regression)
+#   - A2's calibrated `escalate` probability (isotonic regression)
+#
+# The `accept` channel's calibration is NEVER used here -- it did not clear
+# A2's kill criterion, and using a killed arm would misrepresent an
+# unvalidated signal as validated.
+# ==========================================================================
+
+A3_ACTIONS: tuple[str, ...] = ("accept", "reject", "escalate")
+
+# Pre-registered BEFORE evaluation (SCENARIO-VERIFY-7752-GATE: "evaluate a
+# pre-registered grid of escalation costs instead of choosing one cost
+# after seeing results"). `A3_PRIMARY_COST` is the single grid point used
+# for the headline confusion matrix and the gate's "all three actions
+# occur" check -- also chosen here, before any row is scored, not picked
+# after looking at which point looks best.
+A3_COST_GRID: tuple[float, ...] = (
+    0.05,
+    0.10,
+    0.15,
+    0.20,
+    0.25,
+    0.30,
+    0.35,
+    0.40,
+    0.45,
+    0.50,
+)
+A3_PRIMARY_COST = 0.20
+
+# Matches the existing abstention measurement floor
+# (`python/carnot/pipeline/risk_coverage_abstention_3718.py:29-40`).
+A3_FIXED_COVERAGES: tuple[float, ...] = (0.50, 0.80, 0.90)
+A3_TARGET_RISK = 0.05
+A3_MIN_ROWS = 1000
+A3_MIN_GROUPS = 30
+
+
+def combine_calibrated_risk(
+    p_verifier: Sequence[float], p_reject_cal: Sequence[float], p_escalate_cal: Sequence[float]
+) -> np.ndarray:
+    """The combined P(incorrect) estimate the A3 policy routes on: an
+    unweighted mean of three independently-calibrated signals -- the
+    verifier-only baseline, A2's calibrated `reject` channel, and A2's
+    calibrated `escalate` channel.
+
+    An unweighted mean is the simplest defensible combiner given the task's
+    explicit input set. It needs no fitting on the evaluation data (so it
+    cannot leak or overfit), unlike a learned weighted combiner. The
+    `accept` channel is deliberately excluded -- it did not clear A2's kill
+    criterion (see this section's module-level docstring).
+    """
+    a = np.asarray(p_verifier, dtype=np.float64)
+    b = np.asarray(p_reject_cal, dtype=np.float64)
+    c = np.asarray(p_escalate_cal, dtype=np.float64)
+    return (a + b + c) / 3.0
+
+
+def three_way_entropy_confidence(probs_by_option: Mapping[str, Sequence[float]]) -> np.ndarray:
+    """1 minus the normalized Shannon entropy of the raw (uncalibrated)
+    3-way softmax over accept/reject/escalate -- the "entropy control"
+    ranking signal for the A3 gate.
+
+    This is deliberately NOT the same as `max(p, 1-p)` confidence on a
+    2-way collapsed probability: for a binary probability those two
+    rankings are mathematically equivalent (entropy is a monotonic
+    function of distance from 0.5), so an "entropy baseline" would be
+    decorative if built from a 2-way score. Computing entropy over the
+    genuine 3-way distribution makes it a real, distinct alternative
+    signal -- correlated with our combined-risk score, but not identical.
+    """
+    eps = 1e-12
+    arrays = [np.clip(np.asarray(probs_by_option[o], dtype=np.float64), eps, 1.0) for o in OPTIONS]
+    entropy = -sum(a * np.log(a) for a in arrays)
+    return 1.0 - entropy / math.log(len(OPTIONS))
+
+
+def chow_reject_option_decisions(p_incorrect: Sequence[float], cost_escalate: float) -> np.ndarray:
+    """The standard Chow (1970) reject-option rule, applied per row.
+
+    `accept` when confidently correct (p < cost_escalate), `reject` when
+    confidently incorrect (p > 1 - cost_escalate), `escalate` in the
+    uncertain zone between the two thresholds. `cost_escalate` is clipped
+    to [0, 0.5] (the rule is only meaningful in that range -- a cost above
+    0.5 would make escalating always at least as cheap as guessing).
+
+    The decision threshold is DERIVED ANALYTICALLY from the pre-registered
+    cost -- it is never fit or searched for on the evaluation data, which
+    is what "no new model forward, a threshold sweep... over cached
+    out-of-fold rows" (the plan's cost line) means in practice.
+    """
+    p = np.asarray(p_incorrect, dtype=np.float64)
+    cost = float(np.clip(cost_escalate, 0.0, 0.5))
+    decisions = np.full(p.shape, "escalate", dtype=object)
+    decisions[p < cost] = "accept"
+    decisions[p > 1.0 - cost] = "reject"
+    return decisions
+
+
+def policy_confusion_matrix(labels: Sequence[int], decisions: Sequence[str]) -> dict[str, Any]:
+    """Counts of every (action, true label) pair, plus the per-action
+    totals SCENARIO-VERIFY-7752-DEGENERATE reads to decide `always_accept`
+    / `always_reject` / `always_escalate`."""
+    y = np.asarray(labels)
+    d = np.asarray(decisions, dtype=object)
+    counts = {action: int((d == action).sum()) for action in A3_ACTIONS}
+    by_action_and_label: dict[str, dict[str, int]] = {}
+    for action in A3_ACTIONS:
+        mask = d == action
+        by_action_and_label[action] = {
+            "n": int(mask.sum()),
+            "n_label_correct_0": int(((y == 0) & mask).sum()),
+            "n_label_incorrect_1": int(((y == 1) & mask).sum()),
+        }
+    return {"counts": counts, "by_action_and_label": by_action_and_label, "n_total": int(len(y))}
+
+
+def check_action_balance(
+    counts: Mapping[str, int], cost_escalate: float, epsilon: float = 1e-9
+) -> dict[str, Any]:
+    """SCENARIO-VERIFY-7752-DEGENERATE: a policy using at most two of the
+    three actions is not a three-way policy, UNLESS the registered cost
+    matrix mathematically forces the collapse.
+
+    Chow's rule's uncertain zone has width `1 - 2 * cost_escalate`. At
+    `cost_escalate >= 0.5` the zone has zero width, so `escalate` can never
+    fire -- a provable, not accidental, collapse. At `cost_escalate <= 0`
+    the zone covers the whole `[0, 1]` range, so `accept` and `reject` can
+    never fire. Both are provable from the cost alone. A collapse at any
+    OTHER grid point is a real balance failure, the exact shape the prior
+    decision artifact hit (6,613 accepts, 2 escalations, 0 rejects --
+    `results/experiment_7385_v648_decision_training.json:128-142`).
+    """
+    zone_width = max(0.0, 1.0 - 2.0 * float(cost_escalate))
+    zero_actions = [action for action in A3_ACTIONS if counts.get(action, 0) == 0]
+    if not zero_actions:
+        return {"degenerate": False, "zero_actions": [], "justified_by_cost_matrix": None}
+    justified = False
+    reason = "not mathematically forced by the cost grid -- a real balance failure"
+    if zone_width <= epsilon and "escalate" in zero_actions:
+        justified = True
+        reason = f"cost_escalate={cost_escalate} >= 0.5 forces an empty escalate zone (Chow's rule)"
+    elif cost_escalate <= epsilon and {"accept", "reject"} <= set(zero_actions):
+        justified = True
+        reason = (
+            f"cost_escalate={cost_escalate} <= 0 forces the escalate zone "
+            "to cover the whole [0, 1] range (Chow's rule)"
+        )
+    return {
+        "degenerate": True,
+        "zero_actions": zero_actions,
+        "justified_by_cost_matrix": justified,
+        "reason": reason,
+    }
+
+
+def escalation_value(
+    labels: Sequence[int],
+    p_incorrect: Sequence[float],
+    decisions: Sequence[str],
+    cost_escalate: float,
+) -> dict[str, Any]:
+    """Compares the escalation-aware policy's realized total cost against a
+    FORCED-DECISION baseline that must always accept or reject at the same
+    0.5 threshold, with no escalate option at all.
+
+    This is the direct measurement for the kill criterion's "escalation
+    saves no errors after its measured cost is charged": escalation is
+    only worth using at a given `cost_escalate` if the policy's total
+    realized cost (decided-row errors, plus `cost_escalate` charged per
+    escalated row) is LOWER than the forced-decision baseline's error
+    count.
+    """
+    y = np.asarray(labels, dtype=np.float64)
+    p = np.asarray(p_incorrect, dtype=np.float64)
+    d = np.asarray(decisions, dtype=object)
+
+    forced_pred = (p >= 0.5).astype(np.float64)
+    forced_errors = int((forced_pred != y).sum())
+
+    decided_mask = d != "escalate"
+    decided_pred = (p[decided_mask] >= 0.5).astype(np.float64)
+    decided_errors = int((decided_pred != y[decided_mask]).sum())
+    n_escalated = int((d == "escalate").sum())
+    policy_cost = float(decided_errors) + float(cost_escalate) * n_escalated
+
+    return {
+        "cost_escalate": float(cost_escalate),
+        "forced_decision_errors": forced_errors,
+        "forced_decision_total_cost": float(forced_errors),
+        "policy_decided_errors": decided_errors,
+        "policy_n_escalated": n_escalated,
+        "policy_total_cost": policy_cost,
+        "errors_avoided_by_escalation": forced_errors - decided_errors,
+        "escalation_saves_cost": bool(policy_cost < forced_errors),
+    }
+
+
+def a3_kill_check(
+    grid_results: Sequence[Mapping[str, Any]], coverage_at_5pct_risk: float
+) -> dict[str, Any]:
+    """SCENARIO-VERIFY-7752-GATE kill criterion: drop the policy if every
+    calibrated arm collapses to one action across the WHOLE registered
+    grid, if useful coverage stays below 25 percent, or if escalation never
+    saves cost at any registered grid point.
+    """
+    all_single_action = all(
+        len([a for a in A3_ACTIONS if r["confusion_matrix"]["counts"].get(a, 0) > 0]) <= 1
+        for r in grid_results
+    )
+    coverage_below_floor = bool(coverage_at_5pct_risk < 0.25)
+    no_escalation_ever_saves_cost = all(
+        not r["escalation_value"]["escalation_saves_cost"] for r in grid_results
+    )
+    kill = bool(all_single_action or coverage_below_floor or no_escalation_ever_saves_cost)
+    return {
+        "all_grid_points_single_action": all_single_action,
+        "coverage_below_25pct_floor": coverage_below_floor,
+        "no_escalation_ever_saves_cost_at_any_grid_point": no_escalation_ever_saves_cost,
+        "kill": kill,
+    }
+
+
+def run_a3_positive_control(seed: int = 20260928, n: int = 2000) -> dict[str, Any]:
+    """SCENARIO-VERIFY-7752-POSITIVE-CONTROL: an independent noisy-gold
+    score must produce a better (lower) AURC than an uninformative entropy
+    control and a trivial prevalence control.
+
+    Fully synthetic, kept apart from the real fit. The entropy-control lane
+    mirrors `three_way_entropy_confidence`'s construction on the real
+    corpus (a genuine 3-way distribution, scored by its own predictive
+    entropy) but the logits are pure noise with NO relationship to the
+    label -- so a working AURC/entropy-confidence pipeline should rank it
+    worse than the informative noisy-gold lane.
+    """
+    rng = np.random.default_rng(seed)
+    labels = rng.integers(0, 2, size=n).astype(np.float64)
+
+    signal = 2.0 * labels - 1.0
+    z_noisy_gold = 2.0 * signal + rng.normal(scale=1.0, size=n)
+    p_noisy_gold = 1.0 / (1.0 + np.exp(-z_noisy_gold))
+    aurc_noisy_gold = aurc_and_coverage_at_risk(labels, p_noisy_gold)["aurc"]
+
+    random_logits = rng.normal(size=(n, 3))
+    exp_logits = np.exp(random_logits - random_logits.max(axis=1, keepdims=True))
+    random_probs = exp_logits / exp_logits.sum(axis=1, keepdims=True)
+    entropy_confidence = three_way_entropy_confidence(
+        {
+            "accept": random_probs[:, 0],
+            "reject": random_probs[:, 1],
+            "escalate": random_probs[:, 2],
+        }
+    )
+    aurc_entropy_control = aurc_and_coverage_at_risk(
+        labels, random_probs[:, 1], confidence=entropy_confidence
+    )["aurc"]
+
+    prevalence = float(np.mean(labels))
+    p_prevalence_control = np.full(n, prevalence)
+    aurc_prevalence_control = aurc_and_coverage_at_risk(labels, p_prevalence_control)["aurc"]
+
+    passed = bool(
+        aurc_noisy_gold < aurc_entropy_control and aurc_noisy_gold < aurc_prevalence_control
+    )
+    return {
+        "aurc_noisy_gold": aurc_noisy_gold,
+        "aurc_entropy_control": aurc_entropy_control,
+        "aurc_prevalence_control": aurc_prevalence_control,
+        "noisy_gold_beats_entropy_control": bool(aurc_noisy_gold < aurc_entropy_control),
+        "noisy_gold_beats_prevalence_control": bool(aurc_noisy_gold < aurc_prevalence_control),
+        "passed": passed,
+        "n": n,
+    }
+
+
+def paired_group_bootstrap_aurc_delta(
+    question_ids: Sequence[str],
+    labels: Sequence[int],
+    main_probs: Sequence[float],
+    control_probs: Sequence[float],
+    n_boot: int,
+    seed: int,
+    main_confidence: Sequence[float] | None = None,
+    control_confidence: Sequence[float] | None = None,
+) -> dict[str, Any]:
+    """Paired group bootstrap for `AURC(main) - AURC(control)`, resampling
+    QUESTION GROUPS with replacement -- same construction as A1's and A2's
+    own bootstraps. A negative delta means `main` has a LOWER (better)
+    AURC than `control`; the A3 gate requires the 95 percent interval's
+    upper bound to stay below zero against both the entropy control and
+    the verifier-only control.
+    """
+    qid = np.asarray(question_ids)
+    y = np.asarray(labels, dtype=np.float64)
+    p_main = np.asarray(main_probs, dtype=np.float64)
+    p_control = np.asarray(control_probs, dtype=np.float64)
+    c_main = None if main_confidence is None else np.asarray(main_confidence, dtype=np.float64)
+    c_control = (
+        None if control_confidence is None else np.asarray(control_confidence, dtype=np.float64)
+    )
+
+    unique_groups = np.unique(qid)
+    group_row_indices = {g: np.where(qid == g)[0] for g in unique_groups}
+    rng = np.random.default_rng(seed)
+
+    deltas = np.empty(n_boot, dtype=np.float64)
+    for b in range(n_boot):
+        sampled_groups = rng.choice(unique_groups, size=len(unique_groups), replace=True)
+        idx = np.concatenate([group_row_indices[g] for g in sampled_groups])
+        aurc_main = aurc_and_coverage_at_risk(
+            y[idx], p_main[idx], confidence=None if c_main is None else c_main[idx]
+        )["aurc"]
+        aurc_control = aurc_and_coverage_at_risk(
+            y[idx], p_control[idx], confidence=None if c_control is None else c_control[idx]
+        )["aurc"]
+        deltas[b] = aurc_main - aurc_control
+
+    point_main = aurc_and_coverage_at_risk(y, p_main, confidence=c_main)["aurc"]
+    point_control = aurc_and_coverage_at_risk(y, p_control, confidence=c_control)["aurc"]
+    return {
+        "point": point_main - point_control,
+        "ci95": [float(np.percentile(deltas, 2.5)), float(np.percentile(deltas, 97.5))],
+        "n_boot": n_boot,
+        "n_groups": int(len(unique_groups)),
+    }
+
+
+def run_a3_policy_evaluation(
+    question_ids: Sequence[str],
+    labels: Sequence[int],
+    p_verifier: Sequence[float],
+    p_reject_cal: Sequence[float],
+    p_escalate_cal: Sequence[float],
+    p_accept_raw: Sequence[float],
+    p_reject_raw: Sequence[float],
+    p_escalate_raw: Sequence[float],
+    seed: int,
+    n_boot: int = 500,
+    cost_grid: Sequence[float] = A3_COST_GRID,
+    primary_cost: float = A3_PRIMARY_COST,
+) -> dict[str, Any]:
+    """One full A3 evaluation pass for ONE bootstrap seed: the combined-risk
+    score, the entropy and verifier-only controls, the AURC/coverage
+    metrics for all three, the paired group bootstraps against both
+    controls, the full pre-registered cost-grid sweep (confusion matrix,
+    balance check, escalation value per grid point), and the kill check.
+    Called once per fixed seed by the driver so seed-to-seed stability is
+    directly comparable.
+    """
+    combined_risk = combine_calibrated_risk(p_verifier, p_reject_cal, p_escalate_cal)
+    entropy_confidence = three_way_entropy_confidence(
+        {"accept": p_accept_raw, "reject": p_reject_raw, "escalate": p_escalate_raw}
+    )
+
+    main_metrics = aurc_and_coverage_at_risk(
+        labels,
+        combined_risk,
+        target_risk=A3_TARGET_RISK,
+        fixed_coverages=A3_FIXED_COVERAGES,
+    )
+    verifier_only_metrics = aurc_and_coverage_at_risk(
+        labels,
+        p_verifier,
+        target_risk=A3_TARGET_RISK,
+        fixed_coverages=A3_FIXED_COVERAGES,
+    )
+    entropy_control_metrics = aurc_and_coverage_at_risk(
+        labels,
+        p_reject_raw,
+        target_risk=A3_TARGET_RISK,
+        fixed_coverages=A3_FIXED_COVERAGES,
+        confidence=entropy_confidence,
+    )
+
+    delta_vs_entropy = paired_group_bootstrap_aurc_delta(
+        question_ids,
+        labels,
+        combined_risk,
+        p_reject_raw,
+        n_boot=n_boot,
+        seed=seed,
+        control_confidence=entropy_confidence,
+    )
+    delta_vs_verifier_only = paired_group_bootstrap_aurc_delta(
+        question_ids,
+        labels,
+        combined_risk,
+        p_verifier,
+        n_boot=n_boot,
+        seed=seed + 1,
+    )
+
+    grid_results: list[dict[str, Any]] = []
+    for cost in cost_grid:
+        decisions = chow_reject_option_decisions(combined_risk, cost)
+        confusion = policy_confusion_matrix(labels, decisions)
+        balance = check_action_balance(confusion["counts"], cost)
+        esc_value = escalation_value(labels, combined_risk, decisions, cost)
+        grid_results.append(
+            {
+                "cost_escalate": cost,
+                "confusion_matrix": confusion,
+                "balance_check": balance,
+                "escalation_value": esc_value,
+            }
+        )
+
+    primary_result = next(
+        (r for r in grid_results if abs(r["cost_escalate"] - primary_cost) < 1e-12), None
+    )
+    kill_check = a3_kill_check(
+        grid_results, coverage_at_5pct_risk=main_metrics["coverage_at_5pct_risk"]
+    )
+
+    brier = brier_score(combined_risk, labels)
+    ece = ece_fixed_bins(combined_risk, labels)
+
+    return {
+        "seed": seed,
+        "n_rows": int(len(labels)),
+        "combined_risk_brier": brier,
+        "combined_risk_ece": ece,
+        "main_metrics": main_metrics,
+        "verifier_only_control_metrics": verifier_only_metrics,
+        "entropy_control_metrics": entropy_control_metrics,
+        "aurc_delta_vs_entropy_control": delta_vs_entropy,
+        "aurc_delta_vs_verifier_only_control": delta_vs_verifier_only,
+        "cost_grid_results": grid_results,
+        "primary_cost_result": primary_result,
+        "kill_check": kill_check,
+    }

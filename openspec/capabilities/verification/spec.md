@@ -46743,3 +46743,118 @@ fails the kill criterion (no better than the prevalence baseline); see
 `ops/verifier_gaps.md` `GAP-SEMIF-ACCEPT-ENERGY-COLLAPSES-REJECT-SIGNAL-7750`
 for the full finding and a root-cause note on a raw-logit-scale calibration
 bug found and fixed during this run.
+
+# REQ-VERIFY-7752: Calibrated Accept/Reject/Escalate Policy (A3)
+
+**Origin.** `docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`
+section A3, operator-approved through section 12.4. REQ-VERIFY-7750 (A1)
+found the registered scalar readout feature collapses to `alpha=0` in
+every fold -- there is no separate "A1 signal" to route with, since a PoE
+with `alpha=0` is numerically the verifier-only expert. REQ-VERIFY-7751
+(A2) found real, usable calibration on the `reject` and `escalate` option
+channels (isotonic regression), but the `accept` channel's calibration was
+correctly self-killed (no better than the trivial prevalence baseline).
+This requirement asks whether a policy that routes on the honest input
+set -- the verifier-only probability plus A2's two validated calibrated
+channels -- can reduce selective error at a useful coverage level, while
+routing genuinely uncertain rows to `escalate` instead of forcing a
+decision.
+
+The verifier SHALL compute a combined risk estimate per row as the
+unweighted mean of three independently-calibrated `P(incorrect)` signals:
+the out-of-fold verifier-only probability (A1's own out-of-fold
+cross-validation, which reduces to the verifier-only expert), A2's
+out-of-fold isotonic-calibrated `reject` channel probability, and A2's
+out-of-fold isotonic-calibrated `escalate` channel probability. The
+verifier SHALL NOT use A2's `accept` channel calibration as a routing
+input, because it did not clear A2's kill criterion.
+
+The verifier SHALL route each row to `accept`, `reject`, or `escalate`
+using the Chow (1970) reject-option rule applied to the combined risk
+estimate: `accept` when the estimate is below a registered escalation
+cost, `reject` when it is above one minus that cost, `escalate` in the
+uncertain zone between. The decision threshold SHALL be derived
+analytically from a pre-registered grid of escalation costs, fixed before
+any row is scored, never fit or searched for on the evaluation data.
+
+## SCENARIO-VERIFY-7752-POLICY: Combined-risk policy beats entropy and verifier-only controls
+
+**Given** the joined out-of-fold rows carrying the verifier-only
+probability and A2's calibrated `reject`/`escalate` channels, at least
+1,000 rows and at least 30 independent question groups
+**When** the harness computes the combined-risk AURC and
+coverage-at-5-percent-selective-risk, and a paired group bootstrap of the
+AURC delta against an entropy control (ranked by the raw 3-way readout's
+own predictive entropy) and a verifier-only control, under five fixed
+seeds
+**Then** the artifact SHALL report AURC, coverage at 5 percent risk, risk
+at 50/80/90 percent coverage, Brier, ECE, and the full confusion matrix for
+every registered escalation-cost grid point
+**And** the run SHALL pass only if the 95 percent AURC-delta interval's
+upper bound stays below zero against BOTH controls, under EVERY one of the
+five fixed seeds (the least favorable seed decides the gate), coverage at
+5 percent risk is at least 25 percent, all three actions occur at the
+pre-registered primary cost point, and no protected group exceeds a
+registered risk bound.
+
+## SCENARIO-VERIFY-7752-POSITIVE-CONTROL: A noisy gold score beats entropy and prevalence controls
+
+**Given** a synthetic lane with an independent noisy copy of the gold
+label, an uninformative synthetic 3-way distribution scored by its own
+predictive entropy (the entropy control), and a constant probability at
+the dataset prevalence (the prevalence control), all kept fully separate
+from the real fit
+**When** the harness computes AURC for all three synthetic lanes
+**Then** the noisy-gold lane's AURC SHALL be strictly lower (better) than
+both the entropy control's AURC and the prevalence control's AURC
+**And** the real fit's pass/fail gate SHALL depend on this control
+passing.
+
+## SCENARIO-VERIFY-7752-DEGENERATE: Balance check fails closed unless the cost matrix proves it
+
+**Given** a policy whose decisions at some registered escalation-cost grid
+point use at most two of the three actions
+**When** the balance check evaluates that grid point
+**Then** the collapse SHALL be marked `justified_by_cost_matrix: true`
+ONLY when the cost mathematically forces it (an empty escalate zone at
+`cost_escalate >= 0.5`, or a full-range escalate zone at
+`cost_escalate <= 0`)
+**And** any other one- or two-action collapse SHALL be marked
+`justified_by_cost_matrix: false` and reported as a real balance failure,
+the exact shape the prior decision artifact hit (6,613 accepts, 2
+escalations, 0 rejects --
+`results/experiment_7385_v648_decision_training.json:128-142`).
+
+## SCENARIO-VERIFY-7752-COST-GRID: The escalation-cost grid is pre-registered, not chosen after results
+
+**Given** the pre-registered escalation-cost grid and its single primary
+headline point, both fixed as module-level constants before any row is
+scored
+**When** the harness evaluates the policy at every grid point
+**Then** the artifact SHALL report every grid point's confusion matrix,
+balance check, and escalation-value comparison against a forced-decision
+baseline (no escalate option, same 0.5 threshold)
+**And** the kill criterion SHALL fire if every grid point collapses to a
+single action, if coverage at 5 percent risk stays below 25 percent, or if
+escalation never reduces total realized cost at any registered grid point.
+
+Implementation status: specified 2026-09-28. Executed 2026-09-28. Gate
+result: `a3_calibrated_policy_failed_pre_registered_gate` (honest FAIL --
+`adversarial_verify.py` clean, 0 flags). The combined-risk policy beats
+both the entropy control and the verifier-only control on AURC under
+every one of five fixed seeds (95 percent interval upper bound below zero
+in both comparisons), and coverage at 5 percent risk reaches 1.0. The gate
+still fails because `reject` NEVER FIRES at the pre-registered primary
+cost point (0.20), or at ANY point in the pre-registered cost grid --
+3,777 accepts and 826 escalations at the primary point, exactly the
+`always_accept`-leaning shape SCENARIO-VERIFY-7752-DEGENERATE named after
+`results/experiment_7385_v648_decision_training.json`. Root cause: this
+corpus's ~1.7 percent incorrect-label base rate (the same rate A1/A2's
+headroom checks found) means the calibrated combined-risk score almost
+never crosses the reject threshold `1 - cost_escalate`, even at the
+loosest grid points before the cost=0.5 edge case. The kill criterion did
+NOT fire (two actions are used at every grid point, coverage never drops
+below 25 percent, and escalation does save cost at one grid point,
+cost=0.35) -- so this is a genuine gate FAIL, not a kill. See
+`results/experiment_semif_readout_ebm_eval_a3.json` for the full per-seed,
+per-grid-point results.
