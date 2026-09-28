@@ -9045,6 +9045,59 @@ coverage, stale log or undeclared broad test child forces both readiness scores
 to zero. A fresh process reduces raw rows, and both terminal readers inspect
 the exact candidate before atomic publication.
 
+## REQ-VERIFY-7811: Attempt-sealed numerical and online qualification
+
+Exp7811 SHALL run a task-owned two-epoch fixture miniature for all nine heads,
+six independent positive/negative families, and seeds 67815, 67816 and 67817.
+The natural recipe SHALL remain sixteen epochs at learning rate 0.01; no natural
+labels or fixture checkpoint may enter that fit. The real online runner and
+durable bank SHALL exercise both commit schedules and a private restart. All
+unmeasured natural benefit gates SHALL remain null. Missing science producers
+SHALL yield a complete blocked verdict; a failed owned required check SHALL
+yield a complete disqualified verdict with both readiness scores zero.
+
+Before implementation, the complete affected closure SHALL be frozen in
+`results/raw/experiment_7811_v679_training_runtime/frozen_validation_scope.json`.
+Its command manifest SHALL hold each exact argv template, order, timeout and
+required or diagnostic class. The closure SHALL include the Exp7797 format
+failure file, direct numerical/online/CLI tests, and transitive consumers of
+training, evidence views, bank, receipt and validation code. An old entrypoint
+may not be invoked with a reduced inherited contract. A new scoped entrypoint
+is prospective because this task changes log ownership and dispatch; broad
+repository health remains a bounded diagnostic with its literal exit retained.
+
+The real CLI SHALL dispatch exactly the materialized manifest, including
+commands appended after helper calls. No undeclared child may run. Every
+command SHALL use a unique private attempt root and its own log; the parent
+SHALL exist before pytest starts. After child exit and log closure, the runner
+SHALL copy exact bytes once into an attempt-specific content-addressed durable
+path, hash that path, and reject later mutation. Coverage shards SHALL share
+one configuration, retain exits and files, and combine at one destination.
+Cold replay SHALL run after prior receipts are sealed. A later retry SHALL not
+invalidate the first receipt. Historical Exp7784 and Exp7797 artifacts SHALL
+retain their original verdicts and hashes.
+
+### SCENARIO-VERIFY-7811-DISPATCH
+
+Given a recording child executor, the real CLI emits command names, argv and
+required/diagnostic classes byte-for-byte equal to the frozen manifest. A
+missing parent, undeclared command, omitted transitive consumer, failed
+coverage or failed required exit closes both readiness gates.
+
+### SCENARIO-VERIFY-7811-RECEIPT
+
+Two consecutive attempts use different private roots. After the second run,
+the first artifact reader still verifies its durable log. A one-byte mutation
+of a referenced log fails the cold reader without changing the receipt.
+
+### SCENARIO-VERIFY-7811-MECHANICS
+
+All nine heads change parameters with finite nonzero gradients, normalized
+probabilities, bounded temperatures and save/load-identical decisions. Dual
+constraints affect constrained loss. Nonfinite and role-poisoned inputs fail.
+The bank pins model and bank versions per query, rejects duplicates and
+overflow, rolls back false admission, and retains pending state after restart.
+
 The frozen scope SHALL name every numerical, evidence-view, bank, online and
 CLI consumer before implementation. Coverage shards SHALL use one branch
 setting, keep their original exit codes and data files, and combine at one

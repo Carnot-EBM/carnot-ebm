@@ -82,7 +82,10 @@ def test_online_repeated_task_run_uses_fresh_state(tmp_path: Path) -> None:
     first = exp.exercise_online(tmp_path, names)
     second = exp.exercise_online(tmp_path, names)
     assert first["valid"] and second["valid"]
-    assert first["summaries"]["next_query"]["decision_hash"] == second["summaries"]["next_query"]["decision_hash"]
+    assert (
+        first["summaries"]["next_query"]["decision_hash"]
+        == second["summaries"]["next_query"]["decision_hash"]
+    )
 
 
 def test_frozen_full_suite_argv_is_explicit() -> None:

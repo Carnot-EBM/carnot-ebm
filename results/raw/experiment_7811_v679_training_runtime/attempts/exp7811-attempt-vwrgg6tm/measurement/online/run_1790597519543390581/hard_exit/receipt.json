@@ -1,0 +1,30 @@
+{
+  "children": [
+    {
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "from pathlib import Path\nimport os,sys\nfrom carnot.reporting.constraint_bank_protocol import Bank,grammar\nb=Bank(Path(sys.argv[1]),grammar(),'priority',0.1,2)\nf={n:float(i<2) for i,n in enumerate(grammar()['primitives'])}\nb.predict('case',0,f,0.4,'unknown','update','case')\nb.release('case',1,10)\nassert b.propose() is not None\nos._exit(0)\n",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7811_v679_training_runtime/attempts/exp7811-attempt-vwrgg6tm/measurement/online/run_1790597519543390581/hard_exit/bank.json"
+      ],
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7811_v679_training_runtime/attempts/exp7811-attempt-vwrgg6tm/measurement/online/run_1790597519543390581/hard_exit/before_commit.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "before_commit"
+    },
+    {
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "from pathlib import Path\nimport os,sys\nfrom carnot.reporting.constraint_bank_protocol import Bank,grammar\nb=Bank(Path(sys.argv[1]),grammar(),'priority',0.1,2)\nassert b.state['proposal'] is not None\nb.admit(True)\nos._exit(0)\n",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7811_v679_training_runtime/attempts/exp7811-attempt-vwrgg6tm/measurement/online/run_1790597519543390581/hard_exit/bank.json"
+      ],
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7811_v679_training_runtime/attempts/exp7811-attempt-vwrgg6tm/measurement/online/run_1790597519543390581/hard_exit/after_commit.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "after_commit"
+    }
+  ]
+}
