@@ -20977,3 +20977,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-28: Measure organic exploration on adapter-withheld live games (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7818_v679_arc_organic_measurement.json
 - 2026-09-28: Repair evidence-reader path ownership and preserve board continuity (⚠️ Blocked) — honest_verdict=complete_blocked_missing_service_evidence; results/experiment_7820_v679_hardware_evidence.json
 - 2026-09-28: Independently replay calibration and delayed-feedback error bursts (⚠️ Blocked) — honest_verdict=complete_blocked_required_v679_evidence; results/experiment_7821_v679_independent_evidence_audit.json
+- 2026-09-28: Reconcile fourteen outcomes and retire unchanged failed mechanisms (⚠️ Blocked) — honest_verdict=complete_blocked_required_v679_evidence; results/experiment_7822_v679_capstone.json
