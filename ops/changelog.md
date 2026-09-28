@@ -20963,3 +20963,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-28: Bind fourteen tasks to immutable validation and research protocols (⚠️ Research Finding) — honest_verdict=complete_disqualified_v679_contract_validation; results/experiment_7809_v679_contract_methods.json
 - 2026-09-28: Repair source candidate replay with canonical family custody (⚠️ Research Finding) — honest_verdict=complete_circular_positive_source_view_readiness; results/experiment_7810_v679_source_view_qualification.json
 - 2026-09-28: Seal training receipts and qualify delayed memory mechanics (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7811_v679_training_runtime.json
+- 2026-09-28: Validate evidence interventions through an explicit command allowlist (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7814_v679_counter_evidence_protocol.json
