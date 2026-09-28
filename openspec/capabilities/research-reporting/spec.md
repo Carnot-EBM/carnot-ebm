@@ -84329,3 +84329,68 @@ Its exact argv bytes, 21 ordered command records, and private root
 `/tmp/exp7809-v679-01aa6d41af704f5890cffb66f740a473` are part of
 REQ-REPORT-7809. The dispatcher SHALL reject a different manifest, name,
 argument, sequence, or classification before any child starts.
+
+## REQ-REPORT-7810: Repair source-view candidate custody
+
+Exp7810 SHALL retain the 640-family Exp7727 development roster and role order
+(fit256, tune64, policy64, online_update96, online_admission64,
+evaluation64, retention32). Before preparation it SHALL authenticate the science
+producer, distinct conductor pre-gate, public/evaluator shard hashes, family and
+duplicate-group identities, CPU backend, disk, and exact gate fields. Missing
+external inputs SHALL end complete_blocked_* with an exact failed operand.
+The task SHALL use the existing byte-preserving preparation primitives with
+explicit input and output paths. Private labels SHALL not enter public features
+or view selection; output-error annotations SHALL leave source support unknown.
+Over-budget families SHALL remain in their manifest positions and denominator.
+
+The current dispatcher SHALL freeze this complete affected closure before code:
+`tests/python/test_experiment_7727_v673_development_corpus.py`,
+`tests/python/test_experiment_7740_v674_sentence_label_protocol.py`,
+`tests/python/test_experiment_7754_v675_sentence_protocol.py`,
+`tests/python/test_experiment_7756_v675_evidence_view_protocol.py`,
+`tests/python/test_experiment_7759_v675_qwen_evidence_views.py`,
+`tests/python/test_experiment_7768_v676_source_view_qualification.py`,
+`tests/python/test_experiment_7766_v675_capstone.py`,
+`tests/python/test_experiment_7782_v677_historical_compatibility.py`,
+`tests/python/test_experiment_7796_v678_source_view_qualification.py`, and
+`tests/python/test_experiment_7810_v679_source_view_qualification.py`.
+The changed module is `python/carnot/experiment_7810_v679_source_view_qualification.py`;
+the CLI wrapper is the static path. The task-owned command manifest at
+`results/raw/experiment_7810_v679_source_view_qualification/validation_command_manifest.json`
+freezes exact argv and required versus diagnostic classification. Required
+commands are worktree imports, affected pytest, changed-module coverage and
+100-percent report, Ruff check/format, mypy, scoped spec coverage, cold replay,
+adversarial verification, and strict row lint. The repository-wide Python
+suite is diagnostic and its actual exit SHALL be retained. No old experiment
+main or undeclared child may run. The CLI dispatcher SHALL execute exactly the
+manifest, including appended commands, in order. Each attempt SHALL isolate
+candidate, basetemp, coverage, and durable content-addressed log paths. Readers
+run after candidate sealing; no referenced log may be rewritten.
+
+Readiness SHALL publish only after all required checks pass. A failed required
+check SHALL disqualify and set both readiness fields to zero. A fixture pass
+SHALL remain circular-positive development evidence; probability quality,
+decision benefit, retention, and efficiency stay unmeasured. Exp7796 and
+Exp7782 artifacts and their failed verdicts SHALL remain unchanged.
+
+### SCENARIO-REPORT-7810-ROSTER
+
+The saved Exp7796 candidate and raw shard are reopened independently and their
+counts, ordered identity hashes, and first mismatch are retained. A fresh
+process accepts the full 640-family candidate in manifest order and rejects a
+missing, duplicate, reordered, or altered row, including rejected families.
+The reader accepts explicit manifest, raw, and candidate paths only.
+
+### SCENARIO-REPORT-7810-DISPATCH
+
+A recording child executor sees every exact manifest argv and classification.
+It rejects a directory-wide pytest target, old qualification main, changed
+manifest, and appended undeclared command. A later attempt uses distinct
+paths; missing basetemp parents are created; one-byte log drift is detected.
+
+### SCENARIO-REPORT-7810-VIEWS
+
+Both complete-byte views retain joint-premise windows, UTF-8 offsets, null
+location, duplicate groups, all 132 label-free features, and 128-window and
+16-answer-unit limits. Unknown annotations, truncation, label poisoning, and
+all over-budget escalations are tested without deleting a family.
