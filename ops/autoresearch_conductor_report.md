@@ -1,6 +1,6 @@
 # Autoresearch conductor round
 
-- started: 2026-09-28T02:21:40.069167+00:00
+- started: 2026-09-28T02:54:19.813449+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
@@ -9,19 +9,20 @@
 - rejected: 5
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 259
-- breaker_historical_tail_at_start: 19
+- breaker_invocation_start_position: 264
+- breaker_historical_tail_at_start: 24
 - breaker_invocation_local_tail_at_start: 0
 - breaker_invocation_local_tail_at_end: 5
 - generator_exhausted: False
-- fallback_iterations: [2]
+- fallback_iterations: none
 
 
 ## Generator failure reasons
-- ---: Energy regression on: verifier_auroc
+- Implementation: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7f34a2f983e0>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
+- Additionally, for compatibility across benchmark harnesses, the function includes a finite-difference gradient optimization procedure for `calibrated_decision` that optimizes the 17 parameters of the 2-hidden-4 MLP under `nce_loss` without triggering JAX PyTree type errors on `GibbsModel`.: Energy regression on: verifier_auroc, calibrated_decision
+- ---: Energy regression on: verifier_auroc, calibrated_decision
 - Implementation: Energy regression on: verifier_auroc
-- agy_call_failed: agy exit 0: jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
-- Hypothesis: equal PCIB weights may hide differences in signal quality. For `verifier_auroc`, search both weights directly, then refine the best region using tie-aware training AUROC. Every candidate is scored through the supplied probe.: Time budget exceeded
-- Because the probe score is a weighted linear combination of the two signals, we only need to extract individual signal values $(e_i, f_i)$ **once** across the training set (2 fast passes total, taking $< 0.8$s). We then perform a fast, tie-aware **Stratified 5-Fold Cross-Validation** grid search over normalized weight pairs $(w_e, w_f)$, including variance-balanced ratios and L2 regularization towards $(0.5, 0.5)$. This safeguards against overfitting and ensures the selected weights generalize to the held-out test set without timing out.: Energy regression on: verifier_auroc
-- Because `calibrated_decision` operates directly on numeric `[entity_uptake, falsifiability_score]` feature vectors rather than text strings, training the fixed `GibbsModel` (`input_dim=2`, `hidden_dims=[4]`) using Noise-Contrastive Estimation (`nce_loss`) avoids probe-inference bottlenecks entirely. Using Adam with moderate learning rate (`lr=0.02`) and mild weight decay (`1e-4`) allows the energy model to separate correct rows (data, pushed to low energy) from incorrect rows (noise, pushed to high energy) while preventing logit explosion, ensuring superior probability calibration and energy reduction on the held-out test set.: Sandbox failed: TypeError: iteration over a 0-d array
+- We propose a unified, regression-proof optimization procedure:
+- **`verifier_auroc`**: We score the training set with the default weights $(0.5, 0.5)$ to determine the exact positive label orientation ($AUROC > 0.5$). We check linearity of `PCIBProbe.score` to cache component signals, then perform a stratified 5-fold cross-validation grid search over weight mixtures. We only select a candidate weight pair if its cross-validation AUROC strictly outperforms the baseline's cross-validation score, preserving $(0.5, 0.5)$ if no significant generalization gain is found.
+- **`calibrated_decision`**: We dynamically register `type(model)` and `type(model.layers[0])` into JAX's PyTree registry via `jax.tree_util.register_pytree_node`, enabling exact automatic differentiation through `nce_loss`. We optimize the 17 parameters using Adam with mild weight decay to preserve calibration, tracking the best training loss and rolling back to initial parameters if loss does not improve, guaranteeing zero regression.: Sandbox failed: AttributeError: 'tuple' object has no attribute 'w'
 No hypothesis both won this round and committed cleanly.
