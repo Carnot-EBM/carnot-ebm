@@ -1,5 +1,18 @@
 # Carnot — Operational Status
 
+## 2026-09-28 — Exp7817 direct SDK runner qualification repaired
+
+- Fixed artifact manifest provenance under a private output root and corrected
+  the frozen coverage combine command to read exact unit and CLI data files.
+  The published V679 result now records `organic_runner_ready_score=1` and
+  `complete_circular_positive_runner_qualified_no_benefit`; all 24 required
+  receipts pass, and the 48 measurement rows remain unstarted.
+- The affected suite passes 161/161; the new module and CLI have 383/383
+  statement coverage. Ruff, mypy, scoped spec coverage, E2E-009/011/013,
+  offline E3 smoke, final cold replay, adversarial verification, and strict
+  row lint pass. The repository-wide Python diagnostic timed out after 180
+  seconds and remains failed health, separate from runner readiness.
+
 ## 2026-09-27 — Exp7770 readiness gate repaired
 
 - Added the missing `full_python_suite` requirement to the CPU Qwen runner.

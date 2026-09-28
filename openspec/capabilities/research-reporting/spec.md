@@ -83312,6 +83312,22 @@ The artifact records separate validity, readiness, Brier, decision cost, coverag
 
 ### REQ-REPORT-7803: Publish current scored runner evidence without benefit credit
 
+### REQ-REPORT-7817: Freeze and execute direct SDK qualification commands
+
+The task-owned V679 dispatcher SHALL load `results/raw/experiment_7817_v679_arc_runner_qualification/validation_command_manifest.json` before child dispatch. That manifest SHALL freeze exact argv, required versus diagnostic classification, the full affected module/test closure, and the rationale for its prospective scope. The affected closure includes the new module and CLI, V674–V678 qualification consumers, archive, scored policy, SDK runtime, selector, supervisor, and their named tests. Required commands SHALL cover the affected unit suite, 100 percent statement coverage of changed code, Ruff, mypy, explicit spec coverage, E2E-009/011/013, private E3 smoke, fresh-process reduction, cold replay, and terminal readers. The repository-wide Python suite SHALL run as bounded diagnostic repository health; its nonzero exit or timeout SHALL remain visible and SHALL never be called a pass. The dispatcher SHALL reject any undeclared child. Each command SHALL own a unique private root, pytest basetemp parent, and immutable content-addressed log after child exit and handle close. Failed required checks SHALL set every readiness field to zero and disqualify. Missing external inputs SHALL block with the exact operand. No historical qualification main SHALL be invoked.
+
+#### SCENARIO-REPORT-7817-DISPATCH
+
+Given the real CLI and a recording child executor, observed names, argv, and required/diagnostic classes equal the frozen manifest byte for byte, including commands appended after helper construction. The published manifest path identifies the frozen repository source even when the output root is temporary. An undeclared child fails before launch.
+
+#### SCENARIO-REPORT-7817-CUSTODY
+
+Given a later retry, a missing pytest parent, or a one-byte change in a sealed log, the reader rejects ambiguous or mutated evidence. Older logs and their hashes remain stable. The coverage combine command reads the exact completed unit and CLI coverage files before enforcing 100 percent statement coverage.
+
+#### SCENARIO-REPORT-7817-GATE
+
+Given scored transitions and every required receipt passing, organic runner readiness is one while benefit gates stay null. A failed, missing, duplicate, or timed-out required receipt sets readiness zero. A science producer cannot be replaced by a conductor pre-gate receipt.
+
 Exp7803 SHALL own a new entrypoint and artifact. It SHALL freeze explicit affected tests, changed modules, validation argument vectors, and the 48-row panel before execution. No historical qualification main or undeclared full-suite child may run. Required checks SHALL include the affected unit suite, 100 percent coverage of new code, Ruff, mypy, scoped spec coverage, E2E-009/011/013, the private LLM-off E3 smoke, fresh-process reduction, and both terminal readers. A separate repository-wide diagnostic SHALL remain separate from current affected validation. Failed required validation SHALL set all readiness fields to zero and disqualify; absent external inputs SHALL block with an exact failed operand. No solve, probability, retention, efficiency, or decision benefit follows from transport qualification.
 
 #### SCENARIO-REPORT-7803-GATE

@@ -388,3 +388,13 @@ These are [Fususu’s reported experiments](https://www.kaggle.com/competitions/
 
 CHECK_TIMED_OUT
 
+## 2026-09-28 13:37 UTC -- NEW
+
+**New top-five entrants:** At the September 28 check, Yi-Chia Chen, Tufa Labs, Daniel Franzen, and Tong Hui Kang had entered the top five; Lord Han Solo remained there. I found no published method tied to those teams’ *current scoring submissions*, so their source-reading status is unknown. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+**New technique details from Son Pham & Mark Barney, currently tenth:** Their public Duck-based research repo reports that prompting a local Qwen3.8-27B to reason more compactly cut tokens per action from 874 to 595 and allowed 43% more actions within the same wall clock. It **did not establish a solve-score gain**. **Classification: (b), general-purpose. POSSIBLE CARNOT LEVER:** test compact symbolic reasoning prompts for Carnot’s local generator where generation time limits exploration. [Experiment and results](https://github.com/sonpham-org/arc-3/blob/main/docs/compact-reasoning-style-experiment.md)
+
+The team also tried LoRA training on its model’s successful traces and on human demonstrations. Successful-trace training slightly improved held-out prediction loss, but that is not a gameplay result; later human-demo and rulebook-conditioned gameplay tests did not establish a gain. **Classification: (b)** for the trace and demonstration training method. Separately, the repo contains per-game rulebooks checked against source-code lines and an experimental rulebook prompt path. **Classification: (a)** for that source-derived, game-specific path; I found no evidence that it produced the team’s current Kaggle score. [Training and rulebook record](https://github.com/sonpham-org/arc-3/blob/main/CHANGELOG.md)
+
+**New ARC Prize writeup, outside the Kaggle competition:** The September 3 Astra report attributes a large semi-private score difference to preserving reasoning state between requests and compacting long conversations; it also documents compact symbolic game notes. **Classification: (b), general-purpose on unseen games.** This is a hosted-model evaluation, not evidence about a Kaggle submission. The [blog index](https://arcprize.org/blog) has no Milestone #2 results yet. [Astra analysis](https://arcprize.org/blog/astra)
+

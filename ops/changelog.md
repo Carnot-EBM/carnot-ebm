@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-09-28 — Exp7817 qualification test repair
+
+- Kept the repository manifest path stable when the V679 dispatcher writes to
+  a private root, and corrected the frozen coverage combine argv to name its
+  two completed data files. Added direct preflight, process-group escalation,
+  cold-reader mutation, CLI-route, and blocked-gate regression checks.
+- Verified 161/161 affected tests and 383/383 new-code statements. The V679
+  result now records readiness 1 with no benefit claim. Its full Python suite
+  diagnostic timed out at 180 seconds and is retained as failed health.
+
 ## 2026-09-27 — Exp7770 full-suite readiness fix
 
 - Required a passing `full_python_suite` receipt for Qwen fixture runner

@@ -37607,6 +37607,22 @@ Given the offline SDK and each frozen arm, the live E3 wrapper takes actual envi
 
 ## Induced-plan verified divergence and acceptance pilot — 2026-09-26
 
+### REQ-ARC-WMTE-7817: Qualify the direct scored SDK archive wrapper
+
+V679 SHALL construct `make_carnot_agent` and `E3AgentPolicy` directly from the current policy and archive primitives. It SHALL disable adapters, stored routes, engines, and every LLM tier. The three local arms SHALL use off, total-seen, and organic-seen archive selection without changing production defaults. The frozen V677 panel SHALL retain eight games, two seeds, three arms, and 48 unstarted measurement rows. Registry and SDK roster checks SHALL precede episodes. Two public SDK games SHALL provide actual frames and transitions. Replay and reset frames SHALL not increase organic sightings. A scripted positive selector fixture SHALL prove distinct total and organic choices. These checks give no solve or benefit credit.
+
+#### SCENARIO-ARC-WMTE-7817-SCORED
+
+Given two public SDK games and three arms, each probe records policy entry, transition and observation hashes, charged actions, supervisor outcomes, and zero induction calls. A missing transition closes readiness.
+
+#### SCENARIO-ARC-WMTE-7817-SELECTOR
+
+Given replay sightings for two eligible cells, organic sightings remain fixed and the total and organic selectors choose different prefixes. The off arm has no archive.
+
+#### SCENARIO-ARC-WMTE-7817-PANEL
+
+Given the immutable V677 panel fixture, every one of its 48 measurement rows remains unstarted. A changed row or control blocks compute.
+
 ### REQ-ARC-WMTE-7803: Qualify organic selection on the scored SDK path
 
 V678 SHALL keep the V677 eight-game, two-seed, three-arm, 48-row panel unchanged. Before an episode it SHALL check the public registry and SDK roster. It SHALL use the scored `make_carnot_agent` E3 policy with adapters, stored routes, and all LLM tiers withheld. The off, total-seen, and organic-seen arms SHALL retain production defaults except explicit local archive options. Two public SDK games SHALL provide real observations and transitions. A scripted positive fixture SHALL prove that replay observations leave organic sightings fixed and change the selected prefix. Fixture truth SHALL provide no solve or benefit credit.

@@ -18903,3 +18903,5 @@ code |
 | 2026-09-28 12:54 UTC | Validate evidence interventions through an explici | OK | 97 passed, 1 warning in 7.74s |
 | 2026-09-28 12:56 UTC | Measure bounded Qwen source sensitivity with match | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7814-counter-evidence-protocol.counter_evidence_ready_score (actual=0 == expected=1) |
 | 2026-09-28 12:58 UTC | Measure retained constraint learning and worst-win | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7812-view-energy-fit, exp7812-view-energy-fit, exp7812-view-energy-fit) |
+| 2026-09-28 14:00 UTC | Qualify scored ARC dispatch with bounded validatio | FAIL | Post-tests failed: lambda _start: ([{"passed": True, "field": "fixture"}], {}, {"host": "fixture"}), |
+| 2026-09-28 14:02 UTC | Qualify scored ARC dispatch with bounded validatio | OK | Deliverable already exists in repo |

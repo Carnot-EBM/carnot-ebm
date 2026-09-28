@@ -366,3 +366,8 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 As of September 27, Tufa Labs leads the provisional public leaderboard with **27.29**, ahead of Daniel Franzen (21.01), Lord Han Solo (20.80), and Tong Hui Kang (20.53). [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-09-28 13:14 UTC -- NEW
+
+- **Leaderboard change:** Yi-Chia Chen now leads the provisional public leaderboard with **28.34**. Tufa Labs is second at **27.29**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+- **Official benchmark result:** ARC Prize reported on September 3 that GPT-6 Astra scored **62.7%** on the Semi-Private set with its Standard harness and **99.9%** with its Provider Adapter harness. These are separate benchmark evaluations, not Kaggle competition submissions. [ARC Prize blog](https://arcprize.org/blog/astra)
+

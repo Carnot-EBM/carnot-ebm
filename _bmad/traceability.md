@@ -1,6 +1,15 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-27
+**Last Updated:** 2026-09-28
+**Operational Note:** REQ-REPORT-7817 and REQ-ARC-WMTE-7817 map the frozen
+V679 command manifest, direct SDK qualification wrapper, dispatcher, and
+14 focused scenario tests to the Exp7817 files. The recorded-entrypoint repair
+keeps manifest provenance relative to its source root when outputs are private.
+The coverage combine command now names the two completed data files. The
+affected closure passes 161/161 tests, the new module and CLI cover 383/383
+statements, and E2E-009/011/013 plus the offline E3 smoke pass. The rerun
+publishes readiness 1 with no benefit credit; its separate repository-wide
+diagnostic timed out at 180 seconds and is recorded as failed health.
 **Operational Note:** REQ-REPORT-7752 and SCENARIO-REPORT-7752-REPLAY map the
 V674 capstone reducer and direct CLI to
 `tests/python/test_experiment_7752_v674_capstone.py`. The CLI now resolves the
