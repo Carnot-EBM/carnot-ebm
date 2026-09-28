@@ -18915,3 +18915,5 @@ code |
 | 2026-09-28 18:14 UTC | Bind fourteen tasks and register shortcut and abst | OK | 112 passed, 1 warning in 18.46s |
 | 2026-09-28 19:00 UTC | Challenge source features and missing-label loss w | OK | 86 passed, 1 warning in 8.24s |
 | 2026-09-28 19:33 UTC | Repair the frozen training check and qualify reusa | OK | 110 passed, 1 warning in 61.01s (0:01:01) |
+| 2026-09-28 19:35 UTC | Fit normalized source energies and freeze selectiv | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7824-source-feature-isolation.source_isolation_ready_score (actual=0 == expected=1) |
+| 2026-09-28 19:37 UTC | Measure calibrated decision value and source depen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7826-view-energy-fit, exp7826-view-energy-fit, exp7826-view-energy-fit) |
