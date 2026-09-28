@@ -84921,3 +84921,53 @@ The real CLI observes exactly the frozen command names, argv and classes.
 Fresh reduction and terminal readers inspect the exact candidate. The final
 artifact records separate validity, readiness, probability, benefit,
 retention and efficiency gates, exact hashes, timing and zero model calls.
+## REQ-REPORT-7834: Read qualified service cost with retained board custody
+
+Exp7834 SHALL bind milestone 2026.09.680 and run date 20260928 to an
+independent read-only reduction. It SHALL authenticate the exact Exp7820
+artifact and the original KV260, PolarFire, and GateMate bytes recorded there.
+Historical board scope and age SHALL survive an absent Exp7833 producer. The
+conductor pre-gate receipt is never a science producer. A qualified Exp7833
+requires experiment ID, schema, accepted verdict class, no adversarial flag,
+readiness score one, and finite nonnegative stage times within whole service.
+Only then SHALL the reader recompute host fractions and the optimistic
+complete-service bound. Missing or unqualified service SHALL yield
+complete_blocked_missing_service_evidence, verdict_class blocked, and the
+failed exact gate operands; no old timing or simulated result may substitute.
+
+The reader SHALL account separately for measured memory bandwidth and sampler
+work. Its opportunity map SHALL name measured stage bytes, transfer boundary,
+correctness criterion and required tool/device access; absent sampler work
+defers integration. KV260 remains k_max<=5 fabric, PolarFire remains Linux
+CPU-only, and GateMate remains blocked at JTAG 0xffffffff until dated changed
+cable, port, or power evidence. NPU requires a working toolchain and device
+run; TSU requires authenticated access. No purchase or hardware advantage is
+claimed from missing service evidence.
+
+The prospectively frozen affected closure is the new reducer and CLI, their
+direct tests, and the Exp7820/Exp7806 board and receipt consumers. The exact
+manifest commands SHALL include serial focused tests, completed same-settings
+coverage shards and explicit combine with 100 percent statement coverage of
+new code, scoped Ruff check and format, mypy, explicit test-file spec coverage,
+real CLI E2E, fresh cold replay, adversarial verification, and strict row lint.
+Broad serial Python health is a separate 180-second diagnostic. The real
+dispatcher SHALL reject undeclared names, argv, and classifications. Child
+logs SHALL be sealed after exit at unique content-addressed attempt paths;
+replay SHALL reject byte changes. Required failures disqualify and zero
+readiness. Prior full-suite failures remain visible.
+
+### SCENARIO-REPORT-7834-SERVICE
+
+Given missing Exp7833, the audit records one failed readiness operand and
+retains all three dated boards. Given a qualified producer, it independently
+recomputes fractions and the full-service bound; invalid times or flag block.
+
+### SCENARIO-REPORT-7834-CUSTODY
+
+The audit detects changed original board bytes and sealed log bytes. GateMate
+cannot reopen from a repeated probe. A retry cannot rewrite the earlier log.
+
+### SCENARIO-REPORT-7834-DISPATCH
+
+The real CLI dispatches only the frozen exact argv and required/diagnostic
+classes. Required failures disqualify, while diagnostic health remains open.
