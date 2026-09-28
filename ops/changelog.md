@@ -20954,3 +20954,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-28: Bind fourteen tasks and register source dependence methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v678_contract_methods; results/experiment_7795_v678_contract_methods.json
 - 2026-09-28: Qualify source views through an explicit bounded entrypoint (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7796_v678_source_view_qualification.json
 - 2026-09-28: Qualify numerical updates and durable memory with isolated validation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7797_v678_training_runtime.json
+- 2026-09-28: Qualify byte-preserving counter-evidence interventions (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7800_v678_counter_evidence_protocol.json
