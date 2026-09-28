@@ -18908,3 +18908,4 @@ code |
 | 2026-09-28 14:23 UTC | Measure organic exploration on adapter-withheld li | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 101 passed, 1 warning in 15.44s |
 | 2026-09-28 14:25 UTC | Measure complete service cost and acceleration cei | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7812-view-energy-fit, exp7812-view-energy-fit, exp7812-view-energy-fit) |
 | 2026-09-28 14:42 UTC | Repair evidence-reader path ownership and preserve | OK | 93 passed, 1 warning in 9.71s |
+| 2026-09-28 15:29 UTC | Independently replay calibration and delayed-feedb | OK | 99 passed, 1 warning in 7.63s |
