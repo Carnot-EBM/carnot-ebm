@@ -9,7 +9,9 @@ real `data/fover_corpus_v4.json` file -- a plain file read, not an LLM call.
 Spec: REQ-VERIFY-7750, SCENARIO-VERIFY-7750-POE, SCENARIO-VERIFY-7750-POSITIVE-CONTROL,
 SCENARIO-VERIFY-7750-DEGENERATE, SCENARIO-VERIFY-7750-HEADROOM,
 REQ-VERIFY-7751, SCENARIO-VERIFY-7751-TOURNAMENT, SCENARIO-VERIFY-7751-POSITIVE-CONTROL,
-SCENARIO-VERIFY-7751-DEGENERATE, SCENARIO-VERIFY-7751-GATE
+SCENARIO-VERIFY-7751-DEGENERATE, SCENARIO-VERIFY-7751-GATE,
+REQ-VERIFY-7752, SCENARIO-VERIFY-7752-POLICY, SCENARIO-VERIFY-7752-POSITIVE-CONTROL,
+SCENARIO-VERIFY-7752-DEGENERATE, SCENARIO-VERIFY-7752-COST-GRID
 """
 
 from __future__ import annotations
@@ -1158,3 +1160,414 @@ class TestCalibratorTournamentOnLargeMagnitudeRawLogits:
         assert ok_folds
         mean_brier_temp = float(np.mean([f["brier_temperature"] for f in ok_folds]))
         assert mean_brier_temp < 0.25  # meaningfully better than the always-0.5 baseline
+
+
+# ==========================================================================
+# REQ-VERIFY-7752 (A3): calibrated accept/reject/escalate policy.
+# ==========================================================================
+
+
+class TestAurcAndCoverageAtRiskExtended:
+    """SCENARIO-VERIFY-7752-POLICY: AURC / coverage-at-risk / risk-at-fixed-
+    coverage computed by hand on a tiny fixture, verifying the extension
+    added for A3 (a `confidence` override and `risk_at_fixed_coverage`)
+    while confirming the original two-key shape is unchanged by default."""
+
+    def test_default_call_shape_is_unchanged_from_a1(self) -> None:
+        # SCENARIO-VERIFY-7750/7751 callers pass no `confidence` and no
+        # `fixed_coverages` -- the extension must not add keys they never
+        # asked for.
+        result = sre.aurc_and_coverage_at_risk([0, 0, 1, 1], [0.01, 0.02, 0.98, 0.99])
+        assert set(result.keys()) == {"aurc", "coverage_at_5pct_risk"}
+
+    def test_hand_computed_aurc_and_risk_at_fixed_coverage(self) -> None:
+        # By hand: confidence = max(p, 1-p) = [0.9, 0.9, 0.6, 0.6]; a stable
+        # descending sort keeps the original order (no confidence-tie
+        # reordering). pred = p >= 0.5 -> [0, 1, 1, 0]; y = [0, 1, 0, 1].
+        # errors = [0, 0, 1, 1]; cumulative = [0, 0, 1, 2]; counts =
+        # [1, 2, 3, 4]; cum_risk = [0, 0, 1/3, 1/2]; coverage =
+        # [0.25, 0.5, 0.75, 1.0].
+        labels = [0, 1, 0, 1]
+        probs = [0.1, 0.9, 0.6, 0.4]
+        result = sre.aurc_and_coverage_at_risk(
+            labels, probs, target_risk=0.05, fixed_coverages=(0.50, 0.80, 0.90)
+        )
+        # trapezoid((0,0,1/3,1/2), x=(.25,.5,.75,1)) = 0 + (0+1/3)/2*.25 + (1/3+1/2)/2*.25
+        assert result["aurc"] == pytest.approx(0.145833333, abs=1e-6)
+        # cum_risk <= 0.05 only at the first two points -> max coverage 0.5.
+        assert result["coverage_at_5pct_risk"] == pytest.approx(0.5, abs=1e-9)
+        risk_at = result["risk_at_fixed_coverage"]
+        assert risk_at["0.50"] == pytest.approx(0.0, abs=1e-9)  # k=2 -> cum_risk[1]=0
+        assert risk_at["0.80"] == pytest.approx(1.0 / 3.0, abs=1e-9)  # k=round(3.2)=3
+        assert risk_at["0.90"] == pytest.approx(0.5, abs=1e-9)  # k=round(3.6)=4
+
+    def test_confidence_override_changes_the_ranking(self) -> None:
+        # Same labels/probs, but a confidence array that reverses the
+        # ranking must produce a DIFFERENT AURC than the default max(p,1-p)
+        # ranking -- proving the override is actually used.
+        labels = [0, 1, 0, 1]
+        probs = [0.1, 0.9, 0.6, 0.4]
+        default_result = sre.aurc_and_coverage_at_risk(labels, probs)
+        reversed_confidence = [0.1, 0.2, 0.8, 0.9]  # exact reverse of max(p,1-p)
+        overridden_result = sre.aurc_and_coverage_at_risk(
+            labels, probs, confidence=reversed_confidence
+        )
+        assert overridden_result["aurc"] != pytest.approx(default_result["aurc"])
+
+    def test_empty_input_with_fixed_coverages_returns_zeros(self) -> None:
+        result = sre.aurc_and_coverage_at_risk([], [], fixed_coverages=(0.5, 0.8))
+        assert result["aurc"] == 0.0
+        assert result["risk_at_fixed_coverage"] == {"0.50": 0.0, "0.80": 0.0}
+
+
+class TestCombineCalibratedRisk:
+    def test_unweighted_mean_of_three_signals(self) -> None:
+        combined = sre.combine_calibrated_risk([0.1, 0.5], [0.2, 0.5], [0.3, 0.5])
+        assert combined[0] == pytest.approx(0.2, abs=1e-9)
+        assert combined[1] == pytest.approx(0.5, abs=1e-9)
+
+    def test_never_reads_the_accept_channel_by_construction(self) -> None:
+        # SCENARIO-VERIFY-7752-POLICY: only three arguments are accepted --
+        # there is structurally no fourth "accept calibration" input.
+        import inspect
+
+        params = list(inspect.signature(sre.combine_calibrated_risk).parameters)
+        assert params == ["p_verifier", "p_reject_cal", "p_escalate_cal"]
+
+
+class TestThreeWayEntropyConfidence:
+    def test_uniform_distribution_has_zero_confidence(self) -> None:
+        third = 1.0 / 3.0
+        confidence = sre.three_way_entropy_confidence(
+            {"accept": [third], "reject": [third], "escalate": [third]}
+        )
+        assert confidence[0] == pytest.approx(0.0, abs=1e-6)
+
+    def test_near_certain_distribution_has_near_full_confidence(self) -> None:
+        confidence = sre.three_way_entropy_confidence(
+            {"accept": [0.999998], "reject": [0.000001], "escalate": [0.000001]}
+        )
+        assert confidence[0] > 0.95
+
+
+class TestChowRejectOptionDecisions:
+    def test_hand_computed_three_way_split(self) -> None:
+        # By hand at cost_escalate=0.2: accept iff p < 0.2, reject iff
+        # p > 0.8, escalate otherwise.
+        p = [0.05, 0.2, 0.5, 0.8, 0.95]
+        decisions = sre.chow_reject_option_decisions(p, cost_escalate=0.2)
+        assert list(decisions) == ["accept", "escalate", "escalate", "escalate", "reject"]
+
+    def test_cost_zero_forces_universal_escalation(self) -> None:
+        decisions = sre.chow_reject_option_decisions([0.0, 0.5, 1.0], cost_escalate=0.0)
+        assert list(decisions) == ["escalate", "escalate", "escalate"]
+
+    def test_cost_half_forces_a_two_way_split_never_escalate(self) -> None:
+        decisions = sre.chow_reject_option_decisions([0.1, 0.4999, 0.9], cost_escalate=0.5)
+        assert "escalate" not in list(decisions)
+
+    def test_cost_is_clipped_to_the_valid_range(self) -> None:
+        # A cost above 0.5 or below 0 must not silently invert the rule.
+        decisions_high = sre.chow_reject_option_decisions([0.1, 0.9], cost_escalate=0.9)
+        decisions_low = sre.chow_reject_option_decisions([0.1, 0.9], cost_escalate=-0.3)
+        assert "escalate" not in list(decisions_high)
+        assert list(decisions_low) == ["escalate", "escalate"]
+
+
+class TestPolicyConfusionMatrix:
+    def test_counts_and_by_action_breakdown(self) -> None:
+        labels = [0, 1, 0, 1, 0]
+        decisions = ["accept", "reject", "accept", "escalate", "escalate"]
+        result = sre.policy_confusion_matrix(labels, decisions)
+        assert result["counts"] == {"accept": 2, "reject": 1, "escalate": 2}
+        assert result["by_action_and_label"]["accept"]["n_label_correct_0"] == 2
+        assert result["by_action_and_label"]["reject"]["n_label_incorrect_1"] == 1
+        assert result["n_total"] == 5
+
+
+class TestCheckActionBalance:
+    """SCENARIO-VERIFY-7752-DEGENERATE: both the failing case and the
+    justified-by-cost-matrix case."""
+
+    def test_missing_action_at_an_interior_cost_is_a_real_failure(self) -> None:
+        # The exp7385 shape: near-universal accept, no rejects, at a
+        # moderate cost the grid does NOT mathematically force.
+        counts = {"accept": 6613, "reject": 0, "escalate": 2}
+        result = sre.check_action_balance(counts, cost_escalate=0.2)
+        assert result["degenerate"] is True
+        assert result["zero_actions"] == ["reject"]
+        assert result["justified_by_cost_matrix"] is False
+
+    def test_missing_escalate_at_cost_half_is_justified(self) -> None:
+        counts = {"accept": 5, "reject": 5, "escalate": 0}
+        result = sre.check_action_balance(counts, cost_escalate=0.5)
+        assert result["degenerate"] is True
+        assert result["justified_by_cost_matrix"] is True
+
+    def test_missing_accept_and_reject_at_cost_zero_is_justified(self) -> None:
+        counts = {"accept": 0, "reject": 0, "escalate": 10}
+        result = sre.check_action_balance(counts, cost_escalate=0.0)
+        assert result["degenerate"] is True
+        assert result["justified_by_cost_matrix"] is True
+
+    def test_all_three_actions_present_is_not_degenerate(self) -> None:
+        counts = {"accept": 3, "reject": 3, "escalate": 3}
+        result = sre.check_action_balance(counts, cost_escalate=0.2)
+        assert result["degenerate"] is False
+        assert result["justified_by_cost_matrix"] is None
+
+
+class TestEscalationValue:
+    def test_no_escalation_means_no_benefit(self) -> None:
+        labels = [1, 1, 0, 0]
+        p = [0.9, 0.9, 0.1, 0.1]
+        decisions = sre.chow_reject_option_decisions(p, cost_escalate=0.2)
+        assert "escalate" not in list(decisions)
+        result = sre.escalation_value(labels, p, decisions, cost_escalate=0.2)
+        assert result["policy_n_escalated"] == 0
+        assert result["forced_decision_errors"] == 0
+        assert result["escalation_saves_cost"] is False
+
+    def test_escalating_an_error_prone_row_saves_cost(self) -> None:
+        # A single row the forced 0.5 threshold gets wrong (p=0.49, label=1)
+        # falls inside the cost=0.1 escalate zone and is spared.
+        labels = [1]
+        p = [0.49]
+        decisions = sre.chow_reject_option_decisions(p, cost_escalate=0.1)
+        assert list(decisions) == ["escalate"]
+        result = sre.escalation_value(labels, p, decisions, cost_escalate=0.1)
+        assert result["forced_decision_errors"] == 1
+        assert result["policy_decided_errors"] == 0
+        assert result["policy_n_escalated"] == 1
+        assert result["policy_total_cost"] == pytest.approx(0.1, abs=1e-9)
+        assert result["errors_avoided_by_escalation"] == 1
+        assert result["escalation_saves_cost"] is True
+
+
+class TestA3KillCheck:
+    def _grid_point(self, counts: dict[str, int], saves_cost: bool) -> dict:
+        return {
+            "confusion_matrix": {"counts": counts},
+            "escalation_value": {"escalation_saves_cost": saves_cost},
+        }
+
+    def test_all_single_action_across_grid_triggers_kill(self) -> None:
+        grid = [
+            self._grid_point({"accept": 10, "reject": 0, "escalate": 0}, saves_cost=True),
+            self._grid_point({"accept": 10, "reject": 0, "escalate": 0}, saves_cost=True),
+        ]
+        result = sre.a3_kill_check(grid, coverage_at_5pct_risk=0.5)
+        assert result["all_grid_points_single_action"] is True
+        assert result["kill"] is True
+
+    def test_coverage_below_floor_triggers_kill(self) -> None:
+        grid = [self._grid_point({"accept": 5, "reject": 5, "escalate": 5}, saves_cost=True)]
+        result = sre.a3_kill_check(grid, coverage_at_5pct_risk=0.10)
+        assert result["coverage_below_25pct_floor"] is True
+        assert result["kill"] is True
+
+    def test_escalation_never_saving_cost_triggers_kill(self) -> None:
+        grid = [
+            self._grid_point({"accept": 5, "reject": 5, "escalate": 5}, saves_cost=False),
+            self._grid_point({"accept": 5, "reject": 5, "escalate": 5}, saves_cost=False),
+        ]
+        result = sre.a3_kill_check(grid, coverage_at_5pct_risk=0.5)
+        assert result["no_escalation_ever_saves_cost_at_any_grid_point"] is True
+        assert result["kill"] is True
+
+    def test_healthy_grid_does_not_trigger_kill(self) -> None:
+        grid = [
+            self._grid_point({"accept": 5, "reject": 5, "escalate": 5}, saves_cost=True),
+            self._grid_point({"accept": 8, "reject": 2, "escalate": 5}, saves_cost=False),
+        ]
+        result = sre.a3_kill_check(grid, coverage_at_5pct_risk=0.5)
+        assert result["kill"] is False
+
+
+class TestA3PositiveControl:
+    """SCENARIO-VERIFY-7752-POSITIVE-CONTROL."""
+
+    def test_noisy_gold_beats_both_controls(self) -> None:
+        result = sre.run_a3_positive_control(seed=20260928, n=2000)
+        assert result["noisy_gold_beats_entropy_control"] is True
+        assert result["noisy_gold_beats_prevalence_control"] is True
+        assert result["passed"] is True
+
+    def test_deterministic_given_the_same_seed(self) -> None:
+        r1 = sre.run_a3_positive_control(seed=7, n=500)
+        r2 = sre.run_a3_positive_control(seed=7, n=500)
+        assert r1 == r2
+
+    def test_never_touches_the_real_corpus(self) -> None:
+        import inspect
+
+        source = inspect.getsource(sre.run_a3_positive_control)
+        assert "load_corpus_rows_with_features(" not in source
+        assert "train_gibbs_verifier(" not in source
+        assert "read_option_logits(" not in source
+
+
+class TestPairedGroupBootstrapAurcDelta:
+    def test_a_clearly_better_signal_has_a_negative_delta_ci_below_zero(self) -> None:
+        rng = np.random.default_rng(2026)
+        n = 400
+        question_ids = [f"q{i}" for i in range(n)]
+        labels = rng.integers(0, 2, size=n)
+        signal = 2.0 * labels - 1.0
+        z_main = 3.0 * signal + rng.normal(scale=0.3, size=n)
+        p_main = 1.0 / (1.0 + np.exp(-z_main))
+        p_control = rng.uniform(size=n)  # uninformative
+
+        result = sre.paired_group_bootstrap_aurc_delta(
+            question_ids, labels, p_main, p_control, n_boot=200, seed=11
+        )
+        assert result["point"] < 0.0
+        assert result["ci95"][1] < 0.0
+
+    def test_n_groups_matches_unique_question_ids(self) -> None:
+        question_ids = ["a", "a", "b", "b", "c", "c"]
+        labels = [0, 1, 0, 1, 0, 1]
+        probs = [0.1, 0.9, 0.2, 0.8, 0.3, 0.7]
+        result = sre.paired_group_bootstrap_aurc_delta(
+            question_ids, labels, probs, probs, n_boot=50, seed=1
+        )
+        assert result["n_groups"] == 3
+
+
+class TestCostGridIsPreRegistered:
+    """SCENARIO-VERIFY-7752-COST-GRID: the grid and its primary point are
+    fixed module-level constants, never derived from data at evaluation
+    time."""
+
+    def test_grid_is_a_plain_sorted_tuple_of_floats(self) -> None:
+        assert isinstance(sre.A3_COST_GRID, tuple)
+        assert all(isinstance(c, float) for c in sre.A3_COST_GRID)
+        assert list(sre.A3_COST_GRID) == sorted(sre.A3_COST_GRID)
+        assert all(0.0 <= c <= 0.5 for c in sre.A3_COST_GRID)
+
+    def test_primary_cost_is_a_member_of_the_grid(self) -> None:
+        assert isinstance(sre.A3_PRIMARY_COST, float)
+        assert any(abs(sre.A3_PRIMARY_COST - c) < 1e-12 for c in sre.A3_COST_GRID)
+
+    def test_run_a3_policy_evaluation_default_grid_is_the_module_constant(self) -> None:
+        import inspect
+
+        sig = inspect.signature(sre.run_a3_policy_evaluation)
+        assert sig.parameters["cost_grid"].default is sre.A3_COST_GRID
+        assert sig.parameters["primary_cost"].default is sre.A3_PRIMARY_COST
+
+
+class TestRunA3PolicyEvaluation:
+    """SCENARIO-VERIFY-7752-POLICY: the full evaluation wired together on a
+    strongly-separated synthetic corpus, so every gate condition should
+    individually resolve in the expected direction -- this is a
+    correctness test of the wiring, not a claim about the real corpus
+    (see `results/experiment_semif_readout_ebm_eval_a3.json` for that)."""
+
+    def _synthetic_inputs(self, seed: int = 20260929, n: int = 1500) -> dict:
+        rng = np.random.default_rng(seed)
+        question_ids = [f"q{i}" for i in range(n)]
+        labels = rng.integers(0, 2, size=n)
+        signal = 2.0 * labels - 1.0
+        # Three independently-noised but genuinely informative calibrated
+        # channels. This noise level is deliberately moderate, not strong:
+        # a too-confident signal drives the forced-decision (no escalation)
+        # baseline's error count so low that escalating anything, even at
+        # the smallest registered cost, can never pay for itself -- a real
+        # property of the escalation-value formula, not a bug, but it
+        # would make `escalation_saves_cost` false at every grid point and
+        # defeat this test's purpose. Verified directly: scale=0.6,
+        # noise=1.2 gives ~20 percent forced-decision error and escalation
+        # saves cost at 4 of 10 registered grid points.
+        z_verifier = 0.6 * signal + rng.normal(scale=1.2, size=n)
+        z_reject = 0.6 * signal + rng.normal(scale=1.2, size=n)
+        z_escalate = 0.6 * signal + rng.normal(scale=1.2, size=n)
+        p_verifier = 1.0 / (1.0 + np.exp(-z_verifier))
+        p_reject_cal = 1.0 / (1.0 + np.exp(-z_reject))
+        p_escalate_cal = 1.0 / (1.0 + np.exp(-z_escalate))
+
+        # Raw 3-way probabilities for the entropy control: pure noise, no
+        # relationship to the label -- so the combined-risk signal should
+        # clearly beat it.
+        random_logits = rng.normal(size=(n, 3))
+        exp_logits = np.exp(random_logits - random_logits.max(axis=1, keepdims=True))
+        random_probs = exp_logits / exp_logits.sum(axis=1, keepdims=True)
+        return {
+            "question_ids": question_ids,
+            "labels": labels.tolist(),
+            "p_verifier": p_verifier,
+            "p_reject_cal": p_reject_cal,
+            "p_escalate_cal": p_escalate_cal,
+            "p_accept_raw": random_probs[:, 0],
+            "p_reject_raw": random_probs[:, 1],
+            "p_escalate_raw": random_probs[:, 2],
+        }
+
+    def test_strong_signal_beats_both_controls_and_passes_the_gate_shape(self) -> None:
+        inputs = self._synthetic_inputs()
+        result = sre.run_a3_policy_evaluation(
+            inputs["question_ids"],
+            inputs["labels"],
+            inputs["p_verifier"],
+            inputs["p_reject_cal"],
+            inputs["p_escalate_cal"],
+            inputs["p_accept_raw"],
+            inputs["p_reject_raw"],
+            inputs["p_escalate_raw"],
+            seed=7752,
+            n_boot=200,
+        )
+        assert result["aurc_delta_vs_entropy_control"]["ci95"][1] < 0.0
+        assert result["aurc_delta_vs_verifier_only_control"]["point"] <= 0.0
+        assert result["main_metrics"]["coverage_at_5pct_risk"] >= 0.25
+        assert result["primary_cost_result"] is not None
+        primary_counts = result["primary_cost_result"]["confusion_matrix"]["counts"]
+        assert all(primary_counts[a] > 0 for a in sre.A3_ACTIONS)
+        assert result["kill_check"]["kill"] is False
+
+    def test_deterministic_given_the_same_seed_and_inputs(self) -> None:
+        inputs = self._synthetic_inputs()
+        r1 = sre.run_a3_policy_evaluation(
+            inputs["question_ids"],
+            inputs["labels"],
+            inputs["p_verifier"],
+            inputs["p_reject_cal"],
+            inputs["p_escalate_cal"],
+            inputs["p_accept_raw"],
+            inputs["p_reject_raw"],
+            inputs["p_escalate_raw"],
+            seed=99,
+            n_boot=50,
+        )
+        r2 = sre.run_a3_policy_evaluation(
+            inputs["question_ids"],
+            inputs["labels"],
+            inputs["p_verifier"],
+            inputs["p_reject_cal"],
+            inputs["p_escalate_cal"],
+            inputs["p_accept_raw"],
+            inputs["p_reject_raw"],
+            inputs["p_escalate_raw"],
+            seed=99,
+            n_boot=50,
+        )
+        assert r1["main_metrics"]["aurc"] == r2["main_metrics"]["aurc"]
+        assert r1["aurc_delta_vs_entropy_control"] == r2["aurc_delta_vs_entropy_control"]
+
+    def test_cost_grid_sweep_covers_every_registered_point(self) -> None:
+        inputs = self._synthetic_inputs(n=200)
+        result = sre.run_a3_policy_evaluation(
+            inputs["question_ids"],
+            inputs["labels"],
+            inputs["p_verifier"],
+            inputs["p_reject_cal"],
+            inputs["p_escalate_cal"],
+            inputs["p_accept_raw"],
+            inputs["p_reject_raw"],
+            inputs["p_escalate_raw"],
+            seed=1,
+            n_boot=20,
+        )
+        assert len(result["cost_grid_results"]) == len(sre.A3_COST_GRID)
+        costs_seen = [r["cost_escalate"] for r in result["cost_grid_results"]]
+        assert costs_seen == list(sre.A3_COST_GRID)

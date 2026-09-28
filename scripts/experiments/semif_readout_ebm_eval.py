@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""A1/A2 driver: readout energy calibration (REQ-VERIFY-7750, REQ-VERIFY-7751).
+"""A1/A2/A3 driver: readout energy calibration + policy
+(REQ-VERIFY-7750, REQ-VERIFY-7751, REQ-VERIFY-7752).
 
-Runs the pre-registered A1 and A2 experiments from
+Runs the pre-registered A1, A2, and A3 experiments from
 `docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`. Run A1
 with no argument (`python scripts/experiments/semif_readout_ebm_eval.py`).
 Run A2 with `a2` as the first argument
-(`python scripts/experiments/semif_readout_ebm_eval.py a2`). A2 makes NO
-model call -- it reuses A1's cached readout logits, so it costs nothing to
-rerun.
+(`python scripts/experiments/semif_readout_ebm_eval.py a2`). Run A3 with
+`a3` as the first argument
+(`python scripts/experiments/semif_readout_ebm_eval.py a3`). A2 and A3 make
+NO model call -- both reuse A1's cached readout logits, so either costs
+nothing to rerun.
 
 CONCRETE STEPS (A1, `main()`):
   0. PRECONDITIONS (checked before any subsequent step; any failure writes
@@ -57,7 +60,38 @@ CONCRETE STEPS (A2, `main_a2()`):
      criterion per channel.
   7. Print a progress line, then write the results artifact.
 
-Spec: REQ-VERIFY-7750, REQ-VERIFY-7751
+CONCRETE STEPS (A3, `main_a3()`):
+  0. PRECONDITIONS: the corpus file, A1's result artifact, A1's readout
+     logit cache, and A2's result artifact all exist and parse. No
+     GGUF/GPU precondition -- A3 never loads a model.
+  1. Print a progress line, then load the corpus rows + split, and rebuild
+     the held-out `A2ScoredRow` list (A2's exact construction, reused so
+     the two never drift).
+  2. Print a progress line, then retrain the verifier-only Gibbs energy
+     (A1's exact construction) and run A1's own out-of-fold
+     cross-validation to get the pooled out-of-fold verifier-only
+     probability per held-out row.
+  3. Print a progress line, then rerun A2's grouped out-of-fold calibrator
+     tournament over all three option channels, to get pooled out-of-fold
+     raw and isotonic-calibrated probabilities per held-out row (the
+     `accept` channel's calibration is read but never used in the
+     combined-risk score -- it did not clear A2's kill criterion).
+  4. Print a progress line, then join the two pooled sets by question ID
+     (unique per row in this corpus) and enforce the sample-size floor
+     (>=1,000 rows, >=30 question groups).
+  5. Print a progress line, then run the synthetic A3 positive control (two
+     lanes: noisy-gold vs. entropy control, and noisy-gold vs. prevalence
+     control).
+  6. Print a progress line, then run the full A3 policy evaluation --
+     combined risk, controls, AURC/coverage metrics, paired group
+     bootstraps, and the pre-registered cost-grid sweep -- once per each of
+     five fixed seeds.
+  7. Print a progress line, then apply the pass/fail gate and kill
+     criterion using the seed with the LEAST favorable bootstrap interval
+     (the most conservative choice across the five seeds).
+  8. Print a progress line, then write the results artifact.
+
+Spec: REQ-VERIFY-7750, REQ-VERIFY-7751, REQ-VERIFY-7752
 """
 
 from __future__ import annotations
@@ -813,7 +847,468 @@ def main_a2() -> int:  # noqa: C901 -- one linear driver, matches A1's main() sh
     return 0
 
 
+# ==========================================================================
+# A3: calibrated accept/reject/escalate policy (REQ-VERIFY-7752).
+#
+# Honest input set (see semif_readout_energy.py's A3 module docstring for
+# the full reasoning): the verifier-only probability (A1's collapsed PoE
+# reduces to this), plus A2's calibrated `reject` and `escalate` channels.
+# A2's `accept` channel calibration is read (for the entropy control's raw
+# 3-way probabilities) but never used as a validated calibration input --
+# it did not clear A2's kill criterion.
+# ==========================================================================
+
+RESULT_PATH_A3 = results_path("experiment_semif_readout_ebm_eval_a3.json")
+INFERENCE_SUBSTRATE_A3 = "aggregation_from_upstream_artifacts"
+INFERENCE_SUBSTRATE_CLASS_A3 = "aggregation"
+# Five fixed seeds, matching the existing abstention measurement floor's
+# BOOTSTRAP_SEEDS convention (risk_coverage_abstention_3718.py:29-40).
+RANDOM_SEEDS_A3: tuple[int, ...] = (7752, 7753, 7754, 7755, 7756)
+N_BOOT_A3 = 500
+
+
+def _reproducibility_checksum_a3(cache_path: Path, a1_path: Path, a2_path: Path) -> str:
+    hasher = hashlib.sha256()
+    if CORPUS_PATH.exists():
+        hasher.update(CORPUS_PATH.read_bytes())
+    if cache_path.exists():
+        hasher.update(cache_path.read_bytes())
+    if a1_path.exists():
+        hasher.update(a1_path.read_bytes())
+    if a2_path.exists():
+        hasher.update(a2_path.read_bytes())
+    hasher.update(str(RANDOM_SEEDS_A3).encode())
+    hasher.update(str(KFOLD_K).encode())
+    return "sha256:" + hasher.hexdigest()
+
+
+def _honest_block_a3(reason: str, preconditions_checked: list[dict], start: float) -> int:
+    artifact = {
+        "schema": "carnot.semif_readout_ebm_eval.a3.v1",
+        "experiment": "semif_readout_ebm_eval_a3",
+        "requirement": "REQ-VERIFY-7752",
+        "run_date": datetime.now(UTC).strftime("%Y%m%d"),
+        "honest_verdict": f"complete: blocked_{reason}",
+        "inference_substrate": INFERENCE_SUBSTRATE_A3,
+        "inference_substrate_class": INFERENCE_SUBSTRATE_CLASS_A3,
+        "preconditions_checked": preconditions_checked,
+        "duration_s": time.monotonic() - start,
+        "random_seeds_used": list(RANDOM_SEEDS_A3),
+        "reproducibility_checksum": _reproducibility_checksum_a3(
+            CACHE_PATH, RESULT_PATH, RESULT_PATH_A2
+        ),
+    }
+    RESULT_PATH_A3.parent.mkdir(parents=True, exist_ok=True)
+    RESULT_PATH_A3.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
+    print(f"BLOCKED: {reason}. Wrote {RESULT_PATH_A3}", flush=True)
+    return 0
+
+
+def main_a3() -> int:  # noqa: C901 -- one linear driver, matches A1/A2's shape
+    start = time.monotonic()
+
+    def _p(message: str) -> None:
+        elapsed = time.monotonic() - start
+        print(f"[semif_readout_ebm_eval:a3] t+{elapsed:6.1f}s  {message}", flush=True)
+
+    _p("step 0: checking preconditions (no model/GPU precondition -- A3 makes no model call)")
+    preconditions_checked = [
+        {"resource": "fover_corpus_v4_json", "available": CORPUS_PATH.exists()},
+        {"resource": "a1_result_artifact", "available": RESULT_PATH.exists()},
+        {"resource": "a1_readout_logits_cache", "available": CACHE_PATH.exists()},
+        {"resource": "a2_result_artifact", "available": RESULT_PATH_A2.exists()},
+    ]
+    if not preconditions_checked[0]["available"]:
+        return _honest_block_a3("corpus_missing", preconditions_checked, start)
+    if not preconditions_checked[1]["available"]:
+        return _honest_block_a3("a1_result_missing", preconditions_checked, start)
+    if not preconditions_checked[2]["available"]:
+        return _honest_block_a3("a1_readout_cache_missing", preconditions_checked, start)
+    if not preconditions_checked[3]["available"]:
+        return _honest_block_a3("a2_result_missing", preconditions_checked, start)
+    cache = sre.load_readout_cache(CACHE_PATH)
+    preconditions_checked.append(
+        {"resource": "a1_readout_cache_non_empty", "available": bool(cache)}
+    )
+    if not cache:
+        return _honest_block_a3("a1_readout_cache_empty", preconditions_checked, start)
+    _p(f"preconditions OK; cache has {len(cache)} cached rows")
+
+    assert "llama_cpp" not in sys.modules, "A3 must never load a model -- llama_cpp was imported"
+
+    _p("step 1: loading corpus rows + split; rebuilding A2's held-out ScoredRow list")
+    rows = sre.load_corpus_rows_with_features()
+    train_rows = [r for r in rows if r.split == "train"]
+    held_out_rows = [r for r in rows if r.split == "held_out"]
+
+    a2_scored_rows: list[sre.A2ScoredRow] = []
+    for row in held_out_rows:
+        key = sre.readout_cache_key(row.question_id, row.step_text)
+        raw_logits = cache.get(key)
+        if raw_logits is None:
+            continue
+        finite = all(
+            raw_logits.get(opt) is not None and math.isfinite(float(raw_logits.get(opt)))
+            for opt in sre.OPTIONS
+        )
+        if not finite:
+            continue
+        a2_scored_rows.append(
+            sre.A2ScoredRow(
+                question_id=row.question_id,
+                label=row.label,
+                raw_logits={opt: float(raw_logits[opt]) for opt in sre.OPTIONS},
+            )
+        )
+    _p(f"rebuilt {len(a2_scored_rows)} of {len(held_out_rows)} held-out rows (A2's exact filter)")
+
+    _p("step 2: retraining the verifier-only Gibbs energy; running A1's out-of-fold CV")
+    train_correct = [[r.entity_uptake, r.falsifiability] for r in train_rows if r.label == 0]
+    train_incorrect = [[r.entity_uptake, r.falsifiability] for r in train_rows if r.label == 1]
+    verifier_model = sre.train_gibbs_verifier(train_correct, train_incorrect, seed=RANDOM_SEED)
+    held_out_features = [[r.entity_uptake, r.falsifiability] for r in held_out_rows]
+    verifier_energies_held_out = sre.gibbs_energy_batch(verifier_model, held_out_features)
+    verifier_energy_by_qid = {
+        row.question_id: float(energy)
+        for row, energy in zip(held_out_rows, verifier_energies_held_out)
+    }
+
+    a1_scored_rows: list[sre.ScoredRow] = []
+    for row in a2_scored_rows:
+        readout = sre.readout_from_logits(row.raw_logits)
+        if readout.energy_accept is None:
+            continue  # degenerate readout -- excluded, same rule A1 applies
+        a1_scored_rows.append(
+            sre.ScoredRow(
+                question_id=row.question_id,
+                label=row.label,
+                e_readout=readout.energy_accept,
+                e_verifier=verifier_energy_by_qid[row.question_id],
+            )
+        )
+    oof_result = sre.run_oof_cross_validation(a1_scored_rows, k=KFOLD_K)
+    verifier_p_by_qid = dict(
+        zip(oof_result["pooled"]["question_id"], oof_result["pooled"]["p_verifier_only"])
+    )
+    _p(f"out-of-fold verifier-only probability computed for {len(verifier_p_by_qid)} rows")
+
+    _p("step 3: rerunning A2's grouped out-of-fold calibrator tournament (all 3 channels)")
+    tournament = sre.run_calibrator_tournament(a2_scored_rows, channels=sre.OPTIONS, k=KFOLD_K)
+    accept_by_qid = dict(
+        zip(tournament["accept"]["pooled"]["question_id"], tournament["accept"]["pooled"]["raw"])
+    )
+    reject_raw_by_qid = dict(
+        zip(tournament["reject"]["pooled"]["question_id"], tournament["reject"]["pooled"]["raw"])
+    )
+    escalate_raw_by_qid = dict(
+        zip(
+            tournament["escalate"]["pooled"]["question_id"],
+            tournament["escalate"]["pooled"]["raw"],
+        )
+    )
+    reject_iso_by_qid = dict(
+        zip(
+            tournament["reject"]["pooled"]["question_id"],
+            tournament["reject"]["pooled"]["isotonic"],
+        )
+    )
+    escalate_iso_by_qid = dict(
+        zip(
+            tournament["escalate"]["pooled"]["question_id"],
+            tournament["escalate"]["pooled"]["isotonic"],
+        )
+    )
+    label_by_qid = dict(
+        zip(tournament["reject"]["pooled"]["question_id"], tournament["reject"]["pooled"]["label"])
+    )
+    _p(f"tournament pooled {len(label_by_qid)} rows across all channels")
+
+    _p("step 4: joining the two pooled sets by question ID; enforcing the sample-size floor")
+    joined_qids = sorted(
+        set(verifier_p_by_qid)
+        & set(reject_iso_by_qid)
+        & set(escalate_iso_by_qid)
+        & set(label_by_qid)
+    )
+    joined_qids = [
+        q
+        for q in joined_qids
+        if reject_iso_by_qid[q] is not None and escalate_iso_by_qid[q] is not None
+    ]
+    n_rows = len(joined_qids)
+    n_groups = len(set(joined_qids))  # question_id is unique per row in this corpus
+    _p(f"joined {n_rows} rows ({n_groups} question groups)")
+    preconditions_checked.append(
+        {"resource": "at_least_1000_joined_rows", "available": n_rows >= sre.A3_MIN_ROWS}
+    )
+    if n_rows < sre.A3_MIN_ROWS:
+        return _honest_block_a3("insufficient_joined_rows", preconditions_checked, start)
+    preconditions_checked.append(
+        {"resource": "at_least_30_question_groups", "available": n_groups >= sre.A3_MIN_GROUPS}
+    )
+    if n_groups < sre.A3_MIN_GROUPS:
+        return _honest_block_a3("insufficient_question_groups", preconditions_checked, start)
+
+    labels_arr = [label_by_qid[q] for q in joined_qids]
+    p_verifier_arr = [verifier_p_by_qid[q] for q in joined_qids]
+    p_reject_cal_arr = [reject_iso_by_qid[q] for q in joined_qids]
+    p_escalate_cal_arr = [escalate_iso_by_qid[q] for q in joined_qids]
+    p_accept_raw_arr = [accept_by_qid[q] for q in joined_qids]
+    p_reject_raw_arr = [reject_raw_by_qid[q] for q in joined_qids]
+    p_escalate_raw_arr = [escalate_raw_by_qid[q] for q in joined_qids]
+
+    _p("step 5: running the synthetic A3 positive control")
+    positive_control = sre.run_a3_positive_control(seed=RANDOM_SEEDS_A3[0])
+    _p(f"positive control passed={positive_control['passed']}")
+
+    _p(f"step 6: running the full A3 policy evaluation over {len(RANDOM_SEEDS_A3)} fixed seeds")
+    per_seed_results: list[dict] = []
+    for i, seed in enumerate(RANDOM_SEEDS_A3):
+        result = sre.run_a3_policy_evaluation(
+            joined_qids,
+            labels_arr,
+            p_verifier_arr,
+            p_reject_cal_arr,
+            p_escalate_cal_arr,
+            p_accept_raw_arr,
+            p_reject_raw_arr,
+            p_escalate_raw_arr,
+            seed=seed,
+            n_boot=N_BOOT_A3,
+        )
+        per_seed_results.append(result)
+        _p(
+            f"  seed={seed}: aurc={result['main_metrics']['aurc']:.4f} "
+            f"coverage_5pct_risk={result['main_metrics']['coverage_at_5pct_risk']:.3f} "
+            f"kill={result['kill_check']['kill']}"
+        )
+
+    _p("step 7: applying the pass/fail gate using the least-favorable seed")
+    # Combined-risk point estimates never depend on the bootstrap seed --
+    # only the CI does. The worst (largest, least favorable) upper bound
+    # across all five seeds is the conservative choice: if EVERY seed's
+    # bootstrap agrees the interval is below zero, the result is stable
+    # (SCENARIO-VERIFY-7752-GATE reads this as "seed-to-seed stability").
+    entropy_ci_uppers = [r["aurc_delta_vs_entropy_control"]["ci95"][1] for r in per_seed_results]
+    verifier_ci_uppers = [
+        r["aurc_delta_vs_verifier_only_control"]["ci95"][1] for r in per_seed_results
+    ]
+    worst_entropy_upper = max(entropy_ci_uppers)
+    worst_verifier_upper = max(verifier_ci_uppers)
+    gate_aurc_vs_entropy_ok = bool(worst_entropy_upper < 0.0)
+    gate_aurc_vs_verifier_ok = bool(worst_verifier_upper < 0.0)
+
+    headline = per_seed_results[0]  # seed[0]'s point estimates == every seed's (deterministic)
+    gate_coverage_ok = bool(headline["main_metrics"]["coverage_at_5pct_risk"] >= 0.25)
+    primary_counts = headline["primary_cost_result"]["confusion_matrix"]["counts"]
+    gate_all_actions_present = bool(all(primary_counts.get(a, 0) > 0 for a in sre.A3_ACTIONS))
+    # No `protected_group` / `registered_risk_bound` field or module exists
+    # anywhere in this corpus or in the codebase (checked: `data/fover_corpus_v4.json`
+    # carries only question_id/step_text/label/confidence, and no fairness
+    # module defines either term) -- so this condition is VACUOUSLY satisfied,
+    # not silently skipped. See `protected_group_check` in the artifact below.
+    gate_protected_group_ok = True
+
+    any_seed_kill = any(r["kill_check"]["kill"] for r in per_seed_results)
+    all_seeds_kill = all(r["kill_check"]["kill"] for r in per_seed_results)
+
+    gate_passed = bool(
+        gate_aurc_vs_entropy_ok
+        and gate_aurc_vs_verifier_ok
+        and gate_coverage_ok
+        and gate_all_actions_present
+        and gate_protected_group_ok
+    )
+
+    if gate_passed:
+        verdict_text = "a3_calibrated_policy_passed_pre_registered_gate"
+    elif all_seeds_kill:
+        verdict_text = "a3_calibrated_policy_failed_kill_criterion_triggered_every_seed"
+    else:
+        verdict_text = "a3_calibrated_policy_failed_pre_registered_gate"
+    honest_verdict = f"complete: {verdict_text}"
+
+    _p(f"step 8: writing results artifact ({honest_verdict})")
+
+    seed_stability = {
+        "aurc_delta_vs_entropy_ci95_upper_by_seed": entropy_ci_uppers,
+        "aurc_delta_vs_verifier_only_ci95_upper_by_seed": verifier_ci_uppers,
+        "aurc_delta_vs_entropy_ci95_upper_range": max(entropy_ci_uppers) - min(entropy_ci_uppers),
+        "aurc_delta_vs_verifier_only_ci95_upper_range": (
+            max(verifier_ci_uppers) - min(verifier_ci_uppers)
+        ),
+        "kill_check_agrees_across_all_seeds": bool(any_seed_kill == all_seeds_kill),
+        "combined_risk_point_estimate_identical_across_seeds": bool(
+            len({round(r["main_metrics"]["aurc"], 12) for r in per_seed_results}) == 1
+        ),
+    }
+
+    duration_s = time.monotonic() - start
+    artifact = {
+        "schema": "carnot.semif_readout_ebm_eval.a3.v1",
+        "experiment": "semif_readout_ebm_eval_a3",
+        "requirement": "REQ-VERIFY-7752",
+        "run_date": datetime.now(UTC).strftime("%Y%m%d"),
+        "run_timestamp_utc": datetime.now(UTC).isoformat(),
+        "honest_verdict": honest_verdict,
+        "inference_substrate": INFERENCE_SUBSTRATE_A3,
+        "inference_substrate_class": INFERENCE_SUBSTRATE_CLASS_A3,
+        "inference_substrate_note": (
+            "CPU-only threshold sweep and grouped bootstrap over A1's cached readout "
+            "logits plus a retrained (deterministic, seeded) verifier-only Gibbs "
+            "energy and A2's calibrator tournament re-run. No model is loaded and no "
+            "forward pass is made -- confirmed by asserting `llama_cpp` is never "
+            "imported in this code path."
+        ),
+        "model_specs": [],
+        "verifier_is_oracle": False,
+        "random_seeds_used": list(RANDOM_SEEDS_A3),
+        "reproducibility_checksum": _reproducibility_checksum_a3(
+            CACHE_PATH, RESULT_PATH, RESULT_PATH_A2
+        ),
+        "duration_s": duration_s,
+        "preconditions_checked": preconditions_checked,
+        "cited_upstream_artifacts": [
+            {
+                "experiment_id": "semif_readout_ebm_eval_a1",
+                "fields_imported": [
+                    "readout_logits_cache (all rows' raw per-option logits)",
+                    "the collapsed PoE finding (alpha=0 in every fold) that motivates "
+                    "using the verifier-only probability as the honest baseline",
+                ],
+            },
+            {
+                "experiment_id": "semif_readout_ebm_eval_a2",
+                "fields_imported": [
+                    "the isotonic-regression selection for the reject and escalate "
+                    "channels (re-derived here, not copied, for byte-level "
+                    "reproducibility against the pooled out-of-fold arrays this "
+                    "driver needs)",
+                    "the accept channel's kill-criterion failure (excluded from the "
+                    "combined-risk score per that finding)",
+                ],
+            },
+        ],
+        "field_provenance": {
+            "duration_s": {
+                "principle": "Even a CPU-only aggregation should report a real wall-clock duration so a reader can distinguish a genuine run from a stub.",
+                "satisfied_by": "wall_clock measurement across the full driver run",
+            },
+            "random_seeds_used": {
+                "principle": "Five fixed seeds let a reader assess seed-to-seed stability of the bootstrap confidence intervals, not just a single point estimate.",
+                "satisfied_by": f"random_seeds_used={list(RANDOM_SEEDS_A3)} threaded through five independent bootstrap resamples",
+            },
+            "reproducibility_checksum": {
+                "principle": "A content-addressed hash of the corpus, cache, A1 artifact, and A2 artifact catches silent drift between this artifact and a future rerun.",
+                "satisfied_by": "sha256 over the corpus bytes, cache bytes, A1/A2 artifact bytes, the seeds, and k",
+            },
+        },
+        "corpus": {
+            "path": "data/fover_corpus_v4.json",
+            "n_held_out_rows": len(held_out_rows),
+            "n_a2_scored_rows": len(a2_scored_rows),
+            "n_joined_rows": n_rows,
+            "n_question_groups": n_groups,
+            "note": "question_id is unique per row in this corpus -- no row shares a question with another",
+        },
+        "honest_input_set": (
+            "verifier-only probability (A1's collapsed PoE reduces to this) + "
+            "A2's calibrated `reject` channel (isotonic) + A2's calibrated `escalate` "
+            "channel (isotonic). A2's `accept` channel calibration is read only for "
+            "the entropy control's raw 3-way probabilities -- it never contributes "
+            "to the combined-risk score, because it did not clear A2's kill criterion."
+        ),
+        "combiner": (
+            "combined_risk = mean(p_verifier_only, p_reject_calibrated, "
+            "p_escalate_calibrated) -- an unweighted mean, the simplest defensible "
+            "combiner given this task's explicit input set. It is fit on nothing, "
+            "so it cannot leak or overfit the evaluation data."
+        ),
+        "positive_control": positive_control,
+        "cost_grid": list(sre.A3_COST_GRID),
+        "primary_cost": sre.A3_PRIMARY_COST,
+        "per_seed_results": per_seed_results,
+        "headline_metrics": {
+            "combined_risk_aurc": headline["main_metrics"]["aurc"],
+            "combined_risk_coverage_at_5pct_risk": headline["main_metrics"][
+                "coverage_at_5pct_risk"
+            ],
+            "combined_risk_risk_at_fixed_coverage": headline["main_metrics"].get(
+                "risk_at_fixed_coverage"
+            ),
+            "combined_risk_brier": headline["combined_risk_brier"],
+            "combined_risk_ece": headline["combined_risk_ece"],
+            "verifier_only_control_aurc": headline["verifier_only_control_metrics"]["aurc"],
+            "entropy_control_aurc": headline["entropy_control_metrics"]["aurc"],
+            "primary_cost_confusion_matrix": headline["primary_cost_result"]["confusion_matrix"],
+            "primary_cost_balance_check": headline["primary_cost_result"]["balance_check"],
+            "primary_cost_escalation_value": headline["primary_cost_result"]["escalation_value"],
+        },
+        "seed_stability": seed_stability,
+        "protected_group_check": {
+            "applicable": False,
+            "reason": (
+                "No protected_group field or registered risk-bound registry exists "
+                "for data/fover_corpus_v4.json (it carries only question_id, "
+                "step_text, label, confidence) or anywhere in this codebase's "
+                "fairness/robustness framework, per A1/A2's own finding. This "
+                "sub-condition of the pass/fail gate is therefore VACUOUSLY "
+                "satisfied -- no protected group is defined, so none can be "
+                "exceeded -- not silently skipped."
+            ),
+        },
+        "acceptance_gates": {
+            "aurc_improvement_over_entropy_control_ci95_upper_below_zero_all_seeds": {
+                "value": worst_entropy_upper,
+                "passed": gate_aurc_vs_entropy_ok,
+                "principle": "The combined-risk policy must beat the entropy control's risk-coverage curve, confirmed with a 95 percent paired group bootstrap under every one of five fixed seeds, not just a favorable one.",
+            },
+            "aurc_improvement_over_verifier_only_control_ci95_upper_below_zero_all_seeds": {
+                "value": worst_verifier_upper,
+                "passed": gate_aurc_vs_verifier_ok,
+                "principle": "The combined-risk policy must beat the verifier-only baseline alone -- otherwise A2's calibrated channels add no value over the existing verifier.",
+            },
+            "coverage_at_5pct_risk_at_least_25pct": {
+                "value": headline["main_metrics"]["coverage_at_5pct_risk"],
+                "passed": gate_coverage_ok,
+                "principle": "A policy that can only safely decide on a tiny sliver of rows at 5 percent risk is not useful in deployment.",
+            },
+            "all_three_actions_occur_at_primary_cost": {
+                "value": primary_counts,
+                "passed": gate_all_actions_present,
+                "principle": "A policy that never uses one of its three actions is not a three-way policy -- SCENARIO-VERIFY-7752-DEGENERATE.",
+            },
+            "no_protected_group_exceeds_registered_risk_bound": {
+                "value": "vacuous_no_registry_exists",
+                "passed": gate_protected_group_ok,
+                "principle": "No protected-group registry exists for this corpus; the condition cannot be violated by a group that is never defined.",
+            },
+        },
+        "kill_criterion": {
+            "any_seed_triggers_kill": any_seed_kill,
+            "all_seeds_trigger_kill": all_seeds_kill,
+            "per_seed_kill_checks": [r["kill_check"] for r in per_seed_results],
+        },
+        "gate_passed": gate_passed,
+        "methodology_note": (
+            "The verifier-only probability is a real 2-4-1 GibbsModel retrained via "
+            "NCE on the fixed calibrated_decision_benchmark train split, deterministic "
+            "under random_seed=7750 (A1's seed). A2's calibrator tournament is "
+            "re-run over the same held-out rows and the same grouped out-of-fold "
+            "split, deterministic given the corpus and the cache. Zero new model "
+            "forward passes were made in this driver; every logit was read from "
+            "A1's on-disk cache."
+        ),
+    }
+    RESULT_PATH_A3.parent.mkdir(parents=True, exist_ok=True)
+    RESULT_PATH_A3.write_text(json.dumps(artifact, indent=2, default=str), encoding="utf-8")
+    _p(f"wrote {RESULT_PATH_A3} (gate_passed={gate_passed})")
+    return 0
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "a3":
+        raise SystemExit(main_a3())
     if len(sys.argv) > 1 and sys.argv[1] == "a2":
         raise SystemExit(main_a2())
     raise SystemExit(main())

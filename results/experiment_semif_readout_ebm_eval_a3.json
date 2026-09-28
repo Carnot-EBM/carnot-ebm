@@ -1,0 +1,3100 @@
+{
+  "schema": "carnot.semif_readout_ebm_eval.a3.v1",
+  "experiment": "semif_readout_ebm_eval_a3",
+  "requirement": "REQ-VERIFY-7752",
+  "run_date": "20260928",
+  "run_timestamp_utc": "2026-09-28T19:08:51.144962+00:00",
+  "honest_verdict": "complete: a3_calibrated_policy_failed_pre_registered_gate",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "inference_substrate_note": "CPU-only threshold sweep and grouped bootstrap over A1's cached readout logits plus a retrained (deterministic, seeded) verifier-only Gibbs energy and A2's calibrator tournament re-run. No model is loaded and no forward pass is made -- confirmed by asserting `llama_cpp` is never imported in this code path.",
+  "model_specs": [],
+  "verifier_is_oracle": false,
+  "random_seeds_used": [
+    7752,
+    7753,
+    7754,
+    7755,
+    7756
+  ],
+  "reproducibility_checksum": "sha256:b6895f5235a87a29938b7c7f7d435752897fea054d124ec7b2473428cf448e7b",
+  "duration_s": 28.22159502794966,
+  "preconditions_checked": [
+    {
+      "resource": "fover_corpus_v4_json",
+      "available": true
+    },
+    {
+      "resource": "a1_result_artifact",
+      "available": true
+    },
+    {
+      "resource": "a1_readout_logits_cache",
+      "available": true
+    },
+    {
+      "resource": "a2_result_artifact",
+      "available": true
+    },
+    {
+      "resource": "a1_readout_cache_non_empty",
+      "available": true
+    },
+    {
+      "resource": "at_least_1000_joined_rows",
+      "available": true
+    },
+    {
+      "resource": "at_least_30_question_groups",
+      "available": true
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "semif_readout_ebm_eval_a1",
+      "fields_imported": [
+        "readout_logits_cache (all rows' raw per-option logits)",
+        "the collapsed PoE finding (alpha=0 in every fold) that motivates using the verifier-only probability as the honest baseline"
+      ]
+    },
+    {
+      "experiment_id": "semif_readout_ebm_eval_a2",
+      "fields_imported": [
+        "the isotonic-regression selection for the reject and escalate channels (re-derived here, not copied, for byte-level reproducibility against the pooled out-of-fold arrays this driver needs)",
+        "the accept channel's kill-criterion failure (excluded from the combined-risk score per that finding)"
+      ]
+    }
+  ],
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Even a CPU-only aggregation should report a real wall-clock duration so a reader can distinguish a genuine run from a stub.",
+      "satisfied_by": "wall_clock measurement across the full driver run"
+    },
+    "random_seeds_used": {
+      "principle": "Five fixed seeds let a reader assess seed-to-seed stability of the bootstrap confidence intervals, not just a single point estimate.",
+      "satisfied_by": "random_seeds_used=[7752, 7753, 7754, 7755, 7756] threaded through five independent bootstrap resamples"
+    },
+    "reproducibility_checksum": {
+      "principle": "A content-addressed hash of the corpus, cache, A1 artifact, and A2 artifact catches silent drift between this artifact and a future rerun.",
+      "satisfied_by": "sha256 over the corpus bytes, cache bytes, A1/A2 artifact bytes, the seeds, and k"
+    }
+  },
+  "corpus": {
+    "path": "data/fover_corpus_v4.json",
+    "n_held_out_rows": 4603,
+    "n_a2_scored_rows": 4603,
+    "n_joined_rows": 4603,
+    "n_question_groups": 4603,
+    "note": "question_id is unique per row in this corpus -- no row shares a question with another"
+  },
+  "honest_input_set": "verifier-only probability (A1's collapsed PoE reduces to this) + A2's calibrated `reject` channel (isotonic) + A2's calibrated `escalate` channel (isotonic). A2's `accept` channel calibration is read only for the entropy control's raw 3-way probabilities -- it never contributes to the combined-risk score, because it did not clear A2's kill criterion.",
+  "combiner": "combined_risk = mean(p_verifier_only, p_reject_calibrated, p_escalate_calibrated) -- an unweighted mean, the simplest defensible combiner given this task's explicit input set. It is fit on nothing, so it cannot leak or overfit the evaluation data.",
+  "positive_control": {
+    "aurc_noisy_gold": 0.0007742162612404741,
+    "aurc_entropy_control": 0.5154427225674824,
+    "aurc_prevalence_control": 0.5033100816611707,
+    "noisy_gold_beats_entropy_control": true,
+    "noisy_gold_beats_prevalence_control": true,
+    "passed": true,
+    "n": 2000
+  },
+  "cost_grid": [
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.45,
+    0.5
+  ],
+  "primary_cost": 0.2,
+  "per_seed_results": [
+    {
+      "seed": 7752,
+      "n_rows": 4603,
+      "combined_risk_brier": 0.03256661759614457,
+      "combined_risk_ece": 0.10191455483534066,
+      "main_metrics": {
+        "aurc": 0.006268572123769866,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.005212858384013901,
+          "0.80": 0.009505703422053232,
+          "0.90": 0.013034033309196235
+        }
+      },
+      "verifier_only_control_metrics": {
+        "aurc": 0.28873103820331014,
+        "coverage_at_5pct_risk": 0.0010862480990658267,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.14639443961772372,
+          "0.80": 0.1632265073329712,
+          "0.90": 0.21940622737146995
+        }
+      },
+      "entropy_control_metrics": {
+        "aurc": 0.06147889918737881,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.051259774109470024,
+          "0.80": 0.03367734926670288,
+          "0.90": 0.030654115375331886
+        }
+      },
+      "aurc_delta_vs_entropy_control": {
+        "point": -0.05521032706360894,
+        "ci95": [
+          -0.06783891751241825,
+          -0.044128489053291045
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "aurc_delta_vs_verifier_only_control": {
+        "point": -0.2824624660795403,
+        "ci95": [
+          -0.30420347634456585,
+          -0.2637381377317809
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "cost_grid_results": [
+        {
+          "cost_escalate": 0.05,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 1573,
+              "reject": 0,
+              "escalate": 3030
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 1573,
+                "n_label_correct_0": 1570,
+                "n_label_incorrect_1": 3
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 3030,
+                "n_label_correct_0": 2955,
+                "n_label_incorrect_1": 75
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.05,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 3,
+            "policy_n_escalated": 3030,
+            "policy_total_cost": 154.5,
+            "errors_avoided_by_escalation": 75,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.1,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 2358,
+              "reject": 0,
+              "escalate": 2245
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 2358,
+                "n_label_correct_0": 2345,
+                "n_label_incorrect_1": 13
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2245,
+                "n_label_correct_0": 2180,
+                "n_label_incorrect_1": 65
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.1,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 13,
+            "policy_n_escalated": 2245,
+            "policy_total_cost": 237.5,
+            "errors_avoided_by_escalation": 65,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.15,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3129,
+              "reject": 0,
+              "escalate": 1474
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3129,
+                "n_label_correct_0": 3104,
+                "n_label_incorrect_1": 25
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 1474,
+                "n_label_correct_0": 1421,
+                "n_label_incorrect_1": 53
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.15,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 25,
+            "policy_n_escalated": 1474,
+            "policy_total_cost": 246.1,
+            "errors_avoided_by_escalation": 53,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.2,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3777,
+              "reject": 0,
+              "escalate": 826
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3777,
+                "n_label_correct_0": 3741,
+                "n_label_incorrect_1": 36
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 826,
+                "n_label_correct_0": 784,
+                "n_label_incorrect_1": 42
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.2,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 36,
+            "policy_n_escalated": 826,
+            "policy_total_cost": 201.20000000000002,
+            "errors_avoided_by_escalation": 42,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.25,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4003,
+              "reject": 0,
+              "escalate": 600
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4003,
+                "n_label_correct_0": 3954,
+                "n_label_incorrect_1": 49
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 600,
+                "n_label_correct_0": 571,
+                "n_label_incorrect_1": 29
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.25,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 49,
+            "policy_n_escalated": 600,
+            "policy_total_cost": 199.0,
+            "errors_avoided_by_escalation": 29,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.3,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4238,
+              "reject": 0,
+              "escalate": 365
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4238,
+                "n_label_correct_0": 4176,
+                "n_label_incorrect_1": 62
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 365,
+                "n_label_correct_0": 349,
+                "n_label_incorrect_1": 16
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.3,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 62,
+            "policy_n_escalated": 365,
+            "policy_total_cost": 171.5,
+            "errors_avoided_by_escalation": 16,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.35,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4587,
+              "reject": 0,
+              "escalate": 16
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4587,
+                "n_label_correct_0": 4515,
+                "n_label_incorrect_1": 72
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 16,
+                "n_label_correct_0": 10,
+                "n_label_incorrect_1": 6
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.35,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 72,
+            "policy_n_escalated": 16,
+            "policy_total_cost": 77.6,
+            "errors_avoided_by_escalation": 6,
+            "escalation_saves_cost": true
+          }
+        },
+        {
+          "cost_escalate": 0.4,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4601,
+              "reject": 0,
+              "escalate": 2
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4601,
+                "n_label_correct_0": 4523,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2,
+                "n_label_correct_0": 2,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.4,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 2,
+            "policy_total_cost": 78.8,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.45,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.45,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.5,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": true,
+            "reason": "cost_escalate=0.5 >= 0.5 forces an empty escalate zone (Chow's rule)"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.5,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        }
+      ],
+      "primary_cost_result": {
+        "cost_escalate": 0.2,
+        "confusion_matrix": {
+          "counts": {
+            "accept": 3777,
+            "reject": 0,
+            "escalate": 826
+          },
+          "by_action_and_label": {
+            "accept": {
+              "n": 3777,
+              "n_label_correct_0": 3741,
+              "n_label_incorrect_1": 36
+            },
+            "reject": {
+              "n": 0,
+              "n_label_correct_0": 0,
+              "n_label_incorrect_1": 0
+            },
+            "escalate": {
+              "n": 826,
+              "n_label_correct_0": 784,
+              "n_label_incorrect_1": 42
+            }
+          },
+          "n_total": 4603
+        },
+        "balance_check": {
+          "degenerate": true,
+          "zero_actions": [
+            "reject"
+          ],
+          "justified_by_cost_matrix": false,
+          "reason": "not mathematically forced by the cost grid -- a real balance failure"
+        },
+        "escalation_value": {
+          "cost_escalate": 0.2,
+          "forced_decision_errors": 78,
+          "forced_decision_total_cost": 78.0,
+          "policy_decided_errors": 36,
+          "policy_n_escalated": 826,
+          "policy_total_cost": 201.20000000000002,
+          "errors_avoided_by_escalation": 42,
+          "escalation_saves_cost": false
+        }
+      },
+      "kill_check": {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      }
+    },
+    {
+      "seed": 7753,
+      "n_rows": 4603,
+      "combined_risk_brier": 0.03256661759614457,
+      "combined_risk_ece": 0.10191455483534066,
+      "main_metrics": {
+        "aurc": 0.006268572123769866,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.005212858384013901,
+          "0.80": 0.009505703422053232,
+          "0.90": 0.013034033309196235
+        }
+      },
+      "verifier_only_control_metrics": {
+        "aurc": 0.28873103820331014,
+        "coverage_at_5pct_risk": 0.0010862480990658267,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.14639443961772372,
+          "0.80": 0.1632265073329712,
+          "0.90": 0.21940622737146995
+        }
+      },
+      "entropy_control_metrics": {
+        "aurc": 0.06147889918737881,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.051259774109470024,
+          "0.80": 0.03367734926670288,
+          "0.90": 0.030654115375331886
+        }
+      },
+      "aurc_delta_vs_entropy_control": {
+        "point": -0.05521032706360894,
+        "ci95": [
+          -0.06615630068895371,
+          -0.0444975513364467
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "aurc_delta_vs_verifier_only_control": {
+        "point": -0.2824624660795403,
+        "ci95": [
+          -0.30202158119865413,
+          -0.2648071827446791
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "cost_grid_results": [
+        {
+          "cost_escalate": 0.05,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 1573,
+              "reject": 0,
+              "escalate": 3030
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 1573,
+                "n_label_correct_0": 1570,
+                "n_label_incorrect_1": 3
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 3030,
+                "n_label_correct_0": 2955,
+                "n_label_incorrect_1": 75
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.05,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 3,
+            "policy_n_escalated": 3030,
+            "policy_total_cost": 154.5,
+            "errors_avoided_by_escalation": 75,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.1,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 2358,
+              "reject": 0,
+              "escalate": 2245
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 2358,
+                "n_label_correct_0": 2345,
+                "n_label_incorrect_1": 13
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2245,
+                "n_label_correct_0": 2180,
+                "n_label_incorrect_1": 65
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.1,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 13,
+            "policy_n_escalated": 2245,
+            "policy_total_cost": 237.5,
+            "errors_avoided_by_escalation": 65,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.15,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3129,
+              "reject": 0,
+              "escalate": 1474
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3129,
+                "n_label_correct_0": 3104,
+                "n_label_incorrect_1": 25
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 1474,
+                "n_label_correct_0": 1421,
+                "n_label_incorrect_1": 53
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.15,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 25,
+            "policy_n_escalated": 1474,
+            "policy_total_cost": 246.1,
+            "errors_avoided_by_escalation": 53,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.2,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3777,
+              "reject": 0,
+              "escalate": 826
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3777,
+                "n_label_correct_0": 3741,
+                "n_label_incorrect_1": 36
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 826,
+                "n_label_correct_0": 784,
+                "n_label_incorrect_1": 42
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.2,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 36,
+            "policy_n_escalated": 826,
+            "policy_total_cost": 201.20000000000002,
+            "errors_avoided_by_escalation": 42,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.25,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4003,
+              "reject": 0,
+              "escalate": 600
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4003,
+                "n_label_correct_0": 3954,
+                "n_label_incorrect_1": 49
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 600,
+                "n_label_correct_0": 571,
+                "n_label_incorrect_1": 29
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.25,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 49,
+            "policy_n_escalated": 600,
+            "policy_total_cost": 199.0,
+            "errors_avoided_by_escalation": 29,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.3,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4238,
+              "reject": 0,
+              "escalate": 365
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4238,
+                "n_label_correct_0": 4176,
+                "n_label_incorrect_1": 62
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 365,
+                "n_label_correct_0": 349,
+                "n_label_incorrect_1": 16
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.3,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 62,
+            "policy_n_escalated": 365,
+            "policy_total_cost": 171.5,
+            "errors_avoided_by_escalation": 16,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.35,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4587,
+              "reject": 0,
+              "escalate": 16
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4587,
+                "n_label_correct_0": 4515,
+                "n_label_incorrect_1": 72
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 16,
+                "n_label_correct_0": 10,
+                "n_label_incorrect_1": 6
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.35,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 72,
+            "policy_n_escalated": 16,
+            "policy_total_cost": 77.6,
+            "errors_avoided_by_escalation": 6,
+            "escalation_saves_cost": true
+          }
+        },
+        {
+          "cost_escalate": 0.4,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4601,
+              "reject": 0,
+              "escalate": 2
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4601,
+                "n_label_correct_0": 4523,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2,
+                "n_label_correct_0": 2,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.4,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 2,
+            "policy_total_cost": 78.8,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.45,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.45,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.5,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": true,
+            "reason": "cost_escalate=0.5 >= 0.5 forces an empty escalate zone (Chow's rule)"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.5,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        }
+      ],
+      "primary_cost_result": {
+        "cost_escalate": 0.2,
+        "confusion_matrix": {
+          "counts": {
+            "accept": 3777,
+            "reject": 0,
+            "escalate": 826
+          },
+          "by_action_and_label": {
+            "accept": {
+              "n": 3777,
+              "n_label_correct_0": 3741,
+              "n_label_incorrect_1": 36
+            },
+            "reject": {
+              "n": 0,
+              "n_label_correct_0": 0,
+              "n_label_incorrect_1": 0
+            },
+            "escalate": {
+              "n": 826,
+              "n_label_correct_0": 784,
+              "n_label_incorrect_1": 42
+            }
+          },
+          "n_total": 4603
+        },
+        "balance_check": {
+          "degenerate": true,
+          "zero_actions": [
+            "reject"
+          ],
+          "justified_by_cost_matrix": false,
+          "reason": "not mathematically forced by the cost grid -- a real balance failure"
+        },
+        "escalation_value": {
+          "cost_escalate": 0.2,
+          "forced_decision_errors": 78,
+          "forced_decision_total_cost": 78.0,
+          "policy_decided_errors": 36,
+          "policy_n_escalated": 826,
+          "policy_total_cost": 201.20000000000002,
+          "errors_avoided_by_escalation": 42,
+          "escalation_saves_cost": false
+        }
+      },
+      "kill_check": {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      }
+    },
+    {
+      "seed": 7754,
+      "n_rows": 4603,
+      "combined_risk_brier": 0.03256661759614457,
+      "combined_risk_ece": 0.10191455483534066,
+      "main_metrics": {
+        "aurc": 0.006268572123769866,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.005212858384013901,
+          "0.80": 0.009505703422053232,
+          "0.90": 0.013034033309196235
+        }
+      },
+      "verifier_only_control_metrics": {
+        "aurc": 0.28873103820331014,
+        "coverage_at_5pct_risk": 0.0010862480990658267,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.14639443961772372,
+          "0.80": 0.1632265073329712,
+          "0.90": 0.21940622737146995
+        }
+      },
+      "entropy_control_metrics": {
+        "aurc": 0.06147889918737881,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.051259774109470024,
+          "0.80": 0.03367734926670288,
+          "0.90": 0.030654115375331886
+        }
+      },
+      "aurc_delta_vs_entropy_control": {
+        "point": -0.05521032706360894,
+        "ci95": [
+          -0.06676656977398614,
+          -0.04401317063340271
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "aurc_delta_vs_verifier_only_control": {
+        "point": -0.2824624660795403,
+        "ci95": [
+          -0.3036968419147023,
+          -0.2631411631798657
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "cost_grid_results": [
+        {
+          "cost_escalate": 0.05,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 1573,
+              "reject": 0,
+              "escalate": 3030
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 1573,
+                "n_label_correct_0": 1570,
+                "n_label_incorrect_1": 3
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 3030,
+                "n_label_correct_0": 2955,
+                "n_label_incorrect_1": 75
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.05,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 3,
+            "policy_n_escalated": 3030,
+            "policy_total_cost": 154.5,
+            "errors_avoided_by_escalation": 75,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.1,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 2358,
+              "reject": 0,
+              "escalate": 2245
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 2358,
+                "n_label_correct_0": 2345,
+                "n_label_incorrect_1": 13
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2245,
+                "n_label_correct_0": 2180,
+                "n_label_incorrect_1": 65
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.1,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 13,
+            "policy_n_escalated": 2245,
+            "policy_total_cost": 237.5,
+            "errors_avoided_by_escalation": 65,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.15,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3129,
+              "reject": 0,
+              "escalate": 1474
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3129,
+                "n_label_correct_0": 3104,
+                "n_label_incorrect_1": 25
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 1474,
+                "n_label_correct_0": 1421,
+                "n_label_incorrect_1": 53
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.15,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 25,
+            "policy_n_escalated": 1474,
+            "policy_total_cost": 246.1,
+            "errors_avoided_by_escalation": 53,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.2,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3777,
+              "reject": 0,
+              "escalate": 826
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3777,
+                "n_label_correct_0": 3741,
+                "n_label_incorrect_1": 36
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 826,
+                "n_label_correct_0": 784,
+                "n_label_incorrect_1": 42
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.2,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 36,
+            "policy_n_escalated": 826,
+            "policy_total_cost": 201.20000000000002,
+            "errors_avoided_by_escalation": 42,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.25,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4003,
+              "reject": 0,
+              "escalate": 600
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4003,
+                "n_label_correct_0": 3954,
+                "n_label_incorrect_1": 49
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 600,
+                "n_label_correct_0": 571,
+                "n_label_incorrect_1": 29
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.25,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 49,
+            "policy_n_escalated": 600,
+            "policy_total_cost": 199.0,
+            "errors_avoided_by_escalation": 29,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.3,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4238,
+              "reject": 0,
+              "escalate": 365
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4238,
+                "n_label_correct_0": 4176,
+                "n_label_incorrect_1": 62
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 365,
+                "n_label_correct_0": 349,
+                "n_label_incorrect_1": 16
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.3,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 62,
+            "policy_n_escalated": 365,
+            "policy_total_cost": 171.5,
+            "errors_avoided_by_escalation": 16,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.35,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4587,
+              "reject": 0,
+              "escalate": 16
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4587,
+                "n_label_correct_0": 4515,
+                "n_label_incorrect_1": 72
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 16,
+                "n_label_correct_0": 10,
+                "n_label_incorrect_1": 6
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.35,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 72,
+            "policy_n_escalated": 16,
+            "policy_total_cost": 77.6,
+            "errors_avoided_by_escalation": 6,
+            "escalation_saves_cost": true
+          }
+        },
+        {
+          "cost_escalate": 0.4,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4601,
+              "reject": 0,
+              "escalate": 2
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4601,
+                "n_label_correct_0": 4523,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2,
+                "n_label_correct_0": 2,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.4,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 2,
+            "policy_total_cost": 78.8,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.45,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.45,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.5,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": true,
+            "reason": "cost_escalate=0.5 >= 0.5 forces an empty escalate zone (Chow's rule)"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.5,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        }
+      ],
+      "primary_cost_result": {
+        "cost_escalate": 0.2,
+        "confusion_matrix": {
+          "counts": {
+            "accept": 3777,
+            "reject": 0,
+            "escalate": 826
+          },
+          "by_action_and_label": {
+            "accept": {
+              "n": 3777,
+              "n_label_correct_0": 3741,
+              "n_label_incorrect_1": 36
+            },
+            "reject": {
+              "n": 0,
+              "n_label_correct_0": 0,
+              "n_label_incorrect_1": 0
+            },
+            "escalate": {
+              "n": 826,
+              "n_label_correct_0": 784,
+              "n_label_incorrect_1": 42
+            }
+          },
+          "n_total": 4603
+        },
+        "balance_check": {
+          "degenerate": true,
+          "zero_actions": [
+            "reject"
+          ],
+          "justified_by_cost_matrix": false,
+          "reason": "not mathematically forced by the cost grid -- a real balance failure"
+        },
+        "escalation_value": {
+          "cost_escalate": 0.2,
+          "forced_decision_errors": 78,
+          "forced_decision_total_cost": 78.0,
+          "policy_decided_errors": 36,
+          "policy_n_escalated": 826,
+          "policy_total_cost": 201.20000000000002,
+          "errors_avoided_by_escalation": 42,
+          "escalation_saves_cost": false
+        }
+      },
+      "kill_check": {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      }
+    },
+    {
+      "seed": 7755,
+      "n_rows": 4603,
+      "combined_risk_brier": 0.03256661759614457,
+      "combined_risk_ece": 0.10191455483534066,
+      "main_metrics": {
+        "aurc": 0.006268572123769866,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.005212858384013901,
+          "0.80": 0.009505703422053232,
+          "0.90": 0.013034033309196235
+        }
+      },
+      "verifier_only_control_metrics": {
+        "aurc": 0.28873103820331014,
+        "coverage_at_5pct_risk": 0.0010862480990658267,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.14639443961772372,
+          "0.80": 0.1632265073329712,
+          "0.90": 0.21940622737146995
+        }
+      },
+      "entropy_control_metrics": {
+        "aurc": 0.06147889918737881,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.051259774109470024,
+          "0.80": 0.03367734926670288,
+          "0.90": 0.030654115375331886
+        }
+      },
+      "aurc_delta_vs_entropy_control": {
+        "point": -0.05521032706360894,
+        "ci95": [
+          -0.06582198250315195,
+          -0.0440558460434167
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "aurc_delta_vs_verifier_only_control": {
+        "point": -0.2824624660795403,
+        "ci95": [
+          -0.30193055364588467,
+          -0.26221609944684265
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "cost_grid_results": [
+        {
+          "cost_escalate": 0.05,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 1573,
+              "reject": 0,
+              "escalate": 3030
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 1573,
+                "n_label_correct_0": 1570,
+                "n_label_incorrect_1": 3
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 3030,
+                "n_label_correct_0": 2955,
+                "n_label_incorrect_1": 75
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.05,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 3,
+            "policy_n_escalated": 3030,
+            "policy_total_cost": 154.5,
+            "errors_avoided_by_escalation": 75,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.1,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 2358,
+              "reject": 0,
+              "escalate": 2245
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 2358,
+                "n_label_correct_0": 2345,
+                "n_label_incorrect_1": 13
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2245,
+                "n_label_correct_0": 2180,
+                "n_label_incorrect_1": 65
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.1,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 13,
+            "policy_n_escalated": 2245,
+            "policy_total_cost": 237.5,
+            "errors_avoided_by_escalation": 65,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.15,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3129,
+              "reject": 0,
+              "escalate": 1474
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3129,
+                "n_label_correct_0": 3104,
+                "n_label_incorrect_1": 25
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 1474,
+                "n_label_correct_0": 1421,
+                "n_label_incorrect_1": 53
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.15,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 25,
+            "policy_n_escalated": 1474,
+            "policy_total_cost": 246.1,
+            "errors_avoided_by_escalation": 53,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.2,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3777,
+              "reject": 0,
+              "escalate": 826
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3777,
+                "n_label_correct_0": 3741,
+                "n_label_incorrect_1": 36
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 826,
+                "n_label_correct_0": 784,
+                "n_label_incorrect_1": 42
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.2,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 36,
+            "policy_n_escalated": 826,
+            "policy_total_cost": 201.20000000000002,
+            "errors_avoided_by_escalation": 42,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.25,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4003,
+              "reject": 0,
+              "escalate": 600
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4003,
+                "n_label_correct_0": 3954,
+                "n_label_incorrect_1": 49
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 600,
+                "n_label_correct_0": 571,
+                "n_label_incorrect_1": 29
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.25,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 49,
+            "policy_n_escalated": 600,
+            "policy_total_cost": 199.0,
+            "errors_avoided_by_escalation": 29,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.3,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4238,
+              "reject": 0,
+              "escalate": 365
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4238,
+                "n_label_correct_0": 4176,
+                "n_label_incorrect_1": 62
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 365,
+                "n_label_correct_0": 349,
+                "n_label_incorrect_1": 16
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.3,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 62,
+            "policy_n_escalated": 365,
+            "policy_total_cost": 171.5,
+            "errors_avoided_by_escalation": 16,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.35,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4587,
+              "reject": 0,
+              "escalate": 16
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4587,
+                "n_label_correct_0": 4515,
+                "n_label_incorrect_1": 72
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 16,
+                "n_label_correct_0": 10,
+                "n_label_incorrect_1": 6
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.35,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 72,
+            "policy_n_escalated": 16,
+            "policy_total_cost": 77.6,
+            "errors_avoided_by_escalation": 6,
+            "escalation_saves_cost": true
+          }
+        },
+        {
+          "cost_escalate": 0.4,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4601,
+              "reject": 0,
+              "escalate": 2
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4601,
+                "n_label_correct_0": 4523,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2,
+                "n_label_correct_0": 2,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.4,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 2,
+            "policy_total_cost": 78.8,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.45,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.45,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.5,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": true,
+            "reason": "cost_escalate=0.5 >= 0.5 forces an empty escalate zone (Chow's rule)"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.5,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        }
+      ],
+      "primary_cost_result": {
+        "cost_escalate": 0.2,
+        "confusion_matrix": {
+          "counts": {
+            "accept": 3777,
+            "reject": 0,
+            "escalate": 826
+          },
+          "by_action_and_label": {
+            "accept": {
+              "n": 3777,
+              "n_label_correct_0": 3741,
+              "n_label_incorrect_1": 36
+            },
+            "reject": {
+              "n": 0,
+              "n_label_correct_0": 0,
+              "n_label_incorrect_1": 0
+            },
+            "escalate": {
+              "n": 826,
+              "n_label_correct_0": 784,
+              "n_label_incorrect_1": 42
+            }
+          },
+          "n_total": 4603
+        },
+        "balance_check": {
+          "degenerate": true,
+          "zero_actions": [
+            "reject"
+          ],
+          "justified_by_cost_matrix": false,
+          "reason": "not mathematically forced by the cost grid -- a real balance failure"
+        },
+        "escalation_value": {
+          "cost_escalate": 0.2,
+          "forced_decision_errors": 78,
+          "forced_decision_total_cost": 78.0,
+          "policy_decided_errors": 36,
+          "policy_n_escalated": 826,
+          "policy_total_cost": 201.20000000000002,
+          "errors_avoided_by_escalation": 42,
+          "escalation_saves_cost": false
+        }
+      },
+      "kill_check": {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      }
+    },
+    {
+      "seed": 7756,
+      "n_rows": 4603,
+      "combined_risk_brier": 0.03256661759614457,
+      "combined_risk_ece": 0.10191455483534066,
+      "main_metrics": {
+        "aurc": 0.006268572123769866,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.005212858384013901,
+          "0.80": 0.009505703422053232,
+          "0.90": 0.013034033309196235
+        }
+      },
+      "verifier_only_control_metrics": {
+        "aurc": 0.28873103820331014,
+        "coverage_at_5pct_risk": 0.0010862480990658267,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.14639443961772372,
+          "0.80": 0.1632265073329712,
+          "0.90": 0.21940622737146995
+        }
+      },
+      "entropy_control_metrics": {
+        "aurc": 0.06147889918737881,
+        "coverage_at_5pct_risk": 1.0,
+        "risk_at_fixed_coverage": {
+          "0.50": 0.051259774109470024,
+          "0.80": 0.03367734926670288,
+          "0.90": 0.030654115375331886
+        }
+      },
+      "aurc_delta_vs_entropy_control": {
+        "point": -0.05521032706360894,
+        "ci95": [
+          -0.06662029437722802,
+          -0.04478511840073129
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "aurc_delta_vs_verifier_only_control": {
+        "point": -0.2824624660795403,
+        "ci95": [
+          -0.30267753020812904,
+          -0.2622206810466987
+        ],
+        "n_boot": 500,
+        "n_groups": 4603
+      },
+      "cost_grid_results": [
+        {
+          "cost_escalate": 0.05,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 1573,
+              "reject": 0,
+              "escalate": 3030
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 1573,
+                "n_label_correct_0": 1570,
+                "n_label_incorrect_1": 3
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 3030,
+                "n_label_correct_0": 2955,
+                "n_label_incorrect_1": 75
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.05,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 3,
+            "policy_n_escalated": 3030,
+            "policy_total_cost": 154.5,
+            "errors_avoided_by_escalation": 75,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.1,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 2358,
+              "reject": 0,
+              "escalate": 2245
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 2358,
+                "n_label_correct_0": 2345,
+                "n_label_incorrect_1": 13
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2245,
+                "n_label_correct_0": 2180,
+                "n_label_incorrect_1": 65
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.1,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 13,
+            "policy_n_escalated": 2245,
+            "policy_total_cost": 237.5,
+            "errors_avoided_by_escalation": 65,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.15,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3129,
+              "reject": 0,
+              "escalate": 1474
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3129,
+                "n_label_correct_0": 3104,
+                "n_label_incorrect_1": 25
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 1474,
+                "n_label_correct_0": 1421,
+                "n_label_incorrect_1": 53
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.15,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 25,
+            "policy_n_escalated": 1474,
+            "policy_total_cost": 246.1,
+            "errors_avoided_by_escalation": 53,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.2,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 3777,
+              "reject": 0,
+              "escalate": 826
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 3777,
+                "n_label_correct_0": 3741,
+                "n_label_incorrect_1": 36
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 826,
+                "n_label_correct_0": 784,
+                "n_label_incorrect_1": 42
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.2,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 36,
+            "policy_n_escalated": 826,
+            "policy_total_cost": 201.20000000000002,
+            "errors_avoided_by_escalation": 42,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.25,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4003,
+              "reject": 0,
+              "escalate": 600
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4003,
+                "n_label_correct_0": 3954,
+                "n_label_incorrect_1": 49
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 600,
+                "n_label_correct_0": 571,
+                "n_label_incorrect_1": 29
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.25,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 49,
+            "policy_n_escalated": 600,
+            "policy_total_cost": 199.0,
+            "errors_avoided_by_escalation": 29,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.3,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4238,
+              "reject": 0,
+              "escalate": 365
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4238,
+                "n_label_correct_0": 4176,
+                "n_label_incorrect_1": 62
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 365,
+                "n_label_correct_0": 349,
+                "n_label_incorrect_1": 16
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.3,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 62,
+            "policy_n_escalated": 365,
+            "policy_total_cost": 171.5,
+            "errors_avoided_by_escalation": 16,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.35,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4587,
+              "reject": 0,
+              "escalate": 16
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4587,
+                "n_label_correct_0": 4515,
+                "n_label_incorrect_1": 72
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 16,
+                "n_label_correct_0": 10,
+                "n_label_incorrect_1": 6
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.35,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 72,
+            "policy_n_escalated": 16,
+            "policy_total_cost": 77.6,
+            "errors_avoided_by_escalation": 6,
+            "escalation_saves_cost": true
+          }
+        },
+        {
+          "cost_escalate": 0.4,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4601,
+              "reject": 0,
+              "escalate": 2
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4601,
+                "n_label_correct_0": 4523,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 2,
+                "n_label_correct_0": 2,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.4,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 2,
+            "policy_total_cost": 78.8,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.45,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": false,
+            "reason": "not mathematically forced by the cost grid -- a real balance failure"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.45,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        },
+        {
+          "cost_escalate": 0.5,
+          "confusion_matrix": {
+            "counts": {
+              "accept": 4603,
+              "reject": 0,
+              "escalate": 0
+            },
+            "by_action_and_label": {
+              "accept": {
+                "n": 4603,
+                "n_label_correct_0": 4525,
+                "n_label_incorrect_1": 78
+              },
+              "reject": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              },
+              "escalate": {
+                "n": 0,
+                "n_label_correct_0": 0,
+                "n_label_incorrect_1": 0
+              }
+            },
+            "n_total": 4603
+          },
+          "balance_check": {
+            "degenerate": true,
+            "zero_actions": [
+              "reject",
+              "escalate"
+            ],
+            "justified_by_cost_matrix": true,
+            "reason": "cost_escalate=0.5 >= 0.5 forces an empty escalate zone (Chow's rule)"
+          },
+          "escalation_value": {
+            "cost_escalate": 0.5,
+            "forced_decision_errors": 78,
+            "forced_decision_total_cost": 78.0,
+            "policy_decided_errors": 78,
+            "policy_n_escalated": 0,
+            "policy_total_cost": 78.0,
+            "errors_avoided_by_escalation": 0,
+            "escalation_saves_cost": false
+          }
+        }
+      ],
+      "primary_cost_result": {
+        "cost_escalate": 0.2,
+        "confusion_matrix": {
+          "counts": {
+            "accept": 3777,
+            "reject": 0,
+            "escalate": 826
+          },
+          "by_action_and_label": {
+            "accept": {
+              "n": 3777,
+              "n_label_correct_0": 3741,
+              "n_label_incorrect_1": 36
+            },
+            "reject": {
+              "n": 0,
+              "n_label_correct_0": 0,
+              "n_label_incorrect_1": 0
+            },
+            "escalate": {
+              "n": 826,
+              "n_label_correct_0": 784,
+              "n_label_incorrect_1": 42
+            }
+          },
+          "n_total": 4603
+        },
+        "balance_check": {
+          "degenerate": true,
+          "zero_actions": [
+            "reject"
+          ],
+          "justified_by_cost_matrix": false,
+          "reason": "not mathematically forced by the cost grid -- a real balance failure"
+        },
+        "escalation_value": {
+          "cost_escalate": 0.2,
+          "forced_decision_errors": 78,
+          "forced_decision_total_cost": 78.0,
+          "policy_decided_errors": 36,
+          "policy_n_escalated": 826,
+          "policy_total_cost": 201.20000000000002,
+          "errors_avoided_by_escalation": 42,
+          "escalation_saves_cost": false
+        }
+      },
+      "kill_check": {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      }
+    }
+  ],
+  "headline_metrics": {
+    "combined_risk_aurc": 0.006268572123769866,
+    "combined_risk_coverage_at_5pct_risk": 1.0,
+    "combined_risk_risk_at_fixed_coverage": {
+      "0.50": 0.005212858384013901,
+      "0.80": 0.009505703422053232,
+      "0.90": 0.013034033309196235
+    },
+    "combined_risk_brier": 0.03256661759614457,
+    "combined_risk_ece": 0.10191455483534066,
+    "verifier_only_control_aurc": 0.28873103820331014,
+    "entropy_control_aurc": 0.06147889918737881,
+    "primary_cost_confusion_matrix": {
+      "counts": {
+        "accept": 3777,
+        "reject": 0,
+        "escalate": 826
+      },
+      "by_action_and_label": {
+        "accept": {
+          "n": 3777,
+          "n_label_correct_0": 3741,
+          "n_label_incorrect_1": 36
+        },
+        "reject": {
+          "n": 0,
+          "n_label_correct_0": 0,
+          "n_label_incorrect_1": 0
+        },
+        "escalate": {
+          "n": 826,
+          "n_label_correct_0": 784,
+          "n_label_incorrect_1": 42
+        }
+      },
+      "n_total": 4603
+    },
+    "primary_cost_balance_check": {
+      "degenerate": true,
+      "zero_actions": [
+        "reject"
+      ],
+      "justified_by_cost_matrix": false,
+      "reason": "not mathematically forced by the cost grid -- a real balance failure"
+    },
+    "primary_cost_escalation_value": {
+      "cost_escalate": 0.2,
+      "forced_decision_errors": 78,
+      "forced_decision_total_cost": 78.0,
+      "policy_decided_errors": 36,
+      "policy_n_escalated": 826,
+      "policy_total_cost": 201.20000000000002,
+      "errors_avoided_by_escalation": 42,
+      "escalation_saves_cost": false
+    }
+  },
+  "seed_stability": {
+    "aurc_delta_vs_entropy_ci95_upper_by_seed": [
+      -0.044128489053291045,
+      -0.0444975513364467,
+      -0.04401317063340271,
+      -0.0440558460434167,
+      -0.04478511840073129
+    ],
+    "aurc_delta_vs_verifier_only_ci95_upper_by_seed": [
+      -0.2637381377317809,
+      -0.2648071827446791,
+      -0.2631411631798657,
+      -0.26221609944684265,
+      -0.2622206810466987
+    ],
+    "aurc_delta_vs_entropy_ci95_upper_range": 0.0007719477673285777,
+    "aurc_delta_vs_verifier_only_ci95_upper_range": 0.0025910832978364717,
+    "kill_check_agrees_across_all_seeds": true,
+    "combined_risk_point_estimate_identical_across_seeds": true
+  },
+  "protected_group_check": {
+    "applicable": false,
+    "reason": "No protected_group field or registered risk-bound registry exists for data/fover_corpus_v4.json (it carries only question_id, step_text, label, confidence) or anywhere in this codebase's fairness/robustness framework, per A1/A2's own finding. This sub-condition of the pass/fail gate is therefore VACUOUSLY satisfied -- no protected group is defined, so none can be exceeded -- not silently skipped."
+  },
+  "acceptance_gates": {
+    "aurc_improvement_over_entropy_control_ci95_upper_below_zero_all_seeds": {
+      "value": -0.04401317063340271,
+      "passed": true,
+      "principle": "The combined-risk policy must beat the entropy control's risk-coverage curve, confirmed with a 95 percent paired group bootstrap under every one of five fixed seeds, not just a favorable one."
+    },
+    "aurc_improvement_over_verifier_only_control_ci95_upper_below_zero_all_seeds": {
+      "value": -0.26221609944684265,
+      "passed": true,
+      "principle": "The combined-risk policy must beat the verifier-only baseline alone -- otherwise A2's calibrated channels add no value over the existing verifier."
+    },
+    "coverage_at_5pct_risk_at_least_25pct": {
+      "value": 1.0,
+      "passed": true,
+      "principle": "A policy that can only safely decide on a tiny sliver of rows at 5 percent risk is not useful in deployment."
+    },
+    "all_three_actions_occur_at_primary_cost": {
+      "value": {
+        "accept": 3777,
+        "reject": 0,
+        "escalate": 826
+      },
+      "passed": false,
+      "principle": "A policy that never uses one of its three actions is not a three-way policy -- SCENARIO-VERIFY-7752-DEGENERATE."
+    },
+    "no_protected_group_exceeds_registered_risk_bound": {
+      "value": "vacuous_no_registry_exists",
+      "passed": true,
+      "principle": "No protected-group registry exists for this corpus; the condition cannot be violated by a group that is never defined."
+    }
+  },
+  "kill_criterion": {
+    "any_seed_triggers_kill": false,
+    "all_seeds_trigger_kill": false,
+    "per_seed_kill_checks": [
+      {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      },
+      {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      },
+      {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      },
+      {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      },
+      {
+        "all_grid_points_single_action": false,
+        "coverage_below_25pct_floor": false,
+        "no_escalation_ever_saves_cost_at_any_grid_point": false,
+        "kill": false
+      }
+    ]
+  },
+  "gate_passed": false,
+  "methodology_note": "The verifier-only probability is a real 2-4-1 GibbsModel retrained via NCE on the fixed calibrated_decision_benchmark train split, deterministic under random_seed=7750 (A1's seed). A2's calibrator tournament is re-run over the same held-out rows and the same grouped out-of-fold split, deterministic given the corpus and the cache. Zero new model forward passes were made in this driver; every logit was read from A1's on-disk cache."
+}
