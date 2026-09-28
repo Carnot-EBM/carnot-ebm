@@ -18874,3 +18874,4 @@ code |
 | 2026-09-27 23:45 UTC | Repair organic-runner formatting and specification | OK | 100 passed, 1 warning in 9.61s |
 | 2026-09-27 23:48 UTC | Measure organic selection on adapter-withheld live | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7790-arc-runner-qualification.organic_runner_ready_score (actual=0 == expected=1) |
 | 2026-09-27 23:50 UTC | Measure complete decision and durable-update servi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7785-view-energy-fit, exp7785-view-energy-fit, exp7785-view-energy-fit) |
+| 2026-09-28 00:31 UTC | Preserve board obligations with immutable evidence | OK | 89 passed, 1 warning in 8.69s |
