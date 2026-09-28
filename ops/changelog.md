@@ -20982,3 +20982,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 
 - 2026-09-28: Bind fourteen tasks and register shortcut and abstention hypotheses (⚠️ Research Finding) — honest_verdict=complete_disqualified_v680_contract_validation; results/experiment_7823_v680_contract_methods.json
 - 2026-09-28: Challenge source features and missing-label loss with evaluator isolation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7824_v680_source_feature_isolation.json
+- 2026-09-28: Repair the frozen training check and qualify reusable update mechanics (⚠️ Research Finding) — honest_verdict=complete_circular_positive_training_and_online_runtime; results/experiment_7825_v680_training_runtime.json
