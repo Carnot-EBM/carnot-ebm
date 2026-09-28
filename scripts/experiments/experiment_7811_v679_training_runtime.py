@@ -138,37 +138,44 @@ def _adversarial_flag(receipt: dict[str, Any]) -> bool:
         return True
 
 
-def run(date: str, private: Path | None = None) -> dict[str, Any]:
+def run(
+    date: str,
+    private: Path | None = None,
+    task: Any = None,
+    executor: Callable[[dict[str, Any], Path, Path], dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     """Measure one attempt, dispatch its frozen commands, then publish atomically."""
     started = time.monotonic()
+    task = task or exp
+    executor = executor or execute
     private = private or Path(tempfile.mkdtemp(prefix="exp7811-attempt-", dir="/tmp"))
     private.mkdir(parents=True, exist_ok=True)
-    durable = exp.RAW / "attempts" / private.name
+    durable = task.RAW / "attempts" / private.name
     durable.mkdir(parents=True, exist_ok=False)
-    scope = json.loads(exp.SCOPE.read_text())
+    scope = json.loads(task.SCOPE.read_text())
     manifest = materialize(scope, private)
     manifest_path = durable / "validation_command_manifest.json"
     atomic_json(manifest_path, manifest)
-    exp.progress(started, "measure", "before_benchmark", 0)
-    record = exp.measure(date, durable / "measurement")
-    exp.progress(started, "measure", "after_benchmark", len(record["rows"]))
+    task.progress(started, "measure", "before_benchmark", 0)
+    record = task.measure(date, durable / "measurement")
+    task.progress(started, "measure", "after_benchmark", len(record["rows"]))
     record["validation_command_manifest_path"] = str(manifest_path)
     record["validation_command_manifest_sha256"] = sha256_file(manifest_path)
     record["validation_receipts"]["frozen_affected_scope"] = scope
-    record["historical_receipt_byte_audit"] = exp.historical_receipt_byte_audit(exp.ROOT)
+    record["historical_receipt_byte_audit"] = task.historical_receipt_byte_audit(task.ROOT)
     if record["verdict_class"] != "blocked":
         inputs = record.setdefault("reproducibility_inputs", {})
         inputs["code_closure"] = {
-            path: sha256_file(exp.ROOT / path)
+            path: sha256_file(task.ROOT / path)
             for path in (*scope["changed_modules_and_cli"], *scope["dependency_modules"])
         }
-        inputs["scope"] = sha256_file(exp.SCOPE)
+        inputs["scope"] = sha256_file(task.SCOPE)
         inputs["command_manifest"] = record["validation_command_manifest_sha256"]
         record["reproducibility_checksum"] = canonical_hash(inputs)
     if record["verdict_class"] == "blocked":
         record["duration_s"] = time.monotonic() - started
-        atomic_json(exp.OUTPUT, record)
-        exp.progress(started, "publish", "blocked_atomic_write", len(record["rows"]))
+        atomic_json(task.OUTPUT, record)
+        task.progress(started, "publish", "blocked_atomic_write", len(record["rows"]))
         return record
     measurement_failures = list(record["gate_check_summary"])
     candidate = private / "candidate.json"
@@ -176,17 +183,17 @@ def run(date: str, private: Path | None = None) -> dict[str, Any]:
     def before_command(command: dict[str, Any], prior_receipts: list[dict[str, Any]]) -> None:
         if command["name"] == "cold_replay":
             prefix = {**manifest, "commands": manifest["commands"][: len(prior_receipts)]}
-            provisional = exp.reduce_validation(scope, prefix, prior_receipts)
+            provisional = task.reduce_validation(scope, prefix, prior_receipts)
             _apply_gate(record, provisional)
             record["validation_receipts"]["commands"] = list(prior_receipts)
             atomic_json(candidate, record)
-            exp.progress(started, "candidate", "sealed_before_cold_replay", len(prior_receipts))
+            task.progress(started, "candidate", "sealed_before_cold_replay", len(prior_receipts))
 
     receipts = dispatch(
         manifest,
         private,
         durable,
-        lambda command, folder: execute(command, folder, private),
+        lambda command, folder: executor(command, folder, private),
         before_command,
     )
     record["validation_receipts"]["commands"] = receipts
@@ -204,12 +211,12 @@ def run(date: str, private: Path | None = None) -> dict[str, Any]:
     record["flagged_adversarial"] = _adversarial_flag(
         next(row for row in receipts if row["name"] == "adversarial_verify")
     )
-    gate = exp.reduce_validation(scope, manifest, receipts)
+    gate = task.reduce_validation(scope, manifest, receipts)
     record["gate_check_summary"] = measurement_failures
     _apply_gate(record, gate)
     if record["flagged_adversarial"]:
         record["gate_check_summary"].append(
-            exp.failed_operand(
+            task.failed_operand(
                 "exp7811",
                 str(candidate),
                 "flagged_adversarial",
@@ -231,8 +238,8 @@ def run(date: str, private: Path | None = None) -> dict[str, Any]:
             "completed_units": len(receipts),
         }
     )
-    atomic_json(exp.OUTPUT, record)
-    exp.progress(started, "publish", "atomic_write", len(record["rows"]))
+    atomic_json(task.OUTPUT, record)
+    task.progress(started, "publish", "atomic_write", len(record["rows"]))
     return record
 
 

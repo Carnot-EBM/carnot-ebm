@@ -1,0 +1,301 @@
+{
+  "changed_modules_and_cli": [
+    "python/carnot/experiment_7811_v679_training_runtime.py",
+    "scripts/experiments/experiment_7811_v679_training_runtime.py",
+    "python/carnot/experiment_7825_v680_training_runtime.py",
+    "scripts/experiments/experiment_7825_v680_training_runtime.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file={private}/coverage/.coverage.shard0",
+        "--include=*/experiment_7811_v679_training_runtime.py,*/experiment_7825_v680_training_runtime.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp={private}/basetemp/shard0",
+        "tests/python/test_experiment_7825_v680_training_runtime.py",
+        "tests/python/test_experiment_7811_v679_training_runtime.py",
+        "tests/python/test_experiment_7797_v678_training_runtime.py",
+        "tests/python/test_experiment_7784_v677_training_runtime.py",
+        "tests/python/test_experiment_7769_v676_training_qualification.py",
+        "tests/python/test_experiment_7755_v675_training_runtime.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "coverage_shard_0",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file={private}/coverage/.coverage.shard1",
+        "--include=*/experiment_7811_v679_training_runtime.py,*/experiment_7825_v680_training_runtime.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp={private}/basetemp/shard1",
+        "tests/python/test_experiment_7760_v675_online_runner.py",
+        "tests/python/test_experiment_7756_v675_evidence_view_protocol.py",
+        "tests/python/test_experiment_7759_v675_qwen_evidence_views.py",
+        "tests/python/test_experiment_7730_v673_set_energy_fit.py",
+        "tests/python/test_experiment_7705_v671_constraint_bank_protocol.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "coverage_shard_1",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file={private}/coverage/combined",
+        "{private}/coverage/.coverage.shard0",
+        "{private}/coverage/.coverage.shard1"
+      ],
+      "classification": "required",
+      "name": "coverage_combine",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file={private}/coverage/combined",
+        "--include=*/experiment_7811_v679_training_runtime.py,*/experiment_7825_v680_training_runtime.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "name": "coverage_report",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp={private}/basetemp/affected",
+        "tests/python/test_experiment_7825_v680_training_runtime.py",
+        "tests/python/test_experiment_7811_v679_training_runtime.py",
+        "tests/python/test_experiment_7797_v678_training_runtime.py",
+        "tests/python/test_experiment_7784_v677_training_runtime.py",
+        "tests/python/test_experiment_7769_v676_training_qualification.py",
+        "tests/python/test_experiment_7755_v675_training_runtime.py",
+        "tests/python/test_experiment_7760_v675_online_runner.py",
+        "tests/python/test_experiment_7756_v675_evidence_view_protocol.py",
+        "tests/python/test_experiment_7759_v675_qwen_evidence_views.py",
+        "tests/python/test_experiment_7730_v673_set_energy_fit.py",
+        "tests/python/test_experiment_7705_v671_constraint_bank_protocol.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7811_v679_training_runtime.py",
+        "scripts/experiments/experiment_7811_v679_training_runtime.py",
+        "python/carnot/experiment_7825_v680_training_runtime.py",
+        "scripts/experiments/experiment_7825_v680_training_runtime.py",
+        "tests/python/test_experiment_7811_v679_training_runtime.py",
+        "tests/python/test_experiment_7825_v680_training_runtime.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7811_v679_training_runtime.py",
+        "scripts/experiments/experiment_7811_v679_training_runtime.py",
+        "python/carnot/experiment_7825_v680_training_runtime.py",
+        "scripts/experiments/experiment_7825_v680_training_runtime.py",
+        "tests/python/test_experiment_7811_v679_training_runtime.py",
+        "tests/python/test_experiment_7825_v680_training_runtime.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7811_v679_training_runtime.py",
+        "scripts/experiments/experiment_7811_v679_training_runtime.py",
+        "python/carnot/experiment_7825_v680_training_runtime.py",
+        "scripts/experiments/experiment_7825_v680_training_runtime.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7825_v680_training_runtime.py",
+        "tests/python/test_experiment_7811_v679_training_runtime.py",
+        "tests/python/test_experiment_7797_v678_training_runtime.py",
+        "tests/python/test_experiment_7784_v677_training_runtime.py",
+        "tests/python/test_experiment_7769_v676_training_qualification.py",
+        "tests/python/test_experiment_7755_v675_training_runtime.py",
+        "tests/python/test_experiment_7760_v675_online_runner.py",
+        "tests/python/test_experiment_7756_v675_evidence_view_protocol.py",
+        "tests/python/test_experiment_7759_v675_qwen_evidence_views.py",
+        "tests/python/test_experiment_7730_v673_set_energy_fit.py",
+        "tests/python/test_experiment_7705_v671_constraint_bank_protocol.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "classification": "required",
+      "name": "spec_coverage",
+      "timeout_s": 900
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7825_v680_training_runtime.py",
+        "--mini-e2e",
+        "--date",
+        "20260928",
+        "--private-root",
+        "{private}/e2e"
+      ],
+      "classification": "required",
+      "name": "task_e2e",
+      "timeout_s": 1200
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7825_v680_training_runtime.py",
+        "--cold-reduce",
+        "{private}/candidate.json"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "{private}/candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "{private}/candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_row_consistency",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp={private}/basetemp/repository_health"
+      ],
+      "classification": "diagnostic",
+      "name": "repository_health",
+      "timeout_s": 180
+    }
+  ],
+  "coverage_branch": false,
+  "coverage_include": "*/experiment_7811_v679_training_runtime.py,*/experiment_7825_v680_training_runtime.py",
+  "dependency_modules": [
+    "python/carnot/experiment_7797_v678_training_runtime.py",
+    "python/carnot/verify/training_runtime.py",
+    "python/carnot/verify/training_qualification.py",
+    "python/carnot/verify/evidence_views.py",
+    "python/carnot/experiment_7760_v675_online_runner.py",
+    "python/carnot/reporting/constraint_bank_protocol.py",
+    "python/carnot/reporting/current_work_receipt.py",
+    "python/carnot/reporting/experiment_7303_validation_scope.py"
+  ],
+  "direct_tests": [
+    "tests/python/test_experiment_7825_v680_training_runtime.py"
+  ],
+  "experiment_id": 7825,
+  "frozen_before_implementation": true,
+  "historical_artifacts": [
+    "results/experiment_7784_v677_training_runtime.json",
+    "results/experiment_7797_v678_training_runtime.json"
+  ],
+  "milestone": "2026.09.680",
+  "rationale": "Prospective current fixture and bank requalification; Exp7811 format correction and all its affected consumers remain required; broad health is diagnostic.",
+  "requirement": "REQ-VERIFY-7825",
+  "shards": [
+    [
+      "tests/python/test_experiment_7825_v680_training_runtime.py",
+      "tests/python/test_experiment_7811_v679_training_runtime.py",
+      "tests/python/test_experiment_7797_v678_training_runtime.py",
+      "tests/python/test_experiment_7784_v677_training_runtime.py",
+      "tests/python/test_experiment_7769_v676_training_qualification.py",
+      "tests/python/test_experiment_7755_v675_training_runtime.py"
+    ],
+    [
+      "tests/python/test_experiment_7760_v675_online_runner.py",
+      "tests/python/test_experiment_7756_v675_evidence_view_protocol.py",
+      "tests/python/test_experiment_7759_v675_qwen_evidence_views.py",
+      "tests/python/test_experiment_7730_v673_set_energy_fit.py",
+      "tests/python/test_experiment_7705_v671_constraint_bank_protocol.py",
+      "tests/python/test_current_work_receipt.py"
+    ]
+  ],
+  "transitive_tests": [
+    "tests/python/test_experiment_7811_v679_training_runtime.py",
+    "tests/python/test_experiment_7797_v678_training_runtime.py",
+    "tests/python/test_experiment_7784_v677_training_runtime.py",
+    "tests/python/test_experiment_7769_v676_training_qualification.py",
+    "tests/python/test_experiment_7755_v675_training_runtime.py",
+    "tests/python/test_experiment_7760_v675_online_runner.py",
+    "tests/python/test_experiment_7756_v675_evidence_view_protocol.py",
+    "tests/python/test_experiment_7759_v675_qwen_evidence_views.py",
+    "tests/python/test_experiment_7730_v673_set_energy_fit.py",
+    "tests/python/test_experiment_7705_v671_constraint_bank_protocol.py",
+    "tests/python/test_current_work_receipt.py"
+  ]
+}

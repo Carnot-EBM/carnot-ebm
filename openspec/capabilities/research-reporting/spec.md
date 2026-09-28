@@ -84824,3 +84824,54 @@ The current CLI runs the frozen names, argv and classes. Missing inputs block;
 failed required checks disqualify. A fresh reducer reopens all 640 raw rows,
 public and sidecar manifests, source hashes and sealed validation logs before
 accepting a candidate. Retried logs cannot rewrite earlier bytes.
+
+## REQ-VERIFY-7825: Requalify fixture training and online bank runtime
+
+Exp7825 SHALL correct the named Exp7811 Ruff format failure and preserve its
+historical disqualified artifact and complete required validation roster. Before
+compute, it SHALL check exact explicit source paths, hashes, schema, gate operands
+and resources. Missing external inputs SHALL yield a terminal complete_blocked_*
+record with verdict_class=blocked and exact failed operands. Six registered
+public fixture families, nine arms and seeds 68001, 68002 and 68003 SHALL run
+two real optimization epochs. Every head SHALL show a nonzero gradient, finite
+changed parameters, normalized probability, finite dual update and identical
+decision after save and reload. The separate natural recipe SHALL freeze sixteen
+epochs and all nine arms; fixture weights SHALL never initialize natural fits.
+
+The existing bank SHALL prove immutable query reads, both delayed commit modes,
+capacity, duplicate rejection, rollback, pending persistence and hard-exit
+recovery. Its protocol SHALL export the sixteen-member grammar and one proposal
+per block. Fixture success SHALL be circular_positive and SHALL make no
+oracle-distinct or natural-learning claim.
+
+The prospective frozen closure SHALL include the changed Exp7811 module, the
+current module and CLI, their direct tests and the complete Exp7811 affected
+consumer tests. Exact required children SHALL include serial affected pytest,
+explicit coverage shards and combine with 100 percent statement coverage of
+new code, Ruff check and format, mypy, explicit-file spec coverage, task CLI
+E2E, fresh-process cold replay, adversarial verification and strict row lint.
+Serial broad Python health SHALL be a separate 180-second diagnostic. The real
+dispatcher SHALL match command names, argv and classes exactly, reject undeclared
+children, seal closed logs in unique attempt paths and reject later byte edits.
+Any required failure SHALL disqualify and zero both readiness scores. Historical
+full-suite failures SHALL remain failed health evidence.
+
+### SCENARIO-VERIFY-7825-FIXTURE
+
+All 27 independent arm and seed fits and 162 fixture decisions retain raw paths,
+numerical checks and a distinct sixteen-epoch natural recipe. A missing external
+producer blocks before fit; an invalid numerical row cannot acquire readiness.
+
+### SCENARIO-VERIFY-7825-DISPATCH
+
+The current CLI dispatches exactly the frozen required and diagnostic children.
+The named historical format failure is reproduced from its sealed log, then the
+corrected file passes Ruff format. A required format failure zeros both scores;
+diagnostic health failure remains visible. A later retry and byte mutation cannot
+alter or validate an earlier sealed receipt.
+
+### SCENARIO-VERIFY-7825-TERMINAL
+
+A fresh process reduces current raw rows and closed logs before the strict
+terminal readers inspect the candidate. The one-owner artifact records exact
+source and code hashes, actual timing, complete gates, and no model calls.

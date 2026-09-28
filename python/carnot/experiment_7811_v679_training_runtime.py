@@ -24,6 +24,7 @@ RAW = ROOT / "results/raw/experiment_7811_v679_training_runtime"
 OUTPUT = ROOT / "results/experiment_7811_v679_training_runtime.json"
 SCOPE = RAW / "frozen_validation_scope.json"
 SEEDS = (67815, 67816, 67817)
+CURRENT_SEEDS = (68001, 68002, 68003)
 ARMS = tuple(evidence_views.ARMS)
 HISTORICAL_7797_SHA256 = "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012"
 MODEL_SPECS: list[dict[str, Any]] = []
@@ -60,7 +61,7 @@ def validate_roles(records: list[dict[str, Any]]) -> None:
 
 def _init_params(arm: str, seed: int) -> dict[str, Any]:
     """Seed the same bounded shapes without changing the shared seed registry."""
-    if seed not in SEEDS or arm not in runtime.ARMS:
+    if seed not in (*SEEDS, *CURRENT_SEEDS) or arm not in runtime.ARMS:
         raise ValueError("unregistered arm or seed")
     rng = np.random.default_rng(seed)
     if arm == "mlp_local":
@@ -250,7 +251,10 @@ def _fit_head(
     initial: dict[str, Any],
 ) -> dict[str, Any]:
     """Use the registered loss and dual rule with this task's frozen seeds."""
-    if seed not in SEEDS or runtime.parameter_count(initial, int(mode == "constrained") * 2) > 4096:
+    if (
+        seed not in (*SEEDS, *CURRENT_SEEDS)
+        or runtime.parameter_count(initial, int(mode == "constrained") * 2) > 4096
+    ):
         raise ValueError("unregistered training budget")
     params = initial
     initial_hash = _param_hash(params)
@@ -287,7 +291,7 @@ def fit_one(
     arm: str, seed: int, records: list[dict[str, Any]], names: list[str], folder: Path
 ) -> dict[str, Any]:
     """Train, save, reload and score one independent fixture arm and seed."""
-    if arm not in ARMS or seed not in SEEDS:
+    if arm not in ARMS or seed not in (*SEEDS, *CURRENT_SEEDS):
         raise ValueError("unregistered_arm_or_seed")
     started = time.monotonic()
     validate_roles(records)
