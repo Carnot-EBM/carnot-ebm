@@ -84082,3 +84082,22 @@ An orchestration test records every child argv. Directory-wide pytest targets,
 old qualification mains, and changed scope manifests fail before launch. A
 required failed child sets both readiness scores to zero and disqualifies the
 candidate. Fresh process readers recompute sealed raw rows and reject drift.
+## REQ-REPORT-7800: Byte-preserving counter-evidence protocol
+
+The CPU producer SHALL authenticate the V673 science producer, sealed evaluation manifest, and public source rows before use. It SHALL select 48 of 64 exposed evaluation families by source hash, keep original source and answer bytes, and leave evaluator annotations closed during witness and control selection. Missing or mismatched external evidence SHALL yield a terminal blocked record with the failed operand.
+
+### SCENARIO-REPORT-7800-CUSTODY
+
+The producer rejects a missing, malformed, or hash-mismatched input and records its path, digest, field, expected value, and observed value. A conductor pre-gate receipt alone cannot replace the science producer.
+
+## REQ-REPORT-7800-INTERVENTION: Matched source sentence removal
+
+The intact request SHALL ask for unsupported_probability and one supporting source_sentence_id for the first sentence of the unchanged original answer. A valid citation is a proposed witness only. Follow-up requests SHALL use the same answer, grammar, seed 67801, sampling settings, and 256 output-token limit. Treatment SHALL delete exactly the predicted source sentence bytes. Control SHALL delete a disjoint sentence whose token count differs by at most 25%, chosen by seeded hash order. All source IDs and UTF-8 byte offsets SHALL be validated. Missing witnesses, controls, or context budget SHALL retain explicit non-completed rows. A conservative no-truncation bound SHALL enforce the 8192-token ceiling. Two 32-token canaries SHALL be frozen without invoking a model in this task.
+
+### SCENARIO-REPORT-7800-BYTES
+
+Scripted transport shows exact HTTP payload construction, strict reply parsing, UTF-8 byte deletion, and unchanged original answer bytes under ordinary, empty-source, oversized, and instruction-injection inputs.
+
+### SCENARIO-REPORT-7800-REDUCTION
+
+The reducer applies pilot labels only to intact rows, retains invalid and unmatched units, and freezes 48-family paired bootstrap and coverage rules before later GPU capture. Qualified CPU fixtures can establish protocol readiness, not semantic benefit.

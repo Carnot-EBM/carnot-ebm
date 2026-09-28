@@ -1,0 +1,24 @@
+.....................................Traceback (most recent call last):
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/socketserver.py", line 766, in __init__
+    self.handle()
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/http/server.py", line 440, in handle
+    self.handle_one_request()
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/http/server.py", line 428, in handle_one_request
+    method()
+  File "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7770_v676_qwen_runner_qualification.py", line 166, in do_POST
+    self.wfile.write(b"data: " + json.dumps(finish).encode() + b"\n\n")
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+..................................  [100%]
+=============================== warnings summary ===============================
+tests/python/test_experiment_7727_v673_development_corpus.py::test_req_report_7727_blocked_candidate_and_entrypoint
+  <frozen runpy>:128: RuntimeWarning: 'carnot.experiment_7727_v673_development_corpus' found in sys.modules after import of package 'carnot', but prior to execution of 'carnot.experiment_7727_v673_development_corpus'; this may result in unpredictable behaviour
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+71 passed, 1 warning in 24.86s
