@@ -83931,3 +83931,45 @@ suite, scoped static and spec checks, real entrypoint, cold replay, adversarial
 reader and strict row reader precede atomic publication. A failed required
 validation disqualifies the current artifact and sets every readiness score to
 zero; optional missing service science yields complete_blocked_*.
+
+## REQ-REPORT-7794: Reconcile V677 from qualified current evidence
+
+Exp7794 SHALL compare the immutable V677 design table and JSON contract with
+the matching YAML. It SHALL account for all fourteen ordered tasks, including
+its planned self output, without reading that output as source evidence.
+Declared producer files and conductor pre-gate receipts SHALL stay distinct.
+Missing or disqualified external science SHALL yield terminal
+`complete_blocked_required_v677_evidence`; failed owned validation SHALL yield
+`complete_disqualified_v677_capstone_validation`. Partial is reserved for
+unfinished owned reducer work. Every failed operand SHALL name its producer,
+path, hash when present, field, operator, expected value and observed value.
+
+The reducer SHALL import only qualified current science and recompute available
+Qwen parse and semantic outcomes from authenticated raw rows. Unavailable
+static, learning, ARC and service measurements SHALL remain null. It SHALL
+retain every task row and pre-gate receipt, stable publication G1-G4 output,
+historical verdict boundaries, per-mechanism continuation decisions, measured
+phase times and a reproducible code and data checksum. Administrative and
+fixture success SHALL be labeled circular evidence.
+
+### SCENARIO-REPORT-7794-CUSTODY
+
+Given the immutable authority, all fourteen task rows agree. A missing
+declared producer with a queue receipt remains absent science. A disqualified
+producer retains its exact failed validation operands. The planned Exp7794
+output is never an input.
+
+### SCENARIO-REPORT-7794-GATES
+
+Given passing owned checks and missing external science, the verdict is
+blocked and scientific benefits stay unmeasured. Given a failed owned check,
+the verdict is disqualified and every readiness score is zero. The Qwen null
+retires only its unchanged exposed tested scope.
+
+### SCENARIO-REPORT-7794-REPLAY
+
+A fresh process SHALL reopen source bytes, recompute the available raw Qwen
+rows, and compare task dispositions and hashes. The real entrypoint SHALL run
+the frozen affected suite, complete changed-module coverage, scoped static
+checks, full Python suite, publication gate and terminal readers before atomic
+output. Each subprocess exit and log hash SHALL be retained.
