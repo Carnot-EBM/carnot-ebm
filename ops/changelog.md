@@ -20974,3 +20974,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-28: Repair source candidate replay with canonical family custody (⚠️ Research Finding) — honest_verdict=complete_circular_positive_source_view_readiness; results/experiment_7810_v679_source_view_qualification.json
 - 2026-09-28: Seal training receipts and qualify delayed memory mechanics (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7811_v679_training_runtime.json
 - 2026-09-28: Validate evidence interventions through an explicit command allowlist (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7814_v679_counter_evidence_protocol.json
+- 2026-09-28: Measure organic exploration on adapter-withheld live games (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7818_v679_arc_organic_measurement.json
