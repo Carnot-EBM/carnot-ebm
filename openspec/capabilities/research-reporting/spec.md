@@ -84624,3 +84624,57 @@ A recording executor sees exactly the frozen ordered names, argv, and classes
 through the real CLI. An appended child, changed argv, missing pytest parent,
 later retry log reuse, and one-byte sealed-log change fail. Required validation
 failure disqualifies; diagnostic repository-health failure stays visible.
+
+## REQ-REPORT-7822: Reconcile the complete V679 queue from current evidence
+
+Exp7822 SHALL compare the immutable design table, embedded JSON, and matching
+V679 YAML before reducing results. Its fourteen rows SHALL follow Exp7809–7822
+in YAML order. The planned Exp7822 output SHALL never be an input hash. Science
+producers and conductor pre-gate receipts SHALL remain separate. Every missing
+or disqualified science branch SHALL retain the exact failed operand. Flagged
+rows SHALL not contribute to benefit. Exp7821 raw audit SHALL control decision
+and learning claims. Public SDK ARC scores and whole-service hardware bounds
+SHALL be recomputed only from qualified primitive rows. Claim scopes SHALL
+separate fixtures, exposed development families, public SDK, hidden games,
+hardware, and publication. The unchanged G1–G4 reader SHALL set paper readiness.
+An unchanged repeated prior verdict SHALL retire only its listed mechanism.
+Missing external science with passing owned checks SHALL yield
+`complete_blocked_required_v679_evidence` and class `blocked`.
+
+The complete affected closure is
+`python/carnot/experiment_7822_v679_capstone.py`,
+`scripts/experiments/experiment_7822_v679_capstone.py`,
+`tests/python/test_experiment_7822_v679_capstone.py`, and the consumed
+Exp7809, Exp7820, Exp7821 and validation-scope tests. Exact ordered argv,
+required or diagnostic class, private roots, timeouts, and expected children
+SHALL be frozen before implementation in
+`results/raw/experiment_7822_v679_capstone/validation_command_manifest.json`.
+The manifest byte hash SHALL be copied into the result. A changed manifest,
+missing child, appended child, or changed argv SHALL fail real CLI dispatch.
+The frozen manifest SHA-256 is
+`9ebf8124a882dc92a2648dc887e873743fbf1d6f80940ee6f49249e196b99783`.
+No historical experiment main SHALL run. Each command SHALL have a unique
+private root and sealed attempt-specific log. The full Python suite is one
+bounded diagnostic health command; its failure SHALL remain visible and SHALL
+not become a false full-suite pass. All required checks, changed-code statement
+coverage, static checks, task E2E, fresh cold reduction, adversarial reader,
+and strict row lint SHALL pass before atomic publication. A required failure
+SHALL disqualify and zero every readiness field.
+
+### SCENARIO-REPORT-7822-CUSTODY
+
+A private altered table, YAML, source byte, or one-byte sealed log is rejected.
+Six absent science producers retain missing-path operands, including the two
+conductor receipts, and no queue success is promoted to science.
+
+### SCENARIO-REPORT-7822-DISPATCH
+
+A recording executor on the real CLI observes every frozen command in order,
+including commands after helpers. An undeclared child, later retry using a
+prior log path, or absent pytest basetemp parent is rejected.
+
+### SCENARIO-REPORT-7822-TERMINAL
+
+The result and note carry fourteen decisions, raw provenance, qualified nulls,
+publication gates, source limits, board prerequisites, measured phase timing,
+and the exact validation receipts. No successor activation or publication occurs.
