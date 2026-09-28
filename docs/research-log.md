@@ -7046,3 +7046,11 @@ The critical path for milestone .250:
 - theme: normalized training qualification, sentence custody, and organic exploration dominated wall time across an all-compute milestone without sub-phase metrics
 - key result: honest operational negative — normalized training and sentence custody qualification consumed 34.41 of 42.9 total wall-time minutes (80.2%), while available records lack intra-task stage timing and the post-execution snapshot captured idle GPUs at milestone completion
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.677
+
+- exp_range: no data available this milestone
+- theme: runner formatting repair, outcome reconciliation, and board obligation preservation led wall-time execution across an all-compute set without sub-phase metrics
+- key result: honest operational negative — runner formatting repair and outcome reconciliation consumed 63.13 of 122.4 total wall-time minutes (51.6%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
