@@ -84478,3 +84478,35 @@ labels and unknown labels cannot be substituted. Modified-source labels stay
 null. A 48-family paired bootstrap, its seed, and every coverage rule are
 frozen before GPU capture. CPU fixture success is circular-positive protocol
 evidence only; probability, decision, retention, and efficiency remain null.
+## REQ-REPORT-7818: Measure scored organic selection on public SDK games
+
+The frozen command manifest has SHA-256
+`c2528bdfd84b2f45bbca05b7c6efb368c06b9225dbe2ddc9eac98c1580cb7bfc`
+and contains 66 exact child commands, 65 required and one diagnostic.
+
+Exp7818 SHALL authenticate Exp7817 runner readiness and the immutable Exp7790
+eight-game panel before compute. Its task-owned dispatcher SHALL freeze every
+episode and validation child in `results/raw/experiment_7818_v679_arc_organic_measurement/validation_command_manifest.json` before implementation. The complete affected closure SHALL include the new module and CLI, all Exp7817 affected tests and consumers, and E2E-009/011/013. Exact argv and required or diagnostic class SHALL be immutable; no historical experiment main may run. Every child SHALL have a private root, unique basetemp parent, bounded execution, and an attempt-specific sealed byte log. Cold replay SHALL verify sealed logs and raw rows after receipt sealing. A retry, missing parent, mutated log, and appended child SHALL be tested through the real CLI.
+
+The dispatcher SHALL shuffle game order from seed 67815 and arm order within each game and seed. It SHALL finish both seeds 67815/67816 and three off, total-seen, and organic-seen arms of one game before moving on. Each episode SHALL use the actual scored E3 SDK wrapper, with per-game adapters, routes, stored engines, and all model tiers withheld; limits are 2000 actions and 75 seconds. It SHALL stop launches at 3900 elapsed seconds and retain unstarted, timed-out, errored and censored rows. Exp7804 pre-gate evidence SHALL not substitute for this science producer.
+
+The raw rows SHALL retain SDK observations, human `EnvironmentInfo` baselines, first level-up actions, action and RESET counts, replay/fresh and organic visits, supervisor outcomes, and both RESET charging scores from the installed SDK formula. The fresh reducer SHALL average seeds within game, enumerate 256 paired sign assignments per control and convention, compute paired lower95 intervals and Holm-adjusted p-values, and forbid broad benefit on incomplete pairs. Benefit requires positive lower95 and adjusted p<=0.05 against both controls under both RESET conventions, no lost baseline winning seed, and at most ten percent action regression on shared wins. A valid complete inconclusive comparison is null. Missing external input blocks with an exact failed operand. Failed required validation disqualifies and zeros readiness. Public-game exposure SHALL prohibit hidden leaderboard claims. New level credit requires the canonical replay gate; registry-known levels receive none.
+
+### SCENARIO-REPORT-7818-DISPATCH
+
+The real CLI recording executor observes exactly the frozen manifest's names,
+argv and classes, including commands following helper dispatch. An undeclared
+child or byte change fails before launch; a later retry cannot overwrite a
+sealed log, and cold replay detects one-byte mutation.
+
+### SCENARIO-REPORT-7818-MEASUREMENT
+
+The 48 frozen rows retain every launch outcome. SDK level boundaries and
+`EnvironmentInfo` baselines determine both scores; 8 games, not 16 seeds or 48
+episodes, are the independent units. Missing pairs cannot yield broad benefit.
+
+### SCENARIO-REPORT-7818-TERMINAL
+
+Fresh raw reduction and terminal readers agree with the candidate. Required
+failure produces disqualified zero readiness; missing external science produces
+blocked with the exact artifact field and hash. Model calls remain zero.
