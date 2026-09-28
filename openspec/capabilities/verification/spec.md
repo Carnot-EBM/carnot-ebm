@@ -46632,6 +46632,114 @@ positive confidence interval, or SHALL mark the selection claim
 `FALSE_NEGATIVE_RISK` / not-applicable and SHALL NOT headline a selection
 win from this corpus alone.
 
-Implementation status: specified 2026-09-28. Pending: experiment execution
-and reconciliation of Implementation Status by the executing agent/conductor
-per CLAUDE.md's spec-anchored workflow.
+Implementation status: specified 2026-09-28. Executed 2026-09-28. Gate
+result: `a1_readout_poe_failed_pre_registered_gate` (honest FAIL -- the
+registered scalar feature was fit away to `alpha=0` in every fold; see
+`ops/verifier_gaps.md` `GAP-SEMIF-ACCEPT-ENERGY-COLLAPSES-REJECT-SIGNAL-7750`
+for the post-hoc diagnostic that explains why, and REQ-VERIFY-7751 below for
+the follow-up this diagnostic opened).
+
+# REQ-VERIFY-7751: Target-Workload Calibrator Tournament (A2)
+
+**Origin.** `docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`
+section A2, operator-approved through section 12.4. REQ-VERIFY-7750 (A1)
+found the registered scalar readout feature (`-log p(accept)`) carries no
+usable signal in a product of experts, but its own post-hoc diagnostic found
+the RAW per-option probabilities do discriminate real correctness (rows
+decided `reject` were wrong 11.4 percent of the time against a 1.7 percent
+corpus base rate). This requirement asks a separate question: are those raw
+option probabilities themselves miscalibrated, and does a standard
+calibrator fix that on any individual option channel. It reuses A1's cached
+logits. It makes zero new model forward passes.
+
+The verifier SHALL fit three calibrators per option channel
+(`accept`, `reject`, `escalate`), independently, on the cached A1 readout
+logits: scalar temperature scaling (one parameter), true two-parameter
+Platt scaling (a scale AND an offset -- distinct from, and strictly more
+expressive than, the single-temperature class in
+`python/carnot/training/platt_scaler.py`), and isotonic regression. The
+verifier SHALL NOT call this single-temperature class "full Platt scaling."
+
+Every calibrator SHALL be fit ONLY on the k-1 training folds of a grouped
+out-of-fold cross-validation split (question-ID grouped, same grouping
+function A1 uses), never on the evaluation fold. Isotonic regression SHALL
+be omitted for a fold whose training data has fewer than 20 positive and 20
+negative examples, rather than silently pooling test data to reach the
+floor.
+
+## SCENARIO-VERIFY-7751-TOURNAMENT: Calibrator tournament per option channel
+
+**Given** the A1 cached readout logits and labels for the FoVer corpus's
+held-out rows, grouped out-of-fold by question ID
+**When** the harness fits scalar temperature scaling, two-parameter Platt
+scaling, and isotonic regression independently for each of the `accept`,
+`reject`, and `escalate` option channels, on training folds only
+**Then** the artifact SHALL report, per channel and per calibrator, Brier
+score, ECE, log loss, maximum calibration error, a reliability table, and a
+95 percent paired group bootstrap interval for the Brier delta against the
+raw uncalibrated probability
+**And** the artifact SHALL report the fitted scale and intercept for the
+two-parameter Platt arm on every fold
+**And** the artifact SHALL report performance broken out by option count and
+by source family, or SHALL state plainly that this corpus has only one
+value for each (a fixed 3-option decision, a single unlabelled source) when
+that is what the data supports.
+
+## SCENARIO-VERIFY-7751-POSITIVE-CONTROL: Recoverable synthetic distortions
+
+**Given** a synthetic lane, kept fully separate from the real fit, where a
+known temperature distorts a synthetic ground-truth logit
+**When** scalar temperature scaling is fit on the distorted logit and its
+label
+**Then** the calibrated Brier score SHALL be strictly lower than the raw,
+uncalibrated (overconfident) Brier score
+**And**, in a second synthetic lane applying a known affine distortion
+(both a scale and a shift) to a synthetic ground-truth logit, two-parameter
+Platt scaling SHALL recover a strictly lower Brier score than scalar
+temperature scaling alone, because temperature scaling has no free
+parameter to correct the shift term.
+
+## SCENARIO-VERIFY-7751-DEGENERATE: Calibrators fail closed on degenerate input
+
+**Given** (a) a constant raw probability or logit repeated for every row,
+(b) a genuine-signal synthetic score set used to fit isotonic regression
+and then applied to a fresh held-out score set, and (c) an empty
+probability array, a training fold with only one label class, or a
+probability outside `[0, 1]`
+**When** the calibrators process each case
+**Then** case (a) SHALL leave every calibrator's output constant (no
+calibrator may manufacture variation from a single repeated input)
+**And** case (b) SHALL never invert the raw score's rank order on the
+held-out set (isotonic regression may only merge ties, never reverse an
+order)
+**And** case (c) SHALL raise, not silently return a plausible-looking
+number.
+
+## SCENARIO-VERIFY-7751-GATE: Pass/fail gate and kill criterion
+
+**Given** the tournament result for one option channel
+**When** the harness evaluates the pass/fail gate
+**Then** a calibrator SHALL be selected for that channel only if its 95
+percent Brier-delta interval is fully below zero against the raw
+probability AND the upper bound of its 95 percent ECE interval is below
+0.05
+**And**, when two calibrators tie within the gate, scalar temperature
+scaling SHALL be preferred because it has fewer parameters
+**And**, if no calibrator clears both bounds, the channel SHALL be marked
+`diagnostic_only_no_method_cleared_gate` rather than forced to a pass
+**And** the channel SHALL be flagged for the kill criterion (probability
+use dropped, ranking-only use may continue) if no calibrator clears ECE
+0.05, if the best calibrator's Brier score is no better than the
+prevalence baseline, or if the fitted temperature crosses from below 0.9 to
+above 1.1 across folds (a fold-to-fold calibration-direction reversal).
+
+Implementation status: specified 2026-09-28. Executed 2026-09-28. Gate
+result: `a2_calibrator_tournament_usable_on_reject_escalate` -- isotonic
+regression clears the gate on the `reject` and `escalate` option channels
+(95 percent Brier-delta interval fully below zero against both raw and the
+trivial prevalence baseline, 95 percent ECE upper bound under 0.002). The
+`accept` channel clears the naive gate against its own raw probability but
+fails the kill criterion (no better than the prevalence baseline); see
+`ops/verifier_gaps.md` `GAP-SEMIF-ACCEPT-ENERGY-COLLAPSES-REJECT-SIGNAL-7750`
+for the full finding and a root-cause note on a raw-logit-scale calibration
+bug found and fixed during this run.

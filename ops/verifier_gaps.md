@@ -5051,3 +5051,24 @@ Source: `docs/research-notes/b2-positive-control-2026-09-23.md` (workflow `wf_1b
   same pre-registered gate, positive control, and degenerate-case checks unchanged.
 - priority: high -- this is a real, measured signal (6.7x lift on the `reject` decision) going
   unused by the exact mechanism (REQ-VERIFY-7750's PoE) built to capture it.
+- status: partly filled (A2, REQ-VERIFY-7751), 2026-09-28 (append-only follow-up; the entry above
+  is left unchanged). `results/experiment_semif_readout_ebm_eval_a2.json` ran a calibrator
+  tournament (scalar temperature scaling, true two-parameter Platt scaling, and sample-size-gated
+  isotonic regression) on EACH option channel separately, out of fold, reusing A1's cached logits
+  with zero new model calls. Finding: isotonic regression on the `reject` and `escalate` channels
+  beats both the raw probability AND the trivial prevalence baseline (Brier 0.0159 and 0.0159 vs a
+  0.0167 prevalence floor, both with a 95 percent group-bootstrap interval fully below zero and an
+  ECE 95 percent upper bound under 0.002) -- a real, if modest, win. The `accept` channel also
+  clears the naive gate (it beats its own raw probability), but the KILL criterion catches it: its
+  best calibrated Brier (0.016678) is barely ABOVE the trivial prevalence baseline (0.016658), so
+  it is not a genuine win -- `accept`'s raw probability was simply a poor `P(incorrect)` estimate
+  to begin with, so almost anything beats it without adding real information. Root-cause note for
+  future readers: a first pass at this tournament fed the RAW, un-normalized per-option vocabulary
+  logit (magnitude ~15-20) straight into temperature/Platt scaling and got catastrophic garbage
+  (Brier 0.93, NaN Platt fits) -- the fix calibrates the log-odds of the already-softmaxed channel
+  probability instead (`probability_to_logit` in `python/carnot/verify/semif_readout_energy.py`),
+  which is an exact pass-through at temperature 1 regardless of the raw logit's absolute scale.
+  This does NOT close the gap: the candidate design above (a 2-dimensional PoE feature) is still
+  unbuilt, and A2 only shows individual channels can be usefully calibrated for RANKING/RISK use,
+  not that the collapsed PoE scalar itself has been fixed. See REQ-VERIFY-7751 in
+  `openspec/capabilities/verification/spec.md` for the full scenario set.

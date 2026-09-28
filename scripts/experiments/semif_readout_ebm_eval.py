@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""A1 driver: readout energy and product of experts (REQ-VERIFY-7750).
+"""A1/A2 driver: readout energy calibration (REQ-VERIFY-7750, REQ-VERIFY-7751).
 
-Runs the pre-registered A1 experiment from
-`docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md` section
-"A1. Readout energy and product of experts" end to end: precondition checks,
-verifier-only Gibbs training, degenerate-case checks, the synthetic positive
-control, the real single-pass readout over the FoVer corpus, grouped
-out-of-fold cross-validation, paired group bootstrap intervals, the headroom
-check, and the pre-registered pass/fail gate.
+Runs the pre-registered A1 and A2 experiments from
+`docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`. Run A1
+with no argument (`python scripts/experiments/semif_readout_ebm_eval.py`).
+Run A2 with `a2` as the first argument
+(`python scripts/experiments/semif_readout_ebm_eval.py a2`). A2 makes NO
+model call -- it reuses A1's cached readout logits, so it costs nothing to
+rerun.
 
-CONCRETE STEPS:
+CONCRETE STEPS (A1, `main()`):
   0. PRECONDITIONS (checked before any subsequent step; any failure writes
      honest_verdict `blocked_<resource>` and exits -- no fabrication):
      a. `data/fover_corpus_v4.json` exists and parses.
@@ -39,7 +39,25 @@ CONCRETE STEPS:
      pre-registered pass/fail gate.
  10. Print a progress line, then write the results artifact.
 
-Spec: REQ-VERIFY-7750
+CONCRETE STEPS (A2, `main_a2()`):
+  0. PRECONDITIONS: the corpus file and A1's readout logit cache both
+     exist and parse. No GGUF/GPU precondition -- A2 never loads a model.
+  1. Print a progress line, then load the corpus rows + split, and build
+     `A2ScoredRow` rows from the cached logits for the held-out split,
+     excluding any row whose cached logits are missing or degenerate.
+  2. Print a progress line, then run the calibrator degenerate-case checks
+     on synthetic fixtures (real production code paths).
+  3. Print a progress line, then run the two synthetic positive-control
+     lanes (temperature recovery, Platt affine-distortion recovery).
+  4. Print a progress line, then run the grouped out-of-fold calibrator
+     tournament for every option channel.
+  5. Print a progress line, then run the paired group bootstrap for every
+     channel's calibrator deltas.
+  6. Print a progress line, then apply the pass/fail gate and kill
+     criterion per channel.
+  7. Print a progress line, then write the results artifact.
+
+Spec: REQ-VERIFY-7750, REQ-VERIFY-7751
 """
 
 from __future__ import annotations
@@ -58,6 +76,7 @@ os.environ.setdefault(
 
 import hashlib  # noqa: E402
 import json  # noqa: E402
+import math  # noqa: E402
 import sys  # noqa: E402
 import time  # noqa: E402
 from datetime import UTC, datetime  # noqa: E402
@@ -486,5 +505,315 @@ def main() -> int:
     return 0
 
 
+RESULT_PATH_A2 = results_path("experiment_semif_readout_ebm_eval_a2.json")
+INFERENCE_SUBSTRATE_A2 = "aggregation_from_upstream_artifacts"
+# `inference_substrate_class` (REQ-SUBSTRATE-CLASS-1, mandatory for any artifact
+# dated on or after the 2026-09-07 cutover -- see A1's driver for the same
+# note): the closed-enum vocabulary `adversarial_verify.py` gates on.
+# "aggregation" is the exact match here: CPU-only calibrator fitting and
+# bootstrap over A1's cached logits, no model load at all.
+INFERENCE_SUBSTRATE_CLASS_A2 = "aggregation"
+RANDOM_SEED_A2 = 7751
+
+
+def _reproducibility_checksum_a2(cache_path: Path) -> str:
+    hasher = hashlib.sha256()
+    if CORPUS_PATH.exists():
+        hasher.update(CORPUS_PATH.read_bytes())
+    if cache_path.exists():
+        hasher.update(cache_path.read_bytes())
+    hasher.update(str(RANDOM_SEED_A2).encode())
+    hasher.update(str(KFOLD_K).encode())
+    return "sha256:" + hasher.hexdigest()
+
+
+def _honest_block_a2(reason: str, preconditions_checked: list[dict], start: float) -> int:
+    artifact = {
+        "schema": "carnot.semif_readout_ebm_eval.a2.v1",
+        "experiment": "semif_readout_ebm_eval_a2",
+        "requirement": "REQ-VERIFY-7751",
+        "run_date": datetime.now(UTC).strftime("%Y%m%d"),
+        "honest_verdict": f"complete: blocked_{reason}",
+        "inference_substrate": INFERENCE_SUBSTRATE_A2,
+        "inference_substrate_class": INFERENCE_SUBSTRATE_CLASS_A2,
+        "preconditions_checked": preconditions_checked,
+        "duration_s": time.monotonic() - start,
+        "random_seed": RANDOM_SEED_A2,
+        "reproducibility_checksum": _reproducibility_checksum_a2(CACHE_PATH),
+    }
+    RESULT_PATH_A2.parent.mkdir(parents=True, exist_ok=True)
+    RESULT_PATH_A2.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
+    print(f"BLOCKED: {reason}. Wrote {RESULT_PATH_A2}", flush=True)
+    return 0
+
+
+def main_a2() -> int:  # noqa: C901 -- one linear driver, matches A1's main() shape
+    start = time.monotonic()
+
+    def _p(message: str) -> None:
+        elapsed = time.monotonic() - start
+        print(f"[semif_readout_ebm_eval:a2] t+{elapsed:6.1f}s  {message}", flush=True)
+
+    _p("step 0: checking preconditions (no model/GPU precondition -- A2 makes no model call)")
+    preconditions_checked = [
+        {"resource": "fover_corpus_v4_json", "available": CORPUS_PATH.exists()},
+        {"resource": "a1_readout_logits_cache", "available": CACHE_PATH.exists()},
+    ]
+    if not preconditions_checked[0]["available"]:
+        return _honest_block_a2("corpus_missing", preconditions_checked, start)
+    if not preconditions_checked[1]["available"]:
+        return _honest_block_a2("a1_readout_cache_missing", preconditions_checked, start)
+    cache = sre.load_readout_cache(CACHE_PATH)
+    preconditions_checked.append(
+        {"resource": "a1_readout_cache_non_empty", "available": bool(cache)}
+    )
+    if not cache:
+        return _honest_block_a2("a1_readout_cache_empty", preconditions_checked, start)
+    _p(f"preconditions OK; cache has {len(cache)} cached rows")
+
+    assert "llama_cpp" not in sys.modules, "A2 must never load a model -- llama_cpp was imported"
+
+    _p("step 1: loading corpus rows + split, building A2ScoredRow list from the cache")
+    rows = sre.load_corpus_rows_with_features()
+    held_out_rows = [r for r in rows if r.split == "held_out"]
+    scored_rows: list[sre.A2ScoredRow] = []
+    n_missing_cache_entry = 0
+    n_degenerate_logits = 0
+    for row in held_out_rows:
+        key = sre.readout_cache_key(row.question_id, row.step_text)
+        raw_logits = cache.get(key)
+        if raw_logits is None:
+            n_missing_cache_entry += 1
+            continue
+        finite = all(
+            raw_logits.get(opt) is not None and math.isfinite(float(raw_logits.get(opt)))
+            for opt in sre.OPTIONS
+        )
+        if not finite:
+            n_degenerate_logits += 1
+            continue
+        scored_rows.append(
+            sre.A2ScoredRow(
+                question_id=row.question_id,
+                label=row.label,
+                raw_logits={opt: float(raw_logits[opt]) for opt in sre.OPTIONS},
+            )
+        )
+    _p(
+        f"assembled {len(scored_rows)} of {len(held_out_rows)} held-out rows "
+        f"(missing_cache={n_missing_cache_entry}, degenerate_logits={n_degenerate_logits})"
+    )
+    if len(scored_rows) < 1000:
+        preconditions_checked.append({"resource": "at_least_1000_oof_rows", "available": False})
+        return _honest_block_a2("insufficient_scored_rows", preconditions_checked, start)
+    n_groups = len({r.question_id for r in scored_rows})
+    if n_groups < 30:
+        preconditions_checked.append(
+            {"resource": "at_least_30_question_groups", "available": False}
+        )
+        return _honest_block_a2("insufficient_question_groups", preconditions_checked, start)
+
+    _p("step 2: running the calibrator degenerate-case checks")
+    degenerate_checks = {
+        "constant_probability": sre.check_constant_probability_calibration_is_a_no_op(),
+        "isotonic_no_false_rank_improvement": sre.check_isotonic_no_false_rank_improvement(),
+        "hard_failures_raised": sre.check_hard_failures_are_raised(),
+    }
+    _p(
+        "degenerate checks: constant="
+        f"{degenerate_checks['constant_probability']['passes']} "
+        f"isotonic_order={degenerate_checks['isotonic_no_false_rank_improvement']['passes']} "
+        f"hard_failures={degenerate_checks['hard_failures_raised']['passes']}"
+    )
+
+    _p("step 3: running the two synthetic positive-control lanes")
+    positive_controls = {
+        "temperature_recovery": sre.run_temperature_recovery_positive_control(seed=RANDOM_SEED_A2),
+        "platt_affine_recovery": sre.run_platt_affine_recovery_positive_control(
+            seed=RANDOM_SEED_A2 + 1
+        ),
+    }
+    _p(
+        f"positive controls: temperature={positive_controls['temperature_recovery']['passed']} "
+        f"platt_affine={positive_controls['platt_affine_recovery']['passed']}"
+    )
+
+    _p(
+        f"step 4: running the grouped out-of-fold calibrator tournament ({len(sre.OPTIONS)} channels)"
+    )
+    tournament = sre.run_calibrator_tournament(scored_rows, k=KFOLD_K)
+    for channel in sre.OPTIONS:
+        n_ok = sum(1 for f in tournament[channel]["per_fold"] if f["status"] == "ok")
+        _p(f"  channel={channel}: {n_ok}/{KFOLD_K} folds ok")
+
+    _p("step 5: running the paired group bootstrap per channel")
+    bootstraps: dict[str, dict] = {}
+    for i, channel in enumerate(sre.OPTIONS):
+        bootstraps[channel] = sre.paired_group_bootstrap_calibrator_deltas(
+            tournament[channel]["pooled"], n_boot=N_BOOT, seed=RANDOM_SEED_A2 + 10 * (i + 1)
+        )
+    _p("bootstrap complete")
+
+    _p("step 6: applying the pass/fail gate and kill criterion per channel")
+    gates: dict[str, dict] = {}
+    kills: dict[str, dict] = {}
+    for channel in sre.OPTIONS:
+        gates[channel] = sre.select_calibrator(bootstraps[channel])
+        pooled_labels = tournament[channel]["pooled"]["label"]
+        gates_with_kill = sre.calibrator_kill_check(
+            bootstraps[channel], pooled_labels, tournament[channel]["per_fold"]
+        )
+        kills[channel] = gates_with_kill
+        _p(f"  channel={channel}: gate={gates[channel]['verdict']} kill={kills[channel]['kill']}")
+
+    any_channel_selected = any(g["selected"] is not None for g in gates.values())
+    isotonic_omitted_summary = {
+        channel: tournament[channel]["isotonic_omitted"] for channel in sre.OPTIONS
+    }
+    any_isotonic_omitted = any(bool(v) for v in isotonic_omitted_summary.values())
+
+    # A channel that clears the naive gate (beats the RAW probability) but
+    # is also killed (no better than the trivial prevalence baseline) is
+    # NOT a genuine win -- the raw baseline can be an unfair comparison
+    # point on its own (e.g. the `accept` channel's raw probability is a
+    # poor P(incorrect) estimate BY CONSTRUCTION, so almost anything beats
+    # it). `usable_channels` is the honest, stricter set: selected AND not
+    # flagged by the kill criterion.
+    selected_channels = [c for c, g in gates.items() if g["selected"] is not None]
+    usable_channels = [c for c in selected_channels if not kills[c]["kill"]]
+    gate_selected_but_killed_channels = [c for c in selected_channels if kills[c]["kill"]]
+
+    if usable_channels:
+        verdict_text = f"a2_calibrator_tournament_usable_on_{'_'.join(usable_channels)}"
+    elif any_channel_selected:
+        verdict_text = (
+            "a2_calibrator_tournament_gate_selected_but_all_killed_no_better_than_prevalence"
+        )
+    else:
+        verdict_text = "a2_calibrator_tournament_no_channel_cleared_gate_diagnostic_only"
+    honest_verdict = f"complete: {verdict_text}"
+
+    _p(f"step 7: writing results artifact ({honest_verdict})")
+
+    # Option count and source family: this corpus has one fixed 3-option
+    # decision per row and no field distinguishing sub-sources. Report that
+    # honestly (a single bucket) rather than fabricating a category the
+    # data does not support (the plan's "report by option count and source
+    # family" instruction, applied to what this corpus actually has).
+    breakdown_by_option_count = {
+        "3": {
+            "n_rows": len(scored_rows),
+            "note": "every row declares exactly 3 options (accept/reject/escalate) -- there is no varying option count in this corpus",
+        }
+    }
+    breakdown_by_source_family = {
+        "fover_corpus_v4_single_family": {
+            "n_rows": len(scored_rows),
+            "note": "data/fover_corpus_v4.json carries no field distinguishing sub-sources; treated as one family",
+        }
+    }
+
+    duration_s = time.monotonic() - start
+    upstream_a1_path = RESULT_PATH
+    cited_upstream_artifacts = [
+        {
+            "experiment_id": "semif_readout_ebm_eval_a1",
+            "fields_imported": ["readout_logits_cache (all 6548 rows' raw per-option logits)"],
+            "sha256": (
+                "sha256:" + hashlib.sha256(upstream_a1_path.read_bytes()).hexdigest()
+                if upstream_a1_path.exists()
+                else None
+            ),
+            "cache_sha256": (
+                "sha256:" + hashlib.sha256(CACHE_PATH.read_bytes()).hexdigest()
+                if CACHE_PATH.exists()
+                else None
+            ),
+        }
+    ]
+
+    artifact = {
+        "schema": "carnot.semif_readout_ebm_eval.a2.v1",
+        "experiment": "semif_readout_ebm_eval_a2",
+        "requirement": "REQ-VERIFY-7751",
+        "run_date": datetime.now(UTC).strftime("%Y%m%d"),
+        "run_timestamp_utc": datetime.now(UTC).isoformat(),
+        "honest_verdict": honest_verdict,
+        "inference_substrate": INFERENCE_SUBSTRATE_A2,
+        "inference_substrate_class": INFERENCE_SUBSTRATE_CLASS_A2,
+        "inference_substrate_note": (
+            "CPU-only calibrator fitting and grouped bootstrap over A1's cached readout "
+            "logits. No model is loaded and no forward pass is made -- confirmed by "
+            "asserting `llama_cpp` is never imported in this code path."
+        ),
+        "model_specs": [],
+        "verifier_is_oracle": False,
+        "random_seed": RANDOM_SEED_A2,
+        "reproducibility_checksum": _reproducibility_checksum_a2(CACHE_PATH),
+        "duration_s": duration_s,
+        "preconditions_checked": preconditions_checked,
+        "cited_upstream_artifacts": cited_upstream_artifacts,
+        "field_provenance": {
+            "duration_s": {
+                "principle": "Even a CPU-only aggregation should report a real wall-clock duration so a reader can distinguish a genuine run from a stub.",
+                "satisfied_by": "wall_clock measurement across the full driver run",
+            },
+            "random_seed": {
+                "principle": "Determinism lets a third party re-run the tournament, bootstrap, and positive controls and get the same numbers.",
+                "satisfied_by": f"random_seed={RANDOM_SEED_A2} threaded through the tournament, bootstrap, and positive controls",
+            },
+            "reproducibility_checksum": {
+                "principle": "A content-addressed hash of the corpus and cache files catches silent drift between this artifact and a future rerun.",
+                "satisfied_by": "sha256 over the corpus bytes, the cache bytes, the seed, and k",
+            },
+        },
+        "corpus": {
+            "path": "data/fover_corpus_v4.json",
+            "n_held_out_rows": len(held_out_rows),
+            "n_scored_rows": len(scored_rows),
+            "n_missing_cache_entry": n_missing_cache_entry,
+            "n_degenerate_logits_excluded": n_degenerate_logits,
+            "n_question_groups": n_groups,
+        },
+        "degenerate_case_checks": degenerate_checks,
+        "positive_controls": positive_controls,
+        "tournament": {
+            channel: {
+                "per_fold": tournament[channel]["per_fold"],
+                "isotonic_omitted": tournament[channel]["isotonic_omitted"],
+                "reliability_table_raw": tournament[channel]["reliability_table_raw"],
+            }
+            for channel in sre.OPTIONS
+        },
+        "bootstrap": bootstraps,
+        "gates": gates,
+        "kill_checks": kills,
+        "any_channel_selected": any_channel_selected,
+        "selected_channels": selected_channels,
+        "usable_channels": usable_channels,
+        "gate_selected_but_killed_channels": gate_selected_but_killed_channels,
+        "any_isotonic_omitted_in_any_fold": any_isotonic_omitted,
+        "gate_passed": bool(usable_channels),
+        "isotonic_omitted_by_channel": isotonic_omitted_summary,
+        "breakdown_by_option_count": breakdown_by_option_count,
+        "breakdown_by_source_family": breakdown_by_source_family,
+        "methodology_note": (
+            "Three calibrators (scalar temperature scaling, true two-parameter Platt "
+            "scaling, and sample-size-gated isotonic regression) were fit per option "
+            "channel (accept, reject, escalate), independently, on the k-1 training "
+            "folds of a grouped out-of-fold cross-validation split over A1's cached "
+            "readout logits for the FoVer corpus's held-out rows. No calibrator was "
+            "ever fit on its own evaluation fold. Zero new model forward passes were "
+            "made; every logit was read from A1's on-disk cache."
+        ),
+    }
+    RESULT_PATH_A2.parent.mkdir(parents=True, exist_ok=True)
+    RESULT_PATH_A2.write_text(json.dumps(artifact, indent=2, default=str), encoding="utf-8")
+    _p(f"wrote {RESULT_PATH_A2} (any_channel_selected={any_channel_selected})")
+    return 0
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "a2":
+        raise SystemExit(main_a2())
     raise SystemExit(main())

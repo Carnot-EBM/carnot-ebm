@@ -1,4 +1,5 @@
-"""Readout-energy product of experts for calibrated decisions (REQ-VERIFY-7750).
+"""Readout-energy product of experts for calibrated decisions (REQ-VERIFY-7750,
+REQ-VERIFY-7751).
 
 **What this is.** `docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`
 section A1 asks one question: does a SemIf-style option readout carry
@@ -46,7 +47,15 @@ pass over the row's own reasoning text -- it never reads the row's `label`
 field, and the degenerate-case guards below exist precisely to catch a
 readout, a verifier, or a fit that has stopped carrying real signal.
 
-Spec: REQ-VERIFY-7750
+**A2, the target-workload calibrator tournament (REQ-VERIFY-7751).** A1's
+post-hoc diagnostic found the RAW per-option probabilities do carry real
+signal even though the registered collapsed scalar does not (see the
+corrigendum above). A2 asks a separate, narrower question: does a standard
+calibrator (scalar temperature scaling, true two-parameter Platt scaling,
+or isotonic regression) fix the raw probabilities' calibration on any one
+option channel. It reuses A1's cached logits -- zero new model calls.
+
+Spec: REQ-VERIFY-7750, REQ-VERIFY-7751
 """
 
 from __future__ import annotations
@@ -807,3 +816,725 @@ def paired_group_bootstrap_brier_delta(
             "ci95": _ci(ece_deltas),
         },
     }
+
+
+# ==========================================================================
+# A2: target-workload calibrator tournament (REQ-VERIFY-7751).
+#
+# A1 fit one collapsed scalar (-log p(accept)) into a product of experts and
+# found alpha=0.0 in every fold. A1's own post-hoc diagnostic then found the
+# RAW per-option probabilities DO carry real signal -- the collapse, not an
+# absence of signal, explains the alpha=0 result (see this module's
+# corrigendum note above, and ops/verifier_gaps.md's
+# GAP-SEMIF-ACCEPT-ENERGY-COLLAPSES-REJECT-SIGNAL-7750 entry).
+#
+# A2 asks a narrower, separate question: are the raw per-option
+# probabilities themselves miscalibrated, and does a standard calibrator
+# fix that. Every function below reuses A1's cached logits. None makes a
+# model call.
+# ==========================================================================
+
+ISOTONIC_MIN_POSITIVES = 20
+ISOTONIC_MIN_NEGATIVES = 20
+DEFAULT_ECE_CEILING = 0.05
+DEFAULT_TIE_TOLERANCE = 1e-4
+
+
+@dataclass(frozen=True)
+class A2ScoredRow:
+    """One held-out row carrying the three raw per-option logits A1 cached,
+    plus the same binary label convention used throughout this module
+    (1 = incorrect, 0 = correct)."""
+
+    question_id: str
+    label: int
+    raw_logits: dict[str, float]
+
+
+def channel_probability(raw_logits: Mapping[str, float | None], channel: str) -> float | None:
+    """Softmax probability for one declared option, from the raw 3-way logits.
+
+    Returns None when any of the three raw logits is missing or non-finite.
+    This is the same degenerate condition `readout_from_logits` guards,
+    exposed here so A2 can read a single channel's calibrated-input
+    probability without re-deriving the softmax.
+    """
+    result = readout_from_logits(raw_logits)
+    if result.probs is None:
+        return None
+    return result.probs[channel]
+
+
+def fit_two_parameter_platt(
+    logits: Sequence[float], labels: Sequence[int], n_steps: int = 300, lr: float = 0.05
+) -> dict[str, float]:
+    """Fit `calibrated = sigmoid(a * logit + b)` by gradient descent on NLL.
+
+    This is the TRUE two-parameter Platt scaling the plan asks for. It is
+    NOT the same as `PlattScaler`
+    (`python/carnot/training/platt_scaler.py`), which fits one temperature
+    only (`calibrated = sigmoid(logit / T)`, equivalent to `a = 1/T, b =
+    0`). The extra free parameter `b` is what lets this calibrator correct
+    an affine distortion that has BOTH a scale and a shift -- temperature
+    scaling alone cannot correct a shift.
+    """
+    import jax
+    import jax.numpy as jnp
+
+    z = jnp.asarray(logits, dtype=jnp.float32)
+    y = jnp.asarray(labels, dtype=jnp.float32)
+    a, b = 1.0, 0.0
+
+    def _nll(a_: float, b_: float) -> jnp.ndarray:
+        p = jax.nn.sigmoid(a_ * z + b_)
+        p = jnp.clip(p, 1e-8, 1.0 - 1e-8)
+        return -jnp.mean(y * jnp.log(p) + (1.0 - y) * jnp.log(1.0 - p))
+
+    grad_fn = jax.grad(_nll, argnums=(0, 1))
+    for _ in range(n_steps):
+        ga, gb = grad_fn(a, b)
+        a = float(jnp.clip(a - lr * float(ga), -50.0, 50.0))
+        b = float(jnp.clip(b - lr * float(gb), -50.0, 50.0))
+    return {"a": a, "b": b}
+
+
+def calibrate_two_parameter_platt(logits: Sequence[float], a: float, b: float) -> np.ndarray:
+    """Apply a fitted two-parameter Platt calibrator to raw logits."""
+    z = np.asarray(logits, dtype=np.float64)
+    return 1.0 / (1.0 + np.exp(-(a * z + b)))
+
+
+def probability_to_logit(prob: Sequence[float] | np.ndarray, eps: float = 1e-6) -> np.ndarray:
+    """Log-odds of a probability, clipped away from 0 and 1.
+
+    Temperature and Platt scaling expect a raw score on the same scale as
+    `log(p / (1 - p))` -- a well-behaved calibration input, usually a few
+    units in magnitude. The RAW per-option vocabulary logit A1 caches is
+    NOT that: it is an un-normalized language-model output score, often
+    10-20 units in magnitude, with no fixed relationship to the softmax
+    probability of one option. Feeding that raw vocabulary logit straight
+    into a calibrator saturates the sigmoid and produces garbage (measured
+    directly in this experiment: catastrophic Brier scores and NaN Platt
+    fits). The fix is to calibrate the log-odds of the ALREADY-SOFTMAXED
+    channel probability instead -- at temperature 1 this is an exact
+    pass-through (`sigmoid(probability_to_logit(p)) == p`), which is the
+    correct behaviour for an unfit calibrator.
+    """
+    p = np.clip(np.asarray(prob, dtype=np.float64), eps, 1.0 - eps)
+    return np.log(p / (1.0 - p))
+
+
+def enough_examples_for_isotonic(labels: Sequence[int]) -> bool:
+    """The sample-size floor the plan requires: at least 20 positive AND 20
+    negative examples in the training data. Below this floor, isotonic
+    regression is omitted for that fold rather than silently pooling test
+    data to reach it."""
+    labels_arr = np.asarray(labels)
+    n_pos = int((labels_arr == 1).sum())
+    n_neg = int((labels_arr == 0).sum())
+    return n_pos >= ISOTONIC_MIN_POSITIVES and n_neg >= ISOTONIC_MIN_NEGATIVES
+
+
+def fit_isotonic_calibrator(scores: Sequence[float], labels: Sequence[int]) -> Any | None:
+    """Fit an isotonic calibrator, or return None if the sample-size floor
+    is not met.
+
+    `increasing="auto"` lets scikit-learn pick the monotonic direction from
+    the training data's own Spearman sign, rather than assuming every
+    channel's raw score increases with the incorrect-label rate. A1's
+    diagnostic found `reject` does (higher probability, more likely
+    incorrect) but `escalate` does the opposite (higher probability, LESS
+    likely incorrect) -- `increasing="auto"` handles both without a
+    per-channel special case.
+    """
+    from sklearn.isotonic import IsotonicRegression
+
+    if not enough_examples_for_isotonic(labels):
+        return None
+    reg = IsotonicRegression(out_of_bounds="clip", increasing="auto")
+    reg.fit(np.asarray(scores, dtype=np.float64), np.asarray(labels, dtype=np.float64))
+    return reg
+
+
+def validate_probabilities(probs: Sequence[float]) -> None:
+    """Hard failure (SCENARIO-VERIFY-7751-DEGENERATE case c): an empty
+    array, a non-finite value, or a probability outside [0, 1] raises
+    rather than silently propagating a bad number into a metric."""
+    arr = np.asarray(probs, dtype=np.float64)
+    if arr.size == 0:
+        raise ValueError("empty probability array")
+    if not np.all(np.isfinite(arr)):
+        raise ValueError("non-finite probability")
+    if np.any(arr < 0.0) or np.any(arr > 1.0):
+        raise ValueError("probability outside [0, 1]")
+
+
+def validate_two_class_fold(labels: Sequence[int]) -> None:
+    """Hard failure (SCENARIO-VERIFY-7751-DEGENERATE case c): a training
+    fold with only one label class present raises rather than fitting a
+    calibrator that has never seen the other class."""
+    unique = {int(v) for v in labels}
+    if len(unique) < 2:
+        raise ValueError(f"one-class fold: only label(s) {unique} present")
+
+
+def max_calibration_error(probs: Sequence[float], labels: Sequence[int], n_bins: int = 10) -> float:
+    """The largest (not weighted-average) per-bin |accuracy - confidence|
+    gap, over the same fixed-width bins `ece_fixed_bins` uses. An empty bin
+    contributes nothing -- there is no gap to report, never a silent zero
+    mistaken for a perfect bin."""
+    p = np.asarray(probs, dtype=np.float64)
+    y = np.asarray(labels, dtype=np.float64)
+    n = len(p)
+    if n == 0:
+        return 0.0
+    bin_edges = np.linspace(0.0, 1.0, n_bins + 1)
+    worst = 0.0
+    for i in range(n_bins):
+        lo, hi = bin_edges[i], bin_edges[i + 1]
+        in_bin = (p >= lo) & (p < hi) if i < n_bins - 1 else (p >= lo) & (p <= hi)
+        count = int(in_bin.sum())
+        if count == 0:
+            continue
+        bin_acc = float(y[in_bin].mean())
+        bin_conf = float(p[in_bin].mean())
+        worst = max(worst, abs(bin_acc - bin_conf))
+    return float(worst)
+
+
+def reliability_table(
+    probs: Sequence[float], labels: Sequence[int], n_bins: int = 10
+) -> list[dict[str, float | int]]:
+    """Per-bin (low, high, count, mean confidence, mean accuracy, gap) rows
+    for the calibration report. Empty bins are left out of the table --
+    there is nothing to report for them."""
+    p = np.asarray(probs, dtype=np.float64)
+    y = np.asarray(labels, dtype=np.float64)
+    bin_edges = np.linspace(0.0, 1.0, n_bins + 1)
+    rows: list[dict[str, float | int]] = []
+    for i in range(n_bins):
+        lo, hi = bin_edges[i], bin_edges[i + 1]
+        in_bin = (p >= lo) & (p < hi) if i < n_bins - 1 else (p >= lo) & (p <= hi)
+        count = int(in_bin.sum())
+        if count == 0:
+            continue
+        bin_acc = float(y[in_bin].mean())
+        bin_conf = float(p[in_bin].mean())
+        rows.append(
+            {
+                "lo": float(lo),
+                "hi": float(hi),
+                "count": count,
+                "mean_confidence": bin_conf,
+                "mean_accuracy": bin_acc,
+                "gap": abs(bin_acc - bin_conf),
+            }
+        )
+    return rows
+
+
+def isotonic_preserves_order(
+    raw_scores: Sequence[float], calibrated: Sequence[float], increasing: bool = True
+) -> bool:
+    """SCENARIO-VERIFY-7751-DEGENERATE case (b): isotonic calibration must
+    never invert the rank order of two raw scores -- it can only merge
+    ties (pool adjacent violators). Sorting by the raw score and checking
+    the calibrated values never move backward is a direct, deterministic
+    test of that invariant, independent of any particular fit."""
+    order = np.argsort(np.asarray(raw_scores, dtype=np.float64), kind="stable")
+    cal_sorted = np.asarray(calibrated, dtype=np.float64)[order]
+    diffs = np.diff(cal_sorted)
+    if increasing:
+        return bool(np.all(diffs >= -1e-9))
+    return bool(np.all(diffs <= 1e-9))
+
+
+def run_calibrator_tournament(
+    rows: Sequence[A2ScoredRow],
+    channels: Sequence[str] = OPTIONS,
+    k: int = DEFAULT_KFOLD_K,
+) -> dict[str, Any]:
+    """Grouped out-of-fold calibrator tournament, per option channel.
+
+    For every channel (`accept`, `reject`, `escalate`) and every fold: fit
+    scalar temperature scaling, true two-parameter Platt scaling, and
+    (sample-size permitting) isotonic regression on the training rows
+    only, then score the held-out fold. Reuses `kfold_bucket` -- the same
+    question-ID-grouped split function A1 uses -- so no question's rows
+    ever split across a fold's train and evaluation side.
+    """
+    from carnot.training.platt_scaler import PlattScaler
+
+    fold_of: dict[str, int] = {}
+    for row in rows:
+        if row.question_id not in fold_of:
+            fold_of[row.question_id] = kfold_bucket(row.question_id, k)
+
+    per_channel: dict[str, Any] = {}
+    for channel in channels:
+        per_fold: list[dict[str, Any]] = []
+        pooled_qid: list[str] = []
+        pooled_label: list[int] = []
+        pooled_raw: list[float] = []
+        pooled_temp: list[float] = []
+        pooled_platt: list[float] = []
+        pooled_iso: list[float | None] = []
+        isotonic_omitted: list[dict[str, Any]] = []
+
+        for fold in range(k):
+            train_rows = [r for r in rows if fold_of[r.question_id] != fold]
+            eval_rows = [r for r in rows if fold_of[r.question_id] == fold]
+            if not train_rows or not eval_rows:
+                per_fold.append({"fold": fold, "status": "skipped_empty_split"})
+                continue
+
+            labels_train = [r.label for r in train_rows]
+            labels_eval = [r.label for r in eval_rows]
+            try:
+                validate_two_class_fold(labels_train)
+            except ValueError as exc:
+                per_fold.append({"fold": fold, "status": "one_class_train_fold", "error": str(exc)})
+                continue
+
+            raw_prob_train = np.asarray(
+                [channel_probability(r.raw_logits, channel) for r in train_rows], dtype=np.float64
+            )
+            raw_prob_eval = np.asarray(
+                [channel_probability(r.raw_logits, channel) for r in eval_rows], dtype=np.float64
+            )
+            validate_probabilities(raw_prob_train)
+            validate_probabilities(raw_prob_eval)
+            # Calibrate the log-odds of the SOFTMAXED channel probability,
+            # never the raw un-normalized vocabulary logit -- see
+            # `probability_to_logit`'s docstring for why the raw logit
+            # breaks both temperature and Platt scaling.
+            z_train = probability_to_logit(raw_prob_train)
+            z_eval = probability_to_logit(raw_prob_eval)
+
+            temp_scaler = PlattScaler()
+            temp_scaler.fit(z_train, np.asarray(labels_train, dtype=np.float64))
+            p_temp_eval = np.asarray(temp_scaler.calibrate(z_eval), dtype=np.float64)
+
+            platt_fit = fit_two_parameter_platt(z_train, labels_train)
+            p_platt_eval = calibrate_two_parameter_platt(z_eval, platt_fit["a"], platt_fit["b"])
+
+            iso = fit_isotonic_calibrator(raw_prob_train, labels_train)
+            if iso is None:
+                isotonic_omitted.append(
+                    {
+                        "fold": fold,
+                        "reason": "sample_size_floor",
+                        "n_pos_train": int(sum(1 for lbl in labels_train if lbl == 1)),
+                        "n_neg_train": int(sum(1 for lbl in labels_train if lbl == 0)),
+                    }
+                )
+                p_iso_eval = None
+            else:
+                p_iso_eval = np.asarray(iso.predict(raw_prob_eval), dtype=np.float64)
+                validate_probabilities(p_iso_eval)
+
+            per_fold.append(
+                {
+                    "fold": fold,
+                    "status": "ok",
+                    "n_train": len(train_rows),
+                    "n_eval": len(eval_rows),
+                    "temperature": temp_scaler.T,
+                    "platt_a": platt_fit["a"],
+                    "platt_b": platt_fit["b"],
+                    "isotonic_fit": iso is not None,
+                    "brier_raw": brier_score(raw_prob_eval, labels_eval),
+                    "brier_temperature": brier_score(p_temp_eval, labels_eval),
+                    "brier_platt2": brier_score(p_platt_eval, labels_eval),
+                    "brier_isotonic": (
+                        brier_score(p_iso_eval, labels_eval) if p_iso_eval is not None else None
+                    ),
+                    "ece_raw": ece_fixed_bins(raw_prob_eval, labels_eval),
+                    "ece_temperature": ece_fixed_bins(p_temp_eval, labels_eval),
+                    "ece_platt2": ece_fixed_bins(p_platt_eval, labels_eval),
+                    "ece_isotonic": (
+                        ece_fixed_bins(p_iso_eval, labels_eval) if p_iso_eval is not None else None
+                    ),
+                    "log_loss_raw": log_loss_score(raw_prob_eval, labels_eval),
+                    "log_loss_temperature": log_loss_score(p_temp_eval, labels_eval),
+                    "log_loss_platt2": log_loss_score(p_platt_eval, labels_eval),
+                    "log_loss_isotonic": (
+                        log_loss_score(p_iso_eval, labels_eval) if p_iso_eval is not None else None
+                    ),
+                    "mce_raw": max_calibration_error(raw_prob_eval, labels_eval),
+                    "mce_temperature": max_calibration_error(p_temp_eval, labels_eval),
+                    "mce_platt2": max_calibration_error(p_platt_eval, labels_eval),
+                    "mce_isotonic": (
+                        max_calibration_error(p_iso_eval, labels_eval)
+                        if p_iso_eval is not None
+                        else None
+                    ),
+                }
+            )
+
+            pooled_qid.extend(r.question_id for r in eval_rows)
+            pooled_label.extend(labels_eval)
+            pooled_raw.extend(float(v) for v in raw_prob_eval)
+            pooled_temp.extend(float(v) for v in p_temp_eval)
+            pooled_platt.extend(float(v) for v in p_platt_eval)
+            pooled_iso.extend(
+                (float(v) for v in p_iso_eval)
+                if p_iso_eval is not None
+                else ([None] * len(eval_rows))
+            )
+
+        per_channel[channel] = {
+            "per_fold": per_fold,
+            "isotonic_omitted": isotonic_omitted,
+            "reliability_table_raw": reliability_table(pooled_raw, pooled_label),
+            "pooled": {
+                "question_id": pooled_qid,
+                "label": pooled_label,
+                "raw": pooled_raw,
+                "temperature": pooled_temp,
+                "platt2": pooled_platt,
+                "isotonic": pooled_iso,
+            },
+        }
+    return per_channel
+
+
+def paired_group_bootstrap_calibrator_deltas(
+    pooled: Mapping[str, Sequence[Any]], n_boot: int = 2000, seed: int = 7751
+) -> dict[str, Any]:
+    """95 percent paired group bootstrap for each calibrator's Brier delta
+    against the raw (uncalibrated) probability, resampling question
+    groups with replacement -- the same paired-group-by-question-ID
+    construction A1's bootstrap uses.
+
+    Rows where isotonic was omitted for that fold (`None` in the pooled
+    `isotonic` list) are excluded from the isotonic arm's own bootstrap
+    only; they still count toward the temperature and Platt arms. This is
+    the sample-size floor's "omit, never silently pool" rule applied at
+    the bootstrap stage.
+    """
+    question_id = np.asarray(pooled["question_id"])
+    label = np.asarray(pooled["label"], dtype=np.float64)
+    raw = np.asarray(pooled["raw"], dtype=np.float64)
+    arms = {
+        "temperature": np.asarray(pooled["temperature"], dtype=np.float64),
+        "platt2": np.asarray(pooled["platt2"], dtype=np.float64),
+    }
+    iso_raw = pooled["isotonic"]
+    iso_mask = np.asarray([v is not None for v in iso_raw])
+
+    def _ci(values: np.ndarray) -> list[float]:
+        return [float(np.percentile(values, 2.5)), float(np.percentile(values, 97.5))]
+
+    def _bootstrap_arm(
+        qid: np.ndarray, y: np.ndarray, arm_probs: np.ndarray, base_probs: np.ndarray, rng_seed: int
+    ) -> dict[str, Any]:
+        rng = np.random.default_rng(rng_seed)
+        unique_groups = np.unique(qid)
+        if unique_groups.size == 0:
+            return {
+                "brier_point": None,
+                "brier_delta_vs_raw": {"point": None, "ci95": [None, None]},
+                "ece_point": None,
+                "ece_ci95": [None, None],
+            }
+        group_row_indices = {g: np.where(qid == g)[0] for g in unique_groups}
+        deltas = np.empty(n_boot, dtype=np.float64)
+        ece_vals = np.empty(n_boot, dtype=np.float64)
+        for b in range(n_boot):
+            sampled_groups = rng.choice(unique_groups, size=len(unique_groups), replace=True)
+            idx = np.concatenate([group_row_indices[g] for g in sampled_groups])
+            deltas[b] = brier_score(arm_probs[idx], y[idx]) - brier_score(base_probs[idx], y[idx])
+            ece_vals[b] = ece_fixed_bins(arm_probs[idx], y[idx])
+        return {
+            "brier_point": brier_score(arm_probs, y),
+            "brier_delta_vs_raw": {
+                "point": brier_score(arm_probs, y) - brier_score(base_probs, y),
+                "ci95": _ci(deltas),
+            },
+            "ece_point": ece_fixed_bins(arm_probs, y),
+            "ece_ci95": _ci(ece_vals),
+        }
+
+    result: dict[str, Any] = {}
+    for i, (arm_name, arm_probs) in enumerate(arms.items()):
+        result[arm_name] = _bootstrap_arm(question_id, label, arm_probs, raw, seed + i)
+
+    if bool(iso_mask.any()):
+        iso_vals = np.asarray([v if v is not None else 0.0 for v in iso_raw], dtype=np.float64)
+        result["isotonic"] = _bootstrap_arm(
+            question_id[iso_mask],
+            label[iso_mask],
+            iso_vals[iso_mask],
+            raw[iso_mask],
+            seed + len(arms),
+        )
+        result["isotonic"]["n_rows_isotonic_available"] = int(iso_mask.sum())
+    else:
+        result["isotonic"] = {
+            "omitted_entirely": True,
+            "reason": "sample_size_floor never met in any fold",
+        }
+
+    result["brier_raw_point"] = brier_score(raw, label)
+    result["ece_raw_point"] = ece_fixed_bins(raw, label)
+    result["n_boot"] = n_boot
+    result["n_groups"] = int(len(np.unique(question_id)))
+    result["n_rows"] = int(len(question_id))
+    return result
+
+
+def select_calibrator(
+    bootstrap_result: Mapping[str, Any],
+    ece_ceiling: float = DEFAULT_ECE_CEILING,
+    tie_tolerance: float = DEFAULT_TIE_TOLERANCE,
+) -> dict[str, Any]:
+    """SCENARIO-VERIFY-7751-GATE: select a calibrator only when its 95
+    percent Brier-delta interval is fully below zero AND its 95 percent
+    ECE interval's upper bound is below `ece_ceiling`. A tie (within
+    `tie_tolerance` of the best Brier point) prefers temperature scaling,
+    because it has fewer parameters. No eligible calibrator means the
+    channel stays diagnostic-only -- never forced to a pass.
+    """
+    eligible: list[tuple[str, float]] = []
+    for arm in ("temperature", "platt2", "isotonic"):
+        entry = bootstrap_result.get(arm)
+        if not entry or entry.get("omitted_entirely"):
+            continue
+        delta = entry.get("brier_delta_vs_raw", {})
+        ci = delta.get("ci95")
+        ece_ci = entry.get("ece_ci95")
+        if not ci or ci[1] is None or not ece_ci or ece_ci[1] is None:
+            continue
+        if ci[1] < 0.0 and ece_ci[1] < ece_ceiling:
+            eligible.append((arm, entry["brier_point"]))
+    if not eligible:
+        return {
+            "selected": None,
+            "verdict": "diagnostic_only_no_method_cleared_gate",
+            "eligible": [],
+        }
+    best_point = min(point for _, point in eligible)
+    tied = [name for name, point in eligible if point - best_point <= tie_tolerance]
+    selected = "temperature" if "temperature" in tied else min(eligible, key=lambda kv: kv[1])[0]
+    return {
+        "selected": selected,
+        "verdict": f"selected_{selected}",
+        "eligible": [name for name, _ in eligible],
+    }
+
+
+def calibrator_kill_check(
+    bootstrap_result: Mapping[str, Any],
+    labels: Sequence[int],
+    per_fold: Sequence[Mapping[str, Any]],
+    ece_ceiling: float = DEFAULT_ECE_CEILING,
+) -> dict[str, Any]:
+    """SCENARIO-VERIFY-7751-GATE kill criterion: drop probability-valued
+    use on this channel if no calibrator clears the ECE ceiling, the best
+    calibrator's Brier is no better than the prevalence baseline, or the
+    fitted temperature reverses direction fold to fold (a temperature
+    meaningfully below 1 in one fold and meaningfully above 1 in another --
+    the model's own over/under-confidence direction flipping, not sampling
+    noise around 1.0).
+    """
+    prevalence = float(np.mean(labels)) if len(labels) else 0.0
+    prevalence_probs = np.full(len(labels), prevalence, dtype=np.float64)
+    prevalence_brier = brier_score(prevalence_probs, labels)
+
+    live_arms = [
+        arm
+        for arm in ("temperature", "platt2", "isotonic")
+        if bootstrap_result.get(arm) and not bootstrap_result[arm].get("omitted_entirely")
+    ]
+    no_method_clears_ece = all(
+        (bootstrap_result[arm].get("ece_ci95") or [None, None])[1] is None
+        or (bootstrap_result[arm].get("ece_ci95") or [None, None])[1] >= ece_ceiling
+        for arm in live_arms
+    )
+    best_brier = min(
+        (bootstrap_result[arm]["brier_point"] for arm in live_arms),
+        default=bootstrap_result.get("brier_raw_point", 1.0),
+    )
+    brier_no_better_than_prevalence = best_brier >= prevalence_brier
+
+    ok_temps = [f["temperature"] for f in per_fold if f.get("status") == "ok"]
+    fold_to_fold_reverses = bool(
+        len(ok_temps) >= 2 and any(t < 0.9 for t in ok_temps) and any(t > 1.1 for t in ok_temps)
+    )
+
+    kill = bool(no_method_clears_ece or brier_no_better_than_prevalence or fold_to_fold_reverses)
+    return {
+        "prevalence_brier": prevalence_brier,
+        "best_calibrator_brier": best_brier,
+        "no_method_clears_ece": no_method_clears_ece,
+        "brier_no_better_than_prevalence": brier_no_better_than_prevalence,
+        "fold_to_fold_calibration_reverses": fold_to_fold_reverses,
+        "kill": kill,
+    }
+
+
+# ---- Positive controls (fully synthetic; never mixed with the real fit) ---
+
+
+def run_temperature_recovery_positive_control(
+    seed: int = 20260928, n: int = 2000, true_temperature: float = 3.0
+) -> dict[str, Any]:
+    """SCENARIO-VERIFY-7751-POSITIVE-CONTROL, lane 1: a synthetic
+    ground-truth logit is scaled by a known `true_temperature` to simulate
+    an overconfident model's raw output. Scalar temperature scaling, fit
+    on a training split, MUST recover a lower Brier score on a held-out
+    split than the raw, uncalibrated (overconfident) probability."""
+    from carnot.training.platt_scaler import PlattScaler
+
+    rng = np.random.default_rng(seed)
+    z_true = rng.normal(scale=1.5, size=n)
+    labels = (rng.uniform(size=n) < 1.0 / (1.0 + np.exp(-z_true))).astype(np.float64)
+    z_observed = z_true * true_temperature
+
+    half = n // 2
+    train_slice, test_slice = slice(0, half), slice(half, n)
+
+    scaler = PlattScaler()
+    fitted_t = scaler.fit(z_observed[train_slice], labels[train_slice])
+    p_calibrated_test = np.asarray(scaler.calibrate(z_observed[test_slice]))
+    p_raw_test = 1.0 / (1.0 + np.exp(-z_observed[test_slice]))
+
+    brier_raw = brier_score(p_raw_test, labels[test_slice])
+    brier_calibrated = brier_score(p_calibrated_test, labels[test_slice])
+    return {
+        "true_temperature": true_temperature,
+        "fitted_temperature": fitted_t,
+        "brier_raw_overconfident": brier_raw,
+        "brier_temperature_calibrated": brier_calibrated,
+        "passed": bool(brier_calibrated < brier_raw),
+        "n": n,
+    }
+
+
+def run_platt_affine_recovery_positive_control(
+    seed: int = 20260929, n: int = 2000, true_scale: float = 2.0, true_shift: float = -1.5
+) -> dict[str, Any]:
+    """SCENARIO-VERIFY-7751-POSITIVE-CONTROL, lane 2: a synthetic
+    ground-truth logit is distorted by a known affine transform (a scale
+    AND a shift). Two-parameter Platt scaling MUST recover a lower Brier
+    score on a held-out split than scalar temperature scaling alone --
+    temperature scaling has no free parameter to correct the shift term,
+    so it must leave residual bias that two-parameter Platt corrects."""
+    from carnot.training.platt_scaler import PlattScaler
+
+    rng = np.random.default_rng(seed)
+    z_true = rng.normal(scale=1.5, size=n)
+    labels = (rng.uniform(size=n) < 1.0 / (1.0 + np.exp(-z_true))).astype(np.float64)
+    z_observed = true_scale * z_true + true_shift
+
+    half = n // 2
+    train_slice, test_slice = slice(0, half), slice(half, n)
+
+    temp_scaler = PlattScaler()
+    temp_scaler.fit(z_observed[train_slice], labels[train_slice])
+    p_temp_test = np.asarray(temp_scaler.calibrate(z_observed[test_slice]))
+
+    platt_fit = fit_two_parameter_platt(z_observed[train_slice], labels[train_slice])
+    p_platt_test = calibrate_two_parameter_platt(
+        z_observed[test_slice], platt_fit["a"], platt_fit["b"]
+    )
+
+    brier_temp = brier_score(p_temp_test, labels[test_slice])
+    brier_platt2 = brier_score(p_platt_test, labels[test_slice])
+    return {
+        "true_scale": true_scale,
+        "true_shift": true_shift,
+        "fitted_a": platt_fit["a"],
+        "fitted_b": platt_fit["b"],
+        "brier_temperature_only": brier_temp,
+        "brier_two_parameter_platt": brier_platt2,
+        "passed": bool(brier_platt2 < brier_temp),
+        "n": n,
+    }
+
+
+# ---- Degenerate-case checks (real production code paths, not test-only) ---
+
+
+def check_constant_probability_calibration_is_a_no_op() -> dict[str, Any]:
+    """SCENARIO-VERIFY-7751-DEGENERATE case (a): a constant raw
+    probability/logit must remain constant after every calibrator -- no
+    calibrator may manufacture variation from a single repeated value."""
+    from carnot.training.platt_scaler import PlattScaler
+
+    n = 100
+    z_const = np.full(n, 0.7)
+    labels = np.array([0, 1] * (n // 2))
+
+    temp_scaler = PlattScaler()
+    temp_scaler.fit(z_const, labels)
+    p_temp = np.asarray(temp_scaler.calibrate(z_const))
+    temp_stays_constant = bool(np.ptp(p_temp) < 1e-9)
+
+    platt_fit = fit_two_parameter_platt(z_const, labels)
+    p_platt = calibrate_two_parameter_platt(z_const, platt_fit["a"], platt_fit["b"])
+    platt_stays_constant = bool(np.ptp(p_platt) < 1e-9)
+
+    prob_const = np.full(n, 0.5)
+    iso = fit_isotonic_calibrator(prob_const, labels)
+    iso_stays_constant = True
+    if iso is not None:
+        p_iso = np.asarray(iso.predict(prob_const))
+        iso_stays_constant = bool(np.ptp(p_iso) < 1e-9)
+
+    return {
+        "temperature_stays_constant": temp_stays_constant,
+        "platt2_stays_constant": platt_stays_constant,
+        "isotonic_stays_constant": iso_stays_constant,
+        "passes": bool(temp_stays_constant and platt_stays_constant and iso_stays_constant),
+    }
+
+
+def check_isotonic_no_false_rank_improvement(seed: int = 20260930, n: int = 200) -> dict[str, Any]:
+    """SCENARIO-VERIFY-7751-DEGENERATE case (b): isotonic regression must
+    never invert the raw score's rank order. A calibrator fit on a
+    genuine-signal training split, then applied to a FRESH held-out score
+    set, must preserve that held-out set's own raw order."""
+    rng = np.random.default_rng(seed)
+    raw_scores = rng.uniform(size=n)
+    labels = (rng.uniform(size=n) < raw_scores).astype(np.float64)
+
+    half = n // 2
+    iso = fit_isotonic_calibrator(raw_scores[:half], labels[:half])
+    if iso is None:
+        return {
+            "order_preserved": None,
+            "passes": False,
+            "error": "fixture hit the sample-size floor",
+        }
+    calibrated_eval = np.asarray(iso.predict(raw_scores[half:]))
+    order_preserved = isotonic_preserves_order(raw_scores[half:], calibrated_eval, increasing=True)
+    return {"order_preserved": order_preserved, "passes": order_preserved}
+
+
+def check_hard_failures_are_raised() -> dict[str, Any]:
+    """SCENARIO-VERIFY-7751-DEGENERATE case (c): empty input, a one-class
+    fold, and an out-of-[0, 1] probability must each raise -- never
+    silently return a plausible-looking number."""
+    results: dict[str, bool] = {}
+
+    try:
+        validate_probabilities([])
+        results["empty_probabilities_raises"] = False
+    except ValueError:
+        results["empty_probabilities_raises"] = True
+
+    try:
+        validate_two_class_fold([1, 1, 1, 1])
+        results["one_class_fold_raises"] = False
+    except ValueError:
+        results["one_class_fold_raises"] = True
+
+    try:
+        validate_probabilities([0.2, 1.5, 0.3])
+        results["out_of_range_probability_raises"] = False
+    except ValueError:
+        results["out_of_range_probability_raises"] = True
+
+    return {**results, "passes": all(results.values())}
