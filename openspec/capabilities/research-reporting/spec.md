@@ -84194,3 +84194,38 @@ real CLI, cold replay the candidate in a fresh process, and run adversarial and
 strict row readers. Each child exit and log hash SHALL be retained. Failed
 required checks SHALL disqualify the terminal artifact and zero readiness.
 The full Python suite SHALL run once as a separate repository-health check.
+
+## REQ-REPORT-7808: Reconcile fourteen V678 outcomes without promoting missing science
+
+Exp7808 SHALL compare the preserved V678 design table, embedded JSON, and
+matching staged or active YAML before reading results. It SHALL retain all
+fourteen ordered tasks, including its own planned output, without hashing its
+own output as an input. Every declared producer SHALL have an exact path,
+hash or explicit absence, verdict, queue receipt distinction, and gate operand.
+Disqualified and missing science SHALL not contribute to benefit claims.
+The Exp7807 raw-level audit SHALL control decision and learning claims. ARC
+and service claims SHALL use their primitive rows when available. The stable
+publication gate SHALL supply G1 through G4 without alteration.
+
+### SCENARIO-REPORT-7808-CUSTODY
+
+The active V678 YAML and immutable snapshots agree across all contract fields.
+If a declared science file is absent, its queue receipt is recorded separately.
+The capstone completes with `complete_blocked_required_v678_evidence`, a
+blocked class, an exact failed operand, and null unmeasured benefit gates.
+
+### SCENARIO-REPORT-7808-DECISIONS
+
+Each mechanism has a continue, retire, or await_named_prerequisite decision
+and a falsifiable trigger. Repeated unchanged verdicts retire their exact
+scope. Exposed source families, circular fixtures, absent hidden games, and
+vendor hardware estimates cannot establish generalization or device benefit.
+
+### SCENARIO-REPORT-7808-TERMINAL
+
+The new entrypoint SHALL run explicit affected tests, complete changed-code
+statement coverage, static and spec checks, the full Python suite, a real CLI
+end-to-end run, a fresh-process cold reduction, adversarial verification, and
+strict row consistency. It SHALL retain exact argv, exits, and durable log
+hashes. Failed required validation disqualifies the artifact and zeros all
+readiness fields. The output SHALL be written atomically after validation.
