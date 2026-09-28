@@ -46549,3 +46549,89 @@ be silently repaired.
 
 Given ambiguous quotations, absent answer spans, or malformed JSON, the
 reducer records invalid syntax or address and preserves the family denominator.
+
+# REQ-VERIFY-7750: Readout-Energy Product-of-Experts Calibration (A1)
+
+**Origin.** `docs/research-notes/semif-ebm-arc-experiment-plan-2026-09-20.md`
+section A1, operator-approved through section 12.4. A SemIf-style option
+readout turns a declared option set into one conditional energy over those
+options, with no free text generation. This requirement tests whether that
+readout energy adds real calibration value on top of the existing PCIB
+features and the existing Gibbs verifier energy, via a non-negative product
+of experts (PoE).
+
+The verifier SHALL compute a readout energy from a single forward pass over
+one prompt per row. The prompt SHALL declare three options: `accept`,
+`reject`, and `escalate`. The verifier SHALL read all three option logits
+from that one pass. It SHALL NOT generate free text to reach a decision.
+
+The verifier SHALL combine the readout energy with the two static PCIB
+features and a trained Gibbs verifier energy via:
+
+```
+E_joint(row) = alpha * E_readout(row) + beta * E_verifier(row)
+```
+
+`alpha` and `beta` SHALL be non-negative and SHALL be fit only on training
+folds, never on the fold under evaluation. The verifier SHALL preserve the
+question-ID grouping used by
+`calibrated_decision_benchmark._split_features` so no question splits
+across train and held-out data.
+
+## SCENARIO-VERIFY-7750-POE: Product of experts beats each single expert
+
+**Given** the `data/fover_corpus_v4.json` corpus (6,548 rows, question-ID
+grouped) with cached readout logits, the two PCIB features, and a trained
+Gibbs verifier energy
+**When** the harness runs grouped out-of-fold cross-validation, fitting
+non-negative `alpha` and `beta` per fold and reporting a paired group
+bootstrap interval for the Brier delta
+**Then** the artifact SHALL report a `poe_brier_delta` (PoE minus the better
+single expert) with a 95 percent paired interval, ECE, log loss, AUROC,
+AURC, and coverage at 5 percent selective error, plus `alpha` and `beta` for
+every fold
+**And** the run SHALL pass only if the 95 percent interval for
+`poe_brier_delta` is fully below zero against both single experts and ECE
+does not worsen by more than 0.01.
+
+## SCENARIO-VERIFY-7750-POSITIVE-CONTROL: A noisy gold feature must be caught
+
+**Given** a synthetic lane with a noisy copy of the independent gold label
+joined as a readout-shaped feature, kept fully separate from the real fit
+**When** the PoE combiner is fit on this synthetic lane
+**Then** the fitted `alpha` for the noisy-gold feature SHALL be strictly
+positive and the PoE Brier score SHALL beat a verifier-only baseline with no
+signal
+**And** the real fit's pass/fail gate SHALL depend on this control passing.
+
+## SCENARIO-VERIFY-7750-DEGENERATE: Three degenerate cases fail closed
+
+**Given** (a) a readout that emits the identical energy for every row, (b) a
+trained Gibbs verifier whose held-out energy is degenerate (constant across
+every row), or (c) a single forward pass that returns a missing or
+non-finite logit for one of the three declared options
+**When** the verifier processes each case
+**Then** case (a) SHALL leave the joint ranking identical to the
+verifier-only ranking up to an additive constant (a Spearman rank
+correlation of 1.0 between joint order and verifier-only order)
+**And** case (b) SHALL be rejected before any PoE fit is attempted, the same
+guard `calibrated_decision_benchmark.recompute_calibrated_decision_metrics`
+already applies to a degenerate weight set
+**And** case (c) SHALL force the row's decision to `escalate`, never
+`accept`, and SHALL exclude that row's energy from the real fit rather than
+substitute a fabricated value.
+
+## SCENARIO-VERIFY-7750-HEADROOM: A saturated pool never becomes a selection claim
+
+**Given** the FoVer corpus has no multi-candidate selection structure and a
+prior static-decision experiment already found near-universal accept
+behavior and 22 conflicting cells among 3,950 rows
+**When** the artifact reports on top-one selection lift
+**Then** it SHALL either report a headroom-positive candidate pool with a
+positive confidence interval, or SHALL mark the selection claim
+`FALSE_NEGATIVE_RISK` / not-applicable and SHALL NOT headline a selection
+win from this corpus alone.
+
+Implementation status: specified 2026-09-28. Pending: experiment execution
+and reconciliation of Implementation Status by the executing agent/conductor
+per CLAUDE.md's spec-anchored workflow.
