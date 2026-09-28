@@ -8996,3 +8996,51 @@ finish fails validity without dropping the unit.
 
 A fresh reader reopens exact raw request and response bytes, recomputes the
 paired rows, and rejects a changed hash, duplicate key or changed metric.
+
+## REQ-VERIFY-7797: Qualify bounded numerical heads and immutable online queries
+
+Exp7797 SHALL run the nine registered evidence-view heads on six fixed positive
+and negative fixture families using seeds 67801, 67802 and 67803. It SHALL
+freeze a two-epoch miniature of the sixteen-epoch, learning-rate-0.01 natural
+recipe, fit no natural labels, reject role overlap or label-bearing features,
+and retain all per-family, seed and arm rows. Every head SHALL have a finite
+nonzero gradient, changed parameters, normalized probabilities, bounded
+temperature, a save/load-identical decision and at most 4096 parameters
+including static predicates and dual variables. Constrained heads SHALL prove
+projected dual behavior and a nonzero dual effect; nonfinite inputs SHALL fail.
+
+Exp7797 SHALL exercise the real durable bank and OnlineRunner under queued
+next-block and immediate next-query feedback. Each query SHALL pin one model
+and bank version. Delayed feedback, overflow, duplicate release, false
+admission rollback, candidate compilation and hard-exit restart SHALL retain
+durable receipts, including queue, RNG, pending commits and credits.
+
+Exp7797 SHALL use task-owned protocols, an explicit frozen affected scope,
+private coverage shards with retained exits and durable log hashes. A missing
+external producer SHALL yield a complete blocked verdict with its exact failed
+operand. A failed required current validation SHALL yield a disqualified
+verdict and zero training and online readiness. Historical Exp7784 receipts
+SHALL remain unchanged. Fixture success supports only circular-positive
+mechanics; natural probability, decision, retention and efficiency benefit
+SHALL remain null.
+
+### SCENARIO-VERIFY-7797-NUMERICAL
+
+Given the six sealed fixture families and three seeds, the two-epoch miniature
+trains all nine heads with finite gradients, changed parameters, normalized
+outputs and identical decisions after reload. Train/evaluation role poisoning,
+nonfinite features and parameter-budget excess fail closed.
+
+### SCENARIO-VERIFY-7797-ONLINE
+
+Given the real bank and OnlineRunner, a query observes one bank/model version;
+next-query and next-block commit schedules preserve delayed feedback and
+durable restart. Duplicates, overflow, rejected admission and child hard exit
+cannot silently acknowledge a commit.
+
+### SCENARIO-VERIFY-7797-TERMINAL
+
+Given a frozen current candidate, omission of a transitive consumer, failed
+coverage, stale log or undeclared broad test child forces both readiness scores
+to zero. A fresh process reduces raw rows, and both terminal readers inspect
+the exact candidate before atomic publication.
