@@ -19040,3 +19040,5 @@ code |
 | 2026-09-29 15:59 UTC | Bind twelve tasks and executable validation scopes | OK | 102 passed, 1 warning in 11.92s |
 | 2026-09-29 16:11 UTC | Qualify source custody with measured coverage and  | OK | 96 passed, 1 warning in 14.30s |
 | 2026-09-29 16:37 UTC | Seal the repaired intervention runner under an exp | OK | 97 passed, 1 warning in 10.69s |
+| 2026-09-29 16:39 UTC | Fit calibrated source energies against same-inform | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7880-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 16:41 UTC | Measure typed decision value and abstention at equ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7882-energy-fit, exp7882-energy-fit, exp7882-energy-fit) |
