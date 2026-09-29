@@ -85148,3 +85148,56 @@ separate task_id, raw per-task rows, exact byte hashes, explicit validation
 receipts and no scientific benefit claim. Cold replay rejects changed source,
 row or sealed-log bytes. A missing external prerequisite terminates blocked;
 failed owned validation terminates disqualified.
+
+## REQ-REPORT-7839: Qualify reusable source interventions and import provenance
+
+Exp7839 SHALL preserve Exp7828's failed worktree import receipt and its
+disqualified verdict. The new worktree import command SHALL print a nonempty
+JSON `resolved_imports` map of actual module files below this worktree's
+`python` directory. A zero exit with a success string, empty map, missing
+module, or site-package path SHALL fail. Pure byte-span, request and reply
+operations SHALL live in `carnot.verify.source_interventions`, with no import
+of numbered experiment dispatchers. The first answer sentence and all
+surviving source bytes and IDs SHALL remain unchanged. A disjoint control
+SHALL match witness token length within 25 percent through an injected count;
+an absent control excludes that pair.
+
+The frozen affected source closure is `python/carnot/verify/source_interventions.py`,
+`python/carnot/experiment_7839_v681_intervention_protocol.py`,
+`scripts/experiments/experiment_7839_v681_intervention_protocol.py` and
+`python/carnot/reporting/experiment_7303_validation_scope.py`. The affected
+test closure is `tests/python/test_experiment_7839_v681_intervention_protocol.py`,
+`tests/python/test_experiment_7303_v642_validation_scope.py`,
+`tests/python/test_experiment_7800_v678_counter_evidence_protocol.py`,
+`tests/python/test_experiment_7814_v679_counter_evidence_protocol.py`, and
+`tests/python/test_experiment_7828_v680_counter_evidence_protocol.py`.
+The immutable task manifest SHALL freeze exact argv, deadlines, and classes
+for worktree_imports, affected_pytest, changed_coverage, ruff_check,
+ruff_format, mypy, scoped_spec, cli_e2e, cold_replay,
+adversarial_verify, strict_rows, and the separate repository_health_180s
+diagnostic. The coverage command SHALL name completed unit and CLI data files
+and require 100 percent statement coverage of added code. Historical failed
+obligations remain visible and cannot be relabeled by this scope.
+
+### SCENARIO-REPORT-7839-IMPORTS
+
+Given the exact Exp7828 success-string log, its zero exit and empty import
+map still fail. The new command reports actual worktree paths; a forged or
+empty map, missing module, or external path fails provenance checking.
+
+### SCENARIO-REPORT-7839-BYTES
+
+UTF-8 deletion retains the original answer and all other source bytes and
+sentence IDs. Requests enforce the 8192-token context bound and 256-token
+output bound. Malformed, truncated, timed-out, wrong-model, and absent-witness
+scripted replies remain failed or unstarted primitive rows. Twenty-four
+independent fixture families exercise all three arms with no model call.
+
+### SCENARIO-REPORT-7839-TERMINAL
+
+The real CLI uses a private output root and the frozen dispatcher. Forty-eight
+evaluation families, label sidecar, protocol bytes, per-arm status and all
+required receipts enter the candidate. Cold replay and terminal readers inspect
+the same candidate. Required failure disqualifies and zeros readiness; missing
+external evidence terminates blocked with exact operands. Fixture success is
+circular-positive and leaves scientific benefit unmeasured.
