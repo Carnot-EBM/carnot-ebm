@@ -18933,3 +18933,6 @@ code |
 | 2026-09-29 00:07 UTC | Repair source-intervention import receipts and qua | OK | 86 passed, 1 warning in 8.90s |
 | 2026-09-29 00:09 UTC | Train source-conditioned energies and freeze calib | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7838-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
 | 2026-09-29 00:11 UTC | Measure calibrated decisions against same-informat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
+| 2026-09-29 00:11 UTC | Measure bounded Qwen source sensitivity with match | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7839-intervention-protocol.intervention_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-29 00:14 UTC | Measure delayed constraint additions and finite fe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
+| 2026-09-29 00:14 UTC | Compare disagreement abstention at matched retaine | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
