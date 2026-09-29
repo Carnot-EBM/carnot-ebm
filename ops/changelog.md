@@ -21059,3 +21059,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: Seal the repaired intervention runner under an explicit command manifest (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7881_v684_intervention_protocol.json
 - 2026-09-29: Reduce new live supervisor outcomes with explicit tested paths (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_verification; results/experiment_7887_v684_arc_supervisor_delta.json
 - 2026-09-29: Preserve all board obligations and bind current workload evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7889_v684_hardware_evidence.json
+- 2026-09-29: Independently reduce twelve outcomes and decide the three PRD gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_v684_validation; results/experiment_7890_v684_capstone.json
