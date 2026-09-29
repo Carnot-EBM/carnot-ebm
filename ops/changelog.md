@@ -20993,3 +20993,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-28: Qualify a reusable public-source boundary with complete CLI coverage (⚠️ Blocked) — honest_verdict=complete_blocked_required_source_evidence; results/experiment_7838_v681_source_boundary.json
 - 2026-09-29: Repair source-intervention import receipts and qualify the real dispatcher (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7839_v681_intervention_protocol.json
 - 2026-09-29: Refine ARC generalization only from new outcome-bearing supervisor receipts (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7845_v681_arc_supervisor_delta.json
+- 2026-09-29: Preserve board continuity and bound traffic-sensitive acceleration (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7847_v681_hardware_evidence.json
