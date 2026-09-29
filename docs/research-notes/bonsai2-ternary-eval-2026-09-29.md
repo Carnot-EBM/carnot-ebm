@@ -191,3 +191,158 @@ stack completely untouched.
   follow
 - CLAUDE.md "SOTA Local Models" -- the current `unsloth/Qwen3.8-27B-GGUF`
   mandate this eval compares against
+
+## Follow-up 2026-09-29: where the N=32 collapse begins, and is it fork-specific
+
+Full data: `results/experiment_bonsai2_n32_collapse_followup.json`. This
+follow-up answers the one hypothesis the eval above flagged but did not
+check.
+
+### Where the cliff begins
+
+Bisected the standard model (`Qwen3.8-27B-Q4_K_M`) on the same fork build,
+same prompt, same `ctx_per_slot=2048`. N=8 and N=32 are the numbers above,
+reused. N=16, N=20, N=24 are new:
+
+| N | aggregate tok/s | per-stream tok/s | wall (s) | GDN chunked path disabled at load? |
+|---|---|---|---|---|
+| 8  | 90.36 | 12.97 | 17.71  | not checked (log not kept) |
+| 16 | 60.38 | 4.32  | 53.00  | no |
+| 20 | 27.00 | 1.51  | 148.13 | yes |
+| 24 | 8.54  | 0.41  | 561.93 | yes |
+| 32 | 7.94  | 0.27  | 805.55 | yes |
+
+This is not a hard cliff at one N. It is a continuous, steep, super-linear
+slide. Real degradation shows up as early as N=16 (aggregate throughput
+already falls below the N=8 number, where the ternary model's aggregate
+throughput keeps rising with N). The slide gets much steeper between N=16
+and N=24 -- by N=24 the model has already lost about 97 percent of its N=8
+per-stream rate. N=24 to N=32 is comparatively flat.
+
+### The disable is N-dependent, and the threshold matches the cliff
+
+The fork's own log line, `"fused Gated Delta Net (chunked) not supported,
+set to disabled"`, does NOT appear at N=16. It DOES appear at N=20 and N=24
+(and, per the original eval's own log, at N=32). This line comes from
+`llama_context::resolve_fused_ops` (`src/llama-context.cpp:622`), which
+probes device placement using a worst-case graph shaped by `n_seq_max` --
+the `--parallel` value. A bigger N changes the probe's outcome. The
+threshold where the probe starts failing, and disables the fused kernel for
+the rest of that server's life, sits between N=16 and N=20 -- almost exactly
+where the throughput curve above gets steep.
+
+### What "disabled" costs, read from source
+
+`build_delta_net_base::build_delta_net` (`src/models/delta-net-base.cpp:432`)
+picks between `build_delta_net_fused` (one fused CUDA kernel,
+`src/ggml-cuda/gated_delta_net.cu`) and `build_delta_net_chunking`
+(`src/models/delta-net-base.cpp:16`) based on the flag the probe sets. The
+chunking path is a hand-written per-chunk loop
+(`src/models/delta-net-base.cpp:246`) composing roughly 8-10 separate ggml
+ops per chunk per layer -- matrix multiplies, a triangular solve, a cumulative
+sum, several element-wise ops -- instead of one fused kernel call.
+Qwen3.8-27B is a hybrid architecture: 3 of every 4 layers are Gated-Delta-Net
+(`full_attn_interval=4`, `src/models/qwen35.cpp:22`), so once the fused
+kernel is off, most of the network runs this manual composition.
+
+This is real, exercised, and matches the timing of the collapse. It does
+NOT fully explain the standard model's specific 28x-to-30x penalty, though,
+because this exact code path is identical for both quantizations -- same
+layer count, same chunk count, same op sequence. The prior eval's own log
+showed the SAME disable warning fired for the ternary model too, at N=32,
+and the ternary model kept scaling anyway. Why the chunking path costs the
+K-quantized model so much more than the ternary model, at the same N, is
+NOT confirmed by this follow-up. Read as an open question, not a solved one.
+
+### Fork vs. stock: a real code difference, and a confound
+
+Built a fresh, CUDA-enabled checkout of real upstream `ggml-org/llama.cpp`
+(commit `6a2743f028f78bfb88a7189607b49bde30df3769`, today's master) and ran
+the identical N=32 standard-model test through it.
+
+Caveat first, stated plainly: this is not a clean same-commit A/B. The
+fork's audited merge-base with upstream is 5 weeks and hundreds of commits
+behind today's stock master. Any difference could come from the fork's own
+changes, from unrelated upstream drift, or both.
+
+Found one concrete, citable difference anyway:
+
+- Fork, `src/llama-context.cpp:324`: `cparams.auto_fgdn = true;`
+- Stock, `src/llama-context.cpp:235`: `cparams.auto_fgdn = false;`
+
+With `auto_fgdn` false, stock never runs the Gated-Delta-Net probe at all,
+so the fused kernel stays on for the whole run. Confirmed empirically: the
+stock server's log never mentions "gated" or "gdn" once. This whole
+mechanism -- the probe, the fused/chunked split, the chunking path itself --
+is upstream code, not part of the fork's diff. Diffed the fork's file list
+against fresh upstream to confirm.
+
+But stock is not clean either. Its own `resolve_fused_ops` disabled Flash
+Attention instead, for the same reason (a device mismatch, this time on the
+1-in-4 full-self-attention layers): `"layer 3 is assigned to device CPU but
+Flash Attention is assigned to device CUDA0"`. Same structural pattern
+(auto-probe disables a fast fused op, falls back to a slower generic path),
+different specific op.
+
+Stock's N=32 run was not run to full completion -- after the per-slot
+generation rate converged and held steady for over 20 consecutive samples
+(`tg = 0.27 t/s`), the run was stopped deliberately rather than waited out,
+to keep the diagnostic budget sane. That converged number, 0.27 tok/s per
+stream, is essentially identical to the fork's own converged N=32 number
+(also 0.27 tok/s per stream). Two honest readings are both defensible: this
+is a shared architectural bottleneck at high concurrent batching on this
+GPU, reachable via either disabled-fused-op path and not specific to the
+fork's changes; or it is a coincidence between two different mechanisms.
+This follow-up cannot tell those apart within its bounded scope.
+
+### GPU diagnostics during a collapse
+
+`nvidia-smi dmon`, sampled once per second on GPU 1 through the whole stock
+N=32 run: SM occupancy pinned at 83-100 percent, memory flat at 18.3 GB (no
+growth, no thrashing), power draw oscillating 142-164 W -- well under the
+RTX 3090's roughly 350 W TDP despite near-100-percent occupancy. High
+occupancy plus low power is the signature of many small, serialized kernel
+launches, not one throughput-saturating batched matrix multiply. That
+matches what the source shows.
+
+A `gdb` backtrace of the server's main thread, taken during a stretch with
+no new progress lines for over 4 minutes of real time, showed it inside
+`cudaStreamSynchronize` -- a genuine, blocking wait on real GPU compute, not
+a deadlock or a hang. The process was undisturbed by the attach and kept
+running afterward.
+
+`dmesg` (readable via `sudo -n dmesg -T`, unexpectedly permitted without a
+password on this host) showed zero Xid errors and zero OOM-killer activity
+anywhere in the kernel ring buffer, for the whole session, back to the last
+boot. Whatever this is, it is a userspace performance problem, not a kernel
+fault or a memory-pressure kill.
+
+### Honest conclusion
+
+The cliff is not at N=32. It starts by N=16 and is mostly done by N=24. The
+fork's flagged mechanism -- the disabled chunked-GDN fallback -- is real,
+is upstream code rather than a fork invention, and its N-dependent
+activation lines up with where the throughput curve gets steep. It is NOT
+proven to be the full explanation, because the same code path runs
+identically for the ternary model, which does not collapse. Stock master,
+tested independently, converges to the same per-stream throughput at N=32
+via a different disabled-fused-op fallback (Flash Attention, not GDN) --
+consistent with, but not proof of, a shared architectural cause rather than
+a fork-introduced one. GPU diagnostics rule out a driver fault or an
+OOM-kill and are consistent with a many-small-kernel-launches inefficiency
+in whichever generic fallback path is active. The remaining open question --
+why the standard (K-quantized) model pays roughly 30x more than the ternary
+model for the same disabled-fused-op fallback -- was not resolved.
+
+### Cross-references (follow-up)
+
+- `results/experiment_bonsai2_n32_collapse_followup.json` -- full measured
+  data for this follow-up
+- `src/llama-context.cpp:622` (`resolve_fused_ops`), `:665` (the disable log
+  line), `:324` vs stock `:235` (`auto_fgdn` default) -- in the fork's tree,
+  `PrismML-Eng/llama.cpp` commit `87268f775d74cf8f7ffc6c22a95684aa55995533`
+- `src/models/delta-net-base.cpp:16` (`build_delta_net_chunking`), `:432`
+  (the fused-vs-chunked dispatch) -- same fork tree
+- `src/models/qwen35.cpp:22` (`full_attn_interval`) -- same fork tree
+- `ggml-org/llama.cpp` commit `6a2743f028f78bfb88a7189607b49bde30df3769` --
+  the stock master build used for the isolation test

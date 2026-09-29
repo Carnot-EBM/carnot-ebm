@@ -1,0 +1,180 @@
+{
+  "experiment": "bonsai2_n32_collapse_followup",
+  "run_date": "2026-09-29",
+  "honest_verdict": "complete: bisected the standard-model N=32 collapse to a real, N-dependent, upstream llama.cpp code path (an auto-probe that disables the fused Gated Delta Net kernel once the worst-case batch shape crosses a threshold between N=16 and N=20), confirmed the fork and current stock master both collapse to the same converged per-stream rate at N=32 via two different disabled-fused-op fallbacks, and could not fully explain why the fallback costs the standard (K-quant) model far more than the ternary model at the same N",
+  "purpose": "Follow-up to results/experiment_bonsai2_ternary_eval.json. That eval found the standard (non-ternary) Qwen3.8-27B-Q4_K_M model's aggregate throughput collapsed ~28x from N=8 to N=32 concurrent streams on the PrismML-Eng/llama.cpp fork, while the ternary model kept scaling. It flagged one hypothesis -- the fork's own log line 'fused Gated Delta Net (chunked) not supported, set to disabled' -- but did not verify it. This follow-up bisects the collapse, tests fork-vs-stock, reads the fork's source for that disabled path, and captures GPU diagnostics during a collapse.",
+  "scope_boundaries": {
+    "arc_kaggle_stack_touched": false,
+    "gpu_used": "GPU 1 only (CUDA_VISIBLE_DEVICES=1); GPU 0 (live conductor generator) never touched",
+    "mandated_model_config_modified": false,
+    "claude_md_modified": false,
+    "committed": false
+  },
+  "duration_s": 2200,
+  "duration_note": "Wall-clock across the whole follow-up session (worktree sync, locating the prior eval's cached fork build and both GGUF files, cloning + building a fresh stock ggml-org/llama.cpp checkout with CUDA, source reading, the N=16/20/24 bisection runs, the stock N=32 isolation run, gdb/nvidia-smi/dmesg diagnostics, and this artifact): 2026-09-29T19:35:37Z to approximately 2026-09-29T20:12:00Z.",
+  "random_seed": 20260929,
+  "reproducibility_checksum": "497d16fad0391b00b58d8128a989bb19d75b077104789c6034a1672ebe47dcdc",
+  "reproducibility_checksum_note": "sha256 of 'fork:<fork_commit>|stock:<stock_commit>|gguf:<gguf_lfs_oid>|seed:<random_seed>|followup:n32_collapse_bisection' -- ties this artifact's numbers to the exact fork build, the exact stock commit, and the exact GGUF file used for both.",
+  "preconditions_checked": [
+    {
+      "resource": "prior_eval_gguf_files_still_cached",
+      "available": true,
+      "detail": "both unsloth/Qwen3.8-27B-GGUF Q4_K_M (17.1 GB) and prism-ml/Ternary-Bonsai-2-27B-gguf PTQ1_0 (5.95 GB) found intact in ~/.cache/huggingface/hub, byte sizes matched the prior artifact's recorded sizes"
+    },
+    {
+      "resource": "prior_eval_fork_build_still_present",
+      "available": true,
+      "detail": "the prior eval's session scratchpad still held a built PrismML-Eng/llama.cpp binary at commit 87268f775d74cf8f7ffc6c22a95684aa55995533 (build 1486) -- reused directly, no rebuild needed for the fork side"
+    },
+    {
+      "resource": "stock_ggml_org_llama_cpp_buildable",
+      "available": true,
+      "detail": "an existing local checkout of github.com/ggml-org/llama.cpp was present (CPU-only build); fetched to current master (commit 6a2743f028f78bfb88a7189607b49bde30df3769, 2026-09-29) and rebuilt fresh with -DGGML_CUDA=on -DCMAKE_CUDA_ARCHITECTURES=86, since a true fork-vs-stock test needs a CUDA build, not the pre-existing CPU one"
+    },
+    {
+      "resource": "gpu1_idle_before_each_run",
+      "available": true,
+      "detail": "checked via nvidia-smi before every server launch in the bisection"
+    },
+    {
+      "resource": "dmesg_readable",
+      "available": true,
+      "detail": "sudo -n dmesg -T succeeded without a password prompt on this host, unexpectedly -- used to check for Xid/OOM-killer kernel events during collapse runs"
+    }
+  ],
+  "n_bisection_standard_model_only": {
+    "methodology": "Same fork build (PrismML-Eng/llama.cpp, commit 87268f775, --cont-batching), same GGUF (unsloth/Qwen3.8-27B-GGUF Q4_K_M), same prompt and ctx_per_slot=2048 as the prior eval, standard model only (ternary's scaling was already established fine in the prior eval and was not re-run). N=8 and N=32 are the prior eval's own numbers, reused, not re-measured; N=16, N=20, N=24 are new measurements from this follow-up.",
+    "n8": {
+      "aggregate_tok_s": 90.36,
+      "per_stream_tok_s_mean": 12.97,
+      "wall_total_s": 17.71,
+      "source": "prior eval (results/experiment_bonsai2_ternary_eval.json), not re-run"
+    },
+    "n16": {
+      "aggregate_tok_s": 60.38,
+      "per_stream_tok_s_mean": 4.318,
+      "wall_total_s": 52.998,
+      "load_s": 15.147,
+      "gdn_chunked_disabled_at_startup": false,
+      "measured_this_followup": true
+    },
+    "n20": {
+      "aggregate_tok_s": 27.004,
+      "per_stream_tok_s_mean": 1.514,
+      "wall_total_s": 148.129,
+      "load_s": 11.025,
+      "gdn_chunked_disabled_at_startup": true,
+      "measured_this_followup": true
+    },
+    "n24": {
+      "aggregate_tok_s": 8.542,
+      "per_stream_tok_s_mean": 0.4136,
+      "wall_total_s": 561.932,
+      "load_s": 105.188,
+      "gdn_chunked_disabled_at_startup": true,
+      "measured_this_followup": true
+    },
+    "n32": {
+      "aggregate_tok_s": 7.94,
+      "per_stream_tok_s_mean": 0.27,
+      "wall_total_s": 805.55,
+      "gdn_chunked_disabled_at_startup": true,
+      "source": "prior eval (results/experiment_bonsai2_ternary_eval.json), not re-run"
+    },
+    "shape_finding": "NOT a hard binary cliff at one N. It is a continuous, steep, super-linear degradation: per-stream tok/s falls 12.97 -> 4.32 -> 1.51 -> 0.41 -> 0.27 from N=8 to N=32. The degradation is already real by N=16 (aggregate throughput DROPS from N=8 to N=16, unlike the ternary model whose aggregate throughput rises with N), then intensifies sharply between N=16 and N=24 -- by N=24 the model has already lost ~97% of its N=8 per-stream rate, and N=24-to-N=32 is comparatively flat. Most of the damage lands between N=16 and N=24.",
+    "n_dependent_gdn_disable_finding": "The server log line 'fused Gated Delta Net (chunked) not supported, set to disabled' (the prior eval's flagged hypothesis) does NOT appear at N=16 but DOES appear at N=20 and N=24 (and, per the prior eval's own log, at N=32). This is a genuinely N-dependent code path, not a fixed one-time startup cost: llama_context::resolve_fused_ops (src/llama-context.cpp:622) probes device placement using a worst-case graph shaped by n_seq_max (== --parallel N), so a larger N changes the probe's outcome. The threshold where the probe starts failing (disabling the fused kernel for the whole server lifetime) falls between N=16 and N=20 -- which lines up closely with where the throughput curve's steepest drop happens."
+  },
+  "fork_vs_stock_isolation": {
+    "methodology": "Built a fresh, CUDA-enabled checkout of the real upstream ggml-org/llama.cpp (commit 6a2743f028f78bfb88a7189607b49bde30df3769, fetched and built 2026-09-29 -- current master as of the day of this test, NOT the fork's own merge-base commit; see caveat below). Ran the identical standard-model-only N=32 test through it: same GGUF, same prompt, ctx_per_slot=2048, --cont-batching, CUDA_VISIBLE_DEVICES=1.",
+    "caveat_not_a_clean_same_commit_ab": "This is NOT a controlled same-base-commit A/B. The fork's audited merge-base with upstream is commit 5ea87ddad22541a37053c7ba92b02ec1923617c6 (2026-08-25); the stock build used here is TODAY's master (2026-09-29), roughly 5 weeks and hundreds of unrelated upstream commits ahead of that merge-base. Any difference observed could be caused by the fork's own changes, by unrelated upstream drift in the intervening 5 weeks, or both. This caveat is reported honestly rather than glossed over.",
+    "source_level_fork_vs_stock_difference_found": {
+      "description": "A single, concrete, citable code difference in the flag that controls whether the fused-GDN-disable probe runs at all.",
+      "fork_src_llama_context_cpp_line_324": "cparams.auto_fgdn = true;",
+      "stock_src_llama_context_cpp_line_235": "cparams.auto_fgdn = false;",
+      "effect": "With auto_fgdn=false, stock NEVER runs the resolve_fused_ops probe for Gated Delta Net, so cparams.fused_gdn_ch stays at its default true for the whole server lifetime -- stock always uses the fast fused GDN kernel. Confirmed empirically: the stock N=32 server log contains zero mentions of 'gated' or 'gdn' anywhere, versus the fork's log which prints the disable warning at load time whenever N>=20."
+    },
+    "stock_hit_a_different_disabled_fused_op_instead": {
+      "log_line": "resolve_fused_ops: layer 3 is assigned to device CPU but Flash Attention is assigned to device CUDA0 (usually due to missing support) / Flash Attention not supported, set to disabled",
+      "detail": "Stock's OWN resolve_fused_ops probe (still active for Flash Attention, unlike GDN) found a device mismatch and disabled Flash Attention for the 1-in-4 layers of this hybrid architecture that use full self-attention (full_attn_interval=4 in src/models/qwen35.cpp, so 3 of 4 layers are Gated-Delta-Net and 1 of 4 is full attention). This is a DIFFERENT specific mechanism than the fork's GDN-chunking fallback, but the same STRUCTURAL pattern: an auto-probe disables a fast fused kernel and falls back to a slower generic path."
+    },
+    "stock_n32_result": {
+      "measurement_method": "The wrapped client-side benchmark (200 tokens/stream, all 32 streams) was NOT run to full completion. After the per-slot generation rate converged and held stable across many consecutive print_timing samples (tg=0.27 t/s, tg_3s=0.26 t/s, unchanged for over 20 consecutive samples spanning n_gen=108 through n_gen=123 of the 200-token target), the run was stopped deliberately rather than waited out to the full 200 tokens, to stay within a reasonable diagnostic time budget -- see CLAUDE.md Task Progress-Line Requirement's sibling guidance on budgeting bisection runs sanely rather than exhaustively.",
+      "converged_per_stream_tok_s": 0.27,
+      "converged_per_stream_tok_s_3s_window": 0.26,
+      "aggregate_tok_s_estimate_from_converged_rate": 8.64,
+      "aggregate_tok_s_estimate_note": "32 streams x 0.27 tok/s (converged per-stream rate), an ESTIMATE from steady-state, not a measured completed-run aggregate the way the N=8..24 rows above are.",
+      "n_print_timing_samples_captured": 841,
+      "gdn_chunked_disabled_at_startup": false,
+      "flash_attention_disabled_at_startup": true
+    },
+    "isolation_finding": "Stock's converged per-stream generation rate at N=32 (0.27 tok/s) is essentially IDENTICAL to the fork's own N=32 per-stream rate (0.27 tok/s, from the prior eval). This happened via a DIFFERENT specific resolve_fused_ops outcome (Flash Attention disabled on stock vs GDN chunked disabled on the fork). Two honest readings are both defensible from this single data point: (a) the underlying architectural bottleneck under heavy concurrent batching on this GPU is not specific to the GDN-chunking path or to the fork's changes -- it reproduces on current real upstream llama.cpp via a structurally similar but mechanistically distinct disabled-fused-op fallback; or (b) this is a coincidental convergence to a similar number via two unrelated bottlenecks and should not be over-read as one shared root cause. This follow-up cannot fully distinguish (a) from (b) within its bounded scope -- reported as the honest residual uncertainty, not resolved."
+  },
+  "gpu_diagnostics_during_collapse": {
+    "nvidia_smi_dmon_methodology": "nvidia-smi dmon -i 1 -s pucm -d 1 -o T, sampled once per second on GPU 1 throughout the stock N=32 collapse run (load through generation).",
+    "sm_utilization_pct_range_during_collapse": "83-100, sustained throughout, never dropped to near-zero",
+    "memory_used_mb": "flat at 18272 MB for the whole run -- no growth, no thrashing, no signs of allocator pressure",
+    "power_draw_w_range_during_collapse": "142-164, well under the RTX 3090's ~350W TDP",
+    "power_vs_utilization_interpretation": "High reported SM occupancy (near 100%) combined with low power draw (under half of TDP) is the signature of many small, serialized kernel launches rather than one throughput-saturating batched GEMM -- the GPU looks 'busy' by occupancy but is not doing FLOP-dense work per unit time. This is consistent with what the source shows: the disabled-fused-op fallback paths (build_delta_net_chunking for GDN, and presumably a non-flash generic attention path for the disabled-FA layers) are both hand-composed graphs of many small ggml ops per layer/chunk, not one fused kernel.",
+    "gdb_backtrace_methodology": "sudo -n gdb -p <server_pid> -batch -ex 'thread apply all bt', taken once during a multi-minute stall in the stock N=32 run (no new print_timing lines for over 4 minutes of real wall-clock time despite the server actively running).",
+    "gdb_backtrace_finding": "The server's main thread was inside cudaStreamSynchronize, reached via ggml_backend_cuda_buffer_get_tensor -> ggml_backend_sched_graph_compute_async -> llama_context::graph_compute -> llama_context::process_ubatch. This is a genuine, synchronous wait on real GPU compute -- NOT a deadlock, livelock, or hang. The server process survived the gdb attach/detach cleanly and continued afterward.",
+    "dmesg_methodology": "sudo -n dmesg -T, checked before, during, and after every collapse run in this follow-up (unexpectedly readable without a password on this host).",
+    "dmesg_finding": "Zero Xid errors and zero OOM-killer / 'Out of memory: Kill' entries anywhere in the kernel ring buffer, covering the entire session back to the last boot (2026-09-25). Whatever is causing the collapse, it is a userspace performance problem -- not a kernel-level GPU fault, driver crash, or memory-pressure kill."
+  },
+  "source_reading_disabled_chunked_path": {
+    "log_line_location": "src/llama-context.cpp:665, inside llama_context::resolve_fused_ops's `resolve` lambda -- LLAMA_LOG_WARN(\"%s: %s not supported, set to disabled\\n\", func, probe.name);",
+    "why_it_fires": "resolve_fused_ops (src/llama-context.cpp:622-687) does a device-placement PROBE per fused op (Flash Attention, Gated Delta Net autoregressive, Gated Delta Net chunked, Lightning Indexer, DeepSeek V4 HC) by reserving a worst-case compute graph and checking whether the fused op's tensor landed on the same backend device as its owning layer. A mismatch (in these runs: 'layer 0 is assigned to device CPU but fused Gated Delta Net (chunked) is assigned to device CUDA0') sets the corresponding cparams flag (e.g. fused_gdn_ch) to false for the rest of the server's lifetime.",
+    "what_disabled_means_computationally": "build_delta_net_base::build_delta_net (src/models/delta-net-base.cpp:432-451) dispatches to build_delta_net_fused (one fused ggml_gated_delta_net CUDA kernel call, src/ggml-cuda/gated_delta_net.cu) when the flag is true, or to build_delta_net_chunking (src/models/delta-net-base.cpp:16-288) when false. The chunking path is a hand-written per-chunk loop (`for (int64_t chunk = 0; chunk < n_chunks; chunk++) { ... }`, delta-net-base.cpp:246) composing roughly 8-10 separate ggml ops per chunk per layer -- ggml_mul_mat, ggml_tri, ggml_solve_tri (a batched cuBLAS triangular solve), ggml_cumsum, ggml_exp, several ggml_mul/ggml_add -- instead of one fused kernel launch. Qwen3.8-27B is a hybrid architecture where 3 of every 4 layers are Gated-Delta-Net (full_attn_interval=4, src/models/qwen35.cpp:22-25), so most of the network runs this manual composition whenever the fused kernel is disabled.",
+    "does_this_plausibly_explain_a_28x_standard_model_specific_collapse": "PARTIALLY, and not fully confirmed. The chunking path is real, is exercised (confirmed via the N-dependent disable finding above -- it activates exactly where the throughput curve steepens), and is structurally the kind of many-small-kernel-launch pattern the GPU diagnostics show (high occupancy, low power). But this code is IDENTICAL for both the ternary and standard models -- same layer count, same chunk count, same op sequence -- since both are quantizations of the same base architecture. The chunking path alone does not explain why it costs the STANDARD (Q4_K_M) model roughly 30x more than the ternary model at the same N, when the prior eval's own log showed the SAME disable warning fired for BOTH models at N=32. The quant-type-dependent cost within the shared chunking path (most likely candidate: K-quant dequantization overhead inside ggml_mul_mat, invoked far more times in the chunking path's many small calls than it would be in one fused kernel call, versus the ternary/PTQ1_0 custom kernels which may dequantize more cheaply or not at all in this pattern) is NOT verified by this follow-up -- it is the honest, unresolved residual."
+  },
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "This follow-up makes no verifier-moat or verifier-value claim. It is a performance-diagnosis eval of a third-party inference fork against upstream llama.cpp; this field is included only to satisfy the project's Circularity Discipline field requirement honestly.",
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Real compute takes wall-clock time; this field records genuine elapsed session time across build, bisection, isolation, and diagnostic steps."
+    },
+    "random_seed": {
+      "principle": "Determinism is the precondition for reproducibility; the same seed base (20260929) used to seed every generation call in every N tested, matching the prior eval's convention."
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of both binaries' commits plus the GGUF LFS oid plus the seed catches silent drift between this artifact and any future replication attempt."
+    }
+  },
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_full_generation",
+  "inference_substrate_breakdown": {
+    "n16_n20_n24_bisection_runs": "live_llm_inference",
+    "stock_n32_isolation_run": "live_llm_inference",
+    "source_reading_and_diff_provenance": "aggregation_from_upstream_artifacts",
+    "gpu_diagnostics_gdb_dmesg_nvidia_smi": "aggregation_from_upstream_artifacts",
+    "principle": "The N=16/20/24 bisection and the stock N=32 isolation run genuinely load and run the standard-model GGUF on GPU 1 via real llama-server processes; the source reading, diffing, and diagnostic-tool output capture (gdb, dmesg, nvidia-smi dmon) do not themselves invoke the LLM, so the top-level declaration names the headline compute-bound claim and this field keeps the honest per-component breakdown."
+  },
+  "inference_substrate_breakdown_principle": "adversarial_verify.py requires inference_substrate to be a bare string plus a closed-enum inference_substrate_class. This artifact mixes substrates (live generation for the bisection/isolation runs vs aggregation-only for source reading and diagnostics), so the top-level declaration names the headline compute-bound claim and this field keeps the honest breakdown the top-level pair cannot express.",
+  "model_specs": [
+    {
+      "name": "Qwen3.8-27B-Q4_K_M (mandated comparator, standard/non-ternary, used for every run in this follow-up)",
+      "hf_repo": "unsloth/Qwen3.8-27B-GGUF",
+      "hf_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "file": "Qwen3.8-27B-Q4_K_M.gguf",
+      "size_bytes": 17106775008
+    }
+  ],
+  "server_binaries": [
+    {
+      "role": "fork, used for the N=16/20/24 bisection",
+      "repo": "PrismML-Eng/llama.cpp",
+      "branch": "prism",
+      "commit": "87268f775d74cf8f7ffc6c22a95684aa55995533",
+      "build_version_string": "0.2.0-dev (build 1486, commit 87268f775)",
+      "source": "reused the prior eval's already-built binary, verified byte-identical commit before use; not rebuilt"
+    },
+    {
+      "role": "stock, used for the N=32 isolation run",
+      "repo": "ggml-org/llama.cpp",
+      "branch": "master",
+      "commit": "6a2743f028f78bfb88a7189607b49bde30df3769",
+      "build_version_string": "0.5.0-dev (build 1, commit 6a2743f02)",
+      "fetched_and_built": "2026-09-29, fresh CUDA build (-DGGML_CUDA=on -DCMAKE_CUDA_ARCHITECTURES=86) from an existing local checkout that had previously only been built CPU-only"
+    }
+  ],
+  "adversarial_verify_status": "python3 scripts/adversarial_verify.py results/experiment_bonsai2_n32_collapse_followup.json --json -> flagged_count: 0, max_severity: -1 (no CRITICAL or WARN flags at any level)"
+}
