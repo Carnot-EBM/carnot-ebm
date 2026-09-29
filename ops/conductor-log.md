@@ -18999,3 +18999,5 @@ code |
 | 2026-09-29 05:45 UTC | Measure bounded Qwen decisions under full and part | GATE_BLOCK | gate-unsat(final): 5 of 6 gate(s) failed; first failure: exp7852-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
 | 2026-09-29 05:47 UTC | Test durable constraint acquisition against equall | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7855-energy-fit, exp7855-energy-fit, exp7855-energy-fit) |
 | 2026-09-29 05:47 UTC | Measure delayed-feedback loss under bounded online | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7855-energy-fit, exp7855-energy-fit, exp7855-energy-fit) |
+| 2026-09-29 06:01 UTC | Audit new live ARC supervisor outcomes without re- | OK | 87 passed, 1 warning in 8.87s |
+| 2026-09-29 06:03 UTC | Measure complete CPU verification service and boun | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7855-energy-fit, exp7855-energy-fit, exp7855-energy-fit) |
