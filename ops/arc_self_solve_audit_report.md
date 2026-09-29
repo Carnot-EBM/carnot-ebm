@@ -16,9 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR:** No recent ARC solve artifacts were provided, so there is no demonstrated self-discovery advance to classify. The reachability check passed, but reachability alone does not establish how a solve was discovered.
+**TL;DR:** No recent ARC solve artifacts were provided. There is no basis to credit a self-discovery advance—or to assign an artifact verdict.
 
-**Per artifact:** None (last 7 days: 0). **Recommended action:** No artifact action.
+**Per artifact:** None (0 in the last 7 days).
 
-**Pattern watch:** No recent outer-loop solving is visible in this evidence. Continue requiring each claimed solve to show the live agent’s own attempts and runtime reverse-engineering; a reachable solver module alone is insufficient.
+**Pattern watch:** The reachability check shows solver modules are on a live entrypoint path. It does not show that the agent discovered a hidden-game solve through its own attempts. No recent artifact establishes or contradicts that principle.
 

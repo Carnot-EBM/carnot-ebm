@@ -86217,3 +86217,44 @@ health and does not silently become an owned required check.
 After a bounded repository diagnostic has a sealed log, a later current run
 SHALL authenticate and retain that observation without repeating the same
 repository-wide command.
+
+## REQ-REPORT-PLAN-685: Matching research plan and executable task contract
+
+Milestone 2026.09.685 SHALL declare exactly twelve tasks, exp7891 through
+exp7902, in execution order across four phases. The design table, embedded
+machine contract and staged YAML SHALL agree on IDs, titles, phases,
+deliverables, model declarations, substrate classes and structured gates.
+The design SHALL bind the canonical complete task list with a SHA-256 digest.
+The active roadmap and conductor SHALL remain unchanged during planning.
+
+Every prompt SHALL contain context, existing code, a task, numbered steps,
+principle-annotated artifact fields and a run command. Numbered steps SHALL
+require flushed progress at phase boundaries and around long operations.
+They SHALL require loop heartbeats and bounded file-writing tool calls.
+Failure lineage SHALL retain all four mandatory prior-failure fields.
+
+The plan SHALL reserve calibrated energy training, continuous constraint
+learning, an ARC generalization-floor task and all three board obligations.
+LLM work SHALL declare unsloth/Qwen3.8-27B-GGUF and bounded generation.
+Science gates SHALL depend on current producers' explicitly declared fields.
+Administrative activation checks SHALL NOT gate unrelated science branches.
+
+### SCENARIO-REPORT-PLAN-685-CONTRACT
+
+Given the staged V685 YAML, the planning check compares its twelve tasks to
+the visible table and machine contract. Count, order, ID, gate, model and
+deliverable mutations fail. Planning validation does not claim activation.
+
+### SCENARIO-REPORT-PLAN-685-LIFECYCLE
+
+The planned lifecycle experiment tests stage consumption after activation.
+An activated matching roadmap and the immutable design digest remain valid
+when the staging file is absent or belongs to a later milestone. An old
+active milestone never passes activation. Historical tests use private
+versioned authorities, preserving their assertions and past determinations.
+
+### SCENARIO-REPORT-PLAN-685-RESEARCH
+
+The dated reference review precedes task design. It distinguishes verified
+sources, access limits, proposed adaptations and unmeasured benefit. The
+capstone preserves six V684 disqualifications and six skipped producers.

@@ -258,3 +258,5 @@ of truth, not this line.)
 | 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_norm | SILENT_NON_FIRING | OPEN | |
 | 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::check_moat_claim_rigor | SILENT_NON_FIRING | OPEN | |
 | 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_check_terminal_prefix_vs_partial_class | SILENT_NON_FIRING | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_arc_live_search_win | SILENT_NON_FIRING | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_has_measured_arc_live_metric | SILENT_NON_FIRING | OPEN | |

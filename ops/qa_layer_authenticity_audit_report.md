@@ -11,32 +11,34 @@ Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): 
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 1 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 5 |
+| `SILENT_NON_FIRING` | 6 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::check_circular_moat_overclaim` — results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json` contains `"honest_verdict": "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget"` and has no top-level `verifier_is_oracle`. This function returns no flags for it.
-- `adversarial_verify.py::check_verdict_class_consistency` — results/experiment_6571_v570_evidence_gate_and_retirement_root.json` has top-level `"verdict_class": null`. The function emits no flag.
-- `adversarial_verify.py::_check_terminal_prefix_vs_partial_class` — {"honest_verdict":"completed_successfully","verdict_class":"partial"}` The verdict text occurs in `results/experiment_1773_latent_benchmark.json`; with a partial class, this check emits no flag.
-- `adversarial_verify.py::_arc_claimed_level` — "reproduced_levels": {"principle": "offline reproduction reached level 2", "value": 2}
-- `adversarial_verify.py::_is_arc_solve_claim` — {"offline_reproduced":true,"game":"tu93","levels_reproduced":3,"solve_provenance":"outer_loop_re"}` — levels_reproduced is a field name used by the project’s ARC solve registry, yet this claim also receives no provenance flag.
+- `adversarial_verify.py::_arc_registry_level` — ops/arc_solve_registry.yaml` contains `game: tu93` and `levels_reproduced: 9`; the duplicate `tu93` level-9 claim above receives no duplicate flag when `yaml` cannot be imported.
+- `adversarial_verify.py::_is_arc_artifact` — results/experiment_4443_bank_g50t_example_conditioned_win.json`: `target_game` is `"g50t"` and `honest_verdict` is `"success: example_conditioned_g50t_L1_banked_with_correct_substrate"`; the function returns false.
+- `adversarial_verify.py::_arc_live_claim_text` — "claim_scope": "live_agent_first_win_efficiency_up_from_value_head"
+- `adversarial_verify.py::_claims_arc_live_search_win` — results/experiment_4202_arc_live_env_solver_vs_floor.json`: `honest_verdict="complete: solver_beats_floor_live_lp85-305b61c3_efficiency_only"`, with `solver_beats_floor.efficiency.beats=true`. The function returns `False`.
+- `adversarial_verify.py::_has_measured_arc_live_metric` — live_agent_ran: false` — a field and value present in `results/experiment_4784_heldout_first_win_readiness.json`, combined above with the existing offline-live overclaim test fixture.
+- `adversarial_verify.py::_has_offline_auroc_metric` — candidate_auroc: 0.893651` in [experiment_4178_gap3_stage1_model_native_arc_energy.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4178_gap3_stage1_model_native_arc_energy.json:46), whose declared substrate is offline. The function returns `False` for that artifact.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::check_circular_moat_overclaim` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_verdict_class_consistency` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_check_terminal_prefix_vs_partial_class` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_arc_claimed_level` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_arc_solve_claim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_arc_registry_level` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_arc_artifact` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_arc_live_claim_text` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_arc_live_search_win` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_measured_arc_live_metric` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_offline_auroc_metric` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::check_circular_moat_overclaim
+## adversarial_verify.py::_arc_registry_level
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -44,40 +46,29 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-The docstring says this guard prevents a circular verifier result from headlining a moat or flipping a gate, and requires every moat or gate claim to declare `verifier_is_oracle: bool`.
+“Best-effort: the levels_reproduced the registry already records for `game` (None if unknown).”
 
 ## FINDINGS
-1. **Silent miss and permissive default:** `if not (_claims_moat(d) or _flips_gate(d)):` followed by `return` drops the committed beats-self-consistency verdict in MISSED INPUT. This function emits no flag and gives no indication that it failed to recognize the claim. A separate moat-rigor check does flag that artifact; it does not make this guard fire.
-2. **Field shape:** `vio = d.get("verifier_is_oracle")` is the only direct field read. The identity checks assume a bare Boolean: a principle-wrapped false value draws a critical gate flag, while a wrapped true value, string, or list can pass silently on a moat-only claim. `None` receives a warning. No value is unwrapped or validated against the docstring’s Boolean requirement.
-3. **Text boundaries and context:** The delegated recognizers can treat a negated or blocked gate phrase as an affirmative flip, as COUNTEREXAMPLE demonstrates. Their moat matching can also match within a longer word because it lacks a left boundary. The displayed function performs no free-text matching itself; it trusts those two recognizers’ answers.
-4. **Pattern list narrower than claim:** There is no marker list in the displayed body. The delegated moat markers stand in for verifier-superiority claims but omit beats-self-consistency wording; their headline-field selection also omits paper-summary prose. The first omission is demonstrated by MISSED INPUT.
-5. **Prohibition reduced to warning:** For a moat claim without a gate flip, `elif vio is True:` emits `severity="warn"` despite the docstring saying a circular result `must NOT headline a moat or flip a gate`. There is no numeric threshold or off-by-one comparison in this function.
-6. **Weak branch tests:** Making `elif vio is None:` unreachable, then separately making `elif vio is True:` unreachable, left all 28 focused tests passing in each run. Those branches are not independently pinned by those tests; a full-suite mutation result was not established.
-7. **Other requested classes:** This function contains no absolute path, tracked-file write, or measurement. Its unrecognized-claim default is the early `return` in finding 1.
+1. **A/F — known becomes unknown.** `except Exception` followed by `return None` treats a missing optional YAML package or an unreadable registry exactly like an unregistered game. The caller skips the duplicate-solve flag, so its output does not reveal that the lookup failed.
+2. **1/B — field shapes are narrow.** `reg.get("games")` requires a bare list; `e.get("game") == game` requires an unwrapped matching value; and `lv = e.get("levels_reproduced")` is accepted only through `isinstance(lv, (int, float))`. Wrapped values, lists, and `None` are silently skipped. A quoted numeric depth is also skipped. There is no token pattern list in this function; these exact schema keys define its lookup.
+3. **4/5 — numeric handling is narrower than the claim.** `int(lv)` truncates an accepted fractional float, so the returned level need not equal what the registry records. The caller correctly flags a claim exactly equal to an integer registry depth; that boundary is not the defect.
+4. **C — the guard is unprotected by its focused tests.** Replacing this helper with a constant `return None` left all 14 focused tests green. The duplicate-solve test explicitly accepts the skipped-check case.
+5. **2/3/D/E/G — none found.** This function has no free-text matching, negation scan, absolute write target, write side effect, or measurement.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "honest_verdict": "blocked_gate_met_not_attempted",
-  "verifier_is_oracle": {
-    "principle": "The verifier does not execute the correctness oracle.",
-    "value": false
-  }
-}
-```
-This blocked, oracle-distinct artifact receives a critical circular-moat flag.
+With the current registry’s `tu93` depth of 9, this artifact is a duplicate: `{"offline_reproduced": true, "game": "tu93", "reproduced_levels": 9, "solve_provenance": "live_agent_self_discovery"}`. A direct check produced a critical flag with PyYAML available and **no flags** when the optional import was unavailable.
 
 ## MISSED INPUT
-`results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json` contains `"honest_verdict": "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget"` and has no top-level `verifier_is_oracle`. This function returns no flags for it.
+`ops/arc_solve_registry.yaml` contains `game: tu93` and `levels_reproduced: 9`; the duplicate `tu93` level-9 claim above receives no duplicate flag when `yaml` cannot be imported.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A committed verifier-superiority claim passes through this guard without a determination, while a blocked claim can receive a critical false flag. Typed field handling, claim recognition, and negation handling all need correction, with tests that assert this guard’s own output for each branch.
+The helper reports lookup failure as an ordinary unknown game, and the caller reads that as permission to skip the check. Make lookup failure visible and test that a known duplicate cannot pass when registry loading fails.
 
 
-## adversarial_verify.py::check_verdict_class_consistency
+## adversarial_verify.py::_is_arc_artifact
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -85,70 +76,100 @@ A committed verifier-superiority claim passes through this guard without a deter
 SILENT_NON_FIRING
 
 ## CLAIM
-The function claims to cross-check a declared verdict class against structural fields and critically flag values outside the closed enum or positive classes with failed acceptance gates.
+The name `_is_arc_artifact` claims to identify ARC artifacts.
 
 ## FINDINGS
-
-1. `vc = d.get("verdict_class")` followed by `if vc is None:` treats a **present JSON null** as an absent field. That bypasses the promised critical flag for a value outside the closed enum. A committed artifact has this exact top-level shape.
-2. `if isinstance(k, str) and k.startswith("acceptance_gate") and v is False` only detects top-level, bare-boolean failures. A committed artifact declares a circular-positive class while its nested acceptance-gate results report four failed gates; this function emits no flag. The prefix also omits gate reports named gate_check_summary. The closed enum and `("positive", "circular_positive")` cover their stated categories; the failed-gate recognizer does not.
-3. Direct callers must supply bare values: `d.get("verifier_is_oracle") is True` misses a wrapped true, the gate condition misses a wrapped false, and `if not isinstance(vc, str) or vc not in _VERDICT_CLASSES:` rejects a wrapped valid class. The normal artifact-verification path unwraps top-level principle fields before calling this function, so these direct-call cases are **not established production failures**. Lists are rejected as invalid classes; bare booleans are compared exactly.
-4. The only text prefix check in this body is `k.startswith("acceptance_gate")`. It has no delimiter boundary, so a longer unrelated key beginning with those letters could match; no real collision was established. This body does not scan verdict prose for flagged phrases, so no negation-blind match is demonstrated. It has no numeric threshold, absolute write path, tracked-state write, or measurement.
-5. Unknown non-null classes are flagged, but `if vc is None:` returns without distinguishing a missing declaration from an invalid present null. In an in-memory mutation run, all **37 targeted tests passed** after the circular-positive failed-gate branch was removed. They also all passed after the null check was changed to skip only an absent key.
+1. **Silent miss and disabled checks:** The real artifact `results/experiment_4443_bank_g50t_example_conditioned_win.json` has `target_game` equal to g50t and an ARC game win verdict, yet the function returns false. The `return isinstance(d.get("game"), str) or "arc" in text or any(g in text for g in _ARC_GAME_IDS)` expression gives callers the same false result for an unrecognized ARC artifact as for a genuine non-ARC artifact.
+2. **Field shapes:** `text = f"{d.get('experiment', '')} {d.get('honest_verdict', '')} {d.get('mode', '')}".lower()` stringifies wrapped dicts, lists, and None, allowing their metadata to influence classification. `isinstance(d.get("game"), str)` accepts only a bare string; a principle-wrapped game value is missed unless another branch happens to match.
+3. **Substring and context errors:** `"arc" in text` matches inside “research” and “architecture,” and `g in text` can match a game ID inside a longer unrelated identifier such as “tu93x.” Neither match checks context: a value saying “not_arc” also matches. There is no forbidden-action or negation check in this helper.
+4. **Patterns narrower than the concept:** The selected text fields omit the real `target_game` field. `_ARC_GAME_IDS` stands in for ARC game IDs but omits real IDs g50t, s5i5, and sk48. Conversely, `isinstance(d.get("game"), str)` classifies *any* string game as ARC.
+5. **Tests do not protect every pattern:** In 44 selected tests, removing the `"arc" in text` branch passed all 44; removing the tuple member “lp85” also passed all 44. Removing the `game` branch failed three tests, and removing the entire ID tuple failed two. This is a targeted mutation result, not a full-suite claim.
+6. **Other classes:** There is no numeric threshold or equality boundary, absolute write path, write side effect, or measurement in this function. It has no docstring; its actual classification is both broader and narrower than its name claims.
 
 ## COUNTEREXAMPLE
-A fragment of the committed `results/experiment_7708_v671_arc_generalization_runner.json`:
-
-```json
-{
-  "verdict_class": "circular_positive",
-  "acceptance_gate_results": {
-    "efficiency": {"passed": false},
-    "probability": {"passed": false},
-    "retention": {"passed": false},
-    "utility": {"passed": false}
-  }
-}
-```
-
-Calling this function on the artifact produces no verdict-class flag.
+`{"experiment": "90_autoresearch_constraints"}` is a real non-ARC artifact fragment, but the function returns true because “autoresearch” contains “arc.”
 
 ## MISSED INPUT
-`results/experiment_6571_v570_evidence_gate_and_retirement_root.json` has top-level `"verdict_class": null`. The function emits no flag.
+`results/experiment_4443_bank_g50t_example_conditioned_win.json`: `target_game` is `"g50t"` and `honest_verdict` is `"success: example_conditioned_g50t_L1_banked_with_correct_substrate"`; the function returns false.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The classifier can silently exclude a real ARC artifact from checks that call it, while also admitting unrelated research artifacts. It needs typed field extraction, a complete source of game IDs, and token-aware ARC matching; the selected tests currently miss both demonstrated classification errors.
+
+
+## adversarial_verify.py::_arc_live_claim_text
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_arc_live_claim_text` claims to collect an artifact’s ARC live-claim text; the function has no docstring.
+
+## FINDINGS
+1. **A, B, F — missed claim field.** The read `str(d.get(key, ""))` covers only `_ARC_LIVE_CLAIM_TEXT_KEYS`. That list stands in for fields carrying the artifact’s claim, but omits the real project field claim_scope. A live-win claim placed there produces the same text as an artifact with no claim and silently skips the downstream offline-versus-live check. I verified that moving the identical claim into headline makes the check fire.
+2. **Field shape.** The same read stringifies dicts, lists, and None without checking what they mean. A principle/value wrapper can contribute its *principle* to the apparent claim. The normal artifact-verification path unwraps top-level principle/value fields first, so that particular failure applies to direct calls to this helper or its check.
+3. **Substring and negation.** This helper performs no substring match itself, but its joined text feeds matches that ignore negation. I verified that “live first-win not achieved; offline detector improved” is classified downstream as a positive live win.
+4. **C, D, E, G, and numeric boundaries.** No individual rule here is proven deletable while tests stay green. The helper has no numeric threshold, absolute path, write side effect, or measurement.
+
+## COUNTEREXAMPLE
+`{"game":"ar25","honest_verdict":"complete: offline_auroc_characterized","claim_scope":"live_agent_first_win_efficiency_up_from_value_head","offline_loo_auroc":0.725}` — the offline-substituted-for-live flag does not fire. Moving the claim unchanged to headline makes it fire.
+
+## MISSED INPUT
+`"claim_scope": "live_agent_first_win_efficiency_up_from_value_head"`
 
 ## RECOMMENDATION
 WIDEN_PATTERN_TO_CONCEPT
 
 ## RATIONALE
-Committed artifacts demonstrate both silent paths: an explicitly invalid class is treated as absent, and nested failed gates are ignored. The targeted tests remain green when protection for circular-positive gate failures is removed. Check key presence separately from value validity, read structured gate results, and add regression cases for both artifacts.
+Claim scope is an existing artifact field, and a claim in that field is invisible to this helper’s fixed key list. The resulting absence of a flag looks like a genuine pass; widening claim extraction and testing the omitted field would make that case observable.
 
 
-## adversarial_verify.py::_verdict_text
+## adversarial_verify.py::_claims_arc_live_search_win
 
-**Verdict:** `CLEAN`
+**Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
-CLEAN
+
+SILENT_NON_FIRING
 
 ## CLAIM
-The function returns `honest_verdict` as a string, reading through a principle wrapper.
+
+The docstring claims: `True if the artifact headlines a positive live-agent ARC search win.`
 
 ## FINDINGS
-none found
+
+1. **A / F — real missed input.** The existing artifact named in MISSED INPUT reports that its live solver beat the floor on efficiency, but this function returns `False`: `positive = any(marker in text for marker in _ARC_POSITIVE_LIVE_CLAIM_MARKERS)` has no match for “beats.” Its `False` is indistinguishable from a genuine no-win result. That artifact has live measurements, so the downstream warning correctly need not fire for *that file*; an offline-only artifact with the same headline would silently bypass the warning.
+2. **Field extraction.** The sole direct field read, `d.get("solve_provenance") == "live_agent_self_discovery"`, assumes a bare string. A principle-wrapped value fails that comparison when this helper is called directly. The normal verifier path unwraps top-level principle fields before calling it, which limits this defect’s production impact. The called text helpers also stringify fields, so direct calls with dicts or lists can match annotation prose rather than the intended value.
+3. **Substring boundaries.** Each `marker in text` test accepts matches inside longer words. In the verified COUNTEREXAMPLE, “live” matches inside “deliver” and “solve” inside “solver,” turning an offline result into a claimed live win. Conversely, “blocked” inside “unblocked” can make `null` true and suppress a real positive claim.
+4. **Negation and context.** `return positive and not null` does not understand “not improved” or “won zero games”; both can satisfy a positive marker. A null marker anywhere in the combined text can also veto a separate, affirmative headline. The implementation is both broader and narrower than the docstring’s claim.
+5. **Pattern lists versus concepts.** The context markers omit “online agent”; the win markers omit “level cleared”; the positive markers omit the corpus-used “beats”; and the null markers omit “zero wins.” The headline-field tuple also omits “conclusion,” a field present in ARC artifacts. These lists sample the concepts they represent.
+6. **Deletable rules.** In the context list, “live_agent” and “live agent” are already covered by “live.” In the win list, “solved” is covered by “solve”; in the null list, “honest_null” is covered by “null.” Removing those entries preserves predicate behavior, so behavior-based tests would remain green.
+7. **Other requested classes.** There is no numeric threshold or equality boundary here. This function computes no absolute path, writes no tracked artifact or operator document, and records no duration or other measurement. The focused test writes its fixture under a temporary path.
 
 ## COUNTEREXAMPLE
-none constructed
+
+`{"experiment":"experiment_9999_arc_offline_solver_diagnostic","honest_verdict":"complete: offline solver improved; deliver diagnostic to operator","offline_loo_auroc":0.725}`
+
+This offline-only fragment makes the function return `True`. The verifier consequently emits `OFFLINE_SUBSTITUTED_FOR_LIVE`, an erroneous warning.
 
 ## MISSED INPUT
-none found
+
+`results/experiment_4202_arc_live_env_solver_vs_floor.json`: `honest_verdict="complete: solver_beats_floor_live_lp85-305b61c3_efficiency_only"`, with `solver_beats_floor.efficiency.beats=true`. The function returns `False`.
 
 ## RECOMMENDATION
-KEEP
+
+NEEDS_REDESIGN
 
 ## RATIONALE
-The function accepts a bare string or a string inside a single principle wrapper and returns `None` for other values. This snippet contains no matching rules, thresholds, write targets, or measurements; whether a caller silently skips a check on `None` cannot be determined from it.
+
+A real efficiency-win headline is silently missed, while a plausible offline-only headline produces a false live-win warning. Adding one token would address the observed miss but leave substring matches, negation, and the indistinguishable `False` outcomes intact.
 
 
-## adversarial_verify.py::_check_terminal_prefix_vs_partial_class
+## adversarial_verify.py::_has_measured_arc_live_metric
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -156,32 +177,37 @@ The function accepts a bare string or a string inside a single principle wrapper
 SILENT_NON_FIRING
 
 ## CLAIM
-The function claims to warn when a success-shaped verdict declares itself partial.
+`Return true for real metric fields, not prose-only field principles.`
 
 ## FINDINGS
-1. **Silent miss:** `low.startswith(p)` checks only `_TERMINAL_SUCCESS_PREFIXES`. A completion verdict already used in the artifact corpus falls outside that set; `if hit is None:` then returns without a flag. The broad claim is therefore narrower in practice.
-2. **Field shape:** `if vc != "partial":` requires a bare string. The caller rejects a principle-wrapped partial class as a critical mismatch before this warning runs, falsely quarantining an otherwise valid field shape. The separate `verdict = _verdict_text(d)` path does unwrap the verdict.
-3. **Untested entry:** The prefix test generates cases from the production tuple. Removing its passed-underscore entry in memory made that case disappear; all 36 remaining focused tests passed.
-4. The match is anchored, so I found no inside-word match. This function has no numeric threshold, absolute write path, tracked-state write, or measurement.
+1. **A — Silent non-firing and field shape.** `for key, value in d.items():` never unwraps a principle-annotated value. `isinstance(value, (dict, list, bool))` treats a wrapped null, an empty list, or false as a measured live metric. I reproduced this with the real corpus field live_agent_ran set to false: the offline-for-live warning disappears.
+2. **B — Names stand in for evidence.** `kl.startswith("live_")` accepts status fields such as live_agent_ran as metrics. `any(marker in kl for marker in _ARC_LIVE_METRIC_KEY_MARKERS)` accepts a prior-baseline field such as prior_best_heldout_first_win_rate and can match solve_rate inside the unrelated name resolve_rate. The marker list also omits the corpus’s measured field heldout_first_win_delta_vs_prior_best. `kl.startswith("offline_")` has a token boundary; `"_offline" in kl` does not, though I found no demonstrated corpus collision for it.
+3. **C — Decorative rules.** `if value is None:` is redundant: neither acceptance branch accepts None. `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` is also redundant here: none of that set’s three names matches either acceptance branch. The set represents prose metadata but omits the real field_provenance key; that omission currently has no effect here. The named regression’s positive exemplar has multiple matching metrics, so removing any single marker leaves that exemplar passing.
+4. **Other classes.** There is no numeric threshold, absolute path, write, or computed measurement in this function. Its final `return False` does not itself disable the caller’s warning; the dangerous default is the premature `return True` for non-metric fields. The inspected targeted tests use temporary artifact paths and do not overwrite a tracked result.
 
 ## COUNTEREXAMPLE
-`{"honest_verdict":"complete_v563_independent_exact_root: immutable rows","verdict_class":{"principle":"Task incomplete; resume required","value":"partial"}}`
-
-The caller emits a critical class-mismatch flag instead of this function’s warning.
+```json
+{
+  "experiment": "experiment_4623_arc_live_overclaim_fixture",
+  "game": "ar25",
+  "honest_verdict": "success: live_agent_first_win_efficiency_up_from_value_head",
+  "offline_loo_auroc": 0.725,
+  "live_agent_ran": false
+}
+```
+The function returns true, and the offline-for-live warning does not fire.
 
 ## MISSED INPUT
-`{"honest_verdict":"completed_successfully","verdict_class":"partial"}`
-
-The verdict text occurs in `results/experiment_1773_latent_benchmark.json`; with a partial class, this check emits no flag.
+`live_agent_ran: false` — a field and value present in `results/experiment_4784_heldout_first_win_readiness.json`, combined above with the existing offline-live overclaim test fixture.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Normalize the class before validation and share a defined success recognizer with the conductor. Pin expected spellings in tests independent of the production tuple, so deleting a recognizer cannot delete its own test.
+`kl.startswith("live_")` tests a key’s spelling, while `isinstance(value, (dict, list, bool))` treats even explicit evidence that no live run occurred as a measurement. Validate the field’s meaning and unwrapped measured value before allowing it to suppress the fabrication warning.
 
 
-## adversarial_verify.py::_arc_claimed_level
+## adversarial_verify.py::_has_offline_auroc_metric
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -189,58 +215,24 @@ Normalize the class before validation and share a defined success recognizer wit
 SILENT_NON_FIRING
 
 ## CLAIM
-By name, `_arc_claimed_level` extracts the level an ARC artifact claims; the function has no docstring.
+The name `_has_offline_auroc_metric` claims to identify whether an artifact contains an offline AUROC measurement.
 
 ## FINDINGS
-1. **Silent non-firing:** `v = d.get(k)` followed by `if isinstance(v, (int, float)) and not isinstance(v, bool):` ignores a valid principle-wrapped level. `return best` then returns None. In the actual caller, that makes the solve-claim guard skip the artifact without a flag.
-2. **Narrow field list:** `for k in ("reproduced_levels", "reached_level", "levels_completed"):` stands in for ARC level claims but omits the real top-level field level_reached, used in results/arc_within_game_l3_self_induction_cd82_stage1.json. That artifact alone does not establish a missed solve flag, but the omitted field is real.
-3. **Untested alternatives:** Removing the reached_level and levels_completed alternatives left the focused ARC self-solve suite green: 14 tests passed. That result does not establish whether the full suite would pass.
-4. **Numeric handling:** `int(v)` truncates fractional values and raises ValueError on NaN instead of classifying them. An exact integer level of 1 is preserved; no off-by-one error was found.
-5. **Other classes:** This function has no free-text matching, negation check, absolute path, write, or work measurement. Its unrecognized-field outcome is indistinguishable from an artifact with no claimed level.
+1. **Silent non-firing:** A real offline ARC artifact reports candidate_auroc = 0.893651, but the function returns `False` for the entire artifact. Its context-marker list omits candidate, even though this is an offline AUROC measurement.
+2. **Field shape:** `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS or not _is_finite_number(value):` rejects a valid principle-wrapped numeric measurement before examining its value. Lists and nested measurements are also ignored; there is no field extraction or unwrapping.
+3. **Pattern scope and false positives:** The AUROC/AUC marker list covers the demonstrated metric spellings, but the context list misses the real candidate_auroc field. Conversely, the real target_loo_auroc field returns `True` even though its value is a target, not a result. Both `any(marker in kl for marker in _ARC_OFFLINE_AUROC_KEY_MARKERS)` and `any(marker in kl for marker in _ARC_OFFLINE_AUROC_CONTEXT_MARKERS)` use unrestricted substrings. The metadata exclusion list omits other metadata names, but its numeric filter already rejects the demonstrated nonnumeric ones.
+4. **Tests:** After removing the AUC marker and every context marker except offline in memory, all three focused guard tests still passed. Those tests do not independently protect the removed rules; the full suite was not run.
+5. **Other classes:** This function scans field names, not free-text verdicts, so no free-text negation case is established. It has no numeric threshold to check for an off-by-one error, and no path, write, or timing measurement. Its terminal `return False` gives callers no way to distinguish an unrecognized measurement from a genuine absence of one.
 
 ## COUNTEREXAMPLE
-`{"offline_reproduced": true, "game": "tu93", "solve_provenance": "outer_loop_re", "reproduced_levels": {"principle": "offline reproduction reached level 2", "value": 2}}`
-
-The guard returns no flags. Changing only the wrapped level to the bare number 2 produces critical flags.
+`{"offline_loo_auroc": {"principle": "measured offline LOO AUROC", "value": 0.725}}` returns `False`.
 
 ## MISSED INPUT
-`"reproduced_levels": {"principle": "offline reproduction reached level 2", "value": 2}`
+`candidate_auroc: 0.893651` in [experiment_4178_gap3_stage1_model_native_arc_energy.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4178_gap3_stage1_model_native_arc_energy.json:46), whose declared substrate is offline. The function returns `False` for that artifact.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The extractor accepts only three bare numeric field shapes despite the project’s permitted principle wrapper and a real alternative level field. Its None result conflates an absent claim with an unreadable one, allowing the caller to treat a missed claim as a pass.
-
-
-## adversarial_verify.py::_is_arc_solve_claim
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring says `_is_arc_solve_claim` identifies `an artifact claiming the agent SOLVED a hidden-game level` when offline reproduction, a numeric level of at least one, and a game ID are present.
-
-## FINDINGS
-1. **A/F — silent miss:** `return False` also handles an unrecognized solve claim. The caller then emits no provenance flag, making that case indistinguishable from a genuine non-solve. The project’s registry uses the level field name levels_reproduced, but the called level helper does not recognize it.
-2. **1 — field shapes:** `if d.get("offline_reproduced") is not True or not isinstance(d.get("game"), str):` rejects a documented principle/value wrapper around either field. `_arc_claimed_level(d)` likewise misses a wrapped numeric level. Lists and None are also rejected; this audit found no basis to treat those shapes as individual solve claims.
-3. **B — narrow name list:** The level helper recognizes reproduced_levels, reached_level, and levels_completed as level counts, while omitting the registry’s levels_reproduced. No hardcoded token list or free-text pattern appears in this function itself.
-4. **4/5 — boundary and claim:** `lvl is not None and lvl >= 1` correctly accepts exactly level 1. The game test is broader than the docstring’s “game id”: an empty string qualifies and produces a warning when the other fields qualify.
-5. **2/3 — text matching:** This function scans no free text, so it has no substring-boundary or negation-context defect.
-6. **C — test gap:** In separate in-memory mutations, removing each of the offline-true requirement, game-type requirement, and level-one floor left the focused 14-test suite green. This establishes a focused-suite gap, not a claim about every repository test.
-7. **D/E/G — side effects and measurements:** This function contains no absolute write path, tracked-state write, or computed measurement.
-
-## COUNTEREXAMPLE
-`{"offline_reproduced":{"principle":"Offline replay confirms the solve","value":true},"game":"tu93","reproduced_levels":3,"solve_provenance":"outer_loop_re"}` returns false and receives no provenance flag.
-
-## MISSED INPUT
-`{"offline_reproduced":true,"game":"tu93","levels_reproduced":3,"solve_provenance":"outer_loop_re"}` — levels_reproduced is a field name used by the project’s ARC solve registry, yet this claim also receives no provenance flag.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Both fragments declare a plausible solve that should trigger provenance review, but the predicate silently treats them as non-solves. Normalize documented field wrappers, recognize the registry’s level name, validate a nonempty game ID, and distinguish an unrecognized claim shape from a clean result.
+The recognizer silently misses both a recorded offline ARC measurement and the project’s permitted wrapped measurement shape. It also treats a numeric target as measured evidence. Unwrap values, classify observed metrics separately from targets, and test each recognized field pattern independently.
 

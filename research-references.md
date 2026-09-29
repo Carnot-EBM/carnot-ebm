@@ -48565,3 +48565,87 @@ venue `host`, a nonexistent ARC test path, and repeated repository-wide test
 timeouts need explicit treatment. Preserve all historical determinations.
 Use a prospectively declared affected validation scope for new work, with
 repository health recorded separately; never relabel the old required checks.
+
+## V685 planning review — 2026-09-29 (recorded before design)
+
+This pass checked the eight research topics and six secondary sources below.
+Most useful papers were already indexed. Rechecking them does not establish
+novelty. Paper findings are author reports, not Carnot measurements.
+
+### Methods to test or retain
+
+- [TOOD](https://arxiv.org/abs/2607.29592), July 31, 2026:
+  [Sections 3–4 and Appendix D](https://arxiv.org/html/2607.29592v1)
+  separate score-scale drift from representation damage. Buffer-based location
+  and scale correction motivates a paired drift diagnostic on fixed Carnot
+  snapshots. Carnot's binary source classifier lacks TOOD's disjoint class
+  blocks. A temporal logit correction is an adaptation, not TOOD reproduction
+  or an OOD guarantee. Compare stale calibration, temperature refresh and
+  robust location/scale correction with the same held-out buffer.
+- [Continual Calibration](https://arxiv.org/abs/2604.23987), April 2026,
+  remains the basis for measuring uncertainty retention separately from
+  accuracy. Calibration families must never train or admit constraints.
+  Reused development families cannot support a conformal coverage theorem.
+- [SURE-RAG v2](https://arxiv.org/abs/2605.03534), revised July 24, 2026,
+  and [Verification Without Sufficiency](https://arxiv.org/abs/2608.00585),
+  August 2026, motivate whole-source, witness, neighboring-context and filler
+  controls. Controlled sufficiency and natural hallucination detection differ.
+  Edited-context sensitivity must not inherit the original answer's truth label.
+- [Constrained decoding and the semantic gap](https://arxiv.org/abs/2609.23742),
+  September 2026, motivates separate syntax, byte-fidelity and semantic metrics.
+  A valid schema does not prove that the mandated 27B model understands evidence.
+- [Delayed online optimization](https://arxiv.org/abs/2602.02634), February
+  2026, motivates explicit feedback-release times and pending-label counts.
+  Discrete predicate admission inherits no convex regret guarantee.
+- [VeriFin](https://arxiv.org/abs/2608.10213), August 10, 2026, surfaced
+  through the Hugging Face verification feed. Source identity, units and
+  authorized formulas precede SMT arithmetic checking. Keep this as a future
+  extraction direction; do not open another domain before current source
+  decisions run. Its finite-pool false-accept result is not a universal guarantee.
+
+### Topic coverage and decisions
+
+| Topic | Primary sources checked | Planning consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM v4, May 2026](https://arxiv.org/abs/2512.15605); [distributional EBM, May 2026](https://arxiv.org/abs/2605.18871) | Train small conditional energies with matched information. Preserve the retired external-text reranker boundary. |
+| Neural constraints | [NSVIF, January 2026](https://arxiv.org/abs/2601.17789); [T-SKM-Net, December 2025](https://arxiv.org/abs/2512.10461) | Known constraint satisfaction and extracting the correct constraint remain separate problems. Defer another solver. |
+| Ising in ML | [Parallel inertia Ising, April 2026](https://arxiv.org/abs/2604.17109) | Optimization speed does not establish calibrated sampling. No repeated inertia sweep. |
+| Hallucination mitigation | SURE-RAG, sufficiency, semantic-gap and VeriFin papers above | Keep source isolation and natural-label evaluation. |
+| KAN | [Forgetting, November 2025](https://arxiv.org/abs/2511.12828); [KAN-CL, May 2026](https://arxiv.org/abs/2605.12306); [KAC, March 2025](https://arxiv.org/abs/2503.21076) | Spline locality does not ensure retained confidence. Defer architecture changes until current heads are measured. |
+| Energy-guided generation | [ETS, January 2026](https://arxiv.org/abs/2601.21484); [ERM, July 2026](https://arxiv.org/abs/2607.10128) | Require a useful energy before increasing search or changing decoding. |
+| Accelerated sampling | [FPGA decomposition, February 2026](https://arxiv.org/abs/2602.15985); [Extropic Z1T, September 4](https://extropic.ai/writing/z1t) | Include projection, transport and durable writes in acceleration ceilings. Vendor estimates are not local timings. |
+| Continual learning | TOOD, Continual Calibration and delayed-feedback work above | Test causal future decisions and uncertainty retention on the same trajectory. |
+
+### Secondary-source access receipts
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. The indexed
+  [VFScale PDF](https://openreview.net/pdf?id=8ta0xgtsJK) describes energy-quality
+  alignment and hybrid search. Its [forum](https://openreview.net/forum?id=8ta0xgtsJK)
+  returned a browser challenge. No new implementation depends on this lead.
+- **Semantic Scholar:** queried citation endpoints for both requested papers.
+  EBT's bounded 20-record request returned HTTP 429. ARM–EBM returned eight
+  citing records with no next marker, including distributional EBM, LoopUS,
+  Graph Energy Matching and Constitutional On-Policy Safe Distillation.
+  This is an access-limited citation check, not a complete census of EBT work.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification)
+  and related verification searches. Followed VeriFin to its primary abstract.
+  Feed popularity and snippets do not establish method validity.
+- **GitHub:** checked monthly Python and weekly Rust trending pages. Returned
+  crawls were two weeks old and dominated by navigation; no current rank is
+  established. Direct repositories [THRML](https://github.com/extropic-ai/thrml),
+  [sparse transformers](https://github.com/extropic-ai/sparse-transformers) and
+  [KAC](https://github.com/Ethanhuhuhu/KAC) were accessible. No dependency update
+  or local compatibility claim follows from browsing them.
+- **Extropic:** checked the writing index and readable Z1T article. Its sparse
+  topology and FPGA companion motivate transfer-cost accounting. Local TSU
+  access remains unqualified.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and the current site. Architecture descriptions supply context, without a
+  reproducible Kona implementation or a Carnot comparison.
+
+V684's twelve dispatches produced six disqualified artifacts and six skipped
+science producers. Specific failures include source coverage of 70/318
+statements, intervention coverage of 302/304, and tests that require a staging
+file after activation removes it. These are execution defects, not negative
+scientific findings. Repair and qualify the existing code paths before fitting;
+retain the historical artifacts and all required-check determinations.

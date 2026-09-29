@@ -11,7 +11,55 @@ evidence the reviewer could not have read -- do NOT act on them.
 |---|---|
 | CHECKABLE | 8 |
 
-## experiment_7867_v683_natural_runtime.json
+## experiment_7879_v684_contract_methods.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The validation run is disqualified and fails the contract gate because the staged authority file `research-roadmap-next.yaml` is missing.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7880_v684_source_boundary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Experiment 7880 was disqualified because the required coverage check failed: it measured 22% against a 100% threshold.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` and `observed_child_commands` identify `coverage_report`, its failed status, exit code, measured coverage, and threshold.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7881_v684_intervention_protocol.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The run was disqualified because a required validation check failed (`coverage_report.passed` observed false vs. expected true).
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7882_energy_fit.json
 
 **CHECKABLE**
 
@@ -27,7 +75,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7868_v683_intervention_protocol.json
+## experiment_7884_qwen_sufficiency.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The run was blocked because four of six upstream gates failed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7887_v684_arc_supervisor_delta.json
 
 **CHECKABLE**
 
@@ -43,7 +107,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7874_v683_arc_supervisor_delta.json
+## experiment_7889_v684_hardware_evidence.json
 
 **CHECKABLE**
 
@@ -51,15 +115,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The run claims no current hardware execution or measured hardware advantage, and reports disqualification due to required checks.
 
 ## WHAT IS MISSING
-nothing
+nothing; `board_rows` records the board statuses, `board_rows.GateMate.blocker` records `0xffffffff`, and `historical_required_failures` and `historical_failures` identify failed checks and observed results.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7876_v683_hardware_evidence.json
+## experiment_7890_v684_capstone.json
 
 **CHECKABLE**
 
@@ -67,71 +131,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-This is receipt-only historical accounting: it reports zero current device executions, no measured hardware speedup, and a disqualified verdict.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7877_v683_independent_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The audit was completed but disqualified because required v683 validation and upstream readiness checks failed.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` records the failed checks with their `expected` and `observed` values.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7878_v683_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact claims that the v683 milestone capstone is disqualified from execution readiness (`complete_disqualified_required_v683_validation`) due to failed prerequisite experiment gate checks and validation command timeouts.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7869_energy_fit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7871_qwen_sufficiency.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because 5 of 6 upstream gate checks failed, beginning with exp7866-source-boundary.source_boundary_ready_score observing 0 instead of 1.
+The capstone is disqualified with readiness score 0 because required validation and upstream gates failed.
 
 ## WHAT IS MISSING
 nothing
