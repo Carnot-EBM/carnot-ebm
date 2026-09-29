@@ -7074,3 +7074,10 @@ The critical path for milestone .250:
 - theme: source feature isolation, training check repair, and outcome reconciliation led wall-time execution across an all-compute set lacking sub-phase metrics
 - key result: honest operational negative — evaluator isolation and training check repair consumed 51.97 of 74.6 total wall-time minutes (69.7%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.681
+
+- exp_range: no data available this milestone
+- theme: outcome reconciliation, delayed-feedback task binding, and length baseline permutation led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — outcome reconciliation and delayed-feedback task binding consumed 7.97 of 24.9 total wall-time minutes (32.0%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone

@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.681",
+  "generated_at": "2026-09-29T02:17:26Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 24.9,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile fourteen outcomes and set evidence-based continuation rules",
+      "duration_minutes": 4.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and ingest length-confounding and delayed-feedback methods",
+      "duration_minutes": 3.87,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Test a length-only baseline and source permutation before crediting semantics",
+      "duration_minutes": 3.65,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Repair source-intervention import receipts and qualify the real dispatcher",
+      "duration_minutes": 3.55,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Preserve board continuity and bound traffic-sensitive acceleration",
+      "duration_minutes": 3.33,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Eight compute-bound experiments completed in 24.9 wall-time minutes (averaging 3 minutes per experiment) based on disk-mtime fallback reconstruction. Execution was led by 'Reconcile fourteen outcomes and set evidence-based continuation rules' at 4.1 minutes, 'Bind fourteen tasks and ingest length-confounding and delayed-feedback methods' at 3.87 minutes, and 'Test a length-only baseline and source permutation before crediting semantics' at 3.65 minutes, with the top five compute-bound tasks totaling 18.5 minutes (74.3% of the milestone wall time). The post-execution GPU monitor report recorded both RTX 3090 GPUs idle (5MB and 4MB allocated at 0% utilization) upon completion with gpu_idle_on_compute_bound_tasks recorded as false, while continuous active-window accelerator telemetry was unrecorded and no multi-model task requiring DualGPURunner was present.",
+  "bottlenecks_identified": [
+    "The top five compute-bound experiments ('Reconcile fourteen outcomes and set evidence-based continuation rules' at 4.1 minutes, 'Bind fourteen tasks and ingest length-confounding and delayed-feedback methods' at 3.87 minutes, 'Test a length-only baseline and source permutation before crediting semantics' at 3.65 minutes, 'Repair source-intervention import receipts and qualify the real dispatcher' at 3.55 minutes, and 'Preserve board continuity and bound traffic-sensitive acceleration' at 3.33 minutes) accounted for 18.5 of 24.9 total wall-time minutes (74.3%), but available records lack intra-task phase breakdown to isolate specific execution delays.",
+    "Milestone timing relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits, omitting granular per-phase boundary markers and execution metadata.",
+    "The GPU monitor report provides only a single post-execution snapshot (both RTX 3090 GPUs idle at 0% utilization with 5MB and 4MB allocated at 2026-09-29T02:17:26.505603+00:00), leaving continuous accelerator utilization and throughput unmeasured across the 24.9 minutes."
+  ],
+  "improvements_suggested": [
+    "Add granular phase-level timing within outcome reconciliation, task binding, and baseline permutation tasks to profile where execution time is concentrated.",
+    "Persist structured execution receipts at milestone boundaries to avoid falling back to disk-mtime reconstruction.",
+    "Sample GPU utilization, memory usage, and temperature periodically throughout task execution to capture active-window accelerator telemetry.",
+    "Include explicit concurrency and model count declarations in task manifests to unambiguously verify DualGPURunner applicability."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement intra-task phase profiling for the longest-running outcome reconciliation and task binding workflows to identify internal bottlenecks.",
+    "Persist structured milestone execution receipts to eliminate disk-mtime fallback reconstruction when git log yields 0 commits.",
+    "Deploy lightweight continuous GPU telemetry logging during compute-bound runs to measure active accelerator utilization."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU monitor report captured quiescent accelerators (both RTX 3090 GPUs at 0% utilization with 5MB and 4MB allocated) at milestone completion timestamp 2026-09-29T02:17:26.505603+00:00, indicating post-run idle state rather than mid-task stalling, consistent with gpu_idle_on_compute_bound_tasks=false. Without continuous active-window telemetry or intra-task phase timers for the 4.1-minute outcome reconciliation and 3.87-minute task binding tasks, specific internal compute bottlenecks cannot be definitively isolated from available records. Estimated time savings are set to 0% pending empirical measurement of phase profiling and receipt persistence tooling improvements."
+}
