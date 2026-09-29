@@ -7102,3 +7102,10 @@ The critical path for milestone .250:
 - theme: board obligation preservation, source custody qualification, and PRD gap reduction led wall-time execution across an all-compute set lacking sub-phase metrics
 - key result: honest operational negative — board obligation preservation and source custody qualification consumed 4.52 of 7.7 total wall-time minutes (58.7%), while available records lack intra-task stage timing, continuous multi-device accelerator telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.685
+
+- exp_range: no data available this milestone
+- theme: source energy calibration, producer coverage qualification, and terminal revalidation led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — calibrated source energy fitting and source producer coverage qualification consumed 8.63 of 13.1 total wall-time minutes (65.9%), while available records lack intra-task stage timing, continuous multi-device accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone

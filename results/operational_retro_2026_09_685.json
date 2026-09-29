@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.685",
+  "generated_at": "2026-09-29T23:42:45Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 13.1,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Fit calibrated source energies with matched observation budgets",
+      "duration_minutes": 5.39,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Complete source producer coverage and qualify natural inputs",
+      "duration_minutes": 3.24,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify terminal revalidation and source intervention paths",
+      "duration_minutes": 1.21,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind the task contract across staging and activation",
+      "duration_minutes": 1.16,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently reduce twelve outcomes and decide the PRD gaps",
+      "duration_minutes": 1.06,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Seven compute-bound experiments completed in 13.1 wall-time minutes (averaging 2 minutes per experiment) based on disk-mtime fallback reconstruction, with no synthesis-only tasks. Execution was led by 'Fit calibrated source energies with matched observation budgets' at 5.39 minutes and 'Complete source producer coverage and qualify natural inputs' at 3.24 minutes, which together accounted for 8.63 of the 13.1 total wall-time minutes (65.9%), followed by three tasks at 1.21, 1.16, and 1.06 minutes. Active accelerator utilization was recorded on GPU 1 at 96% utilization and 17355MB allocated across two processes while GPU 0 was idle with 5MB allocated (0% utilization), resulting in gpu_idle_on_compute_bound_tasks recorded as false with no multi-model concurrent workloads requiring DualGPURunner.",
+  "bottlenecks_identified": [
+    "The top two compute-bound experiments ('Fit calibrated source energies with matched observation budgets' at 5.39 minutes and 'Complete source producer coverage and qualify natural inputs' at 3.24 minutes) accounted for 8.63 of 13.1 total wall-time minutes (65.9%), but available records lack intra-task stage timing to profile which internal numerical optimization and coverage routines dominated execution.",
+    "Milestone timing relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits, omitting structured per-task phase start/finish timestamps and execution metadata.",
+    "Accelerator telemetry represents a single point-in-time snapshot (GPU 1 at 96% utilization with 17355MB allocated and GPU 0 idle with 5MB allocated at 2026-09-29T23:42:45.918242+00:00), leaving continuous accelerator utilization and memory telemetry unrecorded across the 13.1 minutes of execution."
+  ],
+  "improvements_suggested": [
+    "Implement request batching in Python inference (batching 8-16 questions per forward pass) to improve throughput on compute-bound workloads as identified in the GPU monitor report.",
+    "Add granular sub-phase timers within source energy calibration and producer coverage qualification workflows to isolate numerical fitting and validation delays.",
+    "Persist structured milestone execution receipts to eliminate fallback to disk-mtime reconstruction when git log finds 0 commits.",
+    "Sample GPU utilization, memory allocation, and temperature periodically throughout task execution to capture continuous multi-device accelerator telemetry across compute-bound runs."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement request batching (8-16 questions per forward pass) for Python inference processes to accelerate forward passes on GPU 1.",
+    "Add intra-task phase profiling for the longest-running source energy calibration and producer coverage workflows to isolate internal execution bottlenecks.",
+    "Persist structured milestone execution receipts at milestone boundaries to eliminate disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "All 7 completed experiments were compute-bound and finished within 13.1 wall-time minutes, with GPU 1 actively utilized at 96% utilization (17355MB allocated across PID 3630307 and PID 3630429) and GPU 0 idle (5MB allocated, 0% utilization), correctly reflected by gpu_idle_on_compute_bound_tasks=false for a single-model workload. Execution was concentrated in the two longest tasks totaling 8.63 minutes (65.9% of wall time), which currently lack intra-task sub-phase instrumentation to identify internal bottlenecks. Estimated time savings are set to 0% pending empirical measurement of inference batching and structured receipt persistence tooling improvements."
+}

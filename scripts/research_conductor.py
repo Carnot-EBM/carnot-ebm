@@ -81,7 +81,8 @@ DEFAULT_MODEL_BY_TYPE = {
     # audit already ran gpt-5.6-sol via their own AGENT_MODEL_* env vars; only
     # the experiment tier was left behind, so a milestone mixed both models.
     # 2026-09-25 operator directive: move to gpt-6-sol (released with gpt-6-luna; cheaper).
-    "codex": "gpt-6-sol",
+    # 2026-09-29: move to gpt-6.1-sol.
+    "codex": "gpt-6.1-sol",
     "agy": "gemini-3.8-flash-high",
 }
 
@@ -1734,7 +1735,7 @@ def run_agent(
     if deliverable_path and _deliverable_present(deliverable_path):
         return result
 
-    fallback_model = os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-6-sol")
+    fallback_model = os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-6.1-sol")
     logger.warning(
         "%s Retrying once with Codex model %s.",
         result[1],
@@ -6001,7 +6002,7 @@ def _plan_next_milestone(push: bool = True, replan_context: str = "") -> bool:
         f"    work. Use this field to route specific task categories to their\n"
         f"    strongest backend. Multi-agent routing per\n"
         f"    openspec/change-proposals/multi-agent-routing.md.\n\n"
-        f"    Set `agent_type: codex` + `model: gpt-6-sol` for FORMULAIC CODE:\n"
+        f"    Set `agent_type: codex` + `model: gpt-6.1-sol` for FORMULAIC CODE:\n"
         f"      - WOPR-games-gallery cartridges (Sudoku, Lights Out,\n"
         f"        N-Queens, Connect Four, Hex, Slitherlink, Hashi, etc.)\n"
         f"      - New verifier implementations (constraint encoding follows\n"

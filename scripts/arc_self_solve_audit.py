@@ -131,7 +131,7 @@ def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tupl
     return call_codex(
         prompt,
         body,
-        model=os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-6-sol"),
+        model=os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-6.1-sol"),
     )
 
 

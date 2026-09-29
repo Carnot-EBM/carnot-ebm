@@ -47,7 +47,7 @@ LOG_PATH = REPO_ROOT / "docs" / "research-notes" / "arc-agi3-leaderboard-techniq
 # timer runs this unattended once daily, so a longer wall-clock budget costs nothing but the
 # investigation's own runtime.
 CODEX_TIMEOUT_S = 900
-CODEX_MODEL = "gpt-6-sol"
+CODEX_MODEL = "gpt-6.1-sol"
 
 KNOWN_BASELINE = """\
 Known baseline as of 2026-07-15 (do not re-report these as new; prior one-off dive on 2026-06-20,
