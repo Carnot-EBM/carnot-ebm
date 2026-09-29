@@ -21034,3 +21034,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: Repaired the Exp7874 CLI sibling import for direct script execution. Its private reduction and cold replay pass; the conductor-equivalent subset passes 87/87 and the new reducer has 75/75 statement coverage. No test was skipped or weakened, and `scripts/research_conductor.py` was not changed.
 - 2026-09-29: V683 live ARC supervisor receipt delta (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_verification; results/experiment_7874_v683_arc_supervisor_delta.json
 - 2026-09-29: V683 board continuity and workload custody (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7876_v683_hardware_evidence.json
+- 2026-09-29: V683 independent evidence and causal audit (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_v683_validation; results/experiment_7877_v683_independent_audit.json
