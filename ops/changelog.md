@@ -21028,3 +21028,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 
 - 2026-09-29: V683 contract and frozen methods (⚠️ Research Finding) — honest_verdict=complete_disqualified_v683_required_validation; results/experiment_7865_v683_contract_methods.json
 - 2026-09-29: V683 public source boundary qualification (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7866_v683_source_boundary.json
+- 2026-09-29: V683 callable natural training and bank runtime (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_runtime; results/experiment_7867_v683_natural_runtime.json
