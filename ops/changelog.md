@@ -20994,3 +20994,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: Repair source-intervention import receipts and qualify the real dispatcher (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7839_v681_intervention_protocol.json
 - 2026-09-29: Refine ARC generalization only from new outcome-bearing supervisor receipts (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7845_v681_arc_supervisor_delta.json
 - 2026-09-29: Preserve board continuity and bound traffic-sensitive acceleration (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7847_v681_hardware_evidence.json
+- 2026-09-29: Test a length-only baseline and source permutation before crediting semantics (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7848_v681_length_shortcut.json
