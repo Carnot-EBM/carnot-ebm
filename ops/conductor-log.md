@@ -19010,3 +19010,5 @@ code |
 | 2026-09-29 09:55 UTC | V683 public source boundary qualification | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 87 passed, 1 warning in 12.75s |
 | 2026-09-29 10:27 UTC | V683 callable natural training and bank runtime | OK | 109 passed, 1 warning in 45.16s |
 | 2026-09-29 11:12 UTC | V683 CPU intervention protocol qualification | OK | 101 passed, 1 warning in 11.49s |
+| 2026-09-29 11:14 UTC | V683 calibrated source energy versus matched contr | GATE_BLOCK | gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7866-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 11:16 UTC | V683 selective decisions at equal coverage | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
