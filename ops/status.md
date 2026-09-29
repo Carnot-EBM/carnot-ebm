@@ -1,5 +1,15 @@
 # Carnot — Operational Status
 
+## 2026-09-29 — Exp7874 direct CLI import repaired
+
+- The V683 supervisor delta CLI resolves its V682 sibling when invoked by
+  script path, so private ledger reduction and cold replay run in fresh
+  processes. The conductor-equivalent subset passes 87/87 tests with one
+  existing deprecation warning; adjacent ARC delta tests pass 33/33.
+- The new reducer has 75/75 statements covered. Scoped Ruff, format, strict
+  mypy, spec traceability, and E2E-017 pass. Repository-wide spec traceability
+  still reports 1,142 pre-existing untraced tests.
+
 ## 2026-09-29 — Exp7862 malformed board receipt repaired
 
 - Required historical JSON and board-row shape failures now yield a blocked

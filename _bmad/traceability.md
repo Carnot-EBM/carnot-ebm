@@ -1,6 +1,12 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-29
+**Operational Note:** REQ-REPORT-7874 and SCENARIO-REPORT-7874-GATE map the
+V683 receipt reducer and direct script-path CLI to
+`tests/python/test_arc_supervisor_delta_7874.py` and E2E-017. The CLI resolves
+its V682 sibling in both package imports and direct execution. The 87-test
+conductor-equivalent subset passes; the new reducer has 75/75 statements
+covered by focused tests.
 **Operational Note:** REQ-REPORT-7852 and SCENARIO-REPORT-7852-TERMINAL map
 the direct script-path public fixture to
 `tests/python/test_source_boundary_7852.py` and E2E-015. The sibling producer

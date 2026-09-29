@@ -85364,6 +85364,22 @@ Given no authenticated receipt later than the cutoff, the CLI returns a complete
 #### SCENARIO-REPORT-7860-INPUT
 
 Given a missing prerequisite or malformed receipt, the CLI reports exact failed gate operands or a retained excluded row. A required validation failure disqualifies readiness. The candidate verdict class and terminal prefix agree.
+
+### REQ-REPORT-7874: Sealed live supervisor continuity
+
+The V683 reader SHALL pin the exact V682 artifact, source, and solve registry bytes before reading receipts. It SHALL advance the cutoff to the V682 sealed snapshot and count only authenticated live agent outcomes after that cutoff. It SHALL keep duplicate, stale, malformed, and off-path rows visible but ineligible. A game level already reproduced by the live mechanism SHALL not count as a new solve. It SHALL report per-game outcomes, gains, regressions, and lost wins from primitive rows. It SHALL make zero model calls and SHALL not start a game. An empty eligible delta SHALL be a complete null with readiness one after required validation passes. Missing external evidence SHALL be a terminal blocked result.
+
+#### SCENARIO-REPORT-7874-DELTA
+
+Given new authenticated live receipts, stale receipts, duplicates, and off-path provenance, only unique post-cutoff live rows contribute to the delta. The result keeps every screened disposition and the registry precheck.
+
+#### SCENARIO-REPORT-7874-EMPTY
+
+Given no new admissible outcomes, the CLI records zero new live outcomes, the exact cutoff and registry hash, an empty per-game result, and a complete null verdict.
+
+#### SCENARIO-REPORT-7874-GATE
+
+Given a changed prior hash, missing source, or failed required check, the terminal artifact reports the exact failed operand and does not claim readiness.
 ## REQ-REPORT-7847: Direct board custody and optional current service
 
 Exp7847 SHALL use a direct reader of the three dated board source files and
