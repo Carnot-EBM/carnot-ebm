@@ -1,0 +1,1221 @@
+{
+  "experiment": "bonsai2_quality_eval",
+  "run_date": "2026-09-29",
+  "honest_verdict": "complete: no detectable quality difference between bonsai-2 ternary and the mandated standard model at N=60 execution-graded HumanEval tasks (McNemar p=1.0000)",
+  "purpose": "Follow-up quality comparison of PrismML's ternary-quantized Bonsai-2 27B against the Carnot-mandated unsloth/Qwen3.8-27B-GGUF, using REAL text generation graded by REAL unit-test execution (not an LLM judge, not a single-logit readout). Replaces the inconclusive bounded quality proxy in the prior eval.",
+  "scope_boundaries": {
+    "arc_kaggle_stack_touched": false,
+    "gpu_used": "GPU 1 only (CUDA_VISIBLE_DEVICES=1); GPU 0 never touched",
+    "mandated_model_config_modified": false,
+    "claude_md_modified": false,
+    "concurrent_or_batched_requests": false
+  },
+  "duration_s": 596.5144507660298,
+  "random_seed": 20260929,
+  "reproducibility_checksum": "2d419a6ee4f20aa3",
+  "reproducibility_checksum_note": "sha256 of manifest name + n_main + seed + both GGUF revisions + fork commit.",
+  "preconditions_checked": [
+    {
+      "resource": "fork_server_binary_present",
+      "available": true,
+      "detail": "/tmp/bonsai_followup/fork-llama.cpp/build/bin/llama-server"
+    },
+    {
+      "resource": "bonsai_gguf_cached",
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--prism-ml--Ternary-Bonsai-2-27B-gguf/snapshots/b072e1d3b35a0a630cece372c2127528e0994386/Ternary-Bonsai-2-27B-PTQ1_0.gguf"
+    },
+    {
+      "resource": "standard_gguf_cached",
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+    },
+    {
+      "resource": "gpu1_state_logged",
+      "available": true,
+      "detail": "0, 5 MiB\n1, 4 MiB"
+    }
+  ],
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_full_generation",
+  "positive_control_passed": true,
+  "false_negative_risk_checked": true,
+  "false_negative_risk_note": "A real, deliberately-trivial positive control ('add two numbers') is run through the SAME harness as the main comparison for both models. Both models passing it is what makes a null quality-delta result trustworthy rather than a harness-degeneracy artifact; a failed control blocks the verdict outright (see honest_verdict) instead of being read as a finding.",
+  "methodology_notes": [],
+  "task_set": {
+    "name": "HumanEval",
+    "why_chosen": "Reused existing project infrastructure rather than building new: data/eval_manifests/humaneval_20260522.jsonl is a real, already-in-repo 164-problem HumanEval manifest with canonical solutions and executable unit tests, already used by this project's own execution-graded code experiments (e.g. scripts/experiment_163_humaneval_full.py). Coding with unit-test execution is the strongest, most objective grader available and was the brief's stated preference.",
+    "manifest_path": "data/eval_manifests/humaneval_20260522.jsonl",
+    "manifest_total_available": 164,
+    "n_main_sampled": 60,
+    "n_positive_control": 1,
+    "sample_size_rationale": "N=60 is double CLAUDE.md's Adversarial Artifact Verification floor of N>=30 for a percentage-point delta claim, chosen to give real statistical margin while keeping single-stream wall-clock (60 tasks x 2 models, temperature=0, max_tokens=512) inside a bounded-eval budget."
+  },
+  "model_specs": [
+    {
+      "name": "Ternary-Bonsai-2-27B (PrismML fork, PTQ1_0)",
+      "hf_repo": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+      "hf_revision": "b072e1d3b35a0a630cece372c2127528e0994386",
+      "file": "Ternary-Bonsai-2-27B-PTQ1_0.gguf"
+    },
+    {
+      "name": "Qwen3.8-27B-Q4_K_M (mandated comparator)",
+      "hf_repo": "unsloth/Qwen3.8-27B-GGUF",
+      "hf_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "file": "Qwen3.8-27B-Q4_K_M.gguf"
+    }
+  ],
+  "serving_substrate": {
+    "repo": "PrismML-Eng/llama.cpp",
+    "branch": "prism",
+    "commit": "87268f775d74cf8f7ffc6c22a95684aa55995533",
+    "fork_safety_audit_reused": "Already audited clean in results/experiment_bonsai2_ternary_eval.json; not re-audited here per task instructions.",
+    "same_binary_both_models": true,
+    "parallel_slots": 1,
+    "ctx_tokens": 4096,
+    "temperature": 0.0,
+    "max_tokens": 512,
+    "prompt_suffix": "/no_think appended to disable extended reasoning traces for both models equally"
+  },
+  "grader": {
+    "method": "real subprocess execution of the HumanEval check(candidate) test harness",
+    "not_llm_judge": true,
+    "timeout_s": 5,
+    "adapted_from": "scripts/experiment_163_humaneval_full.py execute_solution() -- same subprocess+tempfile+hard-timeout shape, reimplemented here (not imported: that file's module-level dataclasses break under dynamic importlib loading outside its own script identity) and adapted to grade a full generated function rather than a continuation-style body fragment, which better fits chat-completion output."
+  },
+  "positive_control": {
+    "task": "positive_control/add_two_numbers",
+    "bonsai_passed": true,
+    "standard_passed": true,
+    "principle": "A deliberately trivial task ('add two numbers') that both models must solve. If either fails it, that is a harness bug, not a model-quality finding -- caught before any negative result is trusted."
+  },
+  "results": {
+    "bonsai_ternary": {
+      "server_status": "ready",
+      "load_s": 4.007678250956815,
+      "pass_rate": 0.85,
+      "n_passed": 51,
+      "n_total": 60,
+      "per_task_passed": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "per_task_detail": [
+        {
+          "stable_id": "HumanEval/97",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.6868095619720407,
+          "completion_tokens": 139
+        },
+        {
+          "stable_id": "HumanEval/132",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 3.939719417016022,
+          "completion_tokens": 214
+        },
+        {
+          "stable_id": "HumanEval/74",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.698906566947699,
+          "completion_tokens": 256
+        },
+        {
+          "stable_id": "HumanEval/118",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.165731518005487,
+          "completion_tokens": 226
+        },
+        {
+          "stable_id": "HumanEval/37",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.586223541002255,
+          "completion_tokens": 190
+        },
+        {
+          "stable_id": "HumanEval/111",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.367553862044588,
+          "completion_tokens": 238
+        },
+        {
+          "stable_id": "HumanEval/60",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.4781930640456267,
+          "completion_tokens": 125
+        },
+        {
+          "stable_id": "HumanEval/153",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.288445217011031,
+          "completion_tokens": 351
+        },
+        {
+          "stable_id": "HumanEval/93",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError: This prints if this assert fails 1 (good for debugging!)",
+          "elapsed_s": 5.165216414025053,
+          "completion_tokens": 286
+        },
+        {
+          "stable_id": "HumanEval/123",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.891584814991802,
+          "completion_tokens": 328
+        },
+        {
+          "stable_id": "HumanEval/17",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.177697567036375,
+          "completion_tokens": 227
+        },
+        {
+          "stable_id": "HumanEval/129",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 8.205676629033405,
+          "completion_tokens": 457
+        },
+        {
+          "stable_id": "HumanEval/2",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.022415367013309,
+          "completion_tokens": 97
+        },
+        {
+          "stable_id": "HumanEval/79",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.241153409006074,
+          "completion_tokens": 170
+        },
+        {
+          "stable_id": "HumanEval/128",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.995133204967715,
+          "completion_tokens": 216
+        },
+        {
+          "stable_id": "HumanEval/108",
+          "passed": false,
+          "error_type": "other",
+          "error_msg": "ValueError: invalid literal for int() with base 10: '-'",
+          "elapsed_s": 4.166439509950578,
+          "completion_tokens": 227
+        },
+        {
+          "stable_id": "HumanEval/117",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.864979771024082,
+          "completion_tokens": 267
+        },
+        {
+          "stable_id": "HumanEval/113",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.7814019519719295,
+          "completion_tokens": 260
+        },
+        {
+          "stable_id": "HumanEval/149",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.379533161991276,
+          "completion_tokens": 237
+        },
+        {
+          "stable_id": "HumanEval/114",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.1626819550292566,
+          "completion_tokens": 167
+        },
+        {
+          "stable_id": "HumanEval/33",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.1857959579792805,
+          "completion_tokens": 226
+        },
+        {
+          "stable_id": "HumanEval/14",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 1.8176000919775106,
+          "completion_tokens": 84
+        },
+        {
+          "stable_id": "HumanEval/47",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.2074137129820883,
+          "completion_tokens": 170
+        },
+        {
+          "stable_id": "HumanEval/124",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 9.161126590974163,
+          "completion_tokens": 512
+        },
+        {
+          "stable_id": "HumanEval/158",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.069664110953454,
+          "completion_tokens": 161
+        },
+        {
+          "stable_id": "HumanEval/32",
+          "passed": false,
+          "error_type": "other",
+          "error_msg": "NameError: name 'math' is not defined. Did you forget to import 'math'?",
+          "elapsed_s": 6.637435570999514,
+          "completion_tokens": 375
+        },
+        {
+          "stable_id": "HumanEval/141",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.252961233025417,
+          "completion_tokens": 353
+        },
+        {
+          "stable_id": "HumanEval/65",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.8735341919818893,
+          "completion_tokens": 150
+        },
+        {
+          "stable_id": "HumanEval/80",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.5887342219939455,
+          "completion_tokens": 194
+        },
+        {
+          "stable_id": "HumanEval/126",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.353387415991165,
+          "completion_tokens": 358
+        },
+        {
+          "stable_id": "HumanEval/159",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.188738349999767,
+          "completion_tokens": 343
+        },
+        {
+          "stable_id": "HumanEval/151",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.660972260986455,
+          "completion_tokens": 196
+        },
+        {
+          "stable_id": "HumanEval/143",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.13569288601866,
+          "completion_tokens": 284
+        },
+        {
+          "stable_id": "HumanEval/145",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 3.837401647004299,
+          "completion_tokens": 207
+        },
+        {
+          "stable_id": "HumanEval/146",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.906238073017448,
+          "completion_tokens": 212
+        },
+        {
+          "stable_id": "HumanEval/116",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.318001560983248,
+          "completion_tokens": 235
+        },
+        {
+          "stable_id": "HumanEval/95",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.640701630036347,
+          "completion_tokens": 255
+        },
+        {
+          "stable_id": "HumanEval/94",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 8.24059474299429,
+          "completion_tokens": 469
+        },
+        {
+          "stable_id": "HumanEval/133",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.5241100399871357,
+          "completion_tokens": 186
+        },
+        {
+          "stable_id": "HumanEval/25",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.7617079210467637,
+          "completion_tokens": 202
+        },
+        {
+          "stable_id": "HumanEval/55",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.25081623805454,
+          "completion_tokens": 110
+        },
+        {
+          "stable_id": "HumanEval/56",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.9873391749570146,
+          "completion_tokens": 157
+        },
+        {
+          "stable_id": "HumanEval/24",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.0859717679559253,
+          "completion_tokens": 104
+        },
+        {
+          "stable_id": "HumanEval/85",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 1.8220206269761547,
+          "completion_tokens": 88
+        },
+        {
+          "stable_id": "HumanEval/5",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.77010673499899,
+          "completion_tokens": 144
+        },
+        {
+          "stable_id": "HumanEval/73",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.9624292819644324,
+          "completion_tokens": 210
+        },
+        {
+          "stable_id": "HumanEval/137",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.240671815990936,
+          "completion_tokens": 232
+        },
+        {
+          "stable_id": "HumanEval/162",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.380980823014397,
+          "completion_tokens": 120
+        },
+        {
+          "stable_id": "HumanEval/53",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 1.501230251044035,
+          "completion_tokens": 63
+        },
+        {
+          "stable_id": "HumanEval/138",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 1.915669706009794,
+          "completion_tokens": 93
+        },
+        {
+          "stable_id": "HumanEval/163",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError: Test 1",
+          "elapsed_s": 2.9381443460006267,
+          "completion_tokens": 154
+        },
+        {
+          "stable_id": "HumanEval/66",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.746588926005643,
+          "completion_tokens": 140
+        },
+        {
+          "stable_id": "HumanEval/101",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 2.7121112250024453,
+          "completion_tokens": 140
+        },
+        {
+          "stable_id": "HumanEval/160",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 5.963621615024749,
+          "completion_tokens": 335
+        },
+        {
+          "stable_id": "HumanEval/31",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.6531758200144395,
+          "completion_tokens": 193
+        },
+        {
+          "stable_id": "HumanEval/42",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.5837886030203663,
+          "completion_tokens": 132
+        },
+        {
+          "stable_id": "HumanEval/154",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.3215833560097963,
+          "completion_tokens": 176
+        },
+        {
+          "stable_id": "HumanEval/134",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 6.264729760994669,
+          "completion_tokens": 356
+        },
+        {
+          "stable_id": "HumanEval/139",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.9910374580067582,
+          "completion_tokens": 157
+        },
+        {
+          "stable_id": "HumanEval/135",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.824435839022044,
+          "completion_tokens": 147
+        }
+      ],
+      "single_stream_tokens_per_s": 54.014994602928894
+    },
+    "standard_mandated": {
+      "server_status": "ready",
+      "load_s": 8.006849893019535,
+      "pass_rate": 0.8666666666666667,
+      "n_passed": 52,
+      "n_total": 60,
+      "per_task_passed": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "per_task_detail": [
+        {
+          "stable_id": "HumanEval/97",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.6767248019459657,
+          "completion_tokens": 139
+        },
+        {
+          "stable_id": "HumanEval/132",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 5.493407570000272,
+          "completion_tokens": 216
+        },
+        {
+          "stable_id": "HumanEval/74",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.520500127982814,
+          "completion_tokens": 256
+        },
+        {
+          "stable_id": "HumanEval/118",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 7.182628921989817,
+          "completion_tokens": 287
+        },
+        {
+          "stable_id": "HumanEval/37",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.013768777018413,
+          "completion_tokens": 195
+        },
+        {
+          "stable_id": "HumanEval/111",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.77222428197274,
+          "completion_tokens": 269
+        },
+        {
+          "stable_id": "HumanEval/60",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.367472884012386,
+          "completion_tokens": 125
+        },
+        {
+          "stable_id": "HumanEval/153",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.4802667439798824,
+          "completion_tokens": 126
+        },
+        {
+          "stable_id": "HumanEval/93",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 7.313880849047564,
+          "completion_tokens": 292
+        },
+        {
+          "stable_id": "HumanEval/123",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 8.214543598005548,
+          "completion_tokens": 328
+        },
+        {
+          "stable_id": "HumanEval/17",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.571701795968693,
+          "completion_tokens": 260
+        },
+        {
+          "stable_id": "HumanEval/129",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 12.696258624026086,
+          "completion_tokens": 512
+        },
+        {
+          "stable_id": "HumanEval/2",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.7082934789941646,
+          "completion_tokens": 97
+        },
+        {
+          "stable_id": "HumanEval/79",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.461847133003175,
+          "completion_tokens": 170
+        },
+        {
+          "stable_id": "HumanEval/128",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.350721672002692,
+          "completion_tokens": 205
+        },
+        {
+          "stable_id": "HumanEval/108",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.164109644014388,
+          "completion_tokens": 241
+        },
+        {
+          "stable_id": "HumanEval/117",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 7.019793667946942,
+          "completion_tokens": 273
+        },
+        {
+          "stable_id": "HumanEval/113",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.629425077990163,
+          "completion_tokens": 260
+        },
+        {
+          "stable_id": "HumanEval/149",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.139499540033285,
+          "completion_tokens": 237
+        },
+        {
+          "stable_id": "HumanEval/114",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.0625555160222575,
+          "completion_tokens": 153
+        },
+        {
+          "stable_id": "HumanEval/33",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.852651220979169,
+          "completion_tokens": 226
+        },
+        {
+          "stable_id": "HumanEval/14",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.4241388259688392,
+          "completion_tokens": 84
+        },
+        {
+          "stable_id": "HumanEval/47",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.017706644022837,
+          "completion_tokens": 150
+        },
+        {
+          "stable_id": "HumanEval/124",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 12.67668416100787,
+          "completion_tokens": 512
+        },
+        {
+          "stable_id": "HumanEval/158",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.407982914999593,
+          "completion_tokens": 208
+        },
+        {
+          "stable_id": "HumanEval/32",
+          "passed": false,
+          "error_type": "other",
+          "error_msg": "NameError: name 'poly' is not defined",
+          "elapsed_s": 12.628390658006538,
+          "completion_tokens": 512
+        },
+        {
+          "stable_id": "HumanEval/141",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 10.614560910034925,
+          "completion_tokens": 427
+        },
+        {
+          "stable_id": "HumanEval/65",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.0742875980213284,
+          "completion_tokens": 152
+        },
+        {
+          "stable_id": "HumanEval/80",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.0685196639969945,
+          "completion_tokens": 194
+        },
+        {
+          "stable_id": "HumanEval/126",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 9.000404224032536,
+          "completion_tokens": 356
+        },
+        {
+          "stable_id": "HumanEval/159",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 9.101907171017956,
+          "completion_tokens": 362
+        },
+        {
+          "stable_id": "HumanEval/151",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.0034558799816296,
+          "completion_tokens": 196
+        },
+        {
+          "stable_id": "HumanEval/143",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.482070925994776,
+          "completion_tokens": 130
+        },
+        {
+          "stable_id": "HumanEval/145",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 4.39829429902602,
+          "completion_tokens": 170
+        },
+        {
+          "stable_id": "HumanEval/146",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.41059415898053,
+          "completion_tokens": 212
+        },
+        {
+          "stable_id": "HumanEval/116",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 12.4105689979624,
+          "completion_tokens": 512
+        },
+        {
+          "stable_id": "HumanEval/95",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 7.201019367959816,
+          "completion_tokens": 289
+        },
+        {
+          "stable_id": "HumanEval/94",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.064331574016251,
+          "completion_tokens": 149
+        },
+        {
+          "stable_id": "HumanEval/133",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.757978822046425,
+          "completion_tokens": 185
+        },
+        {
+          "stable_id": "HumanEval/25",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.431027699960396,
+          "completion_tokens": 214
+        },
+        {
+          "stable_id": "HumanEval/55",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.3100954889669083,
+          "completion_tokens": 126
+        },
+        {
+          "stable_id": "HumanEval/56",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.05728447396541,
+          "completion_tokens": 157
+        },
+        {
+          "stable_id": "HumanEval/24",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.508541228948161,
+          "completion_tokens": 91
+        },
+        {
+          "stable_id": "HumanEval/85",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.4093257740023546,
+          "completion_tokens": 88
+        },
+        {
+          "stable_id": "HumanEval/5",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.9291068880120292,
+          "completion_tokens": 152
+        },
+        {
+          "stable_id": "HumanEval/73",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.4006340660271235,
+          "completion_tokens": 210
+        },
+        {
+          "stable_id": "HumanEval/137",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.741362950997427,
+          "completion_tokens": 226
+        },
+        {
+          "stable_id": "HumanEval/162",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.202073347987607,
+          "completion_tokens": 120
+        },
+        {
+          "stable_id": "HumanEval/53",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 1.9050810560001992,
+          "completion_tokens": 63
+        },
+        {
+          "stable_id": "HumanEval/138",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 2.548295897024218,
+          "completion_tokens": 93
+        },
+        {
+          "stable_id": "HumanEval/163",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.5073991710087284,
+          "completion_tokens": 176
+        },
+        {
+          "stable_id": "HumanEval/66",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.675181970000267,
+          "completion_tokens": 140
+        },
+        {
+          "stable_id": "HumanEval/101",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 3.79263085097773,
+          "completion_tokens": 145
+        },
+        {
+          "stable_id": "HumanEval/160",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 6.5023167509934865,
+          "completion_tokens": 259
+        },
+        {
+          "stable_id": "HumanEval/31",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 5.048844525997993,
+          "completion_tokens": 196
+        },
+        {
+          "stable_id": "HumanEval/42",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.4878829949884675,
+          "completion_tokens": 132
+        },
+        {
+          "stable_id": "HumanEval/154",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 4.8085687480052,
+          "completion_tokens": 188
+        },
+        {
+          "stable_id": "HumanEval/134",
+          "passed": false,
+          "error_type": "assertion",
+          "error_msg": "AssertionError",
+          "elapsed_s": 8.825162518944126,
+          "completion_tokens": 360
+        },
+        {
+          "stable_id": "HumanEval/139",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.673383354966063,
+          "completion_tokens": 140
+        },
+        {
+          "stable_id": "HumanEval/135",
+          "passed": true,
+          "error_type": "none",
+          "error_msg": "",
+          "elapsed_s": 3.832335482002236,
+          "completion_tokens": 147
+        }
+      ],
+      "single_stream_tokens_per_s": 39.07092877732864
+    }
+  },
+  "mcnemar_test": {
+    "energy_descent_wins": 3.0,
+    "ar_wins": 4.0,
+    "p_value": 1.0,
+    "direction": -1.0
+  },
+  "delta_95_ci": {
+    "point_estimate": -0.016666666666666666,
+    "ci_lower": -0.1,
+    "ci_upper": 0.06666666666666667,
+    "direction_convention": "bonsai_ternary_pass_rate minus standard_mandated_pass_rate",
+    "method": "paired_bootstrap_ci from python/carnot/phase3/energy_descent_premise.py (this project's established paired-significance module), n_boot=5000, resampling problem indices jointly to preserve the paired correlation."
+  },
+  "throughput_single_stream_sanity_check": {
+    "bonsai_ternary_tok_s": 54.014994602928894,
+    "standard_mandated_tok_s": 39.07092877732864,
+    "prior_measured_bonsai_tok_s": 61.2,
+    "prior_measured_standard_tok_s": 42.65,
+    "note": "This run's single-stream tok/s is a sanity check against the prior eval's throughput numbers (different prompt/generation shape -- code completion, not the prior eval's fixed 300-token bench -- so an exact match is not expected, only a consistent ordering and rough magnitude)."
+  },
+  "verifier_is_oracle": true,
+  "verifier_is_oracle_principle": "The grader (real unit-test execution) IS the executable oracle that defines code correctness for HumanEval. Per CLAUDE.md's Circularity/Oracle-Distinctness Discipline this is a VALID, execution_grounded result but must not be headlined as an independent 'verifier moat' claim -- it is a quality comparison between two generators, not a claim about a learned/energy verifier's added value.",
+  "recommendation": "See docs/research-notes/bonsai2-ternary-eval-2026-09-29.md appended section for the full narrative; this artifact is the underlying data."
+}

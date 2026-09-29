@@ -346,3 +346,115 @@ model for the same disabled-fused-op fallback -- was not resolved.
 - `src/models/qwen35.cpp:22` (`full_attn_interval`) -- same fork tree
 - `ggml-org/llama.cpp` commit `6a2743f028f78bfb88a7189607b49bde30df3769` --
   the stock master build used for the isolation test
+
+## Addendum, 2026-09-29 (same day, later session): real-generation quality eval
+
+Full data: `results/experiment_bonsai2_quality_eval.json`.
+
+### Why this addendum exists
+
+The first section's quality check used a single-forward-pass accept/reject/
+escalate readout. Both models scored at or below chance on it. That was not
+evidence either model reasons well or badly -- the readout format was too
+weak to show anything. This addendum replaces it with real text generation,
+graded by real code execution, which is the strongest objective grader
+available and avoids LLM-as-judge grading entirely.
+
+### Task set: HumanEval, reused from existing project infrastructure
+
+We did not build a new benchmark. This project already has a real,
+164-problem HumanEval manifest at `data/eval_manifests/humaneval_20260522.jsonl`
+(canonical solutions plus executable `check(candidate)` unit tests, the same
+corpus `scripts/experiment_163_humaneval_full.py` already uses for
+execution-graded code work). We sampled N=60 of the 164 problems with a fixed
+seed, plus one hand-written positive-control task ("add two numbers") that
+both models had to pass. N=60 is double this project's own sample-size floor
+(N>=30 for a percentage-point delta claim per the Adversarial Artifact
+Verification discipline).
+
+### Method
+
+Both models ran through the SAME fork binary already audited clean in the
+first section (`PrismML-Eng/llama.cpp`, commit `87268f775`), single-stream
+only (`--parallel 1`), GPU 1 only, temperature 0, same 512-token generation
+budget, same system prompt asking for one Python code block. Grading was
+real subprocess execution of each generated function against its HumanEval
+test harness, adapted from `execute_solution()` in
+`scripts/experiment_163_humaneval_full.py` (same subprocess-plus-timeout
+shape; reimplemented rather than imported because that file's module-level
+dataclasses do not survive dynamic `importlib` loading outside its own
+script identity).
+
+**A harness fix worth recording.** Our first pass used the informal
+"/no_think" text hint this project uses for the ARC generator. On a harder
+HumanEval problem, Bonsai-2 spent its entire 512-token budget inside a
+hidden `reasoning_content` field and returned an EMPTY visible answer --
+which would have silently scored as "model produced no code" instead of what
+it actually was, a harness misconfiguration. The fork server has a proper
+structured control for this, `reasoning_effort: "none"` in the request body,
+which reliably disables the thinking phase. Switching to it fixed the
+problem for both models equally (applied identically, so it cannot bias the
+comparison one way).
+
+### Results
+
+| Model | Pass rate (N=60) | Passed |
+|---|---|---|
+| Ternary Bonsai 2 (PTQ1_0) | 85.0% | 51/60 |
+| Standard mandated Qwen3.8-27B-Q4_K_M | 86.7% | 52/60 |
+
+- **McNemar's exact test** (paired, on the 60-task sample): 3 problems where
+  only Bonsai passed, 4 where only the standard model passed, p=1.0000 --
+  not remotely significant.
+- **95% paired-bootstrap CI on the delta** (Bonsai minus standard,
+  n_boot=5000, resampling problem indices jointly): point estimate -0.017,
+  CI [-0.10, +0.067]. The interval comfortably contains zero.
+- **Positive control:** both models solved it. The harness is sound; a null
+  result here is not a broken test.
+
+**Plain-language verdict: no detectable quality difference between the
+ternary model and the mandated standard model at this sample size.** This is
+a clean, useful negative, not an inconclusive one -- unlike the first
+section's proxy, this result comes from real generations graded by real
+execution, with a passing positive control and a McNemar p-value nowhere
+close to significance. It does not rule out a real difference smaller than
+this sample can resolve; it does rule out a large one.
+
+### Throughput sanity check (not new measurement, a consistency check)
+
+| Model | This run's single-stream tok/s (code-completion prompts) | Prior eval's tok/s (fixed 300-token bench) |
+|---|---|---|
+| Ternary Bonsai 2 | 54.0 | 61.2 |
+| Standard mandated | 39.1 | 42.7 |
+
+Both numbers are lower than the first section's fixed-length benchmark,
+which is expected -- these are shorter, more variable code completions, not
+a fixed 300-token generation. The ordering (ternary faster) and rough
+magnitude both match the first section's measurement, so nothing has
+drifted between the two eval sessions.
+
+### `adversarial_verify.py` result
+
+Clean. Zero flags on the first run, exit code 0.
+
+### Updated recommendation
+
+The first section's recommendation stands, with one addition: the bounded
+quality proxy from that section is now superseded by a real measurement.
+Read this addendum's result, not the first section's inconclusive
+proxy, as this project's answer to "does the ternary quantization cost
+measurable coding quality against our own mandated baseline": on
+execution-graded HumanEval at N=60, no.
+
+### Cross-references (this addendum)
+
+- `results/experiment_bonsai2_quality_eval.json` -- full measured data
+- `scripts/experiments/experiment_bonsai2_quality_eval.py` -- the eval
+  harness
+- `data/eval_manifests/humaneval_20260522.jsonl` -- the reused HumanEval
+  task manifest
+- `scripts/experiment_163_humaneval_full.py` -- the project's prior
+  execution-grading pattern this harness adapts
+- `python/carnot/phase3/energy_descent_premise.py` -- the project's
+  established `mcnemar_test` / `paired_bootstrap_ci` module, reused
+  directly (not reimplemented) for the significance testing above
