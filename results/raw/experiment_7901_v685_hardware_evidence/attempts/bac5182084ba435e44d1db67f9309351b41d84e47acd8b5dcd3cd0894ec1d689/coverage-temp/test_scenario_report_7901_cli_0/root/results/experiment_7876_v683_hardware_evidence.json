@@ -1,0 +1,1921 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "decision_benefit": null,
+    "efficiency": null,
+    "probability_quality": null,
+    "readiness": 0,
+    "retention": null,
+    "validity": true
+  },
+  "board_rows": [
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "KV260",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": false,
+      "expected_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "family": "KV260",
+      "historical_verdict": "historical_fabric_k_max<=5",
+      "k_max": 5,
+      "last_authenticated_evidence_date": "20260913",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "processor_class": "fpga_fabric",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "KV260",
+      "source_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "source_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "started": false,
+      "state": "historical_fabric_k_max<=5",
+      "status": "historical_read_only",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "PolarFire",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": false,
+      "expected_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "family": "PolarFire",
+      "historical_verdict": "historical_linux_cpu_only",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260913",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "processor_class": "linux_cpu",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "hash-matched Linux CPU dispatch only",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "PolarFire",
+      "source_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "source_path": "results/experiment_7231_v636_board_continuity.json",
+      "started": false,
+      "state": "historical_linux_cpu_only",
+      "status": "historical_read_only",
+      "venue": "polarfire_linux_cpu_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": true,
+      "expected_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "family": "GateMate",
+      "historical_verdict": "blocked_physical_change_0xffffffff",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260915",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified execution; physical JTAG IDCODE blocked",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "GateMate",
+      "source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "started": false,
+      "state": "blocked_physical_change_0xffffffff",
+      "status": "historical_read_only",
+      "venue": "none_read_only"
+    }
+  ],
+  "changed_physical_receipts": [],
+  "claim_scope": {
+    "Extropic_TSU_Z1T": "unqualified",
+    "GateMate": "blocked_0xffffffff",
+    "NPU": "unqualified",
+    "board_evidence": "historical custody",
+    "current_measurement": "receipt analysis only",
+    "hardware_advantage": "unmeasured",
+    "p_computer": "unqualified",
+    "workload": "missing"
+  },
+  "current_device_execution_count": 0,
+  "duration_s": 915.7310763890273,
+  "execution_venue": "host",
+  "experiment_id": 7876,
+  "field_principles": {
+    "MODEL_SPECS": "Record MODEL SPECS to keep current work distinct from dated evidence.",
+    "acceptance_gate_results": {
+      "decision_benefit": "No decision benefit was measured.",
+      "efficiency": "No device efficiency was measured.",
+      "probability_quality": "No sampling law was measured.",
+      "readiness": "All owned required checks must pass.",
+      "retention": "No learned retention was measured.",
+      "validity": "Exact source bytes and scope must pass."
+    },
+    "board_rows": "Record board rows to keep current work distinct from dated evidence.",
+    "changed_physical_receipts": "Record changed physical receipts to keep current work distinct from dated evidence.",
+    "claim_scope": "Record claim scope to keep current work distinct from dated evidence.",
+    "current_device_execution_count": "Record current device execution count to keep current work distinct from dated evidence.",
+    "duration_s": "Record duration s to keep current work distinct from dated evidence.",
+    "execution_venue": "Record execution venue to keep current work distinct from dated evidence.",
+    "experiment_id": "Record experiment id to keep current work distinct from dated evidence.",
+    "flagged_adversarial": "Record flagged adversarial to keep current work distinct from dated evidence.",
+    "gate_check_summary": "Record gate check summary to keep current work distinct from dated evidence.",
+    "hardware_evidence_ready_score": "Record hardware evidence ready score to keep current work distinct from dated evidence.",
+    "hardware_rows": "Record hardware rows to keep current work distinct from dated evidence.",
+    "hardware_speedup_claimed": "Record hardware speedup claimed to keep current work distinct from dated evidence.",
+    "historical_failures": "Record historical failures to keep current work distinct from dated evidence.",
+    "honest_verdict": "Record honest verdict to keep current work distinct from dated evidence.",
+    "inference_substrate": "Record inference substrate to keep current work distinct from dated evidence.",
+    "inference_substrate_class": "Record inference substrate class to keep current work distinct from dated evidence.",
+    "milestone": "Record milestone to keep current work distinct from dated evidence.",
+    "model_invocation_counts": "Record model invocation counts to keep current work distinct from dated evidence.",
+    "model_specs": "Record model specs to keep current work distinct from dated evidence.",
+    "observed_child_commands": "Record observed child commands to keep current work distinct from dated evidence.",
+    "phase_spans": "Record phase spans to keep current work distinct from dated evidence.",
+    "planned_inference_substrate_class": "Record planned inference substrate class to keep current work distinct from dated evidence.",
+    "preconditions_checked": "Record preconditions checked to keep current work distinct from dated evidence.",
+    "random_seed": "Record random seed to keep current work distinct from dated evidence.",
+    "repository_health": "Record repository health to keep current work distinct from dated evidence.",
+    "reproducibility_checksum": "Record reproducibility checksum to keep current work distinct from dated evidence.",
+    "resolved_imports": "Record resolved imports to keep current work distinct from dated evidence.",
+    "rows": "Record rows to keep current work distinct from dated evidence.",
+    "rows_checksum": "Record rows checksum to keep current work distinct from dated evidence.",
+    "run_date": "Record run date to keep current work distinct from dated evidence.",
+    "sample_size_budget": "Record sample size budget to keep current work distinct from dated evidence.",
+    "source_artifact_hashes": "Record source artifact hashes to keep current work distinct from dated evidence.",
+    "target_model": "Record target model to keep current work distinct from dated evidence.",
+    "task_id": "Record task id to keep current work distinct from dated evidence.",
+    "terminal_receipt_hashes": "Record terminal receipt hashes to keep current work distinct from dated evidence.",
+    "trained_head_specs": "Record trained head specs to keep current work distinct from dated evidence.",
+    "validation_command_manifest_path": "Record validation command manifest path to keep current work distinct from dated evidence.",
+    "validation_command_manifest_sha256": "Freeze the exact validation plan.",
+    "validation_receipts": "Record validation receipts to keep current work distinct from dated evidence.",
+    "verdict_class": "Record verdict class to keep current work distinct from dated evidence.",
+    "verifier_is_oracle": "Record verifier is oracle to keep current work distinct from dated evidence.",
+    "workload_attachment_available": "Record workload attachment available to keep current work distinct from dated evidence.",
+    "workload_feasibility_rows": "Record workload feasibility rows to keep current work distinct from dated evidence."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [],
+  "hardware_evidence_ready_score": 0,
+  "hardware_rows": [
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "KV260",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": false,
+      "expected_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "family": "KV260",
+      "historical_verdict": "historical_fabric_k_max<=5",
+      "k_max": 5,
+      "last_authenticated_evidence_date": "20260913",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "processor_class": "fpga_fabric",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "KV260",
+      "source_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "source_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "started": false,
+      "state": "historical_fabric_k_max<=5",
+      "status": "historical_read_only",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "PolarFire",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": false,
+      "expected_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "family": "PolarFire",
+      "historical_verdict": "historical_linux_cpu_only",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260913",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "processor_class": "linux_cpu",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "hash-matched Linux CPU dispatch only",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "PolarFire",
+      "source_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "source_path": "results/experiment_7231_v636_board_continuity.json",
+      "started": false,
+      "state": "historical_linux_cpu_only",
+      "status": "historical_read_only",
+      "venue": "polarfire_linux_cpu_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": true,
+      "expected_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "family": "GateMate",
+      "historical_verdict": "blocked_physical_change_0xffffffff",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260915",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified execution; physical JTAG IDCODE blocked",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "GateMate",
+      "source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "started": false,
+      "state": "blocked_physical_change_0xffffffff",
+      "status": "historical_read_only",
+      "venue": "none_read_only"
+    }
+  ],
+  "hardware_speedup_claimed": false,
+  "historical_failures": {
+    "exp7834_repository_health": {
+      "exit_code": -15,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7834_v680_hardware_evidence/validation/carnot-7834-jvcipgnf/command_09_repository_health/repository_health/e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a.log",
+      "log_sha256": "sha256:e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a",
+      "status": "failed_diagnostic",
+      "timed_out": true
+    },
+    "exp7834_required_coverage_passed": false,
+    "exp7834_required_coverage_receipt": {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7834-jvcipgnf/combined.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7834_v680_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7834_v680_hardware_evidence.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.11551130103180185,
+      "exit_code": 2,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7834_v680_hardware_evidence/validation/carnot-7834-jvcipgnf/command_04_coverage_report/coverage_report/3f0906c4a48ee06e37bd3c0a035bf36d9d8cd30e41cbca08f3daff2b7dde3e06.log",
+      "log_sha256": "sha256:3f0906c4a48ee06e37bd3c0a035bf36d9d8cd30e41cbca08f3daff2b7dde3e06",
+      "name": "coverage_report",
+      "output_tail": "Name                                                                Stmts   Miss Branch BrPart  Cover   Missing\n---------------------------------------------------------------------------------------------------------------\npython/carnot/reporting/experiment_7834_v680_hardware_evidence.py     211      0     62      0   100%\nscripts/experiments/experiment_7834_v680_hardware_evidence.py           3      0      2      1    80%   6->exit\n---------------------------------------------------------------------------------------------------------------\nTOTAL                                                                 214      0     64      1    99%\nCoverage failure: total of 99 is less than fail-under=100\n",
+      "passed": false,
+      "timed_out": false
+    },
+    "exp7834_verdict": "complete_disqualified_required_checks",
+    "exp7847_affected_pytest_passed": false,
+    "exp7847_repository_health": {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/health-temp"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "duration_s": 180.16695387504296,
+      "exit_code": -15,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/repository_health_180s/a65821a2ce515673cb6aa0486c88cb92a08326036bd9e4b780366931d8385218.log",
+      "log_sha256": "sha256:a65821a2ce515673cb6aa0486c88cb92a08326036bd9e4b780366931d8385218",
+      "name": "repository_health_180s",
+      "passed": false,
+      "timed_out": true
+    },
+    "exp7847_required_failures": [
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+          "tests/python/test_experiment_7847_validation.py",
+          "tests/python/test_current_work_receipt.py",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/test-temp"
+        ],
+        "classification": "required",
+        "deadline_s": 120,
+        "duration_s": 6.081531646021176,
+        "exit_code": 1,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/affected_pytest/3ecf7bfbd1c77a8888335a217a48ca28be72cd9e8fb70ed19e7d7aca063e1ee9.log",
+        "log_sha256": "sha256:3ecf7bfbd1c77a8888335a217a48ca28be72cd9e8fb70ed19e7d7aca063e1ee9",
+        "name": "affected_pytest",
+        "passed": false,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "run",
+          "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/unit.coverage",
+          "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+          "-m",
+          "pytest",
+          "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+          "tests/python/test_experiment_7847_validation.py",
+          "tests/python/test_current_work_receipt.py",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/coverage-temp"
+        ],
+        "classification": "required",
+        "deadline_s": 120,
+        "duration_s": 10.2384528950206,
+        "exit_code": 1,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/unit_coverage/ca22f90ea1b8224138aae6e73d59f50c451803608a8f9a8a1a4f7992d73ea89d.log",
+        "log_sha256": "sha256:ca22f90ea1b8224138aae6e73d59f50c451803608a8f9a8a1a4f7992d73ea89d",
+        "name": "unit_coverage",
+        "passed": false,
+        "timed_out": false
+      }
+    ],
+    "exp7847_source_hash": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+    "exp7847_source_path": "results/experiment_7847_v681_hardware_evidence.json",
+    "exp7847_verdict": "complete_disqualified_required_checks",
+    "source_hash": "sha256:0b1db3e2274036aa363c8b9688461eff230982fef0335d6591b3b678a3d0ebd6",
+    "source_path": "results/experiment_7834_v680_hardware_evidence.json"
+  },
+  "honest_verdict": "complete_disqualified_required_checks",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "inference_substrate_class": "no_model_load",
+  "milestone": "2026.09.683",
+  "model_invocation_counts": {
+    "generation_calls": 0,
+    "model_file_hashes": [],
+    "model_loads": 0,
+    "tokens": 0
+  },
+  "model_specs": [],
+  "observed_child_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json,pathlib;names=['carnot.reporting.current_work_receipt','carnot.reporting.experiment_7847_v681_hardware_evidence','carnot.reporting.experiment_7862_v682_hardware_evidence','carnot.reporting.experiment_7876_v683_hardware_evidence'];d={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names};print(json.dumps({'resolved_imports':d}));assert all(pathlib.Path(p).is_relative_to(pathlib.Path('/home/ianblenke/github.com/ianblenke/carnot/python')) for p in d.values())"
+      ],
+      "classification": "required",
+      "name": "worktree_imports"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_experiment_7876_v683_hardware_evidence.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/test-temp"
+      ],
+      "classification": "required",
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/full-temp"
+      ],
+      "classification": "required",
+      "name": "full_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/unit.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "-m",
+        "pytest",
+        "tests/python/test_experiment_7876_v683_hardware_evidence.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/cov-temp"
+      ],
+      "classification": "required",
+      "name": "unit_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/success.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "--date",
+        "20260929",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--output",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/cli-good.json",
+        "--evidence-only"
+      ],
+      "classification": "required",
+      "name": "cli_success"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/missing.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "--date",
+        "20260929",
+        "--root",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/absent",
+        "--output",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/cli-bad.json",
+        "--evidence-only"
+      ],
+      "classification": "required",
+      "name": "cli_missing_source"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--cold-replay",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/cli-good.json"
+      ],
+      "classification": "required",
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/combined.coverage",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/unit.coverage",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/success.coverage",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/missing.coverage"
+      ],
+      "classification": "required",
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/combined.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "name": "changed_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/experiment_7876_v683_hardware_evidence.py",
+        "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "tests/python/test_experiment_7876_v683_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/experiment_7876_v683_hardware_evidence.py",
+        "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+        "tests/python/test_experiment_7876_v683_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/experiment_7876_v683_hardware_evidence.py",
+        "scripts/experiments/experiment_7876_v683_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "name": "mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7876_v683_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/pending-candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/pending-candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_rows"
+    }
+  ],
+  "phase_spans": {
+    "evidence_read_s": 0.006760156014934182,
+    "validation_s": 915.7243162330124
+  },
+  "planned_inference_substrate_class": "no_model_load",
+  "preconditions_checked": [
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "artifact_path": "results/experiment_7820_v679_hardware_evidence.json",
+      "expected": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "observed": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "board_history"
+    },
+    {
+      "artifact_field": "board_names",
+      "artifact_hash": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "artifact_path": "results/experiment_7820_v679_hardware_evidence.json",
+      "expected": [
+        "KV260",
+        "PolarFire",
+        "GateMate"
+      ],
+      "observed": [
+        "KV260",
+        "PolarFire",
+        "GateMate"
+      ],
+      "op": "==",
+      "passed": true,
+      "upstream_id": "Exp7820"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "board_history"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+      "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "board_history"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "board_history"
+    },
+    {
+      "artifact_field": "k_max",
+      "artifact_hash": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "artifact_path": "results/experiment_7820_v679_hardware_evidence.json",
+      "expected": 5,
+      "observed": 5,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "Exp7820"
+    },
+    {
+      "artifact_field": "processor_class",
+      "artifact_hash": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "artifact_path": "results/experiment_7820_v679_hardware_evidence.json",
+      "expected": "linux_cpu",
+      "observed": "linux_cpu",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "Exp7820"
+    },
+    {
+      "artifact_field": "blocker",
+      "artifact_hash": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "artifact_path": "results/experiment_7820_v679_hardware_evidence.json",
+      "expected": "0xffffffff",
+      "observed": "0xffffffff",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "Exp7820"
+    },
+    {
+      "artifact_field": "raw_sha256",
+      "artifact_hash": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+      "artifact_path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+      "expected": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+      "observed": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "board_history"
+    },
+    {
+      "artifact_field": "raw_sha256",
+      "artifact_hash": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "artifact_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "expected": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "observed": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "board_history"
+    },
+    {
+      "artifact_field": "raw_sha256",
+      "artifact_hash": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "artifact_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "expected": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "observed": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "board_history"
+    },
+    {
+      "artifact_field": "raw_sha256",
+      "artifact_hash": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "artifact_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "expected": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "observed": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "board_history"
+    },
+    {
+      "artifact_field": "processor_class",
+      "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+      "expected": "cpu",
+      "observed": "cpu",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "Exp7231"
+    },
+    {
+      "artifact_field": "affected_pytest.passed",
+      "artifact_hash": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "artifact_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7847_v681_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "affected_pytest.log_sha256",
+      "artifact_hash": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "artifact_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "expected": "sha256:3ecf7bfbd1c77a8888335a217a48ca28be72cd9e8fb70ed19e7d7aca063e1ee9",
+      "observed": "sha256:3ecf7bfbd1c77a8888335a217a48ca28be72cd9e8fb70ed19e7d7aca063e1ee9",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7847_v681_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "unit_coverage.log_sha256",
+      "artifact_hash": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "artifact_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "expected": "sha256:ca22f90ea1b8224138aae6e73d59f50c451803608a8f9a8a1a4f7992d73ea89d",
+      "observed": "sha256:ca22f90ea1b8224138aae6e73d59f50c451803608a8f9a8a1a4f7992d73ea89d",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7847_v681_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "exists",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "schema_json",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "dict",
+      "observed": "dict",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": 7862,
+      "observed": 7862,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "task_id",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "exp7862-hardware-evidence",
+      "observed": "exp7862-hardware-evidence",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "milestone",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "2026.09.682",
+      "observed": "2026.09.682",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "null",
+      "observed": "null",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "hardware_evidence_ready_score",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "new_device_execution_count",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": 0,
+      "observed": 0,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "current_device_execution_count",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": 0,
+      "observed": 0,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "run_date.cutoff",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "source_artifact_hashes.schema",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "dict",
+      "observed": "dict",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+      "artifact_path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+      "expected": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+      "observed": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_6559_gatemate_changed_state_continuity.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+      "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7231_v636_board_continuity.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "artifact_path": "results/experiment_7820_v679_hardware_evidence.json",
+      "expected": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "observed": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7820_v679_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:0b1db3e2274036aa363c8b9688461eff230982fef0335d6591b3b678a3d0ebd6",
+      "artifact_path": "results/experiment_7834_v680_hardware_evidence.json",
+      "expected": "sha256:0b1db3e2274036aa363c8b9688461eff230982fef0335d6591b3b678a3d0ebd6",
+      "observed": "sha256:0b1db3e2274036aa363c8b9688461eff230982fef0335d6591b3b678a3d0ebd6",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7834_v680_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "artifact_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "expected": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "observed": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7847_v681_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "artifact_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "expected": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "observed": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/raw/experiment_7231/polarfire_dispatch.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "artifact_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "expected": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "observed": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "artifact_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "expected": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "observed": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/raw/experiment_7779_v676_hardware_evidence/rows.json"
+    },
+    {
+      "artifact_field": "board_rows.names",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": [
+        "KV260",
+        "PolarFire",
+        "GateMate"
+      ],
+      "observed": [
+        "KV260",
+        "PolarFire",
+        "GateMate"
+      ],
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.KV260.last_authenticated_evidence_date",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.KV260.current_hardware_execution",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.KV260.status",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "historical_read_only",
+      "observed": "historical_read_only",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.KV260.source_hash",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.PolarFire.last_authenticated_evidence_date",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.PolarFire.current_hardware_execution",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.PolarFire.status",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "historical_read_only",
+      "observed": "historical_read_only",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.PolarFire.source_hash",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.GateMate.last_authenticated_evidence_date",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.GateMate.current_hardware_execution",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": false,
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.GateMate.status",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "historical_read_only",
+      "observed": "historical_read_only",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.GateMate.source_hash",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.KV260.k_max",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": 5,
+      "observed": 5,
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.PolarFire.processor_class",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "linux_cpu",
+      "observed": "linux_cpu",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "board_rows.GateMate.blocker",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "0xffffffff",
+      "observed": "0xffffffff",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.worktree_imports.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:5dccc8605392291cabd43be5a4074de0090cd7314e2e5eac63fc730eb338f77a",
+      "observed": "sha256:5dccc8605392291cabd43be5a4074de0090cd7314e2e5eac63fc730eb338f77a",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.affected_pytest.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:5639a27235a23571cdc088a41eb2484cf91d25941bdb8ccee774fa0831fe2dae",
+      "observed": "sha256:5639a27235a23571cdc088a41eb2484cf91d25941bdb8ccee774fa0831fe2dae",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.unit_coverage.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:b0425f626297d0594562b7e4599d2a34f14946c7880695bb02804544894f44d5",
+      "observed": "sha256:b0425f626297d0594562b7e4599d2a34f14946c7880695bb02804544894f44d5",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.cli_success.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:ea0b3536aa274765c2b2619710653f97a6998bbdf559484ec9fafe9d2a55e3eb",
+      "observed": "sha256:ea0b3536aa274765c2b2619710653f97a6998bbdf559484ec9fafe9d2a55e3eb",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.cli_missing_source.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:d7bb8359b25b0b8658d346e8848d4cc7f0bb120143984b59be5fb6a72eec67f9",
+      "observed": "sha256:d7bb8359b25b0b8658d346e8848d4cc7f0bb120143984b59be5fb6a72eec67f9",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.cold_replay.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:de81a76955746fd2785212d5875a726c4346ad60b3e98ba575fc6e32602756bf",
+      "observed": "sha256:de81a76955746fd2785212d5875a726c4346ad60b3e98ba575fc6e32602756bf",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.coverage_combine.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:c3aaf6a9387557d3fe013d83c1ab0e4597f6181e68a1ceabf5f14ce32aad31e7",
+      "observed": "sha256:c3aaf6a9387557d3fe013d83c1ab0e4597f6181e68a1ceabf5f14ce32aad31e7",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.changed_coverage.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:6d9e05a8146cffc49a6c4c17447607321ee84c0d98bf1a8dfd22fa338b8528b2",
+      "observed": "sha256:6d9e05a8146cffc49a6c4c17447607321ee84c0d98bf1a8dfd22fa338b8528b2",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.ruff_check.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "observed": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.ruff_format.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "observed": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.mypy.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+      "observed": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.scoped_spec.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "observed": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.adversarial_verify.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:af53de708703b25aec65410d9cdd0a215146968d12e1bff6ef597f139d532015",
+      "observed": "sha256:af53de708703b25aec65410d9cdd0a215146968d12e1bff6ef597f139d532015",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.strict_rows.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "observed": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    },
+    {
+      "artifact_field": "validation.repository_health_180s.log_sha256",
+      "artifact_hash": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "artifact_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "expected": "sha256:e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a",
+      "observed": "sha256:e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a",
+      "op": "==",
+      "passed": true,
+      "upstream_id": "results/experiment_7862_v682_hardware_evidence.json"
+    }
+  ],
+  "random_seed": 0,
+  "repository_health": {
+    "full_pytest": {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/full-temp"
+      ],
+      "classification": "required",
+      "deadline_s": 900,
+      "duration_s": 900.2168889439781,
+      "exit_code": -15,
+      "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/full_pytest/c81901532ec8d45bc1352c5b5e1436173f8caae5170e3d53b4f7d84adde15f6e.log",
+      "log_sha256": "sha256:c81901532ec8d45bc1352c5b5e1436173f8caae5170e3d53b4f7d84adde15f6e",
+      "name": "full_pytest",
+      "passed": false,
+      "timed_out": true
+    },
+    "status": "not_separately_run"
+  },
+  "reproducibility_checksum": "sha256:32411be654f8d46d3f76f99ffdd8a4ad944337dd825526948ac5d0a387fa04bd",
+  "resolved_imports": {
+    "carnot.reporting.current_work_receipt": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+    "carnot.reporting.experiment_7847_v681_hardware_evidence": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py",
+    "carnot.reporting.experiment_7862_v682_hardware_evidence": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7862_v682_hardware_evidence.py",
+    "carnot.reporting.experiment_7876_v683_hardware_evidence": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py"
+  },
+  "rows": [
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "KV260",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": false,
+      "expected_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "family": "KV260",
+      "historical_verdict": "historical_fabric_k_max<=5",
+      "k_max": 5,
+      "last_authenticated_evidence_date": "20260913",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "processor_class": "fpga_fabric",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "KV260",
+      "source_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "source_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "started": false,
+      "state": "historical_fabric_k_max<=5",
+      "status": "historical_read_only",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "PolarFire",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": false,
+      "expected_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "family": "PolarFire",
+      "historical_verdict": "historical_linux_cpu_only",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260913",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "processor_class": "linux_cpu",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "hash-matched Linux CPU dispatch only",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "PolarFire",
+      "source_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "source_path": "results/experiment_7231_v636_board_continuity.json",
+      "started": false,
+      "state": "historical_linux_cpu_only",
+      "status": "historical_read_only",
+      "venue": "polarfire_linux_cpu_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "censored": false,
+      "claim_class": "historical",
+      "completed": false,
+      "current_hardware_execution": false,
+      "excluded": true,
+      "expected_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "family": "GateMate",
+      "historical_verdict": "blocked_physical_change_0xffffffff",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260915",
+      "measured_current_latency_ms": null,
+      "metric": null,
+      "next_missing_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified execution; physical JTAG IDCODE blocked",
+      "seed": null,
+      "service_fraction": null,
+      "source_family": "GateMate",
+      "source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "started": false,
+      "state": "blocked_physical_change_0xffffffff",
+      "status": "historical_read_only",
+      "venue": "none_read_only"
+    }
+  ],
+  "rows_checksum": "sha256:69cffb8322424e3c0ebbc4d550c2df2ce4cecbffb9381826ed8d5a29966ba3ce",
+  "run_date": "20260929",
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 0,
+    "eligible": 2,
+    "excluded": 1,
+    "independent": 0,
+    "intended": 3,
+    "started": 0
+  },
+  "source_artifact_hashes": {
+    "research-hardware-wishlist.md": {
+      "date": "20260929",
+      "exposure_status": "historical_read_only",
+      "path": "research-hardware-wishlist.md",
+      "role": "hardware_note",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    "research-references.md": {
+      "date": "20260929",
+      "exposure_status": "historical_read_only",
+      "path": "research-references.md",
+      "role": "external_reference_index",
+      "sha256": "sha256:43f28256c6f0624215f73c004a1025c4380195820db4d48aa15af672f0390407"
+    },
+    "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json": {
+      "date": null,
+      "eligible": true,
+      "expected_sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+      "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+      "role": "historical_raw_transcript",
+      "sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e"
+    },
+    "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json": {
+      "date": "20260913",
+      "eligible": true,
+      "expected_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "role": "dated_board_receipt",
+      "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+    },
+    "results/experiment_6559_gatemate_changed_state_continuity.json": {
+      "date": "20260915",
+      "eligible": true,
+      "expected_sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "role": "dated_board_receipt",
+      "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66"
+    },
+    "results/experiment_7231_v636_board_continuity.json": {
+      "date": "20260913",
+      "eligible": true,
+      "expected_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "path": "results/experiment_7231_v636_board_continuity.json",
+      "role": "dated_board_receipt",
+      "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+    },
+    "results/experiment_7820_v679_hardware_evidence.json": {
+      "date": "20260928",
+      "eligible": true,
+      "expected_sha256": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0",
+      "path": "results/experiment_7820_v679_hardware_evidence.json",
+      "role": "board_inventory",
+      "sha256": "sha256:91050861aebf05372c08cc9b4a57cdb04b4dde984f6cf4c6f3a013a16faef4d0"
+    },
+    "results/experiment_7834_v680_hardware_evidence.json": {
+      "date": "20260928",
+      "exposure_status": "historical_read_only",
+      "path": "results/experiment_7834_v680_hardware_evidence.json",
+      "role": "failed_validation_history",
+      "sha256": "sha256:0b1db3e2274036aa363c8b9688461eff230982fef0335d6591b3b678a3d0ebd6"
+    },
+    "results/experiment_7847_v681_hardware_evidence.json": {
+      "date": "20260929",
+      "exposure_status": "historical_read_only",
+      "path": "results/experiment_7847_v681_hardware_evidence.json",
+      "role": "failed_validation_history",
+      "sha256": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05"
+    },
+    "results/experiment_7861_v682_service_cost.json": {
+      "date": null,
+      "exposure_status": "missing",
+      "path": "results/experiment_7861_v682_service_cost.json",
+      "role": "optional_current_service",
+      "sha256": null
+    },
+    "results/experiment_7862_v682_hardware_evidence.json": {
+      "date": "20260929",
+      "exposure_status": "historical_read_only",
+      "path": "results/experiment_7862_v682_hardware_evidence.json",
+      "role": "prior_board_custody",
+      "sha256": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4"
+    },
+    "results/experiment_7875_v683_service_cost.json": {
+      "date": null,
+      "eligible": false,
+      "exposure_status": "missing",
+      "path": "results/experiment_7875_v683_service_cost.json",
+      "role": "optional_current_cpu_workload",
+      "sha256": null
+    },
+    "results/raw/experiment_7231/polarfire_dispatch.json": {
+      "date": null,
+      "eligible": true,
+      "expected_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "role": "historical_raw_transcript",
+      "sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801"
+    },
+    "results/raw/experiment_7751_v674_hardware_continuity/rows.json": {
+      "date": null,
+      "eligible": true,
+      "expected_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "role": "historical_raw_transcript",
+      "sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a"
+    },
+    "results/raw/experiment_7779_v676_hardware_evidence/rows.json": {
+      "date": null,
+      "eligible": true,
+      "expected_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "role": "historical_raw_transcript",
+      "sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6"
+    }
+  },
+  "target_model": "none (no pretrained model)",
+  "task_id": "exp7876-hardware-evidence",
+  "terminal_receipt_hashes": {
+    "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+    "results/experiment_6559_gatemate_changed_state_continuity.json": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "results/experiment_7231_v636_board_continuity.json": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+  },
+  "trained_head_specs": [],
+  "validation_command_manifest_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/validation_command_manifest.json",
+  "validation_command_manifest_sha256": "sha256:d41460c4ba6606bbdbd8cd37e71063e0be0588c6afd2f2e74acbd2f019f183d6",
+  "validation_receipts": {
+    "checks": [
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import importlib,json,pathlib;names=['carnot.reporting.current_work_receipt','carnot.reporting.experiment_7847_v681_hardware_evidence','carnot.reporting.experiment_7862_v682_hardware_evidence','carnot.reporting.experiment_7876_v683_hardware_evidence'];d={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names};print(json.dumps({'resolved_imports':d}));assert all(pathlib.Path(p).is_relative_to(pathlib.Path('/home/ianblenke/github.com/ianblenke/carnot/python')) for p in d.values())"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.565451872011181,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/worktree_imports/fbe37337bdcd828c6820c3e40fd501d338eaf33e435876d465ea5f600efb8442.log",
+        "log_sha256": "sha256:fbe37337bdcd828c6820c3e40fd501d338eaf33e435876d465ea5f600efb8442",
+        "name": "worktree_imports",
+        "passed": true,
+        "resolved_imports": {
+          "carnot.reporting.current_work_receipt": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+          "carnot.reporting.experiment_7847_v681_hardware_evidence": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py",
+          "carnot.reporting.experiment_7862_v682_hardware_evidence": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7862_v682_hardware_evidence.py",
+          "carnot.reporting.experiment_7876_v683_hardware_evidence": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py"
+        },
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "tests/python/test_experiment_7876_v683_hardware_evidence.py",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/test-temp"
+        ],
+        "classification": "required",
+        "deadline_s": 120,
+        "duration_s": 4.5235184989869595,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/affected_pytest/413fa9f29820512060bc449f68df40ac1c3c165bdfdd33672648f4add657fd60.log",
+        "log_sha256": "sha256:413fa9f29820512060bc449f68df40ac1c3c165bdfdd33672648f4add657fd60",
+        "name": "affected_pytest",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "tests/python",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/full-temp"
+        ],
+        "classification": "required",
+        "deadline_s": 900,
+        "duration_s": 900.2168889439781,
+        "exit_code": -15,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/full_pytest/c81901532ec8d45bc1352c5b5e1436173f8caae5170e3d53b4f7d84adde15f6e.log",
+        "log_sha256": "sha256:c81901532ec8d45bc1352c5b5e1436173f8caae5170e3d53b4f7d84adde15f6e",
+        "name": "full_pytest",
+        "passed": false,
+        "timed_out": true
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "run",
+          "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/unit.coverage",
+          "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "-m",
+          "pytest",
+          "tests/python/test_experiment_7876_v683_hardware_evidence.py",
+          "-q",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/cov-temp"
+        ],
+        "classification": "required",
+        "deadline_s": 120,
+        "duration_s": 6.984357945038937,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/unit_coverage/7004809f27820e7840d918e68d1d322f89c3a71db9530ef241e5160d017e8146.log",
+        "log_sha256": "sha256:7004809f27820e7840d918e68d1d322f89c3a71db9530ef241e5160d017e8146",
+        "name": "unit_coverage",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "run",
+          "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/success.coverage",
+          "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "--date",
+          "20260929",
+          "--root",
+          "/home/ianblenke/github.com/ianblenke/carnot",
+          "--output",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/cli-good.json",
+          "--evidence-only"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.9161406210041605,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/cli_success/6815fe5815f05de92f0bc72298c9cc770369b3061ffb0132fcabf2772a5b3b29.log",
+        "log_sha256": "sha256:6815fe5815f05de92f0bc72298c9cc770369b3061ffb0132fcabf2772a5b3b29",
+        "name": "cli_success",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "run",
+          "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/missing.coverage",
+          "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "--date",
+          "20260929",
+          "--root",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/absent",
+          "--output",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/cli-bad.json",
+          "--evidence-only"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.9171229139901698,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/cli_missing_source/e6d53a79fed5c731515c5bc03dede96c8db26d007124d054b6c6dc98c45a8db1.log",
+        "log_sha256": "sha256:e6d53a79fed5c731515c5bc03dede96c8db26d007124d054b6c6dc98c45a8db1",
+        "name": "cli_missing_source",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "--root",
+          "/home/ianblenke/github.com/ianblenke/carnot",
+          "--cold-replay",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/cli-good.json"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.5162223540246487,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/cold_replay/efc2717545082cb244c5f746b754867e32d1f1aa74e4ac1d7822cc186cd13247.log",
+        "log_sha256": "sha256:efc2717545082cb244c5f746b754867e32d1f1aa74e4ac1d7822cc186cd13247",
+        "name": "cold_replay",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "combine",
+          "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/combined.coverage",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/unit.coverage",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/success.coverage",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/missing.coverage"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.06527277600253001,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/coverage_combine/c3aaf6a9387557d3fe013d83c1ab0e4597f6181e68a1ceabf5f14ce32aad31e7.log",
+        "log_sha256": "sha256:c3aaf6a9387557d3fe013d83c1ab0e4597f6181e68a1ceabf5f14ce32aad31e7",
+        "name": "coverage_combine",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "report",
+          "--data-file=/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/combined.coverage",
+          "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7876_v683_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "--show-missing",
+          "--fail-under=100"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.11626147397328168,
+        "exit_code": 2,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/changed_coverage/becd76bc2e53cc4b5cd229921e50317bfbc9a5e6217077b3927752dd810363e6.log",
+        "log_sha256": "sha256:becd76bc2e53cc4b5cd229921e50317bfbc9a5e6217077b3927752dd810363e6",
+        "name": "changed_coverage",
+        "passed": false,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+          "check",
+          "python/carnot/reporting/experiment_7876_v683_hardware_evidence.py",
+          "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "tests/python/test_experiment_7876_v683_hardware_evidence.py"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.032447393983602524,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/ruff_check/82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+        "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "name": "ruff_check",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+          "format",
+          "--check",
+          "python/carnot/reporting/experiment_7876_v683_hardware_evidence.py",
+          "scripts/experiments/experiment_7876_v683_hardware_evidence.py",
+          "tests/python/test_experiment_7876_v683_hardware_evidence.py"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.015744325006380677,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/ruff_format/eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd.log",
+        "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+        "name": "ruff_format",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+          "--strict",
+          "python/carnot/reporting/experiment_7876_v683_hardware_evidence.py",
+          "scripts/experiments/experiment_7876_v683_hardware_evidence.py"
+        ],
+        "classification": "required",
+        "deadline_s": 60,
+        "duration_s": 0.16460791102144867,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/mypy/e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce.log",
+        "log_sha256": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+        "name": "mypy",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/check_spec_coverage.py",
+          "tests/python/test_experiment_7876_v683_hardware_evidence.py"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.032248698989860713,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/scoped_spec/6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+        "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+        "name": "scoped_spec",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/pending-candidate.json"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.6168516320176423,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/adversarial_verify/ff731035fe78b6028496b268d07937f468475a62d67c9a4a17b0fb243e4cf166.log",
+        "log_sha256": "sha256:ff731035fe78b6028496b268d07937f468475a62d67c9a4a17b0fb243e4cf166",
+        "name": "adversarial_verify",
+        "passed": true,
+        "timed_out": false
+      },
+      {
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/pending-candidate.json"
+        ],
+        "classification": "required",
+        "deadline_s": 30,
+        "duration_s": 0.032342715945560485,
+        "exit_code": 0,
+        "log_path": "/tmp/carnot-7876/92232f0d1d204802ac063adedd72e0645e9796ea446d6cf82954fc3f1c63854d/logs/strict_rows/ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "passed": true,
+        "timed_out": false
+      }
+    ],
+    "required_checks_passed": false
+  },
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false,
+  "workload_attachment_available": false,
+  "workload_feasibility_rows": []
+}

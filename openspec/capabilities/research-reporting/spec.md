@@ -86402,3 +86402,44 @@ success, expected failure, and cold replay SHALL use frozen commands and
 explicit coverage files. Combined measured coverage of changed code SHALL be
 100 percent. The terminal artifact SHALL retain separate validity, readiness,
 probability, benefit, retention, and efficiency gates.
+## REQ-REPORT-7901-V685: Preserve dated board evidence and test workload fit
+
+Exp7901 SHALL reduce the three immutable board receipts with the pure Exp7876
+reader. It SHALL retain the disqualified Exp7889 validation and its sealed
+repository health observation. Missing or changed required board bytes SHALL
+produce a complete blocked result with exact failed operands. It SHALL make no
+current device execution or speedup claim. Exp7900 operation and transfer rows
+MAY attach only with an exact dated, eligible, unflagged, ready receipt. An
+absent or ineligible service receipt SHALL leave board custody available.
+
+### SCENARIO-REPORT-7901-CUSTODY
+
+Given original receipt bytes, three rows identify the receipt date and hash,
+the unmet service criterion, and the next physical or operator action. KV260
+retains fabric scope at k<=5 through SSH via kria. PolarFire remains Linux CPU
+only. GateMate remains blocked at 0xffffffff until a physical or JTAG change.
+Wrong hashes, absent boards, and malformed rows close the board gate.
+
+### SCENARIO-REPORT-7901-WORKLOAD
+
+Only qualified Exp7900 primitive rows attach. Their host and transport
+fractions, connection cost, and coupling update cost are compared with each
+board's feasible boundary. No estimate is a measured device speedup. Cold
+replay recomputes board and workload rows and rejects changed input bytes.
+
+### SCENARIO-REPORT-7901-COVERAGE
+
+An existing coverage database with zero executed owned statements is rejected
+by the Exp7889 shard guard. Missing files and files that measure only unrelated
+code are rejected too. Every owned V685 coverage shard must contain executed
+owned statements before combination. Combined measured coverage of the V685
+module and CLI must be 100 percent.
+
+### SCENARIO-REPORT-7901-CLI
+
+The V685 CLI freezes source and test hashes, exact argv, exit semantics,
+deadlines, and coverage includes before validation. It runs affected tests,
+consumer regressions, scoped static checks, E2E-016 fixture and replay,
+private CLI success and failure, cold replay, and exact terminal validators.
+Logs are sealed by hash after exit. Required failures disqualify the new
+artifact. Terminal validator reports bind to the checked candidate bytes.
