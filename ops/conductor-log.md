@@ -18971,3 +18971,4 @@ code |
 | 2026-09-29 00:30 UTC | Measure complete source-decision and durable-updat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
 | 2026-09-29 00:54 UTC | Preserve board continuity and bound traffic-sensit | OK | 96 passed, 1 warning in 11.54s |
 | 2026-09-29 01:15 UTC | Test a length-only baseline and source permutation | OK | 98 passed, 1 warning in 12.27s |
+| 2026-09-29 01:35 UTC | Cold-reduce current decisions and feedback with ty | OK | 93 passed, 1 warning in 11.64s |
