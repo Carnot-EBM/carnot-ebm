@@ -19060,3 +19060,4 @@ code |
 | 2026-09-29 21:24 UTC | Qualify terminal revalidation and source intervent | OK | 115 passed, 1 warning in 16.83s |
 | 2026-09-29 22:23 UTC | Fit calibrated source energies with matched observ | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7894_v685_energy_fit.json; honest_verdict='partial_numerical_work', verdict_class='partial'); pytest: 86 passed, 1 warning in 23.03s |
 | 2026-09-29 22:25 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 3584962 serves 'Ternary-Bonsai-2-27B-PTQ1_0.gguf', live pin is 'Qwen3. |
+| 2026-09-29 22:46 UTC | Fit calibrated source energies with matched observ | OK | 90 passed, 1 warning in 11.34s |
