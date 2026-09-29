@@ -242,3 +242,14 @@ The test invokes the real script-path CLI with a private public-only fixture,
 cold-replays its feature shard, and confirms that a row containing an evaluator
 label fails the same CLI gate. Both routes must work without an ambient
 `PYTHONPATH` that includes the repository root.
+
+### E2E-016: Exp7868 intervention fixture and cold replay (CPU)
+
+Spec ref: REQ-REPORT-7868-V683. Run
+`python scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260929 --fixture-e2e /tmp/carnot-7868-fixture.json`, then use
+`--cold-replay /tmp/carnot-7868-fixture.json` through the same CLI. Require 24
+independent families, zero model calls, and a passing replay. The focused
+`tests/python/test_experiment_7868_v683_intervention_protocol.py` exercises
+checkpoint reuse, code-bound identity drift, fixture hash drift, and the
+terminal validator paths; combined unit and CLI coverage must reach 100% for
+the two Exp7868 modules and its CLI.

@@ -17489,3 +17489,19 @@ non-circular verifier win is still needed before that gate or any Jev-style
 calibrated-decision claim can cite this line of work. The Deep-Sets model
 architecture itself is not discredited; the defect is in how the ARC
 candidate pools were built and labeled.
+
+## 2026-09-29 — Exp7868 checkpoint lookup repaired
+
+The fixture checkpoint path now uses the source row, reply, finish reason and
+seed expected by the regression test. Its stored identity still binds the
+protocol and driver checksums; changed code or checkpoint contents fail closed.
+An added replay test rejects a fixture whose bytes changed after sealing.
+No test was skipped, deleted or weakened, and the conductor was not edited.
+
+The conductor-equivalent subset passes 101 tests with one deprecation warning.
+The affected test file passes 20 tests, and combined unit plus real CLI runs
+cover all 310 statements in the Exp7868 modules and CLI. Ruff, strict mypy,
+scoped spec coverage, fixture CLI and cold replay pass. The repository-wide
+Python suite showed multiple failures before being stopped near 5%, so it is
+not qualified as passing. Repository-wide spec coverage reports 1,142
+untraced tests outside this affected file.

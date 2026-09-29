@@ -3394,3 +3394,18 @@ registered under the original V674 tasks.
   combined unit and real CLI runs cover all 244 statements in the changed
   module and CLI. The refreshed artifact passes all 14 required checks and
   cold replay; repository health times out as a separate diagnostic.
+
+## Exp7868 checkpoint identity repair — 2026-09-29
+
+- REQ-REPORT-7868-V683 and SCENARIO-REPORT-7868-TERMINAL map to
+  `python/carnot/experiment_7868_v683_intervention_protocol.py` and
+  `tests/python/test_experiment_7868_v683_intervention_protocol.py`.
+- The checkpoint filename follows the fixture row, reply, finish reason and
+  seed. The stored identity also binds driver and protocol hashes, rejecting
+  changed code or checkpoint contents. Cold replay rejects altered fixture
+  bytes. The original failed checkpoint lookup now passes unchanged.
+- The conductor-equivalent subset passes 101/101; the affected test file
+  passes 20/20. Combined unit and CLI coverage is 310/310 statements (100%).
+  Scoped spec coverage, Ruff check/format, strict mypy, fixture CLI and cold
+  replay pass. The repository-wide suite showed failures before it was stopped
+  near 5%; repository-wide spec coverage reports 1,142 untraced tests.

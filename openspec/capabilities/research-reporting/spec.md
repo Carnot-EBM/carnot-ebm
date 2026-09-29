@@ -85769,3 +85769,45 @@ records exact required child commands and outcomes. Missing staged authority
 blocks; a failed required child or adversarial flag closes readiness. Frozen
 methods retain exposed development roles, nine arms, three seeds, family
 uncertainty, decision costs and a separate source-sufficiency estimand.
+
+## REQ-REPORT-7868-V683: Qualify CPU intervention receipts on terminal bytes
+
+Exp7868 SHALL retain Exp7854's failed terminal adversarial receipt as historical
+evidence. It SHALL declare verifier_ensemble_against_cached_candidates,
+no_model_load, empty model lists, target_model=none, zero current model calls,
+measured CPU work, a seed and a code/input checksum. The exact terminal artifact
+SHALL be tested by the unchanged adversarial verifier and strict row reader.
+Every inherited required command SHALL remain required. A failed required check
+or flagged terminal report SHALL set readiness to zero and disqualify the result.
+
+The CPU protocol SHALL freeze four future calls from each complete source: a
+full-source witness nomination and risk for the first complete answer sentence,
+that witness alone, that witness with immediate original neighbors, and that
+witness with a disjoint equal-length filler. Original UTF-8 byte offsets and
+source bytes SHALL be retained. Syntax validity and byte fidelity SHALL be
+reported independently per case. Semantic sensitivity SHALL remain null.
+No scripted response SHALL count as a current model call or scientific benefit.
+Fixture checkpoints SHALL use a stable path derived from the source row, reply,
+finish reason and seed. Their stored identity SHALL also bind the protocol and
+driver code checksums; a stale or altered checkpoint SHALL fail replay.
+
+### SCENARIO-REPORT-7868-METHODOLOGY
+
+A terminal CPU-only artifact with typed substrate, target_model=none, seed,
+checksum, duration and zero calls passes the real adversarial methodology check.
+The previous failed check remains named in repository health. A missing external
+source blocks with a hashed failed operand; a failed owned check disqualifies.
+
+### SCENARIO-REPORT-7868-VIEWS
+
+Valid, malformed, truncated and out-of-range replies retain distinct statuses.
+Unicode offsets, duplicate sentences, no disjoint filler, and answers without
+a complete sentence preserve their original bytes and explicit dispositions.
+Every completed request keeps the first answer sentence unchanged across arms.
+
+### SCENARIO-REPORT-7868-TERMINAL
+
+The real private CLI and cold replay recompute primitive row counts and hashes.
+Required coverage includes CLI success and failure paths and reaches 100 percent
+for new code. The complete candidate is tested at its exact terminal path before
+atomic publication. Successful CPU conformance is circular-positive only.
