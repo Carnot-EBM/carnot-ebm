@@ -1,6 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-09-29 Milestone 2026.09.682 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-29T07:16:54Z | 2026-09-29T07:20:32Z | Wrote operational retro for milestone 2026.09.682; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+---
+
 ## Session: 2026-09-29 Milestone 2026.09.681 Operational Retrospective
+
 
 ### Turn Log
 

@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.682",
+  "generated_at": "2026-09-29T07:16:47Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 33.3,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify byte-derived predicates and disjoint natural-data training",
+      "duration_minutes": 6.26,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify exact legacy source identity and public byte projection",
+      "duration_minutes": 6.03,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen V682 outcomes and retire unchanged failed scopes",
+      "duration_minutes": 4.14,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and register sufficiency and causal-learning methods",
+      "duration_minutes": 3.67,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Cold-audit V682 primitive evidence and classify every scientific branch",
+      "duration_minutes": 3.39,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Eight compute-bound experiments completed in 33.3 wall-time minutes (averaging 4 minutes per experiment) based on disk-mtime fallback reconstruction. Execution was led by 'Qualify byte-derived predicates and disjoint natural-data training' at 6.26 minutes and 'Qualify exact legacy source identity and public byte projection' at 6.03 minutes, followed by 'Reconcile fourteen V682 outcomes and retire unchanged failed scopes' at 4.14 minutes, with the top five compute-bound tasks totaling 23.49 minutes (70.5% of milestone wall time). The post-execution GPU monitor report recorded both RTX 3090 GPUs idle (5MB and 4MB allocated at 0% utilization) upon completion with gpu_idle_on_compute_bound_tasks recorded as false, while continuous active-window accelerator telemetry was unrecorded and no multi-model task requiring DualGPURunner was present.",
+  "bottlenecks_identified": [
+    "The top five compute-bound experiments ('Qualify byte-derived predicates and disjoint natural-data training' at 6.26 minutes, 'Qualify exact legacy source identity and public byte projection' at 6.03 minutes, 'Reconcile fourteen V682 outcomes and retire unchanged failed scopes' at 4.14 minutes, 'Bind fourteen tasks and register sufficiency and causal-learning methods' at 3.67 minutes, and 'Cold-audit V682 primitive evidence and classify every scientific branch' at 3.39 minutes) accounted for 23.49 of 33.3 total wall-time minutes (70.5%), but available records lack intra-task phase breakdown to isolate specific execution delays.",
+    "Milestone timing relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits, omitting granular per-phase boundary markers and execution metadata.",
+    "The GPU monitor report provides only a single post-execution snapshot (both RTX 3090 GPUs idle at 0% utilization with 5MB and 4MB allocated at 2026-09-29T07:16:47.559611+00:00), leaving continuous accelerator utilization and throughput unmeasured across the 33.3 minutes."
+  ],
+  "improvements_suggested": [
+    "Add granular phase-level timing within natural-data qualification, legacy source identity, and outcome reconciliation tasks to profile where execution time is concentrated.",
+    "Persist structured execution receipts at milestone boundaries to avoid falling back to disk-mtime reconstruction.",
+    "Sample GPU utilization, memory usage, and temperature periodically throughout task execution to capture active-window accelerator telemetry.",
+    "Include explicit concurrency and model count declarations in task manifests to unambiguously verify DualGPURunner applicability."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement intra-task phase profiling for the longest-running qualification and outcome reconciliation workflows to isolate internal bottlenecks.",
+    "Persist structured milestone execution receipts to eliminate disk-mtime fallback reconstruction when git log yields 0 commits.",
+    "Deploy lightweight continuous GPU telemetry logging during compute-bound runs to measure active accelerator utilization."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU monitor report captured quiescent accelerators (both RTX 3090 GPUs at 0% utilization with 5MB and 4MB allocated) at milestone completion timestamp 2026-09-29T07:16:47.559611+00:00, indicating post-run idle state rather than mid-task stalling, consistent with gpu_idle_on_compute_bound_tasks=false. Without continuous active-window telemetry or intra-task phase timers for the 6.26-minute predicate qualification and 6.03-minute source identity tasks, specific internal compute bottlenecks cannot be definitively isolated from available records. Estimated time savings are set to 0% pending empirical measurement of phase profiling and receipt persistence tooling improvements."
+}
