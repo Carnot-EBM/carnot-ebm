@@ -1,5 +1,44 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7880: Qualify measured source custody on V684
+
+Exp7880 SHALL authenticate the original Exp7810 source and evaluator shards.
+It SHALL retain 640 distinct exposed development families and the seven fixed
+roles. It SHALL split the 64 policy families by public family hash into 32
+policy design and 32 calibration replay families before opening labels. It
+SHALL preserve source bytes, answer bytes, human annotations, offsets, source
+license, URL, and revision in a new hashed manifest. Exp7866 remains
+disqualified and supplies cached candidates only.
+
+The validation scope SHALL name exact source files, tests, argv, deadlines,
+and applicable E2Es before execution. Unit and real CLI coverage SHALL use
+the same explicit absolute file include patterns and separate private data
+files. Each required owned file SHALL have nonzero measured statements before
+combining coverage. Required checks SHALL reach 100 percent coverage of new
+code. An empty coverage file, invalid venue, missing external source, or
+failed required check SHALL leave readiness zero. Historical required failures
+remain separate from new scoped results. The current venue SHALL be `host`.
+
+### SCENARIO-REPORT-7880-CUSTODY
+
+Given authenticated original shards, the producer reconstructs 640 family
+joins and public bytes, keeps evaluator labels separate, and checks disjoint
+groups. Missing source families produce a terminal blocked result with exact
+counts. Unknown labels remain unknown.
+
+### SCENARIO-REPORT-7880-COVERAGE
+
+An old inferred include pattern that measures zero statements fails. Exact
+owned module and CLI paths with nonzero statements pass. `host_cpu` fails the
+closed venue gate; `host` passes.
+
+### SCENARIO-REPORT-7880-TERMINAL
+
+The direct CLI succeeds on a public fixture in a path with spaces and rejects
+missing source, malformed source, labels, and duplicates. Required scoped
+checks and E2E-015 pass before terminal validation. The exact candidate bytes
+pass adversarial and strict-row validators before atomic publication.
+
 ## REQ-REPORT-7866: Requalify the exposed public source boundary
 
 Exp7866 SHALL authenticate the exact Exp7810 source manifest, seven role shards,
