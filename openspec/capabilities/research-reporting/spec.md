@@ -85305,6 +85305,22 @@ Given applied and shadow receipts, the reader counts only closed applied firings
 #### SCENARIO-REPORT-7845-CLI
 
 Given a private output root, the CLI runs the current reader and writes one complete JSON result. Its validation uses frozen scoped commands, real child logs, cold replay, and separate repository health.
+
+### REQ-REPORT-7860: New live ARC supervisor receipt cutoff
+
+The reader SHALL use the exact Exp7845 artifact and source hashes, its artifact write time, and the current solve registry as a frozen cutoff. It SHALL read only later authenticated live supervisor receipts. It SHALL retain excluded, censored, malformed, and duplicate attempts with source hashes. It SHALL deduplicate by game, seed, and attempt. Missing outcome fields SHALL remain unknown. Development proxy and outer loop receipts SHALL never count as live agent self discovery. No receipt SHALL produce a validated null with zero firings and no tuning. The reader SHALL not start a game or claim a new level solve.
+
+#### SCENARIO-REPORT-7860-LEDGER
+
+Given reordered and repeated receipts, the reader counts each eligible live attempt once and records each excluded reason. It keeps fired, helped, resolved by level up, action cost, and unredirected stagnations as separate fields.
+
+#### SCENARIO-REPORT-7860-EMPTY
+
+Given no authenticated receipt later than the cutoff, the CLI returns a complete null with no new outcomes, zero firings, no tuning, and readiness one after required checks pass.
+
+#### SCENARIO-REPORT-7860-INPUT
+
+Given a missing prerequisite or malformed receipt, the CLI reports exact failed gate operands or a retained excluded row. A required validation failure disqualifies readiness. The candidate verdict class and terminal prefix agree.
 ## REQ-REPORT-7847: Direct board custody and optional current service
 
 Exp7847 SHALL use a direct reader of the three dated board source files and
