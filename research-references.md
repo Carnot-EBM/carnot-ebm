@@ -47983,3 +47983,28 @@ Bounded, honestly: this is a single company's blog post, self-reported, not inde
 reproduced, and explicitly stops short of claiming unbounded (ignition-level) self-improvement. Cite
 it as a second corroborating data point for the AVO-Method Adoption program's architecture, never as
 a benchmark result to reproduce or a method to port verbatim.
+
+## Outer-loop note - 2026-09-29 (PrismML Bonsai 2 27B ternary eval)
+
+We measured PrismML's ternary-quantized Bonsai 2 27B (same base architecture as our mandated
+`unsloth/Qwen3.8-27B-GGUF`) on our own RTX 3090s, not on the vendor's word. Full report:
+`docs/research-notes/bonsai2-ternary-eval-2026-09-29.md`. Data: `results/experiment_bonsai2_ternary_eval.json`.
+
+Fork-safety audit of `PrismML-Eng/llama.cpp` (needed because stock llama.cpp cannot read this
+GGUF format): clean. GGUF provenance matches the HuggingFace API exactly. Single-stream: ternary
+is 1.44x faster and 2.88x smaller than our mandated Q4_K_M baseline (not the vendor's "9x smaller",
+which compares to full FP16 precision, a baseline we do not run). A bounded, narrow readout-quality
+proxy was inconclusive (both models near or below chance) -- it neither confirms nor denies the
+vendor's 98.2%-retention claim.
+
+The main finding is a null result on the coordinator's own hypothesis: freeing weight VRAM does
+NOT buy more concurrent capacity for this model family, because both models hit the identical
+VRAM ceiling (max 152 concurrent slots at 2048 ctx each). The blocking buffer is a
+"recurrent-state cache" tied to the shared hybrid-attention (Gated Delta Net) architecture, not to
+weight quantization -- so the same buffer costs the same VRAM regardless of quantization.
+
+Separately, and not yet explained: the STANDARD (non-ternary) model's aggregate throughput
+collapsed about 28x at 32 concurrent streams (7.9 tok/s, versus the ternary model's 223 tok/s at
+the same N), reproduced on a fresh server restart. This may be a real batching-path defect in this
+fork's build for large non-ternary GGUFs under heavy parallelism, independent of the ternary
+question -- worth a dedicated follow-up regardless of any Bonsai-2 adoption decision.
