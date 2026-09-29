@@ -48374,3 +48374,106 @@ learning once the concrete V681 reader and coverage defects are repaired.
 The retired external-text reranker, frozen source-certificate head, importance
 anchor and repeated board probes remain closed. This review does not authorize
 weight updates to `unsloth/Qwen3.8-27B-GGUF` or external publication.
+## V683 planning review — 2026-09-29 (recorded before design)
+
+This scan covers 2025–2026 work and precedes the V683 task design. The
+retirement manifest and V682 terminal artifacts constrain its applications.
+Rechecked papers are identified below. External results are author claims.
+
+### Methods selected for bounded investigation
+
+- **September method recheck:** Chavan, [Constrained Decoding Eliminates Structural
+  Failures in Small LLMs but Reveals a Scale-Dependent Semantic Gap](https://arxiv.org/abs/2609.23742),
+  September 20, 2026. The [full text](https://arxiv.org/html/2609.23742v1)
+  separates schema validity from content correctness on a small structured
+  task suite. Adopt separate parsing, source-fidelity and decision metrics
+  for the existing bounded Qwen protocol. This does not justify a new grammar
+  retry, a small-model headline, or extrapolating its results to 27B models.
+  [Author code](https://github.com/CruiseDevice/small-llm-structured-benchmark)
+  was inspected as a method reference, not installed as a dependency.
+- **Delayed feedback, method recheck:** Ryabchenko, Attias and Roy,
+  [A Reduction from Delayed to Immediate Feedback for Online Convex
+  Optimization with Improved Guarantees](https://arxiv.org/abs/2602.02634),
+  February 2, 2026. Its [full text](https://arxiv.org/html/2602.02634v1)
+  separates delay-induced drift from learning error and tracks outstanding
+  observations. Compare release schedules with equal total delay but different
+  peak pending counts. Record both staleness and admission capacity. Carnot's
+  discrete predicate admission does not inherit the convex regret bound.
+- **Partial feedback, version correction:** Lee et al.,
+  [Online Conformal Abstention for Factuality Control Under Adversarial
+  Bandit Feedback](https://arxiv.org/abs/2506.14067), June 16, 2025;
+  current v4 May 5, 2026. Earlier entries retain older titles. The
+  [current method](https://arxiv.org/html/2506.14067v4) motivates recorded
+  reveal probabilities and an equal-budget random-feedback control. Use
+  empirical selective risk; do not borrow its FDR theorem without its assumptions.
+- **Observed-label discipline, recheck:** Niimi,
+  [Cross-Block Conditioning in Deep Boltzmann Machines for Statistical
+  Data Fusion](https://arxiv.org/abs/2609.14934), September 14/16, 2026.
+  Restrict supervision to observed outcomes and compare models with the same
+  conditioning information. Test unknown-label loss/gradient invariance and
+  explicit train/tune separation in the natural-data adapter. A source-grounded
+  risk head is not a reproduction of this statistical-fusion study.
+- **Evidence sufficiency, recheck:** [Verification Without Sufficiency](https://arxiv.org/abs/2608.00585),
+  August 2026. Compare full source, nominated witness and adjacent context on
+  the same claim. Edited inputs have no independent new truth labels; report
+  their sensitivity separately from accuracy on the unchanged human-labeled input.
+- **Memory controls, rechecks:** [RECAP](https://arxiv.org/abs/2606.06698),
+  June/August 2026, and [Retrieval-Warmed Energy-Based Reasoning](https://arxiv.org/abs/2606.26476),
+  June 2026. Preserve old-task regression checks, no-write controls and shuffled
+  past-feedback controls. Admission must precede the future decisions used to
+  judge it. Memory growth and successful restart do not establish learning value.
+
+### Requested-topic coverage and deferred work
+
+| Topic | Primary sources checked | Consequence |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), December 2025/May 2026; [distributional EBM](https://arxiv.org/abs/2605.18871), May 2026 | Keep learned compatibility, analytic constraints and calibrated probability distinct. No generator training or generic text-ranker revival. |
+| Neural constraint satisfaction | [AS2](https://arxiv.org/abs/2603.18436), March 2026; [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), July 2026 | Representation and deterministic checks matter. Neither licenses semantic certification from a learned energy. |
+| Ising applications in ML | [Pipelined p-computer](https://arxiv.org/abs/2607.21077), July 2026 | Count coupling traffic and complete service cost. Optimization success is not a calibrated sampling result. |
+| Hallucination detection | Source sufficiency and structural/semantic separation above | Evaluate unmodified natural claims independently of parser success and edited-context sensitivity. |
+| KAN | [Spline-local online learning](https://arxiv.org/abs/2602.02056), February/June 2026; [KAN forgetting](https://arxiv.org/abs/2511.12828), November 2025 | Sparse updates provide a hardware path, not guaranteed retention. Measure update bytes before another architecture sweep. |
+| Energy-guided decoding | [ETS v3](https://arxiv.org/abs/2601.21484), January/May 2026 | Reward and transition interfaces need separate qualification. Do not equate schema validity with factual accuracy. |
+| Hardware sampling | P-computer above; [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Z1T describes heterogeneous sparse probabilistic compute. Vendor efficiency is not a Carnot hardware measurement. |
+| Continual constraint learning | Delayed-feedback, partial-feedback and memory references above | Test causal future benefit and retained performance under explicit feedback budgets. |
+
+### Secondary-source receipts and limits
+
+- **OpenReview:** searched 2026 EBM and verification records. The
+  [EBT conference PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  identifies ICLR 2026 publication. Its forum returned a browser challenge.
+  A [CTB@ICML verifier stress-test paper](https://openreview.net/pdf/6f371d86657bf42c4db9245a9d6c6c9d08589c0c.pdf)
+  reinforces the need for independent instance labels. Workshop and conference
+  status remain distinct; search presence does not establish acceptance.
+- **Semantic Scholar:** browser API reads failed. Direct bounded HTTPS requests
+  returned 37 EBT citation records and, after one HTTP 429, eight ARM–EBM records.
+  Neither response had a next-page marker. The queried endpoint was
+  `graph/v1/paper/ARXIV:<id>/citations?fields=title,year,externalIds,url&limit=100`.
+  Followed the DBM, constraint-hardness and distributional-EBM leads to arXiv.
+  These counts describe returned records, not an exhaustive citation census.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  The new September paper page was inaccessible. Use the primary arXiv text.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Their returned
+  crawls were two weeks old. No current relevant trending rank was established.
+  Also checked [KANELE's author repository](https://github.com/Duchstf/KANELE),
+  which documents RTL conversion and Vivado simulation. This does not establish
+  compatibility with Carnot's boards or authorize a new bitstream project.
+- **Extropic:** the [writing index](https://extropic.ai/writing) returned only
+  navigation; the direct Z1T article was readable. No authenticated TSU access
+  or local device execution was established.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes constraint evaluation beneath AI systems. The inspected page provides
+  no reproducible training recipe, weights or local benchmark for Carnot to adopt.
+
+### Local evidence that the design must preserve
+
+V682 produced eight declared results and skipped six science tasks. Exp7851
+qualified the contract. Exp7852 failed import-name validation and its coverage
+child aborted in native logging initialization. The source CLI and import map
+now have code repairs; the historical result remains disqualified. Exp7853
+blocked before natural-data qualification. Exp7854 passed its coverage commands
+but failed its required adversarial check on missing model methodology despite
+performing CPU fixture work. Its flag remains binding. Exp7860 found no new
+supervisor outcomes. Exp7862 preserves historical board scope, with no speedup.
+The audit and capstone remain blocked on science. A current validation receipt
+must precede any reopened measurement. Changing a name cannot erase a failure.

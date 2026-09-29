@@ -11,11 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 5 |
+| CLAIM_SUPPORTED | 4 |
+| NO_CLAIM | 3 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_7839_v681_intervention_protocol.json
+## experiment_7853_v682_natural_runtime.json
 
 **NO_CLAIM**
 
@@ -26,22 +26,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative claim to refute. If intervention benefit were claimed, completed rows showing no selective difference between the intervention arms would refute it.
+A passing source gate or completed natural measurement rows would contradict the reported block. There is no method-benefit claim to refute.
 
 ## WAS THAT CHECKED
-No. No intervention rows were started or completed.
+Yes. The source gate failed, and the sample budget records zero started or completed rows.
 
 ## EVIDENCE
-`claim_scope`: `scripted fixture conformance; exposed development labels only; no fresh generalization`; `readiness`: `false`; `started`: `0`; `completed`: `0`; `verdict_class`: `disqualified`.
+`claim_scope`: `blocked_before_natural_measurement`; `verdict_class`: `blocked`; `source_boundary_ready_score`: `observed`: `0`; `sample_size_budget`: `started`: `0`, `completed`: `0`; `decision_benefit`: `null`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7845_v681_arc_supervisor_delta.json
+## experiment_7854_v682_intervention_protocol.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_7847_v681_hardware_evidence.json
+## experiment_7855_energy_fit.json
 
 **NO_CLAIM**
 
@@ -52,18 +52,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative headline claim to refute. A qualified current board run showing whole-service benefit would challenge the recorded decision to defer.
+There is no experimental claim to refute. The gate receipt itself would be contradicted if its evaluated gates had passed while it reported a block.
 
 ## WAS THAT CHECKED
-No. The artifact reports no current hardware execution, no completed runs, and no qualified service measurement.
+Yes. The artifact lists six evaluated gates, four of which failed, supporting the reported block.
 
 ## EVIDENCE
-`hardware_advantage`: `unmeasured`; `acquisition_relevance`: `defer: no measured board whole-service benefit`; `current_hardware_execution`: `false`; `completed`: `false`; `whole_service_ms`: `null`; `qualified`: `false`; `status`: `missing`; `verdict_class`: `disqualified`.
+`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `gate_check_summary`: `gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7852-source-boundary.source_boundary_ready_score (actual=0 == expected=1)`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7848_v681_length_shortcut.json
+## experiment_7857_qwen_sufficiency.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no Qwen result to falsify. The gate receipt would be contradicted if it reported a blocked run while every prerequisite gate passed.
+
+## WAS THAT CHECKED
+Yes, for the gate receipt: five of six gates failed. No Qwen decisions were measured.
+
+## EVIDENCE
+`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `gate_check_summary`: `gate-unsat(final): 5 of 6 gate(s) failed; first failure: exp7852-source-boundary.source_boundary_ready_score (actual=0 == expected=1)`; `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7860_v682_arc_supervisor_delta.json
 
 **CLAIM_SUPPORTED**
 
@@ -71,43 +93,31 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The length shortcut did not qualify on the exposed development data, and the run was disqualified by required validation failures.
+The ARC supervisor ledger observed no new supervisor outcomes or level solves across the evaluated upstream artifacts.
 
 ## WHAT WOULD REFUTE IT
-A cost gain meeting the stated threshold, a positive lower confidence bound for both cost and Brier gain, and passing required validation would refute that qualification result.
+Any observation of supervisor firings (`firings` > 0), new level solves (`new_level_solves` > 0), or an active supervisor outcome (`no_new_outcomes` set to false) arising from an eligible upstream row.
 
 ## WAS THAT CHECKED
-Yes. The 64 evaluation families were compared with the prevalence baseline, bootstrap bounds were reported, and required validation was run. The artifact makes no fresh generalization claim.
+Yes; candidate rows were checked in `outcome_rows` during the `preconditions_and_reduce` phase, where all 3 candidate upstream sources were evaluated, found to be from a disqualified producer, and excluded, confirming zero firings and zero new level solves.
 
 ## EVIDENCE
-`claim_scope`: `exposed_human_labeled_development_only; no fresh generalization`; `cost_gain_over_prevalence`: `mean` `0.0`, `lower95` `0.0`; `brier_gain_over_prevalence`: `lower95` `-0.0155699037924997`; `required_validation_failures`: `affected_pytest`, `changed_coverage`; `validity`: `false`.
+`"honest_verdict": "complete_null_no_new_supervisor_outcomes"`
+`"verdict_class": "null"`
+`"claim_scope": "observational live supervisor ledger; no causal action saving or new solve"`
+`"no_new_outcomes": true`
+`"firings": 0`
+`"new_level_solves": 0`
+`"status": "excluded"`
+`"reason": "disqualified_producer"`
+`"eligible": 0`
+`"excluded": 3`
+`"verifier_is_oracle": false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7849_v681_independent_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-No comparative benefit claim is made; the audit reports that the required V681 science is blocked.
-
-## WHAT WOULD REFUTE IT
-A completed, eligible upstream science row with qualified evidence would refute the blocked status.
-
-## WAS THAT CHECKED
-Yes, for upstream eligibility: all eight branch rows were excluded. No qualified benefit comparison was available to check.
-
-## EVIDENCE
-`"honest_verdict": "complete_blocked_required_v681_science"`; `"independent_evidence_ready_score": 0`; `"qualified_science": null`; `"eligible": 0`; `"excluded": 8`; `"verdict_class": "blocked"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7850_v681_capstone.json
+## experiment_7862_v682_hardware_evidence.json
 
 **CLAIM_SUPPORTED**
 
@@ -115,69 +125,77 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The v681 milestone is blocked because required current evidence is not qualified.
+No new hardware execution or measured whole-service benefit exists across the evaluated boards, maintaining an honest null status of dated read-only capability custody.
 
 ## WHAT WOULD REFUTE IT
-Required v681 evidence passing the current eligibility and validation checks, with a positive readiness result, while the artifact still declared the milestone blocked.
+The observation of any new qualified device execution, a resolved physical blocker on GateMate yielding a valid IDCODE, a qualified current service cost artifact, or any evaluated board showing changed evidence or a measured whole-service hardware advantage.
 
 ## WAS THAT CHECKED
-Yes. The upstream gate checks and task accounting report failed prerequisites and no eligible independent evidence. The separate publication result is scoped to legacy G1–G4.
+Yes; checked across `change_trigger_rows` (all evaluated targets confirmed `changed_evidence_present` false), `board_rows` (all boards confirmed `current_hardware_execution` false, GateMate blocked by `0xffffffff`), `service_check` (confirmed `qualified` false and status `missing`), and `new_device_execution_count` (0).
 
 ## EVIDENCE
-`honest_verdict`: `complete_blocked_required_v681_evidence`; `milestone_evidence_ready_score`: `0`; `validity`: `false`; `eligible`: `0`; `independent_n`: `0`; `publication`: `legacy_G1_G4_only`; `activation`: `false`.
+- `"honest_verdict"`: `"complete_null_historical_board_scope"`
+- `"verdict_class"`: `"null"`
+- `"new_device_execution_count"`: `0`
+- `"current_hardware_execution"`: `false`
+- `"acquisition_relevance"`: `"defer: no measured board whole-service benefit"`
+- `"status"`: `"historical_read_only"`
+- `"hardware_advantage"`: `"unmeasured"`
+- `"new_execution"`: `"none"`
+- `"current_service"`: `"missing"`
+- `"board_evidence"`: `"dated read-only capability custody"`
+- `"changed_evidence_present"`: `false`
+- `"blocker"`: `"0xffffffff"`
+- `"qualified"`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7840_energy_fit.json
+## experiment_7863_v682_independent_audit.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The independent audit completed, but the required V682 scientific evidence remains blocked.
 
 ## WHAT WOULD REFUTE IT
-None; the artifact is a pre-execution gate receipt recording that the run was aborted before start, asserting no scientific, comparative, or performance claims.
+Eligible upstream science producers with completed independent, labeled results satisfying the required evidence gates would refute the blocked verdict.
 
 ## WAS THAT CHECKED
-No; the experiment halted at the conductor pre-gate phase and never executed, so no candidate method or hypothesis was evaluated.
+Yes. The audit checked upstream preconditions and reduced producer rows; the reported science producers were disqualified or blocked, with no labeled predictions in the shown reductions.
 
 ## EVIDENCE
-`schema`
-`blocked_gate_check_v1`
-`status`
-`blocked`
-`honest_verdict`
-`blocked_gate_check_failed`
-`duration_s`
-`0.0`
-`blocked_at_layer`
-`conductor_pre_gate`
+`honest_verdict` `complete_blocked_required_v682_science`  
+`verdict_class` `blocked`  
+`milestone_evidence_complete_score` `0`  
+`labeled_prediction_count` `0`  
+`status` `disqualified` `blocked`  
+`validity` `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7842_qwen_counter_evidence.json
+## experiment_7864_v682_capstone.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The capstone is complete, but the required v682 science remains blocked.
 
 ## WHAT WOULD REFUTE IT
-There is no result claim to refute. A future positive claim about source sensitivity could be refuted by matched-deletion measurements showing no sensitivity.
+Qualified required science producers, completed dependent runs, and measured scientific gates in the capstone’s own rows would contradict the blocked verdict.
 
 ## WAS THAT CHECKED
-No. The run was blocked before measurement.
+Yes. The capstone checks upstream dispositions and gate results; it records a disqualified source producer, a blocked dependent run, and unmeasured scientific gates.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"blocked_at_layer": "conductor_pre_gate"`
+`"honest_verdict": "complete_blocked_required_v682_science"`; `"status": "disqualified"` for `"exp7852-source-boundary"`; `"status": "blocked"` and `"completed": 0` for `"exp7853-natural-runtime"`; `"decision_benefit": null`; `"milestone_benefit_score": 0`.
 
 ## RECOMMENDATION
 KEEP

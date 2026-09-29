@@ -11,7 +11,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 |---|---|
 | CHECKABLE | 8 |
 
-## experiment_7839_v681_intervention_protocol.json
+## experiment_7853_v682_natural_runtime.json
 
 **CHECKABLE**
 
@@ -19,7 +19,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was disqualified because the required validation check `changed_coverage.passed` failed with an observed value of false against expected true.
+The experiment was blocked before natural measurement because upstream precondition checks on experiment 7852 failed.
 
 ## WHAT IS MISSING
 nothing
@@ -27,7 +27,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7845_v681_arc_supervisor_delta.json
+## experiment_7854_v682_intervention_protocol.json
 
 **CHECKABLE**
 
@@ -35,7 +35,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The audit found no new supervisor outcomes and was disqualified after required validation failed.
+The artifact records a scripted fixture run with failed validity and readiness gates and makes no measured sufficiency claim.
+
+## WHAT IS MISSING
+nothing; `acceptance_gate_results` gives the gate outcomes, and `fixture_request_rows` records per-fixture, per-arm results and failure statuses.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7855_energy_fit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the conductor pre-gate because four of six upstream prerequisite gate checks failed.
 
 ## WHAT IS MISSING
 nothing
@@ -43,7 +59,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7847_v681_hardware_evidence.json
+## experiment_7857_qwen_sufficiency.json
 
 **CHECKABLE**
 
@@ -51,7 +67,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The experiment was blocked at the conductor pre-gate because five of six upstream dependency gate checks failed.
 
 ## WHAT IS MISSING
 nothing
@@ -59,7 +75,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7848_v681_length_shortcut.json
+## experiment_7860_v682_arc_supervisor_delta.json
 
 **CHECKABLE**
 
@@ -67,7 +83,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The length model had a 0.007424 mean Brier improvement over the prevalence baseline on 64 development families, but the run was disqualified by required validation failures.
+No new supervisor outcomes, causal action savings, or level solves were observed across the candidate sources (honest null).
 
 ## WHAT IS MISSING
 nothing
@@ -75,7 +91,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7849_v681_independent_audit.json
+## experiment_7862_v682_hardware_evidence.json
 
 **CHECKABLE**
 
@@ -83,15 +99,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Required V681 science was blocked because upstream readiness and validation checks failed and several science producers were missing.
+The artifact reports a null result: it accounts for historical board evidence but records no new device execution or measured hardware advantage.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary` records the failed checks with `artifact_field`, `expected`, and `observed` values.
+nothing; `rows` and `board_rows` give board-level records, and GateMate’s `blocker` records the observed value `0xffffffff`.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7850_v681_capstone.json
+## experiment_7863_v682_independent_audit.json
 
 **CHECKABLE**
 
@@ -99,23 +115,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The milestone is blocked because required evidence and prerequisite checks did not qualify.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` and `preconditions_checked.failed_operands` name the failed checks and record their expected and observed values.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7840_energy_fit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked because two upstream gates failed.
+The milestone 2026.09.682 validation audit is blocked from execution because required upstream science producer artifacts failed prerequisite checks or are missing.
 
 ## WHAT IS MISSING
 nothing
@@ -123,7 +123,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7842_qwen_counter_evidence.json
+## experiment_7864_v682_capstone.json
 
 **CHECKABLE**
 
@@ -131,7 +131,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The v682 capstone task is blocked on required upstream science producer experiments.
 
 ## WHAT IS MISSING
 nothing

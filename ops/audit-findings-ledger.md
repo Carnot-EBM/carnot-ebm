@@ -256,3 +256,4 @@ of truth, not this line.)
 | 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_marker_present | SILENT_NON_FIRING | OPEN | |
 | 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_claim_text | REAL_BUG | OPEN | |
 | 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_norm | SILENT_NON_FIRING | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::check_moat_claim_rigor | SILENT_NON_FIRING | OPEN | |

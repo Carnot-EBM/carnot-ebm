@@ -85669,3 +85669,34 @@ A private CLI candidate and cold replay agree on the fourteen rows and source
 hashes. A changed source byte, changed task order, omitted row, or false benefit
 score fails replay. Required child failures disqualify the own execution; the
 repository health diagnostic cannot erase historical required failures.
+
+## REQ-REPORT-PLAN-683: Bind the next research plan to executable task contracts
+
+Milestone 2026.09.683 SHALL contain fourteen tasks, exp7865 through exp7878,
+in that order across four phases. The design table, embedded JSON contract
+and staged YAML SHALL agree on IDs, titles, phases, deliverables, models,
+substrate classes and gates. Gates SHALL reference earlier current tasks and
+exact fields in their required artifact contracts. Administrative contract
+readiness SHALL NOT gate scientific measurement.
+
+The plan SHALL preserve V682's two disqualified and three blocked producers,
+two null producers, one circular-positive producer and six absent science
+producers. It SHALL name concrete repairs before rerunning failed scopes.
+It SHALL include calibrated decision training, causal continuous learning,
+ARC generalization evidence and attached-board continuity. Every prompt SHALL
+require progress during long calls and loops, bounded file writes, independent
+validation, per-unit rows and terminal verdict classification.
+
+### SCENARIO-REPORT-PLAN-683-CONTRACT
+
+The unchanged contract reader accepts all fourteen design/YAML task rows.
+Mutating count, order, ID, title, phase, deliverable, model, substrate or a gate
+causes rejection. Schema, prior-failure, exclusion and gate audits run on the
+staged file. No active-roadmap or conductor mutation is needed.
+
+### SCENARIO-REPORT-PLAN-683-RESEARCH
+
+The dated reference review precedes the plan. Each adopted method has a primary
+source and a bounded local test. Qwen3.8-27B is required for current LLM work.
+Bounded generation uses its 10-second substrate class. CPU fixtures cannot
+establish semantic benefit, and past board receipts cannot establish new speed.
