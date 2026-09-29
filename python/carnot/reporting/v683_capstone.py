@@ -49,7 +49,7 @@ def _failure(
 
 def build_ledger(root: Path) -> dict[str, Any]:
     """Read all contract paths; a skip receipt only explains an absent producer."""
-    authority = root / "research-roadmap-next.yaml"
+    authority = root / "docs/research-notes/v683-authority-snapshots/staged.yaml"
     tasks = yaml.safe_load(authority.read_text())["tasks"]
     if len(tasks) != 14 or [t["id"].split("-", 1)[0] for t in tasks] != [
         f"exp{n}" for n in range(7865, 7879)

@@ -86258,3 +86258,31 @@ versioned authorities, preserving their assertions and past determinations.
 The dated reference review precedes task design. It distinguishes verified
 sources, access limits, proposed adaptations and unmeasured benefit. The
 capstone preserves six V684 disqualifications and six skipped producers.
+
+## REQ-REPORT-7891-V685: Bind authority across staging and activation
+
+Exp7891 SHALL compare twelve ordered V685 tasks against the visible design
+ table and embedded contract. It SHALL hash the complete YAML task list as
+canonical JSON and compare it with the digest printed in the design. It SHALL
+read staged and active files independently. Before activation, staging can
+confirm only planning. After activation, matching active bytes and the design
+digest SHALL suffice when staging is absent or names a later milestone. An old
+active milestone SHALL never prove V685 activation. Missing or changed
+authority SHALL yield a terminal blocked verdict with exact failed operands.
+
+### SCENARIO-REPORT-7891-LIFECYCLE
+
+Private versioned authorities cover matching staging, consumed staging,
+later-stage coexistence, old active authority, changed prompts, changed prior
+failures, and mutations to every core task field. Immutable snapshots bind
+each source's bytes. Historical V681, V683, and V684 tests use their own
+private versioned authorities and retain their original assertions.
+
+### SCENARIO-REPORT-7891-VALIDATION
+
+The task SHALL freeze affected commands, expected exits, deadlines, and
+coverage includes before running them. It SHALL retain failed historical
+checks as history and distinguish current required checks from repository
+health. Unit and real CLI success, failure, and replay paths SHALL cover all
+new code. Terminal bytes SHALL pass adversarial and strict row validation
+before atomic publication.

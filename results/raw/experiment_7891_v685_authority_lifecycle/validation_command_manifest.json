@@ -1,0 +1,153 @@
+{
+  "affected_tests": [
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+    "tests/python/test_experiment_7837_v681_contract_methods.py",
+    "tests/python/test_experiment_7877_v683_independent_audit.py",
+    "tests/python/test_experiment_7878_v683_capstone.py",
+    "tests/python/test_experiment_7879_v684_contract_methods.py",
+    "tests/python/test_experiment_7890_v684_capstone.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7891_v685_authority_lifecycle/negative_cli_replay_candidate.json",
+        "--raw",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7891_v685_authority_lifecycle/negative_cli_replay_rows.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 1,
+      "name": "negative_cli_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_experiment_7837_v681_contract_methods.py",
+        "tests/python/test_experiment_7877_v683_independent_audit.py",
+        "tests/python/test_experiment_7878_v683_capstone.py",
+        "tests/python/test_experiment_7879_v684_contract_methods.py",
+        "tests/python/test_experiment_7890_v684_capstone.py"
+      ],
+      "deadline_s": 900,
+      "expected_exit": 0,
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py"
+      ],
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "name": "consumer_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v685_authority_lifecycle.py",
+        "scripts/experiments/experiment_7891_v685_authority_lifecycle.py",
+        "python/carnot/reporting/v683_independent_audit.py",
+        "python/carnot/reporting/v683_capstone.py",
+        "scripts/experiments/experiment_7837_v681_contract_methods.py",
+        "scripts/experiments/experiment_7879_v684_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_experiment_7837_v681_contract_methods.py",
+        "tests/python/test_experiment_7877_v683_independent_audit.py",
+        "tests/python/test_experiment_7878_v683_capstone.py",
+        "tests/python/test_experiment_7879_v684_contract_methods.py",
+        "tests/python/test_experiment_7890_v684_capstone.py"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v685_authority_lifecycle.py",
+        "scripts/experiments/experiment_7891_v685_authority_lifecycle.py",
+        "python/carnot/reporting/v683_independent_audit.py",
+        "python/carnot/reporting/v683_capstone.py",
+        "scripts/experiments/experiment_7837_v681_contract_methods.py",
+        "scripts/experiments/experiment_7879_v684_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_experiment_7837_v681_contract_methods.py",
+        "tests/python/test_experiment_7877_v683_independent_audit.py",
+        "tests/python/test_experiment_7878_v683_capstone.py",
+        "tests/python/test_experiment_7879_v684_contract_methods.py",
+        "tests/python/test_experiment_7890_v684_capstone.py"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/v685_authority_lifecycle.py",
+        "scripts/experiments/experiment_7891_v685_authority_lifecycle.py",
+        "python/carnot/reporting/v683_independent_audit.py",
+        "python/carnot/reporting/v683_capstone.py",
+        "scripts/experiments/experiment_7837_v681_contract_methods.py",
+        "scripts/experiments/experiment_7879_v684_contract_methods.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "mypy_strict"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_experiment_7837_v681_contract_methods.py",
+        "tests/python/test_experiment_7877_v683_independent_audit.py",
+        "tests/python/test_experiment_7878_v683_capstone.py",
+        "tests/python/test_experiment_7879_v684_contract_methods.py",
+        "tests/python/test_experiment_7890_v684_capstone.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "spec_coverage"
+    }
+  ],
+  "consumer_regressions": [
+    "tests/python/test_roadmap_schema.py",
+    "tests/python/test_audit_roadmap_gates.py",
+    "tests/python/test_exclusion_manifest_lint.py",
+    "tests/python/test_conductor_gates.py"
+  ],
+  "coverage_includes": [
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py"
+  ],
+  "inapplicable_e2e": {
+    "E2E-015": "No source producer changed",
+    "E2E-016": "No intervention or Qwen path changed",
+    "E2E-017": "No ARC receipt reducer changed"
+  },
+  "output": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7891_v685_authority_lifecycle.json",
+  "version": 1
+}

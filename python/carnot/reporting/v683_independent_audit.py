@@ -21,7 +21,7 @@ from carnot.reporting.current_work_receipt import (
 )
 
 
-AUTHORITY = "research-roadmap-next.yaml"
+AUTHORITY = "docs/research-notes/v683-authority-snapshots/staged.yaml"
 SCIENCE = {7869, 7870, 7871, 7872, 7873, 7875}
 READY = {
     7865: "contract_ready_score",

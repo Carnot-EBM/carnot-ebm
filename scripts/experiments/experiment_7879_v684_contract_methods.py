@@ -28,9 +28,9 @@ from carnot.reporting.experiment_7303_validation_scope import (  # noqa: E402
     run_commands,
 )
 
-DESIGN = ROOT / "openspec/change-proposals/research-roadmap-vNEXT.md"
+DESIGN = ROOT / "tests/fixtures/v684/design.md"
 STAGED = ROOT / "research-roadmap-next.yaml"
-ACTIVE = ROOT / "research-roadmap.yaml"
+ACTIVE = ROOT / "tests/fixtures/v684/active.yaml"
 RESULT = ROOT / "results/experiment_7879_v684_contract_methods.json"
 START = time.monotonic()
 MODEL_SPECS: list[str] = []
@@ -269,7 +269,7 @@ def snapshot_sources(paths: list[tuple[Path, str]], directory: Path) -> list[dic
 
 def build_manifest(root: Path, scratch: Path) -> dict[str, Any]:
     """Freeze real paths, current consumers, coverage includes and deadlines."""
-    active = yaml.safe_load((root / "research-roadmap.yaml").read_text())
+    active = yaml.safe_load(ACTIVE.read_text())
     scopes = {}
     for task in active["tasks"]:
         number = int(task["id"][3:7])

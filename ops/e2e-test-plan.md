@@ -261,3 +261,14 @@ Spec ref: REQ-REPORT-7874. Run
 The direct script-path CLI must reduce a private empty ledger, reject missing
 required arguments, and cold-replay a zero-firing candidate. A candidate that
 claims a firing without receipts must fail replay. No game or model is run.
+
+### E2E-018: V685 authority lifecycle CLI (CPU)
+
+Spec ref: REQ-REPORT-7891-V685. Run
+`pytest -n 0 -o addopts= --no-cov -q tests/python/test_experiment_7891_v685_authority_lifecycle.py`,
+then run `python scripts/experiments/experiment_7891_v685_authority_lifecycle.py --date 20260929`.
+The private CLI test must accept matching activated authority, reject a changed
+candidate during cold replay, and execute the manifest's negative replay with
+exit 1. The current CLI must pass all required validation receipts, all twelve
+authority mutations, adversarial verification, strict row consistency, and a
+cold replay of the published artifact. It makes no model or science claim.

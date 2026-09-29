@@ -1,5 +1,21 @@
 # Carnot — Operational Status
 
+## 2026-09-29 — V685 authority lifecycle test repair
+
+- The V685 CLI now freezes and executes a negative cold replay, reports replay
+  mismatches explicitly, and refuses publication if terminal validation still
+  fails after recheck. All 18 focused tests pass, including 12/12 authority
+  mutations. The authority reducer and CLI have 85/85 and 180/180 statement
+  coverage, respectively.
+- The V684 capstone now reads frozen V684 authorities; its 16 tests and the
+  current 91-test affected suite pass. The 106 roadmap/conductor consumers pass.
+- The current Exp7891 artifact records readiness 1, 7/7 required receipts,
+  passing terminal validators, and no scientific benefit claim. E2E-018 passes.
+- A repository-wide diagnostic reached 7,178 passed, 50 failed, and 57 skipped
+  before interruption at about 9%; failures include older tracked-result write
+  violations and other unrelated suites. Repository-wide reconciliation also
+  fails on legacy tests without spec references. Full-suite green is not claimed.
+
 ## 2026-09-29 — Exp7879 direct CLI and validation paths repaired
 
 - The V684 CLI resolves `scripts.*` imports from its repository root when

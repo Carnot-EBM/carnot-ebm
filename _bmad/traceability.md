@@ -1,6 +1,19 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-29
+**Operational Note:** REQ-REPORT-7891-V685 and its lifecycle/validation
+scenarios map to `python/carnot/reporting/v685_authority_lifecycle.py`,
+`scripts/experiments/experiment_7891_v685_authority_lifecycle.py`, and
+`tests/python/test_experiment_7891_v685_authority_lifecycle.py`. Frozen V684
+authorities also restore the Exp7890 capstone regression. The current CLI
+records 7/7 passing required receipts, 12/12 passing mutations, terminal
+validators, and authority readiness 1. The reducer and CLI have 85/85 and
+180/180 statement coverage, respectively. E2E-018 runs the real CLI and private
+positive/negative replay. The current manifest passes 91/91 affected tests and
+106/106 consumers. The repository-wide Python diagnostic was interrupted after
+7,178 passes and 50 failures in other suites; repository-wide spec coverage
+also remains red for legacy untraced tests. Neither check qualifies as a
+repository-wide pass.
 **Operational Note:** REQ-REPORT-7879-V684 and its AUTHORITY/SCOPE scenarios map
 the direct Exp7879 CLI, exact import paths, private scratch, sealed validation
 and cold replay to `tests/python/test_experiment_7879_v684_contract_methods.py`.

@@ -20,9 +20,10 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def fixture_root(tmp_path: Path) -> Path:
     """Keep a real design contract while isolating mutable producer bytes."""
-    design = tmp_path / "openspec/change-proposals/research-roadmap-vNEXT.md"
-    design.parent.mkdir(parents=True)
-    design.write_bytes((ROOT / design.relative_to(tmp_path)).read_bytes())
+    for name in (cap.DESIGN, cap.STAGED, cap.ACTIVE):
+        target = tmp_path / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((ROOT / name).read_bytes())
     (tmp_path / "results").mkdir()
     return tmp_path
 
@@ -108,7 +109,7 @@ def test_replay_rejects_changed_source_bytes(tmp_path: Path) -> None:
     path = tmp_path / "candidate.json"
     path.write_text(json.dumps(candidate))
     assert cap.cold_replay(path, root) == []
-    source = root / "openspec/change-proposals/research-roadmap-vNEXT.md"
+    source = root / cap.DESIGN
     source.write_text(source.read_text() + "\nchanged\n")
     assert "source_bytes_changed" in cap.cold_replay(path, root)
 

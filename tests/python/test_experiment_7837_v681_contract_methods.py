@@ -14,9 +14,9 @@ from carnot.reporting import roadmap_contract as subject
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DESIGN = ROOT / "openspec/change-proposals/research-roadmap-vNEXT.md"
-STAGED = ROOT / "research-roadmap-next.yaml"
-ACTIVE = ROOT / "research-roadmap.yaml"
+DESIGN = ROOT / "docs/research-notes/v681-authority-snapshots/design.md"
+STAGED = ROOT / "docs/research-notes/v681-authority-snapshots/staged.yaml"
+ACTIVE = ROOT / "docs/research-notes/v681-authority-snapshots/active.yaml"
 CLI = ROOT / "scripts/experiments/experiment_7837_v681_contract_methods.py"
 
 

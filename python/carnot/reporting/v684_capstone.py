@@ -20,9 +20,9 @@ from carnot.reporting.roadmap_contract import parse_design
 from scripts import publication_gate
 
 
-DESIGN = "openspec/change-proposals/research-roadmap-vNEXT.md"
-STAGED = "research-roadmap-next.yaml"
-ACTIVE = "research-roadmap.yaml"
+DESIGN = "tests/fixtures/v684/design.md"
+STAGED = "tests/fixtures/v684/staged.yaml"
+ACTIVE = "tests/fixtures/v684/active.yaml"
 SCIENCE = {7882, 7883, 7884, 7885, 7886, 7888}
 QUALIFIED = {"positive", "circular_positive", "null"}
 METRICS = (

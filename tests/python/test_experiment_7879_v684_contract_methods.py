@@ -16,8 +16,8 @@ from carnot.reporting.roadmap_contract import compare_contract
 
 ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / "scripts/experiments/experiment_7879_v684_contract_methods.py"
-DESIGN = ROOT / "openspec/change-proposals/research-roadmap-vNEXT.md"
-ACTIVE = ROOT / "research-roadmap.yaml"
+DESIGN = ROOT / "tests/fixtures/v684/design.md"
+ACTIVE = ROOT / "tests/fixtures/v684/active.yaml"
 
 
 def owned():

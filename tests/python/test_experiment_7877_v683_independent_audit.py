@@ -157,6 +157,7 @@ def test_reader_mutations_and_invalid_authority(tmp_path):
     assert audit._data(bad) == {}
     assert audit._receipts({"validation_receipts": 1}) == []
     assert audit._receipts({"validation_receipts": [{"name": "ok"}, None]}) == [{"name": "ok"}]
+    (tmp_path / audit.AUTHORITY).parent.mkdir(parents=True, exist_ok=True)
     (tmp_path / audit.AUTHORITY).write_text("tasks:\n- id: exp0-wrong\n")
     with pytest.raises(ValueError, match="authority_order_changed"):
         audit.inspect_sources(tmp_path)

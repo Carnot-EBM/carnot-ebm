@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-09-29 — V685 authority lifecycle and V684 frozen authority
+
+- Added a real expected-failure replay to the V685 validation manifest and
+  made replay mismatches visible to CLI callers. The CLI now refuses
+  publication after a failed terminal recheck. Added immutable snapshot,
+  design-count, staged-digest, active-count, timeout, and CLI exit tests; the
+  V685 reducer and CLI both reach 100% statement coverage.
+- Bound the historical V684 capstone to its frozen design, staged, and active
+  files so V685 rollover cannot make V684 contract parsing fail. Its assertions
+  remain intact.
+- Rebuilt the Exp7891 receipt with 7/7 required commands, 12/12 mutation
+  controls, 91/91 affected tests, 106/106 consumers, terminal validators, and
+  authority readiness 1. E2E-018 passes.
+- The broader Python suite remains red in unrelated historical areas; a
+  diagnostic was interrupted after 7,178 passes and 50 failures. Repository-wide
+  spec coverage also reports legacy untraced tests.
+
 ## 2026-09-29 — Exp7879 script-path import and validation coverage
 
 - Added the repository root to the V684 CLI import path and an isolated
