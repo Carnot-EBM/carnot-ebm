@@ -1,6 +1,13 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-29
+**Operational Note:** REQ-REPORT-7879-V684 and its AUTHORITY/SCOPE scenarios map
+the direct Exp7879 CLI, exact import paths, private scratch, sealed validation
+and cold replay to `tests/python/test_experiment_7879_v684_contract_methods.py`.
+The conductor smart subset passes 102/102 and combined unit plus direct CLI
+coverage reaches 256/256 statements. The broader prospective manifest still
+finds V681 tests tied to the absent live staged roadmap; it is not qualified
+as passing.
 **Operational Note:** REQ-REPORT-7878 and SCENARIO-REPORT-7878-REPLAY map the
 V683 capstone's direct script-path import to
 `tests/python/test_experiment_7878_v683_capstone.py`. The CLI now resolves

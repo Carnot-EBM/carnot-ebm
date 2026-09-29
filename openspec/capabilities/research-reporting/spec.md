@@ -85977,3 +85977,38 @@ controls map to bounded experiments. The only LLM task declares
 unsloth/Qwen3.8-27B-GGUF and model_bounded_generation. All other tasks explicitly
 perform no pretrained-model load. Historical, fixture, natural development,
 live-agent and device evidence retain separate claim boundaries.
+
+## REQ-REPORT-7879-V684: Bind executable scopes to current authority
+
+Exp7879 SHALL compare the twelve V684 design rows with staged and genuinely
+active roadmap bytes through `compare_contract` with milestone 2026.09.684,
+first ID 7879 and count 12. It SHALL preserve exact source hashes, actual
+import paths, prior required failures, a prospective affected test and command
+manifest, frozen methods and per-task E2E closure. Missing staged authority
+SHALL yield a terminal blocked verdict with the missing operand named; it
+SHALL NOT be replaced silently by active bytes. An owned required-check failure
+SHALL disqualify readiness. Repository-wide debt remains a separate diagnostic.
+
+### SCENARIO-REPORT-7879-V684-AUTHORITY
+
+The private CLI writes twelve primitive contract rows and a cold replayable
+candidate. It records active V684 bytes as active only. A missing staged file
+sets readiness to zero and names path, hash, expected and observed values.
+
+### SCENARIO-REPORT-7879-V684-SCOPE
+
+The manifest names actual existing test and module paths, exact argv and
+deadlines before child execution. Private mutations of every contract field
+and prior-failure metadata fail. Nonexistent ARC tests, empty coverage and
+illegal `host_cpu` venue fail locally before any claim of readiness.
+The CLI accepts a private scratch directory so validation receipts, coverage
+data and terminal replay can be checked without sharing files between runs.
+Changed child-log bytes, an existing mismatched seal, failed required checks,
+and changed published bytes fail closed.
+
+Implementation: `scripts/experiments/experiment_7879_v684_contract_methods.py`
+loads both repository packages during direct script execution and accepts
+`--scratch` for isolated validation. The scoped V684 tests exercise private
+CLI creation, cold replay, supervised checks, terminal publication and log
+seals with 100% script statement coverage. The missing staged authority still
+blocks contract readiness.

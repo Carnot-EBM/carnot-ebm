@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-09-29 — Exp7879 script-path import and validation coverage
+
+- Added the repository root to the V684 CLI import path and an isolated
+  `--scratch` option. The private CLI now runs from outside the repository.
+- Added receipt-integrity and terminal-validation tests without changing
+  failing assertions. The conductor smart subset passes 102/102, and the CLI
+  has 256/256 statement coverage. The broader historical V681 manifest remains
+  red on missing live staged authority and is recorded in operational status.
+
 ## 2026-09-29 — Exp7878 script-path import fix
 
 - Added the repository root to the capstone entrypoint's import path so direct

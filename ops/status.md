@@ -1,5 +1,19 @@
 # Carnot — Operational Status
 
+## 2026-09-29 — Exp7879 direct CLI and validation paths repaired
+
+- The V684 CLI resolves `scripts.*` imports from its repository root when
+  invoked by path, including from outside the repository and without
+  `PYTHONPATH`. Its private candidate and cold replay pass.
+- The conductor smart subset passes 102/102 with one deprecation warning.
+  Scoped unit and direct CLI runs cover 256/256 script statements; Ruff,
+  format, strict mypy and scoped spec coverage pass.
+- The broader V684 validation manifest remains red because its historical
+  Exp7837 tests expect the removed live staged roadmap. V684 contract
+  readiness remains zero, and no full-suite pass is claimed. Repository-wide
+  reconciliation also reports pre-existing tests without spec references;
+  the scoped Exp7879 spec check passes.
+
 ## 2026-09-29 — Exp7878 direct CLI import repaired
 
 - The V683 capstone script resolves the repository root before loading its
