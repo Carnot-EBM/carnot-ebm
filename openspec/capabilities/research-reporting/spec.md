@@ -1,5 +1,53 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7890-V684: Independently reconcile twelve current tasks
+
+Exp7890 SHALL read the twelve ordered V684 rows from the embedded design contract and
+record the actual staged authority as missing when absent. It SHALL hash each of the
+first eleven declared producer paths and record conductor skip receipts separately.
+The twelfth row is this administrative producer and SHALL never hash itself. Every
+failed declared gate operand SHALL retain its upstream ID, path, hash, field,
+operator, expected value and observed value. Missing producers, missing fields,
+failed values, flagged artifacts and disqualified checks SHALL remain distinct.
+Six scientific producers, Exp7882/7883/7884/7885/7886/7888, require qualified
+current measurements for science completeness. Historical required failures and
+repository health SHALL never be recast as passing current checks.
+
+The new reducer SHALL use primitive rows without importing predecessor headline
+reducers. It SHALL average seeds within independent families before paired
+comparisons and confidence intervals. It SHALL preserve original human labels,
+exposed development status, equal coverage, Qwen syntax/fidelity and source
+sensitivity, causal release/admission/no-write effects, calibration retention,
+complete service work, and ARC/board provenance. Missing fields yield null claims;
+mutated labels, denominators or source hashes fail replay. FR-12, FR-11 and
+FR-05/FR-08/NFR-01 decisions SHALL remain separate from FoVer G1-G4 publication
+readiness. Oracle fixtures cannot close GAP-ORACLE-DISTINCT.
+
+The owned CLI SHALL freeze existing affected tests, paths, exact argv, deadlines
+and E2E-016/017 applicability before running checks. It SHALL resolve
+`carnot.*` under `python/carnot` and `scripts.publication_gate` under `scripts`.
+Unit and real CLI coverage shards SHALL use the same includes, contain measured
+statements and combine to 100 percent for owned code. Required check failures
+disqualify and zero owned readiness. External missing science yields a complete
+blocked verdict with exact operands. The final exact bytes SHALL pass adversarial
+verification and strict row lint before atomic publication.
+
+### SCENARIO-REPORT-7890-LEDGER
+
+Given missing producers and failed gate fields, twelve ordered rows and exact
+operands survive reduction. A conductor skip receipt never becomes a producer.
+
+### SCENARIO-REPORT-7890-REDUCTION
+
+Given paired families with repeated seeds, each family contributes once. A
+changed label, denominator or hash fails replay; unmeasured benefit stays null.
+
+### SCENARIO-REPORT-7890-TERMINAL
+
+Given actual package roots and passing owned checks, the real CLI and cold
+replay pass. Historical failures remain visible, and terminal validation checks
+the bytes that are published.
+
 ## REQ-REPORT-7880: Qualify measured source custody on V684
 
 Exp7880 SHALL authenticate the original Exp7810 source and evaluator shards.
