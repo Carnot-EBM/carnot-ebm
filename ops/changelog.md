@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-09-29 — Exp7862 custody parse fix
+
+- Converted malformed required historical JSON and board rows into explicit
+  failed custody checks, so the reducer writes a blocked terminal record.
+- Verified the 90-test conductor subset, real private CLI routes, and 100%
+  combined statement coverage for the Exp7862 reader and CLI.
+- Regenerated the Exp7862 artifact: all 14 required receipts pass, while the
+  separate 180-second repository-health diagnostic remains timed out. Final
+  cold replay, adversarial verification, and strict row lint pass.
+
 ## 2026-09-29 — Exp7852 script-path import fix
 
 - Resolved the sibling Exp7838 producer from both direct script execution and

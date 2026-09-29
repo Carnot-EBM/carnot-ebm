@@ -85367,6 +85367,47 @@ wrong class, flag, readiness, or invalid timing blocks those numbers.
 The real CLI writes only to its selected private output root during E2E. Its
 cold replay reconstructs rows from source bytes and checks sealed child logs.
 
+## REQ-REPORT-7862: Preserve board limits and qualify current service fit
+
+Exp7862 SHALL cold-read the authenticated board receipts and raw transcripts.
+It SHALL retain the original measurement dates, hashes, and failed Exp7834 and
+Exp7847 validation obligations. KV260 qualifies only quadratic Ising fabric
+with k<=5. PolarFire qualifies only hash-matched Linux CPU execution. GateMate
+remains blocked at JTAG 0xffffffff. NPU and TSU remain unqualified. An absent
+Exp7861 science artifact SHALL make service applicability unknown without
+blocking board evidence custody or claiming a current board execution.
+
+The CLI SHALL use private same-directory atomic outputs under /tmp. It SHALL
+freeze exact source and test closure, child commands, deadlines, and classes
+before validation. Required checks include real CLI success and missing-source
+routes, cold replay, changed-code 100% statement coverage, scoped lint, strict
+types, spec coverage, adversarial verification, and strict row consistency.
+Child logs SHALL be sealed after exit. Repository health SHALL run once as a
+separate 180-second diagnostic. Failed required checks SHALL disqualify
+readiness without erasing historical failures. No board operation is in scope.
+
+### SCENARIO-REPORT-7862-CUSTODY
+
+Given unchanged historical bytes and no Exp7861 artifact, the reader returns
+three dated board rows, unknown service fit, zero new device executions, and
+an evidence readiness score of one. A missing required historical receipt or
+changed raw transcript produces a complete blocked record with exact operands.
+Malformed JSON or board rows in a required receipt also produces a blocked
+record with a failed schema operand instead of raising during reduction.
+
+### SCENARIO-REPORT-7862-CLI
+
+The real private-output CLI succeeds with the child-results guard active. Its
+missing-source route emits a blocked terminal artifact. Cold replay independently
+rehashes source bytes, reduces primitive rows, and verifies sealed child logs.
+
+### SCENARIO-REPORT-7862-VALIDATION
+
+The frozen manifest names each required check and a separate health diagnostic.
+An owned child timeout or required failure disqualifies the terminal artifact.
+The Extropic pages and FPGA co-design preprint remain external claims separate
+from local board measurements.
+
 ## REQ-REPORT-7849: Cold audit current V681 science without inherited dispatch
 
 Exp7849 SHALL inspect the eight exact producer paths for Exp7838, Exp7840,

@@ -1,5 +1,21 @@
 # Carnot — Operational Status
 
+## 2026-09-29 — Exp7862 malformed board receipt repaired
+
+- Required historical JSON and board-row shape failures now yield a blocked
+  custody record with the failed operand. The conductor smart subset passes
+  90/90, including private real CLI success, missing-source, and replay routes.
+  Combined unit and CLI coverage reaches 244/244 changed-code statements.
+- The refreshed Exp7862 artifact records a null historical-board verdict,
+  evidence readiness 1, and all 14 required validation checks passing. Cold
+  replay, adversarial verification, and strict row consistency pass. Its
+  separate repository-health diagnostic timed out at 180 seconds.
+- The broad Python suite remains unqualified: an exploratory run was stopped
+  after unrelated legacy failures in the retro and Rosenbrock tests. No board
+  operation or new hardware claim occurred. Repository-wide reconciliation
+  still reports 1,142 pre-existing tests without spec references; scoped
+  Exp7862 spec coverage passes.
+
 ## 2026-09-29 — Exp7852 direct CLI import repaired
 
 - The source-boundary CLI resolves its sibling producer when invoked by script

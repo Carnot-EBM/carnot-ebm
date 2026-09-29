@@ -3382,3 +3382,15 @@ registered under the original V674 tasks.
   Exp7759 tests pass 36/36; the changed module and CLI have 260/260 statements
   covered. Full Python collection has 18 errors, so the artifact records
   readiness zero. The CPU fixture establishes transport conformance only.
+
+## Exp7862 board custody repair — 2026-09-29
+
+- REQ-REPORT-7862 and SCENARIO-REPORT-7862-CUSTODY map to
+  `python/carnot/reporting/experiment_7862_v682_hardware_evidence.py` and
+  `tests/python/test_experiment_7862_v682_hardware_evidence.py`.
+- The required historical JSON reader now records a failed `schema_json` or
+  `board_rows.schema` operand for malformed input. The custody test verifies
+  both terminal blocked paths. The conductor smart subset passes 90/90;
+  combined unit and real CLI runs cover all 244 statements in the changed
+  module and CLI. The refreshed artifact passes all 14 required checks and
+  cold replay; repository health times out as a separate diagnostic.
