@@ -1,0 +1,225 @@
+{
+  "affected_source_closure": [
+    "python/carnot/reporting/v681_independent_audit.py",
+    "scripts/experiments/experiment_7849_v681_independent_audit.py"
+  ],
+  "affected_test_closure": [
+    "tests/python/test_experiment_7849_v681_independent_audit.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib,json; m=importlib.import_module('carnot.reporting.v681_independent_audit'); print(json.dumps({'resolved_imports':{m.__name__:m.__file__}}),flush=True)"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "worktree_imports"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/coverage/.coverage.unit",
+        "--include=*/v681_independent_audit.py,*/experiment_7849_v681_independent_audit.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7849_v681_independent_audit.py",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/coverage/.coverage.cli",
+        "--include=*/v681_independent_audit.py,*/experiment_7849_v681_independent_audit.py",
+        "scripts/experiments/experiment_7849_v681_independent_audit.py",
+        "--date",
+        "20260929",
+        "--science-only",
+        "--output-root",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/private_cli"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "name": "cli_e2e"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "from coverage import Coverage,CoverageData; from pathlib import Path; files=[Path(x) for x in __import__('sys').argv[1:3]]; assert all(p.is_file() for p in files); c=Coverage(data_file=__import__('sys').argv[3],include=__import__('sys').argv[4].split(',')); c.get_data().update(CoverageData(basename=str(files[0]))); c.get_data().update(CoverageData(basename=str(files[1]))); c.save(); pct=c.report(include=__import__('sys').argv[4].split(','),show_missing=True); assert pct==100,pct",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/coverage/.coverage.unit",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/coverage/.coverage.cli",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/coverage/.coverage.combined",
+        "*/v681_independent_audit.py,*/experiment_7849_v681_independent_audit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "changed_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v681_independent_audit.py",
+        "scripts/experiments/experiment_7849_v681_independent_audit.py",
+        "tests/python/test_experiment_7849_v681_independent_audit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v681_independent_audit.py",
+        "scripts/experiments/experiment_7849_v681_independent_audit.py",
+        "tests/python/test_experiment_7849_v681_independent_audit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/v681_independent_audit.py",
+        "scripts/experiments/experiment_7849_v681_independent_audit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "name": "mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7849_v681_independent_audit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "scoped_spec"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7849_v681_independent_audit.py",
+        "--check-only",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/private_cli/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/private_cli/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/private_cli/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "strict_rows"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "name": "repository_health_180s"
+    }
+  ],
+  "inapplicable_e2e": [
+    {
+      "id": "E2E-001",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-002",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-003",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-004",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-005",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-006",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-007",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-008",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-009",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-010",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-011",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-012",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-013",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    },
+    {
+      "id": "E2E-014",
+      "reason": "Outside aggregation audit; no training, binding, ARC or service operation"
+    }
+  ],
+  "schema": "carnot.v681.audit.validation.v1"
+}

@@ -85311,3 +85311,61 @@ wrong class, flag, readiness, or invalid timing blocks those numbers.
 
 The real CLI writes only to its selected private output root during E2E. Its
 cold replay reconstructs rows from source bytes and checks sealed child logs.
+
+## REQ-REPORT-7849: Cold audit current V681 science without inherited dispatch
+
+Exp7849 SHALL inspect the eight exact producer paths for Exp7838, Exp7840,
+Exp7841, Exp7842, Exp7843, Exp7844, Exp7846, and Exp7848 from the immutable
+V681 active authority. It SHALL require numeric experiment_id, exact task_id,
+milestone, date, unflagged terminal verdict, and required producer readiness.
+Conductor gate receipts and disqualified raw rows SHALL remain explanatory only.
+Every planned branch SHALL have one disposition. Missing or ineligible external
+science SHALL produce complete_blocked_required_v681_science with exact failed
+operands, null unmeasured gates, and zero independent readiness. Exp7835's
+failed full-suite and coverage obligations SHALL remain historical failures.
+
+Qualified primitive rows SHALL be joined independently to authenticated
+families and labels. The reader SHALL recompute Brier, typed cost, paired
+family intervals, deletions, delayed admission, retention, capacity loss and
+length controls only where the needed primitive rows and frozen manifests
+exist. It SHALL reject label or annotation feature leakage, future feedback,
+replayed dropped feedback, lost censoring rows, wrong identities, changed
+sealed logs and seed pseudoreplication. Exposed development and fixtures SHALL
+never claim fresh generalization or oracle-distinct benefit.
+
+The frozen affected closure is
+`python/carnot/reporting/v681_independent_audit.py`,
+`scripts/experiments/experiment_7849_v681_independent_audit.py`, and
+`tests/python/test_experiment_7849_v681_independent_audit.py`; consumed
+unnumbered helpers are `current_work_receipt.py` and
+`experiment_7303_validation_scope.py`. The immutable command manifest at
+`results/raw/experiment_7849_v681_independent_audit/validation_command_manifest.json`
+freezes exact argv, deadlines and classes before implementation. Required
+names are worktree_imports, affected_pytest, cli_e2e, changed_coverage,
+ruff_check, ruff_format, mypy, scoped_spec, cold_replay,
+adversarial_verify and strict_rows. Separately, repository_health_180s is a
+180-second diagnostic. No inherited experiment dispatcher is in the closure.
+Unit and real CLI coverage shards SHALL be combined by explicit data files
+at 100 percent for the changed closure. Child logs SHALL be sealed after exit,
+content-addressed and byte checked by cold replay. Required failure SHALL
+disqualify readiness; diagnostic failure SHALL remain visible without
+pretending the full suite passed.
+
+### SCENARIO-REPORT-7849-ABSENT
+
+Given blocked Exp7838, absent producers for Exp7840 through Exp7846 (two
+with conductor receipts), and disqualified
+Exp7848, the reader keeps eight rows and exact failure operands, preserves
+available Exp7848 length metrics as ineligible diagnostics, and ends blocked.
+
+### SCENARIO-REPORT-7849-MUTATIONS
+
+The real private CLI rejects a slug in experiment_id. Independent row checks
+reject private label fields, future feedback, omitted censored rows and
+duplicate-family seeds. Cold replay rejects a changed source or sealed log.
+
+### SCENARIO-REPORT-7849-VALIDATION
+
+The real CLI writes a private candidate without recursive validation. The
+parent executes the frozen manifest with heartbeats and owned deadlines, then
+atomically writes the terminal artifact with actual receipt exits and flags.

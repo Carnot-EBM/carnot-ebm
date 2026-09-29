@@ -1,0 +1,39 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7849_v681_independent_audit.py",
+        "--check-only",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/current/candidate.json"
+      ],
+      "classification": "supplementary_required",
+      "deadline_s": 120,
+      "name": "parent_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/current/candidate.json"
+      ],
+      "classification": "supplementary_required",
+      "deadline_s": 120,
+      "name": "parent_adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7849_v681_independent_audit/current/candidate.json"
+      ],
+      "classification": "supplementary_required",
+      "deadline_s": 120,
+      "name": "parent_strict_rows"
+    }
+  ],
+  "reason": "Original frozen cold, adversarial and row commands targeted private CLI E2E candidate; preserve them and add exact parent candidate checks.",
+  "schema": "carnot.v681.audit.validation-amendment.v1"
+}
