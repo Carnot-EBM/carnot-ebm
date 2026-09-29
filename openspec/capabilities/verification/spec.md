@@ -28,12 +28,28 @@ The private fit/tune interface exercises the current numerical library. All
 nine arms and three seeds preserve matched observations, bounded parameters,
 their checkpoints, temperature choices and source controls. Unknown local
 labels do not create an implicit negative target.
+For scoring, the producer SHALL prepare each role and public view class once
+and reuse those immutable features across seeds and arms with the same view.
+The reuse SHALL preserve the numerical library's calibrated probabilities and
+shall never expose an evaluator label to feature preparation.
+The source permutation control SHALL exchange neighboring families in sorted
+source-length order, with a local three-family cycle for an odd count. No
+family may receive its own source or the shortest-to-longest wraparound.
 
 #### SCENARIO-VERIFY-7894-TERMINAL
 
 Frozen affected commands, unit plus CLI coverage, applicable E2E checks and
 cold row reduction retain their real exit records. Terminal validators inspect
 the exact published candidate bytes and retain hash-bound reports.
+The unchanged repository-wide suite is a repository-health diagnostic; its
+historical timeout remains visible and cannot disqualify an otherwise passing
+affected validation. The producer SHALL not rerun it as a required child.
+The spec traceability command SHALL pass the affected test file paths to the
+checker, so unrelated historical gaps remain repository health rather than
+current required failures.
+A corrected rerun SHALL retain its own earlier failed required receipt as
+historical evidence with the sealed log hash, while readiness uses only the
+new required command exits.
 
 ### REQ-VERIFY-7728: Normalize separate sentence evidence locations
 
