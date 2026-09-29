@@ -85700,3 +85700,29 @@ The dated reference review precedes the plan. Each adopted method has a primary
 source and a bounded local test. Qwen3.8-27B is required for current LLM work.
 Bounded generation uses its 10-second substrate class. CPU fixtures cannot
 establish semantic benefit, and past board receipts cannot establish new speed.
+
+## REQ-REPORT-7865-V683: Freeze current contract and methods before execution
+
+Exp7865 SHALL bind exactly fourteen V683 tasks across the visible table,
+embedded JSON, staged YAML and genuinely active YAML. A staged copy restored
+from already active bytes SHALL declare that provenance and SHALL not imply a
+pre-activation check. Count, order, ID, title, phase, deliverable, model,
+substrate and gate changes SHALL fail. Missing or disqualified external
+authority SHALL produce a terminal blocked result with every failed operand;
+failed owned required validation SHALL disqualify the result. Administrative
+readiness SHALL not assert probability quality or scientific benefit.
+
+### SCENARIO-REPORT-7865-V683-CONTRACT
+
+The fourteen source rows match, each gate points to an earlier task and a
+declared upstream artifact field, and mutations fail through compare_contract
+with milestone 2026.09.683, first_id 7865 and count 14. Immutable snapshots
+preserve design, staged and active bytes without changing the active roadmap.
+
+### SCENARIO-REPORT-7865-V683-VALIDATION
+
+The CLI emits a private candidate, replays its fourteen primitive rows, and
+records exact required child commands and outcomes. Missing staged authority
+blocks; a failed required child or adversarial flag closes readiness. Frozen
+methods retain exposed development roles, nine arms, three seeds, family
+uncertainty, decision costs and a separate source-sufficiency estimand.
