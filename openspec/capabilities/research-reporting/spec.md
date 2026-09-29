@@ -86125,3 +86125,35 @@ Replayed checkpoints reject changed code or fixture bytes.
 Given required child receipts and terminal reports, readiness is one only when
 all pass on the exact candidate. Oracle agreement is circular-positive and
 semantic sensitivity, probability quality, and benefit remain unmeasured.
+## REQ-REPORT-7889: Current manifest for read-only V684 board custody
+
+Exp7889 SHALL reuse the pure Exp7876 board reducer and authenticate its immutable
+source bytes without invoking its historical runner. The disqualified Exp7876
+publication SHALL remain disqualified in historical_required_failures. The
+current result SHALL have three dated board rows, no new device execution, no
+model load, and no hardware speedup claim. A missing or changed required board
+source SHALL finish blocked with exact gate operands. Exp7888 service rows MAY
+attach only when its exact artifact is current, eligible, unflagged, and ready.
+An unavailable service SHALL name failed operands without blocking board custody.
+
+### SCENARIO-REPORT-7889-CUSTODY
+
+Given unchanged board receipts, the reducer returns KV260 fabric at k<=5,
+PolarFire Linux CPU only, and GateMate's 0xffffffff blocker. It retains the
+dated physical or toolchain prerequisite and unmet terminal criterion per board.
+Missing or changed source bytes produce a terminal blocked verdict.
+
+### SCENARIO-REPORT-7889-WORKLOAD
+
+Given absent or ineligible Exp7888, the board analysis remains valid and
+workload_attachment_available is false with named operands. Qualified primitive
+operation and traffic rows attach by exact artifact and row hashes only.
+
+### SCENARIO-REPORT-7889-CLI
+
+The current CLI freezes explicit affected tests, existing consumer regressions,
+owned module and CLI paths, argv, deadlines, coverage includes, and applicable
+E2Es before validation. It runs private success, missing-input, and cold-replay
+paths. It seals child logs after exit. Current required failures disqualify the
+new artifact; historical failures stay historical. Exact terminal bytes pass
+adversarial and strict row validation before atomic publication.

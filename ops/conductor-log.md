@@ -19047,3 +19047,4 @@ code |
 | 2026-09-29 16:43 UTC | Test calibration retention across the same constra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7885-causal-acquisition, exp7885-causal-acquisition, exp7885-causal-acquisition) |
 | 2026-09-29 16:53 UTC | Reduce new live supervisor outcomes with explicit  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 92 passed, 1 warning in 10.09s |
 | 2026-09-29 16:55 UTC | Measure complete decision-service cost and memory | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7882-energy-fit, exp7882-energy-fit, exp7882-energy-fit) |
+| 2026-09-29 17:11 UTC | Preserve all board obligations and bind current wo | FAIL | Codex CLI error: "timed_out": False, "log_path": str(path), " |
