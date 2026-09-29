@@ -85419,6 +85419,22 @@ Given no new admissible outcomes, the CLI records zero new live outcomes, the ex
 #### SCENARIO-REPORT-7874-GATE
 
 Given a changed prior hash, missing source, or failed required check, the terminal artifact reports the exact failed operand and does not claim readiness.
+
+### REQ-REPORT-7887: Explicit V684 supervisor receipt reduction
+
+Exp7887 SHALL freeze the Exp7860 qualified cutoff, current registry bytes, live supervisor reachability, explicit affected tests and actual module and CLI paths before outcome reduction. Exp7874 remains disqualified historical diagnostics. The reducer SHALL count only authenticated, unique, post-cutoff live agent self discovery receipts; retain excluded and censored primitive rows; report per-game arm firings, help, regressions, level-up action costs and stagnations; and credit only unique registry-new live solves. No new firing SHALL yield a complete null with zero new solves and readiness one after all owned required checks pass. It SHALL make no model calls or game actions.
+
+#### SCENARIO-REPORT-7887-MANIFEST
+
+The manifest names the real `test_arc_supervisor_delta_7874.py`, owned V684 test, reducer module and direct CLI with exact argv, deadlines, scope and matching coverage includes. A missing path fails before dispatch. Historical required failures stay historical; repository-wide health remains diagnostic.
+
+#### SCENARIO-REPORT-7887-LEDGER
+
+Given duplicate, stale, proxy and new live receipts, only distinct authenticated live attempts after the Exp7860 cutoff enter current denominators. Empty input produces a terminal null, while a missing external prerequisite produces a terminal blocked result with exact operands.
+
+#### SCENARIO-REPORT-7887-CLI
+
+The direct CLI reduces an empty private ledger, rejects missing arguments, and cold-replays exact primitive firing counts. Forged firings fail replay. Required validation, both terminal readers, and measured statement coverage of new code gate readiness.
 ## REQ-REPORT-7847: Direct board custody and optional current service
 
 Exp7847 SHALL use a direct reader of the three dated board source files and
