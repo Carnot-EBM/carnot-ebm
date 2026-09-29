@@ -85533,3 +85533,21 @@ The real private CLI and cold replay agree on primitive rows. Coverage uses
 `coverage report --fail-under=100`. Adversarial and strict-row readers see a
 candidate whose verdict prefix agrees with its class. Every child exit and
 diagnostic health timeout is retained without changing required classifications.
+
+## REQ-REPORT-7854-V682: Qualify context sufficiency requests and capture
+
+Exp7854 SHALL preserve Exp7839's failed 60 percent coverage receipt as historical evidence. It SHALL freeze four requests per source family: full source, the full-call nominated witness alone, that witness with immediate original neighbors, and that witness with a disjoint original context whose embedded-token length is within 25 percent. All requests SHALL use the unchanged first answer sentence, original sentence IDs, 128 output tokens, and an 8192 token ceiling. Invalid nominations, absent matches, empty sources and overlong full requests SHALL remain excluded without replacement. The future capture budget SHALL be 48 families and at most 192 model calls. The CPU fixture SHALL load no model.
+
+The task SHALL freeze its exact affected closure and required validation argv before measurement. It SHALL exercise 24 distinct scripted families and preserve request bytes, parser dispositions, censored and unstarted units, restart checkpoints, and sealed child logs. Unit and real CLI coverage shards SHALL use identical settings, combine only completed named files, and reach 100 percent changed-code statement coverage. Required failures SHALL set readiness to zero. A separate 180-second repository health diagnostic SHALL retain failure without passing historical obligations. The terminal artifact SHALL identify current imports, source custody, primitive rows and unmeasured scientific gates.
+
+### SCENARIO-REPORT-7854-REQUESTS
+
+A full-source reply nominates an exact original sentence ID. Four frozen request bodies retain one answer sentence and distinct source views. Unicode and repeated sentence text retain byte-span identities. Malformed or truncated replies, invalid IDs, missing controls and context overflow yield explicit dispositions.
+
+### SCENARIO-REPORT-7854-DISPATCH
+
+A real private CLI runs scripted fixtures without model weights. An interrupted child retains a censored row and a restart reuses completed units by input and configuration hash. A bounded dispatcher records true exits and sealed logs, and cold replay rejects changed request or log bytes.
+
+### SCENARIO-REPORT-7854-TERMINAL
+
+The terminal result keeps Exp7839's failed required coverage separate from current checks. Only passing request, parser, dispatcher, CLI, coverage and adversarial checks permit circular-positive protocol readiness. Probability quality and decision benefit remain unmeasured.
