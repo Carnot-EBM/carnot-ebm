@@ -1,0 +1,298 @@
+{
+  "affected_source_closure": [
+    {
+      "path": "python/carnot/reporting/source_boundary_7866.py",
+      "sha256": "sha256:566e2812d90ece23115f9ab40bedde52de825a52113a17799cccf1134ae7ee71"
+    },
+    {
+      "path": "scripts/experiments/experiment_7866_v683_source_boundary.py",
+      "sha256": "sha256:31b20c8731c51689140673ab0c8f4f5153d05eeb8f856f58da6b74e4c67c238a"
+    },
+    {
+      "path": "python/carnot/verify/source_projection.py",
+      "sha256": "sha256:0497fdc01af13f5d1652f57302de1db5be7307803f1eae8131931df8eef3e169"
+    },
+    {
+      "path": "python/carnot/verify/source_alignment.py",
+      "sha256": "sha256:10d5329444d47dc2421d8cceca615c8d5c76df5267c1a70eb669340f05ea475b"
+    },
+    {
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229"
+    },
+    {
+      "path": "scripts/experiments/experiment_7852_v682_source_boundary.py",
+      "sha256": "sha256:8411e4d9d8ff974ab6884bf5e175b60f9db7789398d0e772a48dc35a545595c2"
+    },
+    {
+      "path": "tests/python/test_source_boundary_7866.py",
+      "sha256": "sha256:66b68109daf620a84218fa48596f7b361d9115afb6eae3d62999258d81a5ccbf"
+    },
+    {
+      "path": "tests/python/test_source_boundary_7852.py",
+      "sha256": "sha256:feab9c14e5f9047e247e311a12114998012a5c55a0188ffeeffd42ebe492c70d"
+    },
+    {
+      "path": "tests/python/test_source_projection_7838.py",
+      "sha256": "sha256:c4267ded20e05b64c187e70fcd490dfaa484e38ba8f3fe72244773a978e58bf1"
+    }
+  ],
+  "affected_tests": [
+    "tests/python/test_source_boundary_7866.py",
+    "tests/python/test_source_boundary_7852.py",
+    "tests/python/test_source_projection_7838.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import json; from carnot.reporting.source_boundary_7866 import qualified_imports; print(json.dumps({'resolved_imports':qualified_imports()}))"
+      ],
+      "classification": "required",
+      "name": "worktree_imports",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7866-98994ce2702fc633/pytest",
+        "tests/python/test_source_boundary_7866.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_source_projection_7838.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7866-98994ce2702fc633/unit.coverage",
+        "--include=*/source_boundary_7866.py,*/experiment_7866_v683_source_boundary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7866-98994ce2702fc633/unit_pytest",
+        "tests/python/test_source_boundary_7866.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_source_projection_7838.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "coverage_unit",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7866-98994ce2702fc633/cli.coverage",
+        "--include=*/source_boundary_7866.py,*/experiment_7866_v683_source_boundary.py",
+        "scripts/experiments/experiment_7866_v683_source_boundary.py",
+        "--fixture-public",
+        "/tmp/exp7866-98994ce2702fc633/fixture with spaces/public.jsonl",
+        "--fixture-output",
+        "/tmp/exp7866-98994ce2702fc633/fixture with spaces/features.jsonl"
+      ],
+      "classification": "required",
+      "name": "coverage_cli",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/exp7866-98994ce2702fc633/combined.coverage",
+        "/tmp/exp7866-98994ce2702fc633/unit.coverage",
+        "/tmp/exp7866-98994ce2702fc633/cli.coverage"
+      ],
+      "classification": "required",
+      "name": "coverage_combine",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7866-98994ce2702fc633/combined.coverage",
+        "--include=*/source_boundary_7866.py,*/experiment_7866_v683_source_boundary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "name": "coverage_report",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/source_boundary_7866.py",
+        "scripts/experiments/experiment_7866_v683_source_boundary.py",
+        "tests/python/test_source_boundary_7866.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_source_projection_7838.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/source_boundary_7866.py",
+        "scripts/experiments/experiment_7866_v683_source_boundary.py",
+        "tests/python/test_source_boundary_7866.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_source_projection_7838.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/source_boundary_7866.py",
+        "scripts/experiments/experiment_7866_v683_source_boundary.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_source_boundary_7866.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_source_projection_7838.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7866_v683_source_boundary.py",
+        "--fixture-public",
+        "/tmp/exp7866-98994ce2702fc633/fixture with spaces/public.jsonl",
+        "--fixture-output",
+        "/tmp/exp7866-98994ce2702fc633/fixture with spaces/features.jsonl"
+      ],
+      "classification": "required",
+      "name": "cli_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.verify.source_projection",
+        "replay",
+        "/tmp/exp7866-98994ce2702fc633/fixture with spaces/public.jsonl",
+        "/tmp/exp7866-98994ce2702fc633/fixture with spaces/features.jsonl"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "full_pytest",
+      "timeout_s": 600
+    }
+  ],
+  "historical_aborted_command": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/exp7852-4a9eeded227fd1e7/unit.coverage",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/tmp/exp7852-4a9eeded227fd1e7/coverage_pytest",
+      "tests/python/test_source_boundary_7852.py",
+      "-q"
+    ],
+    "classification": "required",
+    "name": "changed_coverage",
+    "timeout_s": 150
+  },
+  "historical_affected_source_closure": [
+    {
+      "path": "python/carnot/reporting/source_identity_7852.py",
+      "sha256": "sha256:86f99b1f1d467382ec61334ed9c670c88a7e803b48f9127bd58de8d88ce6652a"
+    },
+    {
+      "path": "scripts/experiments/experiment_7852_v682_source_boundary.py",
+      "sha256": "sha256:273db18021ba77d00fb85d755ebd6b3a74270a448dd608ac188f14356c5866b3"
+    },
+    {
+      "path": "python/carnot/verify/source_projection.py",
+      "sha256": "sha256:0497fdc01af13f5d1652f57302de1db5be7307803f1eae8131931df8eef3e169"
+    },
+    {
+      "path": "python/carnot/verify/evidence_views.py",
+      "sha256": "sha256:dbebf5bbb362ee324bd19b529957c689ca5165aefa043de08451f197d31eed3d"
+    },
+    {
+      "path": "python/carnot/verify/source_alignment.py",
+      "sha256": "sha256:10d5329444d47dc2421d8cceca615c8d5c76df5267c1a70eb669340f05ea475b"
+    },
+    {
+      "path": "python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229"
+    },
+    {
+      "path": "scripts/experiments/experiment_7838_v681_source_boundary.py",
+      "sha256": "sha256:ad7ab721f3a48ec686b3af223f4e8e25b8e1d7713e57483c68386feb9555ec6a"
+    }
+  ],
+  "historical_affected_tests": [
+    "tests/python/test_source_boundary_7852.py",
+    "tests/python/test_source_projection_7838.py"
+  ],
+  "inapplicable_e2e": [
+    {
+      "ids": "E2E-001-through-014",
+      "reason": "No model, hardware, ARC agent or service changed."
+    }
+  ],
+  "schema": "carnot.exp7866.validation.v1",
+  "task_id": "exp7866-v683-source-boundary"
+}

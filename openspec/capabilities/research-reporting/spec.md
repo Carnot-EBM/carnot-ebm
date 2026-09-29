@@ -1,5 +1,48 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7866: Requalify the exposed public source boundary
+
+Exp7866 SHALL authenticate the exact Exp7810 source manifest, seven role shards,
+and historical Exp7852 failure. It SHALL retain 640 exposed families with roles
+256 fit, 64 tune, 64 policy, 96 update, 64 admission, 64 evaluation, and 32
+retention. Normalized source-plus-answer duplicates SHALL share one group before
+role separation. Its immutable cohort manifest SHALL keep original text, source
+hash, human-label lineage, offsets, exclusion reasons, source license, URL, and
+revision. Missing external evidence SHALL end complete blocked; malformed owned
+conversion SHALL end complete disqualified.
+
+The V683 CLI SHALL run the inherited public fixture with success, missing
+source, malformed label, duplicate, space-containing path, and direct script
+import controls. Import receipts SHALL use fully qualified module names and
+resolved files. The old alias spelling SHALL fail the import gate. Required
+coverage SHALL run in isolated CPU children; only completed coverage files may
+combine. The inherited affected tests and failed Exp7852 coverage receipt SHALL
+remain visible. Every required failed check SHALL set readiness to zero.
+
+The current run SHALL use no pretrained model, record zero model calls, and
+measure only deterministic fixture or cached-candidate agreement. A qualified
+boundary may be circular positive; it SHALL claim no fresh generalization or
+decision benefit. Exact terminal candidate bytes SHALL pass adversarial and
+strict row checks before atomic publication.
+
+### SCENARIO-REPORT-7866-CUSTODY
+
+Given authenticated upstream shards, the producer writes one row for each of
+640 families, preserves seven frozen role counts, and rejects cross-role
+source-plus-answer duplicates.
+
+### SCENARIO-REPORT-7866-CLI
+
+The real script-path CLI projects and replays a private public-only fixture.
+Missing source, evaluator labels, duplicate families, and import aliases fail;
+paths with spaces and fully qualified import receipts pass.
+
+### SCENARIO-REPORT-7866-TERMINAL
+
+The frozen required checks run in isolated children. A failed or aborted child
+remains failed, preserves its log and exact argv, and sets readiness to zero.
+Only a closed, independently checked terminal artifact publishes.
+
 ## REQ-REPORT-7852: Bind legacy identity and replay public source bytes
 
 Exp7852 SHALL accept the archived Exp7810 task slug only when its exact path,
