@@ -85201,3 +85201,22 @@ required receipts enter the candidate. Cold replay and terminal readers inspect
 the same candidate. Required failure disqualifies and zeros readiness; missing
 external evidence terminates blocked with exact operands. Fixture success is
 circular-positive and leaves scientific benefit unmeasured.
+### REQ-REPORT-7845: Current ARC supervisor outcome delta
+
+The reader SHALL authenticate the prior inventory and scan raw live supervisor receipts. It SHALL count only source bytes newer than the prior run date and absent from the prior hash inventory. It SHALL exclude disqualified, malformed, and repeated receipts with reasons. An empty eligible delta SHALL yield `complete_null_no_new_supervisor_outcomes`, zero new sources, no recommendation, and readiness one after owned validation. A missing or changed prerequisite SHALL yield a terminal blocked verdict with exact gate operands. Recommendations SHALL remain observational and SHALL never change production defaults.
+
+#### SCENARIO-REPORT-7845-EMPTY
+
+Given no newly dated raw supervisor outcome, the reader reports an empty, valid delta without new gameplay.
+
+#### SCENARIO-REPORT-7845-GATE
+
+Given a missing or mutated prior inventory operand, the reader reports a complete blocked result with the expected and observed values.
+
+#### SCENARIO-REPORT-7845-RECEIPT
+
+Given applied and shadow receipts, the reader counts only closed applied firings, retains exclusions and censoring, and recommends shadow retirement only after twenty closed nonprogress firings across three games.
+
+#### SCENARIO-REPORT-7845-CLI
+
+Given a private output root, the CLI runs the current reader and writes one complete JSON result. Its validation uses frozen scoped commands, real child logs, cold replay, and separate repository health.

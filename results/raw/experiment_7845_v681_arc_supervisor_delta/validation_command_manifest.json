@@ -1,0 +1,189 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json; from pathlib import Path; names=(\"carnot.reporting.arc_supervisor_delta\",\"carnot.reporting.current_work_receipt\",\"carnot.reporting.experiment_7303_validation_scope\",\"carnot.agentic.arc_supervisor_refinement\"); print(json.dumps({\"resolved_imports\":{n:str(Path(importlib.import_module(n).__file__).resolve()) for n in names}}),flush=True)"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "worktree_imports"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7845/unit.coverage",
+        "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_arc_supervisor_delta.py",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7845/cli.coverage",
+        "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "--date",
+        "20260929",
+        "--reader-only",
+        "--output",
+        "/tmp/carnot-exp7845/e2e/result.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "cli_e2e"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-exp7845/combined.coverage",
+        "/tmp/carnot-exp7845/unit.coverage",
+        "/tmp/carnot-exp7845/cli.coverage"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7845/combined.coverage",
+        "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "changed_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "tests/python/test_arc_supervisor_delta.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "tests/python/test_arc_supervisor_delta.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_arc_supervisor_delta.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "scoped_spec"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "--cold-replay",
+        "/tmp/carnot-exp7845/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-exp7845/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7845/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "strict_rows"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "name": "repository_health_180s"
+    }
+  ],
+  "inapplicable_e2e": {
+    "E2E-009": "No live cascade code changed",
+    "E2E-011": "No live cascade code changed",
+    "E2E-013": "No live cascade code changed",
+    "e3_sdk_smoke": "No live cascade code changed"
+  },
+  "source_closure": [
+    "python/carnot/reporting/arc_supervisor_delta.py",
+    "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+    "python/carnot/reporting/current_work_receipt.py",
+    "python/carnot/reporting/experiment_7303_validation_scope.py",
+    "python/carnot/agentic/arc_supervisor_refinement.py",
+    "python/carnot/agentic/arc_trajectory_supervisor.py"
+  ],
+  "task_id": "exp7845-arc-supervisor-delta",
+  "test_closure": [
+    "tests/python/test_arc_supervisor_delta.py"
+  ]
+}

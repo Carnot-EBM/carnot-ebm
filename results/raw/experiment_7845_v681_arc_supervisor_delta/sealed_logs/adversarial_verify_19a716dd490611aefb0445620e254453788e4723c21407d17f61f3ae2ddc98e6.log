@@ -1,0 +1,32 @@
+{
+  "reports": [
+    {
+      "artifact": "/tmp/carnot-exp7845/candidate.json",
+      "loaded": true,
+      "exp_id": 7845,
+      "title": "",
+      "honest_verdict": "complete_null_no_new_supervisor_outcomes",
+      "flag_count": 3,
+      "max_severity": 2,
+      "flags": [
+        {
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info",
+          "detail": "supervisor_delta_ready_score=0.0 (exactly zero). Confirm this is not a stub default."
+        },
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical",
+          "detail": "duration_s=0.0 but artifact declares aggregation substrate. Even loading upstream JSON takes microseconds; a value below 0.0001s suggests the duration was not measured at all."
+        },
+        {
+          "kind": "SUBSTRATE_CLASS_MISMATCH",
+          "severity": "critical",
+          "detail": "duration_s=0.0 is below the 0.0001s floor of the declared inference_substrate_class=aggregation. Either the class is wrong or the duration was not measured."
+        }
+      ],
+      "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+    }
+  ],
+  "flagged_count": 1
+}
