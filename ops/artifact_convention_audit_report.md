@@ -11,7 +11,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 |---|---|
 | CHECKABLE | 8 |
 
-## experiment_7853_v682_natural_runtime.json
+## experiment_7867_v683_natural_runtime.json
 
 **CHECKABLE**
 
@@ -19,7 +19,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked before natural measurement because upstream precondition checks on experiment 7852 failed.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -27,7 +27,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7854_v682_intervention_protocol.json
+## experiment_7868_v683_intervention_protocol.json
 
 **CHECKABLE**
 
@@ -35,23 +35,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact records a scripted fixture run with failed validity and readiness gates and makes no measured sufficiency claim.
-
-## WHAT IS MISSING
-nothing; `acceptance_gate_results` gives the gate outcomes, and `fixture_request_rows` records per-fixture, per-arm results and failure statuses.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7855_energy_fit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because four of six upstream prerequisite gate checks failed.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -59,7 +43,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7857_qwen_sufficiency.json
+## experiment_7874_v683_arc_supervisor_delta.json
 
 **CHECKABLE**
 
@@ -67,7 +51,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because five of six upstream dependency gate checks failed.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -75,7 +59,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7860_v682_arc_supervisor_delta.json
+## experiment_7876_v683_hardware_evidence.json
 
 **CHECKABLE**
 
@@ -83,7 +67,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-No new supervisor outcomes, causal action savings, or level solves were observed across the candidate sources (honest null).
+This is receipt-only historical accounting: it reports zero current device executions, no measured hardware speedup, and a disqualified verdict.
 
 ## WHAT IS MISSING
 nothing
@@ -91,7 +75,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7862_v682_hardware_evidence.json
+## experiment_7877_v683_independent_audit.json
 
 **CHECKABLE**
 
@@ -99,15 +83,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports a null result: it accounts for historical board evidence but records no new device execution or measured hardware advantage.
+The audit was completed but disqualified because required v683 validation and upstream readiness checks failed.
 
 ## WHAT IS MISSING
-nothing; `rows` and `board_rows` give board-level records, and GateMate’s `blocker` records the observed value `0xffffffff`.
+nothing; `gate_check_summary` records the failed checks with their `expected` and `observed` values.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7863_v682_independent_audit.json
+## experiment_7878_v683_capstone.json
 
 **CHECKABLE**
 
@@ -115,7 +99,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The milestone 2026.09.682 validation audit is blocked from execution because required upstream science producer artifacts failed prerequisite checks or are missing.
+The artifact claims that the v683 milestone capstone is disqualified from execution readiness (`complete_disqualified_required_v683_validation`) due to failed prerequisite experiment gate checks and validation command timeouts.
 
 ## WHAT IS MISSING
 nothing
@@ -123,7 +107,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7864_v682_capstone.json
+## experiment_7869_energy_fit.json
 
 **CHECKABLE**
 
@@ -131,7 +115,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The v682 capstone task is blocked on required upstream science producer experiments.
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7871_qwen_sufficiency.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the conductor pre-gate because 5 of 6 upstream gate checks failed, beginning with exp7866-source-boundary.source_boundary_ready_score observing 0 instead of 1.
 
 ## WHAT IS MISSING
 nothing

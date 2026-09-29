@@ -85944,3 +85944,36 @@ disqualifies readiness. Only terminal complete bytes are atomically published.
 **Implementation status:** The Exp7878 direct script path resolves the
 repository root before importing the reducer's publication gate. The existing
 private CLI test, cold replay, and focused reducer coverage verify this route.
+
+## REQ-REPORT-PLAN-684: Stage an executable and matched research plan
+
+The proposed milestone 2026.09.684 SHALL contain twelve ordered tasks,
+Exp7879 through Exp7890, in four phases. The visible design table, embedded
+JSON contract and staged YAML SHALL agree on IDs, titles, phases, deliverables,
+model lists, substrate classes and structured gates. The active roadmap and
+conductor SHALL remain unchanged during planning. The previous V683 design
+SHALL be preserved byte for byte before the shared vNEXT document is replaced.
+
+The plan SHALL distinguish V683's seven disqualified producers, one circular
+fixture result and six skipped science tasks. It SHALL record the literature
+review before experiment design, include calibrated energy decisions and
+continuous constraint learning, and retain ARC and attached-board obligations.
+Every prompt SHALL specify bounded writes, flushed progress, per-unit evidence,
+closed verdict classes and exact upstream fields. New validation scopes SHALL
+be declared before results exist; old failed requirements remain failed.
+
+### SCENARIO-REPORT-PLAN-684-CONTRACT
+
+Parsing the two proposed files yields twelve identical ordered contract rows.
+Private mutations of count, order, identity, title, phase, path, model, class,
+gate operand or required prior-failure metadata are rejected by the applicable
+unchanged reader. Planning checks do not impersonate an activated milestone.
+
+### SCENARIO-REPORT-PLAN-684-METHODS
+
+The review covers all eight requested research topics and all six secondary
+sources, with access limits stated. Calibration replay and causal memory
+controls map to bounded experiments. The only LLM task declares
+unsloth/Qwen3.8-27B-GGUF and model_bounded_generation. All other tasks explicitly
+perform no pretrained-model load. Historical, fixture, natural development,
+live-agent and device evidence retain separate claim boundaries.
