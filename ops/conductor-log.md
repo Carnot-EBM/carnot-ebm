@@ -19063,3 +19063,5 @@ code |
 | 2026-09-29 22:46 UTC | Fit calibrated source energies with matched observ | OK | 90 passed, 1 warning in 11.34s |
 | 2026-09-29 22:48 UTC | Measure typed decision value and source-sensitive  | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7894-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
 | 2026-09-29 22:50 UTC | Measure bounded Qwen witness and context sensitivi | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7893-intervention-protocol.intervention_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-29 22:52 UTC | Test persistent constraint additions with delayed  | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7894-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
+| 2026-09-29 22:54 UTC | Separate confidence drift from retained decision q | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7897-causal-acquisition, exp7897-causal-acquisition, exp7897-causal-acquisition) |
