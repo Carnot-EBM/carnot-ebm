@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.683",
+  "generated_at": "2026-09-29T13:34:42Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 89.4,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "V683 CPU intervention protocol qualification",
+      "duration_minutes": 20.44,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V683 PRD gap decision and publication gates",
+      "duration_minutes": 15.95,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V683 independent evidence and causal audit",
+      "duration_minutes": 15.41,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V683 board continuity and workload custody",
+      "duration_minutes": 15.26,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V683 public source boundary qualification",
+      "duration_minutes": 12.22,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Eight compute-bound experiments completed in 89.4 wall-time minutes (averaging 11 minutes per experiment) based on disk-mtime fallback reconstruction. Execution was led by 'V683 CPU intervention protocol qualification' at 20.44 minutes, 'V683 PRD gap decision and publication gates' at 15.95 minutes, 'V683 independent evidence and causal audit' at 15.41 minutes, 'V683 board continuity and workload custody' at 15.26 minutes, and 'V683 public source boundary qualification' at 12.22 minutes, with the top five compute-bound tasks totaling 79.28 minutes (88.7% of total wall time). The post-execution GPU monitor report recorded both RTX 3090 GPUs idle (5MB and 4MB allocated at 0% utilization) upon milestone completion with gpu_idle_on_compute_bound_tasks recorded as false, while continuous active-window accelerator telemetry was unrecorded and no multi-model task requiring DualGPURunner was present.",
+  "bottlenecks_identified": [
+    "The top five compute-bound experiments ('V683 CPU intervention protocol qualification' at 20.44 minutes, 'V683 PRD gap decision and publication gates' at 15.95 minutes, 'V683 independent evidence and causal audit' at 15.41 minutes, 'V683 board continuity and workload custody' at 15.26 minutes, and 'V683 public source boundary qualification' at 12.22 minutes) accounted for 79.28 of 89.4 total wall-time minutes (88.7%), but available records lack intra-task phase breakdown to isolate specific execution delays.",
+    "Milestone timing relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits, omitting granular per-phase boundary markers and execution metadata.",
+    "The GPU monitor report provides only a single post-execution snapshot (both RTX 3090 GPUs idle at 0% utilization with 5MB and 4MB allocated at 2026-09-29T13:34:42.670608+00:00), leaving continuous accelerator utilization and throughput unmeasured across the 89.4 minutes."
+  ],
+  "improvements_suggested": [
+    "Add granular phase-level timing within CPU intervention protocol qualification, publication gates, audit, and hardware custody tasks to profile where execution time is concentrated.",
+    "Persist structured execution receipts at milestone boundaries to avoid falling back to disk-mtime reconstruction when git log finds 0 commits.",
+    "Sample GPU utilization, memory usage, and temperature periodically throughout task execution to capture active-window accelerator telemetry during compute-bound runs.",
+    "Include explicit concurrency and model count declarations in task manifests to unambiguously verify DualGPURunner applicability."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement intra-task phase profiling for the longest-running qualification, audit, and publication gate workflows to isolate internal bottlenecks.",
+    "Persist structured milestone execution receipts to eliminate disk-mtime fallback reconstruction when git log yields 0 commits.",
+    "Deploy lightweight continuous GPU telemetry logging during compute-bound runs to measure active accelerator utilization."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU monitor report captured quiescent accelerators (both RTX 3090 GPUs at 0% utilization with 5MB and 4MB allocated) at milestone completion timestamp 2026-09-29T13:34:42.670608+00:00, indicating post-run idle state rather than mid-task stalling, consistent with gpu_idle_on_compute_bound_tasks=false. Without continuous active-window telemetry or intra-task phase timers for the 20.44-minute CPU intervention qualification and 15.95-minute publication gates tasks, specific internal compute bottlenecks cannot be definitively isolated from available records. Estimated time savings are set to 0% pending empirical measurement of phase profiling and receipt persistence tooling improvements."
+}

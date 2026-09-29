@@ -7089,3 +7089,10 @@ The critical path for milestone .250:
 - key result: honest operational negative — predicate qualification and legacy source identity projection consumed 12.29 of 33.3 total wall-time minutes (36.9%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
 
+### Milestone 2026.09.683
+
+- exp_range: no data available this milestone
+- theme: CPU intervention qualification, publication gates, causal audit, and board continuity led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — CPU intervention protocol qualification and publication gates consumed 36.39 of 89.4 total wall-time minutes (40.7%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+

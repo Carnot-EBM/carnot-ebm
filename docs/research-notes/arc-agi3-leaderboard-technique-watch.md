@@ -398,3 +398,7 @@ The team also tried LoRA training on its model’s successful traces and on huma
 
 **New ARC Prize writeup, outside the Kaggle competition:** The September 3 Astra report attributes a large semi-private score difference to preserving reasoning state between requests and compacting long conversations; it also documents compact symbolic game notes. **Classification: (b), general-purpose on unseen games.** This is a hosted-model evaluation, not evidence about a Kaggle submission. The [blog index](https://arcprize.org/blog) has no Milestone #2 results yet. [Astra analysis](https://arcprize.org/blog/astra)
 
+## 2026-09-29 13:35 UTC -- NEW
+
+**Newly discovered technique detail — Tong Hui Kang:** A [May experiment](https://blog.huikang.dev/2026/05/31/autoresearch-hackathon.html) trained an action predictor on ideal traces from modified public games, then validated it on the original games. It predicted action type, click color, and coordinate from a 384×64×64 history representation. Lower validation loss did **not** translate into play: Kang found no evidence it beat random actions even on games used for training. **Classification: (a)** the training games reused published game engine logic. This is a failed historical experiment, **not evidence about his current top-five submission**, whose method remains unpublished.
+
