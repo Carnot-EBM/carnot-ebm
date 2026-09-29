@@ -18970,3 +18970,4 @@ code |
 | 2026-09-29 00:28 UTC | Refine ARC generalization only from new outcome-be | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 102 passed, 1 warning in 8.04s |
 | 2026-09-29 00:30 UTC | Measure complete source-decision and durable-updat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
 | 2026-09-29 00:54 UTC | Preserve board continuity and bound traffic-sensit | OK | 96 passed, 1 warning in 11.54s |
+| 2026-09-29 01:15 UTC | Test a length-only baseline and source permutation | OK | 98 passed, 1 warning in 12.27s |
