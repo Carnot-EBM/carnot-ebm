@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.680",
+  "generated_at": "2026-09-28T21:32:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 74.6,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Challenge source features and missing-label loss with evaluator isolation",
+      "duration_minutes": 35.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Repair the frozen training check and qualify reusable update mechanics",
+      "duration_minutes": 16.97,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen dispositions and decide continuation by qualified evidence",
+      "duration_minutes": 6.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Repair explicit coverage-file collection for source interventions",
+      "duration_minutes": 4.57,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind fourteen tasks and register shortcut and abstention hypotheses",
+      "duration_minutes": 4.16,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Eight compute-bound experiments completed in 74.6 wall-time minutes (averaging 9 minutes per experiment) based on disk-mtime fallback reconstruction. Execution was dominated by 'Challenge source features and missing-label loss with evaluator isolation' at 35.0 minutes and 'Repair the frozen training check and qualify reusable update mechanics' at 16.97 minutes, which together accounted for 51.97 minutes (69.7% of the milestone wall time). The post-execution GPU monitor report recorded both RTX 3090 GPUs idle (5MB and 4MB allocated at 0% utilization) upon completion with gpu_idle_on_compute_bound_tasks recorded as false, while continuous active-window accelerator telemetry was unrecorded and no multi-model task requiring DualGPURunner was present.",
+  "bottlenecks_identified": [
+    "The top two compute-bound experiments ('Challenge source features and missing-label loss with evaluator isolation' at 35.0 minutes and 'Repair the frozen training check and qualify reusable update mechanics' at 16.97 minutes) accounted for 51.97 of 74.6 total wall-time minutes (69.7%), but available records lack intra-task phase breakdown to isolate specific execution delays.",
+    "Milestone timing relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits, omitting granular per-phase boundary markers and execution metadata.",
+    "The GPU monitor report provides only a single post-execution snapshot (both RTX 3090 GPUs idle at 0% utilization with 5MB and 4MB allocated at 2026-09-28T21:32:27.959482+00:00), leaving continuous accelerator utilization and throughput unmeasured across the 74.6 minutes."
+  ],
+  "improvements_suggested": [
+    "Add granular phase-level timing within evaluator isolation and training qualification tasks to profile where execution time is concentrated.",
+    "Persist structured execution receipts at milestone boundaries to avoid falling back to disk-mtime reconstruction.",
+    "Sample GPU utilization, memory usage, and temperature periodically throughout task execution to capture active-window accelerator telemetry.",
+    "Include explicit concurrency and model count declarations in task manifests to unambiguously verify DualGPURunner applicability."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement intra-task phase profiling for the longest-running evaluator isolation and training check workflows to identify internal bottlenecks.",
+    "Persist structured milestone execution receipts to eliminate disk-mtime fallback reconstruction when git log yields 0 commits.",
+    "Deploy lightweight continuous GPU telemetry logging during compute-bound runs to measure active accelerator utilization."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU monitor report captured quiescent accelerators (both RTX 3090 GPUs at 0% utilization with 5MB and 4MB allocated) at milestone completion timestamp 2026-09-28T21:32:27.959482+00:00, indicating post-run idle state rather than mid-task stalling, consistent with gpu_idle_on_compute_bound_tasks=false. Without continuous active-window telemetry or intra-task phase timers for the 35.0-minute evaluator isolation and 16.97-minute training qualification tasks, specific internal compute bottlenecks cannot be definitively isolated from available records. Estimated time savings are set to 0% pending empirical measurement of phase profiling and receipt persistence tooling improvements."
+}

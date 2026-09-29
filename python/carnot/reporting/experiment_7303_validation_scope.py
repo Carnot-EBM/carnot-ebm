@@ -281,16 +281,38 @@ def run_commands(
             "output_tail": "".join(lines)[-4000:],
         }
         if spec.name == "worktree_imports":
-            parsed = next(
-                (
-                    json.loads(line)["resolved_imports"]
-                    for line in reversed(lines)
-                    if line.lstrip().startswith("{") and "resolved_imports" in line
-                ),
-                {},
-            )
+            parsed: Any = {}
+            for line in reversed(lines):
+                try:
+                    candidate = json.loads(line)
+                except ValueError:
+                    continue
+                if isinstance(candidate, dict) and "resolved_imports" in candidate:
+                    parsed = candidate["resolved_imports"]
+                    break
+            expected_names: set[str] | None = None
+            if "--exp7303-resolve-imports" in spec.argv:
+                marker = spec.argv.index("--exp7303-resolve-imports")
+                expected_names = set(spec.argv[marker + 2 :])
+            valid_paths = isinstance(parsed, dict) and bool(parsed)
+            if valid_paths:
+                for name, value in parsed.items():
+                    if not isinstance(name, str) or not isinstance(value, str):
+                        valid_paths = False
+                        break
+                    path = Path(value)
+                    expected_file = root / "python" / Path(*name.split(".")).with_suffix(".py")
+                    expected_package = root / "python" / Path(*name.split(".")) / "__init__.py"
+                    if not path.is_file() or path.resolve() not in {
+                        expected_file.resolve(),
+                        expected_package.resolve(),
+                    }:
+                        valid_paths = False
+                        break
+            if expected_names is not None and set(parsed) != expected_names:
+                valid_paths = False
             receipt["resolved_imports"] = parsed
-            receipt["passed"] = receipt["passed"] and bool(parsed)
+            receipt["passed"] = receipt["passed"] and valid_paths
         receipts.append(receipt)
         _progress(
             spec.name,

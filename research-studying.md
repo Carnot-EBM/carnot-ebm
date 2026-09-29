@@ -1,5 +1,19 @@
 # Research Studying — Ranked Ideas for Future Experiments
 
+<!-- EXP7837-V681-METHOD-INGESTION-START -->
+## Exp7837 — V681 bounded method controls — INGESTED
+
+Primary methods read on 2026-09-28: arXiv:2508.08285 (length baseline and
+repetition control), 2608.15804 (separate span detection and evidence
+alignment), 2606.11711 (finite delayed-feedback tracking), 2609.06921
+(signed versus worst-window constraint budgets), and 2605.18871
+(distributional energy and matched abstention). Local adaptations, fixed
+controls and claim limits are in `docs/research-notes/v681-method-map.md`.
+This is a continuation of the fixed-generator calibrated-decision program.
+All 640 families remain exposed development data; method ingestion supplies
+no scientific readiness or fresh generalization claim.
+<!-- EXP7837-V681-METHOD-INGESTION-END -->
+
 **Purpose:** Claude (outer loop) continuously researches novel ideas from
 online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
@@ -6239,3 +6253,6 @@ retention controls and complete hardware service costs are mapped to specific
 V674 tests in `docs/research-notes/v674-method-map.md`. The sequential delta
 check could not access Semantic Scholar citations. This ingestion establishes
 method custody, not scientific benefit or fresh generalization.
+# V682 method ingestion — 2026-09-29
+
+Read the primary method sections of [Verification Without Sufficiency](https://arxiv.org/html/2608.00585v1), [RECAP](https://arxiv.org/html/2606.06698v4), [Retrieval-warmed EBR](https://arxiv.org/html/2606.26476v1), and [FPGA/ASIC co-design](https://arxiv.org/html/2602.15985v2). The [V682 method map](docs/research-notes/v682-method-map.md) fixes local contrasts, family bootstrap, multiplicity, roles and limits before Exp7851 measurement. These papers motivate controls; they do not supply local scientific outcomes or hardware evidence.

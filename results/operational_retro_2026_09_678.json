@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.678",
+  "generated_at": "2026-09-28T09:06:19Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 162.9,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify numerical updates and durable memory with isolated validation",
+      "duration_minutes": 82.4,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify byte-preserving counter-evidence interventions",
+      "duration_minutes": 32.64,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify scored ARC transitions without inherited benchmark orchestration",
+      "duration_minutes": 32.22,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify source views through an explicit bounded entrypoint",
+      "duration_minutes": 7.59,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently replay decision calibration and feedback causality",
+      "duration_minutes": 6.13,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Eight compute-bound experiments completed in 162.9 wall-time minutes (averaging 20 minutes per experiment) based on disk-mtime fallback reconstruction. The longest executions were 'Qualify numerical updates and durable memory with isolated validation' at 82.4 minutes, 'Qualify byte-preserving counter-evidence interventions' at 32.64 minutes, and 'Qualify scored ARC transitions without inherited benchmark orchestration' at 32.22 minutes, which together accounted for 147.26 minutes (90.4% of the total milestone wall time). The GPU monitor report recorded a post-execution snapshot with both RTX 3090 GPUs idle (5MB and 4MB allocated at 0% utilization) upon completion with gpu_idle_on_compute_bound_tasks recorded as false, while continuous active-window accelerator utilization was unmeasured and no multi-model task requiring DualGPURunner was present.",
+  "bottlenecks_identified": [
+    "The top three compute-bound tasks ('Qualify numerical updates and durable memory with isolated validation' at 82.4 minutes, 'Qualify byte-preserving counter-evidence interventions' at 32.64 minutes, and 'Qualify scored ARC transitions without inherited benchmark orchestration' at 32.22 minutes) consumed 147.26 of the 162.9 total wall-time minutes (90.4%), but available records lack intra-task phase breakdown to explain internal durations.",
+    "Total milestone wall time was derived via disk-mtime fallback reconstruction because the live git-log path found 0 commits, leaving explicit task boundaries and per-task overheads unrecorded.",
+    "The GPU monitor report provides an isolated post-execution snapshot (both GPUs idle at 0% utilization with 5MB and 4MB allocated at 2026-09-28T09:06:19.938698+00:00), preventing evaluation of continuous active-window accelerator utilization patterns across the 162.9 minutes."
+  ],
+  "improvements_suggested": [
+    "Persist structured task execution receipts containing monotonic start, finish, and intra-task phase timers to eliminate fallback timing reconstruction.",
+    "Implement continuous background GPU telemetry sampling (utilization, VRAM allocation, and temperature) throughout task lifecycles correlated to task identifiers.",
+    "Profile intra-task stages (such as numerical validation loops, counter-evidence checks, and ARC transition scoring) for long-running workflows to isolate internal delays.",
+    "Record explicit concurrent model load declarations in task manifests to enable verifiable DualGPURunner eligibility assessment."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic sub-phase timers to experiment receipts for long-running numerical validation, counter-evidence intervention, and ARC scoring routines to isolate intra-task overheads.",
+    "Implement continuous task-correlated GPU telemetry recording to evaluate active-window compute efficiency across the entire run.",
+    "Persist structured milestone execution receipts at conductor boundaries to eliminate disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The monitor snapshot demonstrates quiescent GPUs (both RTX 3090 GPUs at 0% utilization with 5MB and 4MB allocated) at the milestone completion timestamp 2026-09-28T09:06:19.938698+00:00, reflecting completed execution rather than an active-task compute stall. Because accelerator metrics were not captured continuously across the 162.9 minutes and tasks omitted sub-phase timings, internal execution bottlenecks cannot be confirmed from available records. Estimated time savings remain 0% until proposed telemetry and profiling tooling are empirically measured against established baselines."
+}

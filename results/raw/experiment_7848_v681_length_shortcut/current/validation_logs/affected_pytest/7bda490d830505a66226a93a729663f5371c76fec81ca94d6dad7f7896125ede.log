@@ -1,0 +1,55 @@
+......F                                                                  [100%]
+=================================== FAILURES ===================================
+_______________________ test_private_cli_and_cold_replay _______________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/pytest/test_private_cli_and_cold_repl0')
+
+    def test_private_cli_and_cold_replay(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7848-TERMINAL: real entrypoint keeps child validation off."""
+        script = ROOT / "scripts/experiments/experiment_7848_v681_length_shortcut.py"
+        command = [
+            sys.executable,
+            "-u",
+            str(script),
+            "--date",
+            "20260929",
+            "--output-root",
+            str(tmp_path),
+            "--science-only",
+        ]
+        child = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=60)
+>       assert child.returncode == 0, child.stdout + child.stderr
+E       AssertionError: [exp7848] start elapsed_s=0.000 completed=0/1
+E         [exp7848] preconditions_begin elapsed_s=0.000 completed=0/1
+E         [exp7848] preconditions_end elapsed_s=0.059 completed=1/1
+E         [exp7848] fit_begin elapsed_s=0.059 completed=0/1
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py", line 523, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py", line 512, in main
+E             candidate = science(output, args.date)
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py", line 132, in science
+E             result = run_baseline(custody, output, seed=7848)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py", line 417, in run_baseline
+E             _freeze(model_path, model)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py", line 374, in _freeze
+E             atomic_json(path, value)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-h5sv3ra7/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/pytest/test_private_cli_and_cold_repl0/.fit-a3410506dbf041d94be69095a0eea6bbc38fc05b96386537424df5519b8161c8.json.tmp-2868895' -> '/tmp/carnot-pytest-artifacts-j9d7l37r/raw/experiment_7848_v681_length_shortcut/current/pytest/test_private_cli_and_cold_repl0/fit-a3410506dbf041d94be69095a0eea6bbc38fc05b96386537424df5519b8161c8.json'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c.../pytest/test_private_cli_and_cold_repl0/fit-a3410506dbf041d94be69095a0eea6bbc38fc05b96386537424df5519b8161c8.json\'\n').returncode
+
+tests/python/test_experiment_7848_v681_length_shortcut.py:125: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7848_v681_length_shortcut.py::test_private_cli_and_cold_replay
+1 failed, 6 passed in 4.04s

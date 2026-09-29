@@ -1,0 +1,19 @@
+# V679 method map — 2026-09-28
+
+This note registers methods and owners from the completed [V679 planning review](../../research-references.md#v679-planning-review--2026-09-28-recorded-before-design). It reports no new science. The exact fourteen-task authority is preserved in `v679-authority-snapshots/`. Exp7809 checks its agreement; later producers must pass their own gates.
+
+| Method and source | Local contrast | Validation owner | Claim boundary |
+|---|---|---|---|
+| [CoEV, June 2026](https://arxiv.org/html/2606.18609v1) | Delete a predicted witness sentence; compare with a matched unrelated sentence deletion while holding the answer and generation settings fixed. | Exp7814 freezes byte-level intervention and controls; Exp7815 measures Qwen probability shifts; Exp7821 audits raw families. | A text source-sensitivity shift neither proves entailment nor imports visual-domain accuracy. Modified-source rows need their own labels. |
+| [CCHD, June 2026](https://arxiv.org/abs/2606.08158) | Compare view-consistency energy with equal-information augmentation and MLP controls. | Exp7810 qualifies views; Exp7812 fits matched heads; Exp7813 measures independent family labels. | Two consistent views may share the same mistake. |
+| [Memoir, July 2026](https://arxiv.org/abs/2607.20792) | Keep state read-only within each query; compare delayed commit timing at equal feedback and update budgets. | Exp7811 qualifies memory mechanics; Exp7816 measures retained decisions; Exp7821 checks restart and chronology. | A memory write is not generator-weight learning or proof of permanent retention. |
+| [Capacity-constrained delayed feedback, June 2026](https://arxiv.org/abs/2606.11711) | Log prediction, release, pending capacity, dropped feedback, commit and later use. | Exp7811 owns timing mechanics; Exp7816 owns the causal capacity contrast. | Convex regret results do not transfer to discrete predicate admission. |
+| [Noisy constraint values, September 2026](https://arxiv.org/html/2609.06921v1) | Report cumulative false accepts and the worst-window excess, including delayed-label bursts. | Exp7816 computes raw-window debt; Exp7821 independently replays it. | This is a diagnostic adaptation, not the paper's guarantee. |
+
+Exp7817 qualifies scored ARC dispatch; Exp7818 owns adapter-withheld game measurement. Known public solves do not count as fresh wins. Exp7819 times complete service work, and Exp7820 preserves board venue and limits. [Extropic Z1T](https://extropic.ai/writing/z1t) and [FPGA-ASIC co-design](https://arxiv.org/abs/2602.15985) inform component accounting; vendor efficiency estimates stay separate from exposed local measurements.
+
+V678 has eight declared artifacts: Exp7795 circular positive, six disqualified, and Exp7808 blocked. Exp7798, 7799, 7801, 7802, 7804 and 7805 science outputs are absent. Conductor pre-gate receipts describe queue stops but do not replace producers. The archive still ends at V677. The 2026-09-28 oracle-distinct corrigendum remains open; all 640 source families are exposed development data.
+
+V678's `candidate_roster_mismatch` maps to Exp7810 canonical family custody with a changed-roster negative test. Five stale receipt hashes map to Exp7811's immutable per-attempt receipt test and Exp7809's one-byte seal test. Ruff formatting maps to scoped format checking. Terminated broad-suite readiness maps to prospective complete affected command scopes while preserving inherited failures. The missing pytest parent maps to private parent creation and a missing-parent negative test. These are planned repairs, not shipped scientific outcomes in Exp7809.
+
+A same-verdict prior retires only its listed scope when the current task actually repeats that verdict. This contract's agreement cannot retire a scientific prior or qualify an absent producer. Probability quality, decision benefit, retention and efficiency remain unmeasured here.

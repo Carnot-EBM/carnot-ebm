@@ -1,0 +1,252 @@
+{
+  "affected_sources": [
+    "python/carnot/verify/intervention_protocol_7868.py",
+    "python/carnot/experiment_7868_v683_intervention_protocol.py",
+    "scripts/experiments/experiment_7868_v683_intervention_protocol.py"
+  ],
+  "affected_tests": [
+    "tests/python/test_experiment_7868_v683_intervention_protocol.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json; names=['carnot.verify.intervention_protocol_7868','carnot.experiment_7868_v683_intervention_protocol']; print(json.dumps({'resolved_imports':{n:importlib.import_module(n).__file__ for n in names}}))"
+      ],
+      "classification": "required",
+      "name": "worktree_imports",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7868-v683-20260929/pytest/affected",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7868-v683-20260929/coverage/.coverage.unit",
+        "--include=*/intervention_protocol_7868.py,*/experiment_7868_v683_intervention_protocol.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7868-v683-20260929/pytest/coverage",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "unit_coverage",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7868-v683-20260929/coverage/.coverage.cli",
+        "--include=*/intervention_protocol_7868.py,*/experiment_7868_v683_intervention_protocol.py",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-7868-v683-20260929/cli-fixture.json"
+      ],
+      "classification": "required",
+      "name": "cli_coverage",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/tmp/carnot-7868-v683-20260929/coverage/.coverage.combined",
+        "/tmp/carnot-7868-v683-20260929/coverage/.coverage.unit",
+        "/tmp/carnot-7868-v683-20260929/coverage/.coverage.cli"
+      ],
+      "classification": "required",
+      "name": "coverage_combine",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7868-v683-20260929/coverage/.coverage.combined",
+        "--include=*/intervention_protocol_7868.py,*/experiment_7868_v683_intervention_protocol.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "name": "coverage_report",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/intervention_protocol_7868.py",
+        "python/carnot/experiment_7868_v683_intervention_protocol.py",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/intervention_protocol_7868.py",
+        "python/carnot/experiment_7868_v683_intervention_protocol.py",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/verify/intervention_protocol_7868.py",
+        "python/carnot/experiment_7868_v683_intervention_protocol.py",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-7868-v683-20260929/e2e-fixture.json"
+      ],
+      "classification": "required",
+      "name": "cli_e2e",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-7868-v683-20260929/pending_candidate.json"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7868-v683-20260929/pytest/full",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "full_pytest",
+      "timeout_s": 1200
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-7868-v683-20260929/pending_candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-7868-v683-20260929/pending_candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_rows",
+      "timeout_s": 60
+    }
+  ],
+  "coverage_files": [
+    "/tmp/carnot-7868-v683-20260929/coverage/.coverage.unit",
+    "/tmp/carnot-7868-v683-20260929/coverage/.coverage.cli"
+  ],
+  "coverage_settings": {
+    "branch": false,
+    "include": "*/intervention_protocol_7868.py,*/experiment_7868_v683_intervention_protocol.py"
+  },
+  "historical_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7854_v682_intervention_protocol/validation_command_manifest.json",
+  "historical_manifest_sha256": "sha256:cad89d908e9d18c8b721fe53f44d870f87309c9d9f5a47aac0e6ee18fd0190ae",
+  "inapplicable_e2e": [
+    "E2E-001 through E2E-014 concern model, hardware or another producer",
+    "E2E-015 belongs to Exp7852"
+  ],
+  "required_checks": [
+    "worktree_imports",
+    "affected_pytest",
+    "unit_coverage",
+    "cli_coverage",
+    "coverage_combine",
+    "coverage_report",
+    "ruff_check",
+    "ruff_format",
+    "mypy",
+    "scoped_spec",
+    "cli_e2e",
+    "cold_replay",
+    "full_pytest",
+    "adversarial_verify",
+    "strict_rows"
+  ],
+  "schema": "carnot.exp7868.validation_manifest.v1"
+}

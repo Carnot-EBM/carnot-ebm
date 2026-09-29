@@ -1,5 +1,76 @@
 # Carnot — Session Metrics
 
+## Session: 2026-09-29 Milestone 2026.09.684 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-29T17:52:45Z | 2026-09-29T17:54:42Z | Wrote operational retro for milestone 2026.09.684; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+---
+
+## Session: 2026-09-29 Milestone 2026.09.683 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-29T13:34:52Z | 2026-09-29T13:42:25Z | Wrote operational retro for milestone 2026.09.683; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+---
+
+## Session: 2026-09-29 Milestone 2026.09.682 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-29T07:16:54Z | 2026-09-29T07:20:32Z | Wrote operational retro for milestone 2026.09.682; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+---
+
+## Session: 2026-09-29 Milestone 2026.09.681 Operational Retrospective
+
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-29T02:17:35Z | 2026-09-29T02:21:03Z | Wrote operational retro for milestone 2026.09.681; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+---
+
+## Session: 2026-09-28 Milestone 2026.09.680 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-28T21:32:35Z | 2026-09-28T21:35:21Z | Wrote operational retro for milestone 2026.09.680; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+---
+
+## Session: 2026-09-28 Milestone 2026.09.679 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-28T16:10:30Z | 2026-09-28T16:12:57Z | Wrote operational retro for milestone 2026.09.679; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+---
+
+## Session: 2026-09-28 Milestone 2026.09.678 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-28T09:06:31Z | 2026-09-28T09:10:46Z | Wrote operational retro for milestone 2026.09.678; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+---
+
 ## Session: 2026-09-27 Milestone 2026.09.677 Operational Retrospective
 
 ### Turn Log
@@ -3631,3 +3702,16 @@ REQ-ARC-WMTE-10026: lattice-cell candidate promotion for sc25. Corrected the "ca
 diagnosis (they were tier-1, not absent). No promotion: 25-game mean real score 0.171888 -> 0.149261.
 sc25 gets confirmed real cast-panel clicks but no win. Branch 5601df3eb6, not merged. Closes out
 today's ARC session per Fable 5.1's recommendation list.
+
+## Session: 2026-09-28 V679 research planning
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-09-28T10:15:59Z | pending | User requested literature-informed successor to .678 with matching design and execution YAML; preserve active roadmap and conductor. | pending authoritative extraction |
+
+## Session: 2026-09-29 Milestone 2026.09.685 Operational Retrospective
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-09-29T23:42:56Z | 2026-09-29T23:44:34Z | Operational retrospective for milestone 2026.09.685: analyze timing data and GPU state, update retro JSON, changelog, and research-log. | pending authoritative extraction |
+

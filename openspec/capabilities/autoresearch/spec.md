@@ -4715,6 +4715,17 @@ Given a roadmap task with `agent_type: codex` and `model: gpt-6-luna`, the
 audit reports no `MODEL_AGENT_COHERENCE` failure for it, and the artifact's
 `luna_tasks_requiring_review` names that task id.
 
+**AMENDMENT 2026-09-29 (append-only).** The accepted codex models are now
+`gpt-6.1-sol`, `gpt-6-sol` (draining), `gpt-5.6-sol` (draining), and
+`gpt-6-luna`. `gpt-6.1-sol` is the codex model for new tasks going forward.
+The 2026-09-26 amendment above stays as the record of what was accepted at
+that date; this amendment does not replace it.
+
+### SCENARIO-INFRA-086b: Roadmap Audit Accepts gpt-6.1-sol Tasks
+
+Given a roadmap task with `agent_type: codex` and `model: gpt-6.1-sol`, the
+audit reports no `MODEL_AGENT_COHERENCE` failure for it.
+
 ### SCENARIO-INFRA-087: Pre-Activation Audit Artifact Records ArXiv Prior Coverage
 
 Given a planned milestone roadmap, the Exp 1152 pre-activation runner MUST
@@ -4727,7 +4738,7 @@ failures for `exp1139-arxiv-final-submission-v3`,
 `exp1127-arxiv-pdf-compilation-final-submission`, and
 `exp1116-arxiv-pdf-compilation-submission`.
 
-Spec: REQ-INFRA-075, SCENARIO-INFRA-084, SCENARIO-INFRA-085, SCENARIO-INFRA-086, SCENARIO-INFRA-087 (Exp 1140, Exp 1152)
+Spec: REQ-INFRA-075, SCENARIO-INFRA-084, SCENARIO-INFRA-085, SCENARIO-INFRA-086, SCENARIO-INFRA-086a, SCENARIO-INFRA-086b, SCENARIO-INFRA-087 (Exp 1140, Exp 1152)
 
 ---
 

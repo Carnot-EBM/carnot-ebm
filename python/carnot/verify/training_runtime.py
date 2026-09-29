@@ -20,7 +20,7 @@ from carnot.verify import source_alignment as alignment
 
 jax.config.update("jax_enable_x64", True)
 
-SEEDS = (67501, 67502, 67503, 67504, 67505)
+SEEDS = (67501, 67502, 67503, 67504, 67505, 67801, 67802, 67803)
 LEARNING_RATES = (0.01, 0.05)
 EPOCHS_MAX = 40
 PARAMETER_MAX = 4096

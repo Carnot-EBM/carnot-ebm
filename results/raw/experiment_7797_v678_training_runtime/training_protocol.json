@@ -1,0 +1,87 @@
+{
+  "arms": [
+    "response_set",
+    "local_set",
+    "augmented_set",
+    "constrained_set",
+    "augmented_mlp",
+    "constrained_mlp",
+    "local_logistic",
+    "source_erased_constrained_set",
+    "complete_static_constrained_set"
+  ],
+  "complete_static_predicates": [
+    "low_overlap",
+    "negation_mismatch",
+    "number_mismatch",
+    "missing_evidence",
+    "low_overlap_and_negation",
+    "low_overlap_and_number",
+    "low_overlap_and_missing",
+    "negation_and_number",
+    "negation_and_missing",
+    "number_and_missing",
+    "low_overlap_and_negation_and_number",
+    "low_overlap_and_negation_and_missing",
+    "low_overlap_and_number_and_missing",
+    "negation_and_number_and_missing",
+    "all_four",
+    "zero_overlap_and_missing"
+  ],
+  "dual_constraints": {
+    "clip": [
+      0,
+      10
+    ],
+    "second_view_ce_tolerance": 0.7,
+    "step": 0.01,
+    "symmetric_kl_half_tolerance": 0.01
+  },
+  "fixture_only": true,
+  "miniature_epochs": 2,
+  "natural_recipe": {
+    "epochs": 16,
+    "learning_rate": 0.01,
+    "optimizer": "full_batch_gradient_descent"
+  },
+  "parameter_max": 4096,
+  "roles": {
+    "evaluation": [
+      "gamma-0",
+      "gamma-1"
+    ],
+    "fit": [
+      "alpha-0",
+      "alpha-1"
+    ],
+    "tune": [
+      "beta-0",
+      "beta-1"
+    ]
+  },
+  "schema": "exp7797-training-protocol-v1",
+  "seeds": [
+    67801,
+    67802,
+    67803
+  ],
+  "temperature_grid": [
+    0.25,
+    0.29730177875068026,
+    0.3535533905932738,
+    0.42044820762685725,
+    0.5,
+    0.5946035575013605,
+    0.7071067811865475,
+    0.8408964152537145,
+    1.0,
+    1.189207115002721,
+    1.4142135623730951,
+    1.6817928305074292,
+    1.9999999999999998,
+    2.378414230005442,
+    2.82842712474619,
+    3.363585661014858,
+    4.0
+  ]
+}

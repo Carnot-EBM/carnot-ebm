@@ -1,0 +1,178 @@
+{
+  "tests": [
+    "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+    "tests/python/test_experiment_7727_v673_development_corpus.py",
+    "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py",
+    "tests/python/test_experiment_7787_v677_qwen_event_confidence.py",
+    "tests/python/test_experiment_7303_v642_validation_scope.py",
+    "tests/python/test_current_work_receipt.py"
+  ],
+  "changed_modules": [
+    "python/carnot/experiment_7800_v678_counter_evidence_protocol.py"
+  ],
+  "static_paths": [
+    "scripts/experiments/experiment_7800_v678_counter_evidence_protocol.py"
+  ],
+  "commands": [
+    {
+      "name": "worktree_imports",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7800_v678_counter_evidence_protocol"
+      ],
+      "timeout_s": 900.0
+    },
+    {
+      "name": "focused_pytest",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7800-pytest/focused",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7727_v673_development_corpus.py",
+        "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py",
+        "tests/python/test_experiment_7787_v677_qwen_event_confidence.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q"
+      ],
+      "timeout_s": 900.0
+    },
+    {
+      "name": "changed_module_coverage",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7800-coverage/.coverage",
+        "--include=*/experiment_7800_v678_counter_evidence_protocol.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7800-pytest/coverage",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7727_v673_development_corpus.py",
+        "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py",
+        "tests/python/test_experiment_7787_v677_qwen_event_confidence.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q"
+      ],
+      "timeout_s": 900.0
+    },
+    {
+      "name": "changed_module_coverage_report",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7800-coverage/.coverage",
+        "--include=*/experiment_7800_v678_counter_evidence_protocol.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "timeout_s": 900.0
+    },
+    {
+      "name": "ruff_check",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7800_v678_counter_evidence_protocol.py",
+        "scripts/experiments/experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7727_v673_development_corpus.py",
+        "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py",
+        "tests/python/test_experiment_7787_v677_qwen_event_confidence.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "timeout_s": 900.0
+    },
+    {
+      "name": "ruff_format",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7800_v678_counter_evidence_protocol.py",
+        "scripts/experiments/experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7727_v673_development_corpus.py",
+        "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py",
+        "tests/python/test_experiment_7787_v677_qwen_event_confidence.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "timeout_s": 900.0
+    },
+    {
+      "name": "changed_module_mypy",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7800_v678_counter_evidence_protocol.py"
+      ],
+      "timeout_s": 900.0
+    },
+    {
+      "name": "scoped_spec_coverage",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7727_v673_development_corpus.py",
+        "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py",
+        "tests/python/test_experiment_7787_v677_qwen_event_confidence.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "timeout_s": 900.0
+    }
+  ],
+  "e2e": [
+    "scripted_http_intervention",
+    "fresh_process_raw_reduction",
+    "adversarial_verify_exact_candidate",
+    "verdict_row_consistency_lint_strict"
+  ],
+  "branch_coverage": false,
+  "full_suite_argv": [
+    ".venv/bin/pytest",
+    "tests/python",
+    "-q"
+  ],
+  "cold_reducer_argv": [
+    ".venv/bin/python",
+    "-u",
+    "scripts/experiments/experiment_7800_v678_counter_evidence_protocol.py",
+    "--reduce-raw",
+    "results/raw/experiment_7800_v678_counter_evidence_protocol/intervention_fixture_rows.json"
+  ],
+  "terminal_reader_argv": [
+    [
+      ".venv/bin/python",
+      "-u",
+      "scripts/adversarial_verify.py",
+      "results/experiment_7800_v678_counter_evidence_protocol.json"
+    ],
+    [
+      ".venv/bin/python",
+      "-u",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "results/experiment_7800_v678_counter_evidence_protocol.json"
+    ]
+  ]
+}

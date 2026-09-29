@@ -4,6 +4,103 @@
 **Version:** 0.1.0
 **Status:** Draft
 
+## REQ-VERIFY-7853: Public-byte natural runtime qualification
+
+Exp7853 SHALL compute four advisory bits from only the UTF-8 source and answer
+bytes. Tokens are maximal Unicode alphanumeric runs; punctuation and whitespace
+separate runs. Matching uses Unicode casefold. A decimal token contains only
+Unicode decimal digits; each digit is converted to ASCII and leading zeroes
+are removed (zero remains `0`). Content tokens are casefolded alphabetic runs
+excluding `a`, `an`, `the`, `is`, `are`, `was`, `were`, `of`, `to`, `in`, `on`,
+`and`, `or`, `for`, `with`. The four bits, in order, are: an answer decimal
+absent from source, an answer negator absent from source, content-token Jaccard
+strictly below 0.20 (empty union has similarity one), and an answer token after
+the first whose original spelling is title case and whose folded form is
+absent from source. Negators are `no`, `not`, `never`, `neither`, `without`,
+`cannot`. The frozen grammar is a constant one plus the fifteen nonempty
+conjunctions in increasing four-bit mask order. These values are heuristics,
+not labels; identifiers, labels, annotations, and private evaluator fields
+cannot affect them.
+
+The natural adapter SHALL accept explicit disjoint fit and tune source groups,
+registered seeds 67801/67802/67803, learning rate 0.01 and at most sixteen
+epochs. It SHALL train all nine registered evidence-view arms through the
+existing numerical runtime. Source erasure precedes every base and predicate
+feature; the complete-static arm gets all sixteen real predicate features
+before training. Temperature is selected on tune labels only after view
+aggregation. Evaluation and retention labels are never calibration inputs.
+
+A durable advisory bank SHALL seal predictions before feedback, release only
+after a later tick, and update each coefficient by `0.01 * (label - prediction)
+* feature`, clipped to [-1, 1]. Admission requires released positive feedback;
+read-only forecasts never write. Restart, pending queue and ledger corruption
+must be checked. No generator weights change. A disqualified Exp7852 source
+boundary or zero readiness SHALL produce a terminal blocked artifact with exact
+failed operands and zero natural readiness; fixture mechanics cannot override it.
+
+### SCENARIO-VERIFY-7853-BYTES
+
+Byte edits toggle each of the four signals. Opaque ID, label and annotation
+edits leave the actual fit and predict features unchanged. All sixteen names
+and values are deterministic, including Unicode decimal and casefold cases.
+
+### SCENARIO-VERIFY-7853-SPLIT
+
+Fit and tune group overlap is rejected. The real fit/predict interfaces enforce
+source erasure and static features, explicit seeds and tune-only calibration.
+Gradient, normalization, mask, objectives, temperature and reload checks use
+the numerical runtime.
+
+### SCENARIO-VERIFY-7853-BANK
+
+Forecasts precede delayed feedback. Read-only mode leaves bytes unchanged;
+restart preserves pending forecasts; corrupt state is rejected.
+
+### SCENARIO-VERIFY-7853-BLOCK
+
+Exp7852's disqualified or zero-readiness result blocks before natural compute.
+The CLI publishes a complete blocked record with source hashes and gate operands.
+
+## REQ-VERIFY-7867: Callable circular fixture runtime
+
+Exp7867 SHALL run the existing nine byte-derived view arms with disjoint fit and
+tune families and deterministic seeds. The fixture path SHALL train and predict
+from actual UTF-8 source bytes, record 132 base feature dimensions, symmetric
+view divergence, held-out temperature, per-arm rows, and fitted head metadata.
+It SHALL identify fixture agreement as circular_positive with
+`verifier_is_oracle=true` and `natural_measurement_performed=false`. A qualified
+source manifest SHALL bind exact public and evaluator bytes, split roles, and
+hashes before natural measurement. Missing or disqualified external source
+inputs SHALL terminate as complete_blocked with every failed operand.
+
+The advisory bank SHALL keep split tokens immutable. Feedback used to admit a
+predicate SHALL not train coefficients. A predicate SHALL affect a later typed
+decision only after admission. Pending labels SHALL remain inaccessible before
+their delay. Every write SHALL retain its prior-state lineage; a read-only
+decision SHALL leave state bytes unchanged. Restart SHALL reproduce the same
+prediction and reject corrupt state.
+
+### SCENARIO-VERIFY-7867-TRAIN
+
+Two distinct byte fixtures, including long source windows, exercise all nine
+arms. Fit/tune overlap and mutable split identity are rejected. Unknown local
+labels have zero loss and gradient effect. The real fixture CLI succeeds; its
+invalid source branch fails closed.
+
+### SCENARIO-VERIFY-7867-BANK
+
+A feedback-trained but inactive candidate becomes active only after separate
+delayed admission evidence. Admission does not change coefficients. No-write,
+shuffled-past, early-label, crash/restart and ledger-tamper cases retain exact
+state and decisions.
+
+### SCENARIO-VERIFY-7867-RECEIPT
+
+The runtime SHALL publish exact source and code hashes, primitive rows, honest
+terminal verdict, measured timing, zero model calls, typed readiness, and a
+versioned callable interface manifest. Required validation failures SHALL
+disqualify readiness; separate benefit gates SHALL remain null for fixtures.
+
 ## Overview
 
 Defines deterministic audits for executable constraint-verification corpora.
@@ -8996,3 +9093,112 @@ finish fails validity without dropping the unit.
 
 A fresh reader reopens exact raw request and response bytes, recomputes the
 paired rows, and rejects a changed hash, duplicate key or changed metric.
+
+## REQ-VERIFY-7797: Qualify bounded numerical heads and immutable online queries
+
+Exp7797 SHALL run the nine registered evidence-view heads on six fixed positive
+and negative fixture families using seeds 67801, 67802 and 67803. It SHALL
+freeze a two-epoch miniature of the sixteen-epoch, learning-rate-0.01 natural
+recipe, fit no natural labels, reject role overlap or label-bearing features,
+and retain all per-family, seed and arm rows. Every head SHALL have a finite
+nonzero gradient, changed parameters, normalized probabilities, bounded
+temperature, a save/load-identical decision and at most 4096 parameters
+including static predicates and dual variables. Constrained heads SHALL prove
+projected dual behavior and a nonzero dual effect; nonfinite inputs SHALL fail.
+
+Exp7797 SHALL exercise the real durable bank and OnlineRunner under queued
+next-block and immediate next-query feedback. Each query SHALL pin one model
+and bank version. Delayed feedback, overflow, duplicate release, false
+admission rollback, candidate compilation and hard-exit restart SHALL retain
+durable receipts, including queue, RNG, pending commits and credits.
+
+Exp7797 SHALL use task-owned protocols, an explicit frozen affected scope,
+private coverage shards with retained exits and durable log hashes. A missing
+external producer SHALL yield a complete blocked verdict with its exact failed
+operand. A failed required current validation SHALL yield a disqualified
+verdict and zero training and online readiness. Historical Exp7784 receipts
+SHALL remain unchanged. Fixture success supports only circular-positive
+mechanics; natural probability, decision, retention and efficiency benefit
+SHALL remain null.
+
+### SCENARIO-VERIFY-7797-NUMERICAL
+
+Given the six sealed fixture families and three seeds, the two-epoch miniature
+trains all nine heads with finite gradients, changed parameters, normalized
+outputs and identical decisions after reload. Train/evaluation role poisoning,
+nonfinite features and parameter-budget excess fail closed.
+
+### SCENARIO-VERIFY-7797-ONLINE
+
+Given the real bank and OnlineRunner, a query observes one bank/model version;
+next-query and next-block commit schedules preserve delayed feedback and
+durable restart. Duplicates, overflow, rejected admission and child hard exit
+cannot silently acknowledge a commit.
+
+### SCENARIO-VERIFY-7797-TERMINAL
+
+Given a frozen current candidate, omission of a transitive consumer, failed
+coverage, stale log or undeclared broad test child forces both readiness scores
+to zero. A fresh process reduces raw rows, and both terminal readers inspect
+the exact candidate before atomic publication.
+
+## REQ-VERIFY-7811: Attempt-sealed numerical and online qualification
+
+Exp7811 SHALL run a task-owned two-epoch fixture miniature for all nine heads,
+six independent positive/negative families, and seeds 67815, 67816 and 67817.
+The natural recipe SHALL remain sixteen epochs at learning rate 0.01; no natural
+labels or fixture checkpoint may enter that fit. The real online runner and
+durable bank SHALL exercise both commit schedules and a private restart. All
+unmeasured natural benefit gates SHALL remain null. Missing science producers
+SHALL yield a complete blocked verdict; a failed owned required check SHALL
+yield a complete disqualified verdict with both readiness scores zero.
+
+Before implementation, the complete affected closure SHALL be frozen in
+`results/raw/experiment_7811_v679_training_runtime/frozen_validation_scope.json`.
+Its command manifest SHALL hold each exact argv template, order, timeout and
+required or diagnostic class. The closure SHALL include the Exp7797 format
+failure file, direct numerical/online/CLI tests, and transitive consumers of
+training, evidence views, bank, receipt and validation code. An old entrypoint
+may not be invoked with a reduced inherited contract. A new scoped entrypoint
+is prospective because this task changes log ownership and dispatch; broad
+repository health remains a bounded diagnostic with its literal exit retained.
+
+The real CLI SHALL dispatch exactly the materialized manifest, including
+commands appended after helper calls. No undeclared child may run. Every
+command SHALL use a unique private attempt root and its own log; the parent
+SHALL exist before pytest starts. After child exit and log closure, the runner
+SHALL copy exact bytes once into an attempt-specific content-addressed durable
+path, hash that path, and reject later mutation. Coverage shards SHALL share
+one configuration, retain exits and files, and combine at one destination.
+Cold replay SHALL run after prior receipts are sealed. A later retry SHALL not
+invalidate the first receipt. Historical Exp7784 and Exp7797 artifacts SHALL
+retain their original verdicts and hashes.
+
+### SCENARIO-VERIFY-7811-DISPATCH
+
+Given a recording child executor, the real CLI emits command names, argv and
+required/diagnostic classes byte-for-byte equal to the frozen manifest. A
+missing parent, undeclared command, omitted transitive consumer, failed
+coverage or failed required exit closes both readiness gates.
+
+### SCENARIO-VERIFY-7811-RECEIPT
+
+Two consecutive attempts use different private roots. After the second run,
+the first artifact reader still verifies its durable log. A one-byte mutation
+of a referenced log fails the cold reader without changing the receipt.
+
+### SCENARIO-VERIFY-7811-MECHANICS
+
+All nine heads change parameters with finite nonzero gradients, normalized
+probabilities, bounded temperatures and save/load-identical decisions. Dual
+constraints affect constrained loss. Nonfinite and role-poisoned inputs fail.
+The bank pins model and bank versions per query, rejects duplicates and
+overflow, rolls back false admission, and retains pending state after restart.
+
+The frozen scope SHALL name every numerical, evidence-view, bank, online and
+CLI consumer before implementation. Coverage shards SHALL use one branch
+setting, keep their original exit codes and data files, and combine at one
+explicit destination. A missing transitive test, changed log byte, failed
+shard or undeclared broad child SHALL fail the current gate. The historical
+Exp7784 failed exits and receipt hashes remain evidence of that verdict; its
+mutable temporary logs SHALL not be used to infer a past failure cause.

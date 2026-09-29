@@ -1,0 +1,426 @@
+{
+  "affected_sources": [
+    "python/carnot/experiment_7881_v684_intervention_protocol.py",
+    "python/carnot/verify/intervention_protocol_7868.py",
+    "python/carnot/verify/context_sufficiency_7854.py",
+    "python/carnot/verify/source_interventions.py",
+    "python/carnot/reporting/experiment_7303_validation_scope.py",
+    "python/carnot/reporting/current_work_receipt.py",
+    "scripts/experiments/experiment_7881_v684_intervention_protocol.py",
+    "python/carnot/experiment_7893_v685_intervention_protocol.py",
+    "scripts/experiments/experiment_7893_v685_intervention_protocol.py"
+  ],
+  "affected_tests": [
+    "tests/python/test_experiment_7881_v684_intervention_protocol.py",
+    "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+    "tests/python/test_experiment_7854_v682_intervention_protocol.py",
+    "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+    "tests/python/test_experiment_7303_v642_validation_scope.py",
+    "tests/python/test_current_work_receipt.py",
+    "tests/python/test_experiment_7893_v685_intervention_protocol.py"
+  ],
+  "closure_rationale": "Direct fixture, source-view, receipt, and scope dependencies plus existing consumers; current V685 CLI and terminal regression",
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json; names=['carnot.experiment_7881_v684_intervention_protocol', 'carnot.verify.intervention_protocol_7868', 'carnot.verify.context_sufficiency_7854', 'carnot.verify.source_interventions', 'carnot.reporting.experiment_7303_validation_scope', 'carnot.reporting.current_work_receipt']; print(json.dumps({'resolved_imports':{n:importlib.import_module(n).__file__ for n in names}}))"
+      ],
+      "classification": "required",
+      "name": "worktree_imports",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected",
+        "tests/python/test_experiment_7881_v684_intervention_protocol.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "tests/python/test_experiment_7854_v682_intervention_protocol.py",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q",
+        "tests/python/test_experiment_7893_v685_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.unit",
+        "--include=*/experiment_7881_v684_intervention_protocol.py,*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py,*/experiment_7893_v685_intervention_protocol.py,*/scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage",
+        "tests/python/test_experiment_7881_v684_intervention_protocol.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "tests/python/test_experiment_7854_v682_intervention_protocol.py",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q",
+        "tests/python/test_experiment_7893_v685_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "unit_coverage",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.cli",
+        "--include=*/experiment_7881_v684_intervention_protocol.py,*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py,*/experiment_7893_v685_intervention_protocol.py,*/scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7881_v684_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/fixture-cli.json"
+      ],
+      "classification": "required",
+      "name": "cli_coverage",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.replay",
+        "--include=*/experiment_7881_v684_intervention_protocol.py,*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py,*/experiment_7893_v685_intervention_protocol.py,*/scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7881_v684_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/fixture-cli.json"
+      ],
+      "classification": "required",
+      "name": "cli_replay_coverage",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.failure",
+        "--include=*/experiment_7881_v684_intervention_protocol.py,*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py,*/experiment_7893_v685_intervention_protocol.py,*/scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7881_v684_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/missing-fixture.json"
+      ],
+      "classification": "required",
+      "expected_error_token": "FileNotFoundError",
+      "expected_exit_code": 1,
+      "name": "cli_failure_coverage",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.fixture",
+        "--include=*/experiment_7881_v684_intervention_protocol.py,*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py,*/experiment_7893_v685_intervention_protocol.py,*/scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/v685-fixture.json"
+      ],
+      "classification": "required",
+      "name": "v685_cli_fixture",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.replay",
+        "--include=*/experiment_7881_v684_intervention_protocol.py,*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py,*/experiment_7893_v685_intervention_protocol.py,*/scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/v685-fixture.json"
+      ],
+      "classification": "required",
+      "name": "v685_cli_replay",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.failure",
+        "--include=*/experiment_7881_v684_intervention_protocol.py,*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py,*/experiment_7893_v685_intervention_protocol.py,*/scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7893_v685_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/absent-v685.json"
+      ],
+      "classification": "required",
+      "expected_error_token": "FileNotFoundError",
+      "expected_exit_code": 1,
+      "name": "v685_cli_failure",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.combined",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.unit",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.cli",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.failure",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.fixture",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.failure"
+      ],
+      "classification": "required",
+      "name": "coverage_combine",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.combined",
+        "--include=*/experiment_7893_v685_intervention_protocol.py,*/experiment_7881_v684_intervention_protocol.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "name": "coverage_report",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.combined",
+        "--include=*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py"
+      ],
+      "classification": "required",
+      "name": "reused_coverage_report",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7881_v684_intervention_protocol.py",
+        "python/carnot/verify/intervention_protocol_7868.py",
+        "python/carnot/verify/context_sufficiency_7854.py",
+        "python/carnot/verify/source_interventions.py",
+        "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "python/carnot/reporting/current_work_receipt.py",
+        "scripts/experiments/experiment_7881_v684_intervention_protocol.py",
+        "tests/python/test_experiment_7881_v684_intervention_protocol.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "tests/python/test_experiment_7854_v682_intervention_protocol.py",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7893_v685_intervention_protocol.py",
+        "python/carnot/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7893_v685_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7881_v684_intervention_protocol.py",
+        "python/carnot/verify/intervention_protocol_7868.py",
+        "python/carnot/verify/context_sufficiency_7854.py",
+        "python/carnot/verify/source_interventions.py",
+        "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "python/carnot/reporting/current_work_receipt.py",
+        "scripts/experiments/experiment_7881_v684_intervention_protocol.py",
+        "tests/python/test_experiment_7881_v684_intervention_protocol.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "tests/python/test_experiment_7854_v682_intervention_protocol.py",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7893_v685_intervention_protocol.py",
+        "python/carnot/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7893_v685_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/experiment_7881_v684_intervention_protocol.py",
+        "python/carnot/verify/intervention_protocol_7868.py",
+        "python/carnot/verify/context_sufficiency_7854.py",
+        "python/carnot/verify/source_interventions.py",
+        "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "python/carnot/reporting/current_work_receipt.py",
+        "scripts/experiments/experiment_7881_v684_intervention_protocol.py",
+        "python/carnot/experiment_7893_v685_intervention_protocol.py",
+        "scripts/experiments/experiment_7893_v685_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7881_v684_intervention_protocol.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "tests/python/test_experiment_7854_v682_intervention_protocol.py",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7893_v685_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/e2e-016-fixture.json"
+      ],
+      "classification": "required",
+      "name": "e2e_016_fixture",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/e2e-016-fixture.json"
+      ],
+      "classification": "required",
+      "name": "e2e_016_replay",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7881_v684_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/fixture-cli.json"
+      ],
+      "classification": "required",
+      "name": "current_cli_replay",
+      "timeout_s": 60
+    }
+  ],
+  "coverage_files": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.unit",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.cli",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.replay",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.failure",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.fixture",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.replay",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/coverage/.coverage.v685.failure"
+  ],
+  "coverage_settings": {
+    "branch": false,
+    "include": "*/experiment_7881_v684_intervention_protocol.py,*/verify/intervention_protocol_7868.py,*/verify/context_sufficiency_7854.py,*/verify/source_interventions.py,*/reporting/experiment_7303_validation_scope.py,*/reporting/current_work_receipt.py,*/experiment_7893_v685_intervention_protocol.py,*/scripts/experiments/experiment_7893_v685_intervention_protocol.py"
+  },
+  "historical_required_failures": [
+    {
+      "classification": "historical_required_failure",
+      "name": "full_pytest",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7868_v683_intervention_protocol.json"
+    }
+  ],
+  "inapplicable_e2e": [
+    "E2E-001 through E2E-015 and E2E-017: other producers"
+  ],
+  "prior_owned_attempt": {
+    "disposition": "disqualified_coverage_and_publication_failure",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7881_v684_intervention_protocol/attempts/attempt1_candidate.json",
+    "sha256": "sha256:360669fd2ca618839dd9dab386a74a145d2f15cc2c4494a41eee444a5d6d4519"
+  },
+  "repository_health_command": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/repository",
+      "tests/python",
+      "-q"
+    ],
+    "classification": "diagnostic",
+    "name": "repository_full_pytest",
+    "timeout_s": 180
+  },
+  "schema": "carnot.exp7893.validation_manifest.v1",
+  "second_owned_attempt": {
+    "disposition": "disqualified_cold_replay_cli_coverage",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7881_v684_intervention_protocol/attempts/attempt2_candidate.json",
+    "sha256": "sha256:3768699bb06920a4b293d70f35970fb77cfd65ae9fd5cea141af4225eb677cf8"
+  },
+  "source_hashes": {
+    "python/carnot/experiment_7881_v684_intervention_protocol.py": "sha256:bdad2b1dd4c95af6196803aace4b672a9e7fe770b1b77aa936d001a806e85c68",
+    "python/carnot/experiment_7893_v685_intervention_protocol.py": "sha256:f0e008a15be40703b1f75f2536585c953a532a590256f0feb108c9525b2afdd7",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229",
+    "python/carnot/verify/context_sufficiency_7854.py": "sha256:607ea21e7c0908843c6eff96471c802c5f4cdc337946f0d0a50d1f37ed38d20e",
+    "python/carnot/verify/intervention_protocol_7868.py": "sha256:021a3e1b27abf840acd3fe67d5f765dabec9be1ad7dc839890914a3df3bbee8f",
+    "python/carnot/verify/source_interventions.py": "sha256:dd79ab98fb4cb2567e7ebfcb855354e7dc19adcf2535ef637209f6748de26819",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/check_spec_coverage.py": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559",
+    "scripts/experiments/experiment_7881_v684_intervention_protocol.py": "sha256:1548ef39c5a633792b7062157755ae1feae439b26a1b43c2e80b3ddb932557d6",
+    "scripts/experiments/experiment_7893_v685_intervention_protocol.py": "sha256:5b6bebba7efd249c1f7b5b4e582b689427a59bfa786756e36ea3d303d75df6b3",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_current_work_receipt.py": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120",
+    "tests/python/test_experiment_7303_v642_validation_scope.py": "sha256:60c04230411630ba6919b638139d9d230a2b7254aab2e953dc717d0209364262",
+    "tests/python/test_experiment_7839_v681_intervention_protocol.py": "sha256:4e52a1d1c8b0385348f9924c40302d2e4e2e927f1a3e0f8dafb885cc71da8782",
+    "tests/python/test_experiment_7854_v682_intervention_protocol.py": "sha256:5743084cf7f2b2bb167941716ef289d75c81cd6fc95ae93d9a3642cede0dda0e",
+    "tests/python/test_experiment_7868_v683_intervention_protocol.py": "sha256:0cccf567833636fdda8b0502366f98c3898a0f97bbe0aae528096e38ab79233f",
+    "tests/python/test_experiment_7881_v684_intervention_protocol.py": "sha256:7bde84af3c76319b7dfc3a020e09c4335757da33d7917ffe16a34311b2ad22db",
+    "tests/python/test_experiment_7893_v685_intervention_protocol.py": "sha256:be61efa3180c8423c37e23134e2e1ffe5d2126c292e34977cfe3ec7b193e6028"
+  }
+}

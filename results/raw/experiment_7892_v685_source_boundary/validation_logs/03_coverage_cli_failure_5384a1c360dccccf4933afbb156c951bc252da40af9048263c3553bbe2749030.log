@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7892_v685_source_boundary.py", line 806, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7892_v685_source_boundary.py", line 797, in main
+    source_projection.extract_file(args.fixture_public, args.fixture_output)
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/source_projection.py", line 141, in extract_file
+    public = read_jsonl(public_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/source_projection.py", line 126, in read_jsonl
+    return [json.loads(line) for line in path.read_text().splitlines()]
+                                         ^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp7892-0d3c31db3a82ee9c/fixture with spaces/missing.jsonl'

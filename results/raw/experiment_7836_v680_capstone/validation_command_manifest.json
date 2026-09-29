@@ -1,0 +1,222 @@
+{
+  "schema": "carnot.exp7836.validation.v1",
+  "affected_modules": [
+    "python/carnot/experiment_7836_v680_capstone.py",
+    "scripts/experiments/experiment_7836_v680_capstone.py"
+  ],
+  "affected_tests": [
+    "tests/python/test_experiment_7836_v680_capstone.py"
+  ],
+  "commands": [
+    {
+      "name": "focused_pytest",
+      "argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7836_v680_capstone.py",
+        "-q"
+      ],
+      "classification": "required",
+      "timeout_s": 600
+    },
+    {
+      "name": "full_python_pytest",
+      "argv": [
+        ".venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "classification": "required",
+      "timeout_s": 180
+    },
+    {
+      "name": "coverage_tests",
+      "argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=results/raw/experiment_7836_v680_capstone/.coverage.tests",
+        "--include=*/experiment_7836_v680_capstone.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7836_v680_capstone.py",
+        "-q"
+      ],
+      "classification": "required",
+      "timeout_s": 600
+    },
+    {
+      "name": "coverage_cli",
+      "argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=results/raw/experiment_7836_v680_capstone/.coverage.cli",
+        "--include=*/experiment_7836_v680_capstone.py",
+        "scripts/experiments/experiment_7836_v680_capstone.py",
+        "--date",
+        "20260928",
+        "--prepare",
+        "results/raw/experiment_7836_v680_capstone/candidate.json"
+      ],
+      "classification": "required",
+      "timeout_s": 180
+    },
+    {
+      "name": "coverage_combine",
+      "argv": [
+        ".venv/bin/coverage",
+        "combine",
+        "--data-file=results/raw/experiment_7836_v680_capstone/.coverage.combined",
+        "results/raw/experiment_7836_v680_capstone/.coverage.tests",
+        "results/raw/experiment_7836_v680_capstone/.coverage.cli"
+      ],
+      "classification": "required",
+      "timeout_s": 60
+    },
+    {
+      "name": "coverage_report",
+      "argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--data-file=results/raw/experiment_7836_v680_capstone/.coverage.combined",
+        "--fail-under=100",
+        "-m",
+        "python/carnot/experiment_7836_v680_capstone.py",
+        "scripts/experiments/experiment_7836_v680_capstone.py"
+      ],
+      "classification": "required",
+      "timeout_s": 60
+    },
+    {
+      "name": "ruff_check",
+      "argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7836_v680_capstone.py",
+        "scripts/experiments/experiment_7836_v680_capstone.py",
+        "tests/python/test_experiment_7836_v680_capstone.py"
+      ],
+      "classification": "required",
+      "timeout_s": 60
+    },
+    {
+      "name": "ruff_format",
+      "argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7836_v680_capstone.py",
+        "scripts/experiments/experiment_7836_v680_capstone.py",
+        "tests/python/test_experiment_7836_v680_capstone.py"
+      ],
+      "classification": "required",
+      "timeout_s": 60
+    },
+    {
+      "name": "mypy",
+      "argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7836_v680_capstone.py",
+        "scripts/experiments/experiment_7836_v680_capstone.py"
+      ],
+      "classification": "required",
+      "timeout_s": 120
+    },
+    {
+      "name": "spec_coverage",
+      "argv": [
+        ".venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7836_v680_capstone.py"
+      ],
+      "classification": "required",
+      "timeout_s": 60
+    },
+    {
+      "name": "real_cli_e2e",
+      "argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7836_v680_capstone.py",
+        "--date",
+        "20260928",
+        "--prepare",
+        "results/raw/experiment_7836_v680_capstone/candidate.json"
+      ],
+      "classification": "required",
+      "timeout_s": 120
+    },
+    {
+      "name": "cold_replay",
+      "argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7836_v680_capstone.py",
+        "--cold-replay",
+        "results/raw/experiment_7836_v680_capstone/candidate.json"
+      ],
+      "classification": "required",
+      "timeout_s": 120
+    },
+    {
+      "name": "publication_gate",
+      "argv": [
+        ".venv/bin/python",
+        "scripts/publication_gate.py",
+        "--json"
+      ],
+      "classification": "required",
+      "timeout_s": 60
+    },
+    {
+      "name": "adversarial_verify",
+      "argv": [
+        ".venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "results/raw/experiment_7836_v680_capstone/candidate.json"
+      ],
+      "classification": "required",
+      "timeout_s": 60
+    },
+    {
+      "name": "strict_row_lint",
+      "argv": [
+        ".venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "results/raw/experiment_7836_v680_capstone/candidate.json"
+      ],
+      "classification": "required",
+      "timeout_s": 60
+    },
+    {
+      "name": "repository_health",
+      "argv": [
+        ".venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "classification": "diagnostic",
+      "timeout_s": 180
+    }
+  ]
+}

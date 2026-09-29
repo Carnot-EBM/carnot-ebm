@@ -1,5 +1,110 @@
 # Carnot — Operational Status
 
+## 2026-09-29 — V685 source boundary test and coverage repair
+
+- The Exp7892 script-path CLI resolves its qualified V684 producer import.
+  Private success, failure and cold-replay tests pass without changing their
+  assertions. The 50 MiB raw-shard rejection has a regression test.
+- The dated producer passes 67/67 affected tests and 17/17 required receipts,
+  including E2E-015/016, cold feature replay, adversarial verification and
+  strict row consistency. Combined unit and CLI coverage is 625/625 owned
+  statements. The conductor smart subset passes 135/135 tests with one
+  pre-existing deprecation warning. The refreshed result records readiness 1
+  and no failed gates.
+
+## 2026-09-29 — V685 authority lifecycle test repair
+
+- The V685 CLI now freezes and executes a negative cold replay, reports replay
+  mismatches explicitly, and refuses publication if terminal validation still
+  fails after recheck. All 18 focused tests pass, including 12/12 authority
+  mutations. The authority reducer and CLI have 85/85 and 180/180 statement
+  coverage, respectively.
+- The V684 capstone now reads frozen V684 authorities; its 16 tests and the
+  current 91-test affected suite pass. The 106 roadmap/conductor consumers pass.
+- The current Exp7891 artifact records readiness 1, 7/7 required receipts,
+  passing terminal validators, and no scientific benefit claim. E2E-018 passes.
+- A repository-wide diagnostic reached 7,178 passed, 50 failed, and 57 skipped
+  before interruption at about 9%; failures include older tracked-result write
+  violations and other unrelated suites. Repository-wide reconciliation also
+  fails on legacy tests without spec references. Full-suite green is not claimed.
+
+## 2026-09-29 — Exp7879 direct CLI and validation paths repaired
+
+- The V684 CLI resolves `scripts.*` imports from its repository root when
+  invoked by path, including from outside the repository and without
+  `PYTHONPATH`. Its private candidate and cold replay pass.
+- The conductor smart subset passes 102/102 with one deprecation warning.
+  Scoped unit and direct CLI runs cover 256/256 script statements; Ruff,
+  format, strict mypy and scoped spec coverage pass.
+- The broader V684 validation manifest remains red because its historical
+  Exp7837 tests expect the removed live staged roadmap. V684 contract
+  readiness remains zero, and no full-suite pass is claimed. Repository-wide
+  reconciliation also reports pre-existing tests without spec references;
+  the scoped Exp7879 spec check passes.
+
+## 2026-09-29 — Exp7878 direct CLI import repaired
+
+- The V683 capstone script resolves the repository root before loading its
+  reducer and publication gate. Its private CLI and cold replay pass.
+- The conductor-equivalent subset passes 86/86; adjacent V683 tests pass
+  75/75. The reducer has 126/126 statement coverage. Scoped Ruff, format,
+  strict mypy, spec coverage, E2E-016, and E2E-017 pass.
+- The earlier disqualified Exp7878 result records the script's prior hash, so
+  cold replay rejects that result until terminal validation is rerun. Its
+  recorded full Python suite timed out after 900 seconds.
+- Repository-wide reconciliation still reports pre-existing tests without
+  specification references; the focused Exp7878 spec check passes.
+
+## 2026-09-29 — Exp7874 direct CLI import repaired
+
+- The V683 supervisor delta CLI resolves its V682 sibling when invoked by
+  script path, so private ledger reduction and cold replay run in fresh
+  processes. The conductor-equivalent subset passes 87/87 tests with one
+  existing deprecation warning; adjacent ARC delta tests pass 33/33.
+- The new reducer has 75/75 statements covered. Scoped Ruff, format, strict
+  mypy, spec traceability, and E2E-017 pass. Repository-wide spec traceability
+  still reports 1,142 pre-existing untraced tests.
+
+## 2026-09-29 — Exp7862 malformed board receipt repaired
+
+- Required historical JSON and board-row shape failures now yield a blocked
+  custody record with the failed operand. The conductor smart subset passes
+  90/90, including private real CLI success, missing-source, and replay routes.
+  Combined unit and CLI coverage reaches 244/244 changed-code statements.
+- The refreshed Exp7862 artifact records a null historical-board verdict,
+  evidence readiness 1, and all 14 required validation checks passing. Cold
+  replay, adversarial verification, and strict row consistency pass. Its
+  separate repository-health diagnostic timed out at 180 seconds.
+- The broad Python suite remains unqualified: an exploratory run was stopped
+  after unrelated legacy failures in the retro and Rosenbrock tests. No board
+  operation or new hardware claim occurred. Repository-wide reconciliation
+  still reports 1,142 pre-existing tests without spec references; scoped
+  Exp7862 spec coverage passes.
+
+## 2026-09-29 — Exp7852 direct CLI import repaired
+
+- The source-boundary CLI resolves its sibling producer when invoked by script
+  path. The private public-only fixture succeeds, and its label-bearing
+  mutation fails closed.
+- E2E-015 and 60 nearby tests pass. The new identity module has 13/13
+  statements covered; scoped Ruff, format, mypy, and spec coverage pass.
+  The existing Exp7852 result remains disqualified; this test repair does not
+  change its recorded validation receipts. Repository-wide reconciliation
+  still reports legacy tests without spec references.
+
+## 2026-09-28 — Exp7817 direct SDK runner qualification repaired
+
+- Fixed artifact manifest provenance under a private output root and corrected
+  the frozen coverage combine command to read exact unit and CLI data files.
+  The published V679 result now records `organic_runner_ready_score=1` and
+  `complete_circular_positive_runner_qualified_no_benefit`; all 24 required
+  receipts pass, and the 48 measurement rows remain unstarted.
+- The affected suite passes 161/161; the new module and CLI have 383/383
+  statement coverage. Ruff, mypy, scoped spec coverage, E2E-009/011/013,
+  offline E3 smoke, final cold replay, adversarial verification, and strict
+  row lint pass. The repository-wide Python diagnostic timed out after 180
+  seconds and remains failed health, separate from runner readiness.
+
 ## 2026-09-27 — Exp7770 readiness gate repaired
 
 - Added the missing `full_python_suite` requirement to the CPU Qwen runner.
@@ -17449,3 +17554,19 @@ non-circular verifier win is still needed before that gate or any Jev-style
 calibrated-decision claim can cite this line of work. The Deep-Sets model
 architecture itself is not discredited; the defect is in how the ARC
 candidate pools were built and labeled.
+
+## 2026-09-29 — Exp7868 checkpoint lookup repaired
+
+The fixture checkpoint path now uses the source row, reply, finish reason and
+seed expected by the regression test. Its stored identity still binds the
+protocol and driver checksums; changed code or checkpoint contents fail closed.
+An added replay test rejects a fixture whose bytes changed after sealing.
+No test was skipped, deleted or weakened, and the conductor was not edited.
+
+The conductor-equivalent subset passes 101 tests with one deprecation warning.
+The affected test file passes 20 tests, and combined unit plus real CLI runs
+cover all 310 statements in the Exp7868 modules and CLI. Ruff, strict mypy,
+scoped spec coverage, fixture CLI and cold replay pass. The repository-wide
+Python suite showed multiple failures before being stopped near 5%, so it is
+not qualified as passing. Repository-wide spec coverage reports 1,142
+untraced tests outside this affected file.

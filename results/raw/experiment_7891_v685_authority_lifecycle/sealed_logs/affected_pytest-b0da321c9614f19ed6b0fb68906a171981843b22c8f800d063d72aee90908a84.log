@@ -1,0 +1,2471 @@
+..............................................FFFFFFFFFFFFFFFFFF.FFFF.FF [ 86%]
+.F..FFFFFF.                                                              [100%]
+=================================== FAILURES ===================================
+______________ test_missing_stage_is_terminal_and_active_is_real _______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_missing_stage_is_terminal0')
+
+    def test_missing_stage_is_terminal_and_active_is_real(tmp_path):
+        """SCENARIO-REPORT-7879-V684-AUTHORITY preserves actual activation state."""
+>       result = owned().inspect_authorities(DESIGN, tmp_path / "absent.yaml", ACTIVE)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7879_v684_contract_methods.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7879_v684_contract_methods.py:138: in inspect_authorities
+    table, machine = parse_design(design.read_text(), milestone="2026.09.684")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_________________ test_private_contract_mutations_fail[count] __________________
+
+field = 'count'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_________________ test_private_contract_mutations_fail[order] __________________
+
+field = 'order'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+___________________ test_private_contract_mutations_fail[id] ___________________
+
+field = 'id'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_________________ test_private_contract_mutations_fail[title] __________________
+
+field = 'title'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_________________ test_private_contract_mutations_fail[phase] __________________
+
+field = 'phase'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______________ test_private_contract_mutations_fail[deliverable] _______________
+
+field = 'deliverable'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______________ test_private_contract_mutations_fail[MODEL_SPECS] _______________
+
+field = 'MODEL_SPECS'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_______ test_private_contract_mutations_fail[inference_substrate_class] ________
+
+field = 'inference_substrate_class'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ test_private_contract_mutations_fail[gated_on] ________________
+
+field = 'gated_on'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_____________ test_private_contract_mutations_fail[prior_failures] _____________
+
+field = 'prior_failures'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "count",
+            "order",
+            "id",
+            "title",
+            "phase",
+            "deliverable",
+            "MODEL_SPECS",
+            "inference_substrate_class",
+            "gated_on",
+            "prior_failures",
+        ],
+    )
+    def test_private_contract_mutations_fail(field):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects changed contract bytes."""
+        active = yaml.safe_load(ACTIVE.read_text())
+        staged = deepcopy(active)
+        tasks = staged["tasks"]
+        if field == "count":
+            tasks.pop()
+        elif field == "order":
+            tasks[0], tasks[1] = tasks[1], tasks[0]
+        elif field == "prior_failures":
+            tasks[0][field][0].pop("addressed_by")
+        elif field == "gated_on":
+            tasks[3][field][0]["artifact_field"] = "wrong"
+        else:
+            tasks[0][field] = "wrong"
+>       comparison = compare_contract(
+            DESIGN.read_text(),
+            staged,
+            active,
+            milestone="2026.09.684",
+            first_id=7879,
+            count=12,
+        )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________ test_manifest_rejects_nonexistent_arc_empty_coverage_and_venue ________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_manifest_rejects_nonexist0')
+
+    def test_manifest_rejects_nonexistent_arc_empty_coverage_and_venue(tmp_path):
+        """SCENARIO-REPORT-7879-V684-SCOPE checks paths before dispatch."""
+        cli = owned()
+>       manifest = cli.build_manifest(ROOT, tmp_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7879_v684_contract_methods.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+scratch = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_manifest_rejects_nonexist0')
+
+    def build_manifest(root: Path, scratch: Path) -> dict[str, Any]:
+        """Freeze real paths, current consumers, coverage includes and deadlines."""
+        active = yaml.safe_load((root / "research-roadmap.yaml").read_text())
+        scopes = {}
+        for task in active["tasks"]:
+            number = int(task["id"][3:7])
+            scopes[task["id"]] = {
+>               "tests": TASK_TESTS[number],
+                         ^^^^^^^^^^^^^^^^^^
+                "e2e": TASK_E2E.get(number, []),
+                "planned_owned_test": f"tests/python/test_experiment_{number}_v684_*.py",
+                "deadline_s": 900,
+                "classification": "future_required" if number != 7879 else "required",
+            }
+E           KeyError: 7891
+
+scripts/experiments/experiment_7879_v684_contract_methods.py:277: KeyError
+___________________ test_private_cli_cold_replay_and_fields ____________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_private_cli_cold_replay_a0')
+
+    def test_private_cli_cold_replay_and_fields(tmp_path):
+        """SCENARIO-REPORT-7879-V684-AUTHORITY exercises the real CLI."""
+        output, raw = tmp_path / "candidate.json", tmp_path / "rows.json"
+        clean_env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+        command = [
+            sys.executable,
+            str(CLI),
+            "--date",
+            "20260929",
+            "--output",
+            str(output),
+            "--raw",
+            str(raw),
+            "--no-validation",
+        ]
+        run = subprocess.run(
+            command, cwd=tmp_path, env=clean_env, capture_output=True, text=True, timeout=60
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: [exp7879] phase=start event=flushed_start elapsed_s=0.002 completed_units=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7879_v684_contract_methods.py", line 843, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7879_v684_contract_methods.py", line 750, in main
+E             manifest = build_manifest(ROOT, scratch)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7879_v684_contract_methods.py", line 277, in build_manifest
+E             "tests": TASK_TESTS[number],
+E                      ~~~~~~~~~~^^^^^^^^
+E         KeyError: 7891
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...py", line 277, in build_manifest\n    "tests": TASK_TESTS[number],\n             ~~~~~~~~~~^^^^^^^^\nKeyError: 7891\n').returncode
+
+tests/python/test_experiment_7879_v684_contract_methods.py:116: AssertionError
+_______________ test_staged_match_and_wrong_active_are_distinct ________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_staged_match_and_wrong_ac0')
+
+    def test_staged_match_and_wrong_active_are_distinct(tmp_path):
+        """SCENARIO-REPORT-7879-V684-AUTHORITY tests both genuine authority routes."""
+        cli = owned()
+        staged = tmp_path / "staged.yaml"
+        staged.write_bytes(ACTIVE.read_bytes())
+>       matched = cli.inspect_authorities(DESIGN, staged, ACTIVE)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7879_v684_contract_methods.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7879_v684_contract_methods.py:138: in inspect_authorities
+    table, machine = parse_design(design.read_text(), milestone="2026.09.684")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ test_mutation_receipts_and_immutable_snapshots ________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_mutation_receipts_and_imm0')
+
+    def test_mutation_receipts_and_immutable_snapshots(tmp_path):
+        """SCENARIO-REPORT-7879-V684-SCOPE retains defects and exact source bytes."""
+        cli = owned()
+>       rows = cli.mutation_rows(DESIGN, ACTIVE)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7879_v684_contract_methods.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7879_v684_contract_methods.py:238: in mutation_rows
+    result = compare_contract(
+python/carnot/reporting/roadmap_contract.py:72: in compare_contract
+    table, machine = parse_design(text, milestone=milestone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_______________ test_manifest_import_and_coverage_failure_routes _______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_manifest_import_and_cover0')
+
+    def test_manifest_import_and_coverage_failure_routes(tmp_path):
+        """SCENARIO-REPORT-7879-V684-SCOPE rejects silent validation defects."""
+        cli = owned()
+>       manifest = cli.build_manifest(ROOT, tmp_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7879_v684_contract_methods.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+scratch = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_manifest_import_and_cover0')
+
+    def build_manifest(root: Path, scratch: Path) -> dict[str, Any]:
+        """Freeze real paths, current consumers, coverage includes and deadlines."""
+        active = yaml.safe_load((root / "research-roadmap.yaml").read_text())
+        scopes = {}
+        for task in active["tasks"]:
+            number = int(task["id"][3:7])
+            scopes[task["id"]] = {
+>               "tests": TASK_TESTS[number],
+                         ^^^^^^^^^^^^^^^^^^
+                "e2e": TASK_E2E.get(number, []),
+                "planned_owned_test": f"tests/python/test_experiment_{number}_v684_*.py",
+                "deadline_s": 900,
+                "classification": "future_required" if number != 7879 else "required",
+            }
+E           KeyError: 7891
+
+scripts/experiments/experiment_7879_v684_contract_methods.py:277: KeyError
+_______________ test_terminal_manifest_and_sealed_child_receipt ________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_terminal_manifest_and_sea0')
+
+    def test_terminal_manifest_and_sealed_child_receipt(tmp_path):
+        """SCENARIO-REPORT-7879-V684-SCOPE seals completed logs and exact argv."""
+        cli = owned()
+>       manifest = cli.build_manifest(ROOT, tmp_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7879_v684_contract_methods.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+scratch = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_terminal_manifest_and_sea0')
+
+    def build_manifest(root: Path, scratch: Path) -> dict[str, Any]:
+        """Freeze real paths, current consumers, coverage includes and deadlines."""
+        active = yaml.safe_load((root / "research-roadmap.yaml").read_text())
+        scopes = {}
+        for task in active["tasks"]:
+            number = int(task["id"][3:7])
+            scopes[task["id"]] = {
+>               "tests": TASK_TESTS[number],
+                         ^^^^^^^^^^^^^^^^^^
+                "e2e": TASK_E2E.get(number, []),
+                "planned_owned_test": f"tests/python/test_experiment_{number}_v684_*.py",
+                "deadline_s": 900,
+                "classification": "future_required" if number != 7879 else "required",
+            }
+E           KeyError: 7891
+
+scripts/experiments/experiment_7879_v684_contract_methods.py:277: KeyError
+______________ test_artifact_classifies_owned_failure_separately _______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_artifact_classifies_owned0')
+
+    def test_artifact_classifies_owned_failure_separately(tmp_path):
+        """SCENARIO-REPORT-7879-V684-AUTHORITY preserves failed owned checks."""
+        cli = owned()
+>       manifest = cli.build_manifest(ROOT, tmp_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7879_v684_contract_methods.py:223: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+scratch = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_artifact_classifies_owned0')
+
+    def build_manifest(root: Path, scratch: Path) -> dict[str, Any]:
+        """Freeze real paths, current consumers, coverage includes and deadlines."""
+        active = yaml.safe_load((root / "research-roadmap.yaml").read_text())
+        scopes = {}
+        for task in active["tasks"]:
+            number = int(task["id"][3:7])
+            scopes[task["id"]] = {
+>               "tests": TASK_TESTS[number],
+                         ^^^^^^^^^^^^^^^^^^
+                "e2e": TASK_E2E.get(number, []),
+                "planned_owned_test": f"tests/python/test_experiment_{number}_v684_*.py",
+                "deadline_s": 900,
+                "classification": "future_required" if number != 7879 else "required",
+            }
+E           KeyError: 7891
+
+scripts/experiments/experiment_7879_v684_contract_methods.py:277: KeyError
+_____________ test_supervised_validation_and_terminal_fail_closed ______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_supervised_validation_and0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4e924d5e0>
+
+    def test_supervised_validation_and_terminal_fail_closed(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-7879-V684-SCOPE runs both validation phases in private scratch."""
+        cli = owned()
+        scratch = tmp_path / "scratch"
+        output, raw = tmp_path / "candidate.json", tmp_path / "rows.json"
+        terminal_calls = 0
+        coverage_present = False
+    
+        def fake_run(root, commands, *, log_dir):
+            nonlocal terminal_calls
+            assert root == ROOT
+            log_dir.mkdir(parents=True, exist_ok=True)
+            terminal = any(command.name == "cold_replay" for command in commands)
+            if terminal:
+                terminal_calls += 1
+            elif coverage_present:
+                cli.atomic_json(
+                    scratch / "coverage.json",
+                    {"files": {"current.py": {"summary": {"num_statements": 1}}}},
+                )
+            receipts = []
+            for command in commands:
+                path = log_dir / f"{command.name}.log"
+                flagged = command.name == "adversarial_verify" and terminal_calls == 1
+                path.write_text(json.dumps({"flagged_count": int(flagged)}))
+                receipts.append(
+                    {
+                        "name": command.name,
+                        "command_argv": list(command.argv),
+                        "classification": "required",
+                        "passed": True,
+                        "log_path": str(path),
+                        "log_sha256": cli.sha256_file(path),
+                        "exit_code": 0,
+                    }
+                )
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run)
+        args = [
+            "--date",
+            "20260929",
+            "--output",
+            str(output),
+            "--raw",
+            str(raw),
+            "--scratch",
+            str(scratch),
+        ]
+>       assert cli.main(args) == 0
+               ^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7879_v684_contract_methods.py:314: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7879_v684_contract_methods.py:750: in main
+    manifest = build_manifest(ROOT, scratch)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+scratch = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_supervised_validation_and0/scratch')
+
+    def build_manifest(root: Path, scratch: Path) -> dict[str, Any]:
+        """Freeze real paths, current consumers, coverage includes and deadlines."""
+        active = yaml.safe_load((root / "research-roadmap.yaml").read_text())
+        scopes = {}
+        for task in active["tasks"]:
+            number = int(task["id"][3:7])
+            scopes[task["id"]] = {
+>               "tests": TASK_TESTS[number],
+                         ^^^^^^^^^^^^^^^^^^
+                "e2e": TASK_E2E.get(number, []),
+                "planned_owned_test": f"tests/python/test_experiment_{number}_v684_*.py",
+                "deadline_s": 900,
+                "classification": "future_required" if number != 7879 else "required",
+            }
+E           KeyError: 7891
+
+scripts/experiments/experiment_7879_v684_contract_methods.py:277: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp7879] phase=start event=flushed_start elapsed_s=0.001 completed_units=0
+_______ test_private_cli_rejects_invalid_scope_and_public_private_output _______
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_private_cli_rejects_inval0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4ea999070>
+
+    def test_private_cli_rejects_invalid_scope_and_public_private_output(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-7879-V684-SCOPE checks scope before dispatch."""
+        cli = owned()
+        with pytest.raises(SystemExit):
+            cli.main(["--no-validation"])
+        monkeypatch.setattr(cli, "validate_manifest", lambda manifest, root: ["missing_test"])
+        with pytest.raises(ValueError, match="invalid declared scope"):
+>           cli.main(
+                ["--output", str(tmp_path / "candidate.json"), "--scratch", str(tmp_path / "scratch")]
+            )
+
+tests/python/test_experiment_7879_v684_contract_methods.py:350: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7879_v684_contract_methods.py:750: in main
+    manifest = build_manifest(ROOT, scratch)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+scratch = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_private_cli_rejects_inval0/scratch')
+
+    def build_manifest(root: Path, scratch: Path) -> dict[str, Any]:
+        """Freeze real paths, current consumers, coverage includes and deadlines."""
+        active = yaml.safe_load((root / "research-roadmap.yaml").read_text())
+        scopes = {}
+        for task in active["tasks"]:
+            number = int(task["id"][3:7])
+            scopes[task["id"]] = {
+>               "tests": TASK_TESTS[number],
+                         ^^^^^^^^^^^^^^^^^^
+                "e2e": TASK_E2E.get(number, []),
+                "planned_owned_test": f"tests/python/test_experiment_{number}_v684_*.py",
+                "deadline_s": 900,
+                "classification": "future_required" if number != 7879 else "required",
+            }
+E           KeyError: 7891
+
+scripts/experiments/experiment_7879_v684_contract_methods.py:277: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp7879] phase=start event=flushed_start elapsed_s=0.001 completed_units=0
+[exp7879] phase=start event=flushed_start elapsed_s=0.002 completed_units=0
+----------------------------- Captured stderr call -----------------------------
+usage: pytest [-h] [--date DATE] [--output OUTPUT] [--raw RAW]
+              [--scratch SCRATCH] [--no-validation]
+              [--cold-replay COLD_REPLAY]
+pytest: error: private output required for --no-validation
+____________ test_ledger_keeps_missing_producers_and_gate_operands _____________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_ledger_keeps_missing_prod0')
+
+    def test_ledger_keeps_missing_producers_and_gate_operands(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7890-LEDGER: skip receipts never fill absent science."""
+        root = fixture_root(tmp_path)
+        skip = root / "results/experiment_7882_conductor_gate_blocked.json"
+        skip.write_text('{"reason":"upstream"}')
+>       ledger = cap.collect(root, "20260929")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7890_v684_capstone.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______________ test_gate_field_failure_differs_from_missing_field ______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_gate_field_failure_differ0')
+
+    def test_gate_field_failure_differs_from_missing_field(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7890-LEDGER: preserve actual false and absent fields."""
+        root = fixture_root(tmp_path)
+        path = root / "results/experiment_7880_v684_source_boundary.json"
+        path.write_text(json.dumps({"experiment_id": 7880, "source_boundary_ready_score": 0}))
+>       ledger = cap.collect(root, "20260929")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7890_v684_capstone.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+___________________ test_replay_rejects_changed_source_bytes ___________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_replay_rejects_changed_so0')
+
+    def test_replay_rejects_changed_source_bytes(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7890-REDUCTION: candidate hashes bind current bytes."""
+        root = fixture_root(tmp_path)
+>       candidate = cap.build_candidate(root, "20260929")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7890_v684_capstone.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v684_capstone.py:501: in build_candidate
+    ledger = collect(root, date)
+             ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+____________________ test_actual_import_roots_and_real_cli _____________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_actual_import_roots_and_r0')
+
+    def test_actual_import_roots_and_real_cli(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: both package roots are legitimate."""
+        imports = cap.resolve_imports(ROOT)
+        assert imports["carnot.reporting.v684_capstone"].endswith(
+            "python/carnot/reporting/v684_capstone.py"
+        )
+        assert imports["scripts.publication_gate"].endswith("scripts/publication_gate.py")
+        output = tmp_path / "candidate.json"
+        cmd = [
+            sys.executable,
+            str(ROOT / "scripts/experiments/experiment_7890_v684_capstone.py"),
+            "--date",
+            "20260929",
+            "--output",
+            str(output),
+            "--evidence-only",
+        ]
+        done = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=60, check=False)
+>       assert done.returncode == 0, done.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7890_v684_capstone.py", line 443, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7890_v684_capstone.py", line 434, in main
+E             atomic_json(output, build_candidate(args.root, args.date))
+E                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v684_capstone.py", line 501, in build_candidate
+E             ledger = collect(root, date)
+E                      ^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v684_capstone.py", line 197, in collect
+E             _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/roadmap_contract.py", line 55, in parse_design
+E             raise ValueError(f"V{version} JSON contract missing")
+E         ValueError: V684 JSON contract missing
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian... in parse_design\n    raise ValueError(f"V{version} JSON contract missing")\nValueError: V684 JSON contract missing\n').returncode
+
+tests/python/test_experiment_7890_v684_capstone.py:134: AssertionError
+__________________ test_private_producer_and_replay_mutations __________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_private_producer_and_repl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4eafd9940>
+
+    def test_private_producer_and_replay_mutations(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """SCENARIO-REPORT-7890-LEDGER: missing, malformed and failed bytes differ."""
+        root = fixture_root(tmp_path)
+        with pytest.raises(ValueError, match="v684_date_changed"):
+            cap.collect(root, "20260928")
+        original = cap.parse_design
+        monkeypatch.setattr(cap, "parse_design", lambda *args, **kwargs: ([], []))
+        with pytest.raises(ValueError, match="v684_contract_order_changed"):
+            cap.collect(root, "20260929")
+        monkeypatch.setattr(cap, "parse_design", original)
+        invalid = root / "results/experiment_7883_v684_decision_abstention.json"
+        invalid.write_text("not json")
+        prior_attempt = root / "results/raw/experiment_7890_v684_capstone/attempt1_disqualified.json"
+        prior_attempt.parent.mkdir(parents=True)
+        prior_attempt.write_text(
+            json.dumps(
+                {
+                    "run_date": "20260929",
+                    "validation_receipts": [
+                        {
+                            "name": "affected_pytest",
+                            "classification": "required",
+                            "passed": False,
+                            "exit_code": 1,
+                            "log_path": "/tmp/old.log",
+                            "log_sha256": "sha256:old",
+                        }
+                    ],
+                }
+            )
+        )
+        science = root / "results/experiment_7882_v684_energy_fit.json"
+        science.write_text(
+            json.dumps(
+                {
+                    "experiment_id": 7882,
+                    "task_id": "exp7882-energy-fit",
+                    "milestone": "2026.09.684",
+                    "run_date": "20260929",
+                    "flagged_adversarial": True,
+                    "verdict_class": "null",
+                    "validation_receipts": [
+                        {"name": "owned", "classification": "required", "passed": False, "exit_code": 1}
+                    ],
+                    "rows": [
+                        {
+                            "status": "completed",
+                            "family_id": "f",
+                            "arm": "head",
+                            "seed": 1,
+                            "original_human_label": 1,
+                            "label": 1,
+                            "probability": 0.8,
+                            "cost": 0.2,
+                        }
+                    ],
+                }
+            )
+        )
+>       ledger = cap.collect(root, "20260929")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7890_v684_capstone.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_________ test_current_cli_supervision_with_closed_child_logs[passing] _________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_current_cli_supervision_w0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4eaf60d70>
+mode = 'passing'
+
+    @pytest.mark.parametrize(
+        "mode",
+        [
+            "passing",
+            "required_failure",
+            "flagged",
+            "terminal_failure",
+            "replay_failure",
+            "recheck_failure",
+        ],
+    )
+    def test_current_cli_supervision_with_closed_child_logs(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    ) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: own failures and flags zero readiness."""
+        root = fixture_root(tmp_path / "repo")
+        private = tmp_path / "private"
+        private.mkdir()
+        calls = 0
+    
+        def fake_run_commands(
+            _root: Path, specs: list[object], *, log_dir: Path, heartbeat_s: float
+        ) -> list[dict[str, object]]:
+            nonlocal calls
+            calls += 1
+            log_dir.mkdir(parents=True, exist_ok=True)
+            receipts = []
+            for spec in specs:
+                name = spec.name  # type: ignore[attr-defined]
+                content = (
+                    json.dumps({"flagged_count": int(mode in {"flagged", "recheck_failure"})})
+                    if name == "adversarial_verify"
+                    else "FileNotFoundError"
+                    if name == "cli_missing_input"
+                    else "okay"
+                )
+                log = log_dir / f"{name}.log"
+                log.write_text(content)
+                receipts.append(
+                    {
+                        "name": name,
+                        "log_path": str(log),
+                        "log_sha256": cap.sha256_file(log),
+                        "scope": spec.scope,
+                        "duration_s": 0.01,  # type: ignore[attr-defined]
+                        "exit_code": 1 if name == "cli_missing_input" else 0,
+                        "passed": not (
+                            name == "cli_missing_input"
+                            or (mode == "required_failure" and name == "affected_pytest")
+                            or (mode == "terminal_failure" and name == "strict_rows" and calls == 2)
+                            or (mode == "recheck_failure" and name == "strict_rows" and calls == 3)
+                        ),
+                        "output_tail": content,
+                        "command_argv": list(spec.argv),
+                    }
+                )  # type: ignore[attr-defined]
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run_commands)
+        output = tmp_path / "terminal.json"
+        if mode == "replay_failure":
+            monkeypatch.setattr(cli, "cold_replay", lambda *_: ["changed"])
+            with pytest.raises(ValueError, match="terminal_cold_replay_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+        if mode == "recheck_failure":
+            with pytest.raises(ValueError, match="terminal_recheck_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+>       result = cli.run_current(root, "20260929", output, private)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7890_v684_capstone.py:418: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7890_v684_capstone.py:316: in run_current
+    value = build_candidate(root, date)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:501: in build_candidate
+    ledger = collect(root, date)
+             ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp7890] preflight_before_compute elapsed_s=228.216 completed_units=0
+____ test_current_cli_supervision_with_closed_child_logs[required_failure] _____
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_current_cli_supervision_w1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4eafda660>
+mode = 'required_failure'
+
+    @pytest.mark.parametrize(
+        "mode",
+        [
+            "passing",
+            "required_failure",
+            "flagged",
+            "terminal_failure",
+            "replay_failure",
+            "recheck_failure",
+        ],
+    )
+    def test_current_cli_supervision_with_closed_child_logs(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    ) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: own failures and flags zero readiness."""
+        root = fixture_root(tmp_path / "repo")
+        private = tmp_path / "private"
+        private.mkdir()
+        calls = 0
+    
+        def fake_run_commands(
+            _root: Path, specs: list[object], *, log_dir: Path, heartbeat_s: float
+        ) -> list[dict[str, object]]:
+            nonlocal calls
+            calls += 1
+            log_dir.mkdir(parents=True, exist_ok=True)
+            receipts = []
+            for spec in specs:
+                name = spec.name  # type: ignore[attr-defined]
+                content = (
+                    json.dumps({"flagged_count": int(mode in {"flagged", "recheck_failure"})})
+                    if name == "adversarial_verify"
+                    else "FileNotFoundError"
+                    if name == "cli_missing_input"
+                    else "okay"
+                )
+                log = log_dir / f"{name}.log"
+                log.write_text(content)
+                receipts.append(
+                    {
+                        "name": name,
+                        "log_path": str(log),
+                        "log_sha256": cap.sha256_file(log),
+                        "scope": spec.scope,
+                        "duration_s": 0.01,  # type: ignore[attr-defined]
+                        "exit_code": 1 if name == "cli_missing_input" else 0,
+                        "passed": not (
+                            name == "cli_missing_input"
+                            or (mode == "required_failure" and name == "affected_pytest")
+                            or (mode == "terminal_failure" and name == "strict_rows" and calls == 2)
+                            or (mode == "recheck_failure" and name == "strict_rows" and calls == 3)
+                        ),
+                        "output_tail": content,
+                        "command_argv": list(spec.argv),
+                    }
+                )  # type: ignore[attr-defined]
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run_commands)
+        output = tmp_path / "terminal.json"
+        if mode == "replay_failure":
+            monkeypatch.setattr(cli, "cold_replay", lambda *_: ["changed"])
+            with pytest.raises(ValueError, match="terminal_cold_replay_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+        if mode == "recheck_failure":
+            with pytest.raises(ValueError, match="terminal_recheck_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+>       result = cli.run_current(root, "20260929", output, private)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7890_v684_capstone.py:418: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7890_v684_capstone.py:316: in run_current
+    value = build_candidate(root, date)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:501: in build_candidate
+    ledger = collect(root, date)
+             ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp7890] preflight_before_compute elapsed_s=228.331 completed_units=0
+_________ test_current_cli_supervision_with_closed_child_logs[flagged] _________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_current_cli_supervision_w2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4eaf63d70>
+mode = 'flagged'
+
+    @pytest.mark.parametrize(
+        "mode",
+        [
+            "passing",
+            "required_failure",
+            "flagged",
+            "terminal_failure",
+            "replay_failure",
+            "recheck_failure",
+        ],
+    )
+    def test_current_cli_supervision_with_closed_child_logs(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    ) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: own failures and flags zero readiness."""
+        root = fixture_root(tmp_path / "repo")
+        private = tmp_path / "private"
+        private.mkdir()
+        calls = 0
+    
+        def fake_run_commands(
+            _root: Path, specs: list[object], *, log_dir: Path, heartbeat_s: float
+        ) -> list[dict[str, object]]:
+            nonlocal calls
+            calls += 1
+            log_dir.mkdir(parents=True, exist_ok=True)
+            receipts = []
+            for spec in specs:
+                name = spec.name  # type: ignore[attr-defined]
+                content = (
+                    json.dumps({"flagged_count": int(mode in {"flagged", "recheck_failure"})})
+                    if name == "adversarial_verify"
+                    else "FileNotFoundError"
+                    if name == "cli_missing_input"
+                    else "okay"
+                )
+                log = log_dir / f"{name}.log"
+                log.write_text(content)
+                receipts.append(
+                    {
+                        "name": name,
+                        "log_path": str(log),
+                        "log_sha256": cap.sha256_file(log),
+                        "scope": spec.scope,
+                        "duration_s": 0.01,  # type: ignore[attr-defined]
+                        "exit_code": 1 if name == "cli_missing_input" else 0,
+                        "passed": not (
+                            name == "cli_missing_input"
+                            or (mode == "required_failure" and name == "affected_pytest")
+                            or (mode == "terminal_failure" and name == "strict_rows" and calls == 2)
+                            or (mode == "recheck_failure" and name == "strict_rows" and calls == 3)
+                        ),
+                        "output_tail": content,
+                        "command_argv": list(spec.argv),
+                    }
+                )  # type: ignore[attr-defined]
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run_commands)
+        output = tmp_path / "terminal.json"
+        if mode == "replay_failure":
+            monkeypatch.setattr(cli, "cold_replay", lambda *_: ["changed"])
+            with pytest.raises(ValueError, match="terminal_cold_replay_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+        if mode == "recheck_failure":
+            with pytest.raises(ValueError, match="terminal_recheck_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+>       result = cli.run_current(root, "20260929", output, private)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7890_v684_capstone.py:418: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7890_v684_capstone.py:316: in run_current
+    value = build_candidate(root, date)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:501: in build_candidate
+    ledger = collect(root, date)
+             ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp7890] preflight_before_compute elapsed_s=228.446 completed_units=0
+____ test_current_cli_supervision_with_closed_child_logs[terminal_failure] _____
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_current_cli_supervision_w3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4ea96bec0>
+mode = 'terminal_failure'
+
+    @pytest.mark.parametrize(
+        "mode",
+        [
+            "passing",
+            "required_failure",
+            "flagged",
+            "terminal_failure",
+            "replay_failure",
+            "recheck_failure",
+        ],
+    )
+    def test_current_cli_supervision_with_closed_child_logs(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    ) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: own failures and flags zero readiness."""
+        root = fixture_root(tmp_path / "repo")
+        private = tmp_path / "private"
+        private.mkdir()
+        calls = 0
+    
+        def fake_run_commands(
+            _root: Path, specs: list[object], *, log_dir: Path, heartbeat_s: float
+        ) -> list[dict[str, object]]:
+            nonlocal calls
+            calls += 1
+            log_dir.mkdir(parents=True, exist_ok=True)
+            receipts = []
+            for spec in specs:
+                name = spec.name  # type: ignore[attr-defined]
+                content = (
+                    json.dumps({"flagged_count": int(mode in {"flagged", "recheck_failure"})})
+                    if name == "adversarial_verify"
+                    else "FileNotFoundError"
+                    if name == "cli_missing_input"
+                    else "okay"
+                )
+                log = log_dir / f"{name}.log"
+                log.write_text(content)
+                receipts.append(
+                    {
+                        "name": name,
+                        "log_path": str(log),
+                        "log_sha256": cap.sha256_file(log),
+                        "scope": spec.scope,
+                        "duration_s": 0.01,  # type: ignore[attr-defined]
+                        "exit_code": 1 if name == "cli_missing_input" else 0,
+                        "passed": not (
+                            name == "cli_missing_input"
+                            or (mode == "required_failure" and name == "affected_pytest")
+                            or (mode == "terminal_failure" and name == "strict_rows" and calls == 2)
+                            or (mode == "recheck_failure" and name == "strict_rows" and calls == 3)
+                        ),
+                        "output_tail": content,
+                        "command_argv": list(spec.argv),
+                    }
+                )  # type: ignore[attr-defined]
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run_commands)
+        output = tmp_path / "terminal.json"
+        if mode == "replay_failure":
+            monkeypatch.setattr(cli, "cold_replay", lambda *_: ["changed"])
+            with pytest.raises(ValueError, match="terminal_cold_replay_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+        if mode == "recheck_failure":
+            with pytest.raises(ValueError, match="terminal_recheck_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+>       result = cli.run_current(root, "20260929", output, private)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7890_v684_capstone.py:418: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7890_v684_capstone.py:316: in run_current
+    value = build_candidate(root, date)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:501: in build_candidate
+    ledger = collect(root, date)
+             ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp7890] preflight_before_compute elapsed_s=228.560 completed_units=0
+_____ test_current_cli_supervision_with_closed_child_logs[replay_failure] ______
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_current_cli_supervision_w4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4eaf62210>
+mode = 'replay_failure'
+
+    @pytest.mark.parametrize(
+        "mode",
+        [
+            "passing",
+            "required_failure",
+            "flagged",
+            "terminal_failure",
+            "replay_failure",
+            "recheck_failure",
+        ],
+    )
+    def test_current_cli_supervision_with_closed_child_logs(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    ) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: own failures and flags zero readiness."""
+        root = fixture_root(tmp_path / "repo")
+        private = tmp_path / "private"
+        private.mkdir()
+        calls = 0
+    
+        def fake_run_commands(
+            _root: Path, specs: list[object], *, log_dir: Path, heartbeat_s: float
+        ) -> list[dict[str, object]]:
+            nonlocal calls
+            calls += 1
+            log_dir.mkdir(parents=True, exist_ok=True)
+            receipts = []
+            for spec in specs:
+                name = spec.name  # type: ignore[attr-defined]
+                content = (
+                    json.dumps({"flagged_count": int(mode in {"flagged", "recheck_failure"})})
+                    if name == "adversarial_verify"
+                    else "FileNotFoundError"
+                    if name == "cli_missing_input"
+                    else "okay"
+                )
+                log = log_dir / f"{name}.log"
+                log.write_text(content)
+                receipts.append(
+                    {
+                        "name": name,
+                        "log_path": str(log),
+                        "log_sha256": cap.sha256_file(log),
+                        "scope": spec.scope,
+                        "duration_s": 0.01,  # type: ignore[attr-defined]
+                        "exit_code": 1 if name == "cli_missing_input" else 0,
+                        "passed": not (
+                            name == "cli_missing_input"
+                            or (mode == "required_failure" and name == "affected_pytest")
+                            or (mode == "terminal_failure" and name == "strict_rows" and calls == 2)
+                            or (mode == "recheck_failure" and name == "strict_rows" and calls == 3)
+                        ),
+                        "output_tail": content,
+                        "command_argv": list(spec.argv),
+                    }
+                )  # type: ignore[attr-defined]
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run_commands)
+        output = tmp_path / "terminal.json"
+        if mode == "replay_failure":
+            monkeypatch.setattr(cli, "cold_replay", lambda *_: ["changed"])
+            with pytest.raises(ValueError, match="terminal_cold_replay_failed"):
+>               cli.run_current(root, "20260929", output, private)
+
+tests/python/test_experiment_7890_v684_capstone.py:412: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7890_v684_capstone.py:316: in run_current
+    value = build_candidate(root, date)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:501: in build_candidate
+    ledger = collect(root, date)
+             ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_current_cli_supervision_w4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4eaf62210>
+mode = 'replay_failure'
+
+    @pytest.mark.parametrize(
+        "mode",
+        [
+            "passing",
+            "required_failure",
+            "flagged",
+            "terminal_failure",
+            "replay_failure",
+            "recheck_failure",
+        ],
+    )
+    def test_current_cli_supervision_with_closed_child_logs(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    ) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: own failures and flags zero readiness."""
+        root = fixture_root(tmp_path / "repo")
+        private = tmp_path / "private"
+        private.mkdir()
+        calls = 0
+    
+        def fake_run_commands(
+            _root: Path, specs: list[object], *, log_dir: Path, heartbeat_s: float
+        ) -> list[dict[str, object]]:
+            nonlocal calls
+            calls += 1
+            log_dir.mkdir(parents=True, exist_ok=True)
+            receipts = []
+            for spec in specs:
+                name = spec.name  # type: ignore[attr-defined]
+                content = (
+                    json.dumps({"flagged_count": int(mode in {"flagged", "recheck_failure"})})
+                    if name == "adversarial_verify"
+                    else "FileNotFoundError"
+                    if name == "cli_missing_input"
+                    else "okay"
+                )
+                log = log_dir / f"{name}.log"
+                log.write_text(content)
+                receipts.append(
+                    {
+                        "name": name,
+                        "log_path": str(log),
+                        "log_sha256": cap.sha256_file(log),
+                        "scope": spec.scope,
+                        "duration_s": 0.01,  # type: ignore[attr-defined]
+                        "exit_code": 1 if name == "cli_missing_input" else 0,
+                        "passed": not (
+                            name == "cli_missing_input"
+                            or (mode == "required_failure" and name == "affected_pytest")
+                            or (mode == "terminal_failure" and name == "strict_rows" and calls == 2)
+                            or (mode == "recheck_failure" and name == "strict_rows" and calls == 3)
+                        ),
+                        "output_tail": content,
+                        "command_argv": list(spec.argv),
+                    }
+                )  # type: ignore[attr-defined]
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run_commands)
+        output = tmp_path / "terminal.json"
+        if mode == "replay_failure":
+            monkeypatch.setattr(cli, "cold_replay", lambda *_: ["changed"])
+>           with pytest.raises(ValueError, match="terminal_cold_replay_failed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'terminal_cold_replay_failed'
+E             Actual message: 'V684 JSON contract missing'
+
+tests/python/test_experiment_7890_v684_capstone.py:411: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7890] preflight_before_compute elapsed_s=228.698 completed_units=0
+_____ test_current_cli_supervision_with_closed_child_logs[recheck_failure] _____
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_current_cli_supervision_w5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4eafd8050>
+mode = 'recheck_failure'
+
+    @pytest.mark.parametrize(
+        "mode",
+        [
+            "passing",
+            "required_failure",
+            "flagged",
+            "terminal_failure",
+            "replay_failure",
+            "recheck_failure",
+        ],
+    )
+    def test_current_cli_supervision_with_closed_child_logs(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    ) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: own failures and flags zero readiness."""
+        root = fixture_root(tmp_path / "repo")
+        private = tmp_path / "private"
+        private.mkdir()
+        calls = 0
+    
+        def fake_run_commands(
+            _root: Path, specs: list[object], *, log_dir: Path, heartbeat_s: float
+        ) -> list[dict[str, object]]:
+            nonlocal calls
+            calls += 1
+            log_dir.mkdir(parents=True, exist_ok=True)
+            receipts = []
+            for spec in specs:
+                name = spec.name  # type: ignore[attr-defined]
+                content = (
+                    json.dumps({"flagged_count": int(mode in {"flagged", "recheck_failure"})})
+                    if name == "adversarial_verify"
+                    else "FileNotFoundError"
+                    if name == "cli_missing_input"
+                    else "okay"
+                )
+                log = log_dir / f"{name}.log"
+                log.write_text(content)
+                receipts.append(
+                    {
+                        "name": name,
+                        "log_path": str(log),
+                        "log_sha256": cap.sha256_file(log),
+                        "scope": spec.scope,
+                        "duration_s": 0.01,  # type: ignore[attr-defined]
+                        "exit_code": 1 if name == "cli_missing_input" else 0,
+                        "passed": not (
+                            name == "cli_missing_input"
+                            or (mode == "required_failure" and name == "affected_pytest")
+                            or (mode == "terminal_failure" and name == "strict_rows" and calls == 2)
+                            or (mode == "recheck_failure" and name == "strict_rows" and calls == 3)
+                        ),
+                        "output_tail": content,
+                        "command_argv": list(spec.argv),
+                    }
+                )  # type: ignore[attr-defined]
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run_commands)
+        output = tmp_path / "terminal.json"
+        if mode == "replay_failure":
+            monkeypatch.setattr(cli, "cold_replay", lambda *_: ["changed"])
+            with pytest.raises(ValueError, match="terminal_cold_replay_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+        if mode == "recheck_failure":
+            with pytest.raises(ValueError, match="terminal_recheck_failed"):
+>               cli.run_current(root, "20260929", output, private)
+
+tests/python/test_experiment_7890_v684_capstone.py:416: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7890_v684_capstone.py:316: in run_current
+    value = build_candidate(root, date)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:501: in build_candidate
+    ledger = collect(root, date)
+             ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v684_capstone.py:197: in collect
+    _, tasks = parse_design(design.read_text(), milestone="2026.09.684")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v685: Measured Decisions and Retained Confidence\n\n**Created:** 2026-09-29  \n**Milestone:...CS": [], "inference_substrate_class": "no_model_load", "gated_on": []}\n  ]\n}\n```\n<!-- V685_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V684 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20260929T194442-3427863-b552f65b/test_current_cli_supervision_w5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd4eafd8050>
+mode = 'recheck_failure'
+
+    @pytest.mark.parametrize(
+        "mode",
+        [
+            "passing",
+            "required_failure",
+            "flagged",
+            "terminal_failure",
+            "replay_failure",
+            "recheck_failure",
+        ],
+    )
+    def test_current_cli_supervision_with_closed_child_logs(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    ) -> None:
+        """SCENARIO-REPORT-7890-TERMINAL: own failures and flags zero readiness."""
+        root = fixture_root(tmp_path / "repo")
+        private = tmp_path / "private"
+        private.mkdir()
+        calls = 0
+    
+        def fake_run_commands(
+            _root: Path, specs: list[object], *, log_dir: Path, heartbeat_s: float
+        ) -> list[dict[str, object]]:
+            nonlocal calls
+            calls += 1
+            log_dir.mkdir(parents=True, exist_ok=True)
+            receipts = []
+            for spec in specs:
+                name = spec.name  # type: ignore[attr-defined]
+                content = (
+                    json.dumps({"flagged_count": int(mode in {"flagged", "recheck_failure"})})
+                    if name == "adversarial_verify"
+                    else "FileNotFoundError"
+                    if name == "cli_missing_input"
+                    else "okay"
+                )
+                log = log_dir / f"{name}.log"
+                log.write_text(content)
+                receipts.append(
+                    {
+                        "name": name,
+                        "log_path": str(log),
+                        "log_sha256": cap.sha256_file(log),
+                        "scope": spec.scope,
+                        "duration_s": 0.01,  # type: ignore[attr-defined]
+                        "exit_code": 1 if name == "cli_missing_input" else 0,
+                        "passed": not (
+                            name == "cli_missing_input"
+                            or (mode == "required_failure" and name == "affected_pytest")
+                            or (mode == "terminal_failure" and name == "strict_rows" and calls == 2)
+                            or (mode == "recheck_failure" and name == "strict_rows" and calls == 3)
+                        ),
+                        "output_tail": content,
+                        "command_argv": list(spec.argv),
+                    }
+                )  # type: ignore[attr-defined]
+            return receipts
+    
+        monkeypatch.setattr(cli, "run_commands", fake_run_commands)
+        output = tmp_path / "terminal.json"
+        if mode == "replay_failure":
+            monkeypatch.setattr(cli, "cold_replay", lambda *_: ["changed"])
+            with pytest.raises(ValueError, match="terminal_cold_replay_failed"):
+                cli.run_current(root, "20260929", output, private)
+            return
+        if mode == "recheck_failure":
+>           with pytest.raises(ValueError, match="terminal_recheck_failed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'terminal_recheck_failed'
+E             Actual message: 'V684 JSON contract missing'
+
+tests/python/test_experiment_7890_v684_capstone.py:415: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7890] preflight_before_compute elapsed_s=228.825 completed_units=0
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_missing_stage_is_terminal_and_active_is_real
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[count]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[order]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[id]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[title]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[phase]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[deliverable]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[MODEL_SPECS]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[inference_substrate_class]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[gated_on]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_contract_mutations_fail[prior_failures]
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_manifest_rejects_nonexistent_arc_empty_coverage_and_venue
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_cli_cold_replay_and_fields
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_staged_match_and_wrong_active_are_distinct
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_mutation_receipts_and_immutable_snapshots
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_manifest_import_and_coverage_failure_routes
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_terminal_manifest_and_sealed_child_receipt
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_artifact_classifies_owned_failure_separately
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_supervised_validation_and_terminal_fail_closed
+FAILED tests/python/test_experiment_7879_v684_contract_methods.py::test_private_cli_rejects_invalid_scope_and_public_private_output
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_ledger_keeps_missing_producers_and_gate_operands
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_gate_field_failure_differs_from_missing_field
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_replay_rejects_changed_source_bytes
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_actual_import_roots_and_real_cli
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_private_producer_and_replay_mutations
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_current_cli_supervision_with_closed_child_logs[passing]
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_current_cli_supervision_with_closed_child_logs[required_failure]
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_current_cli_supervision_with_closed_child_logs[flagged]
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_current_cli_supervision_with_closed_child_logs[terminal_failure]
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_current_cli_supervision_with_closed_child_logs[replay_failure]
+FAILED tests/python/test_experiment_7890_v684_capstone.py::test_current_cli_supervision_with_closed_child_logs[recheck_failure]
+31 failed, 52 passed in 254.96s (0:04:14)

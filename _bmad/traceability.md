@@ -1,6 +1,65 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-27
+**Last Updated:** 2026-09-29
+**Operational Note:** REQ-REPORT-7892-V685 and its custody, validation and
+terminal scenarios map to `python/carnot/reporting/source_boundary_7892.py`,
+`scripts/experiments/experiment_7892_v685_source_boundary.py`, and
+`tests/python/test_source_boundary_7892.py`. Direct file-path CLI execution now
+resolves the qualified V684 producer import; a sparse 50 MiB shard test covers
+the required size rejection. The dated producer passes 67/67 affected tests,
+17/17 required validation receipts, E2E-015/016 and terminal checks. Combined
+unit and CLI coverage measures 625/625 statements in its four owned files;
+the conductor smart subset passes 135/135 tests (one existing warning), and
+`results/experiment_7892_v685_source_boundary.json` records readiness 1.
+**Operational Note:** REQ-REPORT-7891-V685 and its lifecycle/validation
+scenarios map to `python/carnot/reporting/v685_authority_lifecycle.py`,
+`scripts/experiments/experiment_7891_v685_authority_lifecycle.py`, and
+`tests/python/test_experiment_7891_v685_authority_lifecycle.py`. Frozen V684
+authorities also restore the Exp7890 capstone regression. The current CLI
+records 7/7 passing required receipts, 12/12 passing mutations, terminal
+validators, and authority readiness 1. The reducer and CLI have 85/85 and
+180/180 statement coverage, respectively. E2E-018 runs the real CLI and private
+positive/negative replay. The current manifest passes 91/91 affected tests and
+106/106 consumers. The repository-wide Python diagnostic was interrupted after
+7,178 passes and 50 failures in other suites; repository-wide spec coverage
+also remains red for legacy untraced tests. Neither check qualifies as a
+repository-wide pass.
+**Operational Note:** REQ-REPORT-7879-V684 and its AUTHORITY/SCOPE scenarios map
+the direct Exp7879 CLI, exact import paths, private scratch, sealed validation
+and cold replay to `tests/python/test_experiment_7879_v684_contract_methods.py`.
+The conductor smart subset passes 102/102 and combined unit plus direct CLI
+coverage reaches 256/256 statements. The broader prospective manifest still
+finds V681 tests tied to the absent live staged roadmap; it is not qualified
+as passing.
+**Operational Note:** REQ-REPORT-7878 and SCENARIO-REPORT-7878-REPLAY map the
+V683 capstone's direct script-path import to
+`tests/python/test_experiment_7878_v683_capstone.py`. The CLI now resolves
+`scripts.publication_gate` in a fresh process. The conductor-equivalent subset
+passes 86/86, adjacent V683 tests pass 75/75, and the capstone reducer has
+126/126 statement coverage. Private CLI creation and cold replay pass; the
+earlier disqualified result retains its old source hash pending a separate
+terminal validation run.
+**Operational Note:** REQ-REPORT-7874 and SCENARIO-REPORT-7874-GATE map the
+V683 receipt reducer and direct script-path CLI to
+`tests/python/test_arc_supervisor_delta_7874.py` and E2E-017. The CLI resolves
+its V682 sibling in both package imports and direct execution. The 87-test
+conductor-equivalent subset passes; the new reducer has 75/75 statements
+covered by focused tests.
+**Operational Note:** REQ-REPORT-7852 and SCENARIO-REPORT-7852-TERMINAL map
+the direct script-path public fixture to
+`tests/python/test_source_boundary_7852.py` and E2E-015. The sibling producer
+import now resolves during direct CLI execution; the label-bearing fixture
+still fails closed. The 60 nearby tests pass, and the new identity module has
+13/13 statements covered by its focused tests.
+**Operational Note:** REQ-REPORT-7817 and REQ-ARC-WMTE-7817 map the frozen
+V679 command manifest, direct SDK qualification wrapper, dispatcher, and
+14 focused scenario tests to the Exp7817 files. The recorded-entrypoint repair
+keeps manifest provenance relative to its source root when outputs are private.
+The coverage combine command now names the two completed data files. The
+affected closure passes 161/161 tests, the new module and CLI cover 383/383
+statements, and E2E-009/011/013 plus the offline E3 smoke pass. The rerun
+publishes readiness 1 with no benefit credit; its separate repository-wide
+diagnostic timed out at 180 seconds and is recorded as failed health.
 **Operational Note:** REQ-REPORT-7752 and SCENARIO-REPORT-7752-REPLAY map the
 V674 capstone reducer and direct CLI to
 `tests/python/test_experiment_7752_v674_capstone.py`. The CLI now resolves the
@@ -3367,3 +3426,30 @@ registered under the original V674 tasks.
   Exp7759 tests pass 36/36; the changed module and CLI have 260/260 statements
   covered. Full Python collection has 18 errors, so the artifact records
   readiness zero. The CPU fixture establishes transport conformance only.
+
+## Exp7862 board custody repair — 2026-09-29
+
+- REQ-REPORT-7862 and SCENARIO-REPORT-7862-CUSTODY map to
+  `python/carnot/reporting/experiment_7862_v682_hardware_evidence.py` and
+  `tests/python/test_experiment_7862_v682_hardware_evidence.py`.
+- The required historical JSON reader now records a failed `schema_json` or
+  `board_rows.schema` operand for malformed input. The custody test verifies
+  both terminal blocked paths. The conductor smart subset passes 90/90;
+  combined unit and real CLI runs cover all 244 statements in the changed
+  module and CLI. The refreshed artifact passes all 14 required checks and
+  cold replay; repository health times out as a separate diagnostic.
+
+## Exp7868 checkpoint identity repair — 2026-09-29
+
+- REQ-REPORT-7868-V683 and SCENARIO-REPORT-7868-TERMINAL map to
+  `python/carnot/experiment_7868_v683_intervention_protocol.py` and
+  `tests/python/test_experiment_7868_v683_intervention_protocol.py`.
+- The checkpoint filename follows the fixture row, reply, finish reason and
+  seed. The stored identity also binds driver and protocol hashes, rejecting
+  changed code or checkpoint contents. Cold replay rejects altered fixture
+  bytes. The original failed checkpoint lookup now passes unchanged.
+- The conductor-equivalent subset passes 101/101; the affected test file
+  passes 20/20. Combined unit and CLI coverage is 310/310 statements (100%).
+  Scoped spec coverage, Ruff check/format, strict mypy, fixture CLI and cold
+  replay pass. The repository-wide suite showed failures before it was stopped
+  near 5%; repository-wide spec coverage reports 1,142 untraced tests.

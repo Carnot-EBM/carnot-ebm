@@ -1,0 +1,201 @@
+{
+  "affected_modules": [
+    "python/carnot/experiment_7835_v680_independent_evidence_audit.py",
+    "scripts/experiments/experiment_7835_v680_independent_evidence_audit.py"
+  ],
+  "affected_tests": [
+    "tests/python/test_experiment_7835_v680_independent_evidence_audit.py",
+    "tests/python/test_experiment_7821_v679_independent_evidence_audit.py",
+    "tests/python/test_experiment_7303_v642_validation_scope.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7835_v680_independent_evidence_audit.py",
+        "tests/python/test_experiment_7821_v679_independent_evidence_audit.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "focused_pytest",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "classification": "required",
+      "name": "full_python_pytest",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=results/raw/experiment_7835_v680_independent_evidence_audit/.coverage.tests",
+        "--include=*/experiment_7835_v680_independent_evidence_audit.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7835_v680_independent_evidence_audit.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "coverage_tests",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=results/raw/experiment_7835_v680_independent_evidence_audit/.coverage.cli",
+        "--include=*/experiment_7835_v680_independent_evidence_audit.py",
+        "scripts/experiments/experiment_7835_v680_independent_evidence_audit.py",
+        "--date",
+        "20260928",
+        "--check-only",
+        "results/raw/experiment_7835_v680_independent_evidence_audit/candidate.json"
+      ],
+      "classification": "required",
+      "name": "coverage_cli",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/coverage",
+        "combine",
+        "--data-file=results/raw/experiment_7835_v680_independent_evidence_audit/.coverage.combined",
+        "results/raw/experiment_7835_v680_independent_evidence_audit/.coverage.tests",
+        "results/raw/experiment_7835_v680_independent_evidence_audit/.coverage.cli"
+      ],
+      "classification": "required",
+      "name": "coverage_combine",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--data-file=results/raw/experiment_7835_v680_independent_evidence_audit/.coverage.combined",
+        "--include=*/experiment_7835_v680_independent_evidence_audit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "name": "coverage_report",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7835_v680_independent_evidence_audit.py",
+        "scripts/experiments/experiment_7835_v680_independent_evidence_audit.py",
+        "tests/python/test_experiment_7835_v680_independent_evidence_audit.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7835_v680_independent_evidence_audit.py",
+        "scripts/experiments/experiment_7835_v680_independent_evidence_audit.py",
+        "tests/python/test_experiment_7835_v680_independent_evidence_audit.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7835_v680_independent_evidence_audit.py",
+        "scripts/experiments/experiment_7835_v680_independent_evidence_audit.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7835_v680_independent_evidence_audit.py"
+      ],
+      "classification": "required",
+      "name": "spec_coverage",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7835_v680_independent_evidence_audit.py",
+        "--date",
+        "20260928",
+        "--check-only",
+        "results/raw/experiment_7835_v680_independent_evidence_audit/candidate.json"
+      ],
+      "classification": "required",
+      "name": "real_cli_e2e",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7835_v680_independent_evidence_audit.py",
+        "--date",
+        "20260928",
+        "--check-only",
+        "results/raw/experiment_7835_v680_independent_evidence_audit/candidate.json"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "results/raw/experiment_7835_v680_independent_evidence_audit/candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "results/raw/experiment_7835_v680_independent_evidence_audit/candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_row_lint",
+      "timeout_s": 600
+    }
+  ],
+  "schema": "carnot.exp7835.validation.v1"
+}

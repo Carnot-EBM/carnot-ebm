@@ -1,0 +1,95 @@
+{
+  "attempt_identity": "attempt-6859",
+  "deduplication": {
+    "byte_identical_count": 0,
+    "conflicting_count": 0,
+    "conflicts": []
+  },
+  "game_id": "fixture-game",
+  "rows": [
+    {
+      "action_changed": null,
+      "agent_visible": true,
+      "attempt_identity": "attempt-6859",
+      "causal_eligible": false,
+      "decision_point_identity": "decision-1",
+      "exact_outcome": false,
+      "first_party": true,
+      "game_id": "fixture-game",
+      "gap_kind": "unknown_tool",
+      "hops": {
+        "agent_delivery": {
+          "hop_identity": "sha256:9d8badb789734691fe81923b82cbce9697d0438ba424042b463dcceee810a680",
+          "hop_kind": "agent_delivery",
+          "payload": {
+            "agent_visible": true,
+            "visible_text": "visible"
+          },
+          "payload_sha256": "sha256:1c0497b994c451a6e791062b6d4dfffeab44b38ba30f384828e40a1894cf31bc",
+          "previous_hop_identity": "sha256:30136749470b51ec4cc9d7f617bfb62f4353529b25c5346e17e83c6d2363c3e8",
+          "receipt_identity": "sha256:e0b98de69b1c4cfc32c1a057c79c2c2663e22359e70506369949d1096a6c27e8",
+          "source_sha256": "sha256:612a231cfccd058e999807bf6c47551e5d3dade117ed40065b7d4acabc71ae1a",
+          "timestamp": "2026-09-01T00:00:04Z"
+        },
+        "gap_detection": {
+          "hop_identity": "sha256:976a1fd349d5c1eb214cfcb38aa021b4494f3c5b189e47bd87acf22561400417",
+          "hop_kind": "gap_detection",
+          "payload": {
+            "gap_kind": "unknown_tool",
+            "requested_tool": "missing_grid_tool"
+          },
+          "payload_sha256": "sha256:8b3e6a9f420af856fba7bb3bd3ad1c7b37153a5639e925ab97879fdf33344431",
+          "previous_hop_identity": null,
+          "receipt_identity": "sha256:e0b98de69b1c4cfc32c1a057c79c2c2663e22359e70506369949d1096a6c27e8",
+          "source_sha256": "sha256:5b3df798e90344ff75077e12fce8aaa7bb5e71d6d719fe64beddf5482f5cd8eb",
+          "timestamp": "2026-09-01T00:00:01Z"
+        },
+        "request": {
+          "hop_identity": "sha256:1174775a42351baed1579b3db944e3b4107c146f0a0d0c5894a5dd6a3afb07c4",
+          "hop_kind": "request",
+          "payload": {
+            "arguments": "{\"region\": 3}",
+            "decision_point_identity": "decision-1",
+            "requested_tool": "missing_grid_tool"
+          },
+          "payload_sha256": "sha256:97065634434405a66ef4cfc85eb2cb253de98d05512b27b602df3a500996acdc",
+          "previous_hop_identity": "sha256:976a1fd349d5c1eb214cfcb38aa021b4494f3c5b189e47bd87acf22561400417",
+          "receipt_identity": "sha256:e0b98de69b1c4cfc32c1a057c79c2c2663e22359e70506369949d1096a6c27e8",
+          "source_sha256": "sha256:5b3df798e90344ff75077e12fce8aaa7bb5e71d6d719fe64beddf5482f5cd8eb",
+          "timestamp": "2026-09-01T00:00:02Z"
+        },
+        "tool_response": {
+          "hop_identity": "sha256:30136749470b51ec4cc9d7f617bfb62f4353529b25c5346e17e83c6d2363c3e8",
+          "hop_kind": "tool_response",
+          "payload": {
+            "request_rejected": true,
+            "response": {
+              "error": "unknown tool 'missing_grid_tool'; available: ['run_engine_on_transitions', 'query_region', 'diff_grids', 'run_goal_on_states', 'find_objects', 'list_transitions']",
+              "ok": false
+            }
+          },
+          "payload_sha256": "sha256:36b97d4a5d4705866807b4bcf1b865e8beb8198f77855f61de41110fe802bdf1",
+          "previous_hop_identity": "sha256:1174775a42351baed1579b3db944e3b4107c146f0a0d0c5894a5dd6a3afb07c4",
+          "receipt_identity": "sha256:e0b98de69b1c4cfc32c1a057c79c2c2663e22359e70506369949d1096a6c27e8",
+          "source_sha256": "sha256:5b3df798e90344ff75077e12fce8aaa7bb5e71d6d719fe64beddf5482f5cd8eb",
+          "timestamp": "2026-09-01T00:00:03Z"
+        }
+      },
+      "join_complete": false,
+      "levels_after": null,
+      "levels_before": null,
+      "live_reachable": false,
+      "next_action_recorded": false,
+      "progress": null,
+      "provenance_class": "fixture",
+      "quarantine_reason": null,
+      "receipt_identity": "sha256:e0b98de69b1c4cfc32c1a057c79c2c2663e22359e70506369949d1096a6c27e8",
+      "request_rejected": true,
+      "requested_tool": "missing_grid_tool",
+      "response_transported": true,
+      "response_used": null,
+      "valid_headroom": false
+    }
+  ],
+  "schema": "carnot.arc.first_party_tool_gap_receipt.v1"
+}

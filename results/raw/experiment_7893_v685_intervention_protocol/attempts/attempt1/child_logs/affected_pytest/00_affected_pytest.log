@@ -1,0 +1,474 @@
+...F.................................F.................FF...F......F     [100%]
+=================================== FAILURES ===================================
+____________________ test_scenario_report_7881_fixture_cli _____________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7881_fixt0')
+
+    def test_scenario_report_7881_fixture_cli(tmp_path: Path) -> None:
+        """The new script owns fixture success and cold replay routes."""
+        import subprocess
+        import sys
+    
+        script = (
+            Path(__file__).resolve().parents[2]
+            / "scripts/experiments/experiment_7881_v684_intervention_protocol.py"
+        )
+        path = tmp_path / "fixture.json"
+        for option in ("--fixture-e2e", "--cold-replay"):
+            result = subprocess.run(
+                [sys.executable, "-u", str(script), "--date", "20260929", option, str(path)],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: [exp7881] phase=fixtures event=begin elapsed_s=0.000 completed_units=0
+E             Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7881_v684_intervention_protocol.py", line 6, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7881_v684_intervention_protocol.py", line 984, in main
+E                 measured = write_fixtures(args.fixture_e2e, args.fixture_e2e.parent / "checkpoints")
+E                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7881_v684_intervention_protocol.py", line 503, in write_fixtures
+E                 atomic_json(checkpoint, {"identity": identity, "row": case})
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E                 temporary.replace(path)
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E                 os.replace(self, target)
+E               File "/tmp/carnot-child-results-guard-3d5wgjut/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7881_fixt0/checkpoints/.e63962a6d4a66fad69ef7ca20e09742f0e0767a034950a01096c4913f7730a17.json.tmp-3561278' -> '/tmp/carnot-pytest-artifacts-3ljr1p6r/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7881_fixt0/checkpoints/e63962a6d4a66fad69ef7ca20e09742f0e0767a034950a01096c4913f7730a17.json'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...test_scenario_report_7881_fixt0/checkpoints/e63962a6d4a66fad69ef7ca20e09742f0e0767a034950a01096c4913f7730a17.json\'\n').returncode
+
+tests/python/test_experiment_7881_v684_intervention_protocol.py:131: AssertionError
+_____________________ test_scenario_report_7868_cli_routes _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f59e01634a0>
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7868_cli_0')
+
+    def test_scenario_report_7868_cli_routes(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+        """Actual CLI success and failure return the observed process status."""
+        import os
+        import subprocess
+    
+        from carnot import experiment_7868_v683_intervention_protocol as exp
+    
+        script = exp.ROOT / "scripts/experiments/experiment_7868_v683_intervention_protocol.py"
+        env = {
+            **os.environ,
+            "PYTHONPATH": f"{exp.ROOT / 'python'}:{exp.ROOT}",
+            "CARNOT_FORCE_LIVE": "1",
+            "JAX_PLATFORMS": "cpu",
+        }
+        fixture = tmp_path / "cli.json"
+        good = subprocess.run(
+            [
+                str(exp.ROOT / ".venv/bin/python"),
+                "-u",
+                str(script),
+                "--date",
+                "20260929",
+                "--fixture-e2e",
+                str(fixture),
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+>       assert good.returncode == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...test_scenario_report_7868_cli_0/checkpoints/c2ebc229b80e9f1f282158ce499fd015eeba544039daa818b46a946ac3587274.json\'\n').returncode
+
+tests/python/test_experiment_7868_v683_intervention_protocol.py:429: AssertionError
+_______________ test_scenario_report_7839_fixture_and_direct_cli _______________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7839_fixt0')
+
+    def test_scenario_report_7839_fixture_and_direct_cli(tmp_path: Path) -> None:
+        """The independent fixture and real CLI run without loading a model."""
+        from carnot.verify import source_interventions as new
+    
+        row = {
+            "family_id": "fixture",
+            "complete_source": "One here. Two here. Three here.",
+            "complete_response": "One here.",
+        }
+        row["source_sha256"] = new.digest(row["complete_source"].encode())
+        row["response_sha256"] = new.digest(row["complete_response"].encode())
+        reply = {
+            "model": new.MODEL_ID,
+            "choices": [
+                {
+                    "message": {"content": '{"unsupported_probability":0.2,"source_sentence_id":0}'},
+                    "finish_reason": "stop",
+                }
+            ],
+            "usage": {"completion_tokens": 12},
+        }
+    
+        def visible_reply(payload: dict) -> dict:
+            body = json.loads(payload["messages"][1]["content"])
+            witness = body["source_sentence_offsets"][0]["source_sentence_id"]
+            return {
+                **reply,
+                "choices": [
+                    {
+                        "message": {
+                            "content": json.dumps(
+                                {"unsupported_probability": 0.2, "source_sentence_id": witness}
+                            )
+                        },
+                        "finish_reason": "stop",
+                    }
+                ],
+            }
+    
+        rows = new.capture_fixture(row, new.protocol([], seed=68101), visible_reply, lambda _: 4)
+        assert [item["status"] for item in rows] == ["completed"] * 3
+        assert rows[1]["deleted_sentence_id"] == 0
+        assert rows[2]["deleted_sentence_id"] in {1, 2}
+        wrong = new.capture_fixture(
+            row, new.protocol([], seed=68101), lambda payload: {**reply, "model": "wrong"}, lambda _: 4
+        )
+        assert wrong[0]["status"] == "wrong_model"
+        assert all(item["status"].startswith("unstarted") for item in wrong[1:])
+        timed = new.capture_fixture(
+            row,
+            new.protocol([], seed=68101),
+            lambda payload: (_ for _ in ()).throw(TimeoutError()),
+            lambda _: 4,
+        )
+        assert timed[0]["status"] == "timeout"
+        root = Path(__file__).resolve().parents[2]
+        process = subprocess.run(
+            [
+                sys.executable,
+                "-u",
+                str(root / "scripts/experiments/experiment_7839_v681_intervention_protocol.py"),
+                "--date",
+                "20260928",
+                "--fixture-e2e",
+                str(tmp_path / "fixture.json"),
+            ],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+>       assert process.returncode == 0, process.stdout + process.stderr
+E       AssertionError: [exp7839] phase=fixture event=batch elapsed_s=0.000 completed_units=8
+E         [exp7839] phase=fixture event=batch elapsed_s=0.000 completed_units=16
+E         [exp7839] phase=fixture event=batch elapsed_s=0.000 completed_units=24
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7839_v681_intervention_protocol.py", line 7, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7839_v681_intervention_protocol.py", line 650, in main
+E             result = fixture_e2e(args.fixture_e2e)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7839_v681_intervention_protocol.py", line 231, in fixture_e2e
+E             atomic_json(path, result)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-3d5wgjut/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7839_fixt0/.fixture.json.tmp-3561499' -> '/tmp/carnot-pytest-artifacts-3ljr1p6r/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7839_fixt0/fixture.json'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...nt_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7839_fixt0/fixture.json\'\n').returncode
+
+tests/python/test_experiment_7839_v681_intervention_protocol.py:179: AssertionError
+______ test_scenario_report_7303_affected_failure_propagates_actual_exit _______
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_affe0')
+
+    def test_scenario_report_7303_affected_failure_propagates_actual_exit(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7303-AFFECTED keeps the real failed process receipt."""
+    
+        root = tmp_path / "affected"
+        tests, modules = _private_sources(root)
+        ledger, environment = _fake_toolchain(root)
+        environment["EXP7303_FAIL_MATCH"] = tests[0]
+        result = scope.run_scoped_validation(
+            root,
+            tests,
+            modules,
+            static_paths=["scripts/experiments/experiment_7303_v642_validation_scope.py"],
+            basetemp=root / "pytest-private",
+            coverage_file=root / ".coverage",
+            extra_env=environment,
+        )
+    
+        focused = next(row for row in result["validation_receipts"] if row["name"] == "focused_pytest")
+        assert focused["exit_code"] == 7
+        assert focused["passed"] is False
+        assert tests[0] in focused["command_argv"]
+        assert result["required_checks_passed"] is False
+        assert "focused_pytest" in result["failed_required_commands"]
+>       assert ledger.read_text(encoding="utf-8").count("\n") == len(scope.REQUIRED_CHECK_NAMES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7303_v642_validation_scope.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_affe0/affected/tool-argv.jsonl')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_affe0/affected/tool-argv.jsonl'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess worktree_imports elapsed_s=0.000 unit=1/8
+[exp7303-validation:worktree_imports] {"resolved_imports": {"carnot.experiment_7303_v642_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_affe0/affected/python/carnot/experiment_7303_v642_validation_scope.py", "carnot.reporting.experiment_7303_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_affe0/affected/python/carnot/reporting/experiment_7303_validation_scope.py"}}
+[exp7303-validation:worktree_imports] controlled pass
+[exp7303-validation] after_subprocess worktree_imports elapsed_s=0.018 exit=0 unit=1/8
+[exp7303-validation] before_subprocess focused_pytest elapsed_s=0.000 unit=2/8
+[exp7303-validation:focused_pytest] controlled failure: tests/python/test_affected.py
+[exp7303-validation] after_subprocess focused_pytest elapsed_s=0.020 exit=7 unit=2/8
+[exp7303-validation] before_subprocess changed_module_coverage elapsed_s=0.000 unit=3/8
+[exp7303-validation:changed_module_coverage] controlled failure: tests/python/test_affected.py
+[exp7303-validation] after_subprocess changed_module_coverage elapsed_s=0.029 exit=7 unit=3/8
+[exp7303-validation] before_subprocess changed_module_coverage_report elapsed_s=0.000 unit=4/8
+[exp7303-validation:changed_module_coverage_report] controlled pass
+[exp7303-validation] after_subprocess changed_module_coverage_report elapsed_s=0.023 exit=0 unit=4/8
+[exp7303-validation] before_subprocess ruff_check elapsed_s=0.000 unit=5/8
+[exp7303-validation:ruff_check] controlled failure: tests/python/test_affected.py
+[exp7303-validation] after_subprocess ruff_check elapsed_s=0.032 exit=7 unit=5/8
+[exp7303-validation] before_subprocess ruff_format elapsed_s=0.000 unit=6/8
+[exp7303-validation:ruff_format] controlled failure: tests/python/test_affected.py
+[exp7303-validation] after_subprocess ruff_format elapsed_s=0.022 exit=7 unit=6/8
+[exp7303-validation] before_subprocess changed_module_mypy elapsed_s=0.000 unit=7/8
+[exp7303-validation:changed_module_mypy] controlled pass
+[exp7303-validation] after_subprocess changed_module_mypy elapsed_s=0.023 exit=0 unit=7/8
+[exp7303-validation] before_subprocess scoped_spec_coverage elapsed_s=0.000 unit=8/8
+[exp7303-validation:scoped_spec_coverage] controlled failure: tests/python/test_affected.py
+[exp7303-validation] after_subprocess scoped_spec_coverage elapsed_s=0.022 exit=7 unit=8/8
+_______ test_scenario_report_7303_clean_scoped_run_and_terminal_artifact _______
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_clea0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f59dfd2b9e0>
+
+    def test_scenario_report_7303_clean_scoped_run_and_terminal_artifact(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """SCENARIO-REPORT-7303-CLEAN and ARTIFACT execute and publish exact evidence."""
+    
+        root = tmp_path / "clean"
+        tests, modules = _private_sources(root)
+        ledger, environment = _fake_toolchain(root)
+        _write_historical_evidence(root)
+        for relative in experiment.REQUIRED_INPUT_PATHS:
+            path = root / relative
+            if not path.exists():
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(f"fixture input: {relative}\n", encoding="utf-8")
+        output = root / "results/experiment_7303_v642_validation_scope.json"
+        raw_dir = root / "results/raw/experiment_7303"
+        checkpoint = root / "results/checkpoints/experiment_7303.json"
+    
+        artifact = experiment.run_experiment(
+            root,
+            experiment.RUN_DATE,
+            output_path=output,
+            raw_dir=raw_dir,
+            checkpoint_path=checkpoint,
+            test_paths=tests,
+            changed_modules=modules,
+            static_paths=["scripts/experiments/experiment_7303_v642_validation_scope.py"],
+            extra_env=environment,
+        )
+    
+        assert artifact["status"] == "complete"
+        assert artifact["verdict_class"] == "circular_positive"
+        assert artifact["required_checks_passed"] is True
+        assert artifact["validation_scope_ready_score"] == 1
+        assert artifact["repository_health"]["status"] == "degraded_open"
+        assert artifact["MODEL_SPECS"] == [] and artifact["model_invoked"] is False
+        assert artifact["resolved_imports"][
+            "carnot.reporting.experiment_7303_validation_scope"
+        ].startswith(str(root / "python"))
+        assert experiment.validate_artifact(artifact) == []
+        assert json.loads(output.read_text(encoding="utf-8")) == artifact
+>       argv_rows = [json.loads(line) for line in ledger.read_text(encoding="utf-8").splitlines()]
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7303_v642_validation_scope.py:401: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_clea0/clean/tool-argv.jsonl')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_clea0/clean/tool-argv.jsonl'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp7303] phase=startup event=entrypoint_and_paths_authenticated elapsed_s=0.000
+[exp7303] phase=preconditions event=before_authentication elapsed_s=0.000
+[exp7303] phase=preconditions event=after_authentication elapsed_s=0.001 passed=True checks=33
+[exp7303] phase=scoped_validation event=before_command_set elapsed_s=0.003
+[exp7303-validation] before_subprocess worktree_imports elapsed_s=0.000 unit=1/8
+[exp7303-validation:worktree_imports] {"resolved_imports": {"carnot.experiment_7303_v642_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_clea0/clean/python/carnot/experiment_7303_v642_validation_scope.py", "carnot.reporting.experiment_7303_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_clea0/clean/python/carnot/reporting/experiment_7303_validation_scope.py"}}
+[exp7303-validation:worktree_imports] controlled pass
+[exp7303-validation] after_subprocess worktree_imports elapsed_s=0.019 exit=0 unit=1/8
+[exp7303-validation] before_subprocess focused_pytest elapsed_s=0.000 unit=2/8
+[exp7303-validation:focused_pytest] controlled pass
+[exp7303-validation] after_subprocess focused_pytest elapsed_s=0.025 exit=0 unit=2/8
+[exp7303-validation] before_subprocess changed_module_coverage elapsed_s=0.000 unit=3/8
+[exp7303-validation:changed_module_coverage] controlled pass
+[exp7303-validation] after_subprocess changed_module_coverage elapsed_s=0.023 exit=0 unit=3/8
+[exp7303-validation] before_subprocess changed_module_coverage_report elapsed_s=0.000 unit=4/8
+[exp7303-validation:changed_module_coverage_report] controlled pass
+[exp7303-validation] after_subprocess changed_module_coverage_report elapsed_s=0.023 exit=0 unit=4/8
+[exp7303-validation] before_subprocess ruff_check elapsed_s=0.000 unit=5/8
+[exp7303-validation:ruff_check] controlled pass
+[exp7303-validation] after_subprocess ruff_check elapsed_s=0.025 exit=0 unit=5/8
+[exp7303-validation] before_subprocess ruff_format elapsed_s=0.000 unit=6/8
+[exp7303-validation:ruff_format] controlled pass
+[exp7303-validation] after_subprocess ruff_format elapsed_s=0.023 exit=0 unit=6/8
+[exp7303-validation] before_subprocess changed_module_mypy elapsed_s=0.000 unit=7/8
+[exp7303-validation:changed_module_mypy] controlled pass
+[exp7303-validation] after_subprocess changed_module_mypy elapsed_s=0.025 exit=0 unit=7/8
+[exp7303-validation] before_subprocess scoped_spec_coverage elapsed_s=0.000 unit=8/8
+[exp7303-validation:scoped_spec_coverage] controlled pass
+[exp7303-validation] after_subprocess scoped_spec_coverage elapsed_s=0.024 exit=0 unit=8/8
+[exp7303] phase=scoped_validation event=after_command_set elapsed_s=0.191 required_checks_passed=True
+[exp7303] phase=terminal_validation event=before_strict_candidate_checks elapsed_s=0.193
+[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial_verify] controlled pass
+[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.017 exit=0 unit=1/2
+[exp7303-validation] before_subprocess verdict_row_consistency_strict elapsed_s=0.000 unit=2/2
+[exp7303-validation:verdict_row_consistency_strict] controlled pass
+[exp7303-validation] after_subprocess verdict_row_consistency_strict elapsed_s=0.016 exit=0 unit=2/2
+[exp7303] phase=terminal_validation event=after_strict_candidate_checks elapsed_s=0.226 passed=True
+[exp7303] phase=publication event=before_terminal_atomic_write elapsed_s=0.227
+[exp7303] phase=publication event=after_terminal_atomic_write elapsed_s=0.229 path=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7303_clea0/clean/results/experiment_7303_v642_validation_scope.json validation_scope_ready_score=1
+________________ test_scenario_report_7893_cli_dates_and_replay ________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7893_cli_0')
+
+    def test_scenario_report_7893_cli_dates_and_replay(tmp_path: Path) -> None:
+        """Both public fixture routes require the task date and private paths."""
+        import subprocess
+        import sys
+    
+        script = (
+            Path(__file__).resolve().parents[2]
+            / "scripts/experiments/experiment_7893_v685_intervention_protocol.py"
+        )
+        fixture = tmp_path / "fixture.json"
+        for route in ("--fixture-e2e", "--cold-replay"):
+            result = subprocess.run(
+                [sys.executable, "-u", str(script), "--date", "20260929", route, str(fixture)],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: [exp7881] phase=fixtures event=begin elapsed_s=0.000 completed_units=0
+E             Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7893_v685_intervention_protocol.py", line 6, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7893_v685_intervention_protocol.py", line 411, in main
+E                 measured = write_fixtures(args.fixture_e2e, args.fixture_e2e.parent / "checkpoints")
+E                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7881_v684_intervention_protocol.py", line 503, in write_fixtures
+E                 atomic_json(checkpoint, {"identity": identity, "row": case})
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E                 temporary.replace(path)
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E                 os.replace(self, target)
+E               File "/tmp/carnot-child-results-guard-3d5wgjut/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7893_cli_0/checkpoints/.e63962a6d4a66fad69ef7ca20e09742f0e0767a034950a01096c4913f7730a17.json.tmp-3561653' -> '/tmp/carnot-pytest-artifacts-3ljr1p6r/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/affected/test_scenario_report_7893_cli_0/checkpoints/e63962a6d4a66fad69ef7ca20e09742f0e0767a034950a01096c4913f7730a17.json'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...test_scenario_report_7893_cli_0/checkpoints/e63962a6d4a66fad69ef7ca20e09742f0e0767a034950a01096c4913f7730a17.json\'\n').returncode
+
+tests/python/test_experiment_7893_v685_intervention_protocol.py:85: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7881_v684_intervention_protocol.py::test_scenario_report_7881_fixture_cli
+FAILED tests/python/test_experiment_7868_v683_intervention_protocol.py::test_scenario_report_7868_cli_routes
+FAILED tests/python/test_experiment_7839_v681_intervention_protocol.py::test_scenario_report_7839_fixture_and_direct_cli
+FAILED tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_affected_failure_propagates_actual_exit
+FAILED tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_clean_scoped_run_and_terminal_artifact
+FAILED tests/python/test_experiment_7893_v685_intervention_protocol.py::test_scenario_report_7893_cli_dates_and_replay
+6 failed, 62 passed in 13.98s

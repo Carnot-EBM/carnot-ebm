@@ -1,0 +1,58 @@
+{
+  "cohort": "Exp7810 exposed development families; no fresh holdout",
+  "decision_costs": "accept/reject/escalate cost on calibrated unsupported risk",
+  "epochs_max": 16,
+  "fitted_scalars_max": 4096,
+  "future_e2e_scope": [
+    "private CLI",
+    "cold replay",
+    "source hash mutation",
+    "row mutation"
+  ],
+  "inapplicable_e2e": {
+    "E2E-001_to_004": "no training or native binding change",
+    "E2E-007": "no bank update",
+    "E2E-009_to_013": "no ARC runtime change"
+  },
+  "learning_rate": 0.01,
+  "mlp_width": 16,
+  "primary_contrasts": [
+    "constrained_set vs augmented_set",
+    "constrained_set vs constrained_mlp",
+    "constrained_set vs local_logistic"
+  ],
+  "roles": {
+    "evaluation": 64,
+    "fit": 256,
+    "online_admission": 64,
+    "online_update": 96,
+    "policy": 64,
+    "retention": 32,
+    "tune": 64
+  },
+  "seeds": [
+    67801,
+    67802,
+    67803
+  ],
+  "source_sufficiency_budget": {
+    "calls_max": 192,
+    "launch_stop_s": 2400,
+    "new_tokens_max": 24576,
+    "per_call_s": 120,
+    "service_cap_s": 3000
+  },
+  "source_sufficiency_estimand": "Qwen full source vs witness only, immediate neighbors, and matched filler; separate from correctness",
+  "training_arms": [
+    "response_set",
+    "local_set",
+    "augmented_set",
+    "constrained_set",
+    "augmented_mlp",
+    "constrained_mlp",
+    "local_logistic",
+    "source_erased_constrained_set",
+    "complete_static_constrained_set"
+  ],
+  "uncertainty": "10000 paired source-family bootstrap draws and paired randomization; Holm across six tests"
+}

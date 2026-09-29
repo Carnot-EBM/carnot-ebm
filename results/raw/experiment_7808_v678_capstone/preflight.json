@@ -1,0 +1,649 @@
+{
+  "authority_match": true,
+  "backend": "host_cpu_aggregation",
+  "declared_paths": [
+    "results/experiment_7795_v678_contract_methods.json",
+    "results/experiment_7796_v678_source_view_qualification.json",
+    "results/experiment_7797_v678_training_runtime.json",
+    "results/experiment_7798_v678_view_energy_fit.json",
+    "results/experiment_7799_v678_decision_measurement.json",
+    "results/experiment_7800_v678_counter_evidence_protocol.json",
+    "results/experiment_7801_v678_qwen_counter_evidence.json",
+    "results/experiment_7802_v678_continuous_acquisition.json",
+    "results/experiment_7803_v678_arc_runner_qualification.json",
+    "results/experiment_7804_v678_arc_organic_measurement.json",
+    "results/experiment_7805_v678_service_cost.json",
+    "results/experiment_7806_v678_hardware_evidence.json",
+    "results/experiment_7807_v678_independent_evidence_audit.json",
+    "results/experiment_7808_v678_capstone.json"
+  ],
+  "design_path": "docs/research-notes/v678-authority-snapshots/design.md",
+  "design_sha256": "sha256:f18bbb68356157393029c422274c019276cc703bb79c3c5a7877fbc7d0d52fd2",
+  "failed_operands": [
+    {
+      "artifact_hash": "sha256:2b680eda12ec7803eac3801e68a7bf25f719229f696b6157d3a180ce958fa38e",
+      "artifact_path": "results/experiment_7796_v678_source_view_qualification.json",
+      "expected": [
+        "circular_positive",
+        "null",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7796"
+    },
+    {
+      "artifact_hash": "sha256:be1a62358f4088523b840a7bf19f0f38287d7aaed57b6ba4e51f427e5553bf12",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7796_v678_source_view_qualification/validation_logs/10_cold_replay.log",
+      "expected": 0,
+      "field": "cold_replay.exit_code",
+      "observed": 1,
+      "operator": "==",
+      "upstream_id": "Exp7796"
+    },
+    {
+      "artifact_hash": "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012",
+      "artifact_path": "results/experiment_7797_v678_training_runtime.json",
+      "expected": [
+        "circular_positive",
+        "null",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:21d7931a0779684522a249de3474e1bdff66973ed5f7393bc2d519164b6cdc74",
+      "artifact_path": "results/raw/experiment_7797_v678_training_runtime/validation_logs/00_coverage_shard_0.log",
+      "expected": "sha256:bba4911c28f4c1e96a858c7b507a5d038bc8b5c669a88a3dff4521f067852653",
+      "field": "coverage_shard_0.log_sha256",
+      "observed": "sha256:21d7931a0779684522a249de3474e1bdff66973ed5f7393bc2d519164b6cdc74",
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:1dca469c1e1cfbdbe6d9ea9458219f3d18a13d7541fcecd8ef36aef33cf2c269",
+      "artifact_path": "results/raw/experiment_7797_v678_training_runtime/validation_logs/00_coverage_shard_1.log",
+      "expected": "sha256:f4a89f01f4ec9cccb8b6c1e0f44f494028f454d041059807b31928a028966cc1",
+      "field": "coverage_shard_1.log_sha256",
+      "observed": "sha256:1dca469c1e1cfbdbe6d9ea9458219f3d18a13d7541fcecd8ef36aef33cf2c269",
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:ba9aaa6879b74327ec4a07824be8adb83bbb0c988454d432598513f03e01abea",
+      "artifact_path": "results/raw/experiment_7797_v678_training_runtime/validation_logs/00_coverage_shard_2.log",
+      "expected": "sha256:c693687653d6359201556c345927e801fbb77cba8a447969f2bdca3005970140",
+      "field": "coverage_shard_2.log_sha256",
+      "observed": "sha256:ba9aaa6879b74327ec4a07824be8adb83bbb0c988454d432598513f03e01abea",
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:b93b6ce14f72d02eef82be77d95232075725b57246c5d6a95d9dcbfac916efb8",
+      "artifact_path": "results/raw/experiment_7797_v678_training_runtime/validation_logs/00_coverage_report.log",
+      "expected": "sha256:71bff1ba37bc49e694f6c44964f939a6087e83147da4aa84ab5fabcc6dd68ebe",
+      "field": "coverage_report.log_sha256",
+      "observed": "sha256:b93b6ce14f72d02eef82be77d95232075725b57246c5d6a95d9dcbfac916efb8",
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:ba78c21ff09f37debcf8b32205dc9e9d971f7ca4b110140f597cf8be23cd442c",
+      "artifact_path": "results/raw/experiment_7797_v678_training_runtime/validation_logs/00_affected_pytest.log",
+      "expected": "sha256:d0360a3a2986798aa1f6f6073c807f6c3e629cfd08d942a4c384fb1e3f2bff7a",
+      "field": "affected_pytest.log_sha256",
+      "observed": "sha256:ba78c21ff09f37debcf8b32205dc9e9d971f7ca4b110140f597cf8be23cd442c",
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:aa0c74eed7b742d5bd00005fb51a47d263054b4f05b483c0cb0a8f60e8403225",
+      "artifact_path": "results/raw/experiment_7797_v678_training_runtime/validation_logs/00_full_python_suite.log",
+      "expected": 0,
+      "field": "full_python_suite.exit_code",
+      "observed": -15,
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:4026dbc22385eeb2517551881d192b0787cf1f9215eb624ccd6e2127e5faad92",
+      "artifact_path": "results/raw/experiment_7797_v678_training_runtime/validation_logs/00_ruff_format.log",
+      "expected": 0,
+      "field": "ruff_format.exit_code",
+      "observed": 1,
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7799_v678_decision_measurement.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7799"
+    },
+    {
+      "artifact_hash": "sha256:5c66442de47c60db8fd90d336b2c01c832029505ad39c067e4b222976eb58d96",
+      "artifact_path": "results/experiment_7800_v678_counter_evidence_protocol.json",
+      "expected": [
+        "circular_positive",
+        "null",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7800"
+    },
+    {
+      "artifact_hash": "sha256:5c66442de47c60db8fd90d336b2c01c832029505ad39c067e4b222976eb58d96",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7800_v678_counter_evidence_protocol/full_validation/00_full_python_suite.log",
+      "expected": 0,
+      "field": "full_python_suite.exit_code",
+      "observed": -15,
+      "operator": "==",
+      "upstream_id": "Exp7800"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7801_v678_qwen_counter_evidence.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7801"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7802_v678_continuous_acquisition.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7802"
+    },
+    {
+      "artifact_hash": "sha256:02fab5f1c9fd63d1e962c58698789bfbf183d166dbaa6deb4e38673dcc0ccd7f",
+      "artifact_path": "results/experiment_7803_v678_arc_runner_qualification.json",
+      "expected": [
+        "circular_positive",
+        "null",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7803"
+    },
+    {
+      "artifact_hash": "sha256:02fab5f1c9fd63d1e962c58698789bfbf183d166dbaa6deb4e38673dcc0ccd7f",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7803_v678_arc_runner_qualification/validation/12_full_python_suite.log",
+      "expected": 0,
+      "field": "full_python_suite",
+      "observed": -15,
+      "operator": "==",
+      "upstream_id": "Exp7803"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7804_v678_arc_organic_measurement.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7804"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7805_v678_service_cost.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7805"
+    },
+    {
+      "artifact_hash": "sha256:60b6cededfa59b94ceb231a09b2782bddb756904a1402c58a1f31f1c1071dbcf",
+      "artifact_path": "results/experiment_7806_v678_hardware_evidence.json",
+      "expected": [
+        "circular_positive",
+        "null",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7806"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7805_v678_service_cost.json",
+      "expected": 1,
+      "field": "service_evidence_ready_score",
+      "observed": null,
+      "operator": "==",
+      "upstream_id": "Exp7806"
+    },
+    {
+      "artifact_hash": "sha256:4ed658ea8e1bbb298e21d95dfac36835d2e26247ab370df7a5a4b757c688e35f",
+      "artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/01_focused_pytest.log",
+      "expected": 0,
+      "field": "focused_pytest",
+      "observed": 1,
+      "operator": "==",
+      "upstream_id": "Exp7806"
+    },
+    {
+      "artifact_hash": "sha256:907c9fe3dd9a711988f857e40e5d2db3287c3952c6ffcce5aac27ab7e43870eb",
+      "artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/02_changed_module_coverage.log",
+      "expected": 0,
+      "field": "changed_module_coverage",
+      "observed": 1,
+      "operator": "==",
+      "upstream_id": "Exp7806"
+    },
+    {
+      "artifact_hash": "sha256:ccc84ada72da7a6fd5de17861e2a7a4374e0d1267e1be1dae1a950c86defc8b5",
+      "artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/00_full_python_suite.log",
+      "expected": 0,
+      "field": "full_python_suite",
+      "observed": 1,
+      "operator": "==",
+      "upstream_id": "Exp7806"
+    },
+    {
+      "artifact_hash": "sha256:2f4cfbf140426de67f13d4a401832b5e27f2e423891e69618127e448733dc382",
+      "artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/01_fresh_process_cold_replay.log",
+      "expected": 0,
+      "field": "fresh_process_cold_replay",
+      "observed": 1,
+      "operator": "==",
+      "upstream_id": "Exp7806"
+    },
+    {
+      "artifact_hash": "sha256:ce2c1d2ee0ff90760be4b4f06f68c6f1d140206f715af7dd625644f234c9d3ec",
+      "artifact_path": "results/experiment_7807_v678_independent_evidence_audit.json",
+      "expected": [
+        "circular_positive",
+        "null",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7807"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7799_v678_decision_measurement.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7807"
+    },
+    {
+      "artifact_hash": "sha256:5c66442de47c60db8fd90d336b2c01c832029505ad39c067e4b222976eb58d96",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7800_v678_counter_evidence_protocol.json",
+      "expected": 1,
+      "field": "counter_evidence_ready_score",
+      "observed": 0,
+      "operator": "==",
+      "upstream_id": "Exp7807"
+    },
+    {
+      "artifact_hash": "sha256:5c66442de47c60db8fd90d336b2c01c832029505ad39c067e4b222976eb58d96",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7800_v678_counter_evidence_protocol.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7807"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7801_v678_qwen_counter_evidence.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7807"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7802_v678_continuous_acquisition.json",
+      "expected": "existing declared science producer",
+      "field": "producer_path",
+      "observed": "missing",
+      "operator": "==",
+      "upstream_id": "Exp7807"
+    },
+    {
+      "artifact_hash": "sha256:2b680eda12ec7803eac3801e68a7bf25f719229f696b6157d3a180ce958fa38e",
+      "artifact_path": "results/experiment_7796_v678_source_view_qualification.json",
+      "expected": 1,
+      "field": "sentence_protocol_ready_score",
+      "observed": 0,
+      "operator": "==",
+      "upstream_id": "Exp7796"
+    },
+    {
+      "artifact_hash": "sha256:2b680eda12ec7803eac3801e68a7bf25f719229f696b6157d3a180ce958fa38e",
+      "artifact_path": "results/experiment_7796_v678_source_view_qualification.json",
+      "expected": 1,
+      "field": "evidence_view_ready_score",
+      "observed": 0,
+      "operator": "==",
+      "upstream_id": "Exp7796"
+    },
+    {
+      "artifact_hash": "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012",
+      "artifact_path": "results/experiment_7797_v678_training_runtime.json",
+      "expected": 1,
+      "field": "training_runtime_ready_score",
+      "observed": 0,
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:2b680eda12ec7803eac3801e68a7bf25f719229f696b6157d3a180ce958fa38e",
+      "artifact_path": "results/experiment_7796_v678_source_view_qualification.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7796"
+    },
+    {
+      "artifact_hash": "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012",
+      "artifact_path": "results/experiment_7797_v678_training_runtime.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": 1,
+      "field": "view_heads_ready_score",
+      "observed": null,
+      "operator": "==",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": null,
+      "operator": "==",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": null,
+      "operator": "in",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": "sha256:5c66442de47c60db8fd90d336b2c01c832029505ad39c067e4b222976eb58d96",
+      "artifact_path": "results/experiment_7800_v678_counter_evidence_protocol.json",
+      "expected": 1,
+      "field": "counter_evidence_ready_score",
+      "observed": 0,
+      "operator": "==",
+      "upstream_id": "Exp7800"
+    },
+    {
+      "artifact_hash": "sha256:5c66442de47c60db8fd90d336b2c01c832029505ad39c067e4b222976eb58d96",
+      "artifact_path": "results/experiment_7800_v678_counter_evidence_protocol.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7800"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": 1,
+      "field": "view_heads_ready_score",
+      "observed": null,
+      "operator": "==",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012",
+      "artifact_path": "results/experiment_7797_v678_training_runtime.json",
+      "expected": 1,
+      "field": "online_runtime_ready_score",
+      "observed": 0,
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": null,
+      "operator": "==",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": null,
+      "operator": "in",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012",
+      "artifact_path": "results/experiment_7797_v678_training_runtime.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": "sha256:02fab5f1c9fd63d1e962c58698789bfbf183d166dbaa6deb4e38673dcc0ccd7f",
+      "artifact_path": "results/experiment_7803_v678_arc_runner_qualification.json",
+      "expected": 1,
+      "field": "organic_runner_ready_score",
+      "observed": 0,
+      "operator": "==",
+      "upstream_id": "Exp7803"
+    },
+    {
+      "artifact_hash": "sha256:02fab5f1c9fd63d1e962c58698789bfbf183d166dbaa6deb4e38673dcc0ccd7f",
+      "artifact_path": "results/experiment_7803_v678_arc_runner_qualification.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7803"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": 1,
+      "field": "view_heads_ready_score",
+      "observed": null,
+      "operator": "==",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012",
+      "artifact_path": "results/experiment_7797_v678_training_runtime.json",
+      "expected": 1,
+      "field": "online_runtime_ready_score",
+      "observed": 0,
+      "operator": "==",
+      "upstream_id": "Exp7797"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": false,
+      "field": "flagged_adversarial",
+      "observed": null,
+      "operator": "==",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7798_v678_view_energy_fit.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": null,
+      "operator": "in",
+      "upstream_id": "Exp7798"
+    },
+    {
+      "artifact_hash": "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012",
+      "artifact_path": "results/experiment_7797_v678_training_runtime.json",
+      "expected": [
+        "null",
+        "circular_positive",
+        "positive"
+      ],
+      "field": "verdict_class",
+      "observed": "disqualified",
+      "operator": "in",
+      "upstream_id": "Exp7797"
+    }
+  ],
+  "input_presence": [
+    {
+      "availability": "producer",
+      "sha256": "sha256:fd0028a6e8d35c286316c6513eddae40477b0ec1ed55f793d9a23116c409124d",
+      "task_id": "exp7795-contract-methods"
+    },
+    {
+      "availability": "producer",
+      "sha256": "sha256:2b680eda12ec7803eac3801e68a7bf25f719229f696b6157d3a180ce958fa38e",
+      "task_id": "exp7796-source-view-qualification"
+    },
+    {
+      "availability": "producer",
+      "sha256": "sha256:d59ab0b88dabe36938f54854c24b134e97c45d493ce062b3e7b0ae5db6bb8012",
+      "task_id": "exp7797-training-runtime"
+    },
+    {
+      "availability": "pre_gate_receipt",
+      "sha256": null,
+      "task_id": "exp7798-view-energy-fit"
+    },
+    {
+      "availability": "absent",
+      "sha256": null,
+      "task_id": "exp7799-decision-measurement"
+    },
+    {
+      "availability": "producer",
+      "sha256": "sha256:5c66442de47c60db8fd90d336b2c01c832029505ad39c067e4b222976eb58d96",
+      "task_id": "exp7800-counter-evidence-protocol"
+    },
+    {
+      "availability": "pre_gate_receipt",
+      "sha256": null,
+      "task_id": "exp7801-qwen-counter-evidence"
+    },
+    {
+      "availability": "absent",
+      "sha256": null,
+      "task_id": "exp7802-continuous-acquisition"
+    },
+    {
+      "availability": "producer",
+      "sha256": "sha256:02fab5f1c9fd63d1e962c58698789bfbf183d166dbaa6deb4e38673dcc0ccd7f",
+      "task_id": "exp7803-arc-runner-qualification"
+    },
+    {
+      "availability": "pre_gate_receipt",
+      "sha256": null,
+      "task_id": "exp7804-arc-organic-measurement"
+    },
+    {
+      "availability": "absent",
+      "sha256": null,
+      "task_id": "exp7805-service-cost"
+    },
+    {
+      "availability": "producer",
+      "sha256": "sha256:60b6cededfa59b94ceb231a09b2782bddb756904a1402c58a1f31f1c1071dbcf",
+      "task_id": "exp7806-hardware-evidence"
+    },
+    {
+      "availability": "producer",
+      "sha256": "sha256:ce2c1d2ee0ff90760be4b4f06f68c6f1d140206f715af7dd625644f234c9d3ec",
+      "task_id": "exp7807-independent-evidence-audit"
+    },
+    {
+      "availability": "planned_output",
+      "sha256": null,
+      "task_id": "exp7808-capstone"
+    }
+  ],
+  "resources": "CPU, local files, no model or board load",
+  "roadmap_path": "docs/research-notes/v678-authority-snapshots/roadmap.yaml",
+  "roadmap_sha256": "sha256:cf20da1deda3a0a0fde6074b6f6749ebc999e96c000e5f9fa84065bb4bf9f34d"
+}

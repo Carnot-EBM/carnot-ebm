@@ -47,7 +47,11 @@ _STOPWORDS = {
 }
 
 
-CODEX_MODELS_ACCEPTED = frozenset({"gpt-6-sol", "gpt-5.6-sol", "gpt-6-luna"})
+CODEX_MODELS_ACCEPTED = frozenset(
+    {"gpt-6.1-sol", "gpt-6-sol", "gpt-5.6-sol", "gpt-6-luna"}
+)
+# gpt-6.1-sol is the codex model as of 2026-09-29; gpt-6-sol stays accepted
+# while tasks planned before the switch drain from the live roadmap.
 # gpt-6-luna is allowed (operator, 2026-09-26) but weak and loop-prone.
 # The audit lists each luna task so a reviewer reads its output.
 CODEX_MODELS_REVIEW_REQUIRED = frozenset({"gpt-6-luna"})

@@ -1,0 +1,132 @@
+..F..............F...........F.                                          [100%]
+=================================== FAILURES ===================================
+____________________________ test_real_private_cli _____________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_real_private_cli0')
+
+    def test_real_private_cli(tmp_path: Path) -> None:
+        root = tmp_path / "repo"
+        producer = _producer(root, [])
+        script = (
+            Path(__file__).resolve().parents[2]
+            / "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py"
+        )
+        output = tmp_path / "delta.json"
+        cmd = [
+            sys.executable,
+            str(script),
+            "--reduce-ledger",
+            str(root),
+            "--producer",
+            str(producer),
+            "--output",
+            str(output),
+        ]
+        good = subprocess.run(cmd, capture_output=True, text=True, check=False)
+>       assert good.returncode == 0, good.stdout + good.stderr
+E       AssertionError: [exp7899] phase=start elapsed_s=0.000 completed_units=0
+E         [exp7899] phase=before_private_reduce elapsed_s=0.000 completed_units=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py", line 520, in <module>
+E             sys.exit(main())
+E                      ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py", line 307, in main
+E             atomic_json(args.output, delta)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-xkt0t6v2/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_real_private_cli0/.delta.json.tmp-3608596' -> '/tmp/carnot-pytest-artifacts-0qplfk1f/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_real_private_cli0/delta.json'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...test-artifacts-0qplfk1f/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_real_private_cli0/delta.json\'\n').returncode
+
+tests/python/test_arc_supervisor_delta_7899.py:131: AssertionError
+___________________ test_direct_cli_empty_and_forged_replay ____________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_direct_cli_empty_and_forg0')
+
+    def test_direct_cli_empty_and_forged_replay(tmp_path: Path) -> None:
+        root = Path(__file__).resolve().parents[2]
+        cli = root / "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py"
+        output = tmp_path / "empty.json"
+        argv = [
+            sys.executable,
+            str(cli),
+            "--reduce-ledger",
+            str(tmp_path),
+            "--cutoff-ns",
+            "0",
+            "--output",
+            str(output),
+        ]
+        good = subprocess.run(argv, capture_output=True, text=True, check=False, cwd=root)
+>       assert good.returncode == 0, good.stdout + good.stderr
+E       AssertionError: [exp7887] phase=start elapsed_s=0.000 completed_units=0
+E         [exp7887] phase=before_private_reduce elapsed_s=0.000 completed_units=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py", line 364, in <module>
+E             sys.exit(main())
+E                      ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py", line 234, in main
+E             atomic_json(args.output, delta)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-xkt0t6v2/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_direct_cli_empty_and_forg0/.empty.json.tmp-3608645' -> '/tmp/carnot-pytest-artifacts-0qplfk1f/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_direct_cli_empty_and_forg0/empty.json'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...facts-0qplfk1f/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_direct_cli_empty_and_forg0/empty.json\'\n').returncode
+
+tests/python/test_arc_supervisor_delta_7887.py:126: AssertionError
+_________________________ test_cli_success_and_failure _________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_cli_success_and_failure0')
+
+    def test_cli_success_and_failure(tmp_path: Path) -> None:
+        cli = "scripts/experiments/experiment_7874_v683_arc_supervisor_delta.py"
+        output = tmp_path / "delta.json"
+        command = [
+            sys.executable,
+            cli,
+            "--reduce-ledger",
+            str(tmp_path),
+            "--cutoff-ns",
+            "0",
+            "--output",
+            str(output),
+        ]
+        good = subprocess.run(command, capture_output=True, text=True, check=False)
+>       assert good.returncode == 0, good.stdout + good.stderr
+E       AssertionError: [exp7874] phase=start elapsed_s=0.000 completed_units=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7874_v683_arc_supervisor_delta.py", line 302, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7874_v683_arc_supervisor_delta.py", line 160, in main
+E             atomic_json(args.output, result)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-xkt0t6v2/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_cli_success_and_failure0/.delta.json.tmp-3608681' -> '/tmp/carnot-pytest-artifacts-0qplfk1f/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_cli_success_and_failure0/delta.json'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', 'scripts/experiments/experiment...tifacts-0qplfk1f/raw/experiment_7899_v685_arc_supervisor_delta/test-temp/test_cli_success_and_failure0/delta.json\'\n').returncode
+
+tests/python/test_arc_supervisor_delta_7874.py:149: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_supervisor_delta_7899.py::test_real_private_cli
+FAILED tests/python/test_arc_supervisor_delta_7887.py::test_direct_cli_empty_and_forged_replay
+FAILED tests/python/test_arc_supervisor_delta_7874.py::test_cli_success_and_failure
+3 failed, 28 passed in 4.87s

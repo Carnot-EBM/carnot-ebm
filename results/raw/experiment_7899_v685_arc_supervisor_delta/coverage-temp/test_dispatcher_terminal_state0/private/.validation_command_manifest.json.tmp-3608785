@@ -1,0 +1,45 @@
+{
+  "affected_closure": [
+    "python/carnot/reporting/arc_supervisor_v685_delta.py",
+    "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+    "tests/python/test_arc_supervisor_delta_7899.py",
+    "tests/python/test_arc_supervisor_delta_7887.py",
+    "tests/python/test_arc_supervisor_delta_7874.py"
+  ],
+  "applicable_e2e": [
+    "E2E-016",
+    "E2E-017"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-V"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "affected_pytest"
+    }
+  ],
+  "inapplicable_e2e": [
+    "E2E-001",
+    "E2E-002",
+    "E2E-003",
+    "E2E-004",
+    "E2E-005",
+    "E2E-006",
+    "E2E-007",
+    "E2E-008",
+    "E2E-009",
+    "E2E-010",
+    "E2E-011",
+    "E2E-012",
+    "E2E-013",
+    "E2E-014",
+    "E2E-015",
+    "E2E-018"
+  ],
+  "scope_rationale": "current ARC reader and direct CLI, V684 and V683 consumer regressions"
+}

@@ -1,0 +1,53 @@
+...F...............                                                      [100%]
+=================================== FAILURES ===================================
+_________________ test_real_cli_private_output_and_cold_replay _________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/coverage-temp/test_real_cli_private_output_a0')
+
+    def test_real_cli_private_output_and_cold_replay(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7847-CLI: execute the real entrypoint in a private root."""
+        root = fixture_root(tmp_path / "sources")
+        output = tmp_path / "private" / "candidate.json"
+        script = ROOT / "scripts/experiments/experiment_7847_v681_hardware_evidence.py"
+        env = {**os.environ, "PYTHONPATH": str(ROOT / "python") + ":" + str(ROOT)}
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-u",
+                str(script),
+                "--date",
+                "20260929",
+                "--root",
+                str(root),
+                "--output",
+                str(output),
+                "--evidence-only",
+            ],
+            capture_output=True,
+            text=True,
+            env=env,
+            timeout=30,
+        )
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py", line 380, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py", line 260, in main
+E             atomic_json(output, result)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-m26vblwf/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/coverage-temp/test_real_cli_private_output_a0/private/.candidate.json.tmp-2853217' -> '/tmp/carnot-pytest-artifacts-_rc5hbnq/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/coverage-temp/test_real_cli_private_output_a0/private/candidate.json'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...7167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/coverage-temp/test_real_cli_private_output_a0/private/candidate.json\'\n').returncode
+
+tests/python/test_experiment_7847_v681_hardware_evidence.py:121: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7847_v681_hardware_evidence.py::test_real_cli_private_output_and_cold_replay
+1 failed, 18 passed in 6.54s

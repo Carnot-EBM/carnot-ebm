@@ -7054,3 +7054,58 @@ The critical path for milestone .250:
 - key result: honest operational negative — runner formatting repair and outcome reconciliation consumed 63.13 of 122.4 total wall-time minutes (51.6%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
 
+### Milestone 2026.09.678
+
+- exp_range: no data available this milestone
+- theme: numerical updates qualification, counter-evidence interventions, and scored ARC transitions led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — numerical updates qualification and counter-evidence interventions consumed 115.04 of 162.9 total wall-time minutes (70.6%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+### Milestone 2026.09.679
+
+- exp_range: no data available this milestone
+- theme: calibration replay, command allowlist interventions, and outcome reconciliation led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — calibration replay, evidence interventions, and outcome reconciliation consumed 66.22 of 116.2 total wall-time minutes (57.0%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+### Milestone 2026.09.680
+
+- exp_range: no data available this milestone
+- theme: source feature isolation, training check repair, and outcome reconciliation led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — evaluator isolation and training check repair consumed 51.97 of 74.6 total wall-time minutes (69.7%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+### Milestone 2026.09.681
+
+- exp_range: no data available this milestone
+- theme: outcome reconciliation, delayed-feedback task binding, and length baseline permutation led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — outcome reconciliation and delayed-feedback task binding consumed 7.97 of 24.9 total wall-time minutes (32.0%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+### Milestone 2026.09.682
+
+- exp_range: no data available this milestone
+- theme: predicate qualification, legacy source identity projection, and outcome reconciliation led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — predicate qualification and legacy source identity projection consumed 12.29 of 33.3 total wall-time minutes (36.9%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+### Milestone 2026.09.683
+
+- exp_range: no data available this milestone
+- theme: CPU intervention qualification, publication gates, causal audit, and board continuity led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — CPU intervention protocol qualification and publication gates consumed 36.39 of 89.4 total wall-time minutes (40.7%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+### Milestone 2026.09.684
+
+- exp_range: no data available this milestone
+- theme: board obligation preservation, source custody qualification, and PRD gap reduction led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — board obligation preservation and source custody qualification consumed 4.52 of 7.7 total wall-time minutes (58.7%), while available records lack intra-task stage timing, continuous multi-device accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+### Milestone 2026.09.685
+
+- exp_range: no data available this milestone
+- theme: source energy calibration, producer coverage qualification, and terminal revalidation led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — calibrated source energy fitting and source producer coverage qualification consumed 8.63 of 13.1 total wall-time minutes (65.9%), while available records lack intra-task stage timing, continuous multi-device accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone

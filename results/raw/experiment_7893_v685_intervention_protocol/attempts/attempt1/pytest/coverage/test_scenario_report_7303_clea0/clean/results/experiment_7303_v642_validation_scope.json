@@ -1,0 +1,1272 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "required_commands_complete",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Every named current command must run once and pass."
+    },
+    {
+      "criterion": "repository_wide_pytest_absent",
+      "expected": [],
+      "observed": [],
+      "passed": true,
+      "principle": "A directory-level suite cannot return through a hidden default."
+    },
+    {
+      "criterion": "five_scope_controls_pass",
+      "expected": 5,
+      "observed": 5,
+      "passed": true,
+      "principle": "Each incident control must be exercised by the focused test command."
+    },
+    {
+      "criterion": "worktree_imports_resolved",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Resolved worktree paths prevent an installed wheel from substituting old code."
+    },
+    {
+      "criterion": "historical_health_is_non_gating",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "Old collection debt remains visible without becoming a current pass receipt."
+    },
+    {
+      "criterion": "terminal_candidate_verifiers",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Strict artifact checks must inspect the measured candidate before publication."
+    }
+  ],
+  "completed_at_utc": "2026-09-29T21:19:59.840351+00:00",
+  "current_generation_count": 0,
+  "current_model_load_count": 0,
+  "duplicate_required_commands": [],
+  "duration_s": 0.2512582109775394,
+  "execution_venue": "host",
+  "experiment_id": "exp7303-validation-scope",
+  "failed_required_commands": [],
+  "field_principles": {
+    "MODEL_SPECS": "Actual current executable model identities; historical identities remain in sidecars.",
+    "acceptance_gate_results": "Every check has expected, observed, passed, and a one-line principle explaining its purpose.",
+    "duration_s": "Measure total elapsed and disjoint phase spans including failed work.",
+    "execution_venue": "Record actual host/device work; a CPU replay is not GPU or FPGA execution.",
+    "gate_check_summary": "Every blocked_* names upstream/check, exact field, observed value, and expected value.",
+    "honest_verdict": "Completed findings start complete_ or complete:; external failure starts blocked_. State the finding.",
+    "inference_substrate": "Describe actual computation with a recognized literal, not intended work.",
+    "inference_substrate_class": "Full generation has a 60s floor; bounded generation 10s; load-only 2s. Never pad time.",
+    "invocation_counts": "Separate attempted, completed, failed, cancelled, and in-flight loads and generations.",
+    "model_invoked": "True for any attempted model load or generation, even when output is unusable.",
+    "preconditions_checked": "Hash real inputs and record actual availability and failed checks.",
+    "random_seed": "Seal development and independent evaluation seeds before seeing outcomes.",
+    "repository_health": "Preserve prior failure paths, dates, hashes, and unresolved collection errors.",
+    "reproducibility_checksum": "Bind code, inputs, config, model when used, and raw evidence.",
+    "required_checks_passed": "Named required commands must all run and pass.",
+    "rows": "Record every comparative unit/arm with metrics, costs, errors, abstentions, and censoring.",
+    "run_date": "Use 20260914 with actual UTC start/end and monotonic phase timing.",
+    "sample_size_budget": "Keep planned, attempted, complete, and censored counts with the frozen stopping rule.",
+    "schema": "Version the record while keeping ordinary top-level experiment_id and milestone.",
+    "scope_control_rows": "Actual subprocess selections and results prove scope rather than merely labeling it.",
+    "source_artifact_hashes": "Authenticate producer identity, terminal class, and quarantine state.",
+    "status": "Write the terminal result only after the work and checks; checkpoints remain separate.",
+    "validation_receipts": "Record exact commands, scope, exit codes, elapsed time, and log hashes; retain failures.",
+    "validation_scope_ready_score": "One only after affected failures remain blocking and unrelated health cannot masquerade as passed validation.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Only unfinished own work is partial; unchanged external failure is blocked.",
+    "verifier_is_oracle": "Shared evaluator authority permits circular_positive only, not positive scientific value."
+  },
+  "gate_check_summary": {
+    "failed_checks": [],
+    "failed_count": 0,
+    "first_failure": null,
+    "passed": true
+  },
+  "historical_evidence_sidecar": {
+    "path": "results/raw/experiment_7303/historical_validation_evidence.json",
+    "sha256": "sha256:ada5ebbab2c2bf3020b9d45026a51b6e965b955c8fef4f5c8be2cf4211d80456"
+  },
+  "honest_verdict": "complete_scoped_validation_ready_with_historical_repository_health_open",
+  "inference_substrate": "cpu_exact_solver_or_simulator",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.642",
+  "missing_required_commands": [],
+  "model_invoked": false,
+  "phase_durations_s": {
+    "preconditions": 0.0008751139976084232,
+    "scoped_validation": 0.18878293095622212,
+    "terminal_validation": 0.048400502011645585
+  },
+  "preconditions_checked": [
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7293_v641_reuse_measurement.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7289_v641_arc_boundary.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7296_v641_mixture_learning.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/experiment_7293_v641_reuse_measurement.json"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/experiment_7289_v641_arc_boundary.json"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "scripts/check_spec_coverage.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7303_v642_validation_scope.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7303_v642_validation_scope.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7303_v642_validation_scope.py"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/experiment_7291_v641_reuse_fixture.json"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/experiment_7292_v641_reuse_canary.json"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/experiment_7294_v641_reuse_audit.json"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/raw/experiment_7289_v641_arc_boundary/validation/04_full_python_suite.log"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/raw/experiment_7291_v641_reuse_fixture/validation/full_python_suite.log"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/raw/experiment_7292_v641_reuse_canary/validation/full_python_suite.log"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/raw/experiment_7293_v641_reuse_measurement/validation-attempt-1/full_python_suite.log"
+    },
+    {
+      "check": "input_availability",
+      "expected_value": true,
+      "field": "is_file",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/raw/experiment_7294_v641_reuse_audit/validation/full_python_suite.log"
+    },
+    {
+      "check": "historical_full_suite_log_authentication",
+      "expected_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "field": "sha256",
+      "observed_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "passed": true,
+      "upstream": "results/raw/experiment_7289_v641_arc_boundary/validation/04_full_python_suite.log"
+    },
+    {
+      "check": "historical_full_suite_log_authentication",
+      "expected_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "field": "sha256",
+      "observed_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "passed": true,
+      "upstream": "results/raw/experiment_7291_v641_reuse_fixture/validation/full_python_suite.log"
+    },
+    {
+      "check": "historical_full_suite_log_authentication",
+      "expected_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "field": "sha256",
+      "observed_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "passed": true,
+      "upstream": "results/raw/experiment_7292_v641_reuse_canary/validation/full_python_suite.log"
+    },
+    {
+      "check": "historical_full_suite_log_authentication",
+      "expected_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "field": "sha256",
+      "observed_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "passed": true,
+      "upstream": "results/raw/experiment_7293_v641_reuse_measurement/validation-attempt-1/full_python_suite.log"
+    },
+    {
+      "check": "historical_full_suite_log_authentication",
+      "expected_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "field": "sha256",
+      "observed_value": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "passed": true,
+      "upstream": "results/raw/experiment_7294_v641_reuse_audit/validation/full_python_suite.log"
+    },
+    {
+      "check": "declared_output_path",
+      "expected_value": true,
+      "field": "parent_writable",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/experiment_7303_v642_validation_scope.json"
+    }
+  ],
+  "production_default_changed": false,
+  "random_seed": {
+    "development": 730320260914,
+    "independent_evaluation": 1730320260914,
+    "sealed_before_outcomes": true
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "historical_failure_count": 5,
+    "historical_failures": [
+      {
+        "artifact_path": "results/experiment_7289_v641_arc_boundary.json",
+        "artifact_sha256": "sha256:2c5467fb50561fb1f5736aca5f1b60d588922bec63e0b97495377c805500ad9a",
+        "collection_errors": [
+          {
+            "exact_block": "_ ERROR collecting tests/python/test_old_failure.py _\ntests/python/test_old_failure.py:1: in <module>\nE   KeyError: 'historical-registry-entry'\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!\n",
+            "exception": "KeyError: 'historical-registry-entry'",
+            "test_path": "tests/python/test_old_failure.py"
+          }
+        ],
+        "command": "pytest tests/python -q",
+        "current_required_check": false,
+        "exit_code": 2,
+        "experiment_id": "exp7289-arc-boundary",
+        "focused_checks": [
+          {
+            "command": "pytest explicit_test.py",
+            "exit_code": 0,
+            "log_path": "historical-focused.log",
+            "log_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "name": "focused_pytest",
+            "passed": true
+          }
+        ],
+        "honest_verdict": "complete_disqualified_historical_validation_failed",
+        "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/04_full_python_suite.log",
+        "log_sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+        "milestone": "2026.09.641",
+        "observed_at_utc": null,
+        "predates_current_milestone": true,
+        "quarantined": false,
+        "resolved": false,
+        "terminal_class": "disqualified"
+      },
+      {
+        "artifact_path": "results/experiment_7291_v641_reuse_fixture.json",
+        "artifact_sha256": "sha256:f02d1178b4e8cd683ab2c8f6219d371ccd72a190c06b8fb89dc8c68fe14f7f76",
+        "collection_errors": [
+          {
+            "exact_block": "_ ERROR collecting tests/python/test_old_failure.py _\ntests/python/test_old_failure.py:1: in <module>\nE   KeyError: 'historical-registry-entry'\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!\n",
+            "exception": "KeyError: 'historical-registry-entry'",
+            "test_path": "tests/python/test_old_failure.py"
+          }
+        ],
+        "command": "pytest tests/python -q",
+        "current_required_check": false,
+        "exit_code": 2,
+        "experiment_id": "exp7291-reuse-fixture",
+        "focused_checks": [
+          {
+            "command": "pytest explicit_test.py",
+            "exit_code": 0,
+            "log_path": "historical-focused.log",
+            "log_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "name": "focused_pytest",
+            "passed": true
+          }
+        ],
+        "honest_verdict": "complete_disqualified_historical_validation_failed",
+        "log_path": "results/raw/experiment_7291_v641_reuse_fixture/validation/full_python_suite.log",
+        "log_sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+        "milestone": "2026.09.641",
+        "observed_at_utc": null,
+        "predates_current_milestone": true,
+        "quarantined": false,
+        "resolved": false,
+        "terminal_class": "disqualified"
+      },
+      {
+        "artifact_path": "results/experiment_7292_v641_reuse_canary.json",
+        "artifact_sha256": "sha256:e45f8e598f17dd01efba18179b51260c0653fb0f4400bc33eabed8fdd53bf454",
+        "collection_errors": [
+          {
+            "exact_block": "_ ERROR collecting tests/python/test_old_failure.py _\ntests/python/test_old_failure.py:1: in <module>\nE   KeyError: 'historical-registry-entry'\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!\n",
+            "exception": "KeyError: 'historical-registry-entry'",
+            "test_path": "tests/python/test_old_failure.py"
+          }
+        ],
+        "command": "pytest tests/python -q",
+        "current_required_check": false,
+        "exit_code": 2,
+        "experiment_id": "exp7292-reuse-canary",
+        "focused_checks": [
+          {
+            "command": "pytest explicit_test.py",
+            "exit_code": 0,
+            "log_path": "historical-focused.log",
+            "log_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "name": "focused_pytest",
+            "passed": true
+          }
+        ],
+        "honest_verdict": "complete_disqualified_historical_validation_failed",
+        "log_path": "results/raw/experiment_7292_v641_reuse_canary/validation/full_python_suite.log",
+        "log_sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+        "milestone": "2026.09.641",
+        "observed_at_utc": null,
+        "predates_current_milestone": true,
+        "quarantined": false,
+        "resolved": false,
+        "terminal_class": "disqualified"
+      },
+      {
+        "artifact_path": "results/experiment_7293_v641_reuse_measurement.json",
+        "artifact_sha256": "sha256:7aaa48c6ccdf7d073294461560efc213a419e1ad33a0a7aa615d54ee1f1bb4e7",
+        "collection_errors": [
+          {
+            "exact_block": "_ ERROR collecting tests/python/test_old_failure.py _\ntests/python/test_old_failure.py:1: in <module>\nE   KeyError: 'historical-registry-entry'\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!\n",
+            "exception": "KeyError: 'historical-registry-entry'",
+            "test_path": "tests/python/test_old_failure.py"
+          }
+        ],
+        "command": "pytest tests/python -q",
+        "current_required_check": false,
+        "exit_code": 2,
+        "experiment_id": "exp7293-reuse-measurement",
+        "focused_checks": [
+          {
+            "command": "pytest explicit_test.py",
+            "exit_code": 0,
+            "log_path": "historical-focused.log",
+            "log_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "name": "focused_pytest",
+            "passed": true
+          }
+        ],
+        "honest_verdict": "complete_disqualified_historical_validation_failed",
+        "log_path": "results/raw/experiment_7293_v641_reuse_measurement/validation-attempt-1/full_python_suite.log",
+        "log_sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+        "milestone": "2026.09.641",
+        "observed_at_utc": null,
+        "predates_current_milestone": true,
+        "quarantined": false,
+        "resolved": false,
+        "terminal_class": "disqualified"
+      },
+      {
+        "artifact_path": "results/experiment_7294_v641_reuse_audit.json",
+        "artifact_sha256": "sha256:06c9080ac7e076baded1a78b1007e720acffbee7e63dc241430e3d437b31f576",
+        "collection_errors": [
+          {
+            "exact_block": "_ ERROR collecting tests/python/test_old_failure.py _\ntests/python/test_old_failure.py:1: in <module>\nE   KeyError: 'historical-registry-entry'\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!\n",
+            "exception": "KeyError: 'historical-registry-entry'",
+            "test_path": "tests/python/test_old_failure.py"
+          }
+        ],
+        "command": "pytest tests/python -q",
+        "current_required_check": false,
+        "exit_code": 2,
+        "experiment_id": "exp7294-reuse-audit",
+        "focused_checks": [
+          {
+            "command": "pytest explicit_test.py",
+            "exit_code": 0,
+            "log_path": "historical-focused.log",
+            "log_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "name": "focused_pytest",
+            "passed": true
+          }
+        ],
+        "honest_verdict": "complete_disqualified_historical_validation_failed",
+        "log_path": "results/raw/experiment_7294_v641_reuse_audit/validation/full_python_suite.log",
+        "log_sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+        "milestone": "2026.09.641",
+        "observed_at_utc": null,
+        "predates_current_milestone": true,
+        "quarantined": false,
+        "resolved": false,
+        "terminal_class": "disqualified"
+      }
+    ],
+    "incident_open": true,
+    "status": "degraded_open",
+    "unresolved_collection_error_observation_count": 5
+  },
+  "reproducibility_checksum": "sha256:5c75a75a2c8fd3acf3c772a93a59942569a2d31dbfabf8ee8d7ed99de2ec9cdb",
+  "required_checks_passed": true,
+  "resolved_imports": {
+    "carnot.experiment_7303_v642_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/python/carnot/experiment_7303_v642_validation_scope.py",
+    "carnot.reporting.experiment_7303_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/python/carnot/reporting/experiment_7303_validation_scope.py"
+  },
+  "rows": [
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "affected_test_failure",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "A required test failure remains a failure with its real exit code.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_affected_failure_propagates_actual_exit"
+    },
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "unscoped_pytest_target",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "A directory-level pytest target cannot enter the command plan.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_unscoped_pytest_target_is_rejected"
+    },
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "missing_expected_command",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "Every named required command must have exactly one receipt.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_missing_expected_command_cannot_pass"
+    },
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "unrelated_collection_failure",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "Historical repository debt stays separate from current validation.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_unrelated_history_does_not_become_pass_receipt"
+    },
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "clean_scoped_run",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "A clean explicit run uses actual subprocess arguments and exits.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_clean_scoped_run_and_terminal_artifact"
+    }
+  ],
+  "run_date": "20260914",
+  "sample_size_budget": {
+    "attempted_controls": 5,
+    "censored_controls": 0,
+    "complete_controls": 5,
+    "outcome_based_extension": false,
+    "planned_controls": 5,
+    "stopping_rule": "run each of five frozen validation controls once; do not add a repository-wide pytest target"
+  },
+  "schema": "carnot.validation_scope.v1",
+  "scope_control_rows": [
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "affected_test_failure",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "A required test failure remains a failure with its real exit code.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_affected_failure_propagates_actual_exit"
+    },
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "unscoped_pytest_target",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "A directory-level pytest target cannot enter the command plan.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_unscoped_pytest_target_is_rejected"
+    },
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "missing_expected_command",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "Every named required command must have exactly one receipt.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_missing_expected_command_cannot_pass"
+    },
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "unrelated_collection_failure",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "Historical repository debt stays separate from current validation.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_unrelated_history_does_not_become_pass_receipt"
+    },
+    {
+      "abstentions": 0,
+      "actual_exit_code": 0,
+      "actual_subprocess_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "censored": false,
+      "control_id": "clean_scoped_run",
+      "costs": {
+        "allocated_validation_s": 0.004484939994290471
+      },
+      "errors": [],
+      "metrics": {
+        "control_passed": true
+      },
+      "passed": true,
+      "principle": "A clean explicit run uses actual subprocess arguments and exits.",
+      "test_node": "tests/python/test_experiment_7303_v642_validation_scope.py::test_scenario_report_7303_clean_scoped_run_and_terminal_artifact"
+    }
+  ],
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:b2f1db1cfb4c654ab80a70fb444cd9300d00e06164270d5d631e7c9e5bdc4e0a",
+      "terminal_class": "input"
+    },
+    "CLAUDE.md": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:972efa0e806830e956f990d23a93115997a0dcd1736c355295076380ab9026fd",
+      "terminal_class": "input"
+    },
+    "CODEX.md": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:082c858e9e6c063654f9db36dc0273ed9446e7f0acc73b67dfcdc1c51a4f4d13",
+      "terminal_class": "input"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:ebfc53c21a8c83296b608f857b024e1d2f40c3b24eb7f5598a0b0fde727b07d4",
+      "terminal_class": "input"
+    },
+    "ops/e2e-test-plan.md": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:f14b76cf3ca31c07a80dd3aa7b2a6a38598b004fcb7305506e48b9eb03d33182",
+      "terminal_class": "input"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1514443cd4dd2e8e2e49f9fc7389cb0fc8125cf7448554e8d7714b9aff976a5a",
+      "terminal_class": "input"
+    },
+    "python/carnot/experiment_7289_v641_arc_boundary.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:e9bf955219736217ebe0b1dc4e682a53440c75f2d68a9d230158f2d74b58fe53",
+      "terminal_class": "input"
+    },
+    "python/carnot/experiment_7293_v641_reuse_measurement.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:2d0fed0e1f8c74cfa00c5d9b7c950069ebef72081d70755cb6cab1f1f522554c",
+      "terminal_class": "input"
+    },
+    "python/carnot/experiment_7296_v641_mixture_learning.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:c74a55a38784deda8615a2ab80d9fcfac4b9513931ca6f1b2e13ac87879dd7b5",
+      "terminal_class": "input"
+    },
+    "python/carnot/experiment_7303_v642_validation_scope.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:db1941226b48d952adda10cac238337e7af0f0a0c48ec3575a78dd1006d372c6",
+      "terminal_class": "input"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:db1941226b48d952adda10cac238337e7af0f0a0c48ec3575a78dd1006d372c6",
+      "terminal_class": "input"
+    },
+    "research-program.md": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:f5841ed2ac9eb91ce6037aac3840be69720fb87b8ba0b59e3747ed768ea8536a",
+      "terminal_class": "input"
+    },
+    "results/experiment_7289_v641_arc_boundary.json": {
+      "experiment_id": "exp7289-arc-boundary",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:2c5467fb50561fb1f5736aca5f1b60d588922bec63e0b97495377c805500ad9a",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7291_v641_reuse_fixture.json": {
+      "experiment_id": "exp7291-reuse-fixture",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:f02d1178b4e8cd683ab2c8f6219d371ccd72a190c06b8fb89dc8c68fe14f7f76",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7292_v641_reuse_canary.json": {
+      "experiment_id": "exp7292-reuse-canary",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:e45f8e598f17dd01efba18179b51260c0653fb0f4400bc33eabed8fdd53bf454",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7293_v641_reuse_measurement.json": {
+      "experiment_id": "exp7293-reuse-measurement",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:7aaa48c6ccdf7d073294461560efc213a419e1ad33a0a7aa615d54ee1f1bb4e7",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7294_v641_reuse_audit.json": {
+      "experiment_id": "exp7294-reuse-audit",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:06c9080ac7e076baded1a78b1007e720acffbee7e63dc241430e3d437b31f576",
+      "terminal_class": "disqualified"
+    },
+    "results/raw/experiment_7289_v641_arc_boundary/validation/04_full_python_suite.log": {
+      "experiment_id": "exp7289-arc-boundary",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "terminal_class": "failed_validation_log"
+    },
+    "results/raw/experiment_7291_v641_reuse_fixture/validation/full_python_suite.log": {
+      "experiment_id": "exp7291-reuse-fixture",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "terminal_class": "failed_validation_log"
+    },
+    "results/raw/experiment_7292_v641_reuse_canary/validation/full_python_suite.log": {
+      "experiment_id": "exp7292-reuse-canary",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "terminal_class": "failed_validation_log"
+    },
+    "results/raw/experiment_7293_v641_reuse_measurement/validation-attempt-1/full_python_suite.log": {
+      "experiment_id": "exp7293-reuse-measurement",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "terminal_class": "failed_validation_log"
+    },
+    "results/raw/experiment_7294_v641_reuse_audit/validation/full_python_suite.log": {
+      "experiment_id": "exp7294-reuse-audit",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:68bfcf63f43b338ee971cb591c1687120385294ccff33ffe346fd6076fd298f3",
+      "terminal_class": "failed_validation_log"
+    },
+    "results/raw/experiment_7303/historical_validation_evidence.json": {
+      "experiment_id": "exp7303-validation-scope",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:ada5ebbab2c2bf3020b9d45026a51b6e965b955c8fef4f5c8be2cf4211d80456",
+      "terminal_class": "historical_evidence_sidecar"
+    },
+    "scripts/adversarial_verify.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:ea640d4ffe9f85d9516c17bc9998418992e62b7e213cdf518d51ceedef884a2a",
+      "terminal_class": "input"
+    },
+    "scripts/check_spec_coverage.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1a0397971976fb4d52e235030da26ecaafbf1e1742ee26b13881a780dda55d25",
+      "terminal_class": "input"
+    },
+    "scripts/experiments/experiment_7303_v642_validation_scope.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:db1941226b48d952adda10cac238337e7af0f0a0c48ec3575a78dd1006d372c6",
+      "terminal_class": "input"
+    },
+    "scripts/verdict_row_consistency_lint.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:aba5d81eff55aa9f4c57481b42a65bb23777a9ac2164c1c8cefa05d9449a603c",
+      "terminal_class": "input"
+    },
+    "tests/python/test_experiment_7303_v642_validation_scope.py": {
+      "experiment_id": null,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:9557396dd8ec0413d7e9f8bc93c3351f8adde9d65dbc5ee68325c33233b35cbf",
+      "terminal_class": "input"
+    }
+  },
+  "started_at_utc": "2026-09-29T21:19:59.588035+00:00",
+  "status": "complete",
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean carnot.reporting.experiment_7303_validation_scope carnot.experiment_7303_v642_validation_scope",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean",
+        "carnot.reporting.experiment_7303_validation_scope",
+        "carnot.experiment_7303_v642_validation_scope"
+      ],
+      "duration_s": 0.017427287995815277,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/00_worktree_imports.log",
+      "log_sha256": "sha256:25794b8d35a06a9cd67e9e5b05d40ccb8cc6fdc5052f5276e47fcc043cdd4fa5",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7303_v642_validation_scope\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/python/carnot/experiment_7303_v642_validation_scope.py\", \"carnot.reporting.experiment_7303_validation_scope\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/python/carnot/reporting/experiment_7303_validation_scope.py\"}}\ncontrolled pass\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7303_v642_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/python/carnot/experiment_7303_v642_validation_scope.py",
+        "carnot.reporting.experiment_7303_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/python/carnot/reporting/experiment_7303_validation_scope.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7303-fyzqasx_/focused tests/python/test_affected.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/focused",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "duration_s": 0.022424699971452355,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/01_focused_pytest.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "focused_pytest",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/coverage run --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/raw/experiment_7303/.coverage '--include=*/reporting/experiment_7303_validation_scope.py,*/experiment_7303_v642_validation_scope.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7303-fyzqasx_/coverage tests/python/test_affected.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/raw/experiment_7303/.coverage",
+        "--include=*/reporting/experiment_7303_validation_scope.py,*/experiment_7303_v642_validation_scope.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7303-fyzqasx_/coverage",
+        "tests/python/test_affected.py",
+        "-q"
+      ],
+      "duration_s": 0.020219404948875308,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/02_changed_module_coverage.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "changed_module_coverage",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/coverage report --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/raw/experiment_7303/.coverage '--include=*/reporting/experiment_7303_validation_scope.py,*/experiment_7303_v642_validation_scope.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/coverage",
+        "report",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/raw/experiment_7303/.coverage",
+        "--include=*/reporting/experiment_7303_validation_scope.py,*/experiment_7303_v642_validation_scope.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.023349136987235397,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "changed_module_coverage_report",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/ruff check python/carnot/reporting/experiment_7303_validation_scope.py python/carnot/experiment_7303_v642_validation_scope.py scripts/experiments/experiment_7303_v642_validation_scope.py tests/python/test_affected.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "python/carnot/experiment_7303_v642_validation_scope.py",
+        "scripts/experiments/experiment_7303_v642_validation_scope.py",
+        "tests/python/test_affected.py"
+      ],
+      "duration_s": 0.02099366096081212,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/04_ruff_check.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "ruff_check",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/ruff format --check python/carnot/reporting/experiment_7303_validation_scope.py python/carnot/experiment_7303_v642_validation_scope.py scripts/experiments/experiment_7303_v642_validation_scope.py tests/python/test_affected.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "python/carnot/experiment_7303_v642_validation_scope.py",
+        "scripts/experiments/experiment_7303_v642_validation_scope.py",
+        "tests/python/test_affected.py"
+      ],
+      "duration_s": 0.03181138797663152,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/05_ruff_format.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "ruff_format",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/mypy python/carnot/reporting/experiment_7303_validation_scope.py python/carnot/experiment_7303_v642_validation_scope.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/mypy",
+        "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "python/carnot/experiment_7303_v642_validation_scope.py"
+      ],
+      "duration_s": 0.01759547396795824,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/06_changed_module_mypy.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "changed_module_mypy",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_affected.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_affected.py"
+      ],
+      "duration_s": 0.032215026032645255,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "scoped_spec_coverage",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/raw/experiment_7303/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/raw/experiment_7303/measured-terminal-candidate.json"
+      ],
+      "duration_s": 0.018183880019932985,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/00_adversarial_verify.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "adversarial_verify",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "measured_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/raw/experiment_7303/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/pytest/coverage/test_scenario_report_7303_clea0/clean/results/raw/experiment_7303/measured-terminal-candidate.json"
+      ],
+      "duration_s": 0.029530200990848243,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7303/validation/01_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:94e67ffa173286df4032dbd8ecf774cbc3647f4d18d5da04f5cf97d670609156",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "controlled pass\n",
+      "passed": true,
+      "scope": "measured_terminal_candidate",
+      "timed_out": false
+    }
+  ],
+  "validation_scope_ready_score": 1,
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true
+}

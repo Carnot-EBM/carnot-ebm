@@ -1,6 +1,6 @@
 # Carnot — E2E Test Plan
 
-**Last Updated:** 2026-09-20
+**Last Updated:** 2026-09-29
 
 ## E2E Test Strategy
 
@@ -233,3 +233,42 @@ and check the result with `scripts/adversarial_verify.py --json` and
 `scripts/verdict_row_consistency_lint.py --strict`. Require 48 calls from 24
 families and zero model loads. Runner readiness requires a passing full Python
 suite receipt; a collection failure keeps readiness zero.
+
+### E2E-015: Exp7852 public source fixture (CPU)
+
+Spec ref: REQ-REPORT-7852. Run
+`pytest -n 0 -o addopts= --no-cov -q tests/python/test_source_boundary_7852.py`.
+The test invokes the real script-path CLI with a private public-only fixture,
+cold-replays its feature shard, and confirms that a row containing an evaluator
+label fails the same CLI gate. Both routes must work without an ambient
+`PYTHONPATH` that includes the repository root.
+
+### E2E-016: Exp7868 intervention fixture and cold replay (CPU)
+
+Spec ref: REQ-REPORT-7868-V683. Run
+`python scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260929 --fixture-e2e /tmp/carnot-7868-fixture.json`, then use
+`--cold-replay /tmp/carnot-7868-fixture.json` through the same CLI. Require 24
+independent families, zero model calls, and a passing replay. The focused
+`tests/python/test_experiment_7868_v683_intervention_protocol.py` exercises
+checkpoint reuse, code-bound identity drift, fixture hash drift, and the
+terminal validator paths; combined unit and CLI coverage must reach 100% for
+the two Exp7868 modules and its CLI.
+
+### E2E-017: Exp7874 supervisor delta CLI (CPU)
+
+Spec ref: REQ-REPORT-7874. Run
+`pytest -n 0 -o addopts= --no-cov -q tests/python/test_arc_supervisor_delta_7874.py`.
+The direct script-path CLI must reduce a private empty ledger, reject missing
+required arguments, and cold-replay a zero-firing candidate. A candidate that
+claims a firing without receipts must fail replay. No game or model is run.
+
+### E2E-018: V685 authority lifecycle CLI (CPU)
+
+Spec ref: REQ-REPORT-7891-V685. Run
+`pytest -n 0 -o addopts= --no-cov -q tests/python/test_experiment_7891_v685_authority_lifecycle.py`,
+then run `python scripts/experiments/experiment_7891_v685_authority_lifecycle.py --date 20260929`.
+The private CLI test must accept matching activated authority, reject a changed
+candidate during cold replay, and execute the manifest's negative replay with
+exit 1. The current CLI must pass all required validation receipts, all twelve
+authority mutations, adversarial verification, strict row consistency, and a
+cold replay of the published artifact. It makes no model or science claim.

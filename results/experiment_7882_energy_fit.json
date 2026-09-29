@@ -1,0 +1,81 @@
+{
+  "experiment": 7882,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-29",
+  "started_at": "2026-09-29T16:39:23.074637+00:00",
+  "finished_at": "2026-09-29T16:39:23.074637+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Fit calibrated source energies against same-information controls",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7880-source-boundary",
+  "failed_field": "source_boundary_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7880_v684_source_boundary.json",
+  "failed_evidence_sha256": "sha256:24413debf05f9093b20325acba1f8dafa46c340ec09799efb424444733269679",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7880-source-boundary",
+    "failed_field": "source_boundary_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7880_v684_source_boundary.json",
+    "failed_evidence_sha256": "sha256:24413debf05f9093b20325acba1f8dafa46c340ec09799efb424444733269679"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7880-source-boundary.source_boundary_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7880-source-boundary",
+      "artifact_field": "source_boundary_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7880_v684_source_boundary.json",
+      "artifact_sha256": "sha256:24413debf05f9093b20325acba1f8dafa46c340ec09799efb424444733269679"
+    },
+    {
+      "upstream": "exp7880-source-boundary",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7880_v684_source_boundary.json",
+      "artifact_sha256": "sha256:24413debf05f9093b20325acba1f8dafa46c340ec09799efb424444733269679"
+    },
+    {
+      "upstream": "exp7880-source-boundary",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['positive', 'circular_positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7880_v684_source_boundary.json",
+      "artifact_sha256": "sha256:24413debf05f9093b20325acba1f8dafa46c340ec09799efb424444733269679"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

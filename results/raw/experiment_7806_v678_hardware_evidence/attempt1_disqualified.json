@@ -1,0 +1,1250 @@
+{
+  "MODEL_SPECS": [],
+  "acceleration_bound": null,
+  "acceptance_gate_results": {
+    "decision_benefit": 0,
+    "efficiency": 0,
+    "probability_quality": 0,
+    "readiness": 0,
+    "retention": 0,
+    "validity": 0
+  },
+  "acquisition_recommendation": {
+    "basis": "No qualified local whole-service board benefit",
+    "decision": "defer",
+    "vendor_z1t_estimate_is_local_measurement": false
+  },
+  "actual_inference_substrate_class": "aggregation",
+  "board_rows": [
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "KV260",
+      "censored": false,
+      "completed": false,
+      "excluded": false,
+      "expected_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "historical_verdict": "historical_fabric_k_max<=5",
+      "k_max": 5,
+      "last_authenticated_evidence_date": "20260913",
+      "metric": null,
+      "next_missing_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "processor_class": "fpga_fabric",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "source_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "started": false,
+      "state": "historical_fabric_k_max<=5",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "PolarFire",
+      "censored": false,
+      "completed": false,
+      "excluded": false,
+      "expected_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "historical_verdict": "historical_linux_cpu_only",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260913",
+      "metric": null,
+      "next_missing_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "processor_class": "linux_cpu",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "hash-matched Linux CPU dispatch only",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "source_path": "results/experiment_7231_v636_board_continuity.json",
+      "started": false,
+      "state": "historical_linux_cpu_only",
+      "venue": "polarfire_linux_cpu_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "historical_verdict": "blocked_physical_change_0xffffffff",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260915",
+      "metric": null,
+      "next_missing_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified execution; physical JTAG IDCODE blocked",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "started": false,
+      "state": "blocked_physical_change_0xffffffff",
+      "venue": "none_read_only"
+    }
+  ],
+  "claim_scope": {
+    "NPU": "local access unqualified",
+    "TSU": "local access unqualified; vendor Z1T estimates are not local numbers",
+    "acquisition": "defer until a matched board whole-service run is measured",
+    "decision": "unmeasured",
+    "hardware_advantage": "unmeasured",
+    "learning": "unmeasured",
+    "probability": "unmeasured"
+  },
+  "duration_s": 0.06497924600262195,
+  "evidence_unresolved": [],
+  "experiment_id": 7806,
+  "field_principles": {
+    "MODEL_SPECS": "Cited models are not current invocations.",
+    "acceleration_bound": "Keep source bytes and claim limits visible.",
+    "acceptance_gate_results": "Working custody does not establish benefit.",
+    "acquisition_recommendation": "Keep source bytes and claim limits visible.",
+    "actual_inference_substrate_class": "Exact provenance and scope remain visible.",
+    "board_rows": "Every attached board retains its physical prerequisite.",
+    "claim_scope": "Historical access does not prove current speedup.",
+    "decision_benefit_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "duration_s": "Only actual elapsed work determines duration.",
+    "efficiency_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "evidence_unresolved": "Unrecovered bytes stay unresolved with both hashes.",
+    "experiment_id": "Each record needs a unique owner.",
+    "field_principles": "The rationale for every field and gate travels with the result.",
+    "flagged_adversarial": "Invalid evidence cannot open a downstream gate.",
+    "gate_check_summary": "A missing producer differs from a scientific null.",
+    "hardware_advantage_claimed": "Exact provenance and scope remain visible.",
+    "hardware_continuity_accounted": "Inventory completeness is not fresh execution.",
+    "hardware_operations_issued": "Exact provenance and scope remain visible.",
+    "honest_verdict": "Unchanged external inputs must not consume retries.",
+    "host_stage_fraction": "Keep source bytes and claim limits visible.",
+    "inference_substrate": "Aggregation invokes no model or board.",
+    "inference_substrate_class": "Duration floors follow actual invoked work.",
+    "literature_to_future_requirements": "Exact provenance and scope remain visible.",
+    "milestone": "The milestone binds the current acceptance contract.",
+    "model_invocation_counts": "Loaded-file hashes and tokens are zero without calls.",
+    "model_specs": "Only current calls enter model metadata.",
+    "phase_spans": "Real phase times expose stalled work.",
+    "planned_inference_substrate_class": "Exact provenance and scope remain visible.",
+    "preconditions_checked": "Cheap custody and resource failures precede computation.",
+    "probability_quality_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "random_seed": "A deterministic audit draws no random sample.",
+    "readiness_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "reopen_condition": "Keep source bytes and claim limits visible.",
+    "reproducibility_checksum": "Exact code, inputs, roles and parameters bind replay.",
+    "retention_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "rows": "Individual units make the headline reproducible.",
+    "rows_checksum": "Exact provenance and scope remain visible.",
+    "run_date": "Dates separate historical and current observations.",
+    "sample_size_budget": "Historical views do not multiply independent boards.",
+    "schema": "Exact provenance and scope remain visible.",
+    "service_measured": "Vendor estimates cannot open a local speed gate.",
+    "service_source_status": "Keep source bytes and claim limits visible.",
+    "source_artifact_hashes": "Old bytes cannot be replaced by current prose.",
+    "stage_opportunity_map": "Keep source bytes and claim limits visible.",
+    "terminal_scope": "Keep source bytes and claim limits visible.",
+    "validation_receipts": "Required checks control readiness.",
+    "validity_gate": "Unmeasured benefit remains null; invalid work cannot qualify.",
+    "verdict_class": "Claim strength travels with the result.",
+    "verifier_is_oracle": "Fixture truth does not establish semantic accuracy."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [
+    {
+      "artifact_hash": null,
+      "artifact_path": "results/experiment_7805_v678_service_cost.json",
+      "expected": 1,
+      "field": "service_evidence_ready_score",
+      "observed": null,
+      "operator": "==",
+      "passed": false,
+      "upstream_id": "Exp7805"
+    },
+    {
+      "artifact_hash": "sha256:4ed658ea8e1bbb298e21d95dfac36835d2e26247ab370df7a5a4b757c688e35f",
+      "artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/01_focused_pytest.log",
+      "expected": 0,
+      "field": "focused_pytest",
+      "observed": 1,
+      "operator": "==",
+      "passed": false,
+      "upstream_id": "Exp7806:validation"
+    },
+    {
+      "artifact_hash": "sha256:907c9fe3dd9a711988f857e40e5d2db3287c3952c6ffcce5aac27ab7e43870eb",
+      "artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/02_changed_module_coverage.log",
+      "expected": 0,
+      "field": "changed_module_coverage",
+      "observed": 1,
+      "operator": "==",
+      "passed": false,
+      "upstream_id": "Exp7806:validation"
+    },
+    {
+      "artifact_hash": "sha256:ccc84ada72da7a6fd5de17861e2a7a4374e0d1267e1be1dae1a950c86defc8b5",
+      "artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/00_full_python_suite.log",
+      "expected": 0,
+      "field": "full_python_suite",
+      "observed": 1,
+      "operator": "==",
+      "passed": false,
+      "upstream_id": "Exp7806:validation"
+    },
+    {
+      "artifact_hash": "sha256:2f4cfbf140426de67f13d4a401832b5e27f2e423891e69618127e448733dc382",
+      "artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/01_fresh_process_cold_replay.log",
+      "expected": 0,
+      "field": "fresh_process_cold_replay",
+      "observed": 1,
+      "operator": "==",
+      "passed": false,
+      "upstream_id": "Exp7806:validation"
+    }
+  ],
+  "hardware_advantage_claimed": false,
+  "hardware_continuity_accounted": true,
+  "hardware_operations_issued": [],
+  "honest_verdict": "complete_disqualified_required_checks",
+  "host_stage_fraction": null,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "literature_to_future_requirements": [
+    {
+      "historical_git_blob": "7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "requirement": "Measure local preparation, transfer, sampling, dense readout and durable result on an accessible TSU.",
+      "source": "https://extropic.ai/writing/z1t"
+    },
+    {
+      "historical_git_blob": "7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "requirement": "Measure sparse Boltzmann setup, transfer, readout and complete local service cost before proposing FPGA acquisition.",
+      "source": "https://doi.org/10.1038/s41467-026-75119-0"
+    }
+  ],
+  "milestone": "2026.09.678",
+  "model_invocation_counts": {
+    "generations": 0,
+    "loaded_files": [],
+    "loads": 0,
+    "tokens": 0
+  },
+  "model_specs": [],
+  "phase_spans": [
+    {
+      "completed_units": 6,
+      "duration_s": 0.06497924600262195,
+      "end_monotonic_s": 242705.384481146,
+      "phase": "preconditions_and_reduction",
+      "start_monotonic_s": 242705.3195019
+    }
+  ],
+  "planned_inference_substrate_class": "aggregation",
+  "preconditions_checked": {
+    "backend": "host_cpu_read_only",
+    "board_operations_issued": [],
+    "conductor_pre_gate_receipt": {
+      "is_science_producer": false,
+      "path": "results/experiment_7805_service_cost.json",
+      "sha256": null
+    },
+    "current_board_reachability": "not_probed",
+    "custody_checks": [
+      {
+        "artifact_hash": "sha256:f23ee469ffa99c6c4df7e161b032d526f4c1f5627b0548b07aa991e72211081c",
+        "artifact_path": "results/experiment_7751_v674_hardware_continuity.json",
+        "expected": true,
+        "field": "raw_rows",
+        "observed": true,
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751"
+      },
+      {
+        "artifact_hash": "sha256:c603c6b5b1e859090289be1831e180e0ea0c29986e6a3b6181b21278c6823573",
+        "artifact_path": "results/experiment_7779_v676_hardware_evidence.json",
+        "expected": true,
+        "field": "raw_rows",
+        "observed": true,
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779"
+      },
+      {
+        "artifact_hash": "sha256:c603c6b5b1e859090289be1831e180e0ea0c29986e6a3b6181b21278c6823573",
+        "artifact_path": "results/experiment_7779_v676_hardware_evidence.json",
+        "expected": "disqualified",
+        "field": "verdict_class",
+        "observed": "disqualified",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:KV260"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "raw_expected_hash",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:KV260"
+      },
+      {
+        "artifact_hash": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+        "artifact_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "inventory_raw_evidence_sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:KV260"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "inventory_source_sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:KV260"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "field": "raw_source_sha256",
+        "observed": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:KV260"
+      },
+      {
+        "artifact_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+        "artifact_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "expected": "kv260_fpga_fabric_historical",
+        "field": "raw_venue",
+        "observed": "kv260_fpga_fabric_historical",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:KV260"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "raw_expected_hash",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+        "artifact_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "inventory_raw_evidence_sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "inventory_source_sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "field": "raw_source_sha256",
+        "observed": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+        "artifact_path": "results/experiment_7231_v636_board_continuity.json",
+        "expected": "polarfire_linux_cpu_historical",
+        "field": "raw_venue",
+        "observed": "polarfire_linux_cpu_historical",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:PolarFire"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "raw_expected_hash",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+        "artifact_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "inventory_raw_evidence_sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "inventory_source_sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "field": "raw_source_sha256",
+        "observed": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "artifact_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+        "expected": "none_read_only",
+        "field": "raw_venue",
+        "observed": "none_read_only",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:GateMate"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:AMD XDNA NPU"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "raw_expected_hash",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:AMD XDNA NPU"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:Extropic Z1T/TSU"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "raw_expected_hash",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:Extropic Z1T/TSU"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "historical_evidence_sha256",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7751:Kona"
+      },
+      {
+        "artifact_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "artifact_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+        "expected": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "field": "raw_expected_hash",
+        "observed": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+        "operator": "==",
+        "passed": true,
+        "upstream_id": "Exp7779:Kona"
+      }
+    ],
+    "declared_science_producer": "results/experiment_7805_v678_service_cost.json",
+    "historical_exp7779_full_suite_exit": 2,
+    "historical_exp7779_verdict": "complete_disqualified_required_checks",
+    "historical_exp7793_verdict": "complete_blocked_missing_service_evidence",
+    "input_checks": [
+      {
+        "path": "AGENTS.md",
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      {
+        "path": "CODEX.md",
+        "present": true,
+        "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+      },
+      {
+        "path": "CLAUDE.md",
+        "present": true,
+        "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+      },
+      {
+        "path": "research-program.md",
+        "present": true,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      {
+        "path": "ops/exclusion_manifest.yaml",
+        "present": true,
+        "sha256": "sha256:f7beb6b3481cd5b3fe02208fe7814e9dfa99cc6fef739c1f5594bd6b4468ca90"
+      },
+      {
+        "path": "ops/e2e-test-plan.md",
+        "present": true,
+        "sha256": "sha256:504b745814366cfb01c0e5047d2c5adb71a44883ae14e3e7e2abe6b96ce3df25"
+      },
+      {
+        "path": "scripts/experiment_template.py",
+        "present": true,
+        "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+      },
+      {
+        "path": "python/carnot/reporting/current_work_receipt.py",
+        "present": true,
+        "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+      },
+      {
+        "path": "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "present": true,
+        "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+      },
+      {
+        "path": "openspec/capabilities/research-reporting/spec.md",
+        "present": true,
+        "sha256": "sha256:68bd99faafac10611bdfb26040f9793582b23f44e69de62241643a93b42b86f0"
+      },
+      {
+        "path": "research-hardware-wishlist.md",
+        "present": true,
+        "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+      },
+      {
+        "path": "ops/hardware-bringup-prep.md",
+        "present": true,
+        "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+      },
+      {
+        "path": "ops/north-star.md",
+        "present": true,
+        "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+      }
+    ],
+    "resource_status": "local files and Git object only",
+    "root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "service_pre_gate_is_producer": false
+  },
+  "random_seed": null,
+  "reopen_condition": {
+    "GateMate": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+    "KV260": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+    "PolarFire": "A distinct FPGA workload with device-side execution and timing transcript"
+  },
+  "reproducibility_checksum": "sha256:10e01e2d75b435d672f91e33315b5768baf897cb8c34e2f22e1c0c101e112591",
+  "rows": [
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "KV260",
+      "censored": false,
+      "completed": false,
+      "excluded": false,
+      "expected_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "historical_verdict": "historical_fabric_k_max<=5",
+      "k_max": 5,
+      "last_authenticated_evidence_date": "20260913",
+      "metric": null,
+      "next_missing_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+      "processor_class": "fpga_fabric",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "source_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "started": false,
+      "state": "historical_fabric_k_max<=5",
+      "venue": "kv260_fpga_fabric_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": null,
+      "board": "PolarFire",
+      "censored": false,
+      "completed": false,
+      "excluded": false,
+      "expected_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "historical_verdict": "historical_linux_cpu_only",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260913",
+      "metric": null,
+      "next_missing_prerequisite": "A distinct FPGA workload with device-side execution and timing transcript",
+      "processor_class": "linux_cpu",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "hash-matched Linux CPU dispatch only",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "source_path": "results/experiment_7231_v636_board_continuity.json",
+      "started": false,
+      "state": "historical_linux_cpu_only",
+      "venue": "polarfire_linux_cpu_historical"
+    },
+    {
+      "acquisition_relevance": "defer: no measured board whole-service benefit",
+      "arm": "historical_accounting",
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "historical_verdict": "blocked_physical_change_0xffffffff",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260915",
+      "metric": null,
+      "next_missing_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified execution; physical JTAG IDCODE blocked",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "started": false,
+      "state": "blocked_physical_change_0xffffffff",
+      "venue": "none_read_only"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": "No qualified provider or device run",
+      "board": "AMD XDNA NPU",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "historical_verdict": "no_local_execution",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260927",
+      "metric": null,
+      "next_missing_prerequisite": "Operator-provided SDK/provider and device-side workload receipt",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "no qualified local NPU execution",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "source_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "started": false,
+      "state": "no_local_execution",
+      "venue": "none"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": "No local silicon or reproducible SDK execution",
+      "board": "Extropic Z1T/TSU",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "historical_verdict": "no_local_execution",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260927",
+      "metric": null,
+      "next_missing_prerequisite": "Operator access plus end-to-end SDK run including dense readout and transfers",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "vendor projected sparse energy; dense readout and transfers excluded",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "source_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "started": false,
+      "state": "no_local_execution",
+      "venue": "none"
+    },
+    {
+      "acquisition_relevance": "defer: complete service cost and local benefit unmeasured",
+      "arm": "historical_accounting",
+      "blocker": "No weights, recipe, or local runner",
+      "board": "Kona",
+      "censored": false,
+      "completed": false,
+      "excluded": true,
+      "expected_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "historical_verdict": "no_local_execution",
+      "k_max": null,
+      "last_authenticated_evidence_date": "20260927",
+      "metric": null,
+      "next_missing_prerequisite": "Reproducible local runner, weights, recipe and matched benchmark",
+      "processor_class": "none",
+      "raw_provenance": {
+        "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+        "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+      },
+      "scope": "public product disclosure only",
+      "seed": null,
+      "service_fraction": null,
+      "source_hash": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "source_path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "started": false,
+      "state": "no_local_execution",
+      "venue": "none"
+    }
+  ],
+  "rows_checksum": "sha256:e49098c5fd1fc34f12ed03746871427d9b00230a0d39fb6f97afa3e25f57dc2e",
+  "run_date": "20260928",
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 0,
+    "effective_independent_n": 2,
+    "eligible": 2,
+    "excluded": 1,
+    "intended": 3,
+    "started": 0
+  },
+  "schema": "carnot.experiment_7806.v1",
+  "service_measured": false,
+  "service_source_status": "missing",
+  "source_artifact_hashes": {
+    "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173": {
+      "date": "20260927",
+      "eligible": true,
+      "expected_sha256": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811",
+      "imported_fields": [
+        "historical_disclosure"
+      ],
+      "path": "git:7766c92e07b4cee74ece8d9e0ddfbea14fb69173",
+      "scope": "immutable_git_blob",
+      "sha256": "sha256:68252a8a1b015af07d69228edae902c69895f1f69aba1613b20df1a19b6bf811"
+    },
+    "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json": {
+      "date": "20260913",
+      "eligible": true,
+      "expected_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+      "imported_fields": [
+        "board",
+        "venue"
+      ],
+      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+      "scope": "dated_board_receipt",
+      "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+    },
+    "results/experiment_6559_gatemate_changed_state_continuity.json": {
+      "date": "20260915",
+      "eligible": true,
+      "expected_sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "imported_fields": [
+        "board",
+        "venue"
+      ],
+      "path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "scope": "dated_board_receipt",
+      "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66"
+    },
+    "results/experiment_7231_v636_board_continuity.json": {
+      "date": "20260913",
+      "eligible": true,
+      "expected_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+      "imported_fields": [
+        "board",
+        "venue"
+      ],
+      "path": "results/experiment_7231_v636_board_continuity.json",
+      "scope": "dated_board_receipt",
+      "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+    },
+    "results/experiment_7751_v674_hardware_continuity.json": {
+      "date": "20260927",
+      "eligible": true,
+      "imported_fields": [
+        "rows",
+        "hardware_continuity"
+      ],
+      "path": "results/experiment_7751_v674_hardware_continuity.json",
+      "scope": "historical_inventory",
+      "sha256": "sha256:f23ee469ffa99c6c4df7e161b032d526f4c1f5627b0548b07aa991e72211081c"
+    },
+    "results/experiment_7779_v676_hardware_evidence.json": {
+      "date": "20260927",
+      "eligible": false,
+      "imported_fields": [
+        "rows",
+        "validation_receipts"
+      ],
+      "path": "results/experiment_7779_v676_hardware_evidence.json",
+      "scope": "disqualified_historical_context",
+      "sha256": "sha256:c603c6b5b1e859090289be1831e180e0ea0c29986e6a3b6181b21278c6823573"
+    },
+    "results/experiment_7793_v677_hardware_evidence.json": {
+      "date": "20260927",
+      "eligible": false,
+      "imported_fields": [
+        "honest_verdict",
+        "verdict_class"
+      ],
+      "path": "results/experiment_7793_v677_hardware_evidence.json",
+      "scope": "prior_context",
+      "sha256": "sha256:da5ec3b53ef59c088d6e34204d84dbc0e02cee8b644183062380052fbd2f2141"
+    },
+    "results/experiment_7805_v678_service_cost.json": {
+      "date": null,
+      "eligible": false,
+      "imported_fields": [
+        "stage_times_ms",
+        "service_evidence_ready_score"
+      ],
+      "path": "results/experiment_7805_v678_service_cost.json",
+      "scope": "current_science_producer",
+      "sha256": null
+    },
+    "results/raw/experiment_7751_v674_hardware_continuity/rows.json": {
+      "date": null,
+      "eligible": true,
+      "imported_fields": [],
+      "path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "scope": "historical_raw_rows",
+      "sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a"
+    },
+    "results/raw/experiment_7779_v676_hardware_evidence/rows.json": {
+      "date": null,
+      "eligible": true,
+      "imported_fields": [],
+      "path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "scope": "disqualified_historical_raw_rows",
+      "sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6"
+    }
+  },
+  "stage_opportunity_map": {
+    "CPU counters": "host_stage; reduce count and dispatch overhead",
+    "FPGA predicate matching": "candidate board stage; requires a matching fabric transcript",
+    "Rust batching": "host_stage; amortize repeated host calls",
+    "preparation_ms": null,
+    "readout_ms": null,
+    "transfer_ms": null
+  },
+  "terminal_scope": "historical_board_custody_only",
+  "validation_receipts": {
+    "checks": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.reporting.experiment_7806_v678_hardware_evidence",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+          "--exp7303-resolve-imports",
+          "/home/ianblenke/github.com/ianblenke/carnot",
+          "carnot.reporting.experiment_7806_v678_hardware_evidence"
+        ],
+        "duration_s": 0.485204116004752,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/00_worktree_imports.log",
+        "log_sha256": "sha256:4524694374690536336d26d84071495da17336ebcfd55709be3bcf041ec00056",
+        "name": "worktree_imports",
+        "output_tail": "{\"resolved_imports\": {\"carnot.reporting.experiment_7806_v678_hardware_evidence\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7806_v678_hardware_evidence.py\"}}\n",
+        "passed": true,
+        "resolved_imports": {
+          "carnot.reporting.experiment_7806_v678_hardware_evidence": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7806_v678_hardware_evidence.py"
+        },
+        "scope": "changed_modules",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-7806/basetemp/focused tests/python/test_experiment_7751_v674_hardware_continuity.py tests/python/test_experiment_7779_v676_hardware_evidence.py tests/python/test_experiment_7793_v677_hardware_evidence.py tests/python/test_experiment_7806_v678_hardware_evidence.py -q",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7806/basetemp/focused",
+          "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+          "tests/python/test_experiment_7779_v676_hardware_evidence.py",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7806_v678_hardware_evidence.py",
+          "-q"
+        ],
+        "duration_s": 5.454606577986851,
+        "exit_code": 1,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/01_focused_pytest.log",
+        "log_sha256": "sha256:4ed658ea8e1bbb298e21d95dfac36835d2e26247ab370df7a5a4b757c688e35f",
+        "name": "focused_pytest",
+        "output_tail": "OR at setup of test_terminal_publication_classifies_validation _______\n\nself = PosixPath('/tmp/carnot-7806/basetemp/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-7806/basetemp/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_boundaries_and_missing_cost\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_changed_source\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_changed_summary\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_other_summary_tampering[rows]\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_other_summary_tampering[score]\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_other_summary_tampering[hardware_hash]\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_private_cli_cold_process\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_direct_cli_modes\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_missing_and_malformed_inventory\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_cost_only_maps_measured_quadratic_kernel\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_ineligible_or_invalid_cost\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_historical_blob_survives_current_append\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_unresolved_blob_is_excluded\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_board_hash_and_cold_replay\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_replay_rejects_row_change\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_replay_rejects_blob_and_snapshot_change\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_replay_rejects_summary_and_missing_git\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_cli_prepare_replay_and_validation_gate\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_cold_replay_on_authentic_sources\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_private_changed_digest_and_missing_source\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_private_service_and_unresolved_history\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_replay_rejects_summary_mutations_and_bad_git\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_publish_guard_rejects_invalid_receipts\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_cli_candidate_and_replay\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_cli_publishes_only_replayable_candidate\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_private_wrong_venue_and_digest\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_private_service_fraction_and_disqualification\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_cli_prepare_and_cold_replay\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_cold_replay_rejects_summary_mutations\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_frozen_validation_commands\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_terminal_publication_classifies_validation\n4 passed, 31 errors in 3.22s\n",
+        "passed": false,
+        "scope": "explicit_tests",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-7806/.coverage '--include=*/reporting/experiment_7806_v678_hardware_evidence.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-7806/basetemp/coverage tests/python/test_experiment_7751_v674_hardware_continuity.py tests/python/test_experiment_7779_v676_hardware_evidence.py tests/python/test_experiment_7793_v677_hardware_evidence.py tests/python/test_experiment_7806_v678_hardware_evidence.py -q",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "run",
+          "--data-file=/tmp/carnot-7806/.coverage",
+          "--include=*/reporting/experiment_7806_v678_hardware_evidence.py",
+          "-m",
+          "pytest",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7806/basetemp/coverage",
+          "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+          "tests/python/test_experiment_7779_v676_hardware_evidence.py",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7806_v678_hardware_evidence.py",
+          "-q"
+        ],
+        "duration_s": 9.769027784990612,
+        "exit_code": 1,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/02_changed_module_coverage.log",
+        "log_sha256": "sha256:907c9fe3dd9a711988f857e40e5d2db3287c3952c6ffcce5aac27ab7e43870eb",
+        "name": "changed_module_coverage",
+        "output_tail": " at setup of test_terminal_publication_classifies_validation _______\n\nself = PosixPath('/tmp/carnot-7806/basetemp/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-7806/basetemp/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_boundaries_and_missing_cost\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_changed_source\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_changed_summary\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_other_summary_tampering[rows]\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_other_summary_tampering[score]\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_other_summary_tampering[hardware_hash]\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_private_cli_cold_process\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_direct_cli_modes\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_missing_and_malformed_inventory\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_cost_only_maps_measured_quadratic_kernel\nERROR tests/python/test_experiment_7751_v674_hardware_continuity.py::test_reject_ineligible_or_invalid_cost\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_historical_blob_survives_current_append\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_unresolved_blob_is_excluded\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_board_hash_and_cold_replay\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_replay_rejects_row_change\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_replay_rejects_blob_and_snapshot_change\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_replay_rejects_summary_and_missing_git\nERROR tests/python/test_experiment_7779_v676_hardware_evidence.py::test_cli_prepare_replay_and_validation_gate\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_cold_replay_on_authentic_sources\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_private_changed_digest_and_missing_source\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_private_service_and_unresolved_history\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_replay_rejects_summary_mutations_and_bad_git\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_publish_guard_rejects_invalid_receipts\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_cli_candidate_and_replay\nERROR tests/python/test_experiment_7793_v677_hardware_evidence.py::test_cli_publishes_only_replayable_candidate\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_private_wrong_venue_and_digest\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_private_service_fraction_and_disqualification\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_cli_prepare_and_cold_replay\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_cold_replay_rejects_summary_mutations\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_frozen_validation_commands\nERROR tests/python/test_experiment_7806_v678_hardware_evidence.py::test_terminal_publication_classifies_validation\n4 passed, 31 errors in 6.26s\n",
+        "passed": false,
+        "scope": "explicit_tests_and_changed_modules",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-7806/.coverage '--include=*/reporting/experiment_7806_v678_hardware_evidence.py' --show-missing --fail-under=100",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+          "report",
+          "--data-file=/tmp/carnot-7806/.coverage",
+          "--include=*/reporting/experiment_7806_v678_hardware_evidence.py",
+          "--show-missing",
+          "--fail-under=100"
+        ],
+        "duration_s": 0.061750269000185654,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/03_changed_module_coverage_report.log",
+        "log_sha256": "sha256:01a9041ad7a5eaa1be3be4f65d1f5f3dce32791277eb890fabb33f59965dd7c4",
+        "name": "changed_module_coverage_report",
+        "output_tail": "Combined 1 file\nName                                                                Stmts   Miss  Cover   Missing\n-------------------------------------------------------------------------------------------------\npython/carnot/reporting/experiment_7806_v678_hardware_evidence.py     176      0   100%\n-------------------------------------------------------------------------------------------------\nTOTAL                                                                 176      0   100%\n",
+        "passed": true,
+        "scope": "changed_modules",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/experiment_7806_v678_hardware_evidence.py scripts/experiments/experiment_7806_v678_hardware_evidence.py tests/python/test_experiment_7751_v674_hardware_continuity.py tests/python/test_experiment_7779_v676_hardware_evidence.py tests/python/test_experiment_7793_v677_hardware_evidence.py tests/python/test_experiment_7806_v678_hardware_evidence.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+          "check",
+          "python/carnot/reporting/experiment_7806_v678_hardware_evidence.py",
+          "scripts/experiments/experiment_7806_v678_hardware_evidence.py",
+          "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+          "tests/python/test_experiment_7779_v676_hardware_evidence.py",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7806_v678_hardware_evidence.py"
+        ],
+        "duration_s": 0.014171440998325124,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/04_ruff_check.log",
+        "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "name": "ruff_check",
+        "output_tail": "All checks passed!\n",
+        "passed": true,
+        "scope": "changed_files",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/experiment_7806_v678_hardware_evidence.py scripts/experiments/experiment_7806_v678_hardware_evidence.py tests/python/test_experiment_7751_v674_hardware_continuity.py tests/python/test_experiment_7779_v676_hardware_evidence.py tests/python/test_experiment_7793_v677_hardware_evidence.py tests/python/test_experiment_7806_v678_hardware_evidence.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+          "format",
+          "--check",
+          "python/carnot/reporting/experiment_7806_v678_hardware_evidence.py",
+          "scripts/experiments/experiment_7806_v678_hardware_evidence.py",
+          "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+          "tests/python/test_experiment_7779_v676_hardware_evidence.py",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7806_v678_hardware_evidence.py"
+        ],
+        "duration_s": 0.012050355988321826,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/05_ruff_format.log",
+        "log_sha256": "sha256:ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+        "name": "ruff_format",
+        "output_tail": "6 files already formatted\n",
+        "passed": true,
+        "scope": "changed_files",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/reporting/experiment_7806_v678_hardware_evidence.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+          "python/carnot/reporting/experiment_7806_v678_hardware_evidence.py"
+        ],
+        "duration_s": 0.1205815139983315,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/06_changed_module_mypy.log",
+        "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+        "name": "changed_module_mypy",
+        "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+        "passed": true,
+        "scope": "changed_modules",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7751_v674_hardware_continuity.py tests/python/test_experiment_7779_v676_hardware_evidence.py tests/python/test_experiment_7793_v677_hardware_evidence.py tests/python/test_experiment_7806_v678_hardware_evidence.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/check_spec_coverage.py",
+          "tests/python/test_experiment_7751_v674_hardware_continuity.py",
+          "tests/python/test_experiment_7779_v676_hardware_evidence.py",
+          "tests/python/test_experiment_7793_v677_hardware_evidence.py",
+          "tests/python/test_experiment_7806_v678_hardware_evidence.py"
+        ],
+        "duration_s": 0.02185487499809824,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/affected/07_scoped_spec_coverage.log",
+        "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+        "name": "scoped_spec_coverage",
+        "output_tail": "OK: All tests reference specification requirements.\n",
+        "passed": true,
+        "scope": "explicit_tests",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-7806/full-suite tests/python -q",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "-n",
+          "0",
+          "-o",
+          "addopts=",
+          "--no-cov",
+          "--basetemp=/tmp/carnot-7806/full-suite",
+          "tests/python",
+          "-q"
+        ],
+        "duration_s": 1462.7651851800038,
+        "exit_code": 1,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/00_full_python_suite.log",
+        "log_sha256": "sha256:ccc84ada72da7a6fd5de17861e2a7a4374e0d1267e1be1dae1a950c86defc8b5",
+        "name": "full_python_suite",
+        "output_tail": "............................... [ 16%]\n........................................................................ [ 16%]\n........................................................................ [ 16%]\n........................................................................ [ 17%]\n........................................................................ [ 17%]\n...............s........................................................ [ 17%]\n........................................................................ [ 17%]\n........................................................................ [ 17%]\n........................................................................ [ 17%]\n....................................................................FFF. [ 17%]\n........................................................................ [ 17%]\n........................................................................ [ 17%]\n...................FF................................................... [ 17%]\n........................................................................ [ 18%]\n............................Traceback (most recent call last):\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/threading.py\", line 1381, in invoke_excepthook\n    hook(args)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/threadexception.py\", line 105, in thread_exception_hook\n    traceback.format_exception(\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/traceback.py\", line 139, in format_exception\n    te = TracebackException(type(value), value, tb, limit=limit, compact=True)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest\", line 10, in <module>\n    sys.exit(console_main())\n             ^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py\", line 223, in console_main\n    code = main()\n           ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py\", line 205, in main\n    config._ensure_unconfigure()\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py\", line 1177, in _ensure_unconfigure\n    self._cleanup_stack.close()\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py\", line 618, in close\n    self.__exit__(None, None, None)\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py\", line 610, in __exit__\n    raise exc_details[1]\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py\", line 595, in __exit__\n    if cb(*exc_details):\n       ^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py\", line 478, in _exit_wrapper\n    callback(*args, **kwds)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/threadexception.py\", line 85, in cleanup\n    collect_thread_exception(config)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/threadexception.py\", line 70, in collect_thread_exception\n    raise errors[0]\nRuntimeError: Failed to process thread exception\nException ignored in atexit callback: <function install_write_observer.<locals>._flush at 0x7fc75416f4c0>\nTraceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/test_suite_mutation_check.py\", line 562, in _flush\n    fh.write(\"\".join(f\"{p}\\n\" for p in batch))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError: \n",
+        "passed": false,
+        "scope": "all_python_tests",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7806_v678_hardware_evidence.py --cold-replay /tmp/carnot-7806/candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_7806_v678_hardware_evidence.py",
+          "--cold-replay",
+          "/tmp/carnot-7806/candidate.json"
+        ],
+        "duration_s": 0.48562158600543626,
+        "exit_code": 1,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/01_fresh_process_cold_replay.log",
+        "log_sha256": "sha256:2f4cfbf140426de67f13d4a401832b5e27f2e423891e69618127e448733dc382",
+        "name": "fresh_process_cold_replay",
+        "output_tail": "[exp7806] phase=entrypoint event=start elapsed_s=0.000 completed_units=0\n[exp7806] phase=cold_replay event=before_reduction elapsed_s=0.000 completed_units=0\n[exp7806] phase=preconditions event=start elapsed_s=0.000 completed_units=0\n[exp7806] phase=preconditions event=inputs_complete elapsed_s=0.004 completed_units=15\n[exp7793] phase=preflight event=start elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.011 completed_units=1\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.011 completed_units=1\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.013 completed_units=1\n[exp7793] phase=preflight event=complete elapsed_s=0.042 completed_units=28\n[exp7806] phase=preconditions event=complete elapsed_s=0.047 completed_units=15\n[exp7806] phase=reduction event=complete elapsed_s=0.047 completed_units=3\nTraceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7806_v678_hardware_evidence.py\", line 8, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7806_v678_hardware_evidence.py\", line 513, in main\n    print(json.dumps(cold_reduce(args.cold_replay, root), sort_keys=True), flush=True)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7806_v678_hardware_evidence.py\", line 423, in cold_reduce\n    raise ValueError(f\"summary_mismatch:{field}\")\nValueError: summary_mismatch:claim_scope\n",
+        "passed": false,
+        "scope": "task_candidate",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-7806/candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "/tmp/carnot-7806/candidate.json"
+        ],
+        "duration_s": 0.553416973009007,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/02_adversarial_verify.log",
+        "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "name": "adversarial_verify",
+        "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+        "passed": true,
+        "scope": "task_candidate",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-7806/candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-7806/candidate.json"
+        ],
+        "duration_s": 0.023088059009751305,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/03_verdict_row_consistency_strict.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "verdict_row_consistency_strict",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "task_candidate",
+        "timed_out": false
+      }
+    ],
+    "cold_replay": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7806_v678_hardware_evidence.py --cold-replay /tmp/carnot-7806/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7806_v678_hardware_evidence.py",
+        "--cold-replay",
+        "/tmp/carnot-7806/candidate.json"
+      ],
+      "duration_s": 0.48562158600543626,
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/01_fresh_process_cold_replay.log",
+      "log_sha256": "sha256:2f4cfbf140426de67f13d4a401832b5e27f2e423891e69618127e448733dc382",
+      "name": "fresh_process_cold_replay",
+      "output_tail": "[exp7806] phase=entrypoint event=start elapsed_s=0.000 completed_units=0\n[exp7806] phase=cold_replay event=before_reduction elapsed_s=0.000 completed_units=0\n[exp7806] phase=preconditions event=start elapsed_s=0.000 completed_units=0\n[exp7806] phase=preconditions event=inputs_complete elapsed_s=0.004 completed_units=15\n[exp7793] phase=preflight event=start elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.011 completed_units=1\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.011 completed_units=1\n[exp7793] phase=git_blob event=before_subprocess elapsed_s=0.000 completed_units=0\n[exp7793] phase=git_blob event=after_subprocess elapsed_s=0.013 completed_units=1\n[exp7793] phase=preflight event=complete elapsed_s=0.042 completed_units=28\n[exp7806] phase=preconditions event=complete elapsed_s=0.047 completed_units=15\n[exp7806] phase=reduction event=complete elapsed_s=0.047 completed_units=3\nTraceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7806_v678_hardware_evidence.py\", line 8, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7806_v678_hardware_evidence.py\", line 513, in main\n    print(json.dumps(cold_reduce(args.cold_replay, root), sort_keys=True), flush=True)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7806_v678_hardware_evidence.py\", line 423, in cold_reduce\n    raise ValueError(f\"summary_mismatch:{field}\")\nValueError: summary_mismatch:claim_scope\n",
+      "passed": false,
+      "scope": "task_candidate",
+      "timed_out": false
+    },
+    "frozen_scope_path": "/tmp/carnot-7806/frozen_scope.json",
+    "required_checks_passed": false,
+    "terminal_readers": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-7806/candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "/tmp/carnot-7806/candidate.json"
+        ],
+        "duration_s": 0.553416973009007,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/02_adversarial_verify.log",
+        "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "name": "adversarial_verify",
+        "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+        "passed": true,
+        "scope": "task_candidate",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-7806/candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-7806/candidate.json"
+        ],
+        "duration_s": 0.023088059009751305,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/03_verdict_row_consistency_strict.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "verdict_row_consistency_strict",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "task_candidate",
+        "timed_out": false
+      }
+    ]
+  },
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}

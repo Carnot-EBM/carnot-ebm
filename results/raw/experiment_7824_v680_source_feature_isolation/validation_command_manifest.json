@@ -1,0 +1,182 @@
+{
+  "affected_tests": [
+    "tests/python/test_experiment_7824_v680_source_feature_isolation.py",
+    "tests/python/test_experiment_7810_v679_source_view_qualification.py",
+    "tests/python/test_experiment_7756_v675_evidence_view_protocol.py"
+  ],
+  "candidate_path": "/tmp/exp7824-v680-20260928-frozen-01/candidate.json",
+  "changed_modules": [
+    "python/carnot/experiment_7824_v680_source_feature_isolation.py",
+    "scripts/experiments/experiment_7824_v680_source_feature_isolation.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7824-v680-20260928-frozen-01/pytest/focused",
+        "tests/python/test_experiment_7824_v680_source_feature_isolation.py",
+        "tests/python/test_experiment_7810_v679_source_view_qualification.py",
+        "tests/python/test_experiment_7756_v675_evidence_view_protocol.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "focused_pytest",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7824-v680-20260928-frozen-01/pytest/full",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "full_python_pytest",
+      "timeout_s": 1800
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7824-v680-20260928-frozen-01/coverage/shard.coverage",
+        "--include=*/experiment_7824_v680_source_feature_isolation.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7824-v680-20260928-frozen-01/pytest/coverage",
+        "tests/python/test_experiment_7824_v680_source_feature_isolation.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "changed_code_coverage",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7824-v680-20260928-frozen-01/coverage/shard.coverage",
+        "--include=*/experiment_7824_v680_source_feature_isolation.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "name": "changed_code_coverage_report",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7824_v680_source_feature_isolation.py",
+        "scripts/experiments/experiment_7824_v680_source_feature_isolation.py",
+        "tests/python/test_experiment_7824_v680_source_feature_isolation.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7824_v680_source_feature_isolation.py",
+        "scripts/experiments/experiment_7824_v680_source_feature_isolation.py",
+        "tests/python/test_experiment_7824_v680_source_feature_isolation.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7824_v680_source_feature_isolation.py"
+      ],
+      "classification": "required",
+      "name": "changed_module_mypy",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7824_v680_source_feature_isolation.py",
+        "tests/python/test_experiment_7810_v679_source_view_qualification.py",
+        "tests/python/test_experiment_7756_v675_evidence_view_protocol.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec_coverage",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7824_v680_source_feature_isolation.py",
+        "--date",
+        "20260928",
+        "--cold-replay",
+        "/tmp/exp7824-v680-20260928-frozen-01/candidate.json"
+      ],
+      "classification": "required",
+      "name": "real_cli_e2e",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "/tmp/exp7824-v680-20260928-frozen-01/candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/exp7824-v680-20260928-frozen-01/candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_row_lint",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7824-v680-20260928-frozen-01/pytest/health",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "name": "repository_health",
+      "timeout_s": 180
+    }
+  ],
+  "private_root": "/tmp/exp7824-v680-20260928-frozen-01",
+  "raw_root": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7824_v680_source_feature_isolation",
+  "schema": "carnot.exp7824.validation_scope.v1"
+}

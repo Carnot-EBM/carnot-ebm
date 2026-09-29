@@ -143,7 +143,7 @@ def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
             return True, output
         return _call(
             "codex",
-            os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-6-sol"),
+            os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-6.1-sol"),
             prompt,
             body,
         )

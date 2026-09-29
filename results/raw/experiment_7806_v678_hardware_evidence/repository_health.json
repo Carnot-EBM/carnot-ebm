@@ -1,0 +1,32 @@
+{
+  "attempt1_artifact_path": "results/raw/experiment_7806_v678_hardware_evidence/attempt1_disqualified.json",
+  "attempt1_artifact_sha256": "sha256:60b6cededfa59b94ceb231a09b2782bddb756904a1402c58a1f31f1c1071dbcf",
+  "broad_suite_is_required_for_current_task": false,
+  "broad_suite_receipt": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-7806/full-suite tests/python -q",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/tmp/carnot-7806/full-suite",
+      "tests/python",
+      "-q"
+    ],
+    "duration_s": 1462.7651851800038,
+    "exit_code": 1,
+    "log_path": "results/raw/experiment_7806_v678_hardware_evidence/validation/terminal/00_full_python_suite.log",
+    "log_sha256": "sha256:ccc84ada72da7a6fd5de17861e2a7a4374e0d1267e1be1dae1a950c86defc8b5",
+    "name": "full_python_suite",
+    "output_tail": "............................... [ 16%]\n........................................................................ [ 16%]\n........................................................................ [ 16%]\n........................................................................ [ 17%]\n........................................................................ [ 17%]\n...............s........................................................ [ 17%]\n........................................................................ [ 17%]\n........................................................................ [ 17%]\n........................................................................ [ 17%]\n....................................................................FFF. [ 17%]\n........................................................................ [ 17%]\n........................................................................ [ 17%]\n...................FF................................................... [ 17%]\n........................................................................ [ 18%]\n............................Traceback (most recent call last):\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/threading.py\", line 1381, in invoke_excepthook\n    hook(args)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/threadexception.py\", line 105, in thread_exception_hook\n    traceback.format_exception(\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/traceback.py\", line 139, in format_exception\n    te = TracebackException(type(value), value, tb, limit=limit, compact=True)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest\", line 10, in <module>\n    sys.exit(console_main())\n             ^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py\", line 223, in console_main\n    code = main()\n           ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py\", line 205, in main\n    config._ensure_unconfigure()\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py\", line 1177, in _ensure_unconfigure\n    self._cleanup_stack.close()\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py\", line 618, in close\n    self.__exit__(None, None, None)\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py\", line 610, in __exit__\n    raise exc_details[1]\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py\", line 595, in __exit__\n    if cb(*exc_details):\n       ^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py\", line 478, in _exit_wrapper\n    callback(*args, **kwds)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/threadexception.py\", line 85, in cleanup\n    collect_thread_exception(config)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/threadexception.py\", line 70, in collect_thread_exception\n    raise errors[0]\nRuntimeError: Failed to process thread exception\nException ignored in atexit callback: <function install_write_observer.<locals>._flush at 0x7fc75416f4c0>\nTraceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/test_suite_mutation_check.py\", line 562, in _flush\n    fh.write(\"\".join(f\"{p}\\n\" for p in batch))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMemoryError: \n",
+    "passed": false,
+    "scope": "all_python_tests",
+    "timed_out": false
+  },
+  "historical_exp7779_full_suite_exit": 2,
+  "incident_open": true,
+  "observed_failure": "MemoryError in test_suite_mutation_check observer after multiple test failures; suite did not complete",
+  "status": "degraded_open"
+}

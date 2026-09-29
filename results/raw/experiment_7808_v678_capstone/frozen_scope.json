@@ -1,0 +1,22 @@
+{
+  "requirement": "REQ-REPORT-7808",
+  "affected_tests": [
+    "tests/python/test_experiment_7808_v678_capstone.py",
+    "tests/python/test_experiment_7795_v678_contract_methods.py",
+    "tests/python/test_experiment_7807_v678_independent_evidence_audit.py",
+    "tests/python/test_experiment_7303_v642_validation_scope.py"
+  ],
+  "changed_modules": ["python/carnot/experiment_7808_v678_capstone.py"],
+  "static_paths": ["scripts/experiments/experiment_7808_v678_capstone.py"],
+  "pytest_argv": [".venv/bin/pytest", "-n", "0", "-o", "addopts=", "--no-cov", "--basetemp=/tmp/exp7808/pytest", "tests/python/test_experiment_7808_v678_capstone.py", "tests/python/test_experiment_7795_v678_contract_methods.py", "tests/python/test_experiment_7807_v678_independent_evidence_audit.py", "tests/python/test_experiment_7303_v642_validation_scope.py", "-q"],
+  "coverage_include": ["python/carnot/experiment_7808_v678_capstone.py", "scripts/experiments/experiment_7808_v678_capstone.py"],
+  "full_suite_argv": [".venv/bin/pytest", "tests/python", "-q", "-n", "0", "-o", "addopts=", "--no-cov", "--basetemp=/tmp/exp7808/full"],
+  "validation_amendment_20260928": {
+    "reason": "The first scoped run lacked the parent of pytest basetemp. The broad diagnostic reached 8%, showed failures, and timed out after 600 seconds. Keep its real exit as repository health, then rerun owned checks.",
+    "private_basetemp_parent": "created before scoped validation",
+    "cli_coverage_argv": [".venv/bin/coverage", "run", "--data-file=/tmp/exp7808/.coverage_cli", "--include=python/carnot/experiment_7808_v678_capstone.py,scripts/experiments/experiment_7808_v678_capstone.py", "-m", "pytest", "-n", "0", "-o", "addopts=", "--no-cov", "--basetemp=/tmp/exp7808/pytest/cli_coverage", "tests/python/test_experiment_7808_v678_capstone.py", "-q"],
+    "coverage_combine_argv": [".venv/bin/coverage", "combine", "--keep", "--data-file=/tmp/exp7808/.coverage_combined", "/tmp/exp7808/.coverage", "/tmp/exp7808/.coverage_cli"],
+    "coverage_report_argv": [".venv/bin/coverage", "report", "--data-file=/tmp/exp7808/.coverage_combined", "--include=python/carnot/experiment_7808_v678_capstone.py,scripts/experiments/experiment_7808_v678_capstone.py", "--show-missing", "--fail-under=100"],
+    "broad_suite_role": "repository_health_diagnostic_reuse_exact_log_hash"
+  }
+}

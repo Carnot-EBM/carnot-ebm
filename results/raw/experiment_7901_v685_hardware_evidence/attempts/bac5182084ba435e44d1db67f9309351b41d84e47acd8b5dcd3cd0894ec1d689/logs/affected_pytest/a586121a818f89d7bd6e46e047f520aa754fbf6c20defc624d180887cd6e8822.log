@@ -1,0 +1,242 @@
+.....F.....FF..........F...........F.                                    [100%]
+=================================== FAILURES ===================================
+____________________ test_scenario_report_7901_cli_private _____________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7901_cli_0')
+
+    def test_scenario_report_7901_cli_private(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7901-CLI: real success, missing, and replay paths."""
+        root = private_root(tmp_path / "root")
+        env = {**os.environ, "PYTHONPATH": f"{ROOT / 'python'}:{ROOT}"}
+        for source, name, verdict in ((root, "good", "null"), (tmp_path / "absent", "bad", "blocked")):
+            output = tmp_path / f"{name}.json"
+            done = subprocess.run(
+                [
+                    sys.executable,
+                    "-u",
+                    str(ROOT / cli.SCRIPT),
+                    "--date",
+                    "20260929",
+                    "--root",
+                    str(source),
+                    "--output",
+                    str(output),
+                    "--evidence-only",
+                ],
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+>           assert done.returncode == 0, done.stderr
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7901_v685_hardware_evidence.py", line 443, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7901_v685_hardware_evidence.py", line 292, in main
+E                 atomic_json(output, result)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E                 temporary.replace(path)
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E                 os.replace(self, target)
+E               File "/tmp/carnot-child-results-guard-dow02nz4/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7901_cli_0/.good.json.tmp-3614994' -> '/tmp/carnot-pytest-artifacts-487t3waq/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7901_cli_0/good.json'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7901_cli_0/good.json\'\n').returncode
+
+tests/python/test_experiment_7901_v685_hardware_evidence.py:191: AssertionError
+_________________ test_scenario_report_7889_cli_private_paths __________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_cli_0')
+
+    def test_scenario_report_7889_cli_private_paths(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7889-CLI: the actual script handles both input states."""
+        env = {**os.environ, "PYTHONPATH": f"{ROOT / 'python'}:{ROOT}"}
+        script = ROOT / cli.SCRIPT
+        for root, name, expected in ((ROOT, "good", "null"), (tmp_path, "absent", "blocked")):
+            output = tmp_path / f"{name}.json"
+            done = subprocess.run(
+                [
+                    sys.executable,
+                    "-u",
+                    str(script),
+                    "--date",
+                    "20260929",
+                    "--root",
+                    str(root),
+                    "--output",
+                    str(output),
+                    "--evidence-only",
+                ],
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+>           assert done.returncode == 0, done.stderr
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7889_v684_hardware_evidence.py", line 435, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7889_v684_hardware_evidence.py", line 303, in main
+E                 atomic_json(output, result)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E                 temporary.replace(path)
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E                 os.replace(self, target)
+E               File "/tmp/carnot-child-results-guard-dow02nz4/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_cli_0/.good.json.tmp-3615043' -> '/tmp/carnot-pytest-artifacts-487t3waq/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_cli_0/good.json'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_cli_0/good.json\'\n').returncode
+
+tests/python/test_experiment_7889_v684_hardware_evidence.py:168: AssertionError
+_________________ test_scenario_report_7889_manifest_and_child _________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_mani0')
+
+    def test_scenario_report_7889_manifest_and_child(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7889-CLI: exact commands and closed logs are observable."""
+        commands = cli.manifest(tmp_path)
+        names = [row["name"] for row in commands]
+        assert names == [
+            "worktree_imports",
+            "affected_pytest",
+            "unit_coverage",
+            "cli_success",
+            "cli_missing_input",
+            "cold_replay",
+            "coverage_shards",
+            "coverage_combine",
+            "changed_coverage",
+            "ruff_check",
+            "ruff_format",
+            "mypy",
+            "scoped_spec",
+        ]
+        assert all(row["classification"] == "required" for row in commands)
+        assert all(
+            str(ROOT / cli.SCRIPT) in row["argv"]
+            or row["name"] not in {"cli_success", "cli_missing_input", "cold_replay"}
+            for row in commands
+        )
+        spec = {
+            "name": "probe",
+            "argv": [sys.executable, "-c", "print('ok')"],
+            "deadline_s": 5,
+            "classification": "required",
+        }
+>       receipt = cli.run_child(spec, tmp_path, 0.0, 0)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7889_v684_hardware_evidence.py:221: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/experiments/experiment_7889_v684_hardware_evidence.py:271: in run_child
+    source.replace(sealed)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1376: in replace
+    os.replace(self, target)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+src = PosixPath('results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_mani0/open-logs/00_probe.log')
+dst = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac...-temp/test_scenario_report_7889_mani0/logs/probe/dc51b8c96c2d745df3bd5590d990230a482fd247123599548e0632fdbf97fc22.log')
+args = (), kwargs = {}
+redirected_src = '/tmp/carnot-pytest-artifacts-487t3waq/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_mani0/open-logs/00_probe.log'
+redirected_dst = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac...-temp/test_scenario_report_7889_mani0/logs/probe/dc51b8c96c2d745df3bd5590d990230a482fd247123599548e0632fdbf97fc22.log')
+
+    def _compat_os_replace(src: object, dst: object, *args: Any, **kwargs: Any) -> None:
+        redirected_src = _redirect_legacy_write_path(src, "replace from", ensure_parent=False)
+        redirected_dst = _redirect_legacy_write_path(dst, "replace onto", ensure_parent=True)
+>       return _ORIGINAL_OS_REPLACE(redirected_src, redirected_dst, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-pytest-artifacts-487t3waq/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_mani0/open-logs/00_probe.log' -> '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7889_mani0/logs/probe/dc51b8c96c2d745df3bd5590d990230a482fd247123599548e0632fdbf97fc22.log'
+
+python/carnot/testing/tracked_results_guard.py:209: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp7889] phase=probe event=before_subprocess elapsed_s=384913.628 completed_units=0
+[exp7303-validation] before_subprocess probe elapsed_s=0.000 unit=1/1
+[exp7303-validation:probe] ok
+[exp7303-validation] after_subprocess probe elapsed_s=0.010 exit=0 unit=1/1
+___________ test_scenario_report_7876_cli_success_failure_and_replay ___________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7876_cli_0')
+
+    def test_scenario_report_7876_cli_success_failure_and_replay(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7876-CLI: exercise real script paths in private output."""
+        env = {**os.environ, "PYTHONPATH": f"{ROOT / 'python'}:{ROOT}"}
+        good = tmp_path / "good.json"
+        bad = tmp_path / "bad.json"
+        for root, output in ((ROOT, good), (tmp_path, bad)):
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    "-u",
+                    str(SCRIPT),
+                    "--date",
+                    "20260929",
+                    "--root",
+                    str(root),
+                    "--output",
+                    str(output),
+                    "--evidence-only",
+                ],
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+>           assert completed.returncode == 0, completed.stderr
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py", line 410, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7876_v683_hardware_evidence.py", line 286, in main
+E                 atomic_json(output, result)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E                 temporary.replace(path)
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E                 os.replace(self, target)
+E               File "/tmp/carnot-child-results-guard-dow02nz4/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7876_cli_0/.good.json.tmp-3615104' -> '/tmp/carnot-pytest-artifacts-487t3waq/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7876_cli_0/good.json'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_scenario_report_7876_cli_0/good.json\'\n').returncode
+
+tests/python/test_experiment_7876_v683_hardware_evidence.py:156: AssertionError
+________________________ test_manifest_and_owned_child _________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7901_v685_hardware_evidence/attempts/bac5182084ba435e44d1db67f9309351b41d84e47acd8b5dcd3cd0894ec1d689/test-temp/test_manifest_and_owned_child0')
+
+    def test_manifest_and_owned_child(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7862-VALIDATION: commands and log seals are explicit."""
+        commands = cli.manifest(tmp_path, tmp_path / "pending.json")
+        assert {x["name"] for x in commands} == set(cli.REQUIRED) | {"repository_health_180s"}
+        assert (
+            next(x for x in commands if x["name"] == "repository_health_180s")["classification"]
+            == "diagnostic"
+        )
+>       assert all(
+            "/tmp" in str(x["argv"])
+            for x in commands
+            if x["name"] in {"affected_pytest", "cli_success"}
+        )
+E       assert False
+E        +  where False = all(<generator object test_manifest_and_owned_child.<locals>.<genexpr> at 0x7fb48ce86a40>)
+
+tests/python/test_experiment_7862_v682_hardware_evidence.py:199: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7901_v685_hardware_evidence.py::test_scenario_report_7901_cli_private
+FAILED tests/python/test_experiment_7889_v684_hardware_evidence.py::test_scenario_report_7889_cli_private_paths
+FAILED tests/python/test_experiment_7889_v684_hardware_evidence.py::test_scenario_report_7889_manifest_and_child
+FAILED tests/python/test_experiment_7876_v683_hardware_evidence.py::test_scenario_report_7876_cli_success_failure_and_replay
+FAILED tests/python/test_experiment_7862_v682_hardware_evidence.py::test_manifest_and_owned_child
+5 failed, 32 passed in 6.55s

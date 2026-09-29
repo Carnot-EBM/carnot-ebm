@@ -1,5 +1,56 @@
 # Verification Capability Specification
 
+### REQ-VERIFY-7894-V685: Fit matched natural source energies
+
+The Exp7894 producer SHALL authenticate the qualified Exp7892 public and
+evaluator shards and gate on source readiness, unflagged status and an eligible
+terminal class. It SHALL fit the nine registered natural-training arms on 256
+fit families and calibrate on 64 tune families, with three fixed seeds, sixteen
+epochs, a .01 learning rate and the registered parameter and view limits.
+Labels and annotation offsets SHALL remain outside public feature preparation;
+unknown local targets SHALL have zero loss and gradient contribution. It SHALL
+seal all heads before opening evaluation or retention labels, retain every
+checkpoint and optimizer trace, and score every declared role with honest
+family and exclusion counts. Missing external inputs SHALL end complete
+blocked; failed owned checks SHALL end complete disqualified. A complete null
+measurement may have readiness one, but exposed development data SHALL not
+claim independent generalization.
+
+#### SCENARIO-VERIFY-7894-CUSTODY
+
+Changed source hashes, absent gate fields, evaluator leakage, duplicate family
+IDs and missing observed labels fail before fitting. The blocked record names
+each exact gate operand and path.
+
+#### SCENARIO-VERIFY-7894-FIT
+
+The private fit/tune interface exercises the current numerical library. All
+nine arms and three seeds preserve matched observations, bounded parameters,
+their checkpoints, temperature choices and source controls. Unknown local
+labels do not create an implicit negative target.
+For scoring, the producer SHALL prepare each role and public view class once
+and reuse those immutable features across seeds and arms with the same view.
+The reuse SHALL preserve the numerical library's calibrated probabilities and
+shall never expose an evaluator label to feature preparation.
+The source permutation control SHALL exchange neighboring families in sorted
+source-length order, with a local three-family cycle for an odd count. No
+family may receive its own source or the shortest-to-longest wraparound.
+
+#### SCENARIO-VERIFY-7894-TERMINAL
+
+Frozen affected commands, unit plus CLI coverage, applicable E2E checks and
+cold row reduction retain their real exit records. Terminal validators inspect
+the exact published candidate bytes and retain hash-bound reports.
+The unchanged repository-wide suite is a repository-health diagnostic; its
+historical timeout remains visible and cannot disqualify an otherwise passing
+affected validation. The producer SHALL not rerun it as a required child.
+The spec traceability command SHALL pass the affected test file paths to the
+checker, so unrelated historical gaps remain repository health rather than
+current required failures.
+A corrected rerun SHALL retain its own earlier failed required receipt as
+historical evidence with the sealed log hash, while readiness uses only the
+new required command exits.
+
 ### REQ-VERIFY-7728: Normalize separate sentence evidence locations
 
 The set protocol SHALL reuse REQ-VERIFY-7714 complete bytes, windows, signed

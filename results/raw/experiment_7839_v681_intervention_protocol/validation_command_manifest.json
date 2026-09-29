@@ -1,0 +1,282 @@
+{
+  "affected_sources": [
+    "python/carnot/verify/source_interventions.py",
+    "python/carnot/experiment_7839_v681_intervention_protocol.py",
+    "python/carnot/reporting/experiment_7303_validation_scope.py",
+    "scripts/experiments/experiment_7839_v681_intervention_protocol.py"
+  ],
+  "affected_tests": [
+    "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+    "tests/python/test_experiment_7303_v642_validation_scope.py",
+    "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+    "tests/python/test_experiment_7814_v679_counter_evidence_protocol.py",
+    "tests/python/test_experiment_7828_v680_counter_evidence_protocol.py"
+  ],
+  "candidate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7839_v681_intervention_protocol/candidate.json",
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.source_interventions",
+        "carnot.experiment_7839_v681_intervention_protocol",
+        "carnot.reporting.experiment_7303_validation_scope"
+      ],
+      "classification": "required",
+      "name": "worktree_imports",
+      "private_root": "/tmp/carnot-7839-v681-20260928/worktree_imports",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7839-v681-20260928/affected",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7814_v679_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7828_v680_counter_evidence_protocol.py",
+        "-q"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "private_root": "/tmp/carnot-7839-v681-20260928/affected_pytest",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7839_v681_intervention_protocol.py",
+        "--date",
+        "20260928",
+        "--coverage-check",
+        "/tmp/carnot-7839-v681-20260928/coverage"
+      ],
+      "classification": "required",
+      "name": "changed_coverage",
+      "private_root": "/tmp/carnot-7839-v681-20260928/changed_coverage",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/source_interventions.py",
+        "python/carnot/experiment_7839_v681_intervention_protocol.py",
+        "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "scripts/experiments/experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7814_v679_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7828_v680_counter_evidence_protocol.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "private_root": "/tmp/carnot-7839-v681-20260928/ruff_check",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/source_interventions.py",
+        "python/carnot/experiment_7839_v681_intervention_protocol.py",
+        "python/carnot/reporting/experiment_7303_validation_scope.py",
+        "scripts/experiments/experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7814_v679_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7828_v680_counter_evidence_protocol.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "private_root": "/tmp/carnot-7839-v681-20260928/ruff_format",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/verify/source_interventions.py",
+        "python/carnot/experiment_7839_v681_intervention_protocol.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "private_root": "/tmp/carnot-7839-v681-20260928/mypy",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7814_v679_counter_evidence_protocol.py",
+        "tests/python/test_experiment_7828_v680_counter_evidence_protocol.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec",
+      "private_root": "/tmp/carnot-7839-v681-20260928/scoped_spec",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7839_v681_intervention_protocol.py",
+        "--date",
+        "20260928",
+        "--fixture-e2e",
+        "/tmp/carnot-7839-v681-20260928/fixture.json"
+      ],
+      "classification": "required",
+      "name": "cli_e2e",
+      "private_root": "/tmp/carnot-7839-v681-20260928/cli_e2e",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7839_v681_intervention_protocol.py",
+        "--date",
+        "20260928",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7839_v681_intervention_protocol/candidate.json"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "private_root": "/tmp/carnot-7839-v681-20260928/cold_replay",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7839_v681_intervention_protocol/candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "private_root": "/tmp/carnot-7839-v681-20260928/adversarial_verify",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7839_v681_intervention_protocol/candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_rows",
+      "private_root": "/tmp/carnot-7839-v681-20260928/strict_rows",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7839-v681-20260928/health",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "name": "repository_health_180s",
+      "private_root": "/tmp/carnot-7839-v681-20260928/repository_health_180s",
+      "timeout_s": 180
+    }
+  ],
+  "coverage_commands": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--branch",
+      "--data-file=/tmp/carnot-7839-v681-20260928/coverage/.coverage.unit",
+      "--include=*/source_interventions.py,*/experiment_7839_v681_intervention_protocol.py,*/experiment_7303_validation_scope.py",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/tmp/carnot-7839-v681-20260928/coverage/unit",
+      "tests/python/test_experiment_7839_v681_intervention_protocol.py",
+      "tests/python/test_experiment_7303_v642_validation_scope.py",
+      "tests/python/test_experiment_7800_v678_counter_evidence_protocol.py",
+      "tests/python/test_experiment_7814_v679_counter_evidence_protocol.py",
+      "tests/python/test_experiment_7828_v680_counter_evidence_protocol.py",
+      "-q"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--branch",
+      "--data-file=/tmp/carnot-7839-v681-20260928/coverage/.coverage.cli",
+      "--include=*/source_interventions.py,*/experiment_7839_v681_intervention_protocol.py",
+      "scripts/experiments/experiment_7839_v681_intervention_protocol.py",
+      "--date",
+      "20260928",
+      "--fixture-e2e",
+      "/tmp/carnot-7839-v681-20260928/fixture.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "combine",
+      "--keep",
+      "--data-file=/tmp/carnot-7839-v681-20260928/coverage/.coverage.combined",
+      "/tmp/carnot-7839-v681-20260928/coverage/.coverage.unit",
+      "/tmp/carnot-7839-v681-20260928/coverage/.coverage.cli"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "report",
+      "--data-file=/tmp/carnot-7839-v681-20260928/coverage/.coverage.combined",
+      "--include=*/source_interventions.py,*/experiment_7839_v681_intervention_protocol.py,*/experiment_7303_validation_scope.py",
+      "--show-missing",
+      "--fail-under=100"
+    ]
+  ],
+  "coverage_files": [
+    "/tmp/carnot-7839-v681-20260928/coverage/.coverage.unit",
+    "/tmp/carnot-7839-v681-20260928/coverage/.coverage.cli"
+  ],
+  "private_root": "/tmp/carnot-7839-v681-20260928",
+  "raw_root": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7839_v681_intervention_protocol",
+  "required_checks": [
+    "worktree_imports",
+    "affected_pytest",
+    "changed_coverage",
+    "ruff_check",
+    "ruff_format",
+    "mypy",
+    "scoped_spec",
+    "cli_e2e",
+    "cold_replay",
+    "adversarial_verify",
+    "strict_rows"
+  ],
+  "schema": "carnot.exp7839.validation_manifest.v1"
+}

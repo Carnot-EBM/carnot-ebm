@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.679",
+  "generated_at": "2026-09-28T16:10:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 116.2,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Independently replay calibration and delayed-feedback error bursts",
+      "duration_minutes": 30.58,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Validate evidence interventions through an explicit command allowlist",
+      "duration_minutes": 18.25,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and retire unchanged failed mechanisms",
+      "duration_minutes": 17.39,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Seal training receipts and qualify delayed memory mechanics",
+      "duration_minutes": 14.95,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure organic exploration on adapter-withheld live games",
+      "duration_minutes": 12.2,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Nine compute-bound experiments completed in 116.2 wall-time minutes (averaging 13 minutes per experiment) based on disk-mtime fallback reconstruction. The longest executions were 'Independently replay calibration and delayed-feedback error bursts' at 30.58 minutes, 'Validate evidence interventions through an explicit command allowlist' at 18.25 minutes, and 'Reconcile fourteen outcomes and retire unchanged failed mechanisms' at 17.39 minutes, which together accounted for 66.22 minutes (57.0% of the total milestone wall time). The post-execution GPU monitor report recorded both RTX 3090 GPUs idle (5MB and 4MB allocated at 0% utilization) upon completion with gpu_idle_on_compute_bound_tasks recorded as false, while continuous active-window accelerator utilization was unmeasured and no multi-model task requiring DualGPURunner was present.",
+  "bottlenecks_identified": [
+    "The top three compute-bound tasks ('Independently replay calibration and delayed-feedback error bursts' at 30.58 minutes, 'Validate evidence interventions through an explicit command allowlist' at 18.25 minutes, and 'Reconcile fourteen outcomes and retire unchanged failed mechanisms' at 17.39 minutes) consumed 66.22 of the 116.2 total wall-time minutes (57.0%), but available records lack intra-task sub-phase telemetry to explain internal durations.",
+    "Total milestone wall time was derived via disk-mtime fallback reconstruction because the live git-log path found 0 commits, leaving explicit task boundaries and per-task overheads unrecorded.",
+    "The GPU monitor report provides an isolated post-execution snapshot (both RTX 3090 GPUs idle at 0% utilization with 5MB and 4MB allocated at 2026-09-28T16:10:22.116619+00:00), preventing evaluation of continuous active-window accelerator utilization patterns across the 116.2 minutes."
+  ],
+  "improvements_suggested": [
+    "Persist structured task execution receipts containing monotonic start, finish, and intra-task phase timers to eliminate fallback timing reconstruction.",
+    "Implement continuous background GPU telemetry sampling (utilization, VRAM allocation, and temperature) throughout task lifecycles correlated to task identifiers.",
+    "Profile intra-task stages (such as calibration replay loops, command allowlist validation, and outcome reconciliation) for long-running workflows to isolate internal delays.",
+    "Record explicit concurrent model load declarations in task manifests to enable verifiable DualGPURunner eligibility assessment."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic sub-phase timers to experiment receipts for long-running calibration replay, command allowlist validation, and outcome reconciliation routines to isolate intra-task overheads.",
+    "Implement continuous task-correlated GPU telemetry recording to evaluate active-window compute efficiency across the entire run.",
+    "Persist structured milestone execution receipts at conductor boundaries to eliminate disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The monitor snapshot demonstrates quiescent GPUs (both RTX 3090 GPUs at 0% utilization with 5MB and 4MB allocated) at the milestone completion timestamp 2026-09-28T16:10:22.116619+00:00, reflecting completed execution rather than an active-task compute stall. Because accelerator metrics were not captured continuously across the 116.2 minutes and tasks omitted sub-phase timings, internal execution bottlenecks cannot be confirmed from available records. Estimated time savings remain 0% until proposed telemetry and profiling tooling are empirically measured against established baselines."
+}

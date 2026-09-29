@@ -1,0 +1,22 @@
+{
+  "reports": [
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7837_v681_contract_methods/candidate.json",
+      "loaded": true,
+      "exp_id": 7837,
+      "title": "",
+      "honest_verdict": "complete_partial_v681_validation_pending",
+      "flag_count": 1,
+      "max_severity": 1,
+      "flags": [
+        {
+          "kind": "VERDICT_PREFIX_CLASS_CONTRADICTION",
+          "severity": "warn",
+          "detail": "honest_verdict opens with the terminal-success prefix 'complete_' but verdict_class='partial'. The conductor is enum-first, so it believes the FIELD: the task is classified partial and re-run toward the 3-fail retire limit, while a reader of the verdict string sees a success. Pick one. If the run genuinely fell short, drop the success prefix. If it completed, declare the class that matches (positive / circular_positive / null)."
+        }
+      ],
+      "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+    }
+  ],
+  "flagged_count": 1
+}

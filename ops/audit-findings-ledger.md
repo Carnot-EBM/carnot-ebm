@@ -250,3 +250,13 @@ of truth, not this line.)
 | 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_typed_invocation_evidence | SILENT_NON_FIRING | OPEN | |
 | 2026-09-27 | qa_layer_authenticity_audit | adversarial_verify.py::_is_verifier_scoring_only | REAL_BUG | OPEN | |
 | 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_descriptor_key_present | REAL_BUG | OPEN | |
+| 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_validated_substrate_class_floor | SILENT_NON_FIRING | OPEN | |
+| 2026-09-28 | experiment_claim_audit | experiment_7817_v679_arc_runner_qualification.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-28 | experiment_claim_audit | experiment_7825_v680_training_runtime.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_marker_present | SILENT_NON_FIRING | OPEN | |
+| 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_claim_text | REAL_BUG | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_norm | SILENT_NON_FIRING | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::check_moat_claim_rigor | SILENT_NON_FIRING | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_check_terminal_prefix_vs_partial_class | SILENT_NON_FIRING | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_arc_live_search_win | SILENT_NON_FIRING | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_has_measured_arc_live_metric | SILENT_NON_FIRING | OPEN | |
