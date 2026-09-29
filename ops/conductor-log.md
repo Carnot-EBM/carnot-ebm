@@ -18996,3 +18996,6 @@ code |
 | 2026-09-29 05:41 UTC | Complete intervention-runner coverage and freeze s | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 8.41s |
 | 2026-09-29 05:43 UTC | Train natural source energies and freeze calibrate | GATE_BLOCK | gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7852-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
 | 2026-09-29 05:45 UTC | Measure calibrated decisions and abstention agains | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7855-energy-fit, exp7855-energy-fit, exp7855-energy-fit) |
+| 2026-09-29 05:45 UTC | Measure bounded Qwen decisions under full and part | GATE_BLOCK | gate-unsat(final): 5 of 6 gate(s) failed; first failure: exp7852-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 05:47 UTC | Test durable constraint acquisition against equall | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7855-energy-fit, exp7855-energy-fit, exp7855-energy-fit) |
+| 2026-09-29 05:47 UTC | Measure delayed-feedback loss under bounded online | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7855-energy-fit, exp7855-energy-fit, exp7855-energy-fit) |
