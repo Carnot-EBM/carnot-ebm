@@ -1,5 +1,41 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7899-V685: Count unseen live supervisor outcomes
+
+Exp7899 SHALL pin the V684 artifact, registry, live policy source and exact raw
+producer bytes before reduction. A failed V684 readiness verdict SHALL remain
+historical debt; its receipt identities and hashes remain the delta baseline.
+Only authenticated applied `trajectory_supervisor` redirects with explicit
+`live_agent_self_discovery` provenance and a stable unseen event identity and
+content hash count. Missing, malformed, duplicate, revised and proxy records
+remain visible as excluded rows. A valid empty delta SHALL be a complete null
+with readiness one, zero solves and zero model calls. Arm recommendations need
+at least 20 resolved or censored firings in at least three games, with outcome
+intervals and no causal or production-default claim.
+
+Exp7899 SHALL freeze explicit affected commands, expected exits, deadlines and
+identical coverage includes before validation. Required unit, real CLI success,
+asserted CLI failure, cold replay, Ruff, strict mypy, spec coverage and applicable
+E2E checks SHALL pass. New source and dispatcher code SHALL have nonempty 100%
+combined statement coverage. Exact final bytes SHALL pass adversarial and strict
+row validators; failed owned checks disqualify and zero readiness. External
+missing prerequisites close blocked with exact gate operands.
+
+### SCENARIO-REPORT-7899-RECEIPTS
+
+Given private producer fixtures, an unchanged or duplicated event adds no new
+firing. Revised content for the same identity is excluded. A new censored live
+redirect preserves its metrics and source hash; malformed and proxy records do
+not gain live solve credit.
+
+### SCENARIO-REPORT-7899-CLI
+
+The direct script path accepts a private input and output, rejects missing
+arguments, and cold-replays a zero delta. Its negative exit passes validation
+only when the declared error text appears. Terminal required failure produces
+a complete disqualified artifact, while a missing external prerequisite produces
+a complete blocked artifact with the failed operand.
+
 ## REQ-REPORT-7892-V685: Qualify the current source producer
 
 Exp7892 SHALL authenticate the original Exp7810 source manifest, its public and

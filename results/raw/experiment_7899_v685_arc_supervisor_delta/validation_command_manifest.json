@@ -1,0 +1,271 @@
+{
+  "affected_closure": [
+    "python/carnot/reporting/arc_supervisor_v685_delta.py",
+    "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+    "tests/python/test_arc_supervisor_delta_7899.py",
+    "tests/python/test_arc_supervisor_delta_7887.py",
+    "tests/python/test_arc_supervisor_delta_7874.py"
+  ],
+  "applicable_e2e": [
+    "E2E-016",
+    "E2E-017"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_arc_supervisor_delta_7899.py",
+        "tests/python/test_arc_supervisor_delta_7887.py",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-exp7899-tests-34e6qwm6/test-temp"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.unit",
+        "--include=*/python/carnot/reporting/arc_supervisor_v685_delta.py,*/scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "-m",
+        "pytest",
+        "tests/python/test_arc_supervisor_delta_7899.py",
+        "tests/python/test_arc_supervisor_delta_7887.py",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-exp7899-tests-34e6qwm6/coverage-temp"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "unit_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.success",
+        "--include=*/python/carnot/reporting/arc_supervisor_v685_delta.py,*/scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "--reduce-ledger",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/fixture",
+        "--producer",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/fixture/results/experiment_9001_arc.json",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/fixture_delta.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "cli_success_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.failure",
+        "--include=*/python/carnot/reporting/arc_supervisor_v685_delta.py,*/scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "--reduce-ledger",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/fixture",
+        "--producer",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/fixture/results/experiment_9001_arc.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 2,
+      "expected_text": "--output",
+      "name": "cli_failure_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.replay",
+        "--include=*/python/carnot/reporting/arc_supervisor_v685_delta.py,*/scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/fixture_delta.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "cli_replay_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.combined",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.unit",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.success",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.failure",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.replay"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/coverage.combined",
+        "--include=*/python/carnot/reporting/arc_supervisor_v685_delta.py,*/scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/arc_supervisor_v685_delta.py",
+        "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "tests/python/test_arc_supervisor_delta_7899.py",
+        "tests/python/test_arc_supervisor_delta_7887.py",
+        "tests/python/test_arc_supervisor_delta_7874.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/arc_supervisor_v685_delta.py",
+        "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py",
+        "tests/python/test_arc_supervisor_delta_7899.py",
+        "tests/python/test_arc_supervisor_delta_7887.py",
+        "tests/python/test_arc_supervisor_delta_7874.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/arc_supervisor_v685_delta.py",
+        "scripts/experiments/experiment_7899_v685_arc_supervisor_delta.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_arc_supervisor_delta_7899.py",
+        "tests/python/test_arc_supervisor_delta_7887.py",
+        "tests/python/test_arc_supervisor_delta_7874.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "scoped_spec"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "e2e_017"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "e2e_016_fixture"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7899_v685_arc_supervisor_delta/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "expected_text": null,
+      "name": "e2e_016_replay"
+    }
+  ],
+  "inapplicable_e2e": [
+    "E2E-001",
+    "E2E-002",
+    "E2E-003",
+    "E2E-004",
+    "E2E-005",
+    "E2E-006",
+    "E2E-007",
+    "E2E-008",
+    "E2E-009",
+    "E2E-010",
+    "E2E-011",
+    "E2E-012",
+    "E2E-013",
+    "E2E-014",
+    "E2E-015",
+    "E2E-018"
+  ],
+  "scope_rationale": "current ARC reader and direct CLI, V684 and V683 consumer regressions"
+}
