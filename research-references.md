@@ -48232,3 +48232,44 @@ code needs a prospective, complete affected-test closure and real CLI coverage.
 A renamed historical wrapper cannot erase its inherited full-suite obligation.
 The existing 640-family corpus is exposed development data, even when its roles
 are withheld from the current fit. It cannot establish fresh generalization.
+
+## Outer-loop note - 2026-09-29 (Weco AIDE^2 -- recursive self-improvement of an agent harness)
+
+[Weco, "First evidence of recursive self-improvement"](https://www.weco.ai/blog/first-evidence-of-recursive-self-improvement),
+company blog, unpublished/no peer review. Claims Level 1 (net-positive, bounded) recursive
+self-improvement, not Level 2 (ignition/unbounded) -- they ran the ignition test and it did NOT
+pass, and they say so plainly. The improvement is to an AGENT HARNESS (search policy, context
+management, eval-harness code), not to model weights: an outer agent (Claude-Opus-4.7) rewrote the
+code of an inner coding-agent (starting from Gemini-3-Flash-driven AIDE0), evaluated each rewrite on
+a fixed-cost, public/private-split benchmark, and kept only improvements that held on the hidden
+split. 100 steps over 8 days, 7 kept improvements, ~9 of 10 proposed changes rejected. Held-out
+generalization checked on MLE-Bench Lite (arXiv:2410.07095), ALE-Bench Lite (arXiv:2506.09050),
+WeatherBench 2 (arXiv:2308.15560), and KernelBench (arXiv:2502.10517) -- all external, not the
+tuning benchmark. Reward-hacking rate on KernelBench dropped 63% (AIDE0) to 34% (AIDE85, their
+final agent) under a three-layer defense (an anti-overfitting instruction, a hard-coded guard, and
+statistical outlier removal); the statistical layer had a stated implementation bug. All numbers are
+the authors' own, unreplicated by us.
+
+Three things line up with disciplines already in this file, independently:
+
+1. **The reward-hacking defense is the same three-layer shape as this project's Verifier
+   Authenticity / Adversarial Landing-Page / QA-Layer Authenticity disciplines** (a mechanical
+   guard, an AI-judged layer, and a stated contract) -- a second, independent source (after NVIDIA's
+   AVO) converging on the same architecture for controlling a self-improving loop. Neither source
+   is a specification for us to copy; both are evidence the shape generalizes.
+2. **Public/private held-out evaluation with a fixed cost budget is the same principle as this
+   project's held-out-gate discipline** (adversarial_verify.py's GATE_PASSED_WITHOUT_DATA,
+   the A1/A2/A3 out-of-fold gates just run this session) -- and their own numbers corroborate why it
+   matters: several proposed improvements were "within noise" (run-to-run noise ~0.02-0.045), and
+   ~90% of proposals were rejected. Same lesson this project's own null-heavy A1/A2/A3 run just
+   produced: most ideas fail a real gate, and that is the gate working, not a bad session.
+3. **"What does the harness do when it does not know what to do next" is answered concretely here**
+   too, same question CLAUDE.md's AVO-Method Adoption rule names as the hard, transferable half of
+   that program: a multi-armed-bandit "fork-on-stall" search policy that abandons a stalled lineage,
+   and an unexpected 16x context-size reduction (minimizing history beat maximizing it) discovered
+   by the outer loop, not designed in.
+
+Bounded, honestly: this is a single company's blog post, self-reported, not independently
+reproduced, and explicitly stops short of claiming unbounded (ignition-level) self-improvement. Cite
+it as a second corroborating data point for the AVO-Method Adoption program's architecture, never as
+a benchmark result to reproduce or a method to port verbatim.
