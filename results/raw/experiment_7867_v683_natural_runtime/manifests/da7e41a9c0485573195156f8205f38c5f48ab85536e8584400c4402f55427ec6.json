@@ -1,0 +1,219 @@
+{
+  "affected_closure": [
+    "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+    "python/carnot/verify/natural_bank.py",
+    "tests/python/test_natural_runtime_7867.py",
+    "tests/python/test_natural_runtime_7867.py",
+    "tests/python/test_natural_runtime_7853.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7867-validation/affected-final",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7867-full"
+      ],
+      "classification": "required",
+      "deadline_s": 1800,
+      "name": "full_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+        "python/carnot/verify/natural_bank.py",
+        "tests/python/test_natural_runtime_7867.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+        "python/carnot/verify/natural_bank.py",
+        "tests/python/test_natural_runtime_7867.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+        "python/carnot/verify/natural_bank.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_natural_runtime_7867.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "scoped_spec"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot7867-validation/.coverage.terminal.unit2",
+        "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7867-validation/coverage-terminal-unit2",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 400,
+      "name": "coverage_unit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot7867-validation/.coverage.terminal.success",
+        "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+        "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+        "--fixture",
+        "--date",
+        "20260929",
+        "--output",
+        "/tmp/carnot7867-validation/terminal_success.json",
+        "--private-root",
+        "/tmp/carnot7867-validation/terminal-success-root"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "name": "coverage_cli_success"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot7867-validation/.coverage.terminal.blocked",
+        "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+        "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+        "--qualified-manifest",
+        "/tmp/carnot7867-validation/absent.json",
+        "--output",
+        "/tmp/carnot7867-validation/terminal_blocked.json",
+        "--private-root",
+        "/tmp/carnot7867-validation/terminal-blocked-root"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "coverage_cli_blocked"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot7867-validation/.coverage.terminal.qualified",
+        "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+        "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+        "--qualified-manifest",
+        "/tmp/carnot7867-validation/qualified_fixture.json",
+        "--output",
+        "/tmp/carnot7867-validation/terminal_qualified.json",
+        "--private-root",
+        "/tmp/carnot7867-validation/terminal-qualified-root"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "name": "coverage_cli_qualified"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot7867-validation/.coverage.terminal.cold",
+        "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+        "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+        "--cold-replay",
+        "/tmp/carnot7867-validation/terminal_success.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "coverage_cli_cold"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+        "--cold-replay",
+        "/tmp/carnot7867-validation/terminal_success.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot7867-validation/terminal_success.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot7867-validation/terminal_success.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "strict_rows"
+    }
+  ],
+  "frozen_at": "2026-09-29T10:21:14.559294+00:00",
+  "inapplicable_e2e": [
+    "E2E-001 through E2E-015 target unrelated capabilities; private CLI and cold replay are task-specific checks"
+  ],
+  "schema": "carnot.exp7867.validation_manifest.v4"
+}

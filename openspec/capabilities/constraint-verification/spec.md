@@ -61,6 +61,46 @@ restart preserves pending forecasts; corrupt state is rejected.
 Exp7852's disqualified or zero-readiness result blocks before natural compute.
 The CLI publishes a complete blocked record with source hashes and gate operands.
 
+## REQ-VERIFY-7867: Callable circular fixture runtime
+
+Exp7867 SHALL run the existing nine byte-derived view arms with disjoint fit and
+tune families and deterministic seeds. The fixture path SHALL train and predict
+from actual UTF-8 source bytes, record 132 base feature dimensions, symmetric
+view divergence, held-out temperature, per-arm rows, and fitted head metadata.
+It SHALL identify fixture agreement as circular_positive with
+`verifier_is_oracle=true` and `natural_measurement_performed=false`. A qualified
+source manifest SHALL bind exact public and evaluator bytes, split roles, and
+hashes before natural measurement. Missing or disqualified external source
+inputs SHALL terminate as complete_blocked with every failed operand.
+
+The advisory bank SHALL keep split tokens immutable. Feedback used to admit a
+predicate SHALL not train coefficients. A predicate SHALL affect a later typed
+decision only after admission. Pending labels SHALL remain inaccessible before
+their delay. Every write SHALL retain its prior-state lineage; a read-only
+decision SHALL leave state bytes unchanged. Restart SHALL reproduce the same
+prediction and reject corrupt state.
+
+### SCENARIO-VERIFY-7867-TRAIN
+
+Two distinct byte fixtures, including long source windows, exercise all nine
+arms. Fit/tune overlap and mutable split identity are rejected. Unknown local
+labels have zero loss and gradient effect. The real fixture CLI succeeds; its
+invalid source branch fails closed.
+
+### SCENARIO-VERIFY-7867-BANK
+
+A feedback-trained but inactive candidate becomes active only after separate
+delayed admission evidence. Admission does not change coefficients. No-write,
+shuffled-past, early-label, crash/restart and ledger-tamper cases retain exact
+state and decisions.
+
+### SCENARIO-VERIFY-7867-RECEIPT
+
+The runtime SHALL publish exact source and code hashes, primitive rows, honest
+terminal verdict, measured timing, zero model calls, typed readiness, and a
+versioned callable interface manifest. Required validation failures SHALL
+disqualify readiness; separate benefit gates SHALL remain null for fixtures.
+
 ## Overview
 
 Defines deterministic audits for executable constraint-verification corpora.

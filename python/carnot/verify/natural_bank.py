@@ -13,6 +13,7 @@ from typing import Any
 
 from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
 from carnot.verify.natural_predicates import NAMES
+from carnot.verify.training_runtime import action
 
 SCHEMA = "carnot.natural_bank.v1"
 DELAY_TICKS = 1
@@ -44,6 +45,13 @@ class NaturalBank:
             self._save("init", {})
         if self.state["names"] != list(NAMES):
             raise ValueError("corrupt bank grammar")
+        prior = "genesis"
+        for event in self.state["ledger"]:
+            if event["previous"] != prior or event["hash"] != canonical_hash(
+                {key: value for key, value in event.items() if key != "hash"}
+            ):
+                raise ValueError("corrupt bank lineage")
+            prior = event["hash"]
 
     @property
     def pending(self) -> list[str]:
@@ -77,13 +85,14 @@ class NaturalBank:
             raise ValueError("invalid predicate features")
         if not math.isfinite(base_probability) or not 0 <= base_probability <= 1:
             raise ValueError("invalid base probability")
+        active = {entry["name"] for entry in self.state["admitted"].values()}
         probability = min(
             1.0,
             max(
                 0.0,
                 base_probability
                 + sum(
-                    features[name] * coefficient
+                    features[name] * coefficient if name in active else 0.0
                     for name, coefficient in zip(NAMES, self.state["coefficients"], strict=True)
                 ),
             ),
@@ -95,6 +104,7 @@ class NaturalBank:
             "base_probability": base_probability,
             "probability": probability,
             "bank_hash_before": canonical_hash(self.state["coefficients"]),
+            "action": action(probability),
         }
         if not read_only:
             self.state["pending"][event_id] = receipt
@@ -102,7 +112,9 @@ class NaturalBank:
             self._save("predict", {"event_id": event_id, "tick": tick})
         return receipt
 
-    def release(self, event_id: str, tick: int, label: int) -> None:
+    def release(
+        self, event_id: str, tick: int, label: int, *, admission_only: bool = False
+    ) -> None:
         """Update only after a later tick, using the prediction made beforehand."""
         row = self.state["pending"].get(event_id)
         if row is None:
@@ -111,13 +123,19 @@ class NaturalBank:
             raise ValueError("early feedback")
         if label not in (0, 1):
             raise ValueError("invalid feedback label")
-        residual = label - row["probability"]
-        for index, name in enumerate(NAMES):
-            value = (
-                self.state["coefficients"][index] + LEARNING_RATE * residual * row["features"][name]
-            )
-            self.state["coefficients"][index] = min(1.0, max(-1.0, value))
-        self.state["released"][event_id] = {**row, "release_tick": tick, "label": label}
+        before = list(self.state["coefficients"])
+        if not admission_only:
+            residual = label - row["probability"]
+            for index, name in enumerate(NAMES):
+                value = before[index] + LEARNING_RATE * residual * row["features"][name]
+                self.state["coefficients"][index] = min(1.0, max(-1.0, value))
+        self.state["released"][event_id] = {
+            **row,
+            "release_tick": tick,
+            "label": label,
+            "admission_only": admission_only,
+            "coefficients_before": before,
+        }
         del self.state["pending"][event_id]
         self._save("release", {"event_id": event_id, "tick": tick, "label": label})
 
@@ -129,5 +147,9 @@ class NaturalBank:
         block = str(row["tick"] // BLOCK_SIZE)
         if block in self.state["admitted"]:
             raise ValueError("admission block already used")
+        if not row["admission_only"]:
+            if self.state["ledger"][-1]["detail"].get("event_id") != event_id:
+                raise ValueError("admission label mixed with later feedback")
+            self.state["coefficients"] = row["coefficients_before"]
         self.state["admitted"][block] = {"event_id": event_id, "name": name}
         self._save("admit", {"event_id": event_id, "name": name, "block": block})

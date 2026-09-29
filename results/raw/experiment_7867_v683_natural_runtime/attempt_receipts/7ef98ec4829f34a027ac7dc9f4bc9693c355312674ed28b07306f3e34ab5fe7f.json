@@ -1,0 +1,247 @@
+[
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/tmp/carnot7867-validation/affected",
+      "tests/python/test_natural_runtime_7867.py",
+      "tests/python/test_natural_runtime_7853.py",
+      "-q"
+    ],
+    "deadline_s": 300,
+    "duration_s": 52.46253853198141,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/b1131b4eb37eb8cab6effbb3bcfb49a95fbbe9a49ffb71789cc18283978a3dc8.log",
+    "log_sha256": "sha256:b1131b4eb37eb8cab6effbb3bcfb49a95fbbe9a49ffb71789cc18283978a3dc8",
+    "name": "affected_pytest",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "check",
+      "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+      "python/carnot/verify/natural_bank.py",
+      "tests/python/test_natural_runtime_7867.py"
+    ],
+    "deadline_s": 120,
+    "duration_s": 0.20130408299155533,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+    "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "name": "ruff_check",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "format",
+      "--check",
+      "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+      "python/carnot/verify/natural_bank.py",
+      "tests/python/test_natural_runtime_7867.py"
+    ],
+    "deadline_s": 120,
+    "duration_s": 0.20154521497897804,
+    "exit_code": 1,
+    "log_path": "/tmp/carnot7867-validation/sealed/2ce85d6dbaa92dd4d76253cd6a3484f8cca4571994c370b31d22d94d21668e15.log",
+    "log_sha256": "sha256:2ce85d6dbaa92dd4d76253cd6a3484f8cca4571994c370b31d22d94d21668e15",
+    "name": "ruff_format",
+    "passed": false,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "--strict",
+      "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+      "python/carnot/verify/natural_bank.py"
+    ],
+    "deadline_s": 180,
+    "duration_s": 0.20186841196846217,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/5c0e9403142555d05cc1959eb978548f7737c00539a0f33070641f0860916e35.log",
+    "log_sha256": "sha256:5c0e9403142555d05cc1959eb978548f7737c00539a0f33070641f0860916e35",
+    "name": "strict_mypy",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/check_spec_coverage.py",
+      "tests/python/test_natural_runtime_7867.py"
+    ],
+    "deadline_s": 120,
+    "duration_s": 0.201373491960112,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+    "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+    "name": "scoped_spec",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot7867-validation/.coverage.unit",
+      "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/tmp/carnot7867-validation/coverage-unit",
+      "tests/python/test_natural_runtime_7867.py",
+      "tests/python/test_natural_runtime_7853.py",
+      "-q"
+    ],
+    "deadline_s": 400,
+    "duration_s": 57.233811584999785,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/a7a9ab55d5ba38e31869419e62af486934176d2b237d7a4dd08aae4796a9daac.log",
+    "log_sha256": "sha256:a7a9ab55d5ba38e31869419e62af486934176d2b237d7a4dd08aae4796a9daac",
+    "name": "coverage_unit",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot7867-validation/.coverage.success",
+      "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+      "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+      "--fixture",
+      "--date",
+      "20260929",
+      "--output",
+      "/tmp/carnot7867-validation/coverage_success.json",
+      "--private-root",
+      "/tmp/carnot7867-validation/coverage-success-root"
+    ],
+    "deadline_s": 180,
+    "duration_s": 11.806879571988247,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/91f724a57198e9196f12df5bd230d91d259759e6af5b3a730dee606371d4a1bd.log",
+    "log_sha256": "sha256:91f724a57198e9196f12df5bd230d91d259759e6af5b3a730dee606371d4a1bd",
+    "name": "coverage_cli_success",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot7867-validation/.coverage.blocked",
+      "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+      "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+      "--qualified-manifest",
+      "/tmp/carnot7867-validation/absent.json",
+      "--output",
+      "/tmp/carnot7867-validation/coverage_blocked.json",
+      "--private-root",
+      "/tmp/carnot7867-validation/coverage-blocked-root"
+    ],
+    "deadline_s": 120,
+    "duration_s": 2.6032857010141015,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/ac67f8cb9e63da8f0cbf73e9dd57282adf1ee64f1045852e74420865d239ca70.log",
+    "log_sha256": "sha256:ac67f8cb9e63da8f0cbf73e9dd57282adf1ee64f1045852e74420865d239ca70",
+    "name": "coverage_cli_blocked",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot7867-validation/.coverage.qualified",
+      "--include=*/experiment_7867_v683_natural_runtime.py,*/natural_bank.py",
+      "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+      "--qualified-manifest",
+      "/tmp/carnot7867-validation/qualified_fixture.json",
+      "--output",
+      "/tmp/carnot7867-validation/coverage_qualified.json",
+      "--private-root",
+      "/tmp/carnot7867-validation/coverage-qualified-root"
+    ],
+    "deadline_s": 180,
+    "duration_s": 12.009876402036753,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/960e05504e5263e7c2ac1564f4164b33f5862a8478358d7b49ac4ba487850b49.log",
+    "log_sha256": "sha256:960e05504e5263e7c2ac1564f4164b33f5862a8478358d7b49ac4ba487850b49",
+    "name": "coverage_cli_qualified",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/experiments/experiment_7867_v683_natural_runtime.py",
+      "--cold-replay",
+      "/tmp/carnot7867-validation/coverage_success.json"
+    ],
+    "deadline_s": 120,
+    "duration_s": 1.6026064159814268,
+    "exit_code": 1,
+    "log_path": "/tmp/carnot7867-validation/sealed/24a91f4c7469640580a5082045ce7b908ccf08b35a04a6d74011fbf3f20c7799.log",
+    "log_sha256": "sha256:24a91f4c7469640580a5082045ce7b908ccf08b35a04a6d74011fbf3f20c7799",
+    "name": "cold_replay",
+    "passed": false,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "/tmp/carnot7867-validation/coverage_success.json"
+    ],
+    "deadline_s": 120,
+    "duration_s": 0.8016842189827003,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/374bdc7802566a7a753fcc6a25cd89fa048f3945203747120c9123fd6772011f.log",
+    "log_sha256": "sha256:374bdc7802566a7a753fcc6a25cd89fa048f3945203747120c9123fd6772011f",
+    "name": "adversarial_verify",
+    "passed": true,
+    "timed_out": false
+  },
+  {
+    "classification": "required",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/tmp/carnot7867-validation/coverage_success.json"
+    ],
+    "deadline_s": 120,
+    "duration_s": 0.20098523097112775,
+    "exit_code": 0,
+    "log_path": "/tmp/carnot7867-validation/sealed/ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+    "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+    "name": "strict_rows",
+    "passed": true,
+    "timed_out": false
+  }
+]
