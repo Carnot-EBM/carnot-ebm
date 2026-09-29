@@ -19025,3 +19025,5 @@ code |
 | 2026-09-29 13:28 UTC | V683 public source boundary qualification | OK | Deliverable already exists in repo |
 | 2026-09-29 13:28 UTC | V683 callable natural training and bank runtime | OK | Deliverable already exists in repo |
 | 2026-09-29 13:28 UTC | V683 CPU intervention protocol qualification | OK | Deliverable already exists in repo |
+| 2026-09-29 13:28 UTC | V683 calibrated source energy versus matched contr | GATE_BLOCK | gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7866-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 13:30 UTC | V683 selective decisions at equal coverage | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
