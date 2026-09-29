@@ -18993,3 +18993,4 @@ code |
 | 2026-09-29 04:21 UTC | Bind fourteen tasks and register sufficiency and c | OK | 102 passed, 1 warning in 10.73s |
 | 2026-09-29 04:49 UTC | Qualify exact legacy source identity and public by | OK | 84 passed, 1 warning in 9.64s |
 | 2026-09-29 05:20 UTC | Qualify byte-derived predicates and disjoint natur | OK | 116 passed, 1 warning in 19.15s |
+| 2026-09-29 05:41 UTC | Complete intervention-runner coverage and freeze s | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 8.41s |
