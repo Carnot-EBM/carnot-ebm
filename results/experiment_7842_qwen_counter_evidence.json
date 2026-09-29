@@ -1,0 +1,81 @@
+{
+  "experiment": 7842,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-29",
+  "started_at": "2026-09-29T00:11:58.255640+00:00",
+  "finished_at": "2026-09-29T00:11:58.255640+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure bounded Qwen source sensitivity with matched deletions",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7839-intervention-protocol",
+  "failed_field": "intervention_protocol_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7839_v681_intervention_protocol.json",
+  "failed_evidence_sha256": "sha256:9dcab246a2f30647250c768c9ae0911ba71dc7f25e4a4c43fb32e5221973da8e",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7839-intervention-protocol",
+    "failed_field": "intervention_protocol_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7839_v681_intervention_protocol.json",
+    "failed_evidence_sha256": "sha256:9dcab246a2f30647250c768c9ae0911ba71dc7f25e4a4c43fb32e5221973da8e"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7839-intervention-protocol.intervention_protocol_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7839-intervention-protocol",
+      "artifact_field": "intervention_protocol_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7839_v681_intervention_protocol.json",
+      "artifact_sha256": "sha256:9dcab246a2f30647250c768c9ae0911ba71dc7f25e4a4c43fb32e5221973da8e"
+    },
+    {
+      "upstream": "exp7839-intervention-protocol",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['positive', 'circular_positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7839_v681_intervention_protocol.json",
+      "artifact_sha256": "sha256:9dcab246a2f30647250c768c9ae0911ba71dc7f25e4a4c43fb32e5221973da8e"
+    },
+    {
+      "upstream": "exp7839-intervention-protocol",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7839_v681_intervention_protocol.json",
+      "artifact_sha256": "sha256:9dcab246a2f30647250c768c9ae0911ba71dc7f25e4a4c43fb32e5221973da8e"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

@@ -18931,3 +18931,5 @@ code |
 | 2026-09-28 23:37 UTC | Bind fourteen tasks and ingest length-confounding  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 98 passed, 1 warning in 16.50s |
 | 2026-09-28 23:51 UTC | Qualify a reusable public-source boundary with com | OK | 85 passed, 1 warning in 11.51s |
 | 2026-09-29 00:07 UTC | Repair source-intervention import receipts and qua | OK | 86 passed, 1 warning in 8.90s |
+| 2026-09-29 00:09 UTC | Train source-conditioned energies and freeze calib | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7838-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 00:11 UTC | Measure calibrated decisions against same-informat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
