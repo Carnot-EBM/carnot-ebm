@@ -21092,3 +21092,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: Complete source producer coverage and qualify natural inputs (⚠️ Research Finding) — honest_verdict=complete_circular_positive_source_boundary; results/experiment_7892_v685_source_boundary.json
 - 2026-09-29: Qualify terminal revalidation and source intervention paths (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7893_v685_intervention_protocol.json
 - 2026-09-29: Fit calibrated source energies with matched observation budgets (⚠️ Research Finding) — honest_verdict=partial_numerical_work; results/experiment_7894_v685_energy_fit.json
+- 2026-09-29: Fit calibrated source energies with matched observation budgets (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7894_v685_energy_fit.json
