@@ -1,5 +1,18 @@
 # Carnot — Operational Status
 
+## 2026-09-29 — Exp7878 direct CLI import repaired
+
+- The V683 capstone script resolves the repository root before loading its
+  reducer and publication gate. Its private CLI and cold replay pass.
+- The conductor-equivalent subset passes 86/86; adjacent V683 tests pass
+  75/75. The reducer has 126/126 statement coverage. Scoped Ruff, format,
+  strict mypy, spec coverage, E2E-016, and E2E-017 pass.
+- The earlier disqualified Exp7878 result records the script's prior hash, so
+  cold replay rejects that result until terminal validation is rerun. Its
+  recorded full Python suite timed out after 900 seconds.
+- Repository-wide reconciliation still reports pre-existing tests without
+  specification references; the focused Exp7878 spec check passes.
+
 ## 2026-09-29 — Exp7874 direct CLI import repaired
 
 - The V683 supervisor delta CLI resolves its V682 sibling when invoked by

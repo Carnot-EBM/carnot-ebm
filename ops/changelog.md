@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-09-29 — Exp7878 script-path import fix
+
+- Added the repository root to the capstone entrypoint's import path so direct
+  CLI execution loads `scripts.publication_gate`.
+- Verified the 86-test conductor subset, 75 adjacent V683 tests, private CLI
+  cold replay, E2E-016/017, and 126/126 reducer statements. The existing
+  disqualified artifact needs a terminal rerun to bind the updated source hash.
+
 ## 2026-09-29 — Exp7862 custody parse fix
 
 - Converted malformed required historical JSON and board rows into explicit

@@ -1,6 +1,14 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-29
+**Operational Note:** REQ-REPORT-7878 and SCENARIO-REPORT-7878-REPLAY map the
+V683 capstone's direct script-path import to
+`tests/python/test_experiment_7878_v683_capstone.py`. The CLI now resolves
+`scripts.publication_gate` in a fresh process. The conductor-equivalent subset
+passes 86/86, adjacent V683 tests pass 75/75, and the capstone reducer has
+126/126 statement coverage. Private CLI creation and cold replay pass; the
+earlier disqualified result retains its old source hash pending a separate
+terminal validation run.
 **Operational Note:** REQ-REPORT-7874 and SCENARIO-REPORT-7874-GATE map the
 V683 receipt reducer and direct script-path CLI to
 `tests/python/test_arc_supervisor_delta_7874.py` and E2E-017. The CLI resolves

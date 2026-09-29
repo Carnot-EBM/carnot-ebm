@@ -85908,3 +85908,39 @@ A private CLI accepts the current source bytes and rejects a changed source,
 omitted row, altered family mean, forged child log, or partial terminal prefix.
 Unit and real CLI paths together cover all new statements. Terminal adversarial
 and row checks use the exact candidate bytes that publication will preserve.
+
+## REQ-REPORT-7878: Close V683 from exact current evidence
+
+Exp7878 SHALL reconcile all fourteen ordered V683 contract tasks from their
+declared paths. It SHALL keep missing producers, skip receipts, failed required
+checks, valid nulls, and circular fixtures distinct. Each failed operand SHALL
+name the upstream ID, path, byte hash, field, operator, expected and observed.
+It SHALL compute science completeness from six qualified current producers,
+and benefit only from independently checked primary measurements. A missing
+producer SHALL finish as blocked, with capstone execution readiness separate.
+
+The capstone SHALL decide FR-12 calibrated source decisions, FR-11 persistent
+causal constraint learning, and FR-05/FR-08 deployment plus ARC live evidence
+independently. It SHALL preserve the September 28 oracle-distinct retractions.
+It SHALL call the unchanged publication G1-G4 gate. Retirement SHALL require an
+unchanged technique and scope with the identical prior verdict. It SHALL keep
+prior required failures and shall not treat an administrative skip as science.
+
+### SCENARIO-REPORT-7878-BLOCKED
+
+With the current six science producers absent, the capstone emits fourteen
+ordered task rows, exact failed operands, three blocked gap decisions, zero
+science completeness and benefit, and execution readiness one after its own
+validation. No previous milestone or skip receipt fills a missing producer.
+
+### SCENARIO-REPORT-7878-REPLAY
+
+A private CLI freezes source and validation hashes before measurement, writes
+primitive rows and current import paths, and rejects a changed source or row.
+Required tests, changed-code coverage, static checks and exact terminal
+adversarial and row checks keep their real exits. A failed owned required check
+disqualifies readiness. Only terminal complete bytes are atomically published.
+
+**Implementation status:** The Exp7878 direct script path resolves the
+repository root before importing the reducer's publication gate. The existing
+private CLI test, cold replay, and focused reducer coverage verify this route.
