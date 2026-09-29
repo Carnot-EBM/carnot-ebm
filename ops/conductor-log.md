@@ -19015,3 +19015,5 @@ code |
 | 2026-09-29 11:16 UTC | V683 Qwen witness sufficiency and semantic sensiti | GATE_BLOCK | gate-unsat(final): 5 of 6 gate(s) failed; first failure: exp7866-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
 | 2026-09-29 11:18 UTC | V683 persistent constraint acquisition with delaye | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
 | 2026-09-29 11:18 UTC | V683 equal-delay feedback scheduling and capacity | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
+| 2026-09-29 11:37 UTC | V683 live ARC supervisor receipt delta | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 87 passed, 1 warning in 9.26s |
+| 2026-09-29 11:39 UTC | V683 calibrated service cost on owned CPU | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
