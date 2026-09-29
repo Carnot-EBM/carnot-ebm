@@ -85635,3 +85635,37 @@ Private mutation cases reject zero rows, identical controls, wrong seeds,
 fixture-ID and source leakage, evaluation-tuned thresholds, forged receipts,
 and a complete prefix paired with a partial verdict. A changed source byte or
 closed child log makes cold replay fail.
+
+## REQ-REPORT-7864-V682: Reconcile fourteen outcomes without promoting blocked science
+
+Exp7864 SHALL bind the fourteen ordered V682 task IDs and deliverable paths to
+the exact design, embedded contract, and active or staged YAML bytes. It SHALL
+distinguish a missing science producer from an administrative skip, preserve
+each present verdict and failed required check, and stop the milestone evidence
+gate when any required producer is missing or disqualified. The capstone's own
+completed reconciliation may have a terminal blocked verdict and readiness one.
+The fourteen machine dispositions and human ledger SHALL agree. Unmeasured
+probability, decision, retention, and efficiency benefits SHALL remain null.
+
+The capstone SHALL compare every declared prior verdict exactly. An unchanged
+verdict SHALL retire only its matching failed scope through the exclusion
+manifest. Different verdicts and unstarted tasks SHALL not retire a scope.
+Every source byte, gate operand, validation command, child exit, and historical
+failed obligation SHALL remain attributable. Publication G1 through G4 SHALL
+be reported separately without publishing or activating a roadmap.
+
+### SCENARIO-REPORT-7864-V682-BLOCKED
+
+With the present missing and disqualified V682 science, fourteen dispositions
+remain visible, the capstone finishes complete_blocked, and milestone benefit
+and evidence-complete scores remain zero. A missing producer has a failed
+science_producer operand with a null hash; a present disqualified producer has
+its exact hash and failed verdict operand. The Exp7854 versus Exp7839 identical
+verdict retires only that repeated protocol scope.
+
+### SCENARIO-REPORT-7864-V682-REPLAY
+
+A private CLI candidate and cold replay agree on the fourteen rows and source
+hashes. A changed source byte, changed task order, omitted row, or false benefit
+score fails replay. Required child failures disqualify the own execution; the
+repository health diagnostic cannot erase historical required failures.
