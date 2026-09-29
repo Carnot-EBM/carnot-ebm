@@ -21010,3 +21010,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: Qualify exact legacy source identity and public byte projection (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7852_v682_source_boundary.json
 - 2026-09-29: Qualify byte-derived predicates and disjoint natural-data training (⚠️ Blocked) — honest_verdict=complete_blocked_disqualified_source_boundary; results/experiment_7853_v682_natural_runtime.json
 - 2026-09-29: Complete intervention-runner coverage and freeze source-sufficiency requests (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7854_v682_intervention_protocol.json
+- 2026-09-29: Audit new live ARC supervisor outcomes without re-solving banked levels (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_7860_v682_arc_supervisor_delta.json
