@@ -19027,3 +19027,11 @@ code |
 | 2026-09-29 13:28 UTC | V683 CPU intervention protocol qualification | OK | Deliverable already exists in repo |
 | 2026-09-29 13:28 UTC | V683 calibrated source energy versus matched contr | GATE_BLOCK | gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7866-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
 | 2026-09-29 13:30 UTC | V683 selective decisions at equal coverage | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
+| 2026-09-29 13:30 UTC | V683 Qwen witness sufficiency and semantic sensiti | GATE_BLOCK | gate-unsat(final): 5 of 6 gate(s) failed; first failure: exp7866-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 13:32 UTC | V683 persistent constraint acquisition with delaye | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
+| 2026-09-29 13:32 UTC | V683 equal-delay feedback scheduling and capacity | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
+| 2026-09-29 13:32 UTC | V683 live ARC supervisor receipt delta | OK | Deliverable already exists in repo |
+| 2026-09-29 13:32 UTC | V683 calibrated service cost on owned CPU | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7869-energy-fit, exp7869-energy-fit, exp7869-energy-fit) |
+| 2026-09-29 13:32 UTC | V683 board continuity and workload custody | OK | Deliverable already exists in repo |
+| 2026-09-29 13:32 UTC | V683 independent evidence and causal audit | OK | Deliverable already exists in repo |
+| 2026-09-29 13:32 UTC | V683 PRD gap decision and publication gates | OK | Deliverable already exists in repo |
