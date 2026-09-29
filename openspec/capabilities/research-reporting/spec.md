@@ -86051,3 +86051,61 @@ loads both repository packages during direct script execution and accepts
 CLI creation, cold replay, supervised checks, terminal publication and log
 seals with 100% script statement coverage. The missing staged authority still
 blocks contract readiness.
+
+## REQ-REPORT-7881-V684: Seal a new affected intervention command manifest
+
+Exp7881 SHALL directly call the current CPU fixture and scope primitives without
+invoking a historical experiment dispatcher. Before fixture work, it SHALL pin
+Exp7868's exact artifact and exposed public source bytes, confirm the prior
+required full-suite timeout, and write a manifest with exact argv, deadlines,
+classifications, and an explained affected closure. Missing or changed external
+operands yield complete_blocked with the failed field, expected and observed
+value. The historical timeout remains historical_required_failures.
+
+The required affected test closure is the current Exp7881 and Exp7868 tests,
+Exp7854 and Exp7839 transport consumers, the Exp7303 scope tests, and current
+work receipt tests. The affected source closure is the Exp7881 module and CLI,
+Exp7868 fixture primitive, Exp7854 context primitive, source_interventions,
+Exp7303 validation scope, and current_work_receipt. The manifest SHALL name
+exact pytest paths with `-n 0 -o addopts= --no-cov`, private basetemp, unit and
+real CLI coverage with identical include settings, explicit combine/report,
+scoped Ruff check/format, strict mypy, spec coverage, E2E-016, a private current
+fixture CLI and cold replay. E2E-001 through E2E-015 and E2E-017 are declared
+inapplicable because they own other producers or hardware. Repository-wide
+pytest is a separately labeled diagnostic and cannot satisfy a required check.
+The two completed coverage shards SHALL measure reused modules and require 100
+percent statement coverage for new code. A failed first attempt SHALL remain
+byte-addressed and a retry SHALL authenticate its diagnostic log instead of
+rerunning the repository-wide suite to chase earlier debt.
+The final manifest SHALL also cover a real cold-replay CLI success and a
+predeclared missing-fixture CLI failure. The negative check passes only on its
+declared nonzero exit and error text; all four completed coverage files SHALL
+be combined by explicit path before the 100 percent new-code report.
+
+The model-free protocol SHALL freeze seed 67801, four arms, 128 generated-token
+limit, context 8192, temperature zero, and no_think. Twenty-four independent
+families SHALL retain malformed, truncated, UTF-8, witness-range, duplicate,
+sentence, disjoint-span, checkpoint-resume, and drift outcomes. The first
+complete answer sentence remains unchanged; syntax and byte fidelity are
+separate. No edited fixture receives a new human truth label. Required owned
+failures disqualify and zero readiness. Exact terminal adversarial and strict
+row reports SHALL check the candidate bytes before atomic publication, with
+reports kept outside the self-hashed artifact.
+
+### SCENARIO-REPORT-7881-MANIFEST
+
+Given a new run, every child argv and deadline is fixed before measurement;
+undeclared children and changed manifest bytes fail. The prior full-suite
+timeout remains visible while a passing affected closure may open mechanics.
+
+### SCENARIO-REPORT-7881-FIXTURES
+
+Given scripted replies, 24 distinct families produce 96 planned arm rows with
+original UTF-8 offsets, explicit ineligible cases, and zero model calls.
+Replayed checkpoints reject changed code or fixture bytes.
+
+### SCENARIO-REPORT-7881-TERMINAL
+
+Given required child receipts and terminal reports, readiness is one only when
+all pass on the exact candidate. Oracle agreement is circular-positive and
+semantic sensitivity, probability quality, and benefit remain unmeasured.

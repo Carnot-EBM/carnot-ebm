@@ -1,0 +1,43 @@
+{
+  "candidate_sha256": "sha256:3768699bb06920a4b293d70f35970fb77cfd65ae9fd5cea141af4225eb677cf8",
+  "reports": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /tmp/carnot-7881-v684-20260929/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-7881-v684-20260929/terminal_candidate.json"
+      ],
+      "duration_s": 0.5702575129689649,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-7881-v684-20260929/sealed_logs/15_terminal_adversarial_7caafce75ab9485a5dc750ecd8f682459ec5963624dea82592615e18f5dca345.log",
+      "log_sha256": "sha256:7caafce75ab9485a5dc750ecd8f682459ec5963624dea82592615e18f5dca345",
+      "name": "terminal_adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot-7881-v684-20260929/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7881,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_required_checks\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-7881-v684-20260929/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-7881-v684-20260929/terminal_candidate.json"
+      ],
+      "duration_s": 0.049252789991442114,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-7881-v684-20260929/sealed_logs/16_terminal_strict_rows_ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "terminal_strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    }
+  ]
+}
