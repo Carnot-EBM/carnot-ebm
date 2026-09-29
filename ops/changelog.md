@@ -21022,3 +21022,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: Complete intervention-runner coverage and freeze source-sufficiency requests (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7854_v682_intervention_protocol.json
 - 2026-09-29: Audit new live ARC supervisor outcomes without re-solving banked levels (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_7860_v682_arc_supervisor_delta.json
 - 2026-09-29: Preserve authenticated board limits and audit current service-to-hardware fit (⚠️ Research Finding) — honest_verdict=complete_null_historical_board_scope; results/experiment_7862_v682_hardware_evidence.json
+- 2026-09-29: Cold-audit V682 primitive evidence and classify every scientific branch (⚠️ Blocked) — honest_verdict=complete_blocked_required_v682_science; results/experiment_7863_v682_independent_audit.json
