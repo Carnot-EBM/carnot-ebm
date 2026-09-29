@@ -21030,3 +21030,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: V683 public source boundary qualification (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7866_v683_source_boundary.json
 - 2026-09-29: V683 callable natural training and bank runtime (⚠️ Research Finding) — honest_verdict=complete_circular_positive_fixture_runtime; results/experiment_7867_v683_natural_runtime.json
 - 2026-09-29: Repaired Exp7868 fixture checkpoint lookup while retaining code-bound drift detection; added fixture-hash and code-hash regression checks. Conductor-equivalent tests pass 101/101, and affected code plus CLI reach 310/310 statement coverage.
+- 2026-09-29: V683 CPU intervention protocol qualification (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7868_v683_intervention_protocol.json
