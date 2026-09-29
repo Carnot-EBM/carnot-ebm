@@ -19058,3 +19058,5 @@ code |
 | 2026-09-29 20:23 UTC | Bind the task contract across staging and activati | OK | 167 passed, 1 warning in 41.05s |
 | 2026-09-29 21:11 UTC | Complete source producer coverage and qualify natu | OK | 135 passed, 1 warning in 23.83s |
 | 2026-09-29 21:24 UTC | Qualify terminal revalidation and source intervent | OK | 115 passed, 1 warning in 16.83s |
+| 2026-09-29 22:23 UTC | Fit calibrated source energies with matched observ | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7894_v685_energy_fit.json; honest_verdict='partial_numerical_work', verdict_class='partial'); pytest: 86 passed, 1 warning in 23.03s |
+| 2026-09-29 22:25 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 3584962 serves 'Ternary-Bonsai-2-27B-PTQ1_0.gguf', live pin is 'Qwen3. |
