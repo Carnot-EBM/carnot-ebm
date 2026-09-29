@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-09-29 — V685 source boundary CLI and coverage repair
+
+- Added repository-root bootstrap for direct Exp7892 CLI execution so its
+  qualified V684 producer import succeeds. Added a sparse 50 MiB shard test
+  for the existing custody size gate and clarified the reporting spec.
+- Rebuilt the Exp7892 result after 67/67 affected tests, E2E-015/016, all
+  17 required receipts, and 625/625 owned statement coverage passed. The
+  conductor smart subset passes 135/135 tests. Terminal validators accepted
+  the refreshed candidate with readiness 1.
+
 ## 2026-09-29 — V685 authority lifecycle and V684 frozen authority
 
 - Added a real expected-failure replay to the V685 validation manifest and

@@ -1,5 +1,53 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7892-V685: Qualify the current source producer
+
+Exp7892 SHALL authenticate the original Exp7810 source manifest, its public and
+evaluator shards, the source license and annotations, and the unchanged V684
+policy-family hash split. It SHALL retain 640 unique exposed-development
+families in eight roles: fit 256, tune 64, policy design 32, calibration replay
+32, online update 96, online admission 64, evaluation 64, and retention 32.
+Source-answer duplicates SHALL share a group; source hashes SHALL remain
+cluster identifiers. Public features SHALL contain no evaluator metadata.
+Each raw public, evaluator and feature shard SHALL remain below 50 MiB;
+oversized shards fail custody before qualification.
+Human response-level labels SHALL remain response-level labels, with original
+annotation byte offsets and unknown-label masks preserved.
+
+The current producer SHALL identify itself as `exp7892-source-boundary`,
+milestone `2026.09.685`, on `host` with no model load. It SHALL freeze explicit
+affected paths, command arguments, deadlines, expected exits and coverage
+includes before validation. Real unit, CLI success, expected-failure and cold
+replay paths SHALL measure all statements in changed code. The historical
+V684 producer's 318 statements SHALL be covered before it qualifies current
+readiness. An external absence SHALL close as blocked; a current required
+failure SHALL close as disqualified. Either sets readiness to zero. Historical
+required failures remain visible. Exact terminal bytes SHALL pass adversarial
+and strict-row checks before atomic publication.
+
+### SCENARIO-REPORT-7892-CUSTODY
+
+Given authenticated originals, 640 families and the unchanged V684 policy
+split survive into separate public, evaluator and feature shards. Changed
+source hashes, labels, role assignments, duplicate groups or missing required
+labels fail qualification with an exact operand. Feature replay rejects labels
+and role metadata; document labels never become sentence labels.
+
+### SCENARIO-REPORT-7892-VALIDATION
+
+Given frozen commands, real private success, asserted expected failure and
+cold replay produce sealed child receipts when the producer is invoked by file
+path without the repository root on its import path. Empty coverage or a failing
+required child zeroes readiness. The complete historical producer statement
+count and every new statement are measured before readiness opens.
+
+### SCENARIO-REPORT-7892-TERMINAL
+
+Given a candidate with current identity and passing required checks, both
+terminal validators check its exact bytes. A flagged or rejected candidate is
+reclassified and the changed final bytes are validated again. Only checked
+bytes reach the current deliverable.
+
 ## REQ-REPORT-7890-V684: Independently reconcile twelve current tasks
 
 Exp7890 SHALL read the twelve ordered V684 rows from the embedded design contract and

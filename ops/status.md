@@ -1,5 +1,17 @@
 # Carnot — Operational Status
 
+## 2026-09-29 — V685 source boundary test and coverage repair
+
+- The Exp7892 script-path CLI resolves its qualified V684 producer import.
+  Private success, failure and cold-replay tests pass without changing their
+  assertions. The 50 MiB raw-shard rejection has a regression test.
+- The dated producer passes 67/67 affected tests and 17/17 required receipts,
+  including E2E-015/016, cold feature replay, adversarial verification and
+  strict row consistency. Combined unit and CLI coverage is 625/625 owned
+  statements. The conductor smart subset passes 135/135 tests with one
+  pre-existing deprecation warning. The refreshed result records readiness 1
+  and no failed gates.
+
 ## 2026-09-29 — V685 authority lifecycle test repair
 
 - The V685 CLI now freezes and executes a negative cold replay, reports replay

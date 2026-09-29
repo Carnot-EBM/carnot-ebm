@@ -1,6 +1,16 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-09-29
+**Operational Note:** REQ-REPORT-7892-V685 and its custody, validation and
+terminal scenarios map to `python/carnot/reporting/source_boundary_7892.py`,
+`scripts/experiments/experiment_7892_v685_source_boundary.py`, and
+`tests/python/test_source_boundary_7892.py`. Direct file-path CLI execution now
+resolves the qualified V684 producer import; a sparse 50 MiB shard test covers
+the required size rejection. The dated producer passes 67/67 affected tests,
+17/17 required validation receipts, E2E-015/016 and terminal checks. Combined
+unit and CLI coverage measures 625/625 statements in its four owned files;
+the conductor smart subset passes 135/135 tests (one existing warning), and
+`results/experiment_7892_v685_source_boundary.json` records readiness 1.
 **Operational Note:** REQ-REPORT-7891-V685 and its lifecycle/validation
 scenarios map to `python/carnot/reporting/v685_authority_lifecycle.py`,
 `scripts/experiments/experiment_7891_v685_authority_lifecycle.py`, and
