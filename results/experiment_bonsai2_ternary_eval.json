@@ -1,0 +1,217 @@
+{
+  "experiment": "bonsai2_ternary_eval",
+  "run_date": "2026-09-29",
+  "honest_verdict": "complete: bonsai-2 ternary eval finished; ternary is faster and smaller than the mandated quantized baseline but the free VRAM does not buy more concurrent capacity on this shared hybrid-attention architecture, and the bounded quality proxy is inconclusive",
+  "purpose": "Third-party eval of PrismML's ternary-quantized Bonsai 2 27B against the Carnot-mandated unsloth/Qwen3.8-27B-GGUF (same base architecture), measured on our own hardware. Not a change to Carnot's own architecture; does not touch the live ARC Kaggle stack.",
+  "scope_boundaries": {
+    "arc_kaggle_stack_touched": false,
+    "gpu_used": "GPU 1 only (CUDA_VISIBLE_DEVICES=1); GPU 0 (live conductor generator) never touched",
+    "mandated_model_config_modified": false,
+    "claude_md_modified": false
+  },
+  "duration_s": 4800,
+  "duration_note": "Wall-clock across the whole session (fork clone+audit, CUDA build, model download, single-stream bench, capacity scan, concurrent bench, both readouts): approximately 2026-09-29T17:09Z to 2026-09-29T18:29Z.",
+  "random_seed": 20260929,
+  "reproducibility_checksum": "26df0d9bcc8db1c1ae0d77bc502af30f76bff3c82fd27a2aeb5995fb11ff28c0",
+  "reproducibility_checksum_note": "sha256 of 'fork:<fork_commit>|gguf:<gguf_lfs_oid>|seed:<random_seed>' -- ties this artifact's numbers to the exact fork build and exact GGUF file.",
+  "preconditions_checked": [
+    {
+      "resource": "disk_space_at_least_20gb_free",
+      "available": true,
+      "detail": "725G free on / at start"
+    },
+    {
+      "resource": "gpu1_idle_before_start",
+      "available": true,
+      "detail": "4 MiB used on GPU 1 before any server launch"
+    },
+    {
+      "resource": "cmake_gcc_make_present",
+      "available": true
+    },
+    {
+      "resource": "nvcc_cuda_toolkit_present",
+      "available": true,
+      "detail": "/opt/cuda/bin/nvcc, release 13.4"
+    },
+    {
+      "resource": "network_reachable_github_and_huggingface",
+      "available": true
+    },
+    {
+      "resource": "standard_mandated_gguf_already_cached",
+      "available": true,
+      "detail": "unsloth/Qwen3.8-27B-GGUF Q4_K_M already in ~/.cache/huggingface/hub"
+    }
+  ],
+  "fork_safety_audit": {
+    "repo": "PrismML-Eng/llama.cpp",
+    "branch": "prism",
+    "head_commit": "87268f775d74cf8f7ffc6c22a95684aa55995533",
+    "build_version_string": "0.2.0-dev (build 1486, commit 87268f775)",
+    "is_real_fork_of": "ggml-org/llama.cpp",
+    "merge_base_commit": "5ea87ddad22541a37053c7ba92b02ec1923617c6",
+    "merge_base_date": "2026-08-25T08:08:06+03:00",
+    "fork_commits_since_merge_base": 130,
+    "upstream_commits_since_merge_base": 644,
+    "diff_vs_merge_base": {
+      "files_changed": 178,
+      "insertions": 22725,
+      "deletions": 1059,
+      "new_files_added": 38,
+      "binary_files_added": 0
+    },
+    "suspicious_pattern_scan": {
+      "network_exfiltration_patterns": "none found (socket/connect/curl_easy/CURLOPT/urllib/requests.get-post/popen/subprocess. all zero hits in the diff)",
+      "unexpected_urls_in_diff": "all resolve to expected vendor package sources (NVIDIA CUDA keyring, AMD ROCm repo, LunarG Vulkan SDK) inside the new CI workflow file, plus normal github.com doc links and one localhost test URL; nothing pointing off-project",
+      "obfuscation_or_minification": "none found (no lines over 500 chars in the diff, no unusual encoding)",
+      "eval_or_exec_style_calls": "one hit, ast.literal_eval in conversion/base.py -- the SAFE stdlib form, not eval(); not a concern",
+      "ci_workflow_secrets_usage": "release-prism.yml uses only the standard GITHUB_TOKEN via gh CLI for creating GitHub releases -- ordinary, not a credential-harvesting pattern, and irrelevant to us since we never run their CI"
+    },
+    "diff_content_summary": "The 178 changed files are new ternary quantization kernels (PTQ1_0 1-bit, PQ2_0 2-bit) across CUDA/Metal/SYCL/Vulkan/CPU backends, a speculative-decoding feature (dspark/dflash draft models), a KV-cache mean-centering calibration tool, Hadamard-rotation weight support, and matching tests. This is what a legitimate quantization-format engineering fork looks like.",
+    "verdict": "clean_narrow_diff",
+    "verdict_detail": "The diff reads as a clean, narrow set of quantization-kernel and inference-feature additions layered on a real, currently-maintained fork of upstream llama.cpp. No network exfiltration, no arbitrary file writes outside expected model/build paths, no obfuscated code, no telemetry phone-home, no credential harvesting found. Built and ran without incident."
+  },
+  "gguf_provenance": {
+    "repo": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+    "repo_revision_sha": "b072e1d3b35a0a630cece372c2127528e0994386",
+    "file": "Ternary-Bonsai-2-27B-PTQ1_0.gguf",
+    "variant": "PTQ1_0 (the fork's own 1-bit ternary format; the task brief's 'TQ1_0' name is the closest generic quant-name analogue, not this repo's actual ggml id)",
+    "hf_api_reported_size_bytes": 5946648928,
+    "local_downloaded_size_bytes": 5946648928,
+    "size_match": true,
+    "lfs_oid_sha256": "53107f530aa52eb00912263ab1ee29bd199261c87cd7b4ad4ca1318c1fe33ee3",
+    "base_model": "Qwen/Qwen3.8-27B",
+    "license": "apache-2.0",
+    "comparator_model": {
+      "repo": "unsloth/Qwen3.8-27B-GGUF",
+      "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "file": "Qwen3.8-27B-Q4_K_M.gguf",
+      "size_bytes": 17106775008
+    },
+    "size_ratio_ternary_vs_our_mandated_q4km": 2.876,
+    "size_ratio_note": "PrismML's '~9x smaller' claim is against FULL PRECISION (FP16/BF16, ~55 GB for a 27.8B model), not against our already-4-bit-quantized mandated baseline (17.1 GB). Against OUR actual baseline the real measured ratio is 2.88x, not 9x. Both numbers are honest; they answer different questions."
+  },
+  "throughput_single_stream": {
+    "methodology": "PrismML fork's own llama-server binary, /v1/chat/completions, GPU 1 only, ctx=2048, 1 slot, temperature=0, 300 max_tokens, 5 runs per model, decode tok/s taken from the server's own timings block (excludes HTTP/JSON overhead).",
+    "ternary_bonsai2": {
+      "mean_tok_s": 61.2,
+      "var_tok_s": 0.0177,
+      "n_runs": 5
+    },
+    "standard_qwen38_27b_q4km": {
+      "mean_tok_s": 42.65,
+      "var_tok_s": 0.0253,
+      "n_runs": 5
+    },
+    "speedup_ternary_vs_standard": 1.435
+  },
+  "concurrent_capacity_scan": {
+    "methodology": "Doubling scan of --parallel N (ctx_per_slot=2048, total ctx=N*2048) on the SAME fork llama-server binary for both GGUF files, refined by single-step back-off between the last success and first failure.",
+    "ternary_max_loadable_n": 152,
+    "ternary_first_fail_n": 160,
+    "standard_max_loadable_n": 152,
+    "standard_first_fail_n": 160,
+    "oom_error_both_models": "ggml_backend_cuda_buffer_type_alloc_buffer: allocating 23940.00 MiB on device 0: cudaMalloc failed: out of memory / failed to allocate buffer for rs cache",
+    "finding": "IDENTICAL ceiling for both models. The failing allocation is for the 'rs cache' (recurrent-state cache -- this base architecture is a hybrid attention / Gated Delta Net design, confirmed by the server's own 'fused Gated Delta Net (chunked) not supported' warning on both models). That cache is sized by the SHARED base architecture, not by weight quantization, so it costs the SAME VRAM for both models at a given N. The ~10 GB of VRAM the ternary weights free up (5.95 GB vs 17.1 GB) does NOT translate into extra concurrent-stream capacity for this specific model family, because the state-cache term -- not the weight-VRAM term -- is what hits the ceiling first.",
+    "addendum_premise_result": "REFUTED for this model pair. The user's hypothesis (freed weight VRAM -> more KV cache -> more concurrent capacity) is a reasonable general hypothesis but does not hold here: both models hit exactly the same N=152/160 boundary."
+  },
+  "aggregate_throughput_concurrent": {
+    "methodology": "N concurrent /v1/chat/completions requests fired simultaneously via Python threads at the fork's llama-server (--cont-batching), ctx_per_slot=2048 (same as the single-stream benchmark), 200 max_tokens per stream, temperature=0, GPU 1 only. Aggregate tok/s = total tokens across all streams / wall-clock time from dispatch to last completion. Per-stream tok/s from each response's own timings block.",
+    "acceptable_degradation_cutoff_definition": "Per-stream tok/s at N concurrent streams >= 50% of that model's own single-stream baseline tok/s. Defined here, before further probing beyond N=8; note N=8 itself already falls below this bar for both models (see below), which is itself a finding, not a result to be smoothed over.",
+    "n8": {
+      "ternary": {
+        "aggregate_tok_s": 151.06,
+        "per_stream_tok_s_mean": 23.84,
+        "pct_of_single_stream_baseline": 0.3896,
+        "wall_s": 10.59
+      },
+      "standard": {
+        "aggregate_tok_s": 90.36,
+        "per_stream_tok_s_mean": 12.97,
+        "pct_of_single_stream_baseline": 0.304,
+        "wall_s": 17.71
+      }
+    },
+    "n32": {
+      "ternary": {
+        "aggregate_tok_s": 223.04,
+        "per_stream_tok_s_mean": 9.73,
+        "pct_of_single_stream_baseline": 0.159,
+        "wall_s": 28.69
+      },
+      "standard": {
+        "aggregate_tok_s": 7.94,
+        "per_stream_tok_s_mean": 0.27,
+        "pct_of_single_stream_baseline": 0.0063,
+        "wall_s": 805.55
+      }
+    },
+    "n100_ternary_attempted": "All 100 concurrent requests timed out client-side at 600s with zero completions on the first attempt; this looked pathological (the same server handled N=32 fine in 28.7s), so N=100 was not pursued further given the bounded scope of this eval -- flagged as an open question, not resolved.",
+    "finding_ternary": "Aggregate throughput DOES rise with more concurrent streams (61 -> 151 -> 223 tok/s from N=1 to N=8 to N=32), but per-stream latency degrades fast and is already below the 50% cutoff at N=8. So yes, more parallelism helps the ternary model's aggregate number, at a real per-stream cost -- a genuine but modest win, not a dramatic one, within the bounds actually measured here.",
+    "finding_standard": "CRITICAL, UNEXPECTED: the standard model's aggregate throughput at N=32 COLLAPSED to 7.94 tok/s (0.27 tok/s per stream, 805 seconds wall-clock for 6400 tokens) -- far worse than its own N=8 number (90.36 tok/s), and about 28x worse than the ternary model's N=32 number. This is not a smooth degradation curve; it is a cliff. Verified by re-running on a freshly restarted server (not a stale-server artifact) with an extended client timeout to rule out a client-side measurement error.",
+    "standard_model_collapse_root_cause": "NOT DETERMINED within this eval's bounded scope. The most likely mechanism, based on the server's own log warning ('fused Gated Delta Net (chunked) not supported, set to disabled', printed identically for both models), is that the disabled chunked-processing fallback path scales much worse with (weight size x batch size) for the larger standard-precision weights than for the much smaller ternary weights -- but this is a hypothesis, not something this eval verified. Recorded as an important, separate finding: possibly a real batching-path defect in this fork build for large non-ternary GGUFs at high parallelism, independent of the ternary-quality question this eval was commissioned to answer.",
+    "false_negative_risk_note": "Single trial at each N (not repeated across seeds), and N=100 for the ternary model was not resolved. Read the N=32 standard-model collapse as a flagged anomaly worth a dedicated follow-up, not as a fully explained, publication-grade result."
+  },
+  "bounded_quality_retention_proxy": {
+    "explicit_scope_disclaimer": "This is NOT a replication of PrismML's claimed 20-benchmark suite (reasoning/coding/vision/agentic tasks, aggregate score 83.9 vs 85.4, '98.2% retention'). It is a single narrow slice: a 160-row balanced sample (80 correct / 80 incorrect, seed 20260929) from data/fover_corpus_v4.json, scored with an identical single-forward-pass accept/reject/escalate readout prompt on both models. Treat this only as a bounded, honest signal of whether the ternary model behaves SIMILARLY to the full model on one narrow task -- nothing more.",
+    "readout_methodology": "Prompt asks the model to grade one step of a written math solution and answer with exactly one letter (A=accept/B=reject/C=escalate). Standard model: read via llama-cpp-python's raw logit path (reset+eval+read final-position logits for the A/B/C token ids), reusing this project's already-validated pattern from python/carnot/verify/semif_readout_energy.py. Ternary model: read via the fork's llama-server /completion endpoint with n_predict=1, n_probs=40, temperature=0 -- the server's own top-K next-token log-probabilities for the SAME three option tokens, since llama-cpp-python cannot load this fork's custom ggml quant types at all. Both models share the same tokenizer (verified: identical token ids 357/417/351 for ' A'/' B'/' C' on both).",
+    "n_rows_compared": 160,
+    "argmax_agreement_rate": 0.625,
+    "standard_model_accuracy_vs_label": 0.4,
+    "standard_model_escalate_rate": 0.23125,
+    "ternary_model_accuracy_vs_label": 0.5,
+    "ternary_model_escalate_rate": 0.00625,
+    "interpretation": "Both models score AT OR BELOW random-guess chance (0.50) on this narrow readout task. This most likely reflects a known weakness of this exact single-forward-pass letter-choice readout on this exact corpus (this project's own semif_readout_energy.py module documents a prior finding that the collapsed accept-probability scalar carries little signal on fover_corpus_v4 rows, even though the raw per-option probabilities do carry some signal) -- it is a proxy limitation, not evidence that either 27B model cannot reason. The 62.5% argmax agreement rate shows the two models behave SOMEWHAT correlated but far from identical on this task; this is consistent with, but does not confirm or deny, PrismML's 98.2%-retention claim, which was measured on an entirely different, much broader benchmark suite this eval did not and could not reproduce."
+  },
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "This eval is not claiming a verifier moat; the readout comparison is a bounded behavioral-similarity proxy between two LLMs, not a verifier-vs-oracle comparison, so this field is included only to satisfy the project's Circularity Discipline field requirement honestly.",
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Real compute takes wall-clock time; this field records genuine elapsed session time across build, download, and every benchmark."
+    },
+    "random_seed": {
+      "principle": "Determinism is the precondition for reproducibility; used to seed the row sample and every generation call."
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of fork commit + GGUF LFS oid + seed catches silent drift between this artifact and any future replication attempt."
+    }
+  },
+  "recommendation": {
+    "worth_a_real_follow_up_proposal": "conditionally yes, narrowly scoped",
+    "grounded_in": [
+      "Real, measured 1.44x single-stream speedup on our own RTX 3090 (GPU 1), not a vendor claim.",
+      "Real 2.88x smaller weight footprint against our OWN already-quantized mandated baseline (not the vendor's 9x-vs-FP16 framing).",
+      "The VRAM-savings-buys-more-KV-cache hypothesis this eval was asked to test does NOT hold for this specific model family -- the recurrent-state cache is architecture-fixed and identical for both quantizations, so that specific benefit does not materialize.",
+      "The bounded quality proxy is inconclusive (both models near or below chance) and must not be read as confirming or refuting PrismML's quality-retention claim.",
+      "A separate, more urgent, unresolved finding: the standard (non-ternary) model showed a severe throughput collapse at N=32 concurrent under this fork's build, worth investigating on its own regardless of any Bonsai-2 adoption decision.",
+      "Clean fork-safety audit and verified GGUF provenance -- no blocker on those grounds."
+    ],
+    "concrete_follow_up_if_pursued": "A dev-loop-iteration-speed pilot only (not a Kaggle submission-stack change): swap the ternary GGUF into local dev/experiment iteration where the 1.44x single-stream speedup directly cuts wall-clock, while leaving the frozen live ARC generator untouched. Do NOT recommend adopting this fork's build for any concurrent/batched serving path until the N=32 standard-model collapse is understood, since the same batching code underlies both models."
+  },
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_full_generation",
+  "inference_substrate_breakdown": {
+    "fork_audit_and_provenance_checks": "aggregation_from_upstream_artifacts",
+    "throughput_benchmarks_single_and_concurrent_stream": "live_llm_inference",
+    "readout_quality_proxy": "live_llm_inference",
+    "principle": "The throughput and readout measurements genuinely load and run both GGUF models on GPU 1; the fork-audit and provenance steps only read git history and HF API metadata, no model load."
+  },
+  "inference_substrate_breakdown_principle": "adversarial_verify.py requires inference_substrate to be a bare string plus a closed-enum inference_substrate_class. This artifact genuinely mixes substrates (aggregation-only provenance checks vs live generation), so the top-level declaration names the headline compute-bound claim (the throughput benchmarks, live_llm_inference / model_full_generation), and this field keeps the honest per-component breakdown the top-level pair cannot express.",
+  "model_specs": [
+    {
+      "name": "Ternary-Bonsai-2-27B (PrismML fork, PTQ1_0)",
+      "hf_repo": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+      "hf_revision": "b072e1d3b35a0a630cece372c2127528e0994386",
+      "file": "Ternary-Bonsai-2-27B-PTQ1_0.gguf",
+      "size_bytes": 5946648928
+    },
+    {
+      "name": "Qwen3.8-27B-Q4_K_M (mandated comparator)",
+      "hf_repo": "unsloth/Qwen3.8-27B-GGUF",
+      "hf_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "file": "Qwen3.8-27B-Q4_K_M.gguf",
+      "size_bytes": 17106775008
+    }
+  ]
+}
