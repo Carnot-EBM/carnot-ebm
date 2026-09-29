@@ -85421,3 +85421,46 @@ reader derives flagged_adversarial from the actual verifier receipt.
 The parent runs only frozen exact argv with owned deadlines, flushed boundaries,
 and heartbeats. The CLI child does not recursively validate. All required
 check exits, historical failures and separate health outcome remain visible.
+
+## REQ-REPORT-PLAN-682: Evidence-qualified V682 planning contract
+
+The staged milestone 2026.09.682 SHALL contain exactly fourteen ordered tasks,
+Exp7851 through Exp7864, across four phases. The visible task table, embedded
+JSON contract and research-roadmap-next.yaml SHALL agree on IDs, titles,
+phases, deliverables, MODEL_SPECS, substrates and structured gates. Every
+upstream gate SHALL name an earlier task in this same plan and an identically
+spelled field in that producer's REQUIRED ARTIFACT FIELDS. Scope-matched
+failures SHALL carry all four prior_failures fields, including true retirement.
+
+The plan SHALL distinguish V681's eight producer artifacts (five disqualified,
+three blocked) from six missing science producers. It SHALL preserve the
+September 28 oracle-distinct corrigendum and the existing failure record.
+Source compatibility SHALL validate the exact archived Exp7810 slug without
+weakening current numeric identities. Natural training SHALL not use fixture
+predicates derived from unit_id or calibrate on training rows. Qualification,
+scientific benefit and administrative agreement SHALL have separate gates.
+
+New LLM use SHALL name unsloth/Qwen3.8-27B-GGUF and the workload-appropriate
+substrate. Continuous learning SHALL test prediction-before-feedback,
+constraint admission, causal no-write controls and retained decisions.
+Every task SHALL specify flushed phase and long-call progress, loop heartbeats,
+and chunked writing of files over about 200 lines. All tasks SHALL declare a
+closed verdict_class and per-unit evidence where comparing conditions.
+Planning SHALL leave the active roadmap, conductor, guards and existing
+experiment artifacts unchanged. Historical V681 authority SHALL be preserved.
+
+### SCENARIO-REPORT-PLAN-682-CONTRACT
+
+The staged design and YAML yield fourteen equal contract rows. Existing schema,
+prior-failure, exclusion, gate, harness-fit, ARC-floor and priority readers
+accept the explicit staged YAML. Private missing-task, reordered-task,
+stale-milestone, wrong-model, misspelled-gate and absent-retirement mutations
+are rejected by the relevant reader or an independent contract check.
+
+### SCENARIO-REPORT-PLAN-682-RESEARCH
+
+A dated source review is appended before experiment design. It checks arXiv,
+OpenReview, Extropic, Semantic Scholar citations for both seed papers,
+Hugging Face, GitHub trends and Logical Intelligence. Unavailable pages and
+vendor-only claims remain explicit. Planned tests distinguish source
+sufficiency, calibrated decisions, causal learning and complete service cost.

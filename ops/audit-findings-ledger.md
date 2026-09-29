@@ -255,3 +255,4 @@ of truth, not this line.)
 | 2026-09-28 | experiment_claim_audit | experiment_7825_v680_training_runtime.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_marker_present | SILENT_NON_FIRING | OPEN | |
 | 2026-09-28 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_claim_text | REAL_BUG | OPEN | |
+| 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_norm | SILENT_NON_FIRING | OPEN | |

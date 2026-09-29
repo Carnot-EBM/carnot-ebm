@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-28
 
-Scanned 7 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 5 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -13,32 +13,28 @@ Scanned 7 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): 
 |---|---|
 | `CLEAN` | 1 |
 | `MINOR_RISK` | 0 |
-| `REAL_BUG` | 1 |
-| `SILENT_NON_FIRING` | 5 |
+| `REAL_BUG` | 0 |
+| `SILENT_NON_FIRING` | 4 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::check_implausible_tight_ci` — results/experiment_4781_structural_energy_s1_contrastive_landscape.json`: `energy_ranking_loo_auroc_ci95=[0.7133175599984811, 0.7137104171413382]`, `n_seeds=10`.
-- `adversarial_verify.py::_flatten_metrics` — results/experiment_445_boltzmann_repair_bridge.json: bridge_metrics.repair_success_rate = 1.0 and bridge_metrics.n_samples = 100.
-- `adversarial_verify.py::_moat_marker_present` — {"honest_verdict": "complete: beats majority vote on held-out ARC puzzles", "verifier_is_oracle": false, "set_encoder_minus_vote_delta": 0.44}` — the moat-rigor check emits no flag.
-- `adversarial_verify.py::_claims_moat` — Actual `results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json` value: `honest_verdict = "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget"`. The function returns false, and the dependent circularity guard emits no flag.
-- `adversarial_verify.py::_flips_gate` — The project already uses a dict-shaped `diffusiongemma_gate_status` in `results/experiment_5013_capstone_v461.json`; MET is an existing status value in `results/experiment_4346_capstone_v401.json`. A gate flip recorded in that established shape is missed: ```json {"diffusiongemma_gate_status":{"activation":"activated","autonomously_flipped_to_met":true,"conditions_satisfied_off_arc":true,"operator
-- `adversarial_verify.py::_moat_rigor_claim_text` — [experiment_4357_capstone_v402.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4357_capstone_v402.json:934) contains `verifier_thesis_state: "moat_proven_leak_robust_but_s3_utility_open"`. The helper omits that real claim field from its output.
+- `adversarial_verify.py::_moat_rigor_norm` — complete: verifier doesn't beat SC
+- `adversarial_verify.py::_moat_rigor_positive_delta_items` — results/experiment_4245_arc_set_encoder_beats_vote.json`: `margin_override_minus_vote = 0.4230769231`.
+- `adversarial_verify.py::_moat_rigor_headroom_state` — json { "headroom_present": true, "oracle_at_k": 0.82, "tuned_sc_accuracy": 0.60, "n_flips_possible": 0, "perturbation_flip_rate": 0.05 } ``` These are plausible project field names. The unrelated positive perturbation rate masks zero possible flips, and the function returns true.
+- `adversarial_verify.py::_moat_rigor_claims_relevant` — results/experiment_3651_capstone_and_g_gate_v334.json` contains `"verifier_beats_sc_headroom": true`. The relevance helper returns false; full verification reports zero flags.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::check_implausible_tight_ci` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_flatten_metrics` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_moat_marker_present` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_claims_moat` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_flips_gate` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_moat_rigor_claim_text` — **REAL_BUG**
+- `adversarial_verify.py::_moat_rigor_norm` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_positive_delta_items` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_headroom_state` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_claims_relevant` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::check_implausible_tight_ci
+## adversarial_verify.py::_moat_rigor_norm
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -46,59 +42,26 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-`Detect bootstrap/empirical CIs much tighter than sample-variance floor.`
+By name, `_moat_rigor_norm` normalizes moat-rigor text for claim matching; it has no docstring.
 
 ## FINDINGS
-1. **A real CI is invisible.** `if not any(k.lower().endswith(s) for s in ci_field_suffixes):` excludes the project’s ci95 spelling. In experiment 4781, energy_ranking_loo_auroc_ci95 is [0.7133175599984811, 0.7137104171413382] at 10 seeds. This function returns no flag; changing only the key to end in _ci_95 produces an IMPLAUSIBLE_TIGHT_CI flag. This is a pattern list narrower than the CI concept it represents.
-2. **Degenerate CIs are silently approved.** `if hi <= lo:` skips equal endpoints. An interval such as [1.0, 1.0] has zero width, yet receives no warning even under a recognized field name. The corpus contains cross_family_ci95=[1.0, 1.0].
-3. **Seed extraction assumes a scalar count.** `n_seeds_raw = d.get("n_seeds") or d.get("seeds") or 0` followed by `int(n_seeds_raw)` treats a list of seed IDs as unknown N. It also misses a count nested in model_specs, as in experiment 1693. A principle wrapped count or CI would be skipped by this function directly, though the main verifier unwraps top-level fields before calling it; `None` falls back as intended.
-4. **The numeric gate contradicts its stated threshold.** `flagging_threshold = floor_full_width / 10.0` yields 0.0196/√N, versus the docstring’s 0.1/√N. With unknown N, it yields about 0.000620, versus the comment’s 0.001 gate. `if ci_width < flagging_threshold:` correctly excludes exact equality to the *implemented* threshold. `if midpoint < 0.01:` also admits metrics from 0.01 upward, broader than the docstring’s “near 0.1+” case.
-5. **The suffix list is both broader and redundant.** `_ci_90` and `_credible_interval` extend beyond the stated 95% bootstrap/empirical CI claim, while the calculation still uses the 95% multiplier. The entries `"_bootstrap_ci_95"`, `"_bootstrap_ci_90"`, and `"_bootstrap_ci"` are wholly covered by `"_ci_95"`, `"_ci_90"`, and `"_ci"` respectively. Deleting those three entries cannot change behavior, so a green test suite cannot establish that they work independently.
-6. **Unrecognized inputs look like passes.** The shape and suffix `continue` branches emit no unverified marker. There is no free-text substring or negation scan here, and the suffix check is anchored at the end of a field name; I found no supported internal-word false match. The function has no absolute write target, tracked-file side effect, or duration measurement.
+1. `re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")` turns the apostrophe in “doesn’t” into a separator. In the live moat-rigor check, the null verdict below produces no flag with headroom absent; spelling out “does not” produces a warning. This is a silent miss in the matching path.
+2. This helper reads no artifact fields and has no numeric threshold, write target, measurement, or default branch that skips a check. No rule here was established as deletable while tests remain green.
 
 ## COUNTEREXAMPLE
-Actual experiment 4781 fragment: `{"n_seeds": 10, "energy_ranking_loo_auroc_ci95": [0.7133175599984811, 0.7137104171413382]}`. The function returns no flags. Renaming only the field to `energy_ranking_loo_auroc_ci_95` makes it flag.
+`{"honest_verdict": "complete: verifier doesn't beat SC", "headroom_present": false, "verifier_is_oracle": false}` produces no moat-rigor flag. Replacing “doesn’t” with “does not” produces a warning.
 
 ## MISSED INPUT
-`results/experiment_4781_structural_energy_s1_contrastive_landscape.json`: `energy_ranking_loo_auroc_ci95=[0.7133175599984811, 0.7137104171413382]`, `n_seeds=10`.
+`complete: verifier doesn't beat SC`
 
 ## RECOMMENDATION
-NEEDS_REDESIGN
+WIDEN_PATTERN_TO_CONCEPT
 
 ## RATIONALE
-The committed interval is about 16 times narrower than the implemented flagging threshold, but its field spelling makes the check silent. Fixing the spelling alone leaves zero-width intervals, seed-list handling, and the conflicting threshold claims unresolved.
+The downstream check treats normalized text as claim evidence, but an ordinary contraction makes this null claim invisible. The two equivalent verdicts were checked against the live caller and received different results.
 
 
-## adversarial_verify.py::_flatten_metrics
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`_flatten_metrics` claims to flatten common nested metric dictionaries so downstream checks can see their fields.
-
-## FINDINGS
-1. `v = d.get(container)` followed by `if isinstance(v, dict):` silently skips lists and None. A principle-wrapped container *is* a dict, but the loop copies its principle and value keys instead of the metrics inside its value.
-2. `nested_containers = ("metrics", "report", "summary", "case_scores", "results")` stands in for containers holding metrics. It omits bridge_metrics, a field in a committed artifact whose 1.0 repair success rate over 100 samples produces a warning when checked directly. The full verifier produces no flags for that artifact.
-3. `if k not in out:` silently hides a nested metric when a same-named top-level key exists, even if that top-level value is None. `case_scores` also appears decorative for the observed corpus: all five top-level occurrences inspected were lists, so its dictionary branch never ran. Ten focused tests passed with that recognizer removed; a broader run reached 105 passes before it was stopped, so full-suite survival is unproven.
-4. There is no free-text substring or negation check, numeric threshold, absolute path, write, or measurement in this function. Unrecognized containers leave `return out` indistinguishable from a successful flatten.
-
-## COUNTEREXAMPLE
-`{"bridge_metrics": {"repair_success_rate": 1.0, "n_samples": 100}}` — this fragment from a committed artifact is ignored by the flattening step. The perfect-score check warns when given the nested dictionary directly; the full verifier reports no flags for the artifact.
-
-## MISSED INPUT
-results/experiment_445_boltzmann_repair_bridge.json: bridge_metrics.repair_success_rate = 1.0 and bridge_metrics.n_samples = 100.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-This is a demonstrated silent miss, not merely an unfamiliar field shape. Flattening needs to recognize metric containers by their contents, handle principle wrappers and list rows deliberately, and report fields it could not inspect; otherwise a no-flag report can mean the relevant numbers were never checked.
-
-
-## adversarial_verify.py::_normalize_principle_wrapped_fields
+## adversarial_verify.py::_moat_rigor_numeric_items
 
 **Verdict:** `CLEAN`
 
@@ -106,7 +69,7 @@ This is a demonstrated silent miss, not merely an unfamiliar field shape. Flatte
 CLEAN
 
 ## CLAIM
-The function unwraps top-level principle-annotated fields so downstream checks receive their bare values.
+The function’s name indicates that it collects numeric artifact fields for moat-rigor checks as path/value pairs.
 
 ## FINDINGS
 none found
@@ -121,74 +84,10 @@ none found
 KEEP
 
 ## RATIONALE
-The code requires both annotation keys before extracting the value and copies other fields unchanged. It contains no free-text matching, thresholds, path writes, or measurements. Whether its rule has an effective regression test cannot be determined from this snippet.
+The function makes no named-field assumptions, text matches, threshold decisions, writes, or measurements. Its field walker reaches values inside wrapped dictionaries and lists, while `_is_finite_number(value)` excludes nonnumeric and nonfinite leaves. I found no concrete misclassification attributable to this function.
 
 
-## adversarial_verify.py::_moat_marker_present
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Marker match with a RIGHT token boundary only.`
-
-## FINDINGS
-1. **Silent miss:** `re.escape(marker)` requires the marker’s exact spelling. The current moat-claim callers miss an ordinary spaced claim of beating majority vote. I verified that the fragment below has a positive vote delta but receives no moat-rigor flag. This helper contains no hardcoded marker list; the omitted wording is in its callers’ vocabulary.
-2. **Negation false positive:** `pattern.search(text)` cannot distinguish a claim from its denial. The counterexample below is treated as a moat claim and receives a critical flag. The docstring’s null precedence in `_moat_rigor_claims_win` does not protect that relevance decision.
-3. **Boundary scope:** `(?![a-z0-9])` excludes only lowercase ASCII letters and digits. A longer word continued by an uppercase or Unicode letter can match. Current callers lowercase ordinary text; I found no additional corpus misclassification from this edge. The missing left boundary is intentional and catches the documented concatenated claim.
-4. **Other classes:** `_MOAT_MARKER_RES.get(marker)` reads a regex cache, not an artifact field. There is no numeric threshold, absolute path, write, measurement, or default branch that skips verification in this helper. The right-boundary rule has a dedicated test; no detection rule here is demonstrably deletable while that test stays green.
-
-## COUNTEREXAMPLE
-`{"honest_verdict": "complete: not_moat_proven"}` — the moat-rigor check emits a critical flag for this denied claim.
-
-## MISSED INPUT
-`{"honest_verdict": "complete: beats majority vote on held-out ARC puzzles", "verifier_is_oracle": false, "set_encoder_minus_vote_delta": 0.44}` — the moat-rigor check emits no flag.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The live caller chain both flags a denied claim and silently ignores a positive claim written in ordinary words. Both outcomes were reproduced without changing an artifact. Claim recognition needs consistent separator handling and polarity checks before it decides whether rigor requirements apply.
-
-
-## adversarial_verify.py::_claims_moat
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`True if the artifact headlines a verifier moat / superiority win.`
-
-## FINDINGS
-
-1. **Field shape:** `if d.get("verifier_value_added") is True or d.get("verifier_efficiency_win") is True:` accepts only bare booleans. `v = d.get(key)` followed by `if isinstance(v, str) and any(` silently skips principle-wrapped claim text. Lists and None are also skipped.
-
-2. **Narrow vocabulary and silent default:** `for key in ("honest_verdict", "status", "headline_outcome", "headline"):` omits claim-bearing fields such as paper_summary. The headline marker list represents superiority claims but omits beats_sc. A real verifier-beats-SC headline returns false; `return False` gives its caller no way to distinguish that missed claim from an artifact with no claim. The dependent circularity guard consequently emits no flag for it.
-
-3. **Boundary and negation blindness:** `_moat_marker_present(v.lower(), m) for m in _MOAT_HEADLINE_MARKERS` uses a helper with a right boundary only. In an existing artifact, beats_vote matches within a negated local-not-beats-vote verdict. This function returns true, and the circularity guard emits a warning for that null result.
-
-4. **Decorative marker:** The efficiency_moat_won entry is wholly covered by moat_won under the helper’s matching rule. Removing it in memory left all 26 focused tests green.
-
-5. **Other classes:** This function has no numeric threshold, absolute path, file write, or measurement, so there is no off-by-one, fixed write target, tracked-state side effect, or premature metric here. The inspected focused test copies artifacts to a temporary directory.
-
-## COUNTEREXAMPLE
-Actual Experiment 3996 fragment: `{"honest_verdict": "complete: capstone_v369_gap4_UNCONFIRMED_NOT_DECENTRALIZED_NOT_DEPLOYED_local_not_beats_vote_games3_new_levels2_missing5_flagged_skipped0"}`. The function returns true for a stated non-win; the circularity guard emits a warning.
-
-## MISSED INPUT
-Actual `results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json` value: `honest_verdict = "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget"`. The function returns false, and the dependent circularity guard emits no flag.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The function both misses a real superiority headline and treats a real negated result as a win. Unwrapping fields alone cannot fix the narrow vocabulary, context-blind matching, or silent `return False` path.
-
-
-## adversarial_verify.py::_flips_gate
+## adversarial_verify.py::_moat_rigor_positive_delta_items
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -198,43 +97,31 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-`True if the artifact asserts a (DiffusionGemma) gate is MET / flipped.`
+`Positive numeric deltas measured against an SC-equivalent baseline.`
 
 ## FINDINGS
 
-1. **A / F — silent miss.** `v = d.get("diffusiongemma_gate_status")` is followed by `if isinstance(v, str) and _MET_LEADING_RE.match(v.strip().upper()):`. Real artifacts store this field as a dict with a nested status. If that status becomes MET, this branch ignores it; `return False` gives the caller no way to distinguish an unrecognized claim from no claim.
+1. **Silent miss:** `if "delta" not in path_norm:` requires that literal substring. The committed field margin_override_minus_vote is a positive difference against vote, but this function excludes it. Its caller treats the empty result as “no win,” with no indication that a comparison went unrecognized.
 
-2. **Field shapes.** `g.get("met") is True` rejects a principle-wrapped true value. `_MET_LEADING_RE.match(str(g.get("status", "")).strip().upper())` turns a wrapped status into a dict representation that cannot match. `if isinstance(hv, str):` likewise ignores non-string verdicts. The normal verifier path unwraps top-level principle fields before calling this function, so that path protects top-level wrappers, but it does not unwrap these nested gate fields. Lists and None also fall through silently.
+2. **False positive:** `path_norm = _moat_rigor_norm(path_text)` and `if value > 0.0:` accept positive numeric descendants of a matching path, regardless of what they measure. In the committed negative-result artifact arc3_gap3_stage1_latent_energy.json, the function returns bootstrap count B=1000 and the positive CI upper endpoint 0.0645 as “positive deltas”; the point estimate is −0.0322. That artifact’s null verdict prevents a downstream win flag, but the helper’s classification is wrong.
 
-3. **Boundaries and context.** `_GATE_MET_RE.search(hv_lower)` treats an unrelated gate name in a verdict as a gate flip. The committed phase-one shipping artifact below consequently receives a **critical** circularity flag. `_DIFFUSIONGEMMA_MET_RE.search(hv_lower)` has no left boundary, so it can also begin inside a longer token.
+3. **Shapes, boundaries, and context:** There is no direct field read or bare-type assumption in this snippet; the numeric helper traverses wrapped fields and lists, which also exposes the CI error above. The SC token regex has boundaries, while the `"delta"` substring check has none; I found no real corpus collision inside a longer word. This function does not scan verdict prose or interpret negation.
 
-4. **Negation.** `if _GATE_MET_RE.search(hv_lower) or _DIFFUSIONGEMMA_MET_RE.search(hv_lower):` has no check for a verdict saying a MET claim was blocked or never attempted. It reports such wording as a flip.
+4. **Thresholds and tests:** `if value > 0.0:` correctly excludes zero. The focused tests cover all three filters: removing the delta or positivity filter breaks the exact exp3645 result assertion, and removing the SC filter breaks the score_delta rejection. No deletable branch was identified; 26 focused tests pass.
 
-5. **Pattern list and claim mismatch.** The recognized forms cover a leading MET status and two verdict token patterns. The claimed concept also includes a structured status with nested MET and ordinary wording that a gate “flipped” or “passed”; those forms are absent. The logic is also broader than the claim because it accepts an unrelated shipping gate.
-
-6. **C — test deletion risk.** The existing tests isolate the string status, gate boolean, nested gate status, and both verdict matchers; I found no named branch demonstrably deletable while those tests stay green. All 28 focused tests passed, but they do not cover the committed false positive or a nested MET status.
-
-7. **Other classes.** There is no numeric threshold to check for an equality error, and this function contains no absolute path, write target, or measurement. Its existing focused tests use temporary artifact paths.
+5. **Side effects:** This function has no absolute write path, tracked-file write, or measurement computed before work.
 
 ## COUNTEREXAMPLE
-
-Committed in `results/experiment_2441_phase1_ship_gate_completion_v5.json`:
 
 ```json
-{"honest_verdict":"complete: with phase1_ship_gate_met.","phase1_ship_gate_met":true}
+{"honest_verdict":"complete: arc_oracle_distinct_set_encoder_beats_vote","verifier_is_oracle":false,"margin_override_minus_vote":0.4230769231}
 ```
 
-`_flips_gate` returns true. Full artifact verification emits `CIRCULAR_MOAT_OVERCLAIM` at critical severity, although this is a phase-one shipping gate.
+These names and values occur in experiment 4245. With this plausible fragment, the helper returns an empty list and the moat-rigor check emits no flag despite the absent headroom and paired-significance evidence.
 
 ## MISSED INPUT
 
-The project already uses a dict-shaped `diffusiongemma_gate_status` in `results/experiment_5013_capstone_v461.json`; MET is an existing status value in `results/experiment_4346_capstone_v401.json`. A gate flip recorded in that established shape is missed:
-
-```json
-{"diffusiongemma_gate_status":{"activation":"activated","autonomously_flipped_to_met":true,"conditions_satisfied_off_arc":true,"operator_gated":false,"status":"MET"},"verifier_is_oracle":true}
-```
-
-`_flips_gate` returns false, and the circularity check emits no flag.
+`results/experiment_4245_arc_set_encoder_beats_vote.json`: `margin_override_minus_vote = 0.4230769231`.
 
 ## RECOMMENDATION
 
@@ -242,35 +129,99 @@ NEEDS_REDESIGN
 
 ## RATIONALE
 
-A committed honest artifact already gets a critical false flag, while a MET claim in an established structured field shape silently escapes this detector. The matcher needs to read gate status from the actual field schema and restrict free-text matches to the relevant gate and an affirmative claim.
+A path substring cannot distinguish a measured comparison from its bootstrap count or confidence interval, and it misses a real comparison named without “delta.” The caller then treats an unrecognized positive comparison as no win, so a silent false negative is possible alongside false positives from unrelated numeric descendants.
 
 
-## adversarial_verify.py::_moat_rigor_claim_text
+## adversarial_verify.py::_moat_rigor_headroom_state
 
-**Verdict:** `REAL_BUG`
+**Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
-REAL_BUG
+SILENT_NON_FIRING
 
 ## CLAIM
-With no docstring, `_moat_rigor_claim_text` claims by name to collect an artifact’s moat-rigor claim text.
+The name `_moat_rigor_headroom_state` claims to determine whether declared moat headroom is supported by oracle, tuned self-consistency, and flip evidence; the function has no docstring.
 
 ## FINDINGS
-1. **Silent extraction miss:** `_MOAT_RIGOR_CLAIM_KEYS` stands in for fields carrying an artifact’s own moat claim, but omits the real verifier_thesis_state field identified below. `d.get(key, "")` makes that omission indistinguishable from an empty field. This proves a missed claim in the returned text; it does not prove a missed critical flag on that particular artifact.
-2. **Field shape:** `str(d.get(key, ""))` accepts None, lists, and dictionaries by turning them into text. A dictionary’s explanatory or historical content can therefore be treated as a current claim. The normal verifier path unwraps top-level principle-annotated fields before this helper, limiting that specific risk.
-3. **Context:** The helper preserves negated claim words, and its caller treats the counterexample below as an affirmative moat claim, issuing a critical flag. `" ".join` can also combine words from separate fields into a claim neither field states alone. This helper contains no free-text substring matcher of its own.
-4. **Untested entries:** Removing each of headline_outcome, headline, paper_summary, decision, and oracle_distinct_status individually left all 26 focused moat tests green. Removing honest_verdict or status failed tests. The full suite was not run under these mutations.
-5. **Other classes:** This function has no numeric threshold, absolute path, write, recognizer-chain fallback, or measurement. The inspected focused tests use temporary files for writes.
+
+1. **Field shape:** There is no direct field read in this function. The check `if path and path[-1].lower() == "headroom_present" and value is True:` nevertheless requires a bare Boolean. A principle-wrapped true value is rejected; results/experiment_5178_hidden_state_verifier_pilot_v474.json contains that exact field shape. Nested declarations can also satisfy the check when the artifact’s own top-level declaration is false. Numeric wrappers are traversed by `_moat_rigor_numeric_items(d)`; lists and `None` do not crash the function, but can leave evidence unrecognized.
+
+2. **Patterns narrower than their concepts:** `if "oracle_at_k" in path_text or "oracle@k" in path_text` stands in for an oracle ceiling but omits the corpus field oracle_pass2_ceiling. `if ("tuned_sc" in path_text or "tuned_self_consistency" in path_text)` stands in for a tuned baseline but omits genuine_sc_accuracy, which an artifact’s field principle explicitly describes as genuine tuned self-consistency accuracy.
+
+3. **Substring and context errors:** Those same unbounded matches also accept non_oracle_at_k and untuned_sc_accuracy. `if "flip" in path_text and value >= 0.0` accepts an unrelated perturbation_flip_rate. The function does not scan verdict prose, so phrase negation is not its failure here; it loses the meaning and scope of *field paths*.
+
+4. **Silent pass:** `if oracle_values and tuned_sc_values:` skips comparison when either metric is unrecognized. `if flip_values and max(flip_values) <= 0.0:` skips the flip check when no matching value remains, including when all values are negative. Both routes reach `return True, "headroom_present=true with no contradictory headroom evidence"`; the result does not distinguish unverified evidence from a pass.
+
+5. **Unpaired evidence:** `best_headroom = max(o - s for o in oracle_values for s in tuned_sc_values)` pairs values across different corpora and selects the most favorable pair. An upstream corpus with headroom can therefore hide zero headroom in the claimed corpus.
+
+6. **Threshold boundary:** The `<` and `<=` operators express the stated thresholds, but ordinary floating-point subtraction makes 0.70 minus 0.60 test below 0.10. I verified that this input returns false while reporting headroom as 0.1.
+
+7. **Test coverage:** With both the numeric comparison and flip-check branches removed in memory, the two directly relevant test files still passed all 26 tests. That establishes a gap in those tests; it does not establish that the entire repository suite would remain green.
+
+8. **Paths, writes, and measurements:** This function contains no absolute path, write operation, or computed duration or counter. The fixed-write-target and premature-measurement hazards are absent from the supplied function.
 
 ## COUNTEREXAMPLE
-`{"honest_verdict": "complete: readiness_only_not_moat_proven"}` — the current caller emits a critical moat-rigor flag although the verdict explicitly denies that a moat was proven.
+```json
+{
+  "headroom_present": false,
+  "upstream_artifact": {
+    "headroom_present": true,
+    "oracle_at_k": 0.82,
+    "tuned_sc_accuracy": 0.60,
+    "n_flips_possible": 7
+  },
+  "oracle_at_k": 0.60,
+  "tuned_sc_accuracy": 0.58,
+  "n_flips_possible": 0
+}
+```
+The function returns true despite the current artifact declaring no headroom and zero possible flips.
 
 ## MISSED INPUT
-[experiment_4357_capstone_v402.json](/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4357_capstone_v402.json:934) contains `verifier_thesis_state: "moat_proven_leak_robust_but_s3_utility_open"`. The helper omits that real claim field from its output.
+```json
+{
+  "headroom_present": true,
+  "oracle_at_k": 0.82,
+  "tuned_sc_accuracy": 0.60,
+  "n_flips_possible": 0,
+  "perturbation_flip_rate": 0.05
+}
+```
+These are plausible project field names. The unrelated positive perturbation rate masks zero possible flips, and the function returns true.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The negated-verdict false positive is reproducible in the live caller. A real claim field is silently omitted, though the named artifact declares oracle distinctness false, so no missed critical flag is established for that file. Five key-list entries also lack isolating coverage in the focused tests.
+The function treats any favorable nested evidence as proof for the artifact as a whole, while missing or unrecognized evidence also produces a pass. It needs explicit field unwrapping, metric identity and corpus pairing, and a distinct unverified outcome; the passing mutation run shows the current focused tests do not protect its numeric or flip checks.
+
+
+## adversarial_verify.py::_moat_rigor_claims_relevant
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Identifies artifacts whose moat or verifier-value claims require rigor checks.
+
+## FINDINGS
+1. **Real silent miss; narrower than claimed.** The four explicit-field reads—`d.get("verifier_value_added") is True`, `d.get("verifier_efficiency_win") is True`, `d.get("moat_realized") is True`, and `d.get("moat_retired_bounded") is True`—omit a real, true beats-SC claim field in exp3651. Its verdict uses different wording, so `return any(_moat_marker_present(norm, marker) for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)` is false. The full verifier reports zero flags and gives no indication that this check skipped the claim.
+2. **Field shapes.** Each `is True` read requires a bare boolean; a wrapped dict, list, or None does not match. The full verifier normalizes standard top-level principle/value wrappers before calling this helper, so the wrapper case is a direct-call risk, not the cause of the demonstrated corpus miss. The delegated `_moat_rigor_claim_text(d)` also stringifies claim-field values, allowing text inside other lists or dicts to influence matching.
+3. **Pattern and context gaps.** The boolean-name enumeration stands for explicit moat claims but omits the exp3651 field. `_MOAT_RIGOR_RELEVANCE_MARKERS` stands for moat and SC claim wording but misses a real “did not beat” spelling in the corpus. Delegating to `_claims_moat(d)` or `_flips_gate(d)` supplies no negation or blocked-status veto; a negated moat-win phrase can be classified as a win.
+4. **Decorative branches.** The first two boolean disjuncts are repeated by `_claims_moat(d)`. Deleting either cannot change this helper’s result, so tests of those individual disjuncts cannot establish that they work independently.
+5. **Other requested checks.** There is no numeric threshold, absolute path, write, or measurement in this function. The inspected tests write artifact copies to temporary paths.
+
+## COUNTEREXAMPLE
+`{"honest_verdict":"complete: verifier_not_moat_won_delta_0p02_ci_crosses_zero","verifier_is_oracle":false,"verifier_minus_sc_delta":0.02}` is a negated win claim. The helper classifies it as relevant, and the moat-rigor check emits two critical win-branch flags.
+
+## MISSED INPUT
+`results/experiment_3651_capstone_and_g_gate_v334.json` contains `"verifier_beats_sc_headroom": true`. The relevance helper returns false; full verification reports zero flags.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The exp3651 miss is reproduced on a committed artifact: an explicit beats-SC claim receives no moat-rigor evaluation, and the output looks clean. The negated counterexample shows the opposite failure, where token matching treats a denied win as an asserted one. Claim extraction needs to cover declared claim fields and interpret context before deciding which rigor rules apply.
 

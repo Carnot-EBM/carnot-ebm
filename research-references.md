@@ -48273,3 +48273,104 @@ Bounded, honestly: this is a single company's blog post, self-reported, not inde
 reproduced, and explicitly stops short of claiming unbounded (ignition-level) self-improvement. Cite
 it as a second corroborating data point for the AVO-Method Adoption program's architecture, never as
 a benchmark result to reproduce or a method to port verbatim.
+
+## V682 planning review — 2026-09-28 (recorded before design)
+
+This review precedes the V682 experiment design. It rechecks the 2025–2026
+literature against V681's blocked science and the September 28 oracle-distinct
+corrigendum. Previously catalogued papers are identified as rechecks; they are
+not counted as new discoveries. Source dates below are publication/revision
+dates, not the date a search engine crawled the page.
+
+### Methods worth testing on the current substrate
+
+- **Evidence sufficiency, rechecked at method level:** Kumar,
+  [Verification Without Sufficiency](https://arxiv.org/html/2608.00585v1),
+  submitted August 1, 2026. A chunk may be insufficient for a multi-hop claim
+  even when it contains relevant evidence. The paper separates oracle
+  decomposition from deployable decomposition. For Carnot, compare full
+  source, nominated witness, and witness plus adjoining context on the SAME
+  claim. This is a context-sufficiency diagnostic, not a reproduction of its
+  retrieval pipeline. Source deletion sensitivity alone cannot supply truth
+  labels for edited inputs. Keep the original human annotation as an
+  evaluation-only sidecar and report truncation explicitly.
+- **Continuous learning, revised source rechecked:** Deshpande et al.,
+  [RECAP v4](https://arxiv.org/html/2606.06698v4), June 4 / August 31, 2026.
+  It distinguishes proactive constraint updates from reactive learning with
+  evaluation feedback. Carnot's delayed-feedback constraint acquisition is
+  reactive: seal predictions before labels arrive and evaluate old as well
+  as new constraints. Add a no-write control and measure the first subsequent
+  decision affected by an admitted predicate. Do not call this a RECAP
+  reproduction or claim proactive generalization.
+- **Memory causality, rechecked:** Sun et al.,
+  [Retrieval-Warmed Energy-Based Reasoning](https://arxiv.org/abs/2606.26476),
+  June 25, 2026. Aligned, shuffled, random, constant and oracle controls
+  distinguish useful alignment from warm-start effects. Its deployable
+  pipeline failed its own gate. Adapt the control logic to delayed constraint
+  memory, with shuffled feedback drawn only from labels already released.
+  Oracle diagnostic benefit is not deployable learning benefit.
+- **Calibrated energy decisions, rechecked:** Manchingal et al.,
+  [Distributional EBM](https://arxiv.org/abs/2605.18871), May 15, 2026.
+  Learned quality and analytic constraints have different roles; model
+  identity can supply a shortcut. Test calibrated accept/reject/escalate
+  costs against length-only, source-erased and same-information controls.
+  A small Carnot head is not a reproduction of the paper's encoder ensemble.
+- **Hardware revision, method-level recheck:** Yin et al.,
+  [FPGA–ASIC co-design v2](https://arxiv.org/html/2602.15985v2), February 17 /
+  September 4, 2026. This revision names orchestration and memory access as
+  first-class bottlenecks. Account separately for source projection, model
+  evaluation, serialization and durable updates. Any acceleration ceiling is
+  conditional on those measured host fractions; the paper's chip timings
+  are not local measurements.
+
+### Coverage of the requested research topics
+
+| Topic | Primary sources checked | Planning consequence |
+|---|---|---|
+| EBMs for verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), December 2025 / May 2026; [distributional EBM](https://arxiv.org/abs/2605.18871) | Input/candidate compatibility and normalized risk remain useful models. Neither establishes semantic certification for a learned Carnot energy. |
+| Neural constraint satisfaction | [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), July 19, 2026; abstract checked after citation discovery | Match representation and length; do not assume solver difficulty predicts model difficulty. No new SAT or projection sweep. |
+| Ising applications / sampling | [Pipelined p-computer](https://arxiv.org/abs/2607.21077), July 2026; [FPGA–ASIC v2](https://arxiv.org/abs/2602.15985) | Distinguish optimization success from calibrated samples; count host work before hardware investment. |
+| Hallucination detection/mitigation | [Verification Without Sufficiency](https://arxiv.org/abs/2608.00585); [CoEV](https://arxiv.org/abs/2606.18609), June 2026 | Use source interventions as sensitivity tests; medical-image performance does not transfer to text. No multimodal expansion. |
+| Kolmogorov–Arnold Networks | [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828), November 2025, AAAI 2026; [KAC](https://arxiv.org/abs/2503.21076), March 2025 | Spline locality does not guarantee retention. Preserve held-out retention controls; defer another KAN architecture comparison until the current learning loop yields usable evidence. |
+| Energy-guided / constrained generation | [ETS v3](https://arxiv.org/abs/2601.21484), January / May 2026, ICML 2026; [Energy-Guided Decoding](https://arxiv.org/abs/2507.07731), July 2025 | Both need signals/interfaces not qualified by V681. Keep current Qwen weights fixed; first measure source-conditioned decisions. No claim that a schema grammar enforces factual truth. |
+| Hardware acceleration | [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026; [summer update](https://extropic.ai/writing/from-one-to-one-billion), August 3, 2026 | Vendor reports sparse probabilistic hardware and heterogeneous inference. Availability and efficiency claims remain vendor statements; no Carnot TSU qualification follows. |
+| Continual/online constraint learning | RECAP v4; retrieval-warmed controls above | Predict before feedback, separate admission from final evaluation, preserve restart state, and require changed future decisions plus retention. |
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** checked current ICLR 2026 listings and the
+  [EBT conference PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf).
+  The [ICLR proceedings record](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html)
+  corroborates acceptance. The hidden-state alignment submission
+  [frHL4aSwYX](https://openreview.net/pdf?id=frHL4aSwYX) was searchable, but
+  its forum presented a browser challenge. Do not infer acceptance there.
+- **Semantic Scholar:** browser search/API access failed, then direct HTTPS
+  citation reads succeeded for both seed papers. The endpoint
+  `graph/v1/paper/ARXIV:<id>/citations?fields=title,year,externalIds,url&limit=100`
+  returned 37 rows for EBT and 8 for ARM–EBM, with no next page. These are
+  returned index rows, not an exhaustive census of the literature. EBT's
+  list includes Solver-Hard (2607.17047), Energy-guided Recursive Model
+  (2607.10128) and Planning as Descent (2512.17846); ARM–EBM's list includes
+  distributional EBM (2605.18871). Followed the relevant primary abstracts.
+- **Hugging Face:** [verification papers](https://huggingface.co/papers?q=verification)
+  mixes old and recent work. The
+  [2608.00585 paper page](https://huggingface.co/papers/2608.00585) led back
+  to the primary source; popularity supplies no evidence of validity.
+- **GitHub:** checked monthly [Python](https://github.com/trending/python?since=monthly)
+  and [Rust](https://github.com/trending/rust?since=monthly) trending pages.
+  The browser returned navigation-heavy pages cached about two weeks ago;
+  no current new EBM/constraint/KAN repository ranking was established.
+  A guessed Torx repository URL failed and is not treated as a discovered repo.
+- **Extropic:** `/writing` rendered only navigation; the homepage and direct
+  Z1T/summer-update articles exposed the dated updates. Do not convert a
+  vendor efficiency estimate into a local benchmark or purchase requirement.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes an EBM constraint layer beneath an LLM interface. The inspected
+  page supplies no reproducible method, weights or certification artifact.
+  Treat the architecture as motivation, not a verified Carnot comparator.
+
+The actionable increment is to measure source sufficiency and causal retained
+learning once the concrete V681 reader and coverage defects are repaired.
+The retired external-text reranker, frozen source-certificate head, importance
+anchor and repeated board probes remain closed. This review does not authorize
+weight updates to `unsloth/Qwen3.8-27B-GGUF` or external publication.
