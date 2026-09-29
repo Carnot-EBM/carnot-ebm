@@ -85865,3 +85865,46 @@ The private real CLI exercises success, missing-input, and cold-replay paths.
 Frozen affected tests, changed-code statement coverage, lint, strict types,
 spec coverage, adversarial verification, and strict row consistency SHALL be
 recorded with their actual exits. Failed required checks disqualify readiness.
+
+## REQ-REPORT-7877: Independently audit V683 evidence and causal claims
+
+Exp7877 SHALL run even when upstream gates skipped scientific work. It SHALL
+read the exact Exp7865 through Exp7876 deliverables in contract order and
+re-evaluate declared gate operands from current bytes. Missing producers,
+administrative skip receipts, missing fields, failed values, flagged artifacts,
+and valid nulls SHALL remain distinct. Each failed operand SHALL name its
+upstream ID, exact path and hash, field, operator, expected and observed value.
+Six scientific producers, Exp7869/7870/7871/7872/7873/7875, SHALL all be
+qualified current measurements before science completeness can equal one.
+Prerequisite qualification and ARC and hardware continuity SHALL be checked
+separately. An externally missing producer SHALL end in a blocked verdict.
+
+The audit SHALL reduce primitive family rows independently, re-average seeds
+inside families, and retain exposed development and original label authority.
+It SHALL reconstruct available cost and Brier, equal-coverage, Qwen syntax and
+fidelity, temporal feedback, constraint effects, retention, ARC and hardware
+scope from raw units where present. Unavailable comparisons SHALL remain null;
+oracle fixture agreement SHALL be circular positive and SHALL not establish
+natural benefit. Audit execution readiness SHALL be separate from milestone
+completeness and scientific benefit.
+
+The task SHALL freeze affected code and tests, exact required command vectors,
+classes and deadlines before measurement. It SHALL preserve failed inherited
+checks, resolved imports, sealed child exits and log hashes, changed-code
+coverage, terminal adversarial and strict-row reports, and repository health.
+A failed required check SHALL disqualify own readiness. The terminal candidate
+SHALL be cold-replayed and atomically published only after exact-byte checks.
+
+### SCENARIO-REPORT-7877-BLOCKED
+
+Given the current six absent science deliverables and disqualified prerequisite
+artifacts, twelve ordered task rows and exact failed operands remain visible.
+The audit completes with readiness one after its own checks, science
+completeness zero, and a terminal blocked class.
+
+### SCENARIO-REPORT-7877-REPLAY
+
+A private CLI accepts the current source bytes and rejects a changed source,
+omitted row, altered family mean, forged child log, or partial terminal prefix.
+Unit and real CLI paths together cover all new statements. Terminal adversarial
+and row checks use the exact candidate bytes that publication will preserve.
