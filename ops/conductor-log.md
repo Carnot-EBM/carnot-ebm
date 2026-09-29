@@ -19042,3 +19042,6 @@ code |
 | 2026-09-29 16:37 UTC | Seal the repaired intervention runner under an exp | OK | 97 passed, 1 warning in 10.69s |
 | 2026-09-29 16:39 UTC | Fit calibrated source energies against same-inform | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7880-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
 | 2026-09-29 16:41 UTC | Measure typed decision value and abstention at equ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7882-energy-fit, exp7882-energy-fit, exp7882-energy-fit) |
+| 2026-09-29 16:41 UTC | Measure bounded Qwen risk under witness and contex | GATE_BLOCK | gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7880-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 16:43 UTC | Measure persistent constraint acquisition and caus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7882-energy-fit, exp7882-energy-fit, exp7882-energy-fit) |
+| 2026-09-29 16:43 UTC | Test calibration retention across the same constra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7885-causal-acquisition, exp7885-causal-acquisition, exp7885-causal-acquisition) |
