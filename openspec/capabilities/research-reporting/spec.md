@@ -86443,3 +86443,43 @@ consumer regressions, scoped static checks, E2E-016 fixture and replay,
 private CLI success and failure, cold replay, and exact terminal validators.
 Logs are sealed by hash after exit. Required failures disqualify the new
 artifact. Terminal validator reports bind to the checked candidate bytes.
+## REQ-REPORT-7902-V685: Independently reduce current milestone evidence
+
+Exp7902 SHALL authenticate the twelve active V685 tasks against the design
+digest and activation snapshots. It SHALL read each declared deliverable once,
+reserve its own row without a prior result, and record failed gate operands
+with the upstream path and byte hash. Missing science, disqualified evidence,
+flagged evidence and a qualified null SHALL remain distinct. Missing external
+science SHALL yield a complete blocked verdict. Failed owned checks SHALL
+yield a complete disqualified verdict and zero execution readiness.
+
+For available scientific rows, the capstone SHALL derive family counts,
+probability, Brier loss, cost, false accepts and confidence intervals from
+primitive observations. It SHALL check delayed feedback before a bank write
+can affect a later decision. It SHALL check calibration buffer separation and
+monotone transforms from recorded pairs. It SHALL preserve every intended,
+started, completed, failed, censored, excluded and independent unit. Fixture
+agreement SHALL not close an independent source gap.
+
+### SCENARIO-REPORT-7902-DISPOSITIONS
+
+Private twelve-task authorities cover absent upstream science, an external
+block, an owned disqualification, a valid null and an inconsistent positive.
+Wrong identities, declared model, gate spelling or task-list hash fail closed.
+The self row has no producer artifact and does not count as missing science.
+
+### SCENARIO-REPORT-7902-REPLAY
+
+A cold reader recomputes source hashes, task dispositions and primitive
+reductions. Changed bytes and claimed aggregates fail. Historical consumer
+tests use private immutable V683 authorities.
+
+### SCENARIO-REPORT-7902-VALIDATION
+
+The task freezes exact affected commands, expected exits, deadlines and
+coverage includes before results. It runs unit, CLI success, expected failure,
+replay, scoped static, spec coverage and E2E-015 through E2E-017 checks.
+E2E-016 uses the date on fixture and replay routes. Measured combined coverage
+of changed code SHALL be 100 percent. Exact terminal bytes SHALL pass the
+adversarial and strict row validators before atomic publication. The report
+keeps G1-G4, PRD gap decisions and historical failure scopes separate.

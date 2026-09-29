@@ -1,0 +1,319 @@
+{
+  "affected_tests": [
+    "tests/python/test_experiment_7902_v685_capstone.py",
+    "tests/python/test_experiment_7890_v684_capstone.py",
+    "tests/python/test_experiment_7877_v683_independent_audit.py",
+    "tests/python/test_experiment_7878_v683_capstone.py"
+  ],
+  "applicable_e2e": [
+    "E2E-015",
+    "E2E-016",
+    "E2E-017"
+  ],
+  "changed_files": [
+    "python/carnot/reporting/v685_capstone.py",
+    "scripts/experiments/experiment_7902_v685_capstone.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/publication_gate.py",
+        "--json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "publication_gate"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_experiment_7902_v685_capstone.py",
+        "tests/python/test_experiment_7890_v684_capstone.py",
+        "tests/python/test_experiment_7877_v683_independent_audit.py",
+        "tests/python/test_experiment_7878_v683_capstone.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/unit.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_capstone.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py",
+        "-m",
+        "pytest",
+        "tests/python/test_experiment_7902_v685_capstone.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "unit_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/success.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_capstone.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py",
+        "--date",
+        "20260929",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture",
+        "--design",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture/design.md",
+        "--active",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture/active.yaml",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture/success.json",
+        "--evidence-only"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "cli_success"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/failure.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_capstone.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/failure.json",
+        "--evidence-only"
+      ],
+      "classification": "expected_failure",
+      "deadline_s": 60,
+      "expected_error": "--date",
+      "expected_exit": 2,
+      "name": "cli_missing_date"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/replay.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_capstone.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py",
+        "--date",
+        "20260929",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture",
+        "--design",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture/design.md",
+        "--active",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture/active.yaml",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/fixture/success.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "cli_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_source_boundary_7852.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "e2e015"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "e2e016_fixture"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "e2e016_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "e2e017"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v685_capstone.py",
+        "scripts/experiments/experiment_7902_v685_capstone.py",
+        "tests/python/test_experiment_7902_v685_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v685_capstone.py",
+        "scripts/experiments/experiment_7902_v685_capstone.py",
+        "tests/python/test_experiment_7902_v685_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/v685_capstone.py",
+        "scripts/experiments/experiment_7902_v685_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "mypy_strict"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7902_v685_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/combined.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/unit.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/success.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/failure.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/replay.coverage"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7902_v685_capstone/attempt-sha256:d9ac7f01ac93988af2361567eaed21394c3c78089ac78958bcab0d651e23d435/combined.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_capstone.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_error": null,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    }
+  ],
+  "coverage_includes": [
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_capstone.py",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7902_v685_capstone.py"
+  ],
+  "inapplicable_e2e": [
+    "E2E-001",
+    "E2E-002",
+    "E2E-003",
+    "E2E-004",
+    "E2E-005",
+    "E2E-006",
+    "E2E-007",
+    "E2E-008",
+    "E2E-009",
+    "E2E-010",
+    "E2E-011",
+    "E2E-012",
+    "E2E-013",
+    "E2E-014"
+  ],
+  "source_hashes": {
+    "python/carnot/reporting/v685_capstone.py": "sha256:41922a6944584025390de31a4792f262b03a1c51fecc8f0cb237baa865f8e461",
+    "scripts/experiments/experiment_7902_v685_capstone.py": "sha256:c012995793664325944f88ca36b1e3c63c3f83d644b22ea22e086597ca84dbfa",
+    "tests/python/test_experiment_7877_v683_independent_audit.py": "sha256:a8e97bead63e7bf074dc9de29d4df368465be8c4b6bbc55982869485093283f6",
+    "tests/python/test_experiment_7878_v683_capstone.py": "sha256:f27060843485c6bef9d0b701416684ba8485a99b8dce6d2528fdd645c10ae43b",
+    "tests/python/test_experiment_7890_v684_capstone.py": "sha256:6edefbb2941156eefb6bf989df6ce651307f3725ad1f43e96a8e0bca57ea96d9",
+    "tests/python/test_experiment_7902_v685_capstone.py": "sha256:0ef61edb5af023ad9738448258d06cbeb585ba71912662c5ad42b7c7e5a8b947"
+  }
+}
