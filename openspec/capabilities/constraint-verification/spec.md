@@ -4,6 +4,63 @@
 **Version:** 0.1.0
 **Status:** Draft
 
+## REQ-VERIFY-7853: Public-byte natural runtime qualification
+
+Exp7853 SHALL compute four advisory bits from only the UTF-8 source and answer
+bytes. Tokens are maximal Unicode alphanumeric runs; punctuation and whitespace
+separate runs. Matching uses Unicode casefold. A decimal token contains only
+Unicode decimal digits; each digit is converted to ASCII and leading zeroes
+are removed (zero remains `0`). Content tokens are casefolded alphabetic runs
+excluding `a`, `an`, `the`, `is`, `are`, `was`, `were`, `of`, `to`, `in`, `on`,
+`and`, `or`, `for`, `with`. The four bits, in order, are: an answer decimal
+absent from source, an answer negator absent from source, content-token Jaccard
+strictly below 0.20 (empty union has similarity one), and an answer token after
+the first whose original spelling is title case and whose folded form is
+absent from source. Negators are `no`, `not`, `never`, `neither`, `without`,
+`cannot`. The frozen grammar is a constant one plus the fifteen nonempty
+conjunctions in increasing four-bit mask order. These values are heuristics,
+not labels; identifiers, labels, annotations, and private evaluator fields
+cannot affect them.
+
+The natural adapter SHALL accept explicit disjoint fit and tune source groups,
+registered seeds 67801/67802/67803, learning rate 0.01 and at most sixteen
+epochs. It SHALL train all nine registered evidence-view arms through the
+existing numerical runtime. Source erasure precedes every base and predicate
+feature; the complete-static arm gets all sixteen real predicate features
+before training. Temperature is selected on tune labels only after view
+aggregation. Evaluation and retention labels are never calibration inputs.
+
+A durable advisory bank SHALL seal predictions before feedback, release only
+after a later tick, and update each coefficient by `0.01 * (label - prediction)
+* feature`, clipped to [-1, 1]. Admission requires released positive feedback;
+read-only forecasts never write. Restart, pending queue and ledger corruption
+must be checked. No generator weights change. A disqualified Exp7852 source
+boundary or zero readiness SHALL produce a terminal blocked artifact with exact
+failed operands and zero natural readiness; fixture mechanics cannot override it.
+
+### SCENARIO-VERIFY-7853-BYTES
+
+Byte edits toggle each of the four signals. Opaque ID, label and annotation
+edits leave the actual fit and predict features unchanged. All sixteen names
+and values are deterministic, including Unicode decimal and casefold cases.
+
+### SCENARIO-VERIFY-7853-SPLIT
+
+Fit and tune group overlap is rejected. The real fit/predict interfaces enforce
+source erasure and static features, explicit seeds and tune-only calibration.
+Gradient, normalization, mask, objectives, temperature and reload checks use
+the numerical runtime.
+
+### SCENARIO-VERIFY-7853-BANK
+
+Forecasts precede delayed feedback. Read-only mode leaves bytes unchanged;
+restart preserves pending forecasts; corrupt state is rejected.
+
+### SCENARIO-VERIFY-7853-BLOCK
+
+Exp7852's disqualified or zero-readiness result blocks before natural compute.
+The CLI publishes a complete blocked record with source hashes and gate operands.
+
 ## Overview
 
 Defines deterministic audits for executable constraint-verification corpora.

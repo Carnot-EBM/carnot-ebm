@@ -1,0 +1,37 @@
+{
+  "candidate_path": "/tmp/exp7853-validation/terminal_candidate.json",
+  "candidate_sha256": "sha256:4304ccdc5c3c433aa7c339d9ee0573e8c7f96831a234314b05edf24d8398fd6b",
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7853_v682_natural_runtime.py",
+        "--cold-replay",
+        "/tmp/exp7853-validation/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "name": "terminal_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/exp7853-validation/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "name": "terminal_adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/exp7853-validation/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "name": "terminal_strict_rows"
+    }
+  ]
+}
