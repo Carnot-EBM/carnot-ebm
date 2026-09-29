@@ -18994,3 +18994,5 @@ code |
 | 2026-09-29 04:49 UTC | Qualify exact legacy source identity and public by | OK | 84 passed, 1 warning in 9.64s |
 | 2026-09-29 05:20 UTC | Qualify byte-derived predicates and disjoint natur | OK | 116 passed, 1 warning in 19.15s |
 | 2026-09-29 05:41 UTC | Complete intervention-runner coverage and freeze s | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 8.41s |
+| 2026-09-29 05:43 UTC | Train natural source energies and freeze calibrate | GATE_BLOCK | gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7852-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 05:45 UTC | Measure calibrated decisions and abstention agains | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7855-energy-fit, exp7855-energy-fit, exp7855-energy-fit) |
