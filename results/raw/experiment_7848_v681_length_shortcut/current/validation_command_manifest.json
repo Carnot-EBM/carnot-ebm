@@ -1,0 +1,237 @@
+{
+  "closure": [
+    "python/carnot/reporting/length_shortcut.py",
+    "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+    "tests/python/test_experiment_7848_v681_length_shortcut.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json,pathlib; names=('carnot.reporting.length_shortcut','carnot.reporting.current_work_receipt'); r={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({'resolved_imports':r},sort_keys=True)); assert all(p.startswith('/home/ianblenke/github.com/ianblenke/carnot/python') for p in r.values())"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 30,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "worktree_imports"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.unit",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/pytest",
+        "tests/python/test_experiment_7848_v681_length_shortcut.py",
+        "-q"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 120,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.cli",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "--date",
+        "20260929",
+        "--output-root",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/cli_private",
+        "--science-only"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 120,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "cli_e2e"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "from coverage import Coverage, CoverageData; files=['/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.unit', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.cli']; d=CoverageData(); [(lambda x:(x.read(),d.update(x)))(CoverageData(basename=f)) for f in files]; c=Coverage(data_file='/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.combined'); c.get_data().update(d); c.save(); p=c.report(include=['/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py'],show_missing=True); print({'statement_coverage_percent':p,'data_files':files}); raise SystemExit(0 if p==100.0 else 1)"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 30,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "changed_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/length_shortcut.py",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "tests/python/test_experiment_7848_v681_length_shortcut.py"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/length_shortcut.py",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "tests/python/test_experiment_7848_v681_length_shortcut.py"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/length_shortcut.py",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 120,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7848_v681_length_shortcut.py"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 30,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "scoped_spec"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 120,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+      ],
+      "classification": "required",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "strict_rows"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 180,
+      "env": {
+        "JAX_PLATFORMS": "cpu",
+        "PYTHONPATH": "python:."
+      },
+      "name": "repository_health_180s"
+    }
+  ],
+  "repository_health_name": "repository_health_180s",
+  "required": [
+    "worktree_imports",
+    "affected_pytest",
+    "changed_coverage",
+    "ruff_check",
+    "ruff_format",
+    "mypy",
+    "scoped_spec",
+    "cli_e2e",
+    "cold_replay",
+    "adversarial_verify",
+    "strict_rows"
+  ],
+  "schema": "exp7848_validation_v1"
+}

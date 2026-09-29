@@ -1,5 +1,51 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7848: Measure the exposed development length shortcut
+
+Exp7848 SHALL authenticate the qualified Exp7810 artifact, canonical manifest,
+all seven public/evaluator role shards, all 640 family joins, and raw UTF-8
+source/answer hashes before fitting. It SHALL use only public answer bytes,
+source bytes and their log-ratio as features. Human labels SHALL enter only
+the evaluator. Missing or disqualified required evidence SHALL end with a
+complete blocked verdict and exact failed operands.
+
+### SCENARIO-REPORT-7848-FIT
+
+Fit a deterministic ridge logistic model for exactly 200 steps on fit256,
+calibrate temperature on tune64 with grid [0.5, 0.75, 1, 1.5, 2, 3], and
+evaluate intact evaluation64 once. Prevalence and always-escalate baselines
+use costs accept=5p, reject=1-p, escalate=0.25. Predictions and fit-only
+quartile strata SHALL be sealed before evaluation labels open. Report per-family
+rows, stratum prevalence/Brier/cost and 10000 paired-family bootstrap draws.
+The 64 evaluation families give independent N=64.
+
+### SCENARIO-REPORT-7848-ENERGY
+
+Only a qualified current Exp7840 science producer may provide constrained_set
+heads. A blocked conductor receipt SHALL not substitute. For a qualified fit,
+permute sources within predeclared answer-length strata and a 25 percent
+source-length caliper using a fixed hash derangement, preserve target answers,
+recompute public features and score risk displacement with unknown modified
+pair labels. An absent fit SHALL leave this branch blocked with exact operands.
+Source reasoning requires cost gain >=0.02, positive lower-95 cost and Brier
+gains, and advantage over source-erased control; it cannot override a failed
+primary result.
+
+### SCENARIO-REPORT-7848-TERMINAL
+
+The affected closure is `python/carnot/reporting/length_shortcut.py`,
+`scripts/experiments/experiment_7848_v681_length_shortcut.py`, and
+`tests/python/test_experiment_7848_v681_length_shortcut.py`, plus called
+unnumbered `natural_source_cohort` and `current_work_receipt` libraries.
+Freeze argv, 180-second repository health, and bounded deadlines for required
+worktree_imports, affected_pytest, changed_coverage, ruff_check, ruff_format,
+mypy, scoped_spec, cli_e2e, cold_replay, adversarial_verify and strict_rows.
+Required validation SHALL use explicit paths and 100 percent statement
+coverage across unit and real CLI shards. Preserve failed receipts, seal logs
+after child exit, cold-check them, and publish only an atomic terminal artifact.
+E2E-001 through E2E-014 are inapplicable to this CPU reporting control;
+its own real CLI and cold replay are the applicable end-to-end checks.
+
 ## REQ-REPORT-7838: Qualify an independent public source projection
 
 Exp7838 SHALL authenticate the qualified Exp7810 science artifact, its canonical

@@ -1,0 +1,3275 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "decision_benefit": null,
+    "efficiency": null,
+    "probability_quality": 0.007424055525546853,
+    "readiness": 0,
+    "retention": null,
+    "validity": false
+  },
+  "baseline_rows": {
+    "always_escalate": {
+      "brier": null,
+      "cost": 0.25,
+      "count": 64,
+      "prevalence": 0.3125
+    },
+    "length": {
+      "brier": 0.22403651576351566,
+      "cost": 0.25,
+      "count": 64,
+      "prevalence": 0.3125
+    },
+    "prevalence": {
+      "brier": 0.2314605712890625,
+      "cost": 0.25,
+      "count": 64,
+      "prevalence": 0.3125
+    }
+  },
+  "bootstrap": {
+    "brier_gain_over_prevalence": {
+      "draws": 10000,
+      "independent_n": 64,
+      "lower95": -0.0155699037924997,
+      "mean": 0.007424055525546853,
+      "seed": 7849,
+      "upper95": 0.02901981291073885
+    },
+    "cost_gain_over_prevalence": {
+      "draws": 10000,
+      "independent_n": 64,
+      "lower95": 0.0,
+      "mean": 0.0,
+      "seed": 7848,
+      "upper95": 0.0
+    },
+    "draws": 10000,
+    "independent_n": 64
+  },
+  "claim_scope": "exposed_human_labeled_development_only; no fresh generalization",
+  "cold_replay": {
+    "checked_families": 64,
+    "passed": true,
+    "prediction_sha256": "sha256:a6dfed162304e39c47a27b50772520d10cdab14c31f672263ec1200ec68710de"
+  },
+  "config_sha256": "sha256:a3410506dbf041d94be69095a0eea6bbc38fc05b96386537424df5519b8161c8",
+  "current_work_receipt": {
+    "MODEL_SPECS": [],
+    "current_invocation_events": [],
+    "current_owner_pid": 2868739,
+    "current_run_id": "exp7848-a3410506dbf041d9",
+    "duration_s": 0.372840328,
+    "ended_monotonic_ns": 304995725989617,
+    "event_count": 0,
+    "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "execution_venue": "host",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates",
+    "inference_substrate_class": "no_model_load",
+    "inference_substrate_details": {
+      "model_loads": 0,
+      "public_feature_count": 3
+    },
+    "invocation_counts": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "model_invoked": false,
+    "phase_spans": [
+      {
+        "end_s": 0.05922796204686165,
+        "phase": "preconditions",
+        "start_s": 0.00012405304005369544
+      },
+      {
+        "end_s": 0.37213270901702344,
+        "phase": "fit_tune_evaluate",
+        "start_s": 0.05923006602097303
+      }
+    ],
+    "receipt_sidecars": [],
+    "small_ebm_training": {
+      "performed": false
+    },
+    "started_monotonic_ns": 304995353149289
+  },
+  "duration_s": 219.09430490300292,
+  "experiment_id": 7848,
+  "field_principles": {
+    "acceptance_gate_results": "Optional energy interpretation cannot override baseline validity.",
+    "experiment_id": "Integer experiment number differs from task slug.",
+    "gate_check_summary": "Required missing evidence ends blocked with exact operands.",
+    "length_model": "Public UTF-8 byte lengths do not prove source semantics.",
+    "rows": "One intact human-labelled family is one independent unit."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [],
+  "historical_failures": [
+    {
+      "affects_current_required_checks": false,
+      "artifact_paths": [
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7731_development_decisions.json",
+          "sha256": "sha256:08bef4546e7de69b59e66f74d844bb76c271a185c3ffe224de13a82a201462d8"
+        }
+      ],
+      "experiment_id": 7731,
+      "status": "historical_unresolved"
+    },
+    {
+      "affects_current_required_checks": false,
+      "artifact_paths": [],
+      "experiment_id": 7744,
+      "status": "historical_unresolved"
+    },
+    {
+      "affects_current_required_checks": false,
+      "artifact_paths": [],
+      "experiment_id": 7758,
+      "status": "historical_unresolved"
+    },
+    {
+      "affects_current_required_checks": false,
+      "artifact_paths": [],
+      "experiment_id": 7772,
+      "status": "historical_unresolved"
+    },
+    {
+      "affects_current_required_checks": false,
+      "artifact_paths": [],
+      "experiment_id": 7786,
+      "status": "historical_unresolved"
+    },
+    {
+      "affects_current_required_checks": false,
+      "artifact_paths": [],
+      "experiment_id": 7799,
+      "status": "historical_unresolved"
+    },
+    {
+      "affects_current_required_checks": false,
+      "artifact_paths": [],
+      "experiment_id": 7813,
+      "status": "historical_unresolved"
+    },
+    {
+      "affects_current_required_checks": false,
+      "artifact_paths": [],
+      "experiment_id": 7827,
+      "status": "historical_unresolved"
+    }
+  ],
+  "honest_verdict": "complete_disqualified_required_validation",
+  "inapplicable_e2e": {
+    "E2E-001": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-002": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-003": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-004": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-005": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-006": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-007": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-008": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-009": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-010": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-011": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-012": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-013": "Unrelated model, hardware or ARC path; reporting CLI is checked separately.",
+    "E2E-014": "Unrelated model, hardware or ARC path; reporting CLI is checked separately."
+  },
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "inference_substrate_class": "no_model_load",
+  "length_control_ready_score": 0,
+  "length_model": {
+    "bias": -0.24738689454474297,
+    "feature_names": [
+      "log1p_answer_utf8_bytes",
+      "log1p_source_utf8_bytes",
+      "answer_log_length_over_source_log_length"
+    ],
+    "learning_rate": 0.25,
+    "means": [
+      6.659907111987379,
+      7.639477739957595,
+      0.8739644276054911
+    ],
+    "prevalence": 0.44140625,
+    "regularization": 1.0,
+    "scales": [
+      0.4331639671183394,
+      0.4795576681328789,
+      0.06506436714055087
+    ],
+    "steps": 200,
+    "temperature": 1.0,
+    "temperature_grid": [
+      0.5,
+      0.75,
+      1.0,
+      1.5,
+      2.0,
+      3.0
+    ],
+    "weights": [
+      0.2240361241390832,
+      -0.04297159010925515,
+      0.2557354972641178
+    ]
+  },
+  "milestone": "2026.09.681",
+  "model_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/fit-a3410506dbf041d94be69095a0eea6bbc38fc05b96386537424df5519b8161c8.json",
+  "model_checkpoint_sha256": "sha256:90a78c6b77896d8c25d109c8f2fb12796e1d66c69714ef61090522abfeea2282",
+  "model_invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "model_specs": [],
+  "observed_child_commands": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "-c",
+      "import importlib,json,pathlib; names=('carnot.reporting.length_shortcut','carnot.reporting.current_work_receipt'); r={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({'resolved_imports':r},sort_keys=True)); assert all(p.startswith('/home/ianblenke/github.com/ianblenke/carnot/python') for p in r.values())"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.unit",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/pytest",
+      "tests/python/test_experiment_7848_v681_length_shortcut.py",
+      "-q"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.cli",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py",
+      "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+      "--date",
+      "20260929",
+      "--output-root",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/cli_private",
+      "--science-only"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "-c",
+      "from coverage import Coverage, CoverageData; files=['/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.unit', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.cli']; d=CoverageData(); [(lambda x:(x.read(),d.update(x)))(CoverageData(basename=f)) for f in files]; c=Coverage(data_file='/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.combined'); c.get_data().update(d); c.save(); p=c.report(include=['/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py'],show_missing=True); print({'statement_coverage_percent':p,'data_files':files}); raise SystemExit(0 if p==100.0 else 1)"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "check",
+      "python/carnot/reporting/length_shortcut.py",
+      "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+      "tests/python/test_experiment_7848_v681_length_shortcut.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "format",
+      "--check",
+      "python/carnot/reporting/length_shortcut.py",
+      "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+      "tests/python/test_experiment_7848_v681_length_shortcut.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "--strict",
+      "python/carnot/reporting/length_shortcut.py",
+      "scripts/experiments/experiment_7848_v681_length_shortcut.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/check_spec_coverage.py",
+      "tests/python/test_experiment_7848_v681_length_shortcut.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+      "--cold-replay",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+    ]
+  ],
+  "permutation_rows": [],
+  "phase_spans": [
+    {
+      "end_s": 0.05922796204686165,
+      "phase": "preconditions",
+      "start_s": 0.00012405304005369544
+    },
+    {
+      "end_s": 0.37213270901702344,
+      "phase": "fit_tune_evaluate",
+      "start_s": 0.05923006602097303
+    },
+    {
+      "end_s": 219.09430490300292,
+      "phase": "validation",
+      "start_s": 0.3728356889914721
+    }
+  ],
+  "planned_inference_substrate_class": "no_model_load",
+  "preconditions_checked": [
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:59eac9b918b0d4f8a74e78cc3f114208ad9bb68bac28651e1c5d9435a110ba08",
+      "observed": "sha256:59eac9b918b0d4f8a74e78cc3f114208ad9bb68bac28651e1c5d9435a110ba08",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7810_v679_source_view_qualification.json",
+      "sha256": "sha256:59eac9b918b0d4f8a74e78cc3f114208ad9bb68bac28651e1c5d9435a110ba08",
+      "upstream_id": "exp7810"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:e6bd6f93c58b6dffe6215de5ffec7edd1fe9c16b00105b20f58f088136828f41",
+      "observed": "sha256:e6bd6f93c58b6dffe6215de5ffec7edd1fe9c16b00105b20f58f088136828f41",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7810_v679_source_view_qualification/attempts/attempt-e615e83070d442bf8eec629a8c237603/source_view_manifest.json",
+      "sha256": "sha256:e6bd6f93c58b6dffe6215de5ffec7edd1fe9c16b00105b20f58f088136828f41",
+      "upstream_id": "exp7810"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:c9097c7e39dd76ba3150059432e5e6a8889c37fc755079f48dff135bef4370f9",
+      "observed": "sha256:c9097c7e39dd76ba3150059432e5e6a8889c37fc755079f48dff135bef4370f9",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/development_manifest.json",
+      "sha256": "sha256:c9097c7e39dd76ba3150059432e5e6a8889c37fc755079f48dff135bef4370f9",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:e42e127429e5281956fafc17b012edad41a836b661ce03d7bf6a5d6eef21414d",
+      "observed": "sha256:e42e127429e5281956fafc17b012edad41a836b661ce03d7bf6a5d6eef21414d",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/fit_public.jsonl",
+      "sha256": "sha256:e42e127429e5281956fafc17b012edad41a836b661ce03d7bf6a5d6eef21414d",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:a0b9ac73a46c0af6d58bb9890192d9db1b58d41f503fd2ceadcbebd6eb630138",
+      "observed": "sha256:a0b9ac73a46c0af6d58bb9890192d9db1b58d41f503fd2ceadcbebd6eb630138",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/fit_evaluator.jsonl",
+      "sha256": "sha256:a0b9ac73a46c0af6d58bb9890192d9db1b58d41f503fd2ceadcbebd6eb630138",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:d20421f4ed510c8325e3a4cf22e258d11fa4aa00d49c63acea4e126383855454",
+      "observed": "sha256:d20421f4ed510c8325e3a4cf22e258d11fa4aa00d49c63acea4e126383855454",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/tune_public.jsonl",
+      "sha256": "sha256:d20421f4ed510c8325e3a4cf22e258d11fa4aa00d49c63acea4e126383855454",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:29b3aa9ae0ac0a863879cb94942dc01ce15ce4a28ad59ee846332d45fb3b4843",
+      "observed": "sha256:29b3aa9ae0ac0a863879cb94942dc01ce15ce4a28ad59ee846332d45fb3b4843",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/tune_evaluator.jsonl",
+      "sha256": "sha256:29b3aa9ae0ac0a863879cb94942dc01ce15ce4a28ad59ee846332d45fb3b4843",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:b2d46b025db4a257558e6cf6261fa24f5c6e15c31788d74a135f3ced06a5def4",
+      "observed": "sha256:b2d46b025db4a257558e6cf6261fa24f5c6e15c31788d74a135f3ced06a5def4",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "sha256": "sha256:b2d46b025db4a257558e6cf6261fa24f5c6e15c31788d74a135f3ced06a5def4",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:06e473d5b1aa3d8e2f8ec430b4fde3918abd32be9fa170ac49b797cde91c6898",
+      "observed": "sha256:06e473d5b1aa3d8e2f8ec430b4fde3918abd32be9fa170ac49b797cde91c6898",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "sha256": "sha256:06e473d5b1aa3d8e2f8ec430b4fde3918abd32be9fa170ac49b797cde91c6898",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:dad6a55db702d6202b35b1b426e63fc5d56e859d5a2e94cc1e79b1e0fe556d88",
+      "observed": "sha256:dad6a55db702d6202b35b1b426e63fc5d56e859d5a2e94cc1e79b1e0fe556d88",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/policy_public.jsonl",
+      "sha256": "sha256:dad6a55db702d6202b35b1b426e63fc5d56e859d5a2e94cc1e79b1e0fe556d88",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:5cdfa7b835de69e84a30395a5af02898dd2e4af461438c9550172dfda259264e",
+      "observed": "sha256:5cdfa7b835de69e84a30395a5af02898dd2e4af461438c9550172dfda259264e",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/policy_evaluator.jsonl",
+      "sha256": "sha256:5cdfa7b835de69e84a30395a5af02898dd2e4af461438c9550172dfda259264e",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:7f55761ceda1bdde6adf965b60d51160dfd17921c790bd92a8d2edf1c2995497",
+      "observed": "sha256:7f55761ceda1bdde6adf965b60d51160dfd17921c790bd92a8d2edf1c2995497",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/retention_public.jsonl",
+      "sha256": "sha256:7f55761ceda1bdde6adf965b60d51160dfd17921c790bd92a8d2edf1c2995497",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:678a2f6b6116f5107109cabd32dad1e30b6253f7216133c8ee371258c1d91a77",
+      "observed": "sha256:678a2f6b6116f5107109cabd32dad1e30b6253f7216133c8ee371258c1d91a77",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/retention_evaluator.jsonl",
+      "sha256": "sha256:678a2f6b6116f5107109cabd32dad1e30b6253f7216133c8ee371258c1d91a77",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:d2f43109aef64c0fabbadf298336ada58858b818f256ff2f7dfe6d89546e468d",
+      "observed": "sha256:d2f43109aef64c0fabbadf298336ada58858b818f256ff2f7dfe6d89546e468d",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_admission_public.jsonl",
+      "sha256": "sha256:d2f43109aef64c0fabbadf298336ada58858b818f256ff2f7dfe6d89546e468d",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:08289d7508cd5ab9cf44c66ed98f520b6d1af2408a673233eadebaa15380d611",
+      "observed": "sha256:08289d7508cd5ab9cf44c66ed98f520b6d1af2408a673233eadebaa15380d611",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_admission_evaluator.jsonl",
+      "sha256": "sha256:08289d7508cd5ab9cf44c66ed98f520b6d1af2408a673233eadebaa15380d611",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:a409a5e7717dee3610a9fd9113364f63a0d9fdb4f4b7790e80d04980835a79ad",
+      "observed": "sha256:a409a5e7717dee3610a9fd9113364f63a0d9fdb4f4b7790e80d04980835a79ad",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_update_public.jsonl",
+      "sha256": "sha256:a409a5e7717dee3610a9fd9113364f63a0d9fdb4f4b7790e80d04980835a79ad",
+      "upstream_id": "exp7727"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:2c94bdb952214a0eb89f81df2e404508645f73124bc7d997c0a90f90aa23339e",
+      "observed": "sha256:2c94bdb952214a0eb89f81df2e404508645f73124bc7d997c0a90f90aa23339e",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_update_evaluator.jsonl",
+      "sha256": "sha256:2c94bdb952214a0eb89f81df2e404508645f73124bc7d997c0a90f90aa23339e",
+      "upstream_id": "exp7727"
+    }
+  ],
+  "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+  "prediction_seal_sha256": "sha256:a6dfed162304e39c47a27b50772520d10cdab14c31f672263ec1200ec68710de",
+  "random_seed": 7848,
+  "repository_health": {
+    "historical_failures": [
+      {
+        "affects_current_required_checks": false,
+        "artifact_paths": [
+          {
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7731_development_decisions.json",
+            "sha256": "sha256:08bef4546e7de69b59e66f74d844bb76c271a185c3ffe224de13a82a201462d8"
+          }
+        ],
+        "experiment_id": 7731,
+        "status": "historical_unresolved"
+      },
+      {
+        "affects_current_required_checks": false,
+        "artifact_paths": [],
+        "experiment_id": 7744,
+        "status": "historical_unresolved"
+      },
+      {
+        "affects_current_required_checks": false,
+        "artifact_paths": [],
+        "experiment_id": 7758,
+        "status": "historical_unresolved"
+      },
+      {
+        "affects_current_required_checks": false,
+        "artifact_paths": [],
+        "experiment_id": 7772,
+        "status": "historical_unresolved"
+      },
+      {
+        "affects_current_required_checks": false,
+        "artifact_paths": [],
+        "experiment_id": 7786,
+        "status": "historical_unresolved"
+      },
+      {
+        "affects_current_required_checks": false,
+        "artifact_paths": [],
+        "experiment_id": 7799,
+        "status": "historical_unresolved"
+      },
+      {
+        "affects_current_required_checks": false,
+        "artifact_paths": [],
+        "experiment_id": 7813,
+        "status": "historical_unresolved"
+      },
+      {
+        "affects_current_required_checks": false,
+        "artifact_paths": [],
+        "experiment_id": 7827,
+        "status": "historical_unresolved"
+      }
+    ],
+    "receipt": {
+      "classification": "diagnostic",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline_s": 180,
+      "duration_s": 205.91645469301147,
+      "exit_code": -9,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/repository_health_180s/f8a96fef42a5fd48171ffc1973651d6c95b5c9f4a502755fc13b062ea9bccd0a.log",
+      "log_sha256": "sha256:f8a96fef42a5fd48171ffc1973651d6c95b5c9f4a502755fc13b062ea9bccd0a",
+      "name": "repository_health_180s",
+      "output_tail": "........................................... [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n...../home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140223469572256, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140672688650096, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140333527478976, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139800467725232, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "passed": false,
+      "timed_out": true
+    },
+    "status": "failed_health"
+  },
+  "reproducibility_checksum": "sha256:1945761eb7f067fc3fdee58192a12e41de55f140391773ae01b601c6f0c34d5d",
+  "required_validation_failures": [
+    "affected_pytest",
+    "changed_coverage"
+  ],
+  "rows": [
+    {
+      "answer_bytes": 548,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.49259970916860146,
+          "cost": 0.25,
+          "risk": 0.2981455213731258
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:11d5953abbf9eaa5f94e82465e56fccfb8a66f2c0a42cbb6069017333710482e",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 3375,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 228,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.0645081188589285,
+          "cost": 0.25,
+          "risk": 0.2539844854689524
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:d015fcf3af8788e6f08b2550da35e35f09b33079a490ca813c04f525fcda623a",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 860,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 1200,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.12075985561798465,
+          "cost": 0.25,
+          "risk": 0.6524948120991794
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:63a71024302e3b51a31f29a9b53ec525436d81f3be9874192fee59e1a5f685e8",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1015,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 1126,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.16336093656545567,
+          "cost": 0.25,
+          "risk": 0.4041793371332281
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:f60e71465a753f2aee71ac0b9714d1f7b196bb54366259fc6eabe34a04aef5c5",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 5687,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 718,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.18360865046937885,
+          "cost": 0.25,
+          "risk": 0.42849579982699815
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:62614d3b41c668a8baf0a8393786484580b2921d81914ad28902dcf155052ce9",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1884,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 768,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.23530276803992106,
+          "cost": 0.25,
+          "risk": 0.48508016661158293
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:731cd6030abbf7a5bbb65fe114c368a89e5e0c6b77ff840305e4dc5c75280f6d",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1424,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 281,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.0678516494538884,
+          "cost": 0.25,
+          "risk": 0.2604834917108729
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:0f0e721f9b72859cc7ced323697e180cbc6483124785a481598b7e6852a5c189",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1225,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 918,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.20167774487701343,
+          "cost": 0.25,
+          "risk": 0.4490854538693203
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:a9d8596b4aaec28e46553564662e06ef2e1e10414559c0ac4035d060bf93c6f2",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2584,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 355,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.09503624270331586,
+          "cost": 0.25,
+          "risk": 0.3082794879704387
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:e0ba43b18d0a339ea87cd872ebbb1169a4c1b8ed52fb1c44ae39ea67bf1d82e4",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1257,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 778,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.30938275780651525,
+          "cost": 0.25,
+          "risk": 0.4437781397620953
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:3bf9ad90ae172adc981f66d290f2c3ead258496225d2523d517bbd929c79d1c8",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1958,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 555,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.16263305411449255,
+          "cost": 0.25,
+          "risk": 0.40327788696442624
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:90301ebc8d7c2ff6ed073a8c9db48a4d362cf0b9d1a9956d5fd70f61377f127f",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1396,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 844,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.12770234013166937,
+          "cost": 0.25,
+          "risk": 0.3573546419618323
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:0fe4e6ecf7b18b1f9fde22313cc2c280a0401966efb8ff738c2a4e31341017ea",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 4752,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 853,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.32976180034083735,
+          "cost": 0.25,
+          "risk": 0.42575109896418845
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:7d8f3ec273d25ebcfd30bb859184f736c76b571fea289a480a68a86b11c4c34b",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2687,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 664,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.24418609400157643,
+          "cost": 0.25,
+          "risk": 0.49415189365373924
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:f4111ad5d6657bc1768c49e86a43be3395abff627c1cf99f424d807fa2799f67",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1035,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 660,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.2234635074685344,
+          "cost": 0.25,
+          "risk": 0.47271926919529567
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:a7df6c9fc0d117611e1318d3fae96d3941477a7b15647d91d0123298428cc01c",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1179,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 533,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.139275235224939,
+          "cost": 0.25,
+          "risk": 0.37319597428822704
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:be1b60749bfb13cf3f76d7075315e974651ec0d373c871c11028a2c378e391a5",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1626,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 1530,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.243037354617712,
+          "cost": 0.25,
+          "risk": 0.49298818912597897
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:705bba6c3d5d70a96a4b6a3fdeb111ffad22cb3cae1376790cb4ee5564a6f0f9",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 4996,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 1018,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.12386958533266965,
+          "cost": 0.25,
+          "risk": 0.3519511121344407
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:4f94cb181ef31c3c0ca6d44eb237af08a651f3e01978898a4631fbc81349b0ad",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 7536,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 439,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.5200095701335221,
+          "cost": 0.25,
+          "risk": 0.2788831092440546
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:018e524d7333e7fe7ef54bfdeb6d9c98d1993a24bd9fe66e4dcaf418f440e165",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2564,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 754,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.28465676498604403,
+          "cost": 0.25,
+          "risk": 0.4664676532898459
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:5c8afc65d507ea0dbdfd14b6d44aaa563f4432fc3889debd4759d06f956a970b",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1567,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 256,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.5496878324070205,
+          "cost": 0.25,
+          "risk": 0.2585906445107261
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:e1c3c2a85c7cdc2bdde380c824f2fdd414642b4c7aa744181ea35c741166f8c1",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1035,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 706,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.14843085601542277,
+          "cost": 0.25,
+          "risk": 0.38526725271611495
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:3f4803bcf8273f14b84523f2c591360261d06149e3fe2fa98d318db14792810f",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2564,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 548,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.14009814468508763,
+          "cost": 0.25,
+          "risk": 0.3742968670521938
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:3e323acc341e781b2178a4e6022805c2a2b0b5f8481b2676aea778991e853297",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1701,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 673,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.15055388583097118,
+          "cost": 0.25,
+          "risk": 0.3880127392637659
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:041cde4b409c6d7e762e76888f3f5fbceb34c84b315100a414fd2b8a066d7072",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2279,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 322,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.06944764456610726,
+          "cost": 0.25,
+          "risk": 0.2635292100813632
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:1296def2f77f14cb4a8c4c4a29e21d0264e72ddb5cd12f49eae4b1e7de49fd62",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1569,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 755,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.21885110190072254,
+          "cost": 0.25,
+          "risk": 0.4678152433394219
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:9e307b895baf7e16286aa1eaa407344017180a0d269f9ac8c7e8c70d3781ba76",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1556,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 1082,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.15659784739300722,
+          "cost": 0.25,
+          "risk": 0.3957244589269246
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:5ea598ffcff3067554c50dee259960f4aab176341f3e734a86750d974370e878",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 5644,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 419,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.10437559392527448,
+          "cost": 0.25,
+          "risk": 0.3230721187680461
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:0e1645c0bc25ae82cb2b91802a366a22b6e3823df4b108e7ce2c04c7f17cc443",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1534,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 839,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.2906856391004895,
+          "cost": 0.25,
+          "risk": 0.46084729519319895
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:0c27a150d5b70d7e43e3dba75cce5982027068864a6d21696f328c6b19c3dade",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1991,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 1218,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.26114059814643065,
+          "cost": 0.25,
+          "risk": 0.48898082409127674
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:47ac8fe6c02b58cbeab73844951997ebfeed935324948cdd36e6dab7a13bb43e",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 3287,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 1584,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.24243068316980773,
+          "cost": 0.25,
+          "risk": 0.49237250448192954
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:41a04c8eeb416a0a8e500b8fd16325cb179b8ea283d913e9c45d43ad90c0b53b",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 5385,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 664,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.23817182066061618,
+          "cost": 0.25,
+          "risk": 0.48802850394276787
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:335fb85b642c8e95a16acb7038de0742b7c79adf00c827ca05a3ce0909a48965",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1077,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 649,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.19078276124051832,
+          "cost": 0.25,
+          "risk": 0.43678686019673063
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:2113b9b3c5eb5c395a8887f38a40e202f2cf0d16ae7e63448834fad0f8c3138b",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1466,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 669,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.32445119561753766,
+          "cost": 0.25,
+          "risk": 0.4303938241051651
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:aa23cf956ecc377072134f5396389c6e40aa381d56b6d24836974e592a4cd0fc",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1625,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 1297,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.20916546764267238,
+          "cost": 0.25,
+          "risk": 0.4573461136192942
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:e3267511d96fa7673d16d03709786a3b4c750f165557cc26ff44bcb0442caec3",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 4806,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 1751,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.24871450713282342,
+          "cost": 0.25,
+          "risk": 0.5012871496213243
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:e00d2478859a568af78e29dd60214100812de6c50f3bfbcd766a34295f8c1f16",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 6125,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 340,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.06348564462787219,
+          "cost": 0.25,
+          "risk": 0.2519635779787868
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:d9d28ea7e914644f3866f1f60a5abbb97368c6f5bc9c97d8196d12b232935f90",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1985,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 401,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.09567619242768029,
+          "cost": 0.25,
+          "risk": 0.30931568409584453
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:37e99eb420f23e7a23d60c91e0e5ddba5495974862a9c8e1e071af1c68e2ccc3",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1586,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 787,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.16627756160652973,
+          "cost": 0.25,
+          "risk": 0.40777145756726246
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:80831339757724e1b88540b639ad418c786071ac3af9ddfea06a49c2c94cf779",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2647,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 1123,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.18470876468526543,
+          "cost": 0.25,
+          "risk": 0.4297775758287831
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:d72fc41d1216d0b83229f641a7ad2ce71dd4ba488ca75f6b920bd3e61fb67e56",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 4518,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 454,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.3533465703014014,
+          "cost": 0.25,
+          "risk": 0.4055703823820675
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:9432d478ff8ac91ed31aa85346796d595c617dbdf82688d2ede46b1d669ac0b1",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 948,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 1356,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.21363198149548945,
+          "cost": 0.25,
+          "risk": 0.46220339840322405
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:400f4cdf1cab912c37a20a6739182d1e125f7abdc8702deed25b2b8d1cd9dffd",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 5052,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 1147,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.2946564627742736,
+          "cost": 0.25,
+          "risk": 0.5428226807846864
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:5a6ee3d7e3f6756ca150d441eb39b57bdbe36096da66e17496ba91b18f934f2c",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1972,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 1368,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.19700807363527503,
+          "cost": 0.25,
+          "risk": 0.4438559153996655
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:a6c381efa54d84ef225d0bbcc736102e7344e55b8b2ebeb245007919d145ba50",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 6019,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 679,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.10325037353136549,
+          "cost": 0.25,
+          "risk": 0.32132596149605697
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:af28acd18de16b7854f4fcef58431c483841059e7feab16220b35598c141e1ac",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 4232,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 773,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.18032142026706416,
+          "cost": 0.25,
+          "risk": 0.42464269717853875
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:23b38d278fb4d5212b97cf131b227923f91ee7404124d9fba5eedff612bab502",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2236,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 594,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.46410829023271966,
+          "cost": 0.25,
+          "risk": 0.31874506223241234
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:ce210fa8b1fda298f70d1269a95e16c65c964baafe0dc2a645b8455c1947c5b1",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 3262,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 1121,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.1713744764091387,
+          "cost": 0.25,
+          "risk": 0.41397400450890476
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:be802e66c85fbb953ad1fa3701d8f927035fbe5c99a69959a36ba84d76a3bc2a",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 5162,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 781,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.34320967371784405,
+          "cost": 0.25,
+          "risk": 0.41415900304106057
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:18e7ff2bceb96714474d507f0ac8333b856f9d65e10aa74b1f6fec40b7018039",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2477,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 227,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.055832206021741666,
+          "cost": 0.25,
+          "risk": 0.23628839586772277
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:547065b543ebbb100785f8ac2176e80724e8c816a2a18c5a5f6797a941a9d319",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1016,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 460,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.098663138961157,
+          "cost": 0.25,
+          "risk": 0.31410689098005634
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:739ab3c537c56c4c2bcc3e5d1e0000298bc968bc56a9a8037032139516a3cf84",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2004,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 831,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.25397429237034286,
+          "cost": 0.25,
+          "risk": 0.5039586216847003
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:0618bf24faccb9ee344be5b25bd46dfe66ff9d485687fd02107791e06e98e284",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1443,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 1513,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.4033022515547404,
+          "cost": 0.25,
+          "risk": 0.6350608250827163
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:10b4e7cf3b08344e36c7058e8c9ea2e64ee50e65ec0ba8991689dbb82dd42040",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1681,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 730,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.2992903715126511,
+          "cost": 0.25,
+          "risk": 0.4529256252458437
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:75d9a6a51e4703e61ddc1635fd775f5d9b24c77e349ffbad8f2db978f6d83141",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1625,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 804,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.14352995934211263,
+          "cost": 0.25,
+          "risk": 0.3788534800448752
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:5f6b036dff841bf6d2fb2a32c35a35422a46b5220f78bcd187b19d4f67482b5d",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 3527,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 286,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.07374072443690369,
+          "cost": 0.25,
+          "risk": 0.27155243404709833
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:3b44ba26e4b011f54a32878e342f99f8122f92121a3c07b3160edbaacf9de1a8",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1141,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 1383,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.1857082246440514,
+          "cost": 0.25,
+          "risk": 0.5690612286599738
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:90fc2872613a18e889f8ba6de091311c25cda18c278a4bc98f9cb6adcb2c98a8",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2296,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 3
+    },
+    {
+      "answer_bytes": 513,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.41904392221013387,
+          "cost": 0.25,
+          "risk": 0.35266398044745423
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:7f111a499e0b188b6e6c21160d1a8157b4deb50cd1fdd68e0030313cac5722de",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1782,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 226,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.03727811551145219,
+          "cost": 0.25,
+          "risk": 0.19307541405226142
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:dc188a47d2d2deb0d1c023d17c6349550031a243b6292ce0d94aa1680cb7d6be",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1676,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 708,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.2145918998226299,
+          "cost": 0.25,
+          "risk": 0.4632406500110174
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:b0a222fcbb998d929cb2943ebde2579e0b4bb421ff38cb8cbb62be4d4797afdd",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1428,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 613,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.42296786935211894,
+          "cost": 0.25,
+          "risk": 0.34964020007989505
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:a06db1a77ca5209f3b3e144ebd33c1ad9e35932d55bd7c8151855d434171fe9c",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2615,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    },
+    {
+      "answer_bytes": 754,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.19394381891249765,
+          "cost": 0.25,
+          "risk": 0.4403905299986566
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.1948394775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:d07665c65e9397b9ab0db0861669014d356322cd10943ea62577e160b475e4a3",
+      "label": 0,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 1892,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 1
+    },
+    {
+      "answer_bytes": 815,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.3374556809635721,
+          "cost": 0.25,
+          "risk": 0.41909064307452226
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:e479d4691f7187621cebe3a475fad6e95255acf1fa5bc4f40202aba2f08d0d2b",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2590,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 2
+    },
+    {
+      "answer_bytes": 466,
+      "arm": "paired_intact_family",
+      "arms": {
+        "always_escalate": {
+          "action": "escalate",
+          "brier": null,
+          "cost": 0.25,
+          "risk": null
+        },
+        "length": {
+          "action": "escalate",
+          "brier": 0.4916897281894675,
+          "cost": 0.25,
+          "risk": 0.29879409002100715
+        },
+        "prevalence": {
+          "action": "escalate",
+          "brier": 0.3120269775390625,
+          "cost": 0.25,
+          "risk": 0.44140625
+        }
+      },
+      "evaluator_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "family_id": "sha256:6463f441a65a6dd380ed2d2b3a4a113c829385dae098b58b86a7e86008c7ce93",
+      "label": 1,
+      "prediction_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/evaluation_predictions.json",
+      "role": "evaluation",
+      "seed": 7848,
+      "source_bytes": 2379,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "status": "completed",
+      "stratum": 0
+    }
+  ],
+  "run_date": "20260929",
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 64,
+    "eligible": 64,
+    "excluded": 0,
+    "independent_n": 64,
+    "intended": 64,
+    "started": 64
+  },
+  "semantic_interpretation_gate": {
+    "branch": "blocked_external_exp7840",
+    "failures": [
+      {
+        "artifact_field": "status",
+        "expected": "completed",
+        "observed": "blocked",
+        "op": "==",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7840_energy_fit.json",
+        "sha256": "sha256:f728aea16df348b9eaac319fbd94438a93d2b85222e1f06b698bf166117bb12b",
+        "upstream_id": "exp7840"
+      },
+      {
+        "artifact_field": "blocked_at_layer",
+        "expected": null,
+        "observed": "conductor_pre_gate",
+        "op": "==",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7840_energy_fit.json",
+        "sha256": "sha256:f728aea16df348b9eaac319fbd94438a93d2b85222e1f06b698bf166117bb12b",
+        "upstream_id": "exp7840"
+      },
+      {
+        "artifact_field": "flagged_adversarial",
+        "expected": false,
+        "observed": null,
+        "op": "==",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7840_energy_fit.json",
+        "sha256": "sha256:f728aea16df348b9eaac319fbd94438a93d2b85222e1f06b698bf166117bb12b",
+        "upstream_id": "exp7840"
+      },
+      {
+        "artifact_field": "energy_fit_ready_score",
+        "expected": 1,
+        "observed": null,
+        "op": "==",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7840_energy_fit.json",
+        "sha256": "sha256:f728aea16df348b9eaac319fbd94438a93d2b85222e1f06b698bf166117bb12b",
+        "upstream_id": "exp7840"
+      }
+    ],
+    "passed": false,
+    "required_brier_lower95_positive": true,
+    "required_cost_gain": 0.02,
+    "required_cost_lower95_positive": true,
+    "required_source_erased_advantage": true
+  },
+  "source_artifact_hashes": [
+    {
+      "date": "20260928",
+      "eligibility": "qualified_development",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7810_v679_source_view_qualification.json",
+      "sha256": "sha256:59eac9b918b0d4f8a74e78cc3f114208ad9bb68bac28651e1c5d9435a110ba08",
+      "upstream_id": "exp7810"
+    },
+    {
+      "date": "20260928",
+      "eligibility": "canonical_manifest",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7810_v679_source_view_qualification/attempts/attempt-e615e83070d442bf8eec629a8c237603/source_view_manifest.json",
+      "sha256": "sha256:e6bd6f93c58b6dffe6215de5ffec7edd1fe9c16b00105b20f58f088136828f41",
+      "upstream_id": "exp7810"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/development_manifest.json",
+      "sha256": "sha256:c9097c7e39dd76ba3150059432e5e6a8889c37fc755079f48dff135bef4370f9",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "public",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/fit_public.jsonl",
+      "role": "fit",
+      "sha256": "sha256:e42e127429e5281956fafc17b012edad41a836b661ce03d7bf6a5d6eef21414d",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "evaluator",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/fit_evaluator.jsonl",
+      "role": "fit",
+      "sha256": "sha256:a0b9ac73a46c0af6d58bb9890192d9db1b58d41f503fd2ceadcbebd6eb630138",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "public",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/tune_public.jsonl",
+      "role": "tune",
+      "sha256": "sha256:d20421f4ed510c8325e3a4cf22e258d11fa4aa00d49c63acea4e126383855454",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "evaluator",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/tune_evaluator.jsonl",
+      "role": "tune",
+      "sha256": "sha256:29b3aa9ae0ac0a863879cb94942dc01ce15ce4a28ad59ee846332d45fb3b4843",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "public",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_public.jsonl",
+      "role": "evaluation",
+      "sha256": "sha256:b2d46b025db4a257558e6cf6261fa24f5c6e15c31788d74a135f3ced06a5def4",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "evaluator",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/evaluation_evaluator.jsonl",
+      "role": "evaluation",
+      "sha256": "sha256:06e473d5b1aa3d8e2f8ec430b4fde3918abd32be9fa170ac49b797cde91c6898",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "public",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/policy_public.jsonl",
+      "role": "policy",
+      "sha256": "sha256:dad6a55db702d6202b35b1b426e63fc5d56e859d5a2e94cc1e79b1e0fe556d88",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "evaluator",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/policy_evaluator.jsonl",
+      "role": "policy",
+      "sha256": "sha256:5cdfa7b835de69e84a30395a5af02898dd2e4af461438c9550172dfda259264e",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "public",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/retention_public.jsonl",
+      "role": "retention",
+      "sha256": "sha256:7f55761ceda1bdde6adf965b60d51160dfd17921c790bd92a8d2edf1c2995497",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "evaluator",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/retention_evaluator.jsonl",
+      "role": "retention",
+      "sha256": "sha256:678a2f6b6116f5107109cabd32dad1e30b6253f7216133c8ee371258c1d91a77",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "public",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_admission_public.jsonl",
+      "role": "online_admission",
+      "sha256": "sha256:d2f43109aef64c0fabbadf298336ada58858b818f256ff2f7dfe6d89546e468d",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "evaluator",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_admission_evaluator.jsonl",
+      "role": "online_admission",
+      "sha256": "sha256:08289d7508cd5ab9cf44c66ed98f520b6d1af2408a673233eadebaa15380d611",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "public",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_update_public.jsonl",
+      "role": "online_update",
+      "sha256": "sha256:a409a5e7717dee3610a9fd9113364f63a0d9fdb4f4b7790e80d04980835a79ad",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260926",
+      "eligibility": "exposed_development",
+      "kind": "evaluator",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7727_v673_development_corpus/online_update_evaluator.jsonl",
+      "role": "online_update",
+      "sha256": "sha256:2c94bdb952214a0eb89f81df2e404508645f73124bc7d997c0a90f90aa23339e",
+      "upstream_id": "exp7727"
+    },
+    {
+      "date": "20260929",
+      "eligibility": "blocked_optional_energy",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7840_energy_fit.json",
+      "sha256": "sha256:f728aea16df348b9eaac319fbd94438a93d2b85222e1f06b698bf166117bb12b",
+      "upstream_id": "exp7840"
+    }
+  ],
+  "strata_definition": {
+    "edges": [
+      614,
+      772,
+      1064
+    ],
+    "feature": "answer_utf8_bytes",
+    "source": "fit256_only"
+  },
+  "strata_metrics": [
+    {
+      "answer_bytes_lower_exclusive": null,
+      "answer_bytes_upper_inclusive": 614,
+      "brier": 0.22642523625062846,
+      "cost": 0.25,
+      "count": 22,
+      "index": 0,
+      "prevalence": 0.36363636363636365
+    },
+    {
+      "answer_bytes_lower_exclusive": 614,
+      "answer_bytes_upper_inclusive": 772,
+      "brier": 0.21690239133402583,
+      "cost": 0.25,
+      "count": 15,
+      "index": 1,
+      "prevalence": 0.2
+    },
+    {
+      "answer_bytes_lower_exclusive": 772,
+      "answer_bytes_upper_inclusive": 1064,
+      "brier": 0.23398737132138833,
+      "cost": 0.25,
+      "count": 12,
+      "index": 2,
+      "prevalence": 0.4166666666666667
+    },
+    {
+      "answer_bytes_lower_exclusive": 1064,
+      "answer_bytes_upper_inclusive": null,
+      "brier": 0.21970649903227518,
+      "cost": 0.25,
+      "count": 15,
+      "index": 3,
+      "prevalence": 0.26666666666666666
+    }
+  ],
+  "task_id": "exp7848-length-shortcut",
+  "validation_command_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_command_manifest.json",
+  "validation_command_manifest_sha256": "sha256:d7f94041b60dfc7e68aef47a1af131f1bf82d2e6ab48ee6739392cb2d15dc162",
+  "validation_receipts": [
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json,pathlib; names=('carnot.reporting.length_shortcut','carnot.reporting.current_work_receipt'); r={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({'resolved_imports':r},sort_keys=True)); assert all(p.startswith('/home/ianblenke/github.com/ianblenke/carnot/python') for p in r.values())"
+      ],
+      "deadline_s": 30,
+      "duration_s": 0.5151926859980449,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/worktree_imports/1613c10981057804f031ec38dd839f22a81ea88a4628de694389703fe0b190c1.log",
+      "log_sha256": "sha256:1613c10981057804f031ec38dd839f22a81ea88a4628de694389703fe0b190c1",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.reporting.current_work_receipt\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py\", \"carnot.reporting.length_shortcut\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.reporting.current_work_receipt": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+        "carnot.reporting.length_shortcut": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py"
+      },
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.unit",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/pytest",
+        "tests/python/test_experiment_7848_v681_length_shortcut.py",
+        "-q"
+      ],
+      "deadline_s": 120,
+      "duration_s": 8.245779832010157,
+      "exit_code": 1,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/affected_pytest/7bda490d830505a66226a93a729663f5371c76fec81ca94d6dad7f7896125ede.log",
+      "log_sha256": "sha256:7bda490d830505a66226a93a729663f5371c76fec81ca94d6dad7f7896125ede",
+      "name": "affected_pytest",
+      "output_tail": "com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py\", line 417, in run_baseline\nE             _freeze(model_path, model)\nE           File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py\", line 374, in _freeze\nE             atomic_json(path, value)\nE           File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py\", line 68, in atomic_json\nE             temporary.replace(path)\nE           File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py\", line 1376, in replace\nE             os.replace(self, target)\nE           File \"/tmp/carnot-child-results-guard-h5sv3ra7/sitecustomize.py\", line 76, in moved\nE             return real(src, dest if dest is not None else dst, *args, **kwargs)\nE                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/pytest/test_private_cli_and_cold_repl0/.fit-a3410506dbf041d94be69095a0eea6bbc38fc05b96386537424df5519b8161c8.json.tmp-2868895' -> '/tmp/carnot-pytest-artifacts-j9d7l37r/raw/experiment_7848_v681_length_shortcut/current/pytest/test_private_cli_and_cold_repl0/fit-a3410506dbf041d94be69095a0eea6bbc38fc05b96386537424df5519b8161c8.json'\nE         \nE       assert 1 == 0\nE        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c.../pytest/test_private_cli_and_cold_repl0/fit-a3410506dbf041d94be69095a0eea6bbc38fc05b96386537424df5519b8161c8.json\\'\\n').returncode\n\ntests/python/test_experiment_7848_v681_length_shortcut.py:125: AssertionError\n=========================== short test summary info ============================\nFAILED tests/python/test_experiment_7848_v681_length_shortcut.py::test_private_cli_and_cold_replay\n1 failed, 6 passed in 4.04s\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.cli",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "--date",
+        "20260929",
+        "--output-root",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/cli_private",
+        "--science-only"
+      ],
+      "deadline_s": 120,
+      "duration_s": 2.3523324949783273,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/cli_e2e/b5421813db5fb5ac35c1b441015ba2cefaa47b996c86adc976813f6416b5e85f.log",
+      "log_sha256": "sha256:b5421813db5fb5ac35c1b441015ba2cefaa47b996c86adc976813f6416b5e85f",
+      "name": "cli_e2e",
+      "output_tail": "[exp7848] start elapsed_s=0.000 completed=0/1\n[exp7848] preconditions_begin elapsed_s=0.000 completed=0/1\n[exp7848] preconditions_end elapsed_s=0.111 completed=1/1\n[exp7848] fit_begin elapsed_s=0.111 completed=0/1\n[exp7848] fit_end elapsed_s=1.328 completed=64/64\n[exp7848] cold_replay_begin elapsed_s=1.328 completed=0/1\n[exp7848] cold_replay_end elapsed_s=1.329 completed=64/64\n[exp7848] candidate_written elapsed_s=1.348 completed=64/64\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "from coverage import Coverage, CoverageData; files=['/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.unit', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.cli']; d=CoverageData(); [(lambda x:(x.read(),d.update(x)))(CoverageData(basename=f)) for f in files]; c=Coverage(data_file='/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.combined'); c.get_data().update(d); c.save(); p=c.report(include=['/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/length_shortcut.py', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7848_v681_length_shortcut.py'],show_missing=True); print({'statement_coverage_percent':p,'data_files':files}); raise SystemExit(0 if p==100.0 else 1)"
+      ],
+      "deadline_s": 30,
+      "duration_s": 0.09054292400833219,
+      "exit_code": 1,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/changed_coverage/4c6d7d5329260b5eac1988dab14bcd240607bb3b7c7d137321981972de3b3b54.log",
+      "log_sha256": "sha256:4c6d7d5329260b5eac1988dab14bcd240607bb3b7c7d137321981972de3b3b54",
+      "name": "changed_coverage",
+      "output_tail": "Name                                                          Stmts   Miss  Cover   Missing\n-------------------------------------------------------------------------------------------\npython/carnot/reporting/length_shortcut.py                      224     26    88%   66, 78, 95, 109, 119, 132, 169, 185, 199, 210, 213, 247, 251, 266, 370-372, 380, 524, 526, 529, 533, 543, 545, 553, 571\nscripts/experiments/experiment_7848_v681_length_shortcut.py     184    119    35%   70-126, 140, 250-337, 352-404, 409-421, 426-488, 500-510, 515-519\n-------------------------------------------------------------------------------------------\nTOTAL                                                           408    145    64%\n{'statement_coverage_percent': 64.46078431372548, 'data_files': ['/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.unit', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/.coverage.cli']}\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/length_shortcut.py",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "tests/python/test_experiment_7848_v681_length_shortcut.py"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.013848267029970884,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/ruff_check/82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/length_shortcut.py",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "tests/python/test_experiment_7848_v681_length_shortcut.py"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.01035396195948124,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/ruff_format/eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/length_shortcut.py",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py"
+      ],
+      "deadline_s": 120,
+      "duration_s": 0.16825292800785974,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/mypy/e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce.log",
+      "log_sha256": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+      "name": "mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7848_v681_length_shortcut.py"
+      ],
+      "deadline_s": 30,
+      "duration_s": 0.021480255003552884,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/scoped_spec/6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7848_v681_length_shortcut.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.6299987229867838,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/cold_replay/3d5e75fe7a189507986ad4458f4e41c9b5e72826bd5f8375658ad11b02eb601c.log",
+      "log_sha256": "sha256:3d5e75fe7a189507986ad4458f4e41c9b5e72826bd5f8375658ad11b02eb601c",
+      "name": "cold_replay",
+      "output_tail": "{\"checked_families\": 64, \"passed\": true, \"prediction_sha256\": \"sha256:a6dfed162304e39c47a27b50772520d10cdab14c31f672263ec1200ec68710de\"}\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+      ],
+      "deadline_s": 120,
+      "duration_s": 0.7042977890232578,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/adversarial_verify/23c28f65e8c95b3a286f655e1a2aa7b78381c0092aad6ceed5b09675476513ff.log",
+      "log_sha256": "sha256:23c28f65e8c95b3a286f655e1a2aa7b78381c0092aad6ceed5b09675476513ff",
+      "name": "adversarial_verify",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7848,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_length_control_energy_unavailable\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "classification": "required",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/candidate.json"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.02964281104505062,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7848_v681_length_shortcut/current/validation_logs/strict_rows/ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}
