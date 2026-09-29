@@ -232,20 +232,46 @@ def command_manifest(scratch: Path) -> Json:
         ),
         (
             "cli_replay_coverage",
-            [coverage, "run", f"--data-file={replay_cov}", f"--include={include}",
-             CLI, "--date", "20260929", "--cold-replay", str(fixture)],
+            [
+                coverage,
+                "run",
+                f"--data-file={replay_cov}",
+                f"--include={include}",
+                CLI,
+                "--date",
+                "20260929",
+                "--cold-replay",
+                str(fixture),
+            ],
             60,
         ),
         (
             "cli_failure_coverage",
-            [coverage, "run", f"--data-file={failure_cov}", f"--include={include}",
-             CLI, "--date", "20260929", "--cold-replay", str(scratch / "missing-fixture.json")],
+            [
+                coverage,
+                "run",
+                f"--data-file={failure_cov}",
+                f"--include={include}",
+                CLI,
+                "--date",
+                "20260929",
+                "--cold-replay",
+                str(scratch / "missing-fixture.json"),
+            ],
             60,
         ),
         (
             "coverage_combine",
-            [coverage, "combine", "--keep", f"--data-file={combined}",
-             str(unit), str(cli_cov), str(replay_cov), str(failure_cov)],
+            [
+                coverage,
+                "combine",
+                "--keep",
+                f"--data-file={combined}",
+                str(unit),
+                str(cli_cov),
+                str(replay_cov),
+                str(failure_cov),
+            ],
             60,
         ),
         (
@@ -318,9 +344,17 @@ def command_manifest(scratch: Path) -> Json:
         },
         "closure_rationale": "Direct fixture, source-view, receipt, and scope dependencies plus existing consumers",
         "commands": [
-            {"name": name, "argv": argv, "classification": "required", "timeout_s": timeout,
-             **({"expected_exit_code": 1, "expected_error_token": "FileNotFoundError"}
-                if name == "cli_failure_coverage" else {})}
+            {
+                "name": name,
+                "argv": argv,
+                "classification": "required",
+                "timeout_s": timeout,
+                **(
+                    {"expected_exit_code": 1, "expected_error_token": "FileNotFoundError"}
+                    if name == "cli_failure_coverage"
+                    else {}
+                ),
+            }
             for name, argv, timeout in commands
         ],
         "repository_health_command": {
@@ -346,7 +380,8 @@ def command_manifest(scratch: Path) -> Json:
         "second_owned_attempt": {
             "path": str(RAW / "attempts/attempt2_candidate.json"),
             "sha256": sha256_file(RAW / "attempts/attempt2_candidate.json")
-            if (RAW / "attempts/attempt2_candidate.json").is_file() else None,
+            if (RAW / "attempts/attempt2_candidate.json").is_file()
+            else None,
             "disposition": "disqualified_cold_replay_cli_coverage",
         },
         "coverage_files": [str(unit), str(cli_cov), str(replay_cov), str(failure_cov)],
@@ -864,6 +899,7 @@ def run(date: str, scratch: Path) -> Json:
         )
     ]
     progress(started, "terminal", "after_subprocess", len(receipts) + len(terminal))
+    chain = [{"candidate_sha256": sha256_file(candidate_path), "reports": terminal}]
     try:
         report = json.loads(Path(terminal[0]["log_path"]).read_text())
         flagged = bool(report["flagged_count"])
@@ -906,6 +942,7 @@ def run(date: str, scratch: Path) -> Json:
             if not item["passed"]
         )
         atomic_json(candidate_path, candidate)
+        progress(started, "terminal_retry", "before_subprocess", len(receipts) + len(terminal))
         terminal = [
             seal(item, len(receipts) + 3 + index, scratch)
             for index, item in enumerate(
@@ -914,8 +951,20 @@ def run(date: str, scratch: Path) -> Json:
                 )
             )
         ]
+        progress(started, "terminal_retry", "after_subprocess", len(receipts) + len(terminal))
+        chain.append({"candidate_sha256": sha256_file(candidate_path), "reports": terminal})
+        try:
+            retry_report = json.loads(Path(terminal[0]["log_path"]).read_text())
+            retry_flagged = bool(retry_report["flagged_count"])
+        except (KeyError, ValueError, OSError, TypeError):
+            retry_flagged = True
+        if retry_flagged or any(not item["passed"] for item in terminal):
+            raise ValueError("terminal_revalidation_failed")
     sidecar = scratch / "terminal_validation_reports.json"
-    atomic_json(sidecar, {"candidate_sha256": sha256_file(candidate_path), "reports": terminal})
+    final_hash = sha256_file(candidate_path)
+    if final_hash != chain[-1]["candidate_sha256"]:
+        raise ValueError("terminal_candidate_drift")
+    atomic_json(sidecar, {"candidate_sha256": final_hash, "reports": terminal, "chain": chain})
     publish_exact(candidate_path, OUTPUT)
     progress(started, "publish", "complete", len(rows))
     return candidate

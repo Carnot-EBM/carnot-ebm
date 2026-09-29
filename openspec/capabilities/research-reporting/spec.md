@@ -86334,3 +86334,35 @@ checks as history and distinguish current required checks from repository
 health. Unit and real CLI success, failure, and replay paths SHALL cover all
 new code. Terminal bytes SHALL pass adversarial and strict row validation
 before atomic publication.
+
+## REQ-REPORT-7893-V685: Qualify dated source intervention replay
+
+Exp7893 SHALL bind the current V684 failure and exposed source bytes before CPU
+fixture work, freeze the affected command and coverage closure, and preserve
+historical required failures. It SHALL reuse the source, context, and fixture
+primitives for 24 independent families and four original-byte views. No fixture
+shall receive a semantic truth label. The first and second terminal validator
+reports SHALL each bind the candidate they checked; publication SHALL copy only
+the final checked bytes. Required owned failures disqualify and set readiness
+to zero. Missing external inputs yield a complete blocked verdict.
+
+### SCENARIO-REPORT-7893-REVALIDATION
+
+Given a first validator failure, a changed disqualified candidate is checked
+again. A failed second check prevents publication; passing second reports name
+the final candidate hash and published bytes match that candidate exactly.
+
+### SCENARIO-REPORT-7893-FIXTURES
+
+Given 24 scripted families, fixture and cold-replay CLI routes both require the
+run date. Rows preserve all planned arms, byte offsets, exclusions, and null
+semantic sensitivity. A negative CLI receipt passes only for the frozen exit
+code and error token.
+
+### SCENARIO-REPORT-7893-VALIDATION
+
+Affected unit and consumer tests, scoped static checks, E2E-016, real CLI
+success, expected failure, and cold replay SHALL use frozen commands and
+explicit coverage files. Combined measured coverage of changed code SHALL be
+100 percent. The terminal artifact SHALL retain separate validity, readiness,
+probability, benefit, retention, and efficiency gates.

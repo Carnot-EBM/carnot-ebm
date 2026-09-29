@@ -1,0 +1,1 @@
+fixture input: python/carnot/experiment_7296_v641_mixture_learning.py

@@ -1,0 +1,44 @@
+{
+  "candidate_sha256": "sha256:b166ff59400288338f379ad20ad3663b93bb5ff2e1cc82138d95523da0ca4ebf",
+  "flagged_adversarial": false,
+  "reports": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/terminal_candidate.json"
+      ],
+      "duration_s": 0.6167978579760529,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/sealed_logs/00_terminal_adversarial_5eb18476227f7a440d9a29b4e77fcf3363da60639325aed8d9ffc100878c7f50.log",
+      "log_sha256": "sha256:5eb18476227f7a440d9a29b4e77fcf3363da60639325aed8d9ffc100878c7f50",
+      "name": "terminal_adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7893,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_required_checks\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/terminal_candidate.json"
+      ],
+      "duration_s": 0.03386516199680045,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7893_v685_intervention_protocol/attempts/20260929/sealed_logs/01_terminal_strict_rows_ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "terminal_strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    }
+  ]
+}

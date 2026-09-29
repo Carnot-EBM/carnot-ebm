@@ -237,14 +237,30 @@ def test_scenario_report_7881_expected_cli_failure(
 
     log = tmp_path / "error.log"
     log.write_text("FileNotFoundError: absent fixture")
-    command = {"name": "cli_failure_coverage", "argv": ["python", "absent"],
-               "classification": "required", "timeout_s": 2,
-               "expected_exit_code": 1, "expected_error_token": "FileNotFoundError"}
+    command = {
+        "name": "cli_failure_coverage",
+        "argv": ["python", "absent"],
+        "classification": "required",
+        "timeout_s": 2,
+        "expected_exit_code": 1,
+        "expected_error_token": "FileNotFoundError",
+    }
     monkeypatch.setattr(exp, "seal", lambda row, _index, _scratch: row)
-    monkeypatch.setattr(exp, "run_commands", lambda *_args, **_kwargs: [{
-        "name": command["name"], "command_argv": command["argv"], "log_path": str(log),
-        "passed": False, "exit_code": 1, "timed_out": False, "output_tail": log.read_text(),
-    }])
+    monkeypatch.setattr(
+        exp,
+        "run_commands",
+        lambda *_args, **_kwargs: [
+            {
+                "name": command["name"],
+                "command_argv": command["argv"],
+                "log_path": str(log),
+                "passed": False,
+                "exit_code": 1,
+                "timed_out": False,
+                "output_tail": log.read_text(),
+            }
+        ],
+    )
     assert exp.execute({"commands": [command]}, tmp_path, time.monotonic())[0]["passed"]
     command["expected_error_token"] = "WrongError"
     assert not exp.execute({"commands": [command]}, tmp_path, time.monotonic())[0]["passed"]
@@ -297,6 +313,13 @@ def test_scenario_report_7881_owned_run(
         names = [spec.name for spec in specs]
         if names == ["repository_full_pytest"]:
             return [{"name": names[0], "log_path": str(health), "passed": False}]
+        if "terminal_retry_logs" in str(_kwargs.get("log_dir", "")):
+            retry = tmp_path / "retry-adverse.json"
+            retry.write_text(json.dumps({"flagged_count": 0}))
+            return [
+                {"name": names[0], "log_path": str(retry), "passed": True},
+                {"name": names[1], "log_path": str(strict), "passed": True},
+            ]
         return [
             {
                 "name": names[0],
@@ -336,3 +359,82 @@ def test_scenario_report_7881_date_and_manifest_drift(
         exp.main(["--date", "20260928"])
     monkeypatch.setattr(exp, "run", lambda _date, _scratch: {"verdict_class": "disqualified"})
     assert exp.main(["--date", "20260929", "--scratch", str(tmp_path)]) == 1
+
+
+@pytest.mark.parametrize("mode", ["pass", "invalid", "drift"])
+def test_scenario_report_7893_revalidation_chain(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+) -> None:
+    """The changed candidate needs a fresh passing check before exact publication."""
+    from carnot import experiment_7881_v684_intervention_protocol as exp
+
+    scratch = tmp_path / "scratch"
+    monkeypatch.setattr(exp, "RAW", tmp_path / "raw")
+    monkeypatch.setattr(exp, "OUTPUT", tmp_path / "result.json")
+    plan = exp.command_manifest(scratch)
+    receipts = [
+        {
+            "name": item["name"],
+            "classification": "required",
+            "passed": True,
+            "command_argv": item["argv"],
+            "log_path": str(tmp_path / "unused.log"),
+        }
+        for item in plan["commands"]
+    ]
+    monkeypatch.setattr(exp, "execute", lambda *_args: receipts)
+    health = tmp_path / "health.log"
+    health.write_text("historical diagnostic")
+    seen: list[str] = []
+    if mode == "drift":
+        original_sha = exp.sha256_file
+        candidate_hash_calls = 0
+
+        def drifting_sha(path: Path) -> str:
+            nonlocal candidate_hash_calls
+            if path == scratch / "terminal_candidate.json":
+                candidate_hash_calls += 1
+                if candidate_hash_calls == 5:
+                    return "sha256:changed_after_validation"
+            return original_sha(path)
+
+        monkeypatch.setattr(exp, "sha256_file", drifting_sha)
+
+    def children(_root: Path, specs: object, **_kwargs: object) -> list[dict]:
+        names = [item.name for item in specs]
+        if names == ["repository_full_pytest"]:
+            return [{"name": names[0], "log_path": str(health), "passed": False}]
+        candidate_path = Path(specs[0].argv[-1])
+        seen.append(exp.sha256_file(candidate_path))
+        index = len(seen)
+        adverse = tmp_path / f"adverse-{index}.json"
+        adverse.write_text(
+            "invalid"
+            if index == 2 and mode == "invalid"
+            else json.dumps({"flagged_count": int(index == 1)})
+        )
+        strict = tmp_path / f"strict-{index}.log"
+        strict.write_text("checked")
+        passed = index == 2 and mode != "invalid"
+        return [
+            {"name": names[0], "log_path": str(adverse), "passed": passed},
+            {"name": names[1], "log_path": str(strict), "passed": passed},
+        ]
+
+    monkeypatch.setattr(exp, "run_commands", children)
+    if mode != "pass":
+        expected = (
+            "terminal_revalidation_failed" if mode == "invalid" else "terminal_candidate_drift"
+        )
+        with pytest.raises(ValueError, match=expected):
+            exp.run("20260929", scratch)
+        assert not exp.OUTPUT.exists()
+        return
+    result = exp.run("20260929", scratch)
+    assert len(seen) == 2 and seen[0] != seen[1]
+    assert result["verdict_class"] == "disqualified"
+    assert result["intervention_protocol_ready_score"] == 0
+    assert exp.sha256_file(exp.OUTPUT) == seen[1]
+    sidecar = json.loads((scratch / "terminal_validation_reports.json").read_text())
+    assert [item["candidate_sha256"] for item in sidecar["chain"]] == seen
+    assert sidecar["candidate_sha256"] == seen[1]
