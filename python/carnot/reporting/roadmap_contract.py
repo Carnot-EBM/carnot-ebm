@@ -28,7 +28,9 @@ TABLE_FIELDS = ("id", "title", "phase", "deliverable")
 PRIOR_FIELDS = ("experiment_id", "verdict", "addressed_by", "retire_if_same_verdict")
 
 
-def parse_design(text: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def parse_design(
+    text: str, *, milestone: str = MILESTONE
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Read the visible table separately from the embedded machine contract."""
     section = text.split("## Exact task contract", 1)[1]
     table: list[dict[str, Any]] = []
@@ -43,26 +45,39 @@ def parse_design(text: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]
                     )
                 )
             )
-    block = re.search(r"<!-- V681_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```", section, re.S)
+    version = milestone.rsplit(".", 1)[-1]
+    block = re.search(
+        rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+        section,
+        re.S,
+    )
     if block is None:
-        raise ValueError("V681 JSON contract missing")
+        raise ValueError(f"V{version} JSON contract missing")
     machine = json.loads(block.group(1))
-    if machine.get("milestone") != MILESTONE:
-        raise ValueError("V681 JSON milestone mismatch")
+    if machine.get("milestone") != milestone:
+        raise ValueError(f"V{version} JSON milestone mismatch")
     return table, machine["tasks"]
 
 
-def compare_contract(text: str, staged: dict[str, Any], active: dict[str, Any]) -> dict[str, Any]:
-    """Return one falsifiable row for each ordered V681 task."""
-    table, machine = parse_design(text)
+def compare_contract(
+    text: str,
+    staged: dict[str, Any],
+    active: dict[str, Any],
+    *,
+    milestone: str = MILESTONE,
+    first_id: int = 7837,
+    count: int = 14,
+) -> dict[str, Any]:
+    """Return one falsifiable row per task for an explicit milestone."""
+    table, machine = parse_design(text, milestone=milestone)
     staged_tasks, active_tasks = staged["tasks"], active["tasks"]
     errors = []
-    if any(value.get("milestone") != MILESTONE for value in (staged, active)):
+    if any(value.get("milestone") != milestone for value in (staged, active)):
         errors.append("roadmap_milestone")
-    if tuple(map(len, (table, machine, staged_tasks, active_tasks))) != (14, 14, 14, 14):
+    if tuple(map(len, (table, machine, staged_tasks, active_tasks))) != (count,) * 4:
         errors.append("task_count")
     rows = []
-    for index in range(14):
+    for index in range(count):
         shown = table[index] if index < len(table) else {}
         expected = machine[index] if index < len(machine) else {}
         planned = staged_tasks[index] if index < len(staged_tasks) else {}
@@ -77,8 +92,8 @@ def compare_contract(text: str, staged: dict[str, Any], active: dict[str, Any]) 
             {f"table_{field}": shown.get(field) == expected.get(field) for field in TABLE_FIELDS}
         )
         checks["order"] = shown.get("order") == index + 1
-        checks["sequence"] = str(planned.get("id", "")).startswith(f"exp{7837 + index}-")
-        checks["milestone"] = all(task.get("milestone") == MILESTONE for task in (planned, actual))
+        checks["sequence"] = str(planned.get("id", "")).startswith(f"exp{first_id + index}-")
+        checks["milestone"] = all(task.get("milestone") == milestone for task in (planned, actual))
         checks["prior"] = all(
             bool(task.get("prior_failures"))
             and all(
@@ -163,15 +178,15 @@ def verify_snapshots(snapshots: list[dict[str, str]]) -> bool:
     )
 
 
-def cold_replay(candidate: Path, raw_rows: Path) -> bool:
+def cold_replay(candidate: Path, raw_rows: Path, *, experiment_id: int = 7837) -> bool:
     """Reconstruct row identity without trusting a reported aggregate."""
     value = json.loads(candidate.read_text())
     raw = json.loads(raw_rows.read_text())
     rows = raw["rows"] if isinstance(raw, dict) else raw
     return (
         type(value.get("experiment_id")) is int
-        and value["experiment_id"] == 7837
-        and value.get("task_id") == "exp7837-contract-methods"
+        and value["experiment_id"] == experiment_id
+        and value.get("task_id") == f"exp{experiment_id}-contract-methods"
         and value.get("rows") == rows
         and len(rows) == 14
         and all(row["absolute_metric"] == int(all(row["checks"].values())) for row in rows)

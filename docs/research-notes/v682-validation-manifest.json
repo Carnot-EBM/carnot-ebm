@@ -1,0 +1,294 @@
+{
+  "affected_sources": [
+    "python/carnot/reporting/roadmap_contract.py",
+    "scripts/experiments/experiment_7851_v682_contract_methods.py"
+  ],
+  "affected_tests": [
+    "tests/python/test_experiment_7851_v682_contract_methods.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib,json,pathlib; names=[\"carnot.reporting.roadmap_contract\",\"carnot.reporting.current_work_receipt\",\"carnot.reporting.experiment_7303_validation_scope\"]; resolved={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({\"resolved_imports\":resolved})); assert all(pathlib.Path(p).is_relative_to(pathlib.Path(\"python\").resolve()) for p in resolved.values())"
+      ],
+      "classification": "required",
+      "name": "worktree_imports",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import yaml; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(open(\"research-roadmap.yaml\"))); print(\"schema_ok\")"
+      ],
+      "classification": "required",
+      "name": "schema",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/validate_prior_failures.py",
+        "research-roadmap.yaml"
+      ],
+      "classification": "required",
+      "name": "prior_failures",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/exclusion_manifest_lint.py",
+        "research-roadmap.yaml"
+      ],
+      "classification": "required",
+      "name": "exclusion",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/audit_roadmap_gates.py",
+        "research-roadmap.yaml"
+      ],
+      "classification": "required",
+      "name": "gates",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/harness_fit_lint.py",
+        "research-roadmap.yaml"
+      ],
+      "classification": "required",
+      "name": "harness_fit",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/arc_levelup_guarantee_lint.py",
+        "research-roadmap.yaml"
+      ],
+      "classification": "required",
+      "name": "arc_floor",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/overdue_priority_lint.py",
+        "--strict"
+      ],
+      "classification": "required",
+      "name": "priority",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7851_v682_contract_methods.py",
+        "-q",
+        "--basetemp=/tmp/carnot-exp7851-owned/pytest-affected"
+      ],
+      "classification": "required",
+      "name": "affected_pytest",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7851-owned/.coverage.unit",
+        "--include=*/roadmap_contract.py,*/experiment_7851_v682_contract_methods.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7851_v682_contract_methods.py",
+        "-q",
+        "--basetemp=/tmp/carnot-exp7851-owned/pytest-covered"
+      ],
+      "classification": "required",
+      "name": "coverage_unit",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7851-owned/.coverage.cli",
+        "--include=*/roadmap_contract.py,*/experiment_7851_v682_contract_methods.py",
+        "scripts/experiments/experiment_7851_v682_contract_methods.py",
+        "--date",
+        "20260929",
+        "--output",
+        "/tmp/carnot-exp7851-owned/cli.json",
+        "--raw",
+        "/tmp/carnot-exp7851-owned/cli-rows.json",
+        "--no-validation"
+      ],
+      "classification": "required",
+      "name": "cli_e2e",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/tmp/carnot-exp7851-owned/.coverage",
+        "/tmp/carnot-exp7851-owned/.coverage.unit",
+        "/tmp/carnot-exp7851-owned/.coverage.cli"
+      ],
+      "classification": "required",
+      "name": "coverage_combine",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7851-owned/.coverage",
+        "--include=*/roadmap_contract.py,*/experiment_7851_v682_contract_methods.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "name": "changed_coverage",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/roadmap_contract.py",
+        "scripts/experiments/experiment_7851_v682_contract_methods.py",
+        "tests/python/test_experiment_7851_v682_contract_methods.py"
+      ],
+      "classification": "required",
+      "name": "ruff_check",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/roadmap_contract.py",
+        "scripts/experiments/experiment_7851_v682_contract_methods.py",
+        "tests/python/test_experiment_7851_v682_contract_methods.py"
+      ],
+      "classification": "required",
+      "name": "ruff_format",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/roadmap_contract.py",
+        "scripts/experiments/experiment_7851_v682_contract_methods.py"
+      ],
+      "classification": "required",
+      "name": "mypy",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7851_v682_contract_methods.py"
+      ],
+      "classification": "required",
+      "name": "scoped_spec",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7851_v682_contract_methods.py",
+        "--cold-replay",
+        "/tmp/carnot-exp7851-owned/cli.json",
+        "--raw",
+        "/tmp/carnot-exp7851-owned/cli-rows.json"
+      ],
+      "classification": "required",
+      "name": "cold_replay",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-exp7851-owned/pending-candidate.json"
+      ],
+      "classification": "required",
+      "name": "adversarial_verify",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7851-owned/pending-candidate.json"
+      ],
+      "classification": "required",
+      "name": "strict_rows",
+      "timeout_s": 120
+    }
+  ],
+  "frozen_hashes": {
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229",
+    "python/carnot/reporting/roadmap_contract.py": "sha256:eed75373b8b00f3dc6442fbf878cc833ec7bcf44f6c258019eebcb3e89e4ea63",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/arc_levelup_guarantee_lint.py": "sha256:1d18d6520331e8d55fd16ddeffd557f646de129b58e68f7da251cdd08f1be3d0",
+    "scripts/audit_roadmap_gates.py": "sha256:c7b158b0f12929c753f521960f392942d5e52f3c0b68d578aeab746f6f5533b8",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/experiments/experiment_7851_v682_contract_methods.py": "sha256:0d5b124bc77960b4455ddd8b602d55afe71877969f748f7bbd7549494246624e",
+    "scripts/harness_fit_lint.py": "sha256:8f766d88958e2cbea738e2d0462fd68ae5a0ceb98f6740411b4c9638fa932fc1",
+    "scripts/overdue_priority_lint.py": "sha256:54cd20c79e3ac3e93f2424d280814105f0776213b5b32625511f86ce0e5fb897",
+    "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+    "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7851_v682_contract_methods.py": "sha256:d2d39cf856e3266a8eb439847203581743b85a3867cf27bb2a559ab4b7b8c889"
+  },
+  "historical_required_failures": [
+    "Exp7824: 27% changed coverage and required full-suite timeout",
+    "Exp7828: missing resolved_imports",
+    "Exp7835: integer/task-slug mismatch, coverage and full-suite failure",
+    "Exp7823: prior-failure and gate audits",
+    "Exp7837: unsupported Coverage.report(fail_under=100) and success-prefixed partial candidate"
+  ],
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "tests/python",
+      "-q",
+      "--basetemp=/tmp/carnot-exp7851-owned/pytest-health"
+    ],
+    "classification": "diagnostic",
+    "name": "repository_health_180s",
+    "timeout_s": 180
+  },
+  "schema": "v682_validation_manifest_v1"
+}

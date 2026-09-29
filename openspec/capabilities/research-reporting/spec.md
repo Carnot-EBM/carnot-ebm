@@ -85464,3 +85464,33 @@ OpenReview, Extropic, Semantic Scholar citations for both seed papers,
 Hugging Face, GitHub trends and Logical Intelligence. Unavailable pages and
 vendor-only claims remain explicit. Planned tests distinguish source
 sufficiency, calibrated decisions, causal learning and complete service cost.
+
+## REQ-REPORT-7851-V682: Bind active V682 authority and a terminal validation receipt
+
+Exp7851 SHALL compare the fourteen ordered Exp7851–Exp7864 tasks across the
+visible design table, embedded V682 JSON, and the matching active YAML when
+the staged file has been consumed. It SHALL keep V681 parsing and replay
+available with explicit milestone, first ID, and count arguments. It SHALL
+snapshot the exact authority bytes and reject changed snapshots or private
+task, model, gate, and retirement mutations. Administrative agreement SHALL
+not gate later scientific tasks or imply measured benefit.
+
+The producer SHALL freeze its required commands before measurement, use the
+coverage CLI with a 100 percent changed-code threshold, and pass a
+self-consistent terminal or pending candidate to both verifiers. Failed
+required commands SHALL set readiness to zero and remain visible alongside
+historical failures. A blocked external precondition SHALL name the operand.
+
+### SCENARIO-REPORT-7851-V682-CONTRACT
+
+The active V682 roadmap and its matching design yield fourteen matched rows;
+an absent staged roadmap is accepted only when activation consumed it. A
+missing, reordered, stale, wrong-model, misspelled-gate, or retirement mutation
+fails the comparison. V681 frozen authorities still produce the same rows.
+
+### SCENARIO-REPORT-7851-V682-VALIDATION
+
+The real private CLI and cold replay agree on primitive rows. Coverage uses
+`coverage report --fail-under=100`. Adversarial and strict-row readers see a
+candidate whose verdict prefix agrees with its class. Every child exit and
+diagnostic health timeout is retained without changing required classifications.

@@ -6253,3 +6253,6 @@ retention controls and complete hardware service costs are mapped to specific
 V674 tests in `docs/research-notes/v674-method-map.md`. The sequential delta
 check could not access Semantic Scholar citations. This ingestion establishes
 method custody, not scientific benefit or fresh generalization.
+# V682 method ingestion — 2026-09-29
+
+Read the primary method sections of [Verification Without Sufficiency](https://arxiv.org/html/2608.00585v1), [RECAP](https://arxiv.org/html/2606.06698v4), [Retrieval-warmed EBR](https://arxiv.org/html/2606.26476v1), and [FPGA/ASIC co-design](https://arxiv.org/html/2602.15985v2). The [V682 method map](docs/research-notes/v682-method-map.md) fixes local contrasts, family bootstrap, multiplicity, roles and limits before Exp7851 measurement. These papers motivate controls; they do not supply local scientific outcomes or hardware evidence.
