@@ -18977,3 +18977,5 @@ code |
 | 2026-09-29 02:11 UTC | Bind fourteen tasks and ingest length-confounding | OK | Deliverable already exists in repo |
 | 2026-09-29 02:11 UTC | Qualify a reusable public-source boundary with com | OK | Deliverable already exists in repo |
 | 2026-09-29 02:11 UTC | Repair source-intervention import receipts and qua | OK | Deliverable already exists in repo |
+| 2026-09-29 02:11 UTC | Train source-conditioned energies and freeze calib | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7838-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
+| 2026-09-29 02:13 UTC | Measure calibrated decisions against same-informat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
