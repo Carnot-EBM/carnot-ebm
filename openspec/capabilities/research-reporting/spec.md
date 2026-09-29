@@ -85369,3 +85369,55 @@ duplicate-family seeds. Cold replay rejects a changed source or sealed log.
 The real CLI writes a private candidate without recursive validation. The
 parent executes the frozen manifest with heartbeats and owned deadlines, then
 atomically writes the terminal artifact with actual receipt exits and flags.
+## REQ-REPORT-7850: Reconcile fourteen V681 tasks from current bytes
+
+Exp7850 SHALL compare the fourteen staged V681 task identities, declared paths,
+model and substrate metadata, and exact same-roadmap gates in order. It SHALL
+use Exp7837 immutable authority only when qualified, otherwise independently
+hash the exact staged design and YAML pair and report authority failure. Every
+current producer and available conductor receipt SHALL be read directly.
+Missing or disqualified external science SHALL terminate
+`complete_blocked_required_v681_evidence` with exact failed operands, zero
+readiness and null unmeasured benefit. Queue success SHALL not count as science.
+Exp7849's independent reconstruction and Exp7848's length control SHALL veto
+unqualified advantage. Publication G1-G4 SHALL come unchanged from the stable
+publication reader. Each task SHALL receive one bounded decision and falsifiable
+resource or measurement trigger; retirement applies only to exact registered
+same-verdict scopes. No activation, publication, default change or solve credit
+follows. Exp7836 and inherited full-suite failures remain historical evidence.
+
+The frozen affected closure is
+`python/carnot/reporting/v681_capstone.py`,
+`scripts/experiments/experiment_7850_v681_capstone.py`, and
+`tests/python/test_experiment_7850_v681_capstone.py`. Direct called helpers are
+`current_work_receipt.py` and `experiment_7303_validation_scope.py`.
+The frozen command manifest is
+`results/raw/experiment_7850_v681_capstone/validation_command_manifest.json`.
+Its required names are worktree_imports, affected_pytest, changed_coverage,
+ruff_check, ruff_format, mypy, scoped_spec, cli_e2e, cold_replay,
+adversarial_verify and strict_rows. A separately named 180-second serial
+repository health diagnostic is never a required-science substitute. Unit and
+real CLI coverage shards SHALL be combined from explicitly named complete
+files at 100 percent for both new code files. Required failure disqualifies
+readiness. Owned child logs SHALL be sealed after exit and cold byte checked.
+
+### SCENARIO-REPORT-7850-ACCOUNT
+
+The current staged fourteen-task pair yields fourteen ordered rows, distinct
+absent, blocked, disqualified, partial, null, positive and circular-positive
+dispositions, and exact path/hash/field/op/expected/observed gate failures.
+No current output is its own upstream input. A conductor receipt cannot replace
+a declared science producer. Duplicate seeds do not raise independent N.
+
+### SCENARIO-REPORT-7850-REPLAY
+
+A real private CLI candidate and terminal artifact use numeric experiment_id
+7850 and exact task_id. Cold replay rejects mutated source, row, manifest or
+sealed log bytes. A missing source terminates blocked once. The terminal
+reader derives flagged_adversarial from the actual verifier receipt.
+
+### SCENARIO-REPORT-7850-VALIDATION
+
+The parent runs only frozen exact argv with owned deadlines, flushed boundaries,
+and heartbeats. The CLI child does not recursively validate. All required
+check exits, historical failures and separate health outcome remain visible.

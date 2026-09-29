@@ -1,0 +1,170 @@
+{
+  "schema": "carnot.exp7850.validation.v1",
+  "affected_source_closure": [
+    "python/carnot/reporting/v681_capstone.py",
+    "scripts/experiments/experiment_7850_v681_capstone.py"
+  ],
+  "affected_test_closure": [
+    "tests/python/test_experiment_7850_v681_capstone.py"
+  ],
+  "commands": [
+    {
+      "name": "worktree_imports",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib,json,pathlib; names=('carnot.reporting.v681_capstone','carnot.reporting.current_work_receipt','carnot.reporting.experiment_7303_validation_scope','carnot.reporting.roadmap_contract'); r={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({'resolved_imports':r},sort_keys=True))"
+      ],
+      "deadline_s": 120,
+      "classification": "required"
+    },
+    {
+      "name": "affected_pytest",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/coverage/.coverage.unit",
+        "--include=*/v681_capstone.py,*/experiment_7850_v681_capstone.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_experiment_7850_v681_capstone.py",
+        "-q"
+      ],
+      "deadline_s": 300,
+      "classification": "required"
+    },
+    {
+      "name": "cli_e2e",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/coverage/.coverage.cli",
+        "--include=*/v681_capstone.py,*/experiment_7850_v681_capstone.py",
+        "scripts/experiments/experiment_7850_v681_capstone.py",
+        "--date",
+        "20260929",
+        "--science-only",
+        "--output-root",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/private_cli"
+      ],
+      "deadline_s": 180,
+      "classification": "required"
+    },
+    {
+      "name": "changed_coverage",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "from coverage import Coverage,CoverageData; from pathlib import Path; import sys; a,b,c,inc=sys.argv[1:]; assert Path(a).is_file() and Path(b).is_file(); x=Coverage(data_file=c,include=inc.split(',')); x.get_data().update(CoverageData(basename=a)); x.get_data().update(CoverageData(basename=b)); x.save(); pct=x.report(include=inc.split(','),show_missing=True); assert pct==100,pct",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/coverage/.coverage.unit",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/coverage/.coverage.cli",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/coverage/.coverage.combined",
+        "*/v681_capstone.py,*/experiment_7850_v681_capstone.py"
+      ],
+      "deadline_s": 120,
+      "classification": "required"
+    },
+    {
+      "name": "ruff_check",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v681_capstone.py",
+        "scripts/experiments/experiment_7850_v681_capstone.py",
+        "tests/python/test_experiment_7850_v681_capstone.py"
+      ],
+      "deadline_s": 120,
+      "classification": "required"
+    },
+    {
+      "name": "ruff_format",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v681_capstone.py",
+        "scripts/experiments/experiment_7850_v681_capstone.py",
+        "tests/python/test_experiment_7850_v681_capstone.py"
+      ],
+      "deadline_s": 120,
+      "classification": "required"
+    },
+    {
+      "name": "mypy",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/v681_capstone.py",
+        "scripts/experiments/experiment_7850_v681_capstone.py"
+      ],
+      "deadline_s": 120,
+      "classification": "required"
+    },
+    {
+      "name": "scoped_spec",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7850_v681_capstone.py"
+      ],
+      "deadline_s": 120,
+      "classification": "required"
+    },
+    {
+      "name": "cold_replay",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7850_v681_capstone.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/private_cli/candidate.json"
+      ],
+      "deadline_s": 120,
+      "classification": "required"
+    },
+    {
+      "name": "adversarial_verify",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/private_cli/candidate.json"
+      ],
+      "deadline_s": 180,
+      "classification": "required"
+    },
+    {
+      "name": "strict_rows",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7850_v681_capstone/private_cli/candidate.json"
+      ],
+      "deadline_s": 120,
+      "classification": "required"
+    },
+    {
+      "name": "repository_health_180s",
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "deadline_s": 180,
+      "classification": "diagnostic"
+    }
+  ],
+  "e2e_applicability": {
+    "E2E-001_to_014": "inapplicable: existing Rust, ARC, Qwen, hardware and unrelated research workflows; task-specific real CLI, cold replay and verification are required"
+  }
+}
