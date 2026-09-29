@@ -1,5 +1,44 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7852: Bind legacy identity and replay public source bytes
+
+Exp7852 SHALL accept the archived Exp7810 task slug only when its exact path,
+content hash, milestone, run date, and task identity match. Current output
+SHALL use numeric experiment_id 7852 and a separate task_id. Missing or
+changed external operands SHALL end in a complete blocked verdict. The
+producer SHALL preserve all 640 exposed development families and role counts,
+check duplicate source groups across roles, and keep labels and annotations
+outside the public extractor. It SHALL require 128 valid fit groups and 32
+valid tune groups before granting source readiness. This qualification creates
+no fresh holdout and makes no predictive benefit claim.
+
+### SCENARIO-REPORT-7852-IDENTITY
+
+The exact archived slug, milestone, path, hash, and optional matching task_id
+resolve to numeric upstream identity 7810. A changed suffix, milestone, path,
+hash, or conflicting task_id fails with its exact operand. New artifacts keep
+numeric IDs.
+
+### SCENARIO-REPORT-7852-PROJECTION
+
+The public child receives only source bytes, answer bytes, and opaque joins.
+It cold-replays 132 features, complete offsets, duplicate weights, both
+bounded layouts, and all admitted families. Separate mutations of labels,
+roles, confidence, annotations, generator names, and joins cannot change
+numeric features. Unknown labels have zero loss and gradient with known-label
+controls. The evaluator manifest retains roles and annotations.
+
+### SCENARIO-REPORT-7852-TERMINAL
+
+The real CLI and gate-failure route run under private child roots. Exact
+required argv and deadlines freeze before measurement. Failed required checks
+disqualify readiness; a separate bounded repository health run cannot erase
+historical failures. The producer seals closed logs, independently checks the
+candidate with adversarial and strict-row tools, then atomically publishes a
+terminal artifact with numeric identity and explicit gate values.
+Direct invocation of the CLI by script path SHALL resolve its sibling producer
+before the private fixture route runs.
+
 ## REQ-REPORT-7848: Measure the exposed development length shortcut
 
 Exp7848 SHALL authenticate the qualified Exp7810 artifact, canonical manifest,

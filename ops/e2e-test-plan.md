@@ -1,6 +1,6 @@
 # Carnot — E2E Test Plan
 
-**Last Updated:** 2026-09-20
+**Last Updated:** 2026-09-29
 
 ## E2E Test Strategy
 
@@ -233,3 +233,12 @@ and check the result with `scripts/adversarial_verify.py --json` and
 `scripts/verdict_row_consistency_lint.py --strict`. Require 48 calls from 24
 families and zero model loads. Runner readiness requires a passing full Python
 suite receipt; a collection failure keeps readiness zero.
+
+### E2E-015: Exp7852 public source fixture (CPU)
+
+Spec ref: REQ-REPORT-7852. Run
+`pytest -n 0 -o addopts= --no-cov -q tests/python/test_source_boundary_7852.py`.
+The test invokes the real script-path CLI with a private public-only fixture,
+cold-replays its feature shard, and confirms that a row containing an evaluator
+label fails the same CLI gate. Both routes must work without an ambient
+`PYTHONPATH` that includes the repository root.

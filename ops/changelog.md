@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-09-29 — Exp7852 script-path import fix
+
+- Resolved the sibling Exp7838 producer from both direct script execution and
+  package execution. The existing private fixture test now passes without
+  changing or skipping it.
+- Verified E2E-015, 60 nearby tests, 13/13 identity statements covered, and
+  scoped static and spec checks.
+
 ## 2026-09-28 — Exp7817 qualification test repair
 
 - Kept the repository manifest path stable when the V679 dispatcher writes to

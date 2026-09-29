@@ -1,5 +1,16 @@
 # Carnot — Operational Status
 
+## 2026-09-29 — Exp7852 direct CLI import repaired
+
+- The source-boundary CLI resolves its sibling producer when invoked by script
+  path. The private public-only fixture succeeds, and its label-bearing
+  mutation fails closed.
+- E2E-015 and 60 nearby tests pass. The new identity module has 13/13
+  statements covered; scoped Ruff, format, mypy, and spec coverage pass.
+  The existing Exp7852 result remains disqualified; this test repair does not
+  change its recorded validation receipts. Repository-wide reconciliation
+  still reports legacy tests without spec references.
+
 ## 2026-09-28 — Exp7817 direct SDK runner qualification repaired
 
 - Fixed artifact manifest provenance under a private output root and corrected

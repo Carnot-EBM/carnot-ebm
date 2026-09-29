@@ -1,6 +1,12 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-28
+**Last Updated:** 2026-09-29
+**Operational Note:** REQ-REPORT-7852 and SCENARIO-REPORT-7852-TERMINAL map
+the direct script-path public fixture to
+`tests/python/test_source_boundary_7852.py` and E2E-015. The sibling producer
+import now resolves during direct CLI execution; the label-bearing fixture
+still fails closed. The 60 nearby tests pass, and the new identity module has
+13/13 statements covered by its focused tests.
 **Operational Note:** REQ-REPORT-7817 and REQ-ARC-WMTE-7817 map the frozen
 V679 command manifest, direct SDK qualification wrapper, dispatcher, and
 14 focused scenario tests to the Exp7817 files. The recorded-entrypoint repair
