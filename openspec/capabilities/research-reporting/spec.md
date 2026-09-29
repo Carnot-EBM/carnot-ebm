@@ -85827,3 +85827,41 @@ The real private CLI and cold replay recompute primitive row counts and hashes.
 Required coverage includes CLI success and failure paths and reaches 100 percent
 for new code. The complete candidate is tested at its exact terminal path before
 atomic publication. Successful CPU conformance is circular-positive only.
+## REQ-REPORT-7876: V683 board continuity and workload custody
+
+Exp7876 SHALL compare the exact Exp7862 board receipt and raw transcript hashes,
+dates, cutoffs, and inherited required failures with current bytes before any
+readiness claim. It SHALL retain KV260 fabric at quadratic Ising k<=5, PolarFire
+at Linux CPU dispatch only, and GateMate at the unchanged 0xffffffff physical
+blocker. It SHALL issue no board operation or current model call. Each board
+SHALL have one primitive row, with historical scope and zero current device
+executions. Missing, malformed, changed, stale, or inflated required board
+evidence SHALL produce a terminal blocked verdict with exact failed operands.
+
+An eligible Exp7875 CPU workload receipt MAY supply measured operation and
+memory rows to a candidate feasibility table. Missing or disqualified Exp7875
+SHALL leave workload_attachment_available false without blocking independent
+board custody. CPU, available GPU, and candidate board feasibility SHALL not
+claim a device speedup. The artifact SHALL keep validity, evidence readiness,
+and scientific benefit separate, retain inherited required failures, and seal
+owned validation receipts before an atomic terminal publication.
+
+### SCENARIO-REPORT-7876-CUSTODY
+
+Given unchanged authenticated board bytes and no qualified Exp7875, the reader
+returns three historical rows, zero device execution, a null terminal verdict,
+and hardware evidence readiness one. Missing receipts, changed transcript
+hashes, stale timestamps, or widened board claims block with exact operands.
+
+### SCENARIO-REPORT-7876-WORKLOAD
+
+Given a qualified Exp7875 with primitive CPU operation and memory rows, the
+reader attaches those rows and labels device placement as candidate only.
+An absent or disqualified receipt does not suppress board continuity.
+
+### SCENARIO-REPORT-7876-CLI
+
+The private real CLI exercises success, missing-input, and cold-replay paths.
+Frozen affected tests, changed-code statement coverage, lint, strict types,
+spec coverage, adversarial verification, and strict row consistency SHALL be
+recorded with their actual exits. Failed required checks disqualify readiness.
