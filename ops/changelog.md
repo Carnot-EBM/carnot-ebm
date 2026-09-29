@@ -21093,3 +21093,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: Qualify terminal revalidation and source intervention paths (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7893_v685_intervention_protocol.json
 - 2026-09-29: Fit calibrated source energies with matched observation budgets (⚠️ Research Finding) — honest_verdict=partial_numerical_work; results/experiment_7894_v685_energy_fit.json
 - 2026-09-29: Fit calibrated source energies with matched observation budgets (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7894_v685_energy_fit.json
+- 2026-09-29: Assess new live supervisor outcomes for generalization (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_7899_v685_arc_supervisor_delta.json
