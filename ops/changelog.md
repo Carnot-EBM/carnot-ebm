@@ -21009,3 +21009,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-29: Bind fourteen tasks and register sufficiency and causal-learning methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v682_contract_methods; results/experiment_7851_v682_contract_methods.json
 - 2026-09-29: Qualify exact legacy source identity and public byte projection (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7852_v682_source_boundary.json
 - 2026-09-29: Qualify byte-derived predicates and disjoint natural-data training (⚠️ Blocked) — honest_verdict=complete_blocked_disqualified_source_boundary; results/experiment_7853_v682_natural_runtime.json
+- 2026-09-29: Complete intervention-runner coverage and freeze source-sufficiency requests (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7854_v682_intervention_protocol.json
