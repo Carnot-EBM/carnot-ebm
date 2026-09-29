@@ -85608,3 +85608,30 @@ A real private CLI runs scripted fixtures without model weights. An interrupted 
 ### SCENARIO-REPORT-7854-TERMINAL
 
 The terminal result keeps Exp7839's failed required coverage separate from current checks. Only passing request, parser, dispatcher, CLI, coverage and adversarial checks permit circular-positive protocol readiness. Probability quality and decision benefit remain unmeasured.
+## REQ-REPORT-7863: Cold audit eleven V682 scientific producers
+
+Exp7863 SHALL read the exact Exp7852 through Exp7862 deliverables from the
+active V682 authority. It SHALL retain missing, skipped, flagged, invalid, and
+valid null producers as distinct rows. Missing or invalid external evidence
+SHALL cause a terminal blocked verdict with exact failed operands. A valid
+null SHALL remain eligible. Administrative receipts SHALL not replace science.
+
+The reader SHALL reduce available primitive rows without producer reducers.
+It SHALL reject private fixture IDs in features, source fields in erased views,
+future feedback, replayed dropped feedback, lost rows, duplicate seed families,
+and unverified required child results. It SHALL preserve historical failed
+obligations. The audit SHALL use private outputs, a frozen command manifest,
+bounded children, sealed logs, and a cold replay before atomic publication.
+
+### SCENARIO-REPORT-7863-BLOCKED
+
+Given current missing and disqualified V682 deliverables, eleven dispositions
+and exact per-producer operands remain visible. Valid nulls remain eligible.
+The audit ends complete_blocked with zero milestone evidence completeness.
+
+### SCENARIO-REPORT-7863-MUTATIONS
+
+Private mutation cases reject zero rows, identical controls, wrong seeds,
+fixture-ID and source leakage, evaluation-tuned thresholds, forged receipts,
+and a complete prefix paired with a partial verdict. A changed source byte or
+closed child log makes cold replay fail.
