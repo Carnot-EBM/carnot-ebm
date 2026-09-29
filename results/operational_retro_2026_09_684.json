@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.684",
+  "generated_at": "2026-09-29T17:52:36Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 7.7,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "Preserve all board obligations and bind current workload evidence",
+      "duration_minutes": 2.37,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify source custody with measured coverage and valid venue",
+      "duration_minutes": 2.15,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently reduce twelve outcomes and decide the three PRD gaps",
+      "duration_minutes": 1.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind twelve tasks and executable validation scopes",
+      "duration_minutes": 0.85,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Seal the repaired intervention runner under an explicit command manifest",
+      "duration_minutes": 0.84,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Six compute-bound experiments completed in 7.7 wall-time minutes (averaging 1 minute per experiment) based on disk-mtime fallback reconstruction. Execution was led by 'Preserve all board obligations and bind current workload evidence' at 2.37 minutes, 'Qualify source custody with measured coverage and valid venue' at 2.15 minutes, 'Independently reduce twelve outcomes and decide the three PRD gaps' at 1.1 minutes, 'Bind twelve tasks and executable validation scopes' at 0.85 minutes, and 'Seal the repaired intervention runner under an explicit command manifest' at 0.84 minutes, with these five compute-bound tasks totaling 7.31 minutes. Active accelerator utilization was recorded on GPU 1 at 100% utilization and 18502MB allocated for a single active process while GPU 0 was idle with 5MB allocated, resulting in gpu_idle_on_compute_bound_tasks recorded as false with no multi-model concurrent workloads requiring DualGPURunner.",
+  "bottlenecks_identified": [
+    "The top two compute-bound experiments ('Preserve all board obligations and bind current workload evidence' at 2.37 minutes and 'Qualify source custody with measured coverage and valid venue' at 2.15 minutes) accounted for 4.52 of 7.7 total wall-time minutes (58.7%), but available records lack intra-task stage timing to profile which internal validation steps dominated execution.",
+    "Milestone timing relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits, omitting structured per-task phase start/finish timestamps and execution metadata.",
+    "The GPU monitor report provides a single point-in-time snapshot (GPU 1 at 100% utilization with 18502MB allocated and GPU 0 idle with 5MB allocated at 2026-09-29T17:52:36.272794+00:00), leaving continuous accelerator utilization and memory telemetry unrecorded across the 7.7 minutes of execution."
+  ],
+  "improvements_suggested": [
+    "Add granular phase-level timing within hardware custody, source boundary qualification, and capstone PRD gap decision tasks to isolate internal execution delays.",
+    "Persist structured execution receipts at milestone boundaries to eliminate fallback to disk-mtime reconstruction when git log finds 0 commits.",
+    "Sample GPU utilization, memory allocation, and temperature periodically throughout task execution to capture continuous multi-device accelerator telemetry across compute-bound runs.",
+    "Evaluate task workload manifests for independent multi-model tasks that could utilize both RTX 3090 GPUs in parallel to improve throughput."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement intra-task phase profiling for the longest-running board custody, source qualification, and capstone workflows to isolate internal execution bottlenecks.",
+    "Persist structured milestone execution receipts to eliminate disk-mtime fallback reconstruction when git log yields 0 commits.",
+    "Deploy continuous periodic GPU telemetry logging during compute-bound runs to track active accelerator performance across all devices."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU monitor report captured an active compute-bound workload on GPU 1 (100% utilization, 18502MB allocated, 61C) with a single active process (PID 3383923) while GPU 0 was idle (5MB allocated, 0% utilization), correctly reflected by gpu_idle_on_compute_bound_tasks=false for a single-model workload. All 6 completed experiments were compute-bound and finished within 7.7 wall-time minutes, but lack granular intra-task phase timers for the leading 2.37-minute board obligation and 2.15-minute source custody tasks. Estimated time savings are set to 0% pending empirical measurement of phase-level profiling and receipt persistence tooling improvements."
+}

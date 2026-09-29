@@ -7096,3 +7096,9 @@ The critical path for milestone .250:
 - key result: honest operational negative — CPU intervention protocol qualification and publication gates consumed 36.39 of 89.4 total wall-time minutes (40.7%), while available records lack intra-task stage timing, active-window accelerator telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
 
+### Milestone 2026.09.684
+
+- exp_range: no data available this milestone
+- theme: board obligation preservation, source custody qualification, and PRD gap reduction led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — board obligation preservation and source custody qualification consumed 4.52 of 7.7 total wall-time minutes (58.7%), while available records lack intra-task stage timing, continuous multi-device accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
