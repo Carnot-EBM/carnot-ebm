@@ -198,15 +198,15 @@ def test_scenario_report_7889_manifest_and_child(tmp_path: Path) -> None:
         "cli_success",
         "cli_missing_input",
         "cold_replay",
+        "coverage_shards",
         "coverage_combine",
         "changed_coverage",
         "ruff_check",
         "ruff_format",
         "mypy",
         "scoped_spec",
-        "full_pytest",
     ]
-    assert commands[-1]["classification"] == "diagnostic"
+    assert all(row["classification"] == "required" for row in commands)
     assert all(
         str(ROOT / cli.SCRIPT) in row["argv"]
         or row["name"] not in {"cli_success", "cli_missing_input", "cold_replay"}
@@ -314,3 +314,65 @@ def test_scenario_report_7889_terminal_validation_failure(
     with pytest.raises(ValueError, match="terminal_validation_failed"):
         cli.main(["--output", str(output)])
     assert not output.exists()
+
+
+def test_scenario_report_7889_coverage_shards(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7889-COVERAGE: reject an empty completed shard."""
+    from coverage import CoverageData
+
+    paths = [tmp_path / f"{name}.coverage" for name in ("unit", "success", "missing", "replay")]
+    for path in paths:
+        data = CoverageData(basename=str(path))
+        data.add_lines({str(ROOT / cli.MODULE): {1}})
+        data.write()
+    cli.check_coverage_shards(paths)
+    empty = CoverageData(basename=str(paths[2]))
+    empty.erase()
+    empty.write()
+    with pytest.raises(ValueError, match="empty_coverage_shard"):
+        cli.check_coverage_shards(paths)
+    with pytest.raises(ValueError, match="empty_coverage_shard"):
+        cli.check_coverage_shards([tmp_path / "absent.coverage"])
+    foreign = CoverageData(basename=str(paths[2]))
+    foreign.erase()
+    foreign.add_lines({str(tmp_path / "unowned.py"): {1}})
+    foreign.write()
+    with pytest.raises(ValueError, match="empty_coverage_shard"):
+        cli.check_coverage_shards(paths)
+
+
+def test_scenario_report_7889_coverage_manifest(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7889-COVERAGE: freeze checked shards, keep health separate."""
+    commands = cli.manifest(tmp_path)
+    names = [row["name"] for row in commands]
+    assert names.index("coverage_shards") < names.index("coverage_combine")
+    assert "full_pytest" not in names
+
+
+def test_scenario_report_7889_sealed_repository_health(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7889-COVERAGE: preserve a prior diagnostic by log hash."""
+    log = tmp_path / "full.log"
+    log.write_text("timed out after a failed test")
+    path = tmp_path / "earlier.json"
+    path.write_text(
+        json.dumps(
+            {
+                "repository_health": {
+                    "full_pytest": {
+                        "name": "full_pytest",
+                        "classification": "diagnostic",
+                        "passed": False,
+                        "log_path": str(log),
+                        "log_sha256": sha256_file(log),
+                    }
+                }
+            }
+        )
+    )
+    health = cli.repository_health_from_artifact(path)
+    assert health["status"] == "degraded_open"
+    assert health["affects_required_checks"] is False
+    assert health["source_artifact_hash"] == sha256_file(path)
+    log.write_text("changed")
+    with pytest.raises(ValueError, match="diagnostic_log_changed"):
+        cli.repository_health_from_artifact(path)

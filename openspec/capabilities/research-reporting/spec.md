@@ -86157,3 +86157,15 @@ E2Es before validation. It runs private success, missing-input, and cold-replay
 paths. It seals child logs after exit. Current required failures disqualify the
 new artifact; historical failures stay historical. Exact terminal bytes pass
 adversarial and strict row validation before atomic publication.
+
+### SCENARIO-REPORT-7889-COVERAGE
+
+Each declared unit and real CLI coverage shard SHALL have measured statements
+for at least one owned module before combination. The combined report SHALL
+measure both owned files at 100 percent. A repository-wide diagnostic SHALL
+use the worktree Python path, private pytest basetemp, disabled ambient pytest
+options and coverage, and a bounded deadline. Its failure remains repository
+health and does not silently become an owned required check.
+After a bounded repository diagnostic has a sealed log, a later current run
+SHALL authenticate and retain that observation without repeating the same
+repository-wide command.

@@ -13,9 +13,11 @@ import tempfile
 import time
 from typing import Any
 
+from coverage import CoverageData
+
 from carnot.reporting.current_work_receipt import atomic_json, canonical_hash, sha256_file
 from carnot.reporting.experiment_7303_validation_scope import CommandSpec, run_commands
-from carnot.reporting.experiment_7889_v684_hardware_evidence import cold_reduce, read_evidence
+from carnot.reporting.experiment_7889_v684_hardware_evidence import PRIOR, cold_reduce, read_evidence
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = "results/experiment_7889_v684_hardware_evidence.json"
@@ -41,6 +43,37 @@ def progress(started: float, phase: str, event: str, units: int) -> None:
         f"[exp7889] phase={phase} event={event} elapsed_s={time.monotonic() - started:.3f} completed_units={units}",
         flush=True,
     )
+
+
+def check_coverage_shards(paths: list[Path]) -> None:
+    """SCENARIO-REPORT-7889-COVERAGE: reject a missing or empty owned shard."""
+    owned = {(ROOT / MODULE).resolve(), (ROOT / SCRIPT).resolve()}
+    for path in paths:
+        if not path.is_file():
+            raise ValueError(f"empty_coverage_shard:{path}")
+        data = CoverageData(basename=str(path))
+        data.read()
+        measured = {Path(name).resolve() for name in data.measured_files()}
+        if not any(data.lines(str(name)) for name in measured & owned):
+            raise ValueError(f"empty_coverage_shard:{path}")
+
+
+def repository_health_from_artifact(path: Path) -> dict[str, Any]:
+    """Retain a sealed broad-suite observation without repeating its command."""
+    source = json.loads(path.read_text())
+    receipt = source.get("repository_health", {}).get("full_pytest")
+    if not isinstance(receipt, dict) or receipt.get("name") != "full_pytest":
+        raise ValueError("diagnostic_receipt_missing")
+    log = Path(str(receipt.get("log_path", "")))
+    if not log.is_file() or sha256_file(log) != receipt.get("log_sha256"):
+        raise ValueError("diagnostic_log_changed")
+    return {
+        "status": "healthy" if receipt.get("passed") is True else "degraded_open",
+        "full_pytest": receipt,
+        "affects_required_checks": False,
+        "source_artifact_path": str(path),
+        "source_artifact_hash": sha256_file(path),
+    }
 
 
 def manifest(private: Path) -> list[dict[str, Any]]:
@@ -69,6 +102,12 @@ def manifest(private: Path) -> list[dict[str, Any]]:
     missing = private / "missing.coverage"
     replay = private / "replay.coverage"
     combined = private / "combined.coverage"
+    shard_check = (
+        "from pathlib import Path; import sys; "
+        "from scripts.experiments.experiment_7889_v684_hardware_evidence "
+        "import check_coverage_shards; "
+        "check_coverage_shards([Path(name) for name in sys.argv[1:]])"
+    )
     raw = [
         ("worktree_imports", [py, "-u", "-c", import_code], 30, "required"),
         (
@@ -153,6 +192,12 @@ def manifest(private: Path) -> list[dict[str, Any]]:
             "required",
         ),
         (
+            "coverage_shards",
+            [py, "-u", "-c", shard_check, str(unit), str(success), str(missing), str(replay)],
+            30,
+            "required",
+        ),
+        (
             "coverage_combine",
             [
                 cov,
@@ -183,7 +228,6 @@ def manifest(private: Path) -> list[dict[str, Any]]:
         ("ruff_format", [ruff, "format", "--check", MODULE, SCRIPT, TEST], 30, "required"),
         ("mypy", [mypy, "--strict", MODULE, SCRIPT], 60, "required"),
         ("scoped_spec", [py, "-u", "scripts/check_spec_coverage.py", TEST], 30, "required"),
-        ("full_pytest", [pytest, "tests/python", "-q"], 900, "diagnostic"),
     ]
     return [
         {"name": name, "argv": argv, "deadline_s": deadline, "classification": classification}
@@ -261,6 +305,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if root != ROOT:
         raise ValueError("full validation requires the worktree root")
+    health_source = output if output.is_file() else ROOT / PRIOR
+    health = repository_health_from_artifact(health_source)
     closure = {
         name: sha256_file(ROOT / name) for name in (MODULE, SCRIPT, TEST, *CONSUMERS, *LIBRARIES)
     }
@@ -282,6 +328,13 @@ def main(argv: list[str] | None = None) -> int:
         "code_closure": {name: closure[name] for name in (MODULE, SCRIPT, *LIBRARIES)},
         "test_closure": {name: closure[name] for name in (TEST, *CONSUMERS)},
         "input_configuration_hash": key,
+        "repository_health_diagnostic": {
+            "source_artifact_path": health["source_artifact_path"],
+            "source_artifact_hash": health["source_artifact_hash"],
+            "argv": health["full_pytest"].get("argv"),
+            "deadline_s": health["full_pytest"].get("deadline_s"),
+            "classification": "retained_diagnostic",
+        },
         "e2e_applicability": {
             **{
                 f"E2E-{number:03d}": "inapplicable: owns another producer or requires physical execution"
@@ -327,15 +380,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         if spec["name"] == "worktree_imports":
             result["resolved_imports"] = receipt.get("resolved_imports", {})
-    required = [row for row in receipts if row["classification"] == "required"]
-    required_passed = all(row["passed"] for row in required)
-    diagnostic = next(row for row in receipts if row["name"] == "full_pytest")
+    required_passed = all(row["passed"] for row in receipts)
     result["validation_receipts"] = {"checks": receipts, "required_checks_passed": required_passed}
-    result["repository_health"] = {
-        "status": "healthy" if diagnostic["passed"] else "degraded_open",
-        "full_pytest": diagnostic,
-        "affects_required_checks": False,
-    }
+    result["repository_health"] = health
     if not required_passed:
         result["honest_verdict"] = "complete_disqualified_required_checks"
         result["verdict_class"] = "disqualified"
