@@ -1,0 +1,295 @@
+{
+  "checks": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json,pathlib; names=['carnot.reporting.current_work_receipt','carnot.reporting.experiment_7847_v681_hardware_evidence']; d={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({'resolved_imports':d},sort_keys=True)); assert all(pathlib.Path(p).is_relative_to(pathlib.Path('/home/ianblenke/github.com/ianblenke/carnot/python')) for p in d.values())"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.5154448130051605,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/worktree_imports/caa6b866c67873ccc763e9f778cc1cc2ee2226ee0cceeeb1835831c2e590fddf.log",
+      "log_sha256": "sha256:caa6b866c67873ccc763e9f778cc1cc2ee2226ee0cceeeb1835831c2e590fddf",
+      "name": "worktree_imports",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.reporting.current_work_receipt": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+        "carnot.reporting.experiment_7847_v681_hardware_evidence": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py"
+      },
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/test-temp"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "duration_s": 6.081531646021176,
+      "exit_code": 1,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/affected_pytest/3ecf7bfbd1c77a8888335a217a48ca28be72cd9e8fb70ed19e7d7aca063e1ee9.log",
+      "log_sha256": "sha256:3ecf7bfbd1c77a8888335a217a48ca28be72cd9e8fb70ed19e7d7aca063e1ee9",
+      "name": "affected_pytest",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/unit.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "-m",
+        "pytest",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/coverage-temp"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "duration_s": 10.2384528950206,
+      "exit_code": 1,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/unit_coverage/ca22f90ea1b8224138aae6e73d59f50c451803608a8f9a8a1a4f7992d73ea89d.log",
+      "log_sha256": "sha256:ca22f90ea1b8224138aae6e73d59f50c451803608a8f9a8a1a4f7992d73ea89d",
+      "name": "unit_coverage",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/cli.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "--date",
+        "20260929",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/cli-candidate.json",
+        "--evidence-only"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 1.066856947960332,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/cli_e2e/ff882b8fb615c66c16544a0df3f676dbab915b42f68eb945f070d9133daf5fbf.log",
+      "log_sha256": "sha256:ff882b8fb615c66c16544a0df3f676dbab915b42f68eb945f070d9133daf5fbf",
+      "name": "cli_e2e",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/cli-candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.46555748500395566,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/cold_replay/7cd8b5c185386a024c5544af6eda6bcd3aa9d906e1bfedb5a221ae57ecbfeb01.log",
+      "log_sha256": "sha256:7cd8b5c185386a024c5544af6eda6bcd3aa9d906e1bfedb5a221ae57ecbfeb01",
+      "name": "cold_replay",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/combined.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/unit.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/cli.coverage"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.0646700490033254,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/coverage_combine/c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0.log",
+      "log_sha256": "sha256:c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0",
+      "name": "coverage_combine",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/combined.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.11513263499364257,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/changed_coverage/901abdea185d166fb93a2f5d8108a9ca2ba8721a60293e3aaeb6ffb6421a57c2.log",
+      "log_sha256": "sha256:901abdea185d166fb93a2f5d8108a9ca2ba8721a60293e3aaeb6ffb6421a57c2",
+      "name": "changed_coverage",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/experiment_7847_v681_hardware_evidence.py",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.01613099902169779,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/ruff_check/82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/experiment_7847_v681_hardware_evidence.py",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.015651357010938227,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/ruff_format/f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1.log",
+      "log_sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "name": "ruff_format",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/experiment_7847_v681_hardware_evidence.py",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "duration_s": 0.11456314497627318,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/mypy/e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce.log",
+      "log_sha256": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+      "name": "mypy",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.03275187796680257,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/scoped_spec/6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.5663895590114407,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/adversarial_verify/10ca5a062e79f6377ac92c30dd4c2f2b0a83e2bd38182a3900fc7a7ffe93af5e.log",
+      "log_sha256": "sha256:10ca5a062e79f6377ac92c30dd4c2f2b0a83e2bd38182a3900fc7a7ffe93af5e",
+      "name": "adversarial_verify",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "duration_s": 0.03200495499186218,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/strict_rows/ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/health-temp"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "duration_s": 180.16695387504296,
+      "exit_code": -15,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/validation/c044c165f035432586feb2b3797915d6/repository_health_180s/a65821a2ce515673cb6aa0486c88cb92a08326036bd9e4b780366931d8385218.log",
+      "log_sha256": "sha256:a65821a2ce515673cb6aa0486c88cb92a08326036bd9e4b780366931d8385218",
+      "name": "repository_health_180s",
+      "passed": false,
+      "timed_out": true
+    }
+  ]
+}

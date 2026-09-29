@@ -85220,3 +85220,48 @@ Given applied and shadow receipts, the reader counts only closed applied firings
 #### SCENARIO-REPORT-7845-CLI
 
 Given a private output root, the CLI runs the current reader and writes one complete JSON result. Its validation uses frozen scoped commands, real child logs, cold replay, and separate repository health.
+## REQ-REPORT-7847: Direct board custody and optional current service
+
+Exp7847 SHALL use a direct reader of the three dated board source files and
+their declared raw transcripts. It SHALL not dispatch a numbered experiment.
+It SHALL keep Exp7834's failed required coverage and full-suite health receipt
+as historical failures. The reader SHALL verify exact bytes, board roles,
+KV260 k_max<=5, PolarFire Linux CPU-only dispatch, and GateMate's unchanged
+0xffffffff physical block. An absent or unqualified Exp7846 producer SHALL
+terminate blocked with exact failed operands and null opportunity metrics.
+
+If Exp7846 is qualified, the reader SHALL use only its measured host traffic
+and times for cost and Amdahl bounds. No historical speed number SHALL fill a
+current-service operand. The result SHALL separate board continuity from
+hardware execution and leave NPU and TSU unqualified without device evidence.
+
+The task SHALL freeze the affected source and test closure and exact child
+commands before running validation. Required checks are worktree_imports,
+affected_pytest, changed_coverage, ruff_check, ruff_format, mypy,
+scoped_spec, cli_e2e, cold_replay, adversarial_verify, and strict_rows.
+A separate repository_health_180s diagnostic SHALL never count as a required
+pass. Unit and real CLI shards SHALL use identical coverage settings and
+explicit completed data files. Required failures SHALL disqualify readiness.
+Child logs SHALL be sealed after exit and replay shall rehash their bytes.
+
+### SCENARIO-REPORT-7847-BLOCKED
+
+Given authentic board bytes and no exact Exp7846 producer, the reader returns
+three board rows, a complete blocked verdict, one failed readiness operand,
+and null opportunity measurements. A conductor skip receipt is ineligible.
+
+### SCENARIO-REPORT-7847-CUSTODY
+
+Changing a board source or declared raw transcript makes continuity fail.
+The reader preserves the original failure and never probes a board.
+
+### SCENARIO-REPORT-7847-SERVICE
+
+A qualified current producer permits finite stage shares and optimistic
+whole-service upper bounds. Wrong ID, task slug in the numeric ID field,
+wrong class, flag, readiness, or invalid timing blocks those numbers.
+
+### SCENARIO-REPORT-7847-CLI
+
+The real CLI writes only to its selected private output root during E2E. Its
+cold replay reconstructs rows from source bytes and checks sealed child logs.

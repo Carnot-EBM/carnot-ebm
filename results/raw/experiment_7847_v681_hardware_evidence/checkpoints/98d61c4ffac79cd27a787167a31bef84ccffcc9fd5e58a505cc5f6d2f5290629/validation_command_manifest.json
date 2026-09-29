@@ -1,0 +1,267 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json,pathlib; names=['carnot.reporting.current_work_receipt','carnot.reporting.experiment_7847_v681_hardware_evidence']; d={n:str(pathlib.Path(importlib.import_module(n).__file__).resolve()) for n in names}; print(json.dumps({'resolved_imports':d},sort_keys=True)); assert all(pathlib.Path(p).is_relative_to(pathlib.Path('/home/ianblenke/github.com/ianblenke/carnot/python')) for p in d.values())"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "worktree_imports"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/test-temp"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/unit.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "-m",
+        "pytest",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/coverage-temp"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "name": "unit_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/cli.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "--date",
+        "20260929",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/cli-candidate.json",
+        "--evidence-only"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "cli_e2e"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/cli-candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/combined.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/unit.coverage",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/cli.coverage"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/combined.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7847_v681_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "changed_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/experiment_7847_v681_hardware_evidence.py",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/experiment_7847_v681_hardware_evidence.py",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/experiment_7847_v681_hardware_evidence.py",
+        "scripts/experiments/experiment_7847_v681_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "name": "mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7847_v681_hardware_evidence.py",
+        "tests/python/test_experiment_7847_validation.py",
+        "tests/python/test_current_work_receipt.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "scoped_spec"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "name": "strict_rows"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7847_v681_hardware_evidence/checkpoints/98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629/health-temp"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "name": "repository_health_180s"
+    }
+  ],
+  "config_hash": "sha256:50ec7e6523e8861a7ecd4fd63ca17207539b75a5ede8a3285e2779613ede34da",
+  "e2e_applicability": {
+    "E2E-001": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-002": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-003": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-004": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-005": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-006": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-007": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-008": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-009": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-010": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-011": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-012": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-013": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "E2E-014": "inapplicable: no training, sampling, native binding, or ARC execution",
+    "task_cli_e2e": "applicable: real private-output CLI and cold replay"
+  },
+  "import_call_closure": {
+    "calls": [
+      "atomic_json",
+      "canonical_hash",
+      "sha256_file",
+      "read_evidence",
+      "cold_reduce",
+      "verify_artifact"
+    ],
+    "imports": [
+      "carnot.reporting.current_work_receipt",
+      "carnot.reporting.experiment_7847_v681_hardware_evidence",
+      "scripts.adversarial_verify"
+    ]
+  },
+  "input_configuration_hash": "sha256:98d61c4ffac79cd27a787167a31bef84ccffcc9fd5e58a505cc5f6d2f5290629",
+  "required_names": [
+    "worktree_imports",
+    "affected_pytest",
+    "unit_coverage",
+    "cli_e2e",
+    "cold_replay",
+    "changed_coverage",
+    "ruff_check",
+    "ruff_format",
+    "mypy",
+    "scoped_spec",
+    "adversarial_verify",
+    "strict_rows"
+  ],
+  "source_closure": {
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7847_v681_hardware_evidence.py": "sha256:7f40aaca1d03920bba9615936b315775050b3f082bb566ea470f4a05c6a39bd9",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/experiments/experiment_7847_v681_hardware_evidence.py": "sha256:03d06af91f100257d08f829f539e5fdb38bddace4de02c87671d09bef093c7c6"
+  },
+  "task_id": "exp7847-hardware-evidence",
+  "test_closure": {
+    "tests/python/test_current_work_receipt.py": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120",
+    "tests/python/test_experiment_7847_v681_hardware_evidence.py": "sha256:44423fc302010d990187cf83242a4e1f1481c6e21d671c692661d74d4d72e29e",
+    "tests/python/test_experiment_7847_validation.py": "sha256:a0b39177a8627ea6460c236bb2787c92450c8f9cf650c5aa759ede28c5cd1f5b"
+  }
+}
