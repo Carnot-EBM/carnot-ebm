@@ -18979,3 +18979,12 @@ code |
 | 2026-09-29 02:11 UTC | Repair source-intervention import receipts and qua | OK | Deliverable already exists in repo |
 | 2026-09-29 02:11 UTC | Train source-conditioned energies and freeze calib | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7838-source-boundary.source_boundary_ready_score (actual=0 == expected=1) |
 | 2026-09-29 02:13 UTC | Measure calibrated decisions against same-informat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
+| 2026-09-29 02:13 UTC | Measure bounded Qwen source sensitivity with match | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7839-intervention-protocol.intervention_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-29 02:15 UTC | Measure delayed constraint additions and finite fe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
+| 2026-09-29 02:15 UTC | Compare disagreement abstention at matched retaine | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
+| 2026-09-29 02:15 UTC | Refine ARC generalization only from new outcome-be | OK | Deliverable already exists in repo |
+| 2026-09-29 02:15 UTC | Measure complete source-decision and durable-updat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7840-energy-fit, exp7840-energy-fit, exp7840-energy-fit) |
+| 2026-09-29 02:15 UTC | Preserve board continuity and bound traffic-sensit | OK | Deliverable already exists in repo |
+| 2026-09-29 02:15 UTC | Test a length-only baseline and source permutation | OK | Deliverable already exists in repo |
+| 2026-09-29 02:15 UTC | Cold-reduce current decisions and feedback with ty | OK | Deliverable already exists in repo |
+| 2026-09-29 02:15 UTC | Reconcile fourteen outcomes and set evidence-based | OK | Deliverable already exists in repo |
