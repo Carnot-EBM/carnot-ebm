@@ -87575,3 +87575,41 @@ Cold-reduce claims and run both terminal validators on exact final bytes after
 any verdict change. Atomic publication retains primary uniqueness. Newer nested
 sidecars must not change actual gate or document reader selection; receipts bind
 final hashes. Conductor owns ops and traceability reconciliation after this task.
+## REQ-REPORT-7951: Preserve typed missing board custody
+
+Exp7951 authenticates exact Exp7926 historical receipts without new device work.
+Missing required history and malformed board rows produce complete_blocked_*.
+Each blocker records exact path/hash, field, operator, expected and observed values.
+Missing scope or source_hash never implies fabric compatibility or placement.
+Optional Exp7950 data uses results/experiment_7950_v689_service_cost.json directly.
+Attach only eligible unflagged ready rows. Missing optional data preserves custody.
+KV260 remains quadratic Ising with k_max<=5; PolarFire remains Linux CPU only.
+GateMate retains physical/JTAG 0xffffffff. NPU and TSU remain unqualified.
+All current device and model counts are zero. Future KV260 access requires SSH kria.
+
+### SCENARIO-REPORT-7951-CUSTODY
+
+Test missing history, malformed rows, absent scope/hash, and each board alone.
+Failed custody has typed blocked rows and unknown placement, with no estimates.
+Cold replay of the actual missing-input CLI artifact succeeds without retrying inputs.
+
+### SCENARIO-REPORT-7951-WORKLOAD
+
+Map source projection, features, head forward, energy, typed policy, storage and
+serialization from exact service rows. Neural heads do not imply Ising kernels.
+Compatible measured fractions use 1/(1-f+f/100) and ideal 1/(1-f).
+For f=0 both bounds are one; for f=1 the modeled bound is 100 and the ideal
+ceiling is null with an explicit unbounded status. Missing times produce null.
+All gains are estimates with measured host times/bytes, never board or power claims.
+
+### SCENARIO-REPORT-7951-VALIDATION
+
+Freeze explicit dependencies, commands, exits, reasons, deadlines and identical
+coverage includes. All new statements require nonempty 100 percent coverage.
+Use private success, blocked, negative, replay and terminal publication roots.
+Preserve publisher uniqueness and both actual readers after newer nested sidecars.
+Run E2E-016 fixture and replay with historical date 20260929, recording 20260930
+as current execution. Run repository pytest once with bounded health receipts.
+Cold-reduce claims and inspect both exact-byte terminal validator reports.
+Owned failures disqualify readiness. Publish only checked final bytes atomically.
+Conductor owns ops and traceability reconciliation after this task.

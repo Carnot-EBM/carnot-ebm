@@ -1,0 +1,101 @@
+{
+  "candidate_sha256": "sha256:aad42f02b02ae30ddfd06f1263b8985147686a36b129eb3455f6da039b27c7f3",
+  "cold_reduction": {
+    "row_count": 3,
+    "rows_checksum": "sha256:96e269a5c55bd7c64c4cd7ee92353cfe7d318c79b6d6858dcc7a0929a5c0fbe9"
+  },
+  "flagged_adversarial": false,
+  "passed": true,
+  "reports": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json"
+      ],
+      "classification": "terminal_validator",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json"
+      ],
+      "deadline_s": 30,
+      "duration_s": 0.5706074020126835,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_logs/logs/adversarial_verify/a80657faa29e0a1c7b9ef4180a9cb861d4f9e8270a03380ab88ee8d7e4a99947.log",
+      "log_sha256": "sha256:a80657faa29e0a1c7b9ef4180a9cb861d4f9e8270a03380ab88ee8d7e4a99947",
+      "name": "adversarial_verify",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7951,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_historical_board_scope\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "required_reason": null,
+      "scope": "terminal_validator",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json"
+      ],
+      "classification": "terminal_validator",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json"
+      ],
+      "deadline_s": 30,
+      "duration_s": 0.022629555023740977,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_logs/logs/strict_rows/ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required_reason": null,
+      "scope": "terminal_validator",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7951_v689_hardware_evidence.py",
+        "--terminal-recheck",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json"
+      ],
+      "classification": "terminal_validator",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7951_v689_hardware_evidence.py --terminal-recheck /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7951_v689_hardware_evidence.py",
+        "--terminal-recheck",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_candidate.json"
+      ],
+      "deadline_s": 30,
+      "duration_s": 0.49512707901885733,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7951_v689_hardware_evidence/terminal_logs/logs/terminal_cold_replay/80097a22215da20128e2e318048deb251ca07539028baf3df8070687ce7cac53.log",
+      "log_sha256": "sha256:80097a22215da20128e2e318048deb251ca07539028baf3df8070687ce7cac53",
+      "name": "terminal_cold_replay",
+      "output_tail": "[exp7951] start host aggregation; zero model and device operations\n[exp7913] phase=cold_replay event=before_reduction elapsed_s=0.000 completed_units=0\n{\"row_count\": 3, \"rows_checksum\": \"sha256:96e269a5c55bd7c64c4cd7ee92353cfe7d318c79b6d6858dcc7a0929a5c0fbe9\"}\n[exp7913] phase=cold_replay event=after_reduction elapsed_s=0.011 completed_units=1\n",
+      "passed": true,
+      "required_reason": null,
+      "scope": "terminal_validator",
+      "timed_out": false
+    }
+  ]
+}
