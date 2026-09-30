@@ -47057,3 +47057,25 @@ Cold reduction SHALL reconstruct counts and paired differences from primitive
 four-arm rows. Tampered aggregates or shard hashes SHALL reject replay.
 Fixture agreement SHALL remain circular_positive; natural sources remain
 exposed_development and cannot certify sufficient evidence or factual truth.
+
+## REQ-VERIFY-7941: Preserve qualified training math and current custody
+
+Exp7941 SHALL reuse the qualified callable numerical runtime without changing
+math, weights or dataset. Authenticate Exp7916 primary, sidecar, source and
+transitive hashes before fixture fitting. Failed external operands produce
+complete_blocked_* with exact path, hash, field, operator and observed value.
+Freeze an executable training entrypoint and dependency manifest for Exp7943.
+Runtime readiness requires the current numerical qualification. Fixture success
+is circular_positive with zero independent samples and no decision benefit.
+
+### SCENARIO-VERIFY-7941-CUSTODY
+
+Cold subprocess replay reconstructs fixture probabilities from checkpoint and
+public bytes and rejects changed primary, checkpoint or source hashes. Missing
+or malformed external inputs remain blocked. Owned required failures disqualify
+with both readiness scores zero. Model specs and invocation counts stay empty.
+
+Exp7941 implementation reuses Exp7916's isolated callable library, performs a
+bounded fresh fixture fit, and binds checkpoint custody to the current wrapper
+and transitive source hashes. It preserves Exp7930's disqualification. Terminal
+readiness comes from current primitive receipts and measured new-source coverage.

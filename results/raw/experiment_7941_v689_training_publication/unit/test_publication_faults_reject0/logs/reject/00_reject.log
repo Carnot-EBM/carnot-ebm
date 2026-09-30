@@ -1,0 +1,36 @@
+[exp7941] phase=start completed=0 elapsed_s=0.000
+[exp7941] phase=authenticate completed=0 elapsed_s=0.002
+[exp7941] phase=rejected [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7941_v689_training_publication/unit/test_publication_faults_reject0/reject/raw/experiment_7941_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.005
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+    runner.run()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+    exec(code, main_mod.__dict__)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7941_v689_training_publication.py", line 53, in <module>
+    raise SystemExit(main())
+SystemExit: 2
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+    status = CoverageScript().command_line(argv)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+    return self.do_run(options, args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+    self.coverage.save()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+    data.write()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+    os.rename(current_filename, self._filename)
+  File "/tmp/carnot-child-results-guard-hpb1nth3/sitecustomize.py", line 76, in moved
+    return real(src, dest if dest is not None else dst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7941_v689_training_publication/.coverage.icbfl1.pid53905.XkRkd3Kx' -> '/tmp/carnot-pytest-artifacts-2scpnh2t/raw/experiment_7941_v689_training_publication/.coverage.icbfl1.pid53905.XkRkd3Kx.HmP1NFnGZkGh'

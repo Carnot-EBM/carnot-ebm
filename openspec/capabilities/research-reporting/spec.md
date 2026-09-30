@@ -87409,3 +87409,38 @@ prompt, gate, model, substrate, prior-failure, digest and authority mutations.
 Every declared read-first input exists. No absent or disqualified producer
 opens a science gate. Planning runs applicable private E2E readers and focused
 unit/lint/spec checks. Repository-wide debt remains separate and visible.
+
+## REQ-REPORT-7941: Isolate training CLI publication before another fit
+
+Exp7941 SHALL give negative, blocked, successful fixture and terminal recheck
+routes distinct publication directories. Each cold replay SHALL read the exact
+primary produced by its route. Two differently named primaries with the same
+numeric ID in one directory SHALL remain rejected by the unchanged publisher.
+Both current consumers SHALL select final primary bytes after nested sidecars
+receive newer mtimes. Historical Exp7930 failures and verdict remain unchanged.
+
+### SCENARIO-REPORT-7941-ROUTES
+
+Actual subprocesses exercise fixture fit success, missing and malformed runtime,
+runtime hash mismatch, conflicting siblings, validator rejection, terminal
+recheck and cold replay. Missing runtime publishes blocked readiness zero;
+--assert-ready exits 2 with source evidence blocked. A successful fixture must
+contain a freshly fitted head and primitive predictions, never a missing input.
+
+### SCENARIO-REPORT-7941-TERMINAL
+
+Freeze explicit files, transitive hashes, argv, expected exits and reasons,
+deadlines and identical statement coverage includes before results. Require all
+owned receipts and nonempty 100 percent new module and CLI statement coverage
+before training_publication_ready_score=1. Validate final bytes with both
+terminal validators and bind nested sidecars to the selected hash. Run E2E-015
+and E2E-016 using original fixtures and historical date 20260929. Record current
+date 20260930 and repository health separately. Ops reconciliation is assigned
+to the conductor.
+
+Exp7941 implementation: training_publication_7941.py owns private publication
+and cold reduction; training_publication_7941_run.py freezes and reduces real
+child receipts. The parameterized CLI keeps publication roots separate.
+Pytest basetemp and coverage storage use private temporary roots because the
+repository artifact guard redirects repository-local test writes. The terminal
+artifact records the corrected scope and retains the failed initial attempt.
