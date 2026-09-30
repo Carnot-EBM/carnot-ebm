@@ -11,33 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 5 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| NO_CLAIM | 8 |
 
-## experiment_7879_v684_contract_methods.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-V684 is disqualified because the staged authority is missing and required validation did not pass.
-
-## WHAT WOULD REFUTE IT
-A present staged authority, eligible passing contract rows, and passing required validation would refute the disqualification.
-
-## WAS THAT CHECKED
-Yes. The precondition and contract rows check staged authority and eligibility; the validation receipts record a required test failure.
-
-## EVIDENCE
-`honest_verdict`: `complete_disqualified_v684_required_validation`; `staged_present`: `false`; `missing_staged_authority`; `contract_ready_score`: `0`; `eligible`: `0`; `excluded`: `12`; `affected_pytest`; `passed`: `false`; `verdict_class`: `disqualified`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7880_v684_source_boundary.json
+## experiment_7894_v685_energy_fit.json
 
 **NO_CLAIM**
 
@@ -48,18 +24,27 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify. This artifact records a disqualified custody check.
+An observation showing that the artifact asserts a positive capability, readiness score, or decision benefit despite failing required prerequisite checks. Because the artifact explicitly records a disqualified outcome and makes no comparative or capability claims, there is no affirmative claim to refute.
 
 ## WAS THAT CHECKED
-No comparative refutation was applicable. The required coverage check was run and failed.
+No. The experiment was disqualified at the gate due to required check failures; consequently, no comparative evaluation of candidate efficacy or readiness was conducted.
 
 ## EVIDENCE
-`claim_scope`: `exposed_development_custody_only`; `decision_benefit`: `null`; `honest_verdict`: `complete_disqualified_required_checks`; `coverage_report`; `observed`; `passed`: `false`; `source_boundary_ready_score`: `0`
+- `"honest_verdict"`: `"complete_disqualified_required_checks"`
+- `"verdict_class"`: `"disqualified"`
+- `"energy_fit_ready_score"`: `0`
+- `"validity"`: `false`
+- `"readiness"`: `0`
+- `"decision_benefit"`: `null`
+- `"efficiency"`: `null`
+- `"probability_quality"`: `null`
+- `"retention"`: `null`
+- `"historical_required_failures"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7881_v684_intervention_protocol.json
+## experiment_7895_decision_abstention.json
 
 **NO_CLAIM**
 
@@ -70,36 +55,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Because no comparative, capability, or superiority claim is asserted, there is no scientific hypothesis to refute. If the artifact had claimed successful protocol readiness or execution validity, that would be refuted by any failing required gate check (such as coverage test failure or pytest timeouts) or circular verifier evaluation (`verifier_is_oracle` being `true`).
+There is no experimental claim to refute. A successful measurement recorded in this artifact would contradict its blocked status.
 
 ## WAS THAT CHECKED
-No comparative or model claims were evaluated (zero model calls or loads occurred). Execution mechanics were checked under `gate_check_summary` and `historical_required_failures`, and the artifact recorded required check failures (`coverage_report.passed` observed `false` and pytest timed out), resulting in a disqualified run.
+Yes, for the gate status: `gates_evaluated` records two failed gates. The artifact contains no typed-decision or abstention measurements.
 
 ## EVIDENCE
-`claim_scope`: `CPU fixture mechanics; exposed_development sources; no independent verifier claim`
-`current_work`: `Measured CPU fixture construction and validation`
-`honest_verdict`: `complete_disqualified_required_checks`
-`verdict_class`: `disqualified`
-`intervention_protocol_ready_score`: `0`
-`target_model`: `none (no pretrained model)`
-`model_calls`: `0`
-`acceptance_gate_results`:
-`decision_benefit`: `null`
-`efficiency`: `null`
-`probability_quality`: `null`
-`readiness`: `false`
-`retention`: `null`
-`validity`: `false`
-`gate_check_summary`:
-`artifact_field`: `coverage_report.passed`
-`expected`: `true`
-`observed`: `false`
-`passed`: `false`
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7894-energy-fit.energy_fit_ready_score (actual=0 == expected=1)"`; `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7882_energy_fit.json
+## experiment_7896_qwen_sufficiency.json
 
 **NO_CLAIM**
 
@@ -110,18 +77,27 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative energy-fit claim to refute. A passing upstream gate would contradict the artifact’s finding that the run was blocked.
+None. The artifact is a pipeline gate receipt recording that execution was blocked due to failed upstream gates, making no comparative or empirical claim.
 
 ## WAS THAT CHECKED
-Yes. The prerequisite gates were evaluated; the energy fit did not run.
+No; execution was halted at the pre-gate layer before the experiment ran.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"source_boundary_ready_score"`; `"expected": 1`; `"actual": 0`; `"passed": false`; `"actual": "disqualified"`; `"blocked_at_layer": "conductor_pre_gate"`
+`schema`
+`blocked_gate_check_v1`
+`status`
+`blocked`
+`honest_verdict`
+`blocked_gate_check_failed`
+`duration_s`
+`0.0`
+`blocked_at_layer`
+`conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7884_qwen_sufficiency.json
+## experiment_7897_causal_acquisition.json
 
 **NO_CLAIM**
 
@@ -132,22 +108,29 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no Qwen risk finding to refute. The title describes a planned measurement, and this artifact records a blocked gate check.
+Because the artifact is an execution gate receipt asserting no substantive empirical or comparative claim, there is no experimental hypothesis to refute; refuting the receipt's own recorded state would require demonstrating that upstream prerequisites were satisfied (`energy_fit_ready_score` equal to 1 and `verdict_class` matching the expected set) and that execution was not halted at `conductor_pre_gate`.
 
 ## WAS THAT CHECKED
-No risk measurement was performed. The prerequisite gates were checked, and four of six failed.
+No. The run was aborted at `conductor_pre_gate` before execution began, so no experimental evaluation or comparative test was conducted.
 
 ## EVIDENCE
-`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `duration_s` `0.0` `gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7880-source-boundary.source_boundary_ready_score (actual=0 == expected=1)`
+`schema`
+`blocked_gate_check_v1`
+`status`
+`blocked`
+`duration_s`
+`0.0`
+`honest_verdict`
+`blocked_gate_check_failed`
+`blocked_at_layer`
+`conductor_pre_gate`
+`gate_check_summary`
+`gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7894-energy-fit.energy_fit_ready_score (actual=0 == expected=1)`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7887_v684_arc_supervisor_delta.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7889_v684_hardware_evidence.json
+## experiment_7899_v685_arc_supervisor_delta.json
 
 **NO_CLAIM**
 
@@ -158,45 +141,112 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-None; the artifact is a receipt and custody tracking document that makes no comparative claim and explicitly disclaims any performance speedup or hardware advantage.
+The observation of non-zero supervisor outcomes, candidate firings, or populated evaluation rows generated during the delta run would refute the status of having no new outcomes, but the artifact is an observational receipt tracking upstream hashes and live state delta rather than advancing a comparative or performance claim.
 
 ## WAS THAT CHECKED
-No; no comparative hypothesis was evaluated because required checks failed and the artifact disqualified itself from live device execution.
+Yes, in `precheck_reduce_validate` and `preconditions_checked`, where upstream baseline hashes, the registry precheck, and validation suites were verified; however, the artifact lacks active model loading or an execution harness producing comparative task outcomes.
 
 ## EVIDENCE
-`hardware_speedup_claimed`: `false`  
-`hardware_advantage`: `unmeasured`  
-`board_evidence`: `historical custody`  
-`current_measurement`: `host receipt analysis only`  
-`current_device_execution_count`: `0`  
-`hardware_evidence_ready_score`: `0`  
-`workload_attachment_available`: `false`  
-`honest_verdict`: `complete_disqualified_required_checks`  
-`verdict_class`: `disqualified`  
-`arm`: `historical_accounting`  
-`status`: `historical_read_only`  
+`"claim_scope": "exposed_development; observational live receipt delta"`
+`"honest_verdict": "complete_null_no_new_supervisor_outcomes"`
+`"verdict_class": "null"`
+`"target_model": "none"`
+`"inference_substrate": "aggregation_from_upstream_artifacts"`
+`"inference_substrate_class": "no_model_load"`
+`"new_outcome_count": 0`
+`"new_live_outcome_count": 0`
+`"firings": 0`
+`"rows": []`
+`"outcome_rows": []`
+`"decision_benefit": null`
+`"efficiency": null`
+`"probability_quality": null`
+`"retention": null`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7890_v684_capstone.json
+## experiment_7900_service_cost.json
 
-**CLAIM_SUPPORTED**
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_SUPPORTED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-The V684 capstone is disqualified by failed required validation and establishes no current milestone benefit.
+no claim
 
 ## WHAT WOULD REFUTE IT
-Required validation passing, with valid eligible evidence establishing readiness or benefit, would refute the disqualification and null benefit assessment.
+There is no service-cost result or comparative claim to refute. A passing upstream gate would contradict the reported reason for blocking.
 
 ## WAS THAT CHECKED
-Yes. The artifact records required validation results and counts eligible evidence; a required check failed and the eligible count is zero.
+Yes, for the gate: the artifact records the evaluated conditions and their outcomes. No service-cost measurement was run.
 
 ## EVIDENCE
-`honest_verdict`: `complete_disqualified_required_v684_validation`; `verdict_class`: `disqualified`; `name`: `affected_pytest`, `classification`: `required`, `exit_code`: `1`, `passed`: `false`; `sample_size_budget` → `eligible`: `0`; `acceptance_gate_results` → `validity`: `false`, `readiness`: `0`; `milestone_benefit_score`: `0`.
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "energy_fit_ready_score"`; `"failed_expected": 1`; `"failed_observed": 0`; `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7901_v685_hardware_evidence.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Any observed hardware acceleration, speedup, or comparative performance advantage over a baseline demonstrated in the data rows, or an assertion of positive hardware readiness.
+
+## WAS THAT CHECKED
+No; no device-level executions were performed (`current_device_execution_count` is 0), actual workloads were absent, and required validation checks failed.
+
+## EVIDENCE
+`hardware_speedup_claimed`
+`false`
+`hardware_evidence_ready_score`
+`0`
+`current_device_execution_count`
+`0`
+`hardware_advantage`
+`unmeasured`
+`current_measurement`
+`host receipt analysis only`
+`board_evidence`
+`historical custody`
+`arm`
+`historical_accounting`
+`status`
+`historical_read_only`
+`honest_verdict`
+`complete_disqualified_required_checks`
+`verdict_class`
+`disqualified`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7902_v685_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative benefit claim to refute. The reported disqualification would be contradicted if the required checks passed and the required producers supplied qualified evidence.
+
+## WAS THAT CHECKED
+Yes for the disqualification status: the gate checks and failure records show failed required checks and blocked producers. The artifact does not assert an independent benefit.
+
+## EVIDENCE
+`honest_verdict` `complete_disqualified_required_checks`; `verdict_class` `disqualified`; `independent_benefit` `null`; `decision` `blocked`; `capstone_execution_ready_score` `0`
 
 ## RECOMMENDATION
 KEEP

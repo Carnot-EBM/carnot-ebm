@@ -48649,3 +48649,91 @@ statements, intervention coverage of 302/304, and tests that require a staging
 file after activation removes it. These are execution defects, not negative
 scientific findings. Repair and qualify the existing code paths before fitting;
 retain the historical artifacts and all required-check determinations.
+
+## V686 planning review — 2026-09-29 (recorded before design)
+
+The review searched all eight program topics and checked all six secondary
+sources. Dates below come from primary pages. Findings are author reports.
+Previously indexed methods are rechecks, not new discoveries.
+
+### Promising methods and their limits
+
+- **Delayed confidence updates:** [El Halabi and Brandt, Adaptive Conformal
+  Inference Under Delayed Feedback](https://arxiv.org/abs/2609.07251),
+  September 7, 2026. The [full text](https://arxiv.org/html/2609.07251v1),
+  Sections 4–5, separates feedback delay, temporal dependence and local
+  coverage error. Its interleaved update and delay-to-memory diagnostic
+  motivate a small experiment on frozen Carnot predictions with explicit
+  feedback release times. Measure set size as well as coverage, so accepting
+  every label cannot count as success. This is a binary-classification
+  adaptation of a forecasting method. Do not transfer its theorem to an
+  exposed, finite development stream or assume that its ratio predicts all
+  kinds of drift. Estimate any dependence scale from past feedback only.
+- **Verification capacity:** [VEX-Bench](https://arxiv.org/abs/2609.35028),
+  September 28, 2026, discovered through the
+  [Hugging Face paper page](https://huggingface.co/papers/2609.35028).
+  The [primary text](https://arxiv.org/html/2609.35028v1) separates screening
+  dimensions and verification effort. Carry that distinction into service
+  profiling: report time per processed case, accepted case and caught error,
+  together with false accepts and abstentions. Do not reproduce its LLM-judge
+  scale as a truth oracle or create a misinformation-generation benchmark.
+- **Verify–repair–reselect:** [LLM-as-an-Improver](https://arxiv.org/abs/2609.19515),
+  September 17, 2026. Retaining the original winner while adding repaired
+  candidates is a useful later control against harmful repair. Defer another
+  repair-generation experiment until the current source verifier has measured
+  value; the proposed milestone does not broaden the candidate pool.
+- **Fresh ARM–EBM citation:** [d-OPD](https://arxiv.org/abs/2609.35362),
+  September 2026, concerns future-aware distillation for block diffusion
+  models. It is a future Phase-3 lead, not a reason to train or replace the
+  mandated local autoregressive generator.
+
+### Requested topic coverage
+
+| Topic | Primary source checked | Consequence |
+|---|---|---|
+| EBM verification and reasoning | [EBT](https://arxiv.org/abs/2507.02092), 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), 2025/2026; [distributional EBM](https://arxiv.org/abs/2605.18871), 2026 | Keep normalized risk and exact checking distinct. No revival of the retired external-text reranker. |
+| Neural constraint satisfaction | [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), July 2026; [certified constraint reasoning position](https://arxiv.org/abs/2608.14569), 2026 | Solver difficulty is not a substitute for natural-model error headroom. Certification applies only to encoded constraints. |
+| Ising applications in ML | [FPGA decomposition](https://arxiv.org/abs/2602.15985), February 2026 | Measure preprocessing and transport, not only the Ising kernel. |
+| Hallucination detection | [Semantic Illusion](https://arxiv.org/abs/2512.15068), December 2025; VEX-Bench above | Preserve natural labels and source-isolation controls; embedding similarity alone is insufficient evidence. |
+| KAN | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026; [KAC](https://arxiv.org/abs/2503.21076), March 2025 | Local spline parameters motivate a future hardware path, not a retention guarantee. Avoid an unchanged importance-anchor rerun. |
+| Energy-guided generation | [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 2026; [unified diffusion energy](https://arxiv.org/abs/2606.09159), June 2026 | A useful reward is a prerequisite. Keep the generator fixed while testing evidence sensitivity. |
+| Accelerated sampling | FPGA decomposition; [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Sparse topology and FPGA companion make host/transfer cost relevant. Vendor projections are not Carnot timings. |
+| Continual constraint learning | Delayed ACI above; [Continual Calibration](https://arxiv.org/abs/2604.23987), April 2026, retained from the previous review | Test future decision benefit and local uncertainty retention separately. |
+
+### Secondary-source receipts
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and verifier records. The
+  [EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) identifies ICLR 2026
+  publication. Its forum returned a browser challenge. An indexed
+  [NRGPT PDF](https://openreview.net/pdf?id=B3Muyi2zgo) provides a separate
+  causal-energy direction; no new implementation depends on this lead.
+- **Semantic Scholar:** bounded citation requests to
+  `graph/v1/paper/ARXIV:<id>/citations?fields=title,year,externalIds,url&limit=20`
+  returned 20 EBT records with `next=20`, and nine ARM–EBM records with no
+  next marker. EBT coverage is partial. Followed the constraint-hardness and
+  d-OPD leads to arXiv. These are returned records, not a complete citation census.
+- **Hugging Face:** verification search exposed VEX-Bench, LLM-as-an-Improver
+  and No Free Checker. The first two were followed to primary abstracts.
+  Popularity and generated feed summaries are not research evidence.
+- **GitHub:** weekly Python and Rust trending pages were checked; returned
+  crawls were two weeks old, so no current rank is established. Direct
+  author repositories [EBT](https://github.com/alexiglad/EBT) and
+  [KAC](https://github.com/Ethanhuhuhu/KAC) were readable. No dependency changed.
+- **Extropic:** checked the writing index and Z1T article. Sparse programmable
+  sampling and the companion processor inform workload accounting. Access to
+  a Carnot TSU remains unqualified.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The architecture description does not supply reproducible weights, a
+  training recipe or a local comparison protocol.
+
+### Local evidence to preserve
+
+V685 produced two circular qualifications (Exp7891/7892), a valid zero-new-ARC-
+outcomes result (Exp7899), four disqualified producers and five skipped science
+branches. Exp7894 did fit heads and write prediction rows, but its required
+unscoped spec check failed. Those rows are exposed, disqualified development
+work until a new, prospectively scoped producer qualifies its own execution.
+Exp7893 covered 418/512 statements and failed formatting. Exp7901 put pytest
+scratch under results, triggering guarded cross-filesystem publication errors.
+Exp7902 covered 243/377 statements. Address those exact defects. Reuse the
+qualified source boundary rather than writing another version of its producer.

@@ -86483,3 +86483,38 @@ E2E-016 uses the date on fixture and replay routes. Measured combined coverage
 of changed code SHALL be 100 percent. Exact terminal bytes SHALL pass the
 adversarial and strict row validators before atomic publication. The report
 keeps G1-G4, PRD gap decisions and historical failure scopes separate.
+
+## REQ-REPORT-PLAN-686: Stage an exact research milestone contract
+
+The V686 planning artifacts SHALL declare milestone 2026.09.686 and the same
+12 ordered tasks, exp7903 through exp7914, across four phases. The design
+SHALL bind each task ID, title, phase, deliverable, model, substrate and gate,
+and a canonical SHA-256 over the complete YAML task list. The predecessor
+V685 design SHALL remain available unchanged. Planning SHALL leave the active
+roadmap and research conductor unchanged.
+
+Every prompt SHALL contain CONTEXT, EXISTING CODE TO READ FIRST, TASK,
+numbered CONCRETE STEPS, principle-annotated REQUIRED ARTIFACT FIELDS, a Run
+command, and the push/conductor prohibitions. Numbered steps SHALL require
+flushed phase and long-call progress, heartbeats within 60 seconds, and
+multiple tool calls for files over about 200 lines. Gate fields SHALL appear
+with identical spelling in earlier current producers. Repeated failure scopes
+SHALL carry all four prior-failure fields with same-verdict retirement true.
+
+### SCENARIO-REPORT-PLAN-686-CONTRACT
+
+Independent planning validation compares the table, JSON contract and YAML.
+Mutations to task count, order, deliverable, phase, model, substrate, gate
+producer/field, prompt or lineage SHALL fail. Staged and active authority
+SHALL remain distinct; missing staging after legitimate activation is allowed
+only with the frozen current-task digest and matching actual active authority.
+
+### SCENARIO-REPORT-PLAN-686-SCOPE
+
+The plan SHALL include calibrated decision training, continuous constraint
+acquisition, delayed-feedback calibration, an ARC generalization obligation
+and hardware continuity. Only the bounded local-model task SHALL declare
+unsloth/Qwen3.8-27B-GGUF and model_bounded_generation. Qualification SHALL not
+imply science benefit. Exposed development data SHALL not close the independent
+oracle-distinct gap. New validation scopes SHALL be fixed before execution;
+historical required failures SHALL remain failures.

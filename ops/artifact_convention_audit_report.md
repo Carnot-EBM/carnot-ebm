@@ -11,7 +11,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 |---|---|
 | CHECKABLE | 8 |
 
-## experiment_7879_v684_contract_methods.json
+## experiment_7894_v685_energy_fit.json
 
 **CHECKABLE**
 
@@ -19,7 +19,23 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The validation run is disqualified and fails the contract gate because the staged authority file `research-roadmap-next.yaml` is missing.
+The run completed but was disqualified by required-check failures, with `energy_fit_ready_score` of 0.
+
+## WHAT IS MISSING
+nothing; `historical_required_failures` names failed checks and records their exit codes, and `rows` contains per-unit metrics.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7895_decision_abstention.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the conductor pre-gate because upstream dependency exp7894-energy-fit failed readiness and verdict gate checks.
 
 ## WHAT IS MISSING
 nothing
@@ -27,7 +43,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7880_v684_source_boundary.json
+## experiment_7896_qwen_sufficiency.json
 
 **CHECKABLE**
 
@@ -35,23 +51,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Experiment 7880 was disqualified because the required coverage check failed: it measured 22% against a 100% threshold.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` and `observed_child_commands` identify `coverage_report`, its failed status, exit code, measured coverage, and threshold.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7881_v684_intervention_protocol.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The run was disqualified because a required validation check failed (`coverage_report.passed` observed false vs. expected true).
+The experiment was blocked at the conductor pre-gate because upstream dependency `exp7893-intervention-protocol` failed gate checks (`intervention_protocol_ready_score` was 0 instead of 1, and `verdict_class` was `disqualified`).
 
 ## WHAT IS MISSING
 nothing
@@ -59,7 +59,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7882_energy_fit.json
+## experiment_7897_causal_acquisition.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at conductor pre-gate because upstream dependency exp7894 failed its readiness and verdict gates.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7899_v685_arc_supervisor_delta.json
 
 **CHECKABLE**
 
@@ -75,7 +91,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7884_qwen_sufficiency.json
+## experiment_7900_service_cost.json
 
 **CHECKABLE**
 
@@ -83,7 +99,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked because four of six upstream gates failed.
+The experiment was blocked at the conductor pre-gate because upstream experiment exp7894-energy-fit failed its readiness gate checks.
 
 ## WHAT IS MISSING
 nothing
@@ -91,7 +107,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7887_v684_arc_supervisor_delta.json
+## experiment_7901_v685_hardware_evidence.json
 
 **CHECKABLE**
 
@@ -99,15 +115,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The run was disqualified because required checks failed; it claims no measured hardware benefit.
 
 ## WHAT IS MISSING
-nothing
+nothing — `observed_child_commands` identifies the failed checks and records their `actual_exit` and `expected_exit` values, even though `gate_check_summary` is empty.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7889_v684_hardware_evidence.json
+## experiment_7902_v685_capstone.json
 
 **CHECKABLE**
 
@@ -115,23 +131,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run claims no current hardware execution or measured hardware advantage, and reports disqualification due to required checks.
-
-## WHAT IS MISSING
-nothing; `board_rows` records the board statuses, `board_rows.GateMate.blocker` records `0xffffffff`, and `historical_required_failures` and `historical_failures` identify failed checks and observed results.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7890_v684_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capstone is disqualified with readiness score 0 because required validation and upstream gates failed.
+The capstone is disqualified because required upstream evidence and validation checks failed.
 
 ## WHAT IS MISSING
 nothing

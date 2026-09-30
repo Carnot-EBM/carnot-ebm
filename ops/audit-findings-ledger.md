@@ -260,3 +260,7 @@ of truth, not this line.)
 | 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_check_terminal_prefix_vs_partial_class | SILENT_NON_FIRING | OPEN | |
 | 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_arc_live_search_win | SILENT_NON_FIRING | OPEN | |
 | 2026-09-29 | qa_layer_authenticity_audit | adversarial_verify.py::_has_measured_arc_live_metric | SILENT_NON_FIRING | OPEN | |
+| 2026-09-30 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_intrinsic_reward_exploration_win | SILENT_NON_FIRING | OPEN | |
+| 2026-09-30 | qa_layer_authenticity_audit | adversarial_verify.py::_has_measured_intrinsic_reward_downstream_delta | SILENT_NON_FIRING | OPEN | |
+| 2026-09-30 | qa_layer_authenticity_audit | adversarial_verify.py::_has_rising_intrinsic_reward_magnitude | SILENT_NON_FIRING | OPEN | |
+| 2026-09-30 | qa_layer_authenticity_audit | adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence | SILENT_NON_FIRING | OPEN | |
