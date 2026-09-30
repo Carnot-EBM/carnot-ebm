@@ -86768,3 +86768,36 @@ Parse both authorities with the existing roadmap readers. Verify schema,
 gate fields, retirement records, ordered task identity and the complete digest.
 Reject private mutations to IDs, order, deliverables, gate fields and prompts.
 Keep the active roadmap and conductor byte-identical. Runtime experiments remain planned.
+
+## REQ-REPORT-7915-V687: Bind thirteen tasks and historical validation dates
+
+Exp7915 SHALL bind the visible V687 table, machine JSON and full-task digest
+to separately read staging and active authority. Matching active authority
+permits consumed or later staging, without replacing missing staged bytes.
+The reused lifecycle SHALL default to twelve tasks and accept an explicit thirteen.
+Source custody SHALL authenticate Exp7892 and its 640 families, 604 eligible
+families and 36 exclusions directly. Custody is separate from contract readiness.
+The receipt SHALL preserve historical required failures and make no science claim.
+
+### SCENARIO-REPORT-7915-AUTHORITY
+
+Private twelve-task and thirteen-task fixtures check matching, preactivation,
+consumed and later staging. Twelve mutations exercise order, prompt, failure
+history, gates, count, date, digest, model, compute class and source drift.
+Cold replay SHALL reject changed primitives, counts, identities or snapshots.
+
+### SCENARIO-REPORT-7915-DATES
+
+Both E2E-016 routes SHALL use historical fixture date 20260929. Execution date
+remains 20260930. Wrong-date calls SHALL fail with run_date_mismatch. E2E-015
+and private E2E-018 SHALL preserve historical assertions after rollover.
+
+### SCENARIO-REPORT-7915-VALIDATION
+
+Freeze argv, dependencies, expected exits, reasons, deadlines and coverage
+includes before outcomes. Private unit, CLI, rejection, replay and terminal
+checks SHALL cover every new statement. Require scoped Ruff, strict mypy and
+explicit affected spec coverage. Preserve repository debt separately. Seal
+logs after exit, bind validators to final bytes and publish atomically.
+Freeze fragility groups, masks and delayed-ACI budgets before future outcomes.
+External absence SHALL block; owned failures SHALL disqualify with readiness zero.

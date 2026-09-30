@@ -35,9 +35,11 @@ CONSUMERS = [
 ]
 
 
-def dependency_hashes(root: Path) -> dict[str, str]:
+def dependency_hashes(root: Path, *, paths: list[str] | None = None) -> dict[str, str]:
     """Follow local imports so changed helpers invalidate a frozen validation closure."""
-    pending = [root / item for item in CHANGED + TESTS + CONSUMERS]
+    pending = [
+        root / item for item in (paths if paths is not None else CHANGED + TESTS + CONSUMERS)
+    ]
     found = {}
     while pending:
         path = pending.pop()
@@ -269,7 +271,11 @@ def run_check(
         [command],
         log_dir=private / "logs",
         heartbeat_s=heartbeat_s,
-        extra_env={"PYTHONPATH": "python:.", "JAX_PLATFORMS": "cpu"},
+        extra_env={
+            "PYTHONPATH": "python:.",
+            "JAX_PLATFORMS": "cpu",
+            "COVERAGE_FILE": str(private / ".coverage.repository"),
+        },
     )[0]
     source = root / row["log_path"]
     sealed = durable / f"{spec['name']}-{row['log_sha256'][7:]}.log"
@@ -285,7 +291,7 @@ def run_check(
     }
 
 
-def coverage_complete(report: Path) -> bool:
+def coverage_complete(report: Path, *, includes: list[str] | None = None) -> bool:
     """Require nonempty and complete statement evidence for each measured file."""
     if not report.is_file():
         return False
@@ -295,7 +301,7 @@ def coverage_complete(report: Path) -> bool:
         and files[name]["summary"]["num_statements"] > 0
         and files[name]["summary"]["num_statements"] == files[name]["summary"]["covered_lines"]
         and not files[name]["missing_lines"]
-        for name in CHANGED
+        for name in (includes if includes is not None else CHANGED)
     )
 
 
@@ -360,7 +366,7 @@ def publish(
         artifact["flagged_adversarial"] = not reports[0]["passed"]
         artifact["gate_check_summary"].append(
             {
-                "upstream_id": "exp7903-terminal-validation",
+                "upstream_id": f"exp{artifact.get('experiment_id', 7903)}-terminal-validation",
                 "path": str(candidate_path),
                 "hash": digest,
                 "artifact_field": "validators.passed",
@@ -371,27 +377,57 @@ def publish(
         )
 
 
-def execute(root: Path, args: Any, private: Path) -> dict[str, Any]:
+def execute(
+    root: Path,
+    args: Any,
+    private: Path,
+    *,
+    methods_module: Any = None,
+    prepare_fn: Any = None,
+    manifest_fn: Any = None,
+    coverage_fn: Any = None,
+    experiment_id: int = 7903,
+    count: int = 12,
+) -> dict[str, Any]:
     """Freeze inputs and methods before checks, using private scratch for all children."""
     from carnot.reporting import v686_contract_methods as methods
 
+    methods = methods_module or methods
+    prepare_call = prepare_fn or prepare
+    manifest_call = manifest_fn or manifest
+    coverage_call = coverage_fn or coverage_complete
     started = time.monotonic_ns()
-    print("[exp7903] phase=start elapsed_s=0 completed_units=0", flush=True)
-    prepare(root, private)
+    print(f"[exp{experiment_id}] phase=start elapsed_s=0 completed_units=0", flush=True)
+    prepare_call(root, private)
     durable = args.raw.parent
     assessment = methods.assess(
         args.design, args.staged, args.active, durable / "authority_snapshots"
     )
     custody = methods.source_custody(args.source, methods.SOURCE_SHA256)
     print(
-        f"[exp7903] phase=resolved_inputs elapsed_s={(time.monotonic_ns() - started) / 1e9:.3f} completed_units=3",
+        f"[exp{experiment_id}] phase=resolved_inputs elapsed_s={(time.monotonic_ns() - started) / 1e9:.3f} completed_units=3",
         flush=True,
     )
     freeze = methods.method_freeze(root)
-    frozen = manifest(root, private)
+    frozen = manifest_call(root, private)
+    frozen["input_hashes"] = {
+        "authorities": assessment["authority_snapshots"],
+        "source_custody": custody["hashes"],
+    }
     manifest_path = durable / "validation_command_manifest.json"
     atomic_json(manifest_path, frozen)
     atomic_json(durable / "method_freeze.json", freeze)
+    checkpoint_key = (
+        methods.shared.canonical_hash(frozen) if methods_module else methods.canonical_hash(frozen)
+    )
+    atomic_json(
+        durable / f"checkpoint-{checkpoint_key[7:]}.json",
+        {
+            "status": "inputs_and_commands_frozen",
+            "manifest_sha256": sha256_file(manifest_path),
+            "method_freeze_sha256": sha256_file(durable / "method_freeze.json"),
+        },
+    )
     controls = methods.mutations(
         private / "design.md", private / "active.yaml", args.source, private / "mutations"
     )
@@ -406,8 +442,8 @@ def execute(root: Path, args: Any, private: Path) -> dict[str, Any]:
                 "name": "per_file_statement_coverage",
                 "argv": ["coverage_json_reduction", str(report)],
                 "expected_exit": 0,
-                "actual_exit": int(not coverage_complete(report)),
-                "passed": coverage_complete(report),
+                "actual_exit": int(not coverage_call(report)),
+                "passed": coverage_call(report),
                 "deadline_s": 0,
             }
         )
@@ -436,7 +472,7 @@ def execute(root: Path, args: Any, private: Path) -> dict[str, Any]:
         value = json.loads(args.output.read_text())
         atomic_json(args.raw, methods.primitive_rows(value))
     print(
-        f"[exp7903] phase=published elapsed_s={(time.monotonic_ns() - started) / 1e9:.3f} completed_units=12",
+        f"[exp{experiment_id}] phase=published elapsed_s={(time.monotonic_ns() - started) / 1e9:.3f} completed_units={count}",
         flush=True,
     )
     return value

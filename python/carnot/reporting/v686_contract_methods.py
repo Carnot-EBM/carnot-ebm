@@ -46,25 +46,42 @@ def operand(
     }
 
 
-def assess(design: Path, staged: Path, active: Path, snapshots: Path) -> dict[str, Any]:
+def assess(
+    design: Path,
+    staged: Path,
+    active: Path,
+    snapshots: Path,
+    *,
+    milestone: str = MILESTONE,
+    first_id: int = 7903,
+    count: int = 12,
+) -> dict[str, Any]:
     """Require real design authority before asking the versioned lifecycle to bind it."""
     text = design.read_text() if design.is_file() else ""
     required = {
         "task_table": "## Exact task contract",
-        "machine_contract": "V686_TASK_CONTRACT_START",
+        "machine_contract": f"V{milestone.rsplit('.', 1)[-1]}_TASK_CONTRACT_START",
         "canonical_tasks_sha256": r"Canonical full-task SHA-256: `([0-9a-f]{64})`",
     }
     failures = [
-        operand(design, key, "present in design", None, "V686_authority")
+        operand(
+            design, key, "present in design", None, f"V{milestone.rsplit('.', 1)[-1]}_authority"
+        )
         for key, pattern in required.items()
         if re.search(pattern, text) is None
     ]
     if not failures:
         try:
             result = lifecycle.assess_authorities(
-                design, staged, active, snapshots, milestone=MILESTONE, first_id=7903
+                design,
+                staged,
+                active,
+                snapshots,
+                milestone=milestone,
+                first_id=first_id,
+                count=count,
             )
-            _, machine = lifecycle.parse_design(text, milestone=MILESTONE)
+            _, machine = lifecycle.parse_design(text, milestone=milestone)
             if lifecycle.tasks_digest(machine) != result["canonical_tasks_sha256"]:
                 result["gate_check_summary"].append(
                     operand(
@@ -72,21 +89,21 @@ def assess(design: Path, staged: Path, active: Path, snapshots: Path) -> dict[st
                         "design_tasks_sha256",
                         result["canonical_tasks_sha256"],
                         lifecycle.tasks_digest(machine),
-                        "V686_authority",
+                        f"V{milestone.rsplit('.', 1)[-1]}_authority",
                     )
                 )
                 result["activated"] = False
             for failure in result["gate_check_summary"]:
-                failure["upstream_id"] = "V686_authority"
+                failure["upstream_id"] = f"V{milestone.rsplit('.', 1)[-1]}_authority"
             return result
-        except (ValueError, IndexError, KeyError) as error:
+        except (ValueError, IndexError, KeyError, TypeError, yaml.YAMLError) as error:
             failures.append(
                 operand(
                     design,
                     "design_schema",
                     "complete parseable contract",
                     str(error),
-                    "V686_authority",
+                    f"V{milestone.rsplit('.', 1)[-1]}_authority",
                 )
             )
     observed = {}
@@ -94,7 +111,19 @@ def assess(design: Path, staged: Path, active: Path, snapshots: Path) -> dict[st
     for role, path in (("design", design), ("staged", staged), ("active", active)):
         raw = path.read_bytes() if path.is_file() else None
         observed[role] = lifecycle._snapshot(path, raw, snapshots, role)
-        values[role] = yaml.safe_load(raw) if raw is not None and role != "design" else None
+        try:
+            values[role] = yaml.safe_load(raw) if raw is not None and role != "design" else None
+        except yaml.YAMLError as error:
+            values[role] = None
+            failures.append(
+                operand(
+                    path,
+                    "authority_yaml",
+                    "parseable YAML",
+                    str(error),
+                    f"V{milestone.rsplit('.', 1)[-1]}_authority",
+                )
+            )
     active_value = values["active"] or {}
     tasks = active_value.get("tasks", [])
     rows = [
@@ -114,9 +143,9 @@ def assess(design: Path, staged: Path, active: Path, snapshots: Path) -> dict[st
             "excluded": False,
             "effective_independent_groups": 0,
         }
-        for i, task in enumerate(tasks[:12], 1)
+        for i, task in enumerate(tasks[:count], 1)
     ]
-    while len(rows) < 12:
+    while len(rows) < count:
         rows.append(
             {
                 "unit_id": f"unconfirmed-{len(rows) + 1}",
@@ -346,13 +375,14 @@ def mutations(design: Path, active: Path, source: Path, private: Path) -> list[d
     return rows
 
 
-def method_freeze(root: Path) -> dict[str, Any]:
+def method_freeze(root: Path, *, tasks: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     """Freeze design methods without claiming that future experiments have executed."""
     import gzip
 
-    tasks = yaml.safe_load(
-        gzip.decompress((root / "tests/fixtures/v686/active.yaml.gz").read_bytes())
-    )["tasks"]
+    if tasks is None:
+        tasks = yaml.safe_load(
+            gzip.decompress((root / "tests/fixtures/v686/active.yaml.gz").read_bytes())
+        )["tasks"]
     return {
         "authority_status": "active_only_unconfirmed_until_design_binding",
         "source_sha256": SOURCE_SHA256,
@@ -534,12 +564,12 @@ def verdict(activated: bool, source_ready: bool, checks_passed: bool) -> tuple[s
     return "complete_circular_positive_contract_methods", "circular_positive", 1
 
 
-def contract_budget(rows: list[dict[str, Any]]) -> dict[str, int]:
+def contract_budget(rows: list[dict[str, Any]], *, count: int = 12) -> dict[str, int]:
     """Count contract attempts at their own unit, separate from source families."""
     completed = sum(row["status"] == "completed" for row in rows)
     return {
-        "intended": 12,
-        "eligible": 12,
+        "intended": count,
+        "eligible": count,
         "started": completed,
         "completed": completed,
         "failed": sum(row["status"] == "completed" and not row["matched"] for row in rows),
@@ -561,6 +591,9 @@ def candidate(
     ended_ns: int,
     *,
     fixture: bool = False,
+    experiment_id: int = 7903,
+    milestone: str = MILESTONE,
+    count: int = 12,
 ) -> dict[str, Any]:
     """Build the full terminal schema while keeping historical failure receipts separate."""
     import os
@@ -577,7 +610,7 @@ def candidate(
             "required_check.passed",
             True,
             row["passed"],
-            "exp7903-owned-validation",
+            f"exp{experiment_id}-owned-validation",
         )
         for row in required + controls
         if not row["passed"]
@@ -605,7 +638,7 @@ def candidate(
             }
         )
     receipt = build_current_work_receipt(
-        run_id="exp7903-20260930",
+        run_id=f"exp{experiment_id}-20260930",
         owner_pid=os.getpid(),
         events=[],
         inference_substrate="aggregation_from_upstream_artifacts",
@@ -619,7 +652,7 @@ def candidate(
                 "phase": "authority_source_and_validation",
                 "start_s": 0,
                 "end_s": (ended_ns - started_ns) / 1e9,
-                "completed_units": 12 + len(receipts),
+                "completed_units": count + len(receipts),
             }
         ],
     )
@@ -641,9 +674,9 @@ def candidate(
     )
     value = {
         **receipt,
-        "experiment_id": 7903,
-        "task_id": "exp7903-contract-methods",
-        "milestone": MILESTONE,
+        "experiment_id": experiment_id,
+        "task_id": f"exp{experiment_id}-contract-methods",
+        "milestone": milestone,
         "run_date": "20260930",
         "honest_verdict": honest,
         "verdict_class": verdict_class,
@@ -651,7 +684,7 @@ def candidate(
         "gate_check_summary": failures,
         "rows": assessment["contract_rows"],
         "contract_rows": assessment["contract_rows"],
-        "sample_size_budget": contract_budget(assessment["contract_rows"]),
+        "sample_size_budget": contract_budget(assessment["contract_rows"], count=count),
         "source_sample_size_budget": custody["budget"],
         "source_custody_rows": custody["rows"],
         "source_custody_ready": custody["ready"],
@@ -761,7 +794,7 @@ def primitive_rows(value: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def cold_replay(path: Path, raw: Path) -> bool:
+def cold_replay(path: Path, raw: Path, *, experiment_id: int = 7903, count: int = 12) -> bool:
     """Reduce saved primitive checks and family counts without rerunning producers."""
     if not path.is_file() or not raw.is_file():
         return False
@@ -772,13 +805,13 @@ def cold_replay(path: Path, raw: Path) -> bool:
             if not saved.is_file() or sha256_file(saved) != snapshot["sha256"]:
                 return False
     return (
-        value.get("experiment_id") == 7903
-        and value.get("task_id") == "exp7903-contract-methods"
+        value.get("experiment_id") == experiment_id
+        and value.get("task_id") == f"exp{experiment_id}-contract-methods"
         and primitive_rows(value) == primitive
-        and len(value["rows"]) == 12
+        and len(value["rows"]) == count
         and value["contract_rows"] == value["rows"]
         and all(row["absolute_metric"] == int(all(row["checks"].values())) for row in value["rows"])
-        and value["sample_size_budget"] == contract_budget(primitive["rows"])
+        and value["sample_size_budget"] == contract_budget(primitive["rows"], count=count)
         and value["source_sample_size_budget"]
         == boundary.budget(primitive["source_custody_rows"], 640)
         and value["contract_ready_score"]

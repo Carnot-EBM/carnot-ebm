@@ -80,6 +80,7 @@ def assess_authorities(
     *,
     milestone: str = MILESTONE,
     first_id: int = 7891,
+    count: int = COUNT,
 ) -> dict[str, Any]:
     """Accept activation only when active tasks match the complete design digest."""
     design_raw = design.read_bytes()
@@ -99,14 +100,14 @@ def assess_authorities(
     failures: list[dict[str, Any]] = []
     active_tasks = active_value.get("tasks", []) if active_value else []
     staged_tasks = staged_value.get("tasks", []) if staged_value else []
-    design_ok = len(table) == len(machine) == COUNT
+    design_ok = len(table) == len(machine) == count
     if not design_ok:
         failures.append(
             _failure(
                 design,
                 snapshots["design"]["sha256"],
                 "task_count",
-                COUNT,
+                count,
                 [len(table), len(machine)],
             )
         )
@@ -128,9 +129,9 @@ def assess_authorities(
                 active_digest,
             )
         )
-    if len(active_tasks) != COUNT:
+    if len(active_tasks) != count:
         failures.append(
-            _failure(active, snapshots["active"]["sha256"], "task_count", COUNT, len(active_tasks))
+            _failure(active, snapshots["active"]["sha256"], "task_count", count, len(active_tasks))
         )
     staged_current = staged_value is not None and staged_value.get("milestone") == milestone
     staged_digest = tasks_digest(staged_tasks) if staged_current else None
@@ -145,7 +146,7 @@ def assess_authorities(
             )
         )
     rows: list[dict[str, Any]] = []
-    for index in range(COUNT):
+    for index in range(count):
         expected = machine[index] if index < len(machine) else {}
         shown = table[index] if index < len(table) else {}
         actual = (

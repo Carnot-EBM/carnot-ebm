@@ -6256,3 +6256,16 @@ method custody, not scientific benefit or fresh generalization.
 # V682 method ingestion — 2026-09-29
 
 Read the primary method sections of [Verification Without Sufficiency](https://arxiv.org/html/2608.00585v1), [RECAP](https://arxiv.org/html/2606.06698v4), [Retrieval-warmed EBR](https://arxiv.org/html/2606.26476v1), and [FPGA/ASIC co-design](https://arxiv.org/html/2602.15985v2). The [V682 method map](docs/research-notes/v682-method-map.md) fixes local contrasts, family bootstrap, multiplicity, roles and limits before Exp7851 measurement. These papers motivate controls; they do not supply local scientific outcomes or hardware evidence.
+
+## 2026-09-30 — Exp7915 V687 methods INGESTED
+
+The V687 reference review is ingested. The focused recheck accessed the
+[fragility method and appendix](https://arxiv.org/html/2609.00366v1) and
+[Delayed ACI methods](https://arxiv.org/html/2609.07251v1). The fragility page
+retains its June 29 date despite the September identifier.
+Exp7915 freezes public feature groups, fit-only imputation, separate seeded
+stress draws and family budgets. It also freezes issued-state ACI queues at
+21, 24 and 36 slots after the upstream twenty-slot release schedule.
+These are prospective empirical controls. Oracle agreement and exposed
+natural cohorts do not establish independent benefit or a coverage theorem.
+The executable freeze preserves adoption and deferral decisions before outcomes.
