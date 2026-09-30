@@ -86518,3 +86518,42 @@ unsloth/Qwen3.8-27B-GGUF and model_bounded_generation. Qualification SHALL not
 imply science benefit. Exposed development data SHALL not close the independent
 oracle-distinct gap. New validation scopes SHALL be fixed before execution;
 historical required failures SHALL remain failures.
+
+## REQ-REPORT-7903-V686: Bind methods and reuse qualified source custody
+
+The producer SHALL reuse the V685 lifecycle with explicit version inputs.
+It SHALL read staged and active bytes separately. A missing design table,
+machine contract or canonical digest SHALL yield complete_blocked_authority.
+It SHALL never reconstruct missing design authority from the active roadmap.
+Twelve task rows SHALL retain all lineage, prompts, models and gates.
+Consumed or later staging SHALL be accepted only with matching active authority.
+Source readiness SHALL remain separate from contract readiness. The producer
+SHALL authenticate Exp7892, its receipt logs, manifest and six raw shards.
+It SHALL preserve 640 intended, 604 eligible and 36 excluded source families.
+Only the qualified public projection SHALL supply predictor bytes.
+Methods SHALL freeze delayed confidence, service denominators and science budgets.
+Required owned failures SHALL disqualify; external prerequisites SHALL block.
+Terminal validator sidecars SHALL bind the exact atomically published bytes.
+Coverage SHALL include real CLI success, expected failure and cold replay.
+Historical verdicts and repository debt SHALL remain recorded.
+
+### SCENARIO-REPORT-7903-AUTHORITY
+
+Private immutable authorities SHALL test consumed staging, later staging,
+stale active bytes, prompt drift, lineage deletion, model and substrate drift.
+Missing design operands SHALL name their actual path, hash and field.
+Neither staging nor active authority SHALL be activated by this producer.
+
+### SCENARIO-REPORT-7903-SOURCE
+
+Source hash drift, contaminated public fields, role drift and exclusion drift
+SHALL fail with an operand. Receipt and shard hashes SHALL be frozen separately.
+No source producer SHALL run again. Existing exclusion reasons SHALL survive.
+
+### SCENARIO-REPORT-7903-VALIDATION
+
+The command manifest SHALL freeze argv, expected exits, reasons, deadlines,
+dependency hashes and measured modules before results. Tests SHALL use private
+/tmp authorities and scratch. Both dated E2E-016 routes and private E2E-018
+tests SHALL run. Cold replay SHALL reduce primitive rows and denominators.
+All added statements and the CLI SHALL have nonempty 100 percent coverage.
