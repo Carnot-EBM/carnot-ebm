@@ -1,0 +1,81 @@
+{
+  "experiment": 7918,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-30",
+  "started_at": "2026-09-30T07:04:03.895368+00:00",
+  "finished_at": "2026-09-30T07:04:03.895368+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Fit fresh calibrated source energies under matched budgets",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+  "failed_upstream": "exp7916-training-qualification",
+  "failed_field": "training_runtime_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": null,
+  "failed_observed_type": "null",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7916_v687_training_qualification.json.validators.json",
+  "failed_evidence_sha256": "sha256:fa810cad6108b6006dcb73f18c12a71be7378977e056c4497c2a274f01441198",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+    "failed_upstream": "exp7916-training-qualification",
+    "failed_field": "training_runtime_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": null,
+    "failed_observed_type": "null",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7916_v687_training_qualification.json.validators.json",
+    "failed_evidence_sha256": "sha256:fa810cad6108b6006dcb73f18c12a71be7378977e056c4497c2a274f01441198"
+  },
+  "gate_check_summary": "3 of 3 gate(s) failed; first failure: exp7916-training-qualification.training_runtime_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7916-training-qualification",
+      "artifact_field": "training_runtime_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": null,
+      "actual_type": "null",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7916_v687_training_qualification.json.validators.json",
+      "artifact_sha256": "sha256:fa810cad6108b6006dcb73f18c12a71be7378977e056c4497c2a274f01441198"
+    },
+    {
+      "upstream": "exp7916-training-qualification",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": null,
+      "actual_type": "null",
+      "passed": false,
+      "reason": "actual=None == expected=False -- upstream artifact has NO field 'flagged_adversarial'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7916_v687_training_qualification.json.validators.json",
+      "artifact_sha256": "sha256:fa810cad6108b6006dcb73f18c12a71be7378977e056c4497c2a274f01441198"
+    },
+    {
+      "upstream": "exp7916-training-qualification",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": null,
+      "actual_type": "null",
+      "passed": false,
+      "reason": "actual=None in expected=['positive', 'circular_positive', 'null'] -- upstream artifact has NO field 'verdict_class'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7916_v687_training_qualification.json.validators.json",
+      "artifact_sha256": "sha256:fa810cad6108b6006dcb73f18c12a71be7378977e056c4497c2a274f01441198"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
