@@ -1,0 +1,15 @@
+[exp7938] start host aggregation; zero model and device operations
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7938_v688_hardware_evidence.py", line 58, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7938_v688_hardware_evidence.py", line 43, in main
+    value = q.read_evidence(root, args.date)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7938_v688_hardware_evidence.py", line 223, in read_evidence
+    mapping = operation_map(
+              ^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7938_v688_hardware_evidence.py", line 96, in operation_map
+    "placement_constraint": board["scope"],
+                            ~~~~~^^^^^^^^^
+KeyError: 'scope'

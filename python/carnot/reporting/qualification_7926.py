@@ -21,9 +21,19 @@ from carnot.reporting.current_work_receipt import atomic_json, canonical_hash, s
 run_child = old.run_child
 
 
-def qualify(root: Path, run_date: str, output: Path, raw_root: Path) -> int:
+def qualify(
+    root: Path,
+    run_date: str,
+    output: Path,
+    raw_root: Path,
+    *,
+    evidence: Any = None,
+    validation: Any = None,
+) -> int:
     """Freeze dependencies, run owned checks and publish only terminal-checked bytes."""
     started = time.monotonic()
+    q = evidence or globals()["q"]
+    plan = validation or globals()["plan"]
     if root.resolve() != plan.ROOT:
         raise ValueError("full validation requires the worktree root")
     result = q.read_evidence(root, run_date)

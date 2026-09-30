@@ -87248,3 +87248,48 @@ counts. Cold replay and terminal recheck use identical coverage includes.
 
 Actual gate and reconciliation readers select the primary hash with newer
 sidecars. Validator sidecars bind checked bytes. No new level solves are claimed.
+
+## REQ-REPORT-7938-V688: Workload placement within retained board scope
+
+Exp7938 SHALL authenticate the exact Exp7926 primary, terminal validation binding,
+child logs and original board receipts through the qualified custody callables.
+Keep KV260 quadratic Ising fabric at k_max<=5, PolarFire Linux CPU-only dispatch,
+and GateMate physical/JTAG 0xffffffff. Preserve required failure history.
+No board probe, install, flash, purchase, model load or production change occurs.
+Later KV260 access requires ssh kria. GateMate requires new physical evidence.
+
+### SCENARIO-REPORT-7938-CUSTODY
+
+Missing, malformed or changed external evidence terminates complete_blocked_*
+with upstream, path/hash, field, operator, expected and observed operands.
+Authenticated historical custody remains ready when optional Exp7937 is blocked.
+Three primitive board rows retain zero current device executions and independent
+counts. NPU and TSU remain unqualified. Historical files remain unchanged.
+
+### SCENARIO-REPORT-7938-WORKLOAD
+
+Publish an operation map even without service timing. Attach Exp7937 only when
+current, ready, unflagged and owned checks pass. Each measured primitive row
+maps separately to all boards. A neural source head is not quadratic Ising.
+KV260 placement requires explicit quadratic representation and k_max<=5.
+Label Amdahl ceilings as estimates based on observed kernel share. Show byte
+movement and host orchestration beside sparse topology. Missing or invalid
+timings cannot produce a ceiling or enlarge historical hardware qualification.
+
+### SCENARIO-REPORT-7938-VALIDATION
+
+Freeze hashes, exact commands, exits, failure reasons, deadlines and identical
+coverage includes. Run board-reader and consumer tests, private CLI success,
+expected failure, cold replay and terminal recheck. Require nonempty 100 percent
+changed statement coverage, scoped Ruff, strict mypy and explicit-file spec
+coverage. Run full Python tests once as separate repository health. E2E-016
+fixture and replay both use 20260929; current execution uses 20260930.
+
+### SCENARIO-REPORT-7938-TERMINAL
+
+Cold-reduce every task claim from primitive bytes. Owned failures disqualify
+and close readiness. Both terminal validators inspect the final candidate;
+sidecars bind its hash. Use primary_publication to publish exactly one top-level
+primary. Both actual readers select its path/hash after nested sidecars receive
+newer mtimes. Fixture agreement never establishes independent benefit.
+Retire unchanged prior dispositions. Conductor owns ops and traceability updates.
