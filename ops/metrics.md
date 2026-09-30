@@ -3726,3 +3726,13 @@ One adversarial reviewer checked the proposal and verified corrections. Its
 result metadata supplied no token or duration figures. The documented
 `scripts/session-metrics.py` is absent, so no authoritative session token count
 or cost is claimed. No experiment execution, activation or push occurred.
+
+## Session: 2026-09-30 Milestone 2026.09.687 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|---|---|---|---|---|
+| 1 | 2026-09-30T09:35:37Z | 2026-09-30T09:40:20Z | Wrote operational retro for milestone 2026.09.687; ran adversarial reviewer subagent (approved clean) | ~20k |
+
+One adversarial reviewer checked the retrospective and verified compliance against locked fields, authoritative numbers, and repo rules.

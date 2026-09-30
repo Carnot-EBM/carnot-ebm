@@ -7126,3 +7126,10 @@ The critical path for milestone .250:
 - acceptance: no data available this milestone (criterion definitions and outcomes were not supplied).
 
 Operational evidence addendum: this entry supersedes earlier operational assertions for this milestone while preserving the earlier entry. The monitor shows both GPUs at 0% utilization. Under the supplied compute-bound rule this indicates idle, but the artifact's locked GPU-idle field remains false. The data does not establish that the snapshot was taken after execution, or whether any parallel multi-model workload missed DualGPURunner. Persist phase timing receipts and join them to GPU samples and model-overlap records before estimating savings or choosing parallel dispatch.
+
+### Milestone 2026.09.687
+
+- exp_range: no data available this milestone
+- theme: Outcome reduction, bounded Qwen decisions, and intra-task phase instrumentation across compute-bound tasks
+- key result: honest operational negative — 7 compute-bound experiments completed in 42.5 wall-time minutes led by outcome reduction (13.47 min) and bounded Qwen decisions (9.96 min), while records lack intra-task stage breakdowns, continuous GPU telemetry during execution, and parallel multi-model opportunities
+- acceptance: no data available this milestone
