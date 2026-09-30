@@ -87009,3 +87009,53 @@ Publish only checked bytes. Null scientific benefit may coexist with readiness.
 Keep phase spans nonoverlapping, logs sealed after child exit, and checkpoints
 bound to code/config/input hashes. Retire an unchanged verdict as new evidence.
 The conductor owns ops, changelog and traceability reconciliation after exit.
+
+## REQ-REPORT-7927-V687: Cold-reduce thirteen actual outcomes
+
+Exp7927 SHALL bind thirteen ordered tasks to the actual V687 activation snapshots.
+It SHALL authenticate the visible table, machine contract and full-task digest.
+It SHALL read each declared producer once and reserve its own administrative row.
+Absent, skipped, blocked, disqualified and valid null outcomes SHALL remain distinct.
+Conductor receipts SHALL retain their own paths, hashes and observed gate operands.
+A complete reduction with absent external science SHALL be terminal blocked.
+Owned required failures SHALL produce disqualified and zero execution readiness.
+Historical failures, including Exp7914's 270/271 coverage, SHALL remain unresolved evidence.
+
+### SCENARIO-REPORT-7927-CUSTODY
+
+Private current authorities exercise thirteen dispositions, identity drift and missing authority.
+Cold replay rejects changed bytes, raw rows, aggregates, publication operands and counts.
+Three PRD decisions SHALL state explicit continuation and unchanged-verdict retirement conditions.
+GAP-ORACLE-DISTINCT remains open after the September 28 corrigendum.
+DiffusionGemma remains pending. G1-G4 retain the publication script's definitions.
+
+### SCENARIO-REPORT-7927-PRIMITIVES
+
+Reuse V686 primitive reducers for Brier, decision costs, causal writes and delayed sets.
+Recompute source sensitivity, grouped fragility and complete service timings from rows.
+Reject future labels, changed issued alpha, stale dependencies and shared score/stress draws.
+Report seed, family and source-group denominators separately from task dispositions.
+Development exposure and fixture agreement SHALL never establish independent benefit.
+
+### SCENARIO-REPORT-7927-QUALIFICATION
+
+Freeze dependency hashes, argv, exits, failure reasons, deadlines and coverage includes before checks.
+Run affected and consumer tests, scoped Ruff, strict mypy and explicit-file spec coverage.
+Execute the real read-only publication CLI and assert its parsed result.
+Reject invalid publication output and command failure without inventing passing operands.
+Run E2E-015/016/017 and private current-authority E2E-018.
+Both historical E2E-016 calls SHALL use 20260929; current execution remains 20260930.
+Preserve the historical wrong-date rejection and all historical assertions.
+Combine nonempty unit and actual CLI success, block, failure, replay and terminal data.
+Every added module and CLI SHALL have 100 percent statement coverage.
+Run the full Python suite once and retain unrelated repository debt separately.
+Seal logs after child exit. Bind terminal validator sidecars to exact candidate hashes.
+Atomically publish only bytes checked by adversarial and strict row validators.
+Implementation status: specified; conductor owns ops and traceability reconciliation.
+
+V687 capstone implementation uses callable V686 reducers and the bounded command supervisor.
+Unqualified candidates keep validity and readiness zero until owned checks finish.
+Fragility averages repeats within families, then families within source groups.
+Conflicting source-group identities are rejected. Unstable terminal flags refuse publication.
+Monotonic timestamp field names distinguish clock boundaries from scientific metrics.
+The result artifact records measured qualification. Ops and traceability remain conductor-owned.
