@@ -86962,3 +86962,50 @@ the log bytes and SHALL not claim another full-suite execution.
 Implementation: the task module and small CLI reuse the existing supervisor
 reducers and command builder. The terminal artifact records the current checks.
 Ops and traceability reconciliation remains assigned to the conductor.
+
+## REQ-REPORT-7926-V687: Preserve board custody and bound workload acceleration
+
+Exp7926 SHALL reuse the Exp7913 board reader and private child supervisor.
+It SHALL authenticate Exp7913 and retain every historical required failure.
+The task runs on 20260930 for milestone 2026.09.687 with host aggregation,
+no model load and zero current device operations. No availability probe,
+install, flash or purchase is scheduled. Later KV260 access requires ssh kria.
+
+### SCENARIO-REPORT-7926-CUSTODY
+
+Produce separate KV260, PolarFire and GateMate rows from original byte hashes.
+Preserve qualified KV260 fabric at k_max<=5, PolarFire Linux CPU dispatch,
+and GateMate physical/JTAG 0xffffffff. GateMate requires new physical evidence
+before reopening. NPU and TSU remain unqualified. External source failures
+end complete_blocked with path, hash, field, operator and expected/observed values.
+
+### SCENARIO-REPORT-7926-WORKLOAD
+
+Attach only ready, unflagged current Exp7925 whole-service primitive rows.
+Absent, malformed or failed optional rows leave workload mapping unmeasured;
+they do not block board custody. Compare observed byte movement and kernel
+share with sparse topology and host orchestration. Any Amdahl bound is an
+estimate. Vendor comparisons and hardware speedup remain unmeasured.
+
+### SCENARIO-REPORT-7926-VALIDATION
+
+Freeze dependencies, exact argv, expected exits and reasons, deadlines and
+identical coverage includes before validation. Historical E2E-016 fixture
+and cold replay SHALL both use --date 20260929. Execution remains 20260930.
+An actual wrong-date call SHALL reject with run_date_mismatch. Preserve the
+Exp7913 disqualification. Run all board-reader and consumer tests, scoped Ruff,
+strict mypy and explicit-file spec coverage. Combine nonempty private unit,
+CLI success, expected failure, cold replay and terminal recheck coverage.
+Require 100 percent statements on added code. Run the full Python suite once
+as repository health and preserve failures separately from the affected scope.
+
+### SCENARIO-REPORT-7926-TERMINAL
+
+Cold-reduce primitive board and workload rows and all owned claim fields.
+Owned required failures disqualify and set readiness zero. Terminal adversarial
+and strict-row readers SHALL inspect exact candidate bytes; inspect reports,
+revalidate after verdict changes and bind sidecars to their candidate hashes.
+Publish only checked bytes. Null scientific benefit may coexist with readiness.
+Keep phase spans nonoverlapping, logs sealed after child exit, and checkpoints
+bound to code/config/input hashes. Retire an unchanged verdict as new evidence.
+The conductor owns ops, changelog and traceability reconciliation after exit.
