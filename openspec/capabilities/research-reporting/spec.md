@@ -87079,3 +87079,48 @@ Fragility averages repeats within families, then families within source groups.
 Conflicting source-group identities are rejected. Unstable terminal flags refuse publication.
 Monotonic timestamp field names distinguish clock boundaries from scientific metrics.
 The result artifact records measured qualification. Ops and traceability remain conductor-owned.
+
+### REQ-REPORT-7928
+
+New experiments SHALL publish one top-level primary through
+`carnot.reporting.primary_publication.publish_primary`. Validator reports,
+attempts, manifests and row shards SHALL stay below results/raw/. The helper
+SHALL lock each producer, reject conflicting primary identities, validate exact
+candidate bytes before atomic replacement, and bind sidecars to primary hashes.
+Historical artifacts and the live gate and document-reader functions SHALL remain unchanged.
+Other tasks SHALL apply this layout without waiting for this qualification receipt.
+Historical source checks SHALL use exact primary paths, never newest-match lookup.
+
+### SCENARIO-REPORT-7928-1
+
+Freeze Exp7904 and Exp7916 primary and sidecar byte hashes and nanosecond mtimes.
+Record actual gate and document selections and missing fields; keep prior verdicts.
+Do not infer which artifact a historical dispatch consumed from current selection.
+Exercise valid primary plus newer nested sidecar, legacy top-level shadowing,
+missing primary, conflicting primaries, stale bindings, malformed primary,
+disqualified primary, absent field, concurrent replacement and terminal revalidation.
+Legacy shadowing SHALL remain an expected negative through unmodified readers.
+
+### SCENARIO-REPORT-7928-2
+
+Freeze dependencies, exact commands, expected exits and reasons, deadlines and
+identical coverage includes before results. Combine unit and real CLI fixture,
+expected failure, cold replay and terminal checks; new modules and CLI SHALL have
+nonempty data and 100 percent statement coverage. Run scoped Ruff, strict mypy,
+explicit-file spec coverage, current-work consumers and E2E-015/016. Both historical
+Exp7868 fixture and replay SHALL use 20260929; execution date remains 20260930.
+Run the full Python suite once and preserve unrelated repository debt separately.
+
+### SCENARIO-REPORT-7928-3
+
+Readiness SHALL be one only after real gate and document-reader identity checks
+and every owned check pass. Cold-reduce claims from primitive rows, seal exited
+child logs, retain prior required failures, and check exact terminal bytes with
+adversarial and strict row validators. Flagged or owned failed evidence SHALL
+have readiness zero and complete_disqualified_*; external prerequisites SHALL
+end complete_blocked_* with field, operator, expected, observed, upstream and
+path/hash operands. Fixture agreement is circular_positive; independent science,
+calibration, decision benefit, retention and efficiency remain unmeasured.
+No model load, benchmark, numerical qualification or production-default change occurs.
+Implementation status: implemented; Exp7928 records exact reader and qualification evidence.
+Ops and traceability reconciliation is conductor-owned.
