@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.688",
+  "generated_at": "2026-09-30T15:53:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 110.0,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Fit source energies after primary artifact routing is qualified",
+      "duration_minutes": 38.76,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind twelve tasks and reuse qualified evidence with current methods",
+      "duration_minutes": 16.35,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently reduce twelve outcomes and decide the PRD gaps",
+      "duration_minutes": 13.82,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Recover same-day live supervisor evidence for generalization",
+      "duration_minutes": 13.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure bounded Qwen decisions with paired grammar controls",
+      "duration_minutes": 12.87,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.688 completed 7 compute-bound experiments in 110.0 wall-time minutes (averaging 16 minutes per experiment), reconstructed from disk modification times. 'Fit source energies after primary artifact routing is qualified' was the longest-running task at 38.76 minutes, followed by 'Bind twelve tasks and reuse qualified evidence with current methods' at 16.35 minutes, with intra-task phase breakdown absent from the milestone timing data. The locked GPU-idle indicator is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs.",
+  "bottlenecks_identified": [
+    "Source energy fitting represents the largest single latency focus at 38.76 minutes (over 35% of total wall time), followed by task binding at 16.35 minutes, independent outcome reduction at 13.82 minutes, live supervisor evidence recovery at 13.3 minutes, and bounded Qwen decisions at 12.87 minutes; intra-task stage breakdowns (model loading, inference, validation) are absent from the timing data.",
+    "Milestone timing relied on disk-mtime fallback reconstruction because the live git-log path encountered zero commits, creating an attribution gap for intra-task latency phases.",
+    "Continuous execution-window GPU utilization and multi-model concurrency telemetry are absent from milestone data, precluding empirical measurement of accelerator efficiency or multi-model dispatch during active execution."
+  ],
+  "improvements_suggested": [
+    "Introduce structured monotonic phase timing receipts (tracking model loading, execution, evaluation, and validation) into the runner to attribute latency within long-running experiments.",
+    "Sample continuous GPU utilization, VRAM usage, and active model concurrency throughout task execution windows to correlate compute load with accelerator utilization.",
+    "Profile and optimize the source energy fitting workflow (38.76 minutes) and task binding workflow (16.35 minutes), exploring intermediate artifact caching where valid.",
+    "Restrict DualGPURunner dispatch strictly to verified concurrent multi-model workloads, ensuring single-model tasks target a single GPU without unneeded orchestration.",
+    "Retain the failure_ledger pre-launch doomed-rerun check to preemptively block doomed tasks before wall time is consumed."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement granular task phase receipts in the runner to isolate model loading, compute, and validation stages for the slowest workloads.",
+    "Record continuous time-series GPU telemetry alongside active model identifiers during compute runs to evaluate accelerator utilization empirically.",
+    "Target optimization and checkpoint reuse on the source energy fitting (38.76 min) and task binding (16.35 min) pipelines."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "While the static monitor shows both RTX 3090 GPUs at 0% utilization, the locked field records gpu_idle_on_compute_bound_tasks=false and continuous execution-window telemetry is unavailable. The timing data identifies 7 compute-bound tasks totaling 110.0 minutes, led by source energy fitting (38.76 min) and task binding (16.35 min). Estimated time savings remain set to 0% as an unmeasured placeholder until intra-task phase profiling and active-window accelerator telemetry are implemented."
+}

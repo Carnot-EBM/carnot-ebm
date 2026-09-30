@@ -7133,3 +7133,10 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Outcome reduction, bounded Qwen decisions, and intra-task phase instrumentation across compute-bound tasks
 - key result: honest operational negative — 7 compute-bound experiments completed in 42.5 wall-time minutes led by outcome reduction (13.47 min) and bounded Qwen decisions (9.96 min), while records lack intra-task stage breakdowns, continuous GPU telemetry during execution, and parallel multi-model opportunities
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.688
+
+- exp_range: no data available this milestone
+- theme: Source energy fitting, task binding, and outcome reduction dominated wall time across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — 7 compute-bound experiments completed in 110.0 wall-time minutes led by source energy fitting (38.76 min) and task binding (16.35 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
