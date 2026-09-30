@@ -46628,3 +46628,22 @@ exercise fresh fitting, resume, byte replay, deadline failure and terminal
 recheck failure. The Exp7904 terminal artifact controls runtime qualification.
 The old Exp7894 verdict and required failure remain unchanged. Ops and
 traceability reconciliation remain assigned to the conductor.
+
+## REQ-VERIFY-7916-V687: Requalify the existing callable training runtime
+
+Exp7916 SHALL reuse Exp7904 and Exp7894 callables without changing numerical
+fitting. New producer identity and code hashes SHALL bind every fresh fixture
+head, upstream path, public and evaluator shard, numerical dependency, arm,
+seed and hyperparameter. Unknown targets retain zero local loss and gradient.
+Natural cohorts remain exposed_development; natural training belongs to Exp7918.
+
+### SCENARIO-VERIFY-7916-CHECKPOINT
+
+Private CPU CLI success, same-run resume and cold replay SHALL agree. Changed
+dependency bytes or another upstream path SHALL reject an existing checkpoint.
+Missing source SHALL block; timeout and second terminal failure SHALL disqualify.
+
+V687 implementation: current producer checkpoints bind the existing numerical
+dependencies and both producer modules. Private CLI fitting, resume, rejection,
+deadline, terminal failure and cold replay passed. The fitting pipeline is
+unchanged. Natural training remains assigned to Exp7918.

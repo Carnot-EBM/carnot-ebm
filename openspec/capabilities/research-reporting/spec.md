@@ -86588,6 +86588,37 @@ recheck failure. The Exp7904 terminal artifact controls runtime qualification.
 The old Exp7894 verdict and required failure remain unchanged. Ops and
 traceability reconciliation remain assigned to the conductor.
 
+## REQ-REPORT-7916-V687: Preserve fixture dates and current qualification receipts
+
+Exp7916 SHALL freeze exact affected argv, expected exits, failure reasons,
+deadlines, byte hashes and coverage includes before compute. Execution date
+SHALL be 20260930. BOTH historical E2E-016 fixture and replay calls SHALL use
+20260929; a wrong-date rejection SHALL remain tested. Exp7904's 290/290 covered
+statements and both run_date_mismatch failures SHALL remain historical evidence.
+Current owned failures SHALL close readiness. External missing evidence SHALL
+be complete_blocked with exact gate operands. Required affected unit, consumer,
+E2E-015/016, Ruff, strict mypy and explicit-file spec checks SHALL run.
+
+### SCENARIO-REPORT-7916-SCOPE
+
+New module and CLI coverage SHALL be nonempty and 100 percent. Preserve the
+existing training closure and its stricter coverage obligations. Private /tmp
+directories SHALL contain fixtures, pytest scratch and coverage data. Logs and
+primitive rows SHALL seal after children exit. Current producer fields SHALL
+identify Exp7916, milestone 2026.09.687, no pretrained model calls and host
+aggregation. Both terminal readers SHALL inspect final bytes before atomic
+publication. Sidecars SHALL bind their hash. Fixture agreement is circular_positive.
+
+Implementation status: specified for 2026.09.687. The conductor owns ops,
+changelog and traceability reconciliation after producer completion.
+
+V687 implementation: Exp7916 reuses the unchanged fitting library through an
+isolated producer configuration. All 97 affected tests passed. Both historical
+E2E-016 routes passed with 20260929. Current module and CLI statement coverage
+is 100 percent, including the existing 290-statement obligation. Both terminal
+readers passed; the published verdict is circular_positive with readiness 1.
+The interrupted repository-wide suite remains separate debt: 137 failures.
+
 ## REQ-REPORT-7905-V686: Qualify current intervention orchestration
 
 Exp7905 SHALL bind the exact disqualified Exp7893 artifact and current source
