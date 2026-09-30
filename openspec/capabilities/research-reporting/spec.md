@@ -87613,3 +87613,51 @@ as current execution. Run repository pytest once with bounded health receipts.
 Cold-reduce claims and inspect both exact-byte terminal validator reports.
 Owned failures disqualify readiness. Publish only checked final bytes atomically.
 Conductor owns ops and traceability reconciliation after this task.
+
+## REQ-REPORT-7952-V689: Reduce thirteen current outcomes and sentence boundaries
+
+Bind the thirteen-task table, machine contract and full executable digest to
+actual authority snapshots. Read declared producers once and reserve the self
+row. Keep missing producers and conductor pre-gate receipts in distinct roles.
+Reuse qualified primitive reducers; recompute natural Brier and typed costs,
+source erasure, abstention, fragility, causal writes, delayed sets and complete
+service spans where observations exist. Preserve role, mask, seed and source
+family denominators, paired comparisons, future-label exclusions and restart
+identities. Cold-recheck the evaluator sentence join against original bytes.
+Human source-support judgments, feasibility and model-self targets stay separate.
+
+Exactly thirteen dispositions and three PRD decisions must preserve valid nulls,
+historical disqualifications and external blocks. Audit readiness one does not
+imply science readiness. Absent or failed prerequisites end complete_blocked_*;
+owned validation failures end complete_disqualified_* with readiness zero.
+G1-G4 definitions stay unchanged; September 28 oracle correction remains binding
+and DiffusionGemma remains pending. Retire unchanged declared research verdicts;
+legitimate ARC no-event scans may continue on a new authenticated frontier.
+
+### SCENARIO-REPORT-7952-CUSTODY
+
+Current producer identities, authority bytes, all gate operands and primitive
+rows bind the result. Missing inputs differ from failed thresholds. Sentence
+replay reconstructs source and response bytes and original human span offsets;
+undersized unsupported class keeps scientific readiness blocked. Cold replay
+rejects changed source bytes, counts, reductions and publication operands.
+
+### SCENARIO-REPORT-7952-QUALIFICATION
+
+Freeze exact affected files, transitive dependencies, commands, exits, reasons,
+deadlines and identical coverage includes before results. Require nonempty
+100 percent statements for added modules and CLI through unit and actual CLI
+success, blocked, expected failure, cold replay and terminal routes. Run scoped
+Ruff, strict mypy and explicit spec coverage. Preserve historical failures and
+record one bounded full repository suite separately. Private E2E-015/016/017/018
+readers retain assertions; both Exp7868 routes use 20260929. Current date is
+20260930. Never publish historical CLIs against current authority.
+
+### SCENARIO-REPORT-7952-PUBLICATION
+
+One top-level primary owns experiment 7952. Each private route has its own
+publication directory. Nested rows, attempts and final hash-bound validators
+cannot displace the primary even with newer mtimes. Run real adversarial and
+strict-row validators on final bytes; recheck after verdict changes and publish
+atomically. No roadmap activation, external publication or default changes.
+Ops and traceability reconciliation is delegated to the conductor by the task.
