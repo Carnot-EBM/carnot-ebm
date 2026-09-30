@@ -19146,3 +19146,4 @@ code |
 | 2026-09-30 14:02 UTC | Compare delay-aware confidence on an issued learni | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7934-causal-acquisition, exp7934-causal-acquisition, exp7934-causal-acquisition) |
 | 2026-09-30 14:35 UTC | Recover same-day live supervisor evidence for gene | OK | 115 passed, 1 warning in 7.56s |
 | 2026-09-30 14:37 UTC | Measure complete decision-service and durable-upda | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7930-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
+| 2026-09-30 15:04 UTC | Map the measured workload to retained board capabi | OK | 488 passed, 1 warning in 170.81s (0:02:50) |
