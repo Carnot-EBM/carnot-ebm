@@ -21157,3 +21157,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-30: Fit source energies after isolated publication qualification (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7943_v689_energy_fit.json
 - 2026-09-30: Assess only new live supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_7949_v689_arc_supervisor_delta.json
 - 2026-09-30: Preserve typed board blockers and map measured workload costs (⚠️ Research Finding) — honest_verdict=complete_null_historical_board_scope; results/experiment_7951_v689_hardware_evidence.json
+- 2026-09-30: Independently reduce thirteen outcomes and decide the PRD gaps (⚠️ Blocked) — honest_verdict=complete_blocked_missing_science; results/experiment_7952_v689_capstone.json
