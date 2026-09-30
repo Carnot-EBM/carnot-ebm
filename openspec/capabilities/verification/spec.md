@@ -46647,3 +46647,17 @@ V687 implementation: current producer checkpoints bind the existing numerical
 dependencies and both producer modules. Private CLI fitting, resume, rejection,
 deadline, terminal failure and cold replay passed. The fitting pipeline is
 unchanged. Natural training remains assigned to Exp7918.
+
+## REQ-VERIFY-7920-V687: Keep sensitivity distinct from sentence correctness
+
+Natural Brier and decision cost SHALL remain null without an independent label
+for the unchanged first answer sentence. Whole-response labels SHALL never
+become sentence targets. Source-cluster paired intervals require 32 complete
+independent families. Syntax, byte fidelity and sensitivity SHALL remain separate.
+
+### SCENARIO-VERIFY-7920-REDUCE
+
+Cold reduction SHALL reconstruct counts and paired differences from primitive
+four-arm rows. Tampered aggregates or shard hashes SHALL reject replay.
+Fixture agreement SHALL remain circular_positive; natural sources remain
+exposed_development and cannot certify sufficient evidence or factual truth.

@@ -86881,3 +86881,39 @@ The artifact is complete_circular_positive_protocol_qualification, readiness
 one, with semantic sensitivity and scientific benefit unmeasured. Exp7905's
 697/699 disqualification remains historical. The one full-suite observation
 records failures and a timeout separately. The conductor owns ops reconciliation.
+
+## REQ-REPORT-7920-V687: Measure bounded source sensitivity with current Qwen
+
+Exp7920 SHALL authenticate Exp7917 and Exp7892, including referenced byte
+hashes, before compute. Freeze the first 48 evaluation families in source-group
+hash order, including exclusions. Use only cached unsloth/Qwen3.8-27B-GGUF
+Q4_K_M in a private owned CUDA runtime and GPU lease. Freeze 192 calls,
+24576 output tokens, 128 tokens per call, context 8192, temperature zero,
+seed 67801 and /no_think. Load deadline is 300 seconds, call deadline 120,
+latest launch 2400 and measured work cap 3000. Emit real timing and heartbeats.
+
+### SCENARIO-REPORT-7920-CUSTODY
+
+Missing or changed external authority SHALL end complete_blocked with exact
+path, hash and gate operands. Wrong execution dates SHALL reject before output.
+No-run fields SHALL name planned compute separately and count zero invocations.
+
+### SCENARIO-REPORT-7920-CAPTURE
+
+Full source nominates an original complete-sentence witness and risk for the
+unchanged first answer sentence. Reuse qualified witness-only, neighbors and
+matched disjoint filler construction. Tokenize rendered prompts before dispatch;
+overlength inputs abstain without truncation. Preserve raw bytes, hashes, spans,
+errors, truncations, unstarted arms, and original sentence label eligibility.
+Edited risks measure sensitivity only. At least 32 complete source clusters
+permit a paired interval; a finished smaller budget is an underpowered null.
+
+### SCENARIO-REPORT-7920-VALIDATION
+
+Run historical E2E-016 fixture and replay with date 20260929 before capture.
+Execution time remains 20260930. Freeze explicit tests, includes, commands,
+expected exits, reasons and deadlines. Require complete new statement coverage,
+scoped Ruff, strict mypy, explicit-file spec coverage, cold reduction and both
+terminal validators bound to exact final bytes. Retain historical failures and
+separate repository debt. Owned required failures disqualify with readiness zero.
+The conductor owns ops and traceability reconciliation after this producer exits.
