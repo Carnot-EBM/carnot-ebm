@@ -1,0 +1,63 @@
+{
+  "candidate_sha256": "sha256:764c42c087183050ba5160b2617f5459822a64f4a54c49d27c5ebc7e362efc28",
+  "reports": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-exp7924-i85bvov2/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /tmp/carnot-exp7924-i85bvov2/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-exp7924-i85bvov2/terminal_candidate.json"
+      ],
+      "deadline_s": 90,
+      "duration_s": 0.5626142739783973,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7924_v687_arc_supervisor_delta/sealed/terminal_adversarial-4961c53abf3473de508454020a6ff4446a495e49596849e94bb3d08fc3ce3810.log",
+      "log_sha256": "sha256:4961c53abf3473de508454020a6ff4446a495e49596849e94bb3d08fc3ce3810",
+      "name": "terminal_adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot-exp7924-i85bvov2/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7924,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_no_new_supervisor_outcomes\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7924-i85bvov2/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7924-i85bvov2/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7924-i85bvov2/terminal_candidate.json"
+      ],
+      "deadline_s": 90,
+      "duration_s": 0.04509750101715326,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7924_v687_arc_supervisor_delta/sealed/terminal_rows-2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda.log",
+      "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+      "name": "terminal_rows",
+      "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    }
+  ]
+}

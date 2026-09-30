@@ -86917,3 +86917,48 @@ scoped Ruff, strict mypy, explicit-file spec coverage, cold reduction and both
 terminal validators bound to exact final bytes. Retain historical failures and
 separate repository debt. Owned required failures disqualify with readiness zero.
 The conductor owns ops and traceability reconciliation after this producer exits.
+## REQ-REPORT-7924-V687: Qualified supervisor delta with historical date custody
+
+Exp7924 SHALL retain Exp7899 as the accepted cutoff. It SHALL use the existing
+Exp7911 and Exp7899 callable reducers without running games or models. It SHALL
+deduplicate all receipt identities seen by Exp7911, including authenticated raw
+inputs of disqualified producers, without accepting their headlines. Missing
+required ledgers SHALL block with exact path, hash and gate operands. It SHALL
+read the current solve registry before importing outcomes. A zero delta SHALL
+produce complete_null_no_new_supervisor_outcomes, zero new solves and no arm
+recommendation. Observations remain exposed development and cannot prove causal
+policy benefit. Recommendations require twenty firings across three games.
+
+### SCENARIO-REPORT-7924-CUSTODY
+
+Qualified cutoff bytes remain unchanged. A receipt already seen by disqualified
+Exp7911 cannot count again. Missing ledgers and altered hashes name failed gates.
+Counterfeit firings and non-live provenance remain excluded.
+
+### SCENARIO-REPORT-7924-VALIDATION
+
+Freeze dependencies, exact commands, deadlines, expected failures and identical
+coverage includes before reduction. Both historical E2E-016 routes use 20260929;
+execution is dated 20260930. A wrong-date route must reject with run_date_mismatch.
+Run E2E-017 and frozen consumer tests. Cover every added statement using private
+unit, CLI success, failure, replay and terminal recheck data. Run scoped Ruff,
+strict mypy and explicit-file spec coverage. Run the full Python suite once as
+repository health and retain all historical required failures.
+
+### SCENARIO-REPORT-7924-TERMINAL
+
+Cold replay rejects changed firing, outcome, row-budget and game counts. Owned
+required failures disqualify readiness; external failures block. Both terminal
+validators bind to final candidate bytes. Publish only those checked bytes.
+A qualified empty audit may be ready but establishes no scientific benefit.
+An unchanged qualified null is retired as new evidence under retire_if_same_verdict.
+The conductor owns ops and traceability reconciliation.
+
+A corrected qualification may reuse a sealed repository-health receipt from its
+disqualified attempt. It SHALL rerun every required check and preserve the prior
+candidate hash, failed commands and diagnostic receipt. Reuse SHALL authenticate
+the log bytes and SHALL not claim another full-suite execution.
+
+Implementation: the task module and small CLI reuse the existing supervisor
+reducers and command builder. The terminal artifact records the current checks.
+Ops and traceability reconciliation remains assigned to the conductor.
