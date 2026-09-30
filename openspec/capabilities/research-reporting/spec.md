@@ -1,5 +1,38 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7932-V688: Authenticate and seal paired Qwen completion
+
+Authenticate exact Exp7917 protocol and raw hashes, ready score one, eligible
+terminal class and false adversarial flag. Authenticate Exp7892 independently.
+Freeze dependencies, argv, expected exits, failure reasons, deadlines and coverage includes.
+Check model-free transport, schema, citation, timeout, token limits and owned cleanup first.
+Confirm native grammar enforcement through a private CPU smoke fixture before Qwen load.
+Use one owned GPU lease and server; authenticate revision, GGUF hash, quantization,
+embedded tokenizer, served path and actual CUDA offload. Preserve fixed generator weights.
+External failures are complete_blocked_* with exact gate operands; owned failures disqualify.
+Checkpoint each family with code/config/input hashes and preserve every raw response.
+Publish one top-level experiment_7932_v688_qwen_completion.json through the qualified publisher.
+Keep attempts, validators and reader receipts under results/raw/experiment_7932_v688_qwen_completion/.
+
+### SCENARIO-REPORT-7932-VALIDATION
+
+Run affected and consumer tests, E2E-014/016, a current bounded panel and terminal cold replay.
+Both historical Exp7868 fixture and replay use 20260929; current execution uses 20260930.
+Combine unit, real CLI success, expected failure, replay and terminal-recheck coverage.
+Require nonempty 100 percent statement coverage for added modules and CLI.
+Run scoped Ruff, strict mypy and explicit-file spec coverage. Run full pytest once;
+record unrelated repository debt separately and preserve historical required failures.
+Validate exact terminal bytes with adversarial and strict row validators before atomic publication.
+Actual gate and document readers must select the primary hash after newer nested sidecars.
+Readiness means complete accounting and passed owned validation, including valid nulls.
+Ops/status/traceability reconciliation remains conductor-owned. No production default changes.
+
+Implementation status: implemented in the parameterized Exp7932 module and CLI.
+The primary keeps terminal and reader receipts outside its own bytes to avoid
+self-referential hashes. Both readers report the final primary path and SHA-256.
+The required coverage scope contains only the added producer, view/reduction
+module and CLI. Historical assertions and failure receipts remain intact.
+
 ## REQ-REPORT-7899-V685: Count unseen live supervisor outcomes
 
 Exp7899 SHALL pin the V684 artifact, registry, live policy source and exact raw

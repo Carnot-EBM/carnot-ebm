@@ -1,0 +1,70 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.terminal",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7932_v688_qwen_completion.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "current_terminal_cold_replay",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.final",
+        "/tmp/carnot-7932-thfje8en/.coverage.combined",
+        "/tmp/carnot-7932-thfje8en/.coverage.terminal"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "terminal_coverage_combine",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.final",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "-o",
+        "/tmp/carnot-7932-thfje8en/terminal-coverage.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "terminal_coverage_json",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.final",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "terminal_coverage_report",
+      "scope": "required",
+      "timeout_s": 60
+    }
+  ],
+  "coverage_include": "*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+  "execution_date": "20260930",
+  "purpose": "Independent current terminal CLI cold replay; no model loading"
+}

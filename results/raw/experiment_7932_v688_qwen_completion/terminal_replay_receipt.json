@@ -1,0 +1,103 @@
+{
+  "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7932_v688_qwen_completion/terminal_replay_command_manifest.json",
+  "manifest_sha256": "sha256:01ea44c08a02e7d9604dc63547d1ebf6b77c3f1e33c8c735a1e2e35f67baaae7",
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7932_v688_qwen_completion.json",
+  "primary_sha256": "sha256:9b3ef7a61f694fa5fba3520ecedc119d7e52ad376e318b11b5dc37a171ff7198",
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-7932-thfje8en/.coverage.terminal '--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py' scripts/experiments/experiment_7932_v688_qwen_completion.py --date 20260930 --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7932_v688_qwen_completion.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.terminal",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7932_v688_qwen_completion.json"
+      ],
+      "deadline_s": 60,
+      "duration_s": 3.116262754017953,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7932_v688_qwen_completion/logs/current_terminal_cold_replay-251226d60a55bc1b4ed349c2bc92756221edbb646a527a61a590525a44ce7afa.log",
+      "log_sha256": "sha256:251226d60a55bc1b4ed349c2bc92756221edbb646a527a61a590525a44ce7afa",
+      "name": "current_terminal_cold_replay",
+      "output_tail": "[exp7932] phase=cli_start completed_units=0 monotonic_s=437403.752\n{\"complete_family_fraction\": {\"grammar\": 0.8958333333333334, \"plain\": 0.8333333333333334}, \"natural_brier\": null, \"natural_cost\": null, \"paired_completion_delta\": {\"bootstrap_draws\": 10000, \"ci95\": [0.0, 0.14583333333333334], \"estimate\": 0.0625, \"exact_p\": 0.25, \"grammar_only\": 3, \"interval_method\": \"paired_source_cluster_percentile_95\", \"plain_only\": 0, \"protocol_benefit\": false}, \"sample_size_budget\": {\"accounted\": 384, \"accounted_families\": 48, \"actual_output_tokens\": 8209, \"call_limit\": 384, \"censored\": 0, \"completed\": 341, \"eligible\": 344, \"eligible_families\": 43, \"excluded\": 40, \"failed\": 3, \"independent\": 40, \"intended\": 384, \"intended_families\": 48, \"intended_source_clusters\": 48, \"output_token_limit\": 36864, \"started\": 344}, \"semantic_sensitivity\": {\"arms\": {\"grammar\": {\"ci95\": [-0.16624999999999998, 0.05125], \"estimate\": -0.058750000000000004}, \"plain\": {\"ci95\": [-0.16624999999999998, 0.05125], \"estimate\": -0.058750000000000004}}, \"complete_in_both\": 40, \"independent_source_clusters\": 40, \"interpretation\": \"descriptive neighbors-minus-filler probability; no entailment or factual benefit\", \"powered\": true}, \"sentence_label_eligibility\": {\"eligible\": 0, \"reason\": \"no_independent_sentence_labels\"}, \"syntax_valid\": false}\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --keep --data-file=/tmp/carnot-7932-thfje8en/.coverage.final /tmp/carnot-7932-thfje8en/.coverage.combined /tmp/carnot-7932-thfje8en/.coverage.terminal",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.final",
+        "/tmp/carnot-7932-thfje8en/.coverage.combined",
+        "/tmp/carnot-7932-thfje8en/.coverage.terminal"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.09719092695740983,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7932_v688_qwen_completion/logs/terminal_coverage_combine-c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0.log",
+      "log_sha256": "sha256:c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0",
+      "name": "terminal_coverage_combine",
+      "output_tail": "Combined 2 files\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage json --data-file=/tmp/carnot-7932-thfje8en/.coverage.final '--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py' -o /tmp/carnot-7932-thfje8en/terminal-coverage.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.final",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "-o",
+        "/tmp/carnot-7932-thfje8en/terminal-coverage.json"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.10386043495964259,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7932_v688_qwen_completion/logs/terminal_coverage_json-1032a8b4890df6d4aa0470c2bcd677ff7045d37825d272539201d1d4250799ee.log",
+      "log_sha256": "sha256:1032a8b4890df6d4aa0470c2bcd677ff7045d37825d272539201d1d4250799ee",
+      "name": "terminal_coverage_json",
+      "output_tail": "Wrote JSON report to /tmp/carnot-7932-thfje8en/terminal-coverage.json\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-7932-thfje8en/.coverage.final '--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.final",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.07953029597410932,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7932_v688_qwen_completion/logs/terminal_coverage_report-4c7933d827f5056e3b1bb0ab34d7cd2f7b1f0272ac388202e4ba6ffab592ab03.log",
+      "log_sha256": "sha256:4c7933d827f5056e3b1bb0ab34d7cd2f7b1f0272ac388202e4ba6ffab592ab03",
+      "name": "terminal_coverage_report",
+      "output_tail": "Name                                                          Stmts   Miss  Cover   Missing\n-------------------------------------------------------------------------------------------\npython/carnot/experiment_7932_v688_qwen_completion.py           323      0   100%\npython/carnot/verify/qwen_completion_7932.py                    186      0   100%\nscripts/experiments/experiment_7932_v688_qwen_completion.py       3      0   100%\n-------------------------------------------------------------------------------------------\nTOTAL                                                           512      0   100%\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    }
+  ]
+}

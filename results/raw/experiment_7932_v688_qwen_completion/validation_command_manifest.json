@@ -1,0 +1,411 @@
+{
+  "affected_tests": [
+    "tests/python/test_experiment_7932_v688_qwen_completion.py",
+    "tests/python/test_experiment_7920_v687_qwen_sufficiency.py",
+    "tests/python/test_experiment_7917_v687_intervention_qualification.py",
+    "tests/python/test_primary_publication_7928.py",
+    "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7932-thfje8en/model-free",
+        "-q",
+        "tests/python/test_experiment_7932_v688_qwen_completion.py",
+        "-k",
+        "not orchestration and not owned_runtime and not cpu_grammar_fixture"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "model_free_checks",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-7932-thfje8en/e2e-016.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "e2e_016_fixture-e2e",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-7932-thfje8en/e2e-016.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "e2e_016_cold-replay",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7932-thfje8en/e2e-014",
+        "-q",
+        "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "e2e_014",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7770_v676_qwen_runner_qualification.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7770_v676_qwen_runner_qualification.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "e2e_014_replay",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7770_v676_qwen_runner_qualification.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "e2e_014_adversarial",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7770_v676_qwen_runner_qualification.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "e2e_014_strict",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.unit",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7932-thfje8en/pytest",
+        "-q",
+        "tests/python/test_experiment_7932_v688_qwen_completion.py",
+        "tests/python/test_experiment_7920_v687_qwen_sufficiency.py",
+        "tests/python/test_experiment_7917_v687_intervention_qualification.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "unit_coverage",
+      "scope": "required",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.success",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "--root",
+        "/tmp/carnot-7932-thfje8en/absent",
+        "--output",
+        "/tmp/carnot-7932-thfje8en/experiment_7932_fixture_blocked.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "cli_success",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.wrong_date",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "--date",
+        "20260929"
+      ],
+      "expected_exit_code": 1,
+      "expected_failure_reason": "run_date_mismatch",
+      "name": "cli_wrong_date",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.replay",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "--cold-replay",
+        "/tmp/carnot-7932-thfje8en/experiment_7932_fixture_blocked.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "cli_replay",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.missing_replay",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "--cold-replay",
+        "/tmp/carnot-7932-thfje8en/missing.json"
+      ],
+      "expected_exit_code": 1,
+      "expected_failure_reason": "FileNotFoundError",
+      "name": "cli_missing_replay",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.fixture",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "--fixture-e2e",
+        "/tmp/carnot-7932-thfje8en/paired-fixture.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "cli_fixture",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.fixture_replay",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "--cold-replay",
+        "/tmp/carnot-7932-thfje8en/paired-fixture.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "cli_fixture_replay",
+      "scope": "required",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.combined",
+        "/tmp/carnot-7932-thfje8en/.coverage.unit",
+        "/tmp/carnot-7932-thfje8en/.coverage.success",
+        "/tmp/carnot-7932-thfje8en/.coverage.wrong_date",
+        "/tmp/carnot-7932-thfje8en/.coverage.replay",
+        "/tmp/carnot-7932-thfje8en/.coverage.missing_replay",
+        "/tmp/carnot-7932-thfje8en/.coverage.fixture",
+        "/tmp/carnot-7932-thfje8en/.coverage.fixture_replay"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "coverage_combine",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.combined",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "-o",
+        "/tmp/carnot-7932-thfje8en/coverage.json"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "coverage_json",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7932-thfje8en/.coverage.combined",
+        "--include=*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "coverage_report",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7932_v688_qwen_completion.py",
+        "python/carnot/verify/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "tests/python/test_experiment_7932_v688_qwen_completion.py"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "ruff_check",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7932_v688_qwen_completion.py",
+        "python/carnot/verify/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py",
+        "tests/python/test_experiment_7932_v688_qwen_completion.py"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "ruff_format",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_7932_v688_qwen_completion.py",
+        "python/carnot/verify/qwen_completion_7932.py",
+        "scripts/experiments/experiment_7932_v688_qwen_completion.py"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "mypy",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7932_v688_qwen_completion.py",
+        "tests/python/test_experiment_7920_v687_qwen_sufficiency.py",
+        "tests/python/test_experiment_7917_v687_intervention_qualification.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_experiment_7770_v676_qwen_runner_qualification.py"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "scoped_spec",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "--basetemp=/tmp/carnot-7932-thfje8en/repository-pytest"
+      ],
+      "expected_exit_code": 0,
+      "expected_failure_reason": "",
+      "name": "repository_health",
+      "scope": "diagnostic",
+      "timeout_s": 180
+    }
+  ],
+  "configuration": {
+    "bootstrap_draws": 10000,
+    "call_limit": 384,
+    "call_timeout_s": 120,
+    "decoder_order_seed": 68832,
+    "duration_floor_s": 10,
+    "filler_rule": "disjoint contiguous original spans; neighbor-added tokens within 25 percent",
+    "grammar_sha256": "sha256:21b7f15c0cdb5db56065de0f5ab60db2f316f883c9bcef6a0ce806eda13f600a",
+    "intended_families": 48,
+    "latest_launch_s": 2400,
+    "load_timeout_s": 300,
+    "max_tokens": 96,
+    "measured_work_cap_s": 3000,
+    "n_ctx": 8192,
+    "output_token_limit": 36864,
+    "seed": 67801,
+    "temperature": 0,
+    "witness_rule": "unique casefolded Unicode word overlap; earliest original byte tie"
+  },
+  "coverage_include": "*/experiment_7932_v688_qwen_completion.py,*/qwen_completion_7932.py",
+  "execution_date": "20260930",
+  "historical_fixture_date": "20260929",
+  "source_hashes": {
+    "python/carnot/experiment_7920_v687_qwen_sufficiency.py": "sha256:2de42b901dc7029460682664c7ebeb26576e02a96c2987a45ef26827948e9a02",
+    "python/carnot/experiment_7932_v688_qwen_completion.py": "sha256:dce0b1edeedcdbc99a4c47a76fd86a7a35f588caf23e233d014f509051b4cb34",
+    "python/carnot/inference/gguf_metadata.py": "sha256:0445956f17a997b97b0326fdfef8856a93ebdf7683167cea422fa7eb27a1a69e",
+    "python/carnot/inference/llama_cpp_process.py": "sha256:da24f1a661fe70e75169bf753f8a6f9811ac6051acb79b98e80b81d5239573e0",
+    "python/carnot/inference/qwen_sufficiency_7920.py": "sha256:dd3d00920d3454f00aba06de0d8862e9fd1750ff23b9d0c115f1dd13b811b254",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229",
+    "python/carnot/reporting/primary_publication.py": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310",
+    "python/carnot/verify/qwen_completion_7932.py": "sha256:8b821b8ba456956c9dc7588f7e33aeb77418560cfbd998053cdb07776f9cef2f",
+    "python/carnot/verify/source_alignment.py": "sha256:10d5329444d47dc2421d8cceca615c8d5c76df5267c1a70eb669340f05ea475b",
+    "python/carnot/verify/source_interventions.py": "sha256:dd79ab98fb4cb2567e7ebfcb855354e7dc19adcf2535ef637209f6748de26819",
+    "scripts/experiments/experiment_7932_v688_qwen_completion.py": "sha256:07a5091e1d076b01c27309aa86051ee6d36166fe34fdd6e1cd7ef4f65d1cb84e",
+    "tests/python/test_experiment_7932_v688_qwen_completion.py": "sha256:56a0cf8f5bcdd5acda99832c3c4577c90bc374927209d348f530a6c5ca9391b0"
+  }
+}

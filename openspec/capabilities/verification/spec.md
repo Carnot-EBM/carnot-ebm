@@ -1,5 +1,41 @@
 # Verification Capability Specification
 
+## REQ-VERIFY-7932-V688: Paired bounded decoder completion
+
+Freeze 48 original evaluation families by source-group hash before outputs or labels.
+Keep the first complete answer sentence and lossless source byte spans.
+Nominate a witness by unique lexical overlap, with original byte offset as tie-break.
+This rule proposes evidence; it does not certify entailment.
+Freeze full source, witness, witness plus neighbors, and witness plus disjoint filler.
+Match filler to added neighbor tokens within 25 percent using the GGUF tokenizer.
+Exclude unmatched or over-context families without replacement or source truncation.
+Run identical messages with plain instructions and backend JSON grammar.
+Validate syntax, numeric schema and visible citation bounds separately.
+Keep all 384 intended rows, including exclusions and failed outputs, without retries.
+Use Qwen3.8-27B-GGUF, n_ctx=8192, temperature=0, seed=67801, /no_think,
+96 output tokens per call and 36864 total. Shuffle paired decoder order with 68832.
+Stop new calls by 2400 seconds and measured work by 3000 seconds.
+
+### SCENARIO-VERIFY-7932-VIEWS
+
+Witness choice and all four views stay unchanged after decoder failures.
+UTF-8 byte custody, lexical ties, filler lengths and context exclusions are testable.
+No grammar failure may silently fall back to the plain arm.
+
+### SCENARIO-VERIFY-7932-REDUCE
+
+Complete-family fractions use all 48 intended families in each decoder arm.
+Use 10000 paired source-cluster bootstrap draws and exact paired discordance.
+A protocol gain requires delta>=.05, CI95 lower>0 and p<.05.
+Secondary paired sensitivity requires 32 families complete in both arms.
+Keep sentence correctness, natural Brier and natural cost null without independent labels.
+Schema benefit is circular_positive with verifier_is_oracle=true.
+Underpowered completed panels are terminal null. Replay rejects primitive or aggregate drift.
+
+Implementation status: implemented in `carnot.verify.qwen_completion_7932`.
+Frozen lexical views replace model-nominated witnesses. Cold replay checks request
+bytes, decoder order, response parsing, row shards and paired reductions.
+
 ### REQ-VERIFY-7930-V688: Fit current heads from exact qualified primaries
 
 Exp7930 SHALL authenticate exact Exp7916 and Exp7892 primary bytes. Primary
