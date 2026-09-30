@@ -21131,3 +21131,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-30: Bind twelve tasks and reuse qualified evidence with current methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_contract_methods; results/experiment_7929_v688_contract_methods.json
 - 2026-09-30: Fit source energies after primary artifact routing is qualified (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7930_v688_energy_fit.json
 - 2026-09-30: Measure bounded Qwen decisions with paired grammar controls (⚠️ Research Finding) — honest_verdict=complete_null_paired_decoder_completion; results/experiment_7932_v688_qwen_completion.json
+- 2026-09-30: Recover same-day live supervisor evidence for generalization (⚠️ Research Finding) — honest_verdict=complete_null_no_recovered_live_supervisor_events; results/experiment_7936_v688_arc_supervisor_refinement.json
