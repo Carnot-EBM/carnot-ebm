@@ -1,0 +1,475 @@
+{
+  "affected_files": [
+    "python/carnot/verify/energy_fit_7943.py",
+    "python/carnot/verify/energy_fit_7943_validation.py",
+    "scripts/experiments/experiment_7943_v689_energy_fit.py"
+  ],
+  "checkpoint_policy": "current task and complete dependency hash only",
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot7930-d16wrcnq/unit",
+        "tests/python/test_energy_fit_7943.py",
+        "tests/python/test_energy_fit_7930.py",
+        "tests/python/test_energy_fit_7930_run.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_in_process_doc_reconcile.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_training_publication_7941.py"
+      ],
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "affected_unit",
+      "scope": "required",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot7930-d16wrcnq/e2e015",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "e2e_015",
+      "scope": "required",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/e2e016/fixture.json"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "e2e_016_fixture",
+      "scope": "required",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/e2e016/fixture.json"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "e2e_016_replay",
+      "scope": "required",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--date",
+        "20260930",
+        "--fixture",
+        "--publication",
+        "/tmp/carnot7930-d16wrcnq/missing.json",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/routes/negative/experiment_7943_fixture.json",
+        "--assert-ready"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 2,
+      "expected_reason": "source evidence blocked",
+      "name": "cli_expected_failure",
+      "scope": "expected_failure",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--date",
+        "20260930",
+        "--fixture",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/routes/success/experiment_7943_fixture.json",
+        "--assert-ready"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "cli_success",
+      "scope": "required",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--date",
+        "20260930",
+        "--fixture",
+        "--publication",
+        "/tmp/carnot7930-d16wrcnq/missing.json",
+        "--output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/routes/blocked/experiment_7943_fixture.json"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "cli_blocked",
+      "scope": "required",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/routes/blocked/experiment_7943_fixture.json"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "cli_blocked_replay",
+      "scope": "required",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/energy_fit_7943.py",
+        "python/carnot/verify/energy_fit_7943_validation.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "tests/python/test_energy_fit_7943.py"
+      ],
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "ruff_check",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/energy_fit_7943.py",
+        "python/carnot/verify/energy_fit_7943_validation.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "tests/python/test_energy_fit_7943.py"
+      ],
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "ruff_format",
+      "scope": "required",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/verify/energy_fit_7943.py",
+        "python/carnot/verify/energy_fit_7943_validation.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "mypy",
+      "scope": "required",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_energy_fit_7943.py",
+        "tests/python/test_energy_fit_7930.py",
+        "tests/python/test_energy_fit_7930_run.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_in_process_doc_reconcile.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_training_publication_7941.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "spec_coverage",
+      "scope": "required",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "full_pytest",
+      "scope": "repository_health",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/routes/success/experiment_7943_fixture.json"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "cli_fixture_replay",
+      "scope": "required",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--date",
+        "20260930",
+        "--terminal-recheck",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/routes/success/experiment_7943_fixture.json"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "cli_terminal_recheck",
+      "scope": "required",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7943_v689_energy_fit/candidate.json"
+      ],
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "cli_cold_replay",
+      "scope": "late",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "/tmp/carnot7930-d16wrcnq"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "coverage_combine",
+      "scope": "late",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--data-file=/tmp/carnot7930-d16wrcnq/.coverage",
+        "--include=*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot7930-d16wrcnq/coverage.json"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "expected_reason": "command must pass",
+      "name": "coverage_json",
+      "scope": "late",
+      "timeout_s": 30
+    }
+  ],
+  "configuration": {
+    "alternate_ce_limit": 0.7,
+    "arms": [
+      "response_set",
+      "local_set",
+      "augmented_set",
+      "constrained_set",
+      "augmented_mlp",
+      "constrained_mlp",
+      "local_logistic",
+      "source_erased_constrained_set",
+      "complete_static_constrained_set"
+    ],
+    "base_features": 132,
+    "complete_static_features": 16,
+    "compute_budget_s": 3000,
+    "dual_clip": [
+      0,
+      10
+    ],
+    "dual_step": 0.01,
+    "epochs": 16,
+    "kl_tolerance": 0.01,
+    "learning_rate": 0.01,
+    "parameter_limit": 4096,
+    "seeds": [
+      67801,
+      67802,
+      67803
+    ],
+    "temperatures": [
+      0.25,
+      0.29730177875068026,
+      0.3535533905932738,
+      0.42044820762685725,
+      0.5,
+      0.5946035575013605,
+      0.7071067811865475,
+      0.8408964152537145,
+      1.0,
+      1.189207115002721,
+      1.4142135623730951,
+      1.6817928305074292,
+      1.9999999999999998,
+      2.378414230005442,
+      2.82842712474619,
+      3.363585661014858,
+      4.0
+    ],
+    "width": 16
+  },
+  "coverage_file": "/tmp/carnot7930-d16wrcnq/.coverage",
+  "coverage_includes": "*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+  "current_producer": {
+    "experiment_id": 7943,
+    "task_id": "exp7943-energy-fit"
+  },
+  "dependencies": {
+    "python/carnot/reporting/primary_publication.py": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310",
+    "python/carnot/reporting/publication_qualification_7928.py": "sha256:04aa08185b47e5ffe48614383b8c750a2e0eb00ace73d590231d4b17e8c9cfa8",
+    "python/carnot/verify/energy_fit_7943.py": "sha256:1dc63281c73e3f548329e2468b151c274ceee2e82f42aeb9d5890b61bff4fb60",
+    "python/carnot/verify/energy_fit_7943_validation.py": "sha256:fa62e0ec34087285f06bc3b109dfcf13fa107431a5abccbd42bcdf25e6153e2e",
+    "python/carnot/verify/training_publication_7941.py": "sha256:6c1f4c8e06a0732b0b64faa90b5d9a0b1fb31950730c64ab29e0532f18867e15",
+    "python/carnot/verify/training_publication_7941_run.py": "sha256:26f3e6d8adfffe5caabb1ebe7e688c0c421e0efa7ecdbbddc0285a3c2a6dcb9a",
+    "scripts/conductor_gates.py": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+    "scripts/experiments/experiment_7894_v685_energy_fit.py": "sha256:3d7e67996bf210f60d741946f22519f724256e125f7a341349133f13ad13fc9a",
+    "scripts/experiments/experiment_7943_v689_energy_fit.py": "sha256:b4fe4382c60c68daeadcf23781f419853f60c4ad69a395efa36b2eed6b12789b",
+    "scripts/in_process_doc_reconcile.py": "sha256:7fbff3005af55d74acf50c6f932998ea282c674dce197400ea5c1ec219ccd762",
+    "tests/python/test_conductor_gates.py": "sha256:a5a22b1908237000a737920d22c36a9df38e14e92996956e96f1864411b3b409",
+    "tests/python/test_current_work_receipt.py": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120",
+    "tests/python/test_energy_fit_7894.py": "sha256:4d1177f13f3a64d135d83fd7a93706e2f1f00943326d8f8a2eb7a7e1f946b595",
+    "tests/python/test_energy_fit_7930.py": "sha256:861269f9b52790a6561a8f7af0b3cb9e50e6977b727a389cf989622acf25a77c",
+    "tests/python/test_energy_fit_7930_run.py": "sha256:3473b2575f81658e992094613e9eb169a840ebdbe83b06d18c0d2a4403a303af",
+    "tests/python/test_energy_fit_7943.py": "sha256:700af15b67be81d9e15216fc3a386c3397926b11d03ee24f5dfa36d255a0048a",
+    "tests/python/test_in_process_doc_reconcile.py": "sha256:e03f78297c5bcca800e8d034c5528759de084f7a053d7003221a06686edb1c67",
+    "tests/python/test_natural_runtime_7853.py": "sha256:1b9b57329d455cdf76c98f5038b563e48936467d3bb03ce2a739400f4bfa10ca",
+    "tests/python/test_natural_runtime_7867.py": "sha256:68c9a0fe36cf8dd1bc77e399fed06e30ea62014d97beefd3d05ddfd174df4f57",
+    "tests/python/test_primary_publication_7928.py": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d",
+    "tests/python/test_training_publication_7941.py": "sha256:8ea23722c1b5510c847254390f11f763e8ee8036ac63c7a484b006e0934aa053"
+  },
+  "execution_date": "20260930",
+  "historical_fixture_date": "20260929",
+  "transitive_consumers": [
+    "tests/python/test_energy_fit_7930.py",
+    "tests/python/test_energy_fit_7930_run.py",
+    "tests/python/test_energy_fit_7894.py",
+    "tests/python/test_natural_runtime_7867.py",
+    "tests/python/test_natural_runtime_7853.py",
+    "tests/python/test_primary_publication_7928.py",
+    "tests/python/test_conductor_gates.py",
+    "tests/python/test_in_process_doc_reconcile.py",
+    "tests/python/test_current_work_receipt.py",
+    "tests/python/test_training_publication_7941.py"
+  ]
+}

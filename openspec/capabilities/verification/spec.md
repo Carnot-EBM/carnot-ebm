@@ -47126,3 +47126,39 @@ Exp7941 implementation reuses Exp7916's isolated callable library, performs a
 bounded fresh fixture fit, and binds checkpoint custody to the current wrapper
 and transitive source hashes. It preserves Exp7930's disqualification. Terminal
 readiness comes from current primitive receipts and measured new-source coverage.
+
+## REQ-VERIFY-7943: Fit current source energies after publication qualification
+
+Authenticate Exp7941's actual primary, both readiness scores, eligible terminal
+class, validator binding and all callable dependencies before training.
+Authenticate Exp7916 and exact Exp7892 public and evaluator shards directly.
+External missing or failed operands produce complete_blocked_* with exact
+upstream identity, path/hash, field, operator, expected and observed values.
+Preserve 640 exposed development families, 604 eligible and 36 exclusions.
+Reuse qualified math for nine arms and seeds 67801/67802/67803, sixteen epochs,
+width sixteen, learning rate .01, and at most 4096 parameters. Bind every fresh
+head and row to Exp7943 and complete dependency hashes. Seal all 27 heads before
+later-role labels. Preserve masks, energies, controls, real spans and traces.
+Use one 3000-second compute budget. Historical V688 evidence stays disqualified.
+
+### SCENARIO-VERIFY-7943-CUSTODY
+
+Missing primary, failed readiness, changed dependency, changed attestation or
+unqualified callable blocks before fitting. Direct public preparation recomputes
+the existing exclusions without replacing source bytes. Current checkpoints
+include producer identity and reject dependency drift. Unknown targets retain
+zero local loss and gradient through the unchanged qualified numerical library.
+
+### SCENARIO-VERIFY-7943-REPLAY
+
+Cold processes reconstruct predictions from sealed checkpoints and public
+bytes. They reject changed rows, source hashes, checkpoint identity or final
+primary hash. Record class counts, calibration bins and known-label masks.
+Readiness requires 27 current heads, complete rows and passed owned checks.
+A valid null is ready; fixture agreement remains circular_positive.
+
+Implementation: energy_fit_7943.py configures isolated qualified callables.
+The parameterized Exp7943 CLI owns fresh checkpoint and prediction identity.
+Tests in test_energy_fit_7943.py check custody, real private routes, cold
+reconstruction, reader binding and failed required checks. Historical numerical
+modules and V688 determinations remain unchanged.

@@ -87504,3 +87504,30 @@ child receipts. The parameterized CLI keeps publication roots separate.
 Pytest basetemp and coverage storage use private temporary roots because the
 repository artifact guard redirects repository-local test writes. The terminal
 artifact records the corrected scope and retains the failed initial attempt.
+
+## REQ-REPORT-7943: Qualify isolated publication before the long fit
+
+Execute real private success, blocked, required failure, cold replay and terminal
+routes before natural fitting. Each publication scenario has its own directory.
+Keep the unchanged uniqueness check. Publish one experiment_7943_*.json primary;
+rows, attempts and validators remain below its raw directory. Both actual
+consumers must select final primary bytes after nested sidecars get newer mtimes.
+Freeze exact affected tests, transitive consumers, argv, exits, reasons, deadlines
+and identical coverage includes before results. Require nonempty 100 percent
+new-code statement coverage. Retain historical required failures. Run E2E-015
+and both E2E-016 routes with 20260929; record execution date 20260930 separately.
+Run repository-wide pytest once as bounded health evidence. Leave ops and
+traceability reconciliation to the conductor as requested by the operator.
+
+### SCENARIO-REPORT-7943-TERMINAL
+
+Inspect adversarial and strict row consistency reports for exact final bytes.
+Owned required failures close readiness and disqualify. Recheck verdict changes;
+publish only checked bytes atomically with final hash-bound nested sidecars.
+Record actual commands, exits, logs, coverage counts and reader-selected hashes.
+
+Implementation: energy_fit_7943_validation.py freezes explicit commands and
+coverage scope before fitting. The producer executes distinct private routes
+before the long fit and preserves current exits beside historical failures.
+The unchanged publisher seals checked bytes and both actual reader hashes.
+Ops and traceability reconciliation remain assigned to the conductor.
