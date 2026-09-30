@@ -19158,3 +19158,5 @@ code |
 | 2026-09-30 20:59 UTC | Measure calibrated decisions and abstention agains | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7943-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
 | 2026-09-30 21:01 UTC | Measure bounded Qwen source support against human  | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp7942-sentence-labels.sentence_labels_ready_score (actual=0 == expected=1) |
 | 2026-09-30 21:03 UTC | Measure evidence fragility against a separate stre | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7943-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
+| 2026-09-30 21:05 UTC | Measure persistent constraint additions before del | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7943-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
+| 2026-09-30 21:07 UTC | Compare delayed confidence updates on one issued l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7947-causal-acquisition, exp7947-causal-acquisition, exp7947-causal-acquisition) |
