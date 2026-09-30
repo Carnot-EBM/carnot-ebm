@@ -1,0 +1,794 @@
+{
+  "action_budget": 300,
+  "arm_b_skipped": {
+    "confound_left_uncontrolled": "This eval cannot separate a serving-stack effect (stock llama.cpp-master b9606 vs the PrismML fork) from the ternary-weight effect. Arm A vs Arm C answers the real bottom-line question (is ternary worth carrying forward as a candidate at all) but conflates 'the model changed' with 'the server that runs it changed'. The first Bonsai-2 eval's own N=32 concurrency-collapse follow-up already found ONE concrete fork-vs-stock code difference (auto_fgdn default) with real behavioural consequences under batching, so the serving stack is not a safe assumption to treat as inert here.",
+    "reason": "2026-09-29 coordinator decision (Option 2, mid-run): finish Arm A, skip Arm B (fork-serving control, same mandated model through the PrismML fork) entirely, run Arm C, report. Driven by real measured per-episode cost (~5 minutes/episode once real induction fires) against a session time constraint (operator wanted to restart Claude Code soon, unrelated to this task). Two Arm B episodes (cd82, both seeds) DID run for real before the kill, but were never persisted to disk (the harness writes each arm's raw JSON only after that arm's full episode loop finishes) and are not reported anywhere -- nothing here rests on unsaved data.",
+    "skipped": true
+  },
+  "arms": {
+    "A_stock_standard": {
+      "any_level_up_games": [
+        "cd82",
+        "lp85"
+      ],
+      "arm": "A_stock_standard",
+      "episode_errors": [],
+      "episodes": [
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 308.838,
+          "error": null,
+          "game": "cd82",
+          "game_score": 0.0,
+          "induction_enabled": true,
+          "level_checkpoints": {},
+          "levels_completed": 0,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 54.2468,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 79.7201,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 84.5613,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 79.9631,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 298.491,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491001,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 320.195,
+          "error": null,
+          "game": "cd82",
+          "game_score": 0.5043507546921292,
+          "induction_enabled": true,
+          "level_checkpoints": {
+            "1": 169
+          },
+          "levels_completed": 1,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 83.421,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 79.431,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 83.6985,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 64.1099,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 310.66,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            10.591365848534714,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491002,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 320.231,
+          "error": null,
+          "game": "lp85",
+          "game_score": 0.0,
+          "induction_enabled": true,
+          "level_checkpoints": {},
+          "levels_completed": 0,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 88.0571,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 80.6838,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 91.7671,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 49.5751,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 310.083,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491001,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 507.021,
+          "error": null,
+          "game": "lp85",
+          "game_score": 0.033849628005472164,
+          "induction_enabled": true,
+          "level_checkpoints": {
+            "1": 154
+          },
+          "levels_completed": 1,
+          "llm_call_count": 6,
+          "llm_calls": [
+            {
+              "duration_s": 92.0212,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 80.2269,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 88.7054,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 58.2052,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 95.8205,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 90.5241,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 505.503,
+          "llm_tokens_total": 3072,
+          "per_level_scores": [
+            1.2185866081969978,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491002,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 320.51,
+          "error": null,
+          "game": "ar25",
+          "game_score": 0.0,
+          "induction_enabled": true,
+          "level_checkpoints": {},
+          "levels_completed": 0,
+          "llm_call_count": 3,
+          "llm_calls": [
+            {
+              "duration_s": 91.2534,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 90.6512,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 88.9615,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 270.866,
+          "llm_tokens_total": 1536,
+          "per_level_scores": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491001,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 320.504,
+          "error": null,
+          "game": "ar25",
+          "game_score": 0.0,
+          "induction_enabled": true,
+          "level_checkpoints": {},
+          "levels_completed": 0,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 85.5013,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 80.0532,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 86.0551,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 58.4435,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 310.053,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491002,
+          "stored_engines_disabled": true
+        }
+      ],
+      "generation_ok_rate": 0.0,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "label": "today's real path: stock llama.cpp-master build, mandated Q4_K_M model",
+      "mean_call_duration_s": 80.226,
+      "mean_game_score": 0.08970006378293356,
+      "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+      "observed_tokens_per_second": 6.38,
+      "per_game_mean_score": {
+        "ar25": 0.0,
+        "cd82": 0.2521753773460646,
+        "lp85": 0.016924814002736082
+      },
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "total_llm_calls": 25,
+      "total_llm_generation_duration_s": 2005.656,
+      "total_llm_tokens": 12800
+    },
+    "C_fork_ternary": {
+      "any_level_up_games": [
+        "cd82",
+        "lp85"
+      ],
+      "arm": "C_fork_ternary",
+      "episode_errors": [],
+      "episodes": [
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 196.891,
+          "error": null,
+          "game": "cd82",
+          "game_score": 0.0,
+          "induction_enabled": true,
+          "level_checkpoints": {},
+          "levels_completed": 0,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 36.1136,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 49.1899,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 49.0249,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 47.4715,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 181.8,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491001,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 197.83,
+          "error": null,
+          "game": "cd82",
+          "game_score": 0.5043507546921292,
+          "induction_enabled": true,
+          "level_checkpoints": {
+            "1": 169
+          },
+          "levels_completed": 1,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 47.3431,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 47.1805,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 46.5238,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 45.9958,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 187.043,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            10.591365848534714,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491002,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 199.291,
+          "error": null,
+          "game": "lp85",
+          "game_score": 0.0,
+          "induction_enabled": true,
+          "level_checkpoints": {},
+          "levels_completed": 0,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 51.2381,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 43.1121,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 51.0649,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 43.4056,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 188.821,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491001,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 284.901,
+          "error": null,
+          "game": "lp85",
+          "game_score": 0.033849628005472164,
+          "induction_enabled": true,
+          "level_checkpoints": {
+            "1": 154
+          },
+          "levels_completed": 1,
+          "llm_call_count": 6,
+          "llm_calls": [
+            {
+              "duration_s": 46.6597,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 46.7384,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 46.247,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 46.5207,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 52.6986,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 44.5655,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 283.43,
+          "llm_tokens_total": 3072,
+          "per_level_scores": [
+            1.2185866081969978,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491002,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 202.638,
+          "error": null,
+          "game": "ar25",
+          "game_score": 0.0,
+          "induction_enabled": true,
+          "level_checkpoints": {},
+          "levels_completed": 0,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 48.8289,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 46.5522,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 47.5657,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 48.5798,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 191.527,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491001,
+          "stored_engines_disabled": true
+        },
+        {
+          "action_budget": 300,
+          "actions_taken": 300,
+          "adapter_disabled": true,
+          "banked_trajectories_disabled": true,
+          "duration_s": 212.564,
+          "error": null,
+          "game": "ar25",
+          "game_score": 0.0,
+          "induction_enabled": true,
+          "level_checkpoints": {},
+          "levels_completed": 0,
+          "llm_call_count": 4,
+          "llm_calls": [
+            {
+              "duration_s": 51.1219,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 49.7621,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 48.3521,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            },
+            {
+              "duration_s": 48.284,
+              "method": "generate",
+              "ok": false,
+              "tokens": 512
+            }
+          ],
+          "llm_generation_duration_s": 197.52,
+          "llm_tokens_total": 2048,
+          "per_level_scores": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "seed": 7491002,
+          "stored_engines_disabled": true
+        }
+      ],
+      "generation_ok_rate": 0.0,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--prism-ml--Ternary-Bonsai-2-27B-gguf/snapshots/b072e1d3b35a0a630cece372c2127528e0994386/Ternary-Bonsai-2-27B-PTQ1_0.gguf",
+      "label": "the candidate: PrismML fork build, ternary Bonsai-2 (PTQ1_0)",
+      "mean_call_duration_s": 47.313,
+      "mean_game_score": 0.08970006378293356,
+      "model_repository": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+      "observed_tokens_per_second": 10.82,
+      "per_game_mean_score": {
+        "ar25": 0.0,
+        "cd82": 0.2521753773460646,
+        "lp85": 0.016924814002736082
+      },
+      "server_binary": "/tmp/bonsai_followup/fork-llama.cpp/build/bin/llama-server",
+      "total_llm_calls": 26,
+      "total_llm_generation_duration_s": 1230.141,
+      "total_llm_tokens": 13312
+    }
+  },
+  "arms_run": [
+    "A_stock_standard",
+    "C_fork_ternary"
+  ],
+  "duration_s": 3396.704,
+  "duration_s_note": "Real total wall-clock of the two-arm run (Arm A 2099s per run-log timestamps 21:19:22-21:54:21, plus Arm C 1297.704s per its own wrote-in-Ns log line). Distinct from generation_duration_s (3235.797s of pure LLM completion time) because the harness also spends time on explorer moves, env stepping, and server start/stop between games -- duration_s >= generation_duration_s is expected, not a bug.",
+  "episode_wall_cap_s": 320,
+  "games": [
+    "cd82",
+    "lp85",
+    "ar25"
+  ],
+  "generation_duration_s": 3235.797,
+  "generation_invoked": true,
+  "honest_verdict": "complete_arc_candidate_generator_eval_bonsai2_vs_mandated_two_arm",
+  "induce_max_tokens": 512,
+  "induce_n_ctx": 16384,
+  "induce_timeout_s": 90,
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_full_generation",
+  "live_model_loaded": true,
+  "llm_call_count": 51,
+  "methodology_note": "CRITICAL for reading this artifact: every single generate() call in BOTH arms (25 of 25 in Arm A, 26 of 26 in Arm C) returned ok=False, truncated at exactly the 512-token induce_max_tokens cap, never producing a parseable induction result. Neither model completed a valid structured induction within this budget on any of the 6 games/seeds tested. Consequence: because induce() never succeeded, next_move() fell back to identical seed-deterministic explorer behaviour on both arms -- this is WHY per-game/per-seed real scorecard scores are bit-identical between Arm A and Arm C (both 0.0897 mean_game_score). This eval therefore measured REAL GPU throughput and latency under a genuine induction-shaped workload (both arms hit the real generator, real prompts, real 512-token completions -- inference_substrate=live_llm_inference is accurate), but it did NOT measure or compare generation QUALITY or its effect on gameplay outcome, because neither model got a chance to demonstrate one. Raising induce_max_tokens (this run used 512; ARC induction prompts routinely need more headroom to emit a full engine+goal JSON) is a precondition for any future run of this harness to say anything about quality-on-gameplay.",
+  "model_invoked": true,
+  "model_specs": {
+    "A_stock_standard": {
+      "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "C_fork_ternary": {
+      "model_filename": "Ternary-Bonsai-2-27B-PTQ1_0.gguf",
+      "model_repository": "prism-ml/Ternary-Bonsai-2-27B-gguf",
+      "server_binary": "/tmp/bonsai_followup/fork-llama.cpp/build/bin/llama-server"
+    }
+  },
+  "observed_speed_ratio_ternary_over_standard": 1.696,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "cached PrismML fork llama-server binary"
+    },
+    {
+      "available": true,
+      "resource": "cached ternary Bonsai-2 GGUF (PTQ1_0)"
+    },
+    {
+      "available": true,
+      "resource": "cached standard Bonsai-2 GGUF"
+    },
+    {
+      "available": true,
+      "resource": "stock llama.cpp-master llama-server binary"
+    },
+    {
+      "available": true,
+      "resource": "GPU 1 reachable, GPU 0 untouched"
+    }
+  ],
+  "random_seeds_used": [
+    7491001,
+    7491002
+  ],
+  "reproducibility_checksum": "045112f4c13b753df7bdd131eb3267b88d8d2981c0ac0275a91d82abe1862d65",
+  "solve_provenance": "development_proxy",
+  "speed_ratio_note": "Arm A mean call duration 80.226s vs Arm C mean call duration 47.313s -> ternary ran 1.7x faster per call on real ARC induction prompts (both truncated at the same 512-token cap, so this is a clean apples-to-apples per-token throughput comparison). Consistent in direction, larger in magnitude, than the prior standalone single-stream benchmark (1.44x) in docs/research-notes/bonsai2-ternary-eval-2026-09-29.md -- plausibly because ARC induction prompts are longer / differently shaped than that benchmark's prompt, or simple N=25-26-call noise; not independently resolved here."
+}

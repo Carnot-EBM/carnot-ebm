@@ -11,3 +11,13 @@
 # fallback path can do). No ARC level was solved, attempted or claimed and no game was
 # played scored or online; solve_provenance is development_proxy.
 results/arc_multimodal_fidelity_20260801/experiment_arc_multimodal_fidelity_20260801.json
+
+# 2026-09-29, ARC candidate-generator eval (Bonsai-2 ternary vs the mandated model). Both
+# arms genuinely loaded and ran a real llama-server process on GPU 1 for real ARC-AGI-3
+# induction calls during live gameplay (Arm A: stock llama.cpp-master serving the
+# mandated Qwen3.8-27B-Q4_K_M; Arm C: the PrismML fork serving ternary Bonsai-2), real
+# tokens/second measured from actual play (Arm A 6.38 tok/s, Arm C 10.82 tok/s). No ARC
+# level-up is claimed from this artifact; solve_provenance is development_proxy
+# throughout (a candidate-selection eval, not a solve), and it is not registered in
+# ops/arc_solve_registry.yaml.
+results/experiment_bonsai2_arc_candidate_eval.json

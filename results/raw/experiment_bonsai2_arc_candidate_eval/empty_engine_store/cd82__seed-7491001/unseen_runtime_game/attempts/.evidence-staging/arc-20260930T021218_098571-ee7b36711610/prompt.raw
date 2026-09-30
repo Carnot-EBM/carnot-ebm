@@ -1,0 +1,146 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'unseen_runtime_game'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 2, 3, 4, 5, 15]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/unseen_runtime_game/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:5x16,4x2,3x46
+r1:5x16,4x2,3x46
+r2:5x16,4x2,3x17,4x5,3x1,4x5,3x18
+r3:5x3,0x10,5x3,4x2,3x17,4x1,0x3,4x1,3x1,4x1,15x3,4x1,3x18
+r4:5x3,0x10,5x3,4x2,3x17,4x1,0x3,4x1,3x1,4x1,15x3,4x1,3x18
+r5:5x3,0x10,5x3,4x2,3x17,4x1,0x3,4x1,3x1,4x1,15x3,4x1,3x18
+r6:5x3,0x10,5x3,4x2,3x17,4x5,3x1,4x5,3x18
+r7:5x3,0x10,5x3,4x2,3x23,0x5,3x18
+r8:5x3,15x10,5x3,4x2,3x46
+r9:5x3,15x10,5x3,4x2,5x46
+r10:5x3,15x10,5x3,4x2,5x46
+r11:5x3,15x10,5x3,4x2,5x46
+r12:5x3,15x10,5x3,4x2,5x46
+r13:5x16,4x2,5x46
+r14:5x16,4x2,5x46
+r15:5x16,4x2,5x46
+r16:4x18,5x46
+r17:4x18,5x46
+r18:5x64
+r19:5x64
+r20:5x64
+r21:5x64
+r22:5x64
+r23:5x64
+r24:5x25,2x14,5x25
+r25:5x25,2x1,15x12,2x1,5x25
+r26:5x25,2x1,15x12,2x1,5x25
+r27:5x25,2x1,15x12,2x1,5x25
+r28:5x25,2x1,15x12,2x1,5x25
+r29:5x25,2x1,15x12,2x1,5x25
+r30:5x25,2x1,15x12,2x1,5x25
+r31:5x25,2x1,15x12,2x1,5x25
+r32:5x25,2x1,5x12,2x1,5x25
+r33:5x64
+r34:5x27,0x10,5x27
+r35:5x27,0x10,5x27
+r36:5x27,0x10,5x27
+r37:5x27,0x10,5x27
+r38:5x27,0x10,5x27
+r39:5x27,0x10,5x27
+r40:5x27,0x10,5x27
+r41:5x27,0x10,5x27
+r42:5x27,0x10,5x27
+r43:5x27,0x10,5x27
+r44:5x64
+r45:5x64
+r46:5x64
+r47:5x64
+r48:5x64
+r49:5x64
+r50:5x64
+r51:5x64
+r52:5x64
+r53:5x64
+r54:5x64
+r55:5x64
+r56:5x64
+r57:5x64
+r58:5x64
+r59:5x64
+r60:5x64
+r61:5x64
+r62:5x64
+r63:4x64
+--- ACTION6 data={'x': 43, 'y': 4} (level 0->0): changed cells (FULL, run-length) = r63c63:5x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r21c24:2x1 r22c23:2x3 r23c22:2x2,15x1,2x2 r24c21:2x2,15x3 r24c28:5x11 r25c20:2x2,15x4 r25c27:2x2,5x10 r26c19:2x2,15x5 r26c28:2x2,5x9 r27c18:2x2,15x6 r27c29:2x2,5x8 r28c17:2x2,15x7 r28c29:5x10 r29c16:2x2,15x8 r29c28:5x11 r30c15:2x2,15x9 r30c27:5x12 r31c14:2x2,15x10,5x13 r32c15:2x2,15x8,5x1 r32c38:5x1 r33c16:2x2,15x6 r34c17:2x2,15x4 r35c18:2x2,15x2 r36c19:2x2 r37c20:2x1 r63c62:5x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r21c24:5x1 r22c23:5x3 r23c22:5x5 r24c21:5x4,2x1 r24c28:2x11 r25c20:5x5,2x1 r25c27:15x11,2x1 r26c19:5x6,2x1 r26c28:15x10,2x1 r27c18:5x7,2x1 r27c29:15x9,2x1 r28c17:5x8,2x1 r28c29:15x9,2x1 r29c16:5x9,2x1 r29c28:15x10,2x1 r30c15:5x10,2x1 r30c27:15x11,2x1 r31c14:5x11,2x1,15x12,2x1 r32c15:5x10,2x1 r32c38:2x1 r33c16:5x8 r34c17:5x6 r35c18:5x4 r36c19:5x2 r37c20:5x1 r63c61:5x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r21c39:2x1 r22c38:2x3 r23c37:2x2,15x1,2x2 r24c25:5x11 r24c38:15x3,2x2 r25c25:5x10,2x2 r25c38:15x4,2x2 r26c25:5x9,2x2 r26c38:15x5,2x2 r27c25:5x8,2x2 r27c38:15x6,2x2 r28c25:5x10 r28c38:15x7,2x2 r29c25:5x11 r29c38:15x8,2x2 r30c25:5x12 r30c38:15x9,2x2 r31c25:5x13,15x10,2x2 r32c25:5x1 r32c38:5x1,15x8,2x2 r33c40:15x6,2x2 r34c41:15x4,2x2 r35c42:15x2,2x2 r36c43:2x2 r37c43:2x1 r63c60:5x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r21c39:5x1 r22c38:5x3 r23c37:5x5 r24c25:2x11 r24c38:2x1,5x4 r25c25:2x1,15x11 r25c38:2x1,5x5 r26c25:2x1,15x10 r26c38:2x1,5x6 r27c25:2x1,15x9 r27c38:2x1,5x7 r28c25:2x1,15x9 r28c38:2x1,5x8 r29c25:2x1,15x10 r29c38:2x1,5x9 r30c25:2x1,15x11 r30c38:2x1,5x10 r31c25:2x1,15x12,2x1,5x11 r32c25:2x1 r32c38:2x1,5x10 r33c40:5x8 r34c41:5x6 r35c42:5x4 r36c43:5x2 r37c43:5x1
+--- ACTION6 data={'x': 7, 'y': 10} (level 0->0): changed cells (FULL, run-length) = r63c59:5x1
+--- ACTION6 data={'x': 31, 'y': 28} (level 0->0): changed cells (FULL, run-length) = r63c58:5x1
+--- ACTION5 (level 0->0): changed cells (FULL, run-length) = r34c27:15x10 r35c27:15x10 r36c27:15x10 r37c27:15x10 r38c27:15x10
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r21c24:2x1 r22c23:2x3 r23c22:2x2,15x1,2x2 r24c21:2x2,15x3 r24c28:5x11 r25c20:2x2,15x4 r25c27:2x2,5x10 r26c19:2x2,15x5 r26c28:2x2,5x9 r27c18:2x2,15x6 r27c29:2x2,5x8 r28c17:2x2,15x7 r28c29:5x10 r29c16:2x2,15x8 r29c28:5x11 r30c15:2x2,15x9 r30c27:5x12 r31c14:2x2,15x10,5x13 r32c15:2x2,15x8,5x1 r32c38:5x1 r33c16:2x2,15x6 r34c17:2x2,15x4 r35c18:2x2,15x2 r36c19:2x2 r37c20:2x1 r63c57:5x1
+--- ACTION6 data={'x': 31, 'y': 36} (level 0->0): changed cells (FULL, run-length) = r63c56:5x1
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r21c24:5x1 r22c23:5x3 r23c22:5x5 r24c21:5x7 r25c20:5x9 r26c19:5x11 r27c18:5x13 r28c17:5x12 r29c16:5x12 r30c15:5x12 r31c14:5x12 r32c15:5x2,2x9 r33c16:5x1 r33c24:15x1 r34c18:15x1 r34c23:15x2 r35c17:2x1,15x2 r35c22:15x3 r36c17:2x1,15x7 r37c17:2x1,15x7 r38c17:2x1,15x7 r39c17:2x1,15x7 r40c17:2x1,15x7 r41c17:2x1,15x7 r42c17:2x1,15x7 r43c17:2x1,15x7 r44c17:2x1,15x7 r45c17:2x9 r63c55:5x1
+--- ACTION6 data={'x': 31, 'y': 36} (level 0->0): changed cells (FULL, run-length) = r63c54:5x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r63c53:5x1
+--- ACTION5 (level 0->0): changed cells (FULL, run-length) = r39c27:15x5 r40c27:15x5 r41c27:15x5 r42c27:15x5 r43c27:15x5 r63c52:5x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r21c24:2x1 r22c23:2x3 r23c22:2x2,15x1,2x2 r24c21:2x2,15x3,2x2 r25c20:2x2,15x5,2x2 r26c19:2x2,15x7,2x2 r27c18:2x2,15x9,2x2 r28c17:2x2,15x10 r29c16:2x2,15x10 r30c15:2x2,15x10 r31c14:2x2,15x10 r32c15:2x2,15x8,5x1 r33c16:2x1 r33c24:5x1 r34c18:2x1 r34c23:5x2 r35c17:5x1,2x2 r35c22:5x3 r36c17:5x2,2x2,5x4 r37c17:5x3,2x1,5x4 r38c17:5x8 r39c17:5x8 r40c17:5x8 r41c17:5x8 r42c17:5x8 r43c17:5x8 r44c17:5x8 r45c17:5x9
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r63c51:5x1
+--- ACTION6 data={'x': 7, 'y': 10} (level 0->0): changed cells (FULL, run-length) = r63c50:5x1
+--- ACTION6 data={'x': 22, 'y': 29} (level 0->0): changed cells (FULL, run-length) = r63c49:5x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r21c24:5x1 r22c23:5x3 r23c22:5x5 r24c21:5x4,2x1 r24c28:2x11 r25c20:5x5,2x1 r25c27:15x11,2x1 r26c19:5x6,2x1 r26c28:15x10,2x1 r27c18:5x7,2x1 r27c29:15x9,2x1 r28c17:5x8,2x1 r28c29:15x9,2x1 r29c16:5x9,2x1 r29c28:15x10,2x1 r30c15:5x10,2x1 r30c27:15x11,2x1 r31c14:5x11,2x1,15x12,2x1 r32c15:5x10,2x1 r32c38:2x1 r33c16:5x8 r34c17:5x6 r35c18:5x4 r36c19:5x2 r37c20:5x1 r63c48:5x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = (no change)
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = (no change)
+OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):
+INITIAL OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>):
+  obj10: color=5 bbox=(9, 0, 62, 63) px=3080 centroid=(36.9,32.7) shape=2ae161c8cba37526
+  obj2: color=3 bbox=(0, 18, 8, 63) px=359 centroid=(4.0,40.5) shape=96d557584c986308
+  obj0: color=5 bbox=(0, 0, 15, 15) px=156 centroid=(7.5,7.5) shape=6c86b0bfb8d0734a
+  obj13: color=0 bbox=(34, 27, 43, 36) px=100 centroid=(38.5,31.5) shape=9d557488dcca4342
+  obj12: color=15 bbox=(25, 26, 31, 37) px=84 centroid=(28.0,31.5) shape=fa47a640ab8ec144
+  obj1: color=4 bbox=(0, 0, 17, 17) px=68 centroid=(12.3,12.3) shape=6c6f46ce7307e9e8
+  obj14: color=4 bbox=(63, 0, 63, 63) px=64 centroid=(63.0,31.5) shape=056517711a255bc6
+  obj5: color=0 bbox=(3, 3, 7, 12) px=50 centroid=(5.0,7.5) shape=8e7d248b18274a96
+  obj9: color=15 bbox=(8, 3, 12, 12) px=50 centroid=(10.0,7.5) shape=74b655e9adafec2b
+  obj11: color=2 bbox=(24, 25, 32, 38) px=30 centroid=(26.4,31.5) shape=cebf0bde6da4ca47
+  obj3: color=4 bbox=(2, 35, 6, 39) px=16 centroid=(4.0,37.0) shape=cfdf794992c2ed83
+  obj4: color=4 bbox=(2, 41, 6, 45) px=16 centroid=(4.0,43.0) shape=cfdf794992c2ed83
+  obj6: color=0 bbox=(3, 36, 5, 38) px=9 centroid=(4.0,37.0) shape=a6a003b2ee0e8957
+  obj7: color=15 bbox=(3, 42, 5, 44) px=9 centroid=(4.0,43.0) shape=9bb1dccad90702be
+  obj8: color=0 bbox=(7, 41, 7, 45) px=5 centroid=(7.0,43.0) shape=72047de45972da40
+  containment (parent->children): {0: [5, 9], 2: [3, 4, 8], 3: [6], 4: [7], 10: [11, 12, 13]}
+  adjacency (touching id pairs): [[0, 1], [0, 5], [0, 9], [1, 2], [1, 10], [2, 3], [2, 4], [2, 8], [2, 10], [3, 6], [4, 7], [4, 8], [5, 9], [10, 11], [10, 12], [10, 13], [10, 14], [11, 12]]
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.
+
+Return ONLY one ```python code block defining engine(grid, action, data).
