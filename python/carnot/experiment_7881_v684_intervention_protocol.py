@@ -555,13 +555,17 @@ def execute(plan: Json, scratch: Path, started: float) -> list[Json]:
             if argument.startswith(("--basetemp=", "--data-file=")):
                 Path(argument.partition("=")[2]).parent.mkdir(parents=True, exist_ok=True)
         spec = CommandSpec(
-            command["name"], tuple(command["argv"]), "required", command["timeout_s"]
+            command["name"], tuple(command["argv"]), command["classification"], command["timeout_s"]
         )
         observed = run_commands(
             ROOT,
             [spec],
             log_dir=scratch / "child_logs" / command["name"],
-            extra_env={"CARNOT_FORCE_LIVE": "1", "JAX_PLATFORMS": "cpu"},
+            extra_env={
+                "CARNOT_FORCE_LIVE": "1",
+                "JAX_PLATFORMS": "cpu",
+                "COVERAGE_FILE": str(scratch / "coverage/.coverage.repository"),
+            },
             heartbeat_s=30,
         )[0]
         if observed["command_argv"] != command["argv"]:
@@ -575,7 +579,9 @@ def execute(plan: Json, scratch: Path, started: float) -> list[Json]:
             )
             observed["expected_exit_code"] = command["expected_exit_code"]
             observed["expected_error_token"] = command["expected_error_token"]
-        receipts.append({**seal(observed, index, scratch), "classification": "required"})
+        receipts.append(
+            {**seal(observed, index, scratch), "classification": command["classification"]}
+        )
         progress(started, command["name"], "after_subprocess", index + 1)
     return receipts
 

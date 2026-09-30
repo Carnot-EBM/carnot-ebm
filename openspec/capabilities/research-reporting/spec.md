@@ -86832,3 +86832,52 @@ explicit affected spec coverage. Preserve repository debt separately. Seal
 logs after exit, bind validators to final bytes and publish atomically.
 Freeze fragility groups, masks and delayed-ACI budgets before future outcomes.
 External absence SHALL block; owned failures SHALL disqualify with readiness zero.
+
+## REQ-REPORT-7917-V687: Close the two intervention failure regressions
+
+Exp7917 SHALL retain Exp7905's exact 697/699 disqualification and sealed
+coverage report as historical evidence. It SHALL test the Exp7893 wrong-date
+rejection and Exp7905 repeated terminal failure. The failed candidate SHALL
+remain disqualified with readiness zero and a failed terminal receipt.
+A second failed validation SHALL prevent final publication.
+
+The producer SHALL reuse the callable qualification runner with explicit
+input, output, raw root and producer identity. It SHALL retain 24 independent
+fixture families, four source views, first complete answer sentences, original
+byte offsets, full-source witness nomination, and at most 25 percent filler
+length mismatch. Missing labels SHALL leave semantic sensitivity null.
+No pretrained model SHALL load. Execution date SHALL remain 20260930.
+
+### SCENARIO-REPORT-7917-DATES
+
+Both historical E2E-016 routes SHALL invoke Exp7868 with date 20260929.
+Exp7893 SHALL reject 20260930 before creating fixture output or checkpoints.
+
+### SCENARIO-REPORT-7917-TERMINAL
+
+Private tests SHALL exercise success, missing input, timeout, checkpoint reuse
+and drift, cold replay, repeated terminal rejection and failed publication.
+A failed second terminal receipt SHALL retain the disqualified candidate,
+zero readiness, false validity and readiness gates, and no published output.
+
+### SCENARIO-REPORT-7917-QUALIFICATION
+
+Freeze dependencies, argv, expected exits and reasons, deadlines and identical
+coverage includes before compute. Combine private unit and actual CLI success,
+rejection and replay coverage. Every changed module and CLI SHALL have nonempty
+100 percent statement coverage. Preserve stricter historical coverage scopes.
+Run scoped Ruff, strict mypy and explicit-file spec coverage. Record one bounded
+full Python suite observation separately as repository health. Seal closed logs.
+Bind terminal validators to exact candidate hashes and publish checked bytes.
+Fixture agreement SHALL remain circular_positive with scientific benefit null.
+The conductor owns ops and traceability reconciliation after this producer exits.
+
+V687 implementation: nine new tests and all 108 affected tests pass. Combined
+unit and real CLI coverage measures 818/818 owned statements, including 110/110
+new producer and CLI statements. Both historical E2E-016 routes pass with
+20260929. Scoped Ruff, strict mypy and explicit-file spec checks pass. Two
+terminal checks inspect identical candidate hashes with zero adversarial flags.
+The artifact is complete_circular_positive_protocol_qualification, readiness
+one, with semantic sensitivity and scientific benefit unmeasured. Exp7905's
+697/699 disqualification remains historical. The one full-suite observation
+records failures and a timeout separately. The conductor owns ops reconciliation.

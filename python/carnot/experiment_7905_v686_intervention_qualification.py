@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 import shutil
 import time
-from typing import Any
+from typing import Any, Callable
 
 from carnot import experiment_7881_v684_intervention_protocol as prior_code
 from carnot import experiment_7893_v685_intervention_protocol as previous
@@ -245,20 +245,32 @@ def result_row(
     return result
 
 
-def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
+def run(
+    date: str,
+    scratch: Path,
+    output: Path = OUTPUT,
+    *,
+    raw_root: Path | None = None,
+    producer_id: int = 7905,
+    build_plan: Callable[[Path], Json] | None = None,
+    check_inputs: Callable[[Json], tuple[list[Json], Json]] | None = None,
+    build_result: Callable[..., Json] | None = None,
+) -> Json:
     """Measure fixtures, run bounded checks, and publish checked bytes only."""
     started, started_ns = time.monotonic(), time.monotonic_ns()
     progress(started, "start", "begin")
     if date != "20260930":
         raise ValueError("run_date_mismatch")
-    plan = command_manifest(scratch)
-    manifest_path = RAW / "validation_command_manifest.json"
+    raw = RAW if raw_root is None else raw_root
+    reduce_result = result_row if build_result is None else build_result
+    plan = (command_manifest if build_plan is None else build_plan)(scratch)
+    manifest_path = raw / "validation_command_manifest.json"
     if manifest_path.is_file() and json.loads(manifest_path.read_text()) != plan:
         raise ValueError("validation_manifest_drift")
     atomic_json(manifest_path, plan)
     progress(started, "preconditions", "begin")
     phase = time.monotonic()
-    checks, hashes = preflight(plan)
+    checks, hashes = (preflight if check_inputs is None else check_inputs)(plan)
     spans = [
         {
             "phase": "preconditions",
@@ -268,7 +280,7 @@ def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
     ]
     progress(started, "preconditions", "complete", len(checks))
     if any(not check["passed"] for check in checks):
-        blocked = result_row(checks, hashes, [], plan, [], None, None, started_ns, spans, False)
+        blocked = reduce_result(checks, hashes, [], plan, [], None, None, started_ns, spans, False)
         candidate = scratch / "blocked_candidate.json"
         atomic_json(candidate, blocked)
         prior_code.publish_exact(candidate, output)
@@ -280,11 +292,11 @@ def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
     selected = sorted(
         public, key=lambda row: source.digest(f"{prior_code.SEED}:{row['source_sha256']}".encode())
     )[:48]
-    protocol_path = RAW / "four_call_protocol.json"
+    protocol_path = raw / "four_call_protocol.json"
     atomic_json(
         protocol_path,
         {
-            "schema": "carnot.exp7905.four_call_protocol.v1",
+            "schema": f"carnot.exp{producer_id}.four_call_protocol.v1",
             "fixture_family_budget": 24,
             "future_family_budget": 48,
             "future_call_budget": 192,
@@ -305,7 +317,7 @@ def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
     fixture_path = scratch / "fixture.json"
     fixture = write_fixtures(fixture_path, scratch / "checkpoints")
     cold_replay(fixture_path)
-    durable_fixture = RAW / f"fixture_{sha256_file(fixture_path)[7:]}.json"
+    durable_fixture = raw / f"fixture_{sha256_file(fixture_path)[7:]}.json"
     durable_fixture.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(fixture_path, durable_fixture)
     rows = fixture["rows"]
@@ -318,7 +330,7 @@ def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
     receipts = prior_code.execute(plan, scratch, started)
     if {item["name"] for item in receipts} != {item["name"] for item in plan["commands"]}:
         raise ValueError("missing_required_command")
-    receipts = [prior_code.seal(item, index, RAW) for index, item in enumerate(receipts)]
+    receipts = [prior_code.seal(item, index, raw) for index, item in enumerate(receipts)]
     spans.append(
         {
             "phase": "validation",
@@ -327,7 +339,7 @@ def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
         }
     )
     progress(started, "validation", "complete", len(receipts))
-    result = result_row(
+    result = reduce_result(
         checks,
         hashes,
         rows,
@@ -346,14 +358,14 @@ def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
     for attempt in range(2):
         passed, flagged, binding = validate_terminal(candidate, scratch, started, attempt)
         binding["reports"] = [
-            prior_code.seal(item, len(receipts) + attempt * 2 + index, RAW)
+            prior_code.seal(item, len(receipts) + attempt * 2 + index, raw)
             for index, item in enumerate(binding["reports"])
         ]
         chain.append(binding)
         if not passed:
             if attempt:
                 raise ValueError("terminal_revalidation_failed")
-            result = result_row(
+            result = reduce_result(
                 checks,
                 hashes,
                 rows,
@@ -387,7 +399,7 @@ def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
     if reclassified:
         passed, _flagged, binding = validate_terminal(candidate, scratch, started, 2)
         binding["reports"] = [
-            prior_code.seal(item, len(receipts) + 4 + index, RAW)
+            prior_code.seal(item, len(receipts) + 4 + index, raw)
             for index, item in enumerate(binding["reports"])
         ]
         chain.append(binding)
@@ -397,7 +409,7 @@ def run(date: str, scratch: Path, output: Path = OUTPUT) -> Json:
     if final_hash != chain[-1]["candidate_sha256"] or chain[-2]["candidate_sha256"] != final_hash:
         raise ValueError("terminal_candidate_drift")
     atomic_json(
-        RAW / f"terminal_validation_{final_hash[7:]}.json",
+        raw / f"terminal_validation_{final_hash[7:]}.json",
         {"candidate_sha256": final_hash, "chain": chain},
     )
     prior_code.publish_exact(candidate, output)
