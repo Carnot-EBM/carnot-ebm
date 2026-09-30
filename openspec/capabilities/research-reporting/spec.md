@@ -86633,3 +86633,37 @@ Private success, timeout, missing input, second-pass failure, and publication
 failure cases keep actual exits and candidate hashes. The final published bytes
 match both passing terminal reports. Protocol readiness measures mechanics
 only; semantic sensitivity and scientific benefit remain unmeasured.
+## REQ-REPORT-7911: Reuse the qualified live supervisor cutoff
+
+Exp7911 SHALL authenticate Exp7899, its inventory, reducer, registry and scored
+agent source before reduction. It SHALL retain cutoff content hashes and count
+only authenticated, distinct live supervisor outcomes. An unchanged inventory
+SHALL use the explicit empty fast path with no new reducer module or model call.
+No new outcomes SHALL yield complete_null_no_new_supervisor_outcomes with ready
+mechanics and zero new solves. External failures SHALL be terminal blocked.
+Owned validation failures SHALL disqualify readiness. Historical failures remain.
+
+### SCENARIO-REPORT-7911-CUTOFF
+
+Unchanged bytes and changed modification times retain zero fresh outcomes.
+Missing or changed prerequisite bytes name the failed path, hash and gate operand.
+New receipt bytes use the existing Exp7899 authentication and event reducer.
+
+### SCENARIO-REPORT-7911-VALIDATION
+
+Before compute, freeze exact commands, deadlines, expected exits and dependency
+hashes. Private unit, success, failure and replay coverage SHALL cover every new
+statement. Run Exp7899 regressions, E2E-017 and both E2E-016 routes dated 20260930.
+Run the full Python suite once and preserve repository backlog separately.
+Scoped Ruff, strict mypy and explicit-file spec coverage SHALL pass. Both terminal
+validators SHALL inspect the published candidate hash. No public game is solved.
+
+Implementation status: specified for milestone 2026.09.686. The conductor owns
+ops/status.md, ops/changelog.md and _bmad/traceability.md reconciliation.
+
+V686 implementation: the small producer CLI reuses the unchanged qualified
+Exp7899 reducer. All 39 affected tests pass. Combined private unit and real CLI
+coverage measures 145 new statements with no missed statements. Current
+E2E-016 fixture and replay commands carry 20260930; the historical CLI rejects
+that date with run_date_mismatch. These owned failures disqualify readiness.
+The terminal artifact preserves the zero delta and the required failures.
