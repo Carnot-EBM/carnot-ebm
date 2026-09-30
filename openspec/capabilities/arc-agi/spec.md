@@ -3642,3 +3642,15 @@ The current CLI SHALL freeze its explicit validation command names and classes b
 **Given** a frozen command manifest and completed child logs
 **When** the CLI validates a candidate or replays a later attempt
 **Then** it rejects undeclared children, missing or mutated logs, and any failed required check.
+
+## REQ-ARC-7936-REFINEMENT: Identity-based live supervisor inspection
+
+Same-day unseen authenticated supervisor receipts SHALL remain inspectable.
+REQ-REPORT-7936-IDENTITY, REQ-REPORT-7936-ORDER and REQ-REPORT-7936-TERMINAL
+bind custody, chronology and terminal validation. Offline reduction claims zero
+new solves and leaves live production and arm defaults unchanged.
+
+### SCENARIO-ARC-7936-SAME-DAY
+
+Fixture recovery proves ingestion mechanics. Recovered live counts are
+observations rather than game performance gains. Zero recovery is a terminal null.

@@ -87188,3 +87188,63 @@ Run E2E-015/016 and private E2E-018. Both historical fixture and replay use
 bytes, cold-reduce rows, and check both actual readers after newer nested sidecars.
 Publish one top-level primary and keep all reports below its raw directory.
 Ops and traceability reconciliation is conductor-owned.
+
+## REQ-REPORT-7936-IDENTITY: Same-day supervisor receipt custody
+
+Exp7936 SHALL preserve Exp7924 accepted cutoff hashes and its complete seen
+inventory separately. It SHALL authenticate raw live trajectory_supervisor
+receipts through producer source hashes. Invocation and receipt IDs bind full
+row content hashes. Identical retries count once. Conflicting IDs or changed
+bytes fail closed. Future dates, unsupported hashes and disqualified producers
+remain excluded. Same-day unseen receipts are eligible for inspection.
+
+### SCENARIO-REPORT-7936-INGEST
+
+A same-day new receipt passes identity inspection while the historical day
+filter drops it. Identical retries, changed IDs, disqualified producers and
+empty redirects do not add events. Missing fields remain unknown. An unseen
+earlier receipt can be recovered without becoming prospective evidence.
+
+## REQ-REPORT-7936-ORDER: Event order and conservative refinement
+
+Only authenticated event timestamps or scoped sequences establish event order.
+Filesystem modification times SHALL NOT establish chronology. Missing order
+or an incomparable cutoff cannot support prospective gain. Reduce by game,
+seed, invocation and arm. Keep level-up, action, pending-credit and termination
+fields. Separate applied, shadow, malformed, censored and excluded records.
+Selection requires thirty uncensored redirects across five games, Wilson
+bounds and leave-one-game-out summaries. Zero progress with upper95 below .10
+permits a deprioritization proposal. Lower95 above .20 with consistent held-out
+direction permits a priority proposal. Defaults remain unchanged. Exhaustion
+without progress records a shared-method gap. Associations are not causal.
+
+### SCENARIO-REPORT-7936-REDUCE
+
+Cold reduction reproduces counts, unknown clocks, credit and decisions from
+primitive rows. Tampered counts fail. Insufficient or censored evidence cannot
+change priorities. Fixture recovery demonstrates mechanics only.
+
+## REQ-REPORT-7936-TERMINAL: Current checked receipt aggregation
+
+Freeze exact dependencies, argv, deadlines, expected failures and coverage
+includes before reduction. Run private real CLI success, failure, cold replay
+and terminal recheck. Require nonempty 100 percent added statement coverage,
+affected consumer tests, E2E-017, scoped Ruff, strict mypy and explicit-file
+spec coverage. Run the full Python suite once as separate repository health.
+Historical Exp7868 E2E-016 fixture and replay both use 20260929. Current work
+uses 20260930. No model or game runs. External prerequisites terminate blocked;
+owned required failures disqualify readiness. A valid zero recovery is terminal
+null. Preserve historical required failures. Both terminal validators bind final
+candidate bytes. Publish one top-level primary; newer raw sidecars cannot change
+actual conductor or reconciliation reader selection. Conductor owns ops and
+traceability reconciliation. Retire unchanged null scans as new evidence.
+
+### SCENARIO-REPORT-7936-CLI
+
+Private CLI accepts a same-day fixture and rejects missing arguments and forged
+counts. Cold replay and terminal recheck use identical coverage includes.
+
+### SCENARIO-REPORT-7936-PUBLISH
+
+Actual gate and reconciliation readers select the primary hash with newer
+sidecars. Validator sidecars bind checked bytes. No new level solves are claimed.
