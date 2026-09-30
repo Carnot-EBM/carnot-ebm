@@ -87336,6 +87336,51 @@ and document readers must select the primary hash after nested sidecars receive
 newer mtimes. Required owned failures yield disqualified and readiness zero.
 No external publication, activation or production default change is allowed.
 
+## REQ-REPORT-7940-V689: Freeze thirteen-task authority and methods before measurements
+
+Bind Exp7940 through Exp7952 in order using the existing authority lifecycle.
+Read the table, projected machine fields and full-task digest separately.
+Preserve actual staged and active bytes separately. Absent staging remains an
+unobserved prerequisite unless a matching preserved staging snapshot exists;
+active bytes cannot establish earlier staging. Record activation false before
+assessment. Preserve lifecycle failures, including required prior-failure rows.
+External absence or mismatch ends complete_blocked_* without unchanged retries.
+Reject twelve private mutations and keep historical fixture counts unchanged.
+
+Authenticate Exp7892 public and evaluator shards and Exp7916/7917 qualification
+receipts directly. Preserve 640 intended and 604 previously eligible families.
+Freeze all thirteen task prompts and validation closures before outcomes.
+Ingest the V689 review with adoption and defer reasons, original human offsets,
+nine energy arms, typed losses, causal release order and confidence formulas.
+This is administrative exposed-development evidence with zero model calls.
+
+### SCENARIO-REPORT-7940-AUTHORITY
+
+Matching private staged authority passes; each count, ID, order, phase, path,
+prompt, gate, model, substrate, prior failure, digest and date mutation fails.
+Missing or malformed authority and unobserved staging retain exact gate operands.
+The live thirteen-task assessment cannot rewrite historical evidence.
+
+### SCENARIO-REPORT-7940-VALIDATION
+
+Freeze exact tests, transitive hashes, argv, deadlines, expected exits and
+identical coverage includes. Require nonempty 100 percent new-code statements.
+Run private E2E-018 and E2E-015/016; both historical Exp7868 routes use 20260929.
+Keep full-suite health beside owned checks. Owned failures disqualify readiness.
+Cold replay reduces primitive rows and detects changes to dates and custody.
+
+### SCENARIO-REPORT-7940-PUBLICATION
+
+Each success, blocked, negative, replay and terminal CLI route has its own
+publication directory. Keep publisher uniqueness. Publish one checked primary
+with raw nested sidecars bound to its final hash. Actual gate and document
+readers must select that hash after sidecars receive newer mtimes.
+
+Implementation: v689_contract_methods.py, v689_contract_validation.py and the
+Exp7940 parameterized CLI. Task-owned assertions live in
+tests/python/test_experiment_7940_v689_contract_methods.py. The terminal artifact
+records actual check outcomes, external blockers and measured coverage.
+
 ## REQ-REPORT-PLAN-689: Plan from terminal failures and actual label granularity
 
 Stage milestone 2026.09.689 with thirteen tasks, Exp7940 through Exp7952,

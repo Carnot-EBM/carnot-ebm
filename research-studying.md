@@ -6284,3 +6284,32 @@ natural correctness claims, new solver sweeps and unchanged KAN anchoring.
 These papers motivate tests; they do not transfer scientific benefit. Preserve
 the fragility page's June 29 date conflict. Science agents must repeat exact
 primary and raw custody checks. No numerical qualification is repeated here.
+
+## 2026-09-30 — Exp7940 V689 methods INGESTED
+
+Ingest the existing V689 planning review in research-references.md before
+measurements. Adopt original RAGTruth human span offsets with verified text and
+UTF-8 intervals. The target is a sentence that contains an annotated unsupported
+span. Include implicit_true in the primary target. Select one complete sentence
+per intended family by public byte-interval hash before labels. Ambiguous or
+missing annotations remain exclusions without replacement. Reused groups stay
+exposed development; 640 intended and 604 previously eligible families retain
+their source roles. Sentence rows do not create new independent groups.
+
+Adapt CCHD agreement constraints to complete-byte views at matched budgets.
+These views are not verified paraphrases. Keep nine frozen energy arms, three
+seeds, small normalized heads and tune-only temperature selection. Adopt typed
+accept, reject and escalate losses because probability quality and useful
+decisions require separate tests.
+
+Adapt Memoir with read state pinned within each query and commits between
+queries. Test later pre-feedback decisions against no-write and static controls.
+Adapt Delayed ACI with base release delay twenty, total delays 21/24/36, issued
+phase alpha, current scalar alpha and released-only residual buffers. These
+bounded empirical adaptations inherit no paper benefit or coverage theorem.
+
+Defer KAN, feasibility-layer and guided-decoding sweeps until source decisions
+qualify. Defer Kona training without a reproducible local recipe. Keep hardware
+speedups modeled until local host, transfer and readout costs are measured.
+Preserve the review's citation-access and stale trend limits; no new external
+research request or scientific outcome is claimed by this ingestion.
