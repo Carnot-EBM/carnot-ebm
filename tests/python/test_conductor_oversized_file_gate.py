@@ -50,10 +50,12 @@ def test_only_the_oversized_subset_is_returned() -> None:
     assert rc.oversized_staged_files(staged, sizes, threshold_bytes=50) == ["huge.gguf"]
 
 
-def test_the_default_threshold_matches_the_incident_writeup() -> None:
-    """ops/known-issues.md 2026-09-18 fixed the history rewrite at 90M; the live gate must
-    match, or a file the rewrite would have stripped could still land in a future commit."""
-    assert rc.OVERSIZED_FILE_THRESHOLD_BYTES == 90 * 1024 * 1024
+def test_the_default_threshold_matches_github_recommended_max() -> None:
+    """Lowered 2026-09-29: the original 90MiB cap left files at 85-94MB free to commit and
+    trigger GitHub's large-file warning on push. 50MB matches GitHub's own documented
+    "recommended maximum file size" and the matching pre-commit check-added-large-files
+    --maxkb=50000, so both enforcement layers agree."""
+    assert rc.OVERSIZED_FILE_THRESHOLD_BYTES == 50 * 1000 * 1000
 
 
 # ------------------------------------------------------------- the call sites

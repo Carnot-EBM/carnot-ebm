@@ -559,9 +559,17 @@ def checkpoint_after_mutation_freeze(committable: list[str]) -> list[str]:
 #: by a 17GB GGUF cache committed under a moving per-experiment-ID path a static .gitignore
 #: rule cannot list in advance. This is the size-based backstop that catches ANY future oversized
 #: file regardless of path, so the fix does not depend on someone remembering to widen a pattern
-#: list again. 90MB matches the threshold `git filter-repo --strip-blobs-bigger-than 90M` used
-#: for that incident's history rewrite.
-OVERSIZED_FILE_THRESHOLD_BYTES = 90 * 1024 * 1024
+#: list again. Originally 90MB, matching the `git filter-repo --strip-blobs-bigger-than 90M`
+#: threshold used for that incident's history rewrite.
+#:
+#: LOWERED to 50MB on 2026-09-29 after a second incident: files at 85-94MB (inside the old 90MB
+#: cap) committed cleanly through this same checkpoint path and triggered GitHub's "large file"
+#: warnings on push -- not a hard rejection this time only because they stayed under GitHub's
+#: 100MB hard limit by a few MB of luck, not by design. 90MB (and --maxkb=90000 in the matching
+#: pre-commit `check-added-large-files` hook, now also lowered) left only single-digit-MB margin
+#: below the 100MB hard reject. 50MB matches GitHub's own documented "recommended maximum file
+#: size" exactly, giving a real margin instead of a coincidental one.
+OVERSIZED_FILE_THRESHOLD_BYTES = 50 * 1000 * 1000
 
 
 def oversized_staged_files(

@@ -29,13 +29,21 @@ repos:
   # any file over 100MB, and the mirror silently failed to push for 490
   # commits before anyone noticed (gitea has no such limit and kept
   # accepting pushes). Fixed by a git-filter-repo history rewrite; this hook
-  # is the check that stops it from happening again. 90MB cap leaves margin
-  # under GitHub's 100MB hard limit.
+  # is the check that stops it from happening again.
+  #
+  # LOWERED to 50MB on 2026-09-29 after a second incident: files at 85-94MB
+  # (inside the old 90MB cap) committed cleanly via the conductor's own
+  # --no-verify checkpoint path (which this hook never sees) and triggered
+  # GitHub's large-file warnings on push -- under the 100MB hard limit by a
+  # few MB of luck, not by design. 50MB matches GitHub's own documented
+  # "recommended maximum file size" and the matching in-process conductor
+  # guard (research_conductor.py:OVERSIZED_FILE_THRESHOLD_BYTES, also
+  # lowered the same day) -- both layers now agree.
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: check-added-large-files
-        args: ["--maxkb=90000"]
+        args: ["--maxkb=50000"]
 
   # Rust formatting
   - repo: https://github.com/doublify/pre-commit-rust
