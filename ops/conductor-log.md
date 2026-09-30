@@ -19113,3 +19113,5 @@ code |
 | 2026-09-30 02:40 UTC | Measure bounded Qwen witness and neighboring-conte | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7905-intervention-qualification.intervention_protocol_ready_score (actual=0 == expected=1) |
 | 2026-09-30 02:42 UTC | Measure persistent constraint additions before fut | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7906-energy-fit, exp7906-energy-fit, exp7906-energy-fit) |
 | 2026-09-30 02:42 UTC | Test delay-aware confidence updates on a frozen le | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7909-causal-acquisition, exp7909-causal-acquisition, exp7909-causal-acquisition) |
+| 2026-09-30 03:05 UTC | Assess new live supervisor outcomes for transferab | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 89 passed, 1 warning in 8.03s |
+| 2026-09-30 03:07 UTC | Measure complete verification service and useful-w | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7906-energy-fit, exp7906-energy-fit, exp7906-energy-fit) |
