@@ -87531,3 +87531,47 @@ coverage scope before fitting. The producer executes distinct private routes
 before the long fit and preserves current exits beside historical failures.
 The unchanged publisher seals checked bytes and both actual reader hashes.
 Ops and traceability reconciliation remain assigned to the conductor.
+
+## REQ-REPORT-7949: Terminal inventory of new live supervisor outcomes
+
+Exp7949 SHALL authenticate Exp7936 primary and inventory hashes, its null verdict,
+readiness, adversarial flag, seen identities, and current registry levels. Reuse
+its reader and reducer. Scan content identities of ARC producer receipts once,
+within 120 seconds, without a calendar cutoff or repeated recovery project.
+Unchanged frozen producers are inventory evidence, not new outcomes. New events
+require authenticated live E3AgentPolicy and make_carnot_agent provenance,
+resolved_by_levelup, actions_to_levelup, and receipt hashes. Exclude fixtures,
+offline adapters, hand routes, and outer-loop source. Compare only matched
+conditions; report observations without causal or independent benefit claims.
+Retain policy defaults. A retirement proposal needs twenty new firings in five
+games with zero helped events and an exact upper confidence bound. Priority
+proposals require held-out games and a separately registered follow-up.
+
+### SCENARIO-REPORT-7949-1: Empty inventory terminates science
+
+A qualified unchanged inventory produces complete_null_no_new_supervisor_outcomes,
+verdict_class=null, readiness one, zero current device executions, zero model
+calls, and zero new solves. A missing or failed prerequisite produces terminal
+complete_blocked_* with exact path/hash, field, operator, expected and observed
+operands. An incomplete external prerequisite is not retried.
+
+### SCENARIO-REPORT-7949-2: Private CLI and cold reduction
+
+Each private success, negative, blocked, replay, and terminal scenario has its
+own publication directory. Forged counts fail cold replay. Fixture agreement is
+circular_positive mechanics only. Reused reader tests and E2E-017 cover the null
+route. Both historical E2E-016 calls retain --date 20260929; current date is
+20260930. No shared ARC implementation or research conductor edits are needed.
+
+### SCENARIO-REPORT-7949-3: Checked publication and validation custody
+
+Freeze affected files, transitive dependencies, argv, exits, failure reasons,
+deadlines, and identical added-code coverage includes before reduction. Run
+unit and consumer tests, real private CLI routes, scoped Ruff, strict mypy, and
+explicit-file spec coverage. Require nonempty 100 percent new statement coverage.
+Run the repository suite once under a deadline and retain its health separately.
+Retain historical required failures. Owned failures disqualify readiness.
+Cold-reduce claims and run both terminal validators on exact final bytes after
+any verdict change. Atomic publication retains primary uniqueness. Newer nested
+sidecars must not change actual gate or document reader selection; receipts bind
+final hashes. Conductor owns ops and traceability reconciliation after this task.
