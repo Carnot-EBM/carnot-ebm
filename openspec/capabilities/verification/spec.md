@@ -46600,3 +46600,31 @@ be silently repaired.
 
 Given ambiguous quotations, absent answer spans, or malformed JSON, the
 reducer records invalid syntax or address and preserves the family denominator.
+
+## REQ-VERIFY-7904-V686: Qualify current fitting and checkpoint authority
+
+Reusable CPU fitting and scoring SHALL accept explicit upstream, output, raw
+root, producer identity and date. Checkpoints SHALL bind resolved upstream
+path and bytes, public/evaluator roles, all transitive local numerical modules,
+hyperparameters, arm, seed and format. New fits SHALL never reuse historical
+heads. Resume and cold replay SHALL reject identity, module and primitive drift.
+Unknown sentence targets SHALL have zero local loss and gradient. Fit and tune
+source groups SHALL remain disjoint. Fixtures SHALL claim only circular agreement.
+
+### SCENARIO-VERIFY-7904-CHECKPOINT
+
+A changed learning module or a different upstream path with identical bytes
+SHALL reject resume even when the fitting wrapper hash is unchanged.
+
+### SCENARIO-VERIFY-7904-CLI
+
+Real private CPU CLI routes SHALL cover success, missing input, owned deadline,
+replay mismatch, resume equivalence and failed terminal recheck. Checked bytes
+SHALL publish atomically; failed final readers SHALL close readiness.
+
+V686 implementation: the current fitting callable and its small CLI bind all
+local numerical dependencies and resolved source authority. Private CPU routes
+exercise fresh fitting, resume, byte replay, deadline failure and terminal
+recheck failure. The Exp7904 terminal artifact controls runtime qualification.
+The old Exp7894 verdict and required failure remain unchanged. Ops and
+traceability reconciliation remain assigned to the conductor.

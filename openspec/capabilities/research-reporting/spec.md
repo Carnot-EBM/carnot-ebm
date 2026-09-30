@@ -86557,3 +86557,33 @@ dependency hashes and measured modules before results. Tests SHALL use private
 /tmp authorities and scratch. Both dated E2E-016 routes and private E2E-018
 tests SHALL run. Cold replay SHALL reduce primitive rows and denominators.
 All added statements and the CLI SHALL have nonempty 100 percent coverage.
+
+## REQ-REPORT-7904-V686: Freeze and qualify the complete fitting scope
+
+Before CPU fitting, the producer SHALL freeze dependency hashes, exact argv,
+expected exits, reasons, deadlines and measured files. Unit and real CLI data
+SHALL cover every new statement. Scoped spec checks SHALL name test filenames.
+The old Exp7894 unscoped failure and 1142 untraced tests SHALL remain historical
+failures. Current source changes SHALL not rewrite their authority. Children
+SHALL emit bounded heartbeats. Logs SHALL seal by hash after child exit.
+External input failures SHALL be complete blocked with exact operands. Required
+owned failures SHALL disqualify and close readiness. Both terminal readers SHALL
+inspect final candidate bytes; sidecars SHALL bind their hash. Fixture runtime
+qualification SHALL not claim natural quality, decision benefit or independence.
+
+### SCENARIO-REPORT-7904-SCOPE
+
+Private tests SHALL execute actual success, failure and replay CLI routes.
+The scope SHALL include both natural runtime suites, Exp7894 tests, E2E-015,
+E2E-016 fixture and replay with date 20260930, Ruff, strict mypy and scoped spec
+coverage. Repository health SHALL remain separate from affected qualification.
+
+Implementation status: specified for 2026.09.686. The conductor owns ops and
+traceability reconciliation after producer completion.
+
+V686 implementation: the current fitting callable and its small CLI bind all
+local numerical dependencies and resolved source authority. Private CPU routes
+exercise fresh fitting, resume, byte replay, deadline failure and terminal
+recheck failure. The Exp7904 terminal artifact controls runtime qualification.
+The old Exp7894 verdict and required failure remain unchanged. Ops and
+traceability reconciliation remain assigned to the conductor.

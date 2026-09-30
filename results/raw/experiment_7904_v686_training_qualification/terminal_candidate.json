@@ -1,0 +1,1326 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "decision_benefit": null,
+    "efficiency": null,
+    "probability_quality": null,
+    "readiness": 0,
+    "retention": null,
+    "validity": false
+  },
+  "checkpoint_identity": {
+    "arm": "local_set",
+    "cohort_sha256": "sha256:2919f3d67297c86d08af92f8ac68c22cd8e2fa01e7f5e4dcab92ea2010d586d1",
+    "dependencies": {
+      "python/carnot/verify/energy_fit_7894.py": "sha256:6c0f4bea0169205b0e0a68116d5707ad3ca45b5422232f32649efe5090171cc8",
+      "python/carnot/verify/evidence_views.py": "sha256:dbebf5bbb362ee324bd19b529957c689ca5165aefa043de08451f197d31eed3d",
+      "python/carnot/verify/natural_predicates.py": "sha256:ba29249590b470772944b8dc0882f9d8161370d267988f15a54ee126ff2d7ce8",
+      "python/carnot/verify/natural_training.py": "sha256:3719c039a7e05f894e0cb825eca811a98f0ed9da487121a6984789a05c20100d",
+      "python/carnot/verify/source_alignment.py": "sha256:10d5329444d47dc2421d8cceca615c8d5c76df5267c1a70eb669340f05ea475b",
+      "python/carnot/verify/training_qualification_7904.py": "sha256:6df6e4128fdd69681432bf6a5e77a8afffa1cf15bb146a1315d158782b26bc90",
+      "python/carnot/verify/training_runtime.py": "sha256:250b14aac412d1be2d835c37e9b9a3457d5f97bf728e672ffab8cabdc0b00f4b",
+      "scripts/experiments/experiment_7904_v686_training_qualification.py": "sha256:e3efc41d695b62cf6770ebba9290eb8aece20c21a52c743bdc9b2404baa6c76a"
+    },
+    "epochs": 1,
+    "format": "carnot-current-head-v686-1",
+    "learning_rate": 0.01,
+    "seed": 67801,
+    "sources": [
+      {
+        "path": "/tmp/carnot7904-qualification-fig4pp87/fixture-input/upstream.json",
+        "role": "upstream",
+        "sha256": "sha256:79a58d15d3a6a6db8f477b8c785df4d803f51ea09ac4e9a741f0e473300b5822"
+      },
+      {
+        "path": "/tmp/carnot7904-qualification-fig4pp87/fixture-input/public_shards.jsonl",
+        "role": "public_shards",
+        "sha256": "sha256:c3e3e62587e260a2adf3083efdcb675707dc836175d8ba8c9b799b1b2f5dd426"
+      },
+      {
+        "path": "/tmp/carnot7904-qualification-fig4pp87/fixture-input/evaluator_shards.jsonl",
+        "role": "evaluator_shards",
+        "sha256": "sha256:b159466d93d7f9f000a427ae1621a802aa2b3ede9c1b72234a9ad2c099c7b540"
+      }
+    ],
+    "upstream_path": "/tmp/carnot7904-qualification-fig4pp87/fixture-input/upstream.json"
+  },
+  "checkpoint_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/sealed_fixture/checkpoint_manifest.json",
+  "checkpoint_manifest_sha256": "sha256:9efa4a435e968867eaf7962cd3ce5f9d705cc250f8dcda3e25adb2f58f194f92",
+  "checkpoint_mutation_rows": [
+    {
+      "changed_identity_sha256": "sha256:408f73535ecf68c6ea65242256ba9d0996b25f3e8fa4dfef32a48466875265c2",
+      "mutation": "python/carnot/verify/training_qualification_7904.py",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:6cbdb0ccec83a6422ce83e0669f329074a266a6c11af4ac4d7312ba3dacfbf20",
+      "mutation": "scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:affaec9bfb7e88ddd32e39f31b3dae6498f90e901067427b4dfd36214f1972c9",
+      "mutation": "python/carnot/verify/natural_training.py",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:2042fe301b05e113f7835b85ca1d6491e51a621fd9ebca9f11fc25701e644b02",
+      "mutation": "python/carnot/verify/training_runtime.py",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:de4d4c46d6a0031ae6bbc8b87e15d18fc24473d474ded8e46df3615ba9807b16",
+      "mutation": "python/carnot/verify/evidence_views.py",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:105c8b9e0bee8639d4ded7d8456d2b9120282d692e48d51d394e99c84b8cbbd8",
+      "mutation": "python/carnot/verify/natural_predicates.py",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:889c395e13cfe19523a4bed345920581d0e4d47147e9c43c24cd06bae986b96e",
+      "mutation": "python/carnot/verify/source_alignment.py",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:590dae7c49b40d8d904bf731325f33837786c0dc4db04ad8e216852e4529623e",
+      "mutation": "python/carnot/verify/energy_fit_7894.py",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:4ab44fbd02578d14b31e42ada2070daa220a531f5067257b432ac1e39b30789e",
+      "mutation": "upstream_path",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:f473b65a1fd04b3b727254d8ca18f4fcda44583eced1ce8887b712c7d2f69b03",
+      "mutation": "epochs",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:bbb9681880480c63fbab0f53ad98effd33f6e2536db6fc56b2bcddd33e6bd291",
+      "mutation": "arm",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:d6aa8869aad529d4491f2b188d6c7f1236fd585fc0718e67a2159b69820996a5",
+      "mutation": "seed",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    },
+    {
+      "changed_identity_sha256": "sha256:a3f7a26f6a1c49dd85e85587c5b0f61fb6b0e8587d125ca9130a7968567bbc43",
+      "mutation": "format",
+      "observed": "checkpoint dependency mismatch",
+      "original_identity_sha256": "sha256:79887599133ee7c06dc577da3d8f6205bab31b3ce6d1a2bfec434ff82555177a",
+      "rejected": true
+    }
+  ],
+  "claim_scope": "private_fixture_oracle_agreement",
+  "coverage_statement_counts": {
+    "python/carnot/verify/training_qualification_7904.py": {
+      "covered_lines": 246,
+      "excluded_lines": 0,
+      "missing_lines": 0,
+      "num_statements": 246,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100",
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100"
+    },
+    "scripts/experiments/experiment_7904_v686_training_qualification.py": {
+      "covered_lines": 44,
+      "excluded_lines": 0,
+      "missing_lines": 0,
+      "num_statements": 44,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100",
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100"
+    }
+  },
+  "duration_s": 254.51413413800765,
+  "execution_venue": "host",
+  "experiment_id": 7904,
+  "field_principles": {
+    "MODEL_SPECS": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "acceptance_gate_results": {
+      "decision_benefit": "Unmeasured natural benefit remains null.",
+      "efficiency": "Unmeasured natural benefit remains null.",
+      "probability_quality": "Unmeasured natural benefit remains null.",
+      "readiness": "Current runtime and full dependency compatibility qualify.",
+      "retention": "Unmeasured natural benefit remains null.",
+      "validity": "Owned checks and exact terminal bytes pass."
+    },
+    "checkpoint_mutation_rows": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "claim_scope": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "coverage_statement_counts": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "duration_s": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "execution_venue": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "experiment_id": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "fixture_prediction_rows": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "flagged_adversarial": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "gate_check_summary": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "historical_required_failures": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "honest_verdict": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "inference_substrate": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "inference_substrate_class": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "methodology": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "milestone": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "model_invocation_counts": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "model_specs": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "observed_child_commands": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "phase_spans": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "preconditions_checked": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "random_seed": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "repository_health": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "reproducibility_checksum": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "resolved_imports": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "rows": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "run_date": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "sample_size_budget": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "source_artifact_hashes": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "target_model": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "task_id": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "trained_head_specs": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "training_dependency_hashes": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "training_runtime_ready_score": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "validation_command_manifest_path": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "validation_receipts": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "validation_scope_sha256": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "verdict_class": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit.",
+    "verifier_is_oracle": "Preserve actual producer identity, primitive evidence and its scope; never infer independent benefit."
+  },
+  "fixture_prediction_rows": [
+    {
+      "action": "escalate",
+      "arm": "local_set",
+      "family_id": "fit",
+      "label": 1,
+      "probability_unsupported": 0.590559248075706,
+      "raw_risk": 0.5228763772594462,
+      "role": "fit",
+      "seed": 67801,
+      "unit": "fixture_family"
+    },
+    {
+      "action": "escalate",
+      "arm": "local_set",
+      "family_id": "tune",
+      "label": 1,
+      "probability_unsupported": 0.590559248075706,
+      "raw_risk": 0.5228763772594462,
+      "role": "tune",
+      "seed": 67801,
+      "unit": "fixture_family"
+    },
+    {
+      "action": "escalate",
+      "arm": "local_set",
+      "family_id": "evaluation",
+      "label": 1,
+      "probability_unsupported": 0.590559248075706,
+      "raw_risk": 0.5228763772594462,
+      "role": "evaluation",
+      "seed": 67801,
+      "unit": "fixture_family"
+    }
+  ],
+  "flagged_adversarial": false,
+  "gate_check_summary": [
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/validation_command_manifest.json",
+      "artifact_sha256": "sha256:57ba0213c4aa503418fbf0bf6bba3dd6a4c08c992368bf513f28935343207e6e",
+      "expected": 0,
+      "field": "e2e_016_fixture",
+      "observed": 1,
+      "op": "==",
+      "upstream_id": "owned_affected_validation"
+    },
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/validation_command_manifest.json",
+      "artifact_sha256": "sha256:57ba0213c4aa503418fbf0bf6bba3dd6a4c08c992368bf513f28935343207e6e",
+      "expected": 0,
+      "field": "e2e_016_replay",
+      "observed": 1,
+      "op": "==",
+      "upstream_id": "owned_affected_validation"
+    }
+  ],
+  "historical_required_failures": [
+    {
+      "exit_code": 1,
+      "experiment_id": 7866,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7866_v683_source_boundary/validation_logs/05_coverage_report_e55b6640b180c9f52be70f75daad4d661c95bb5debedea163bcce48ea27e08ac.log",
+      "log_sha256": "sha256:e55b6640b180c9f52be70f75daad4d661c95bb5debedea163bcce48ea27e08ac",
+      "name": "coverage_report"
+    },
+    {
+      "exit_code": -15,
+      "experiment_id": 7866,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7866_v683_source_boundary/validation_logs/12_full_pytest_a9fbd26a7bd40656ac03f00741920d2e9139d6daf47b9a7c94418447b2e98edb.log",
+      "log_sha256": "sha256:a9fbd26a7bd40656ac03f00741920d2e9139d6daf47b9a7c94418447b2e98edb",
+      "name": "full_pytest"
+    },
+    {
+      "exit_code": 2,
+      "experiment_id": 7880,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7880_v684_source_boundary/validation_logs/12_coverage_report_c83d676a3662f094a1c545941ec83ee317b4e437691e8dc13a526016c5f426e1.log",
+      "log_sha256": "sha256:c83d676a3662f094a1c545941ec83ee317b4e437691e8dc13a526016c5f426e1",
+      "name": "coverage_report"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py"
+      ],
+      "classification": "required_affected",
+      "deadline_s": 180,
+      "duration_s": 0.1652882070047781,
+      "expected_exit": 0,
+      "expected_reason": null,
+      "experiment_id": 7894,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7894_v685_energy_fit/validation_logs/spec_coverage_3a6d357c517ba8f874cac65ee71cdbe03ad07f8a072b71ccca90983a03a8a0df.log",
+      "log_sha256": "sha256:3a6d357c517ba8f874cac65ee71cdbe03ad07f8a072b71ccca90983a03a8a0df",
+      "name": "spec_coverage",
+      "passed": false
+    }
+  ],
+  "honest_verdict": "complete_disqualified_training_qualification",
+  "inference_substrate": "deterministic_cpu",
+  "inference_substrate_class": "no_model_load",
+  "methodology": "Fresh private CPU head fitting, byte-bound checkpoint replay and required current callable validation. Fixture agreement measures mechanics only. Natural fitting belongs to Exp7906.",
+  "milestone": "2026.09.686",
+  "model_invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "model_specs": [],
+  "observed_child_commands": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "run",
+      "--parallel-mode",
+      "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "--date",
+      "20260930",
+      "--fixture",
+      "--upstream",
+      "/tmp/carnot7904-qualification-fig4pp87/fixture-input/upstream.json",
+      "--output",
+      "/tmp/carnot7904-qualification-fig4pp87/fixture.json",
+      "--raw-root",
+      "/tmp/carnot7904-qualification-fig4pp87/fixture-raw"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "run",
+      "--parallel-mode",
+      "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "--date",
+      "20260930",
+      "--cold-replay",
+      "/tmp/carnot7904-qualification-fig4pp87/fixture.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "-c",
+      "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+      "--exp7303-resolve-imports",
+      "/home/ianblenke/github.com/ianblenke/carnot",
+      "carnot.verify.training_qualification_7904"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/tmp/carnot7904-qualification-fig4pp87/focused",
+      "tests/python/test_training_qualification_7904.py",
+      "tests/python/test_energy_fit_7894.py",
+      "tests/python/test_natural_runtime_7853.py",
+      "tests/python/test_natural_runtime_7867.py",
+      "tests/python/test_source_boundary_7852.py",
+      "-q"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "run",
+      "--parallel-mode",
+      "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+      "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/tmp/carnot7904-qualification-fig4pp87/coverage",
+      "tests/python/test_training_qualification_7904.py",
+      "tests/python/test_energy_fit_7894.py",
+      "tests/python/test_natural_runtime_7853.py",
+      "tests/python/test_natural_runtime_7867.py",
+      "tests/python/test_source_boundary_7852.py",
+      "-q"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "combine",
+      "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+      "/tmp/carnot7904-qualification-fig4pp87"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "json",
+      "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+      "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "--fail-under=100",
+      "-o",
+      "/tmp/carnot7904-qualification-fig4pp87/coverage.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "check",
+      "python/carnot/verify/training_qualification_7904.py",
+      "scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "tests/python/test_training_qualification_7904.py",
+      "tests/python/test_energy_fit_7894.py",
+      "tests/python/test_natural_runtime_7853.py",
+      "tests/python/test_natural_runtime_7867.py",
+      "tests/python/test_source_boundary_7852.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "format",
+      "--check",
+      "python/carnot/verify/training_qualification_7904.py",
+      "scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "tests/python/test_training_qualification_7904.py",
+      "tests/python/test_energy_fit_7894.py",
+      "tests/python/test_natural_runtime_7853.py",
+      "tests/python/test_natural_runtime_7867.py",
+      "tests/python/test_source_boundary_7852.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "--strict",
+      "--follow-imports=silent",
+      "python/carnot/verify/training_qualification_7904.py",
+      "scripts/experiments/experiment_7904_v686_training_qualification.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/check_spec_coverage.py",
+      "tests/python/test_training_qualification_7904.py",
+      "tests/python/test_energy_fit_7894.py",
+      "tests/python/test_natural_runtime_7853.py",
+      "tests/python/test_natural_runtime_7867.py",
+      "tests/python/test_source_boundary_7852.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+      "--date",
+      "20260930",
+      "--fixture-e2e",
+      "/tmp/carnot7904-qualification-fig4pp87/e2e016.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+      "--date",
+      "20260930",
+      "--cold-replay",
+      "/tmp/carnot7904-qualification-fig4pp87/e2e016.json"
+    ]
+  ],
+  "phase_spans": [
+    {
+      "duration_s": 4.128512377967127,
+      "phase": "private_fit_score"
+    }
+  ],
+  "preconditions_checked": {
+    "failed": [],
+    "natural_fitting_deferred_to": 7906,
+    "upstream_records_authenticated": 640
+  },
+  "prediction_rows_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/sealed_fixture/predictions.jsonl",
+  "prediction_rows_sha256": "sha256:0a130eea85f3ec2dbe98ece20945625bcc72fe660aac85c0d01f6992cd69e5cc",
+  "random_seed": 67801,
+  "repository_health": {
+    "affects_required_checks": false,
+    "backlog_evidence": [
+      {
+        "actual_exit": 1,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/check_spec_coverage.py"
+        ],
+        "classification": "required_affected",
+        "deadline_s": 180,
+        "duration_s": 0.1652882070047781,
+        "expected_exit": 0,
+        "expected_reason": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7894_v685_energy_fit/validation_logs/spec_coverage_3a6d357c517ba8f874cac65ee71cdbe03ad07f8a072b71ccca90983a03a8a0df.log",
+        "log_sha256": "sha256:3a6d357c517ba8f874cac65ee71cdbe03ad07f8a072b71ccca90983a03a8a0df",
+        "name": "spec_coverage",
+        "passed": false
+      }
+    ],
+    "current_manifest_spec_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/check_spec_coverage.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_fit_7894.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_natural_runtime_7867.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_natural_runtime_7853.py"
+    ],
+    "current_source_sha256": "sha256:3d7e67996bf210f60d741946f22519f724256e125f7a341349133f13ad13fc9a",
+    "full_suite": {
+      "receipts": [
+        {
+          "actual_exit": -15,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "tests/python",
+            "-q",
+            "-n",
+            "0",
+            "-o",
+            "addopts=",
+            "--no-cov",
+            "--basetemp=/tmp/carnot7904-full-suite/pytest"
+          ],
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot7904-full-suite/pytest",
+          "command_argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "tests/python",
+            "-q",
+            "-n",
+            "0",
+            "-o",
+            "addopts=",
+            "--no-cov",
+            "--basetemp=/tmp/carnot7904-full-suite/pytest"
+          ],
+          "deadline_s": 180,
+          "duration_s": 180.14237796497764,
+          "exit_code": -15,
+          "expected_exit": 0,
+          "expected_reason": "current affected command must pass",
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/repository_health/logs/e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a.log",
+          "log_sha256": "sha256:e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a",
+          "measured_files": [
+            "python/carnot/verify/training_qualification_7904.py",
+            "scripts/experiments/experiment_7904_v686_training_qualification.py"
+          ],
+          "name": "full_repository_suite",
+          "output_tail": "........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n....................................s................................... [  1%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n.............F.......................................................... [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n...",
+          "passed": false,
+          "scope": "repository_health",
+          "timed_out": true
+        }
+      ]
+    },
+    "full_suite_sha256": "sha256:11c027ece3dda84810e3d29e98445e48bf723e4b2b6afed63b6c16715613cd97",
+    "global_spec_backlog": 1142,
+    "historical_checkpoint_manifest_sha256": "sha256:d15573502aa90db0d48ab41c4699a0746e3a329a839e8274a2a42c392bb90c7f",
+    "historical_exp7894_verdict": "complete_disqualified_required_checks",
+    "historical_source_sha256": "sha256:1b579ee80d0831e6b0eefd3492f02f39841ae13bf1f47d6791a58ea935b82413",
+    "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7894_v685_energy_fit/validation_command_manifest.json",
+    "manifest_sha256": "sha256:e173259d137ac2bdc0fdd3846a0e913785346452a1a2010e9c35305c6b5df226",
+    "retire_if_same_verdict": true,
+    "source_hash_comparison": "Historical artifact did not seal the transitive dependency closure; equality cannot be authenticated.",
+    "source_hash_comparisons": {
+      "python/carnot/verify/energy_fit_7894.py": {
+        "current": "sha256:6c0f4bea0169205b0e0a68116d5707ad3ca45b5422232f32649efe5090171cc8",
+        "equal": true,
+        "historical": "sha256:6c0f4bea0169205b0e0a68116d5707ad3ca45b5422232f32649efe5090171cc8"
+      },
+      "scripts/experiments/experiment_7894_v685_energy_fit.py": {
+        "current": "sha256:3d7e67996bf210f60d741946f22519f724256e125f7a341349133f13ad13fc9a",
+        "equal": false,
+        "historical": "sha256:1b579ee80d0831e6b0eefd3492f02f39841ae13bf1f47d6791a58ea935b82413"
+      }
+    }
+  },
+  "reproducibility_checksum": "sha256:8c2ce1faf4adeedc905ab87c66362bf646a51928e30f9466b0d44a1be1a731f6",
+  "resolved_imports": {
+    "carnot.verify.evidence_views": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/evidence_views.py",
+    "carnot.verify.natural_predicates": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/natural_predicates.py",
+    "carnot.verify.natural_training": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/natural_training.py",
+    "carnot.verify.source_alignment": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/source_alignment.py",
+    "carnot.verify.training_qualification_7904": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7904.py",
+    "carnot.verify.training_runtime": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_runtime.py"
+  },
+  "rows": [
+    {
+      "action": "escalate",
+      "arm": "local_set",
+      "family_id": "fit",
+      "label": 1,
+      "probability_unsupported": 0.590559248075706,
+      "raw_risk": 0.5228763772594462,
+      "role": "fit",
+      "seed": 67801,
+      "unit": "fixture_family"
+    },
+    {
+      "action": "escalate",
+      "arm": "local_set",
+      "family_id": "tune",
+      "label": 1,
+      "probability_unsupported": 0.590559248075706,
+      "raw_risk": 0.5228763772594462,
+      "role": "tune",
+      "seed": 67801,
+      "unit": "fixture_family"
+    },
+    {
+      "action": "escalate",
+      "arm": "local_set",
+      "family_id": "evaluation",
+      "label": 1,
+      "probability_unsupported": 0.590559248075706,
+      "raw_risk": 0.5228763772594462,
+      "role": "evaluation",
+      "seed": 67801,
+      "unit": "fixture_family"
+    }
+  ],
+  "run_date": "20260930",
+  "sample_size_budget": {
+    "by_role": {
+      "evaluation": {
+        "censored": 0,
+        "completed": 1,
+        "eligible": 1,
+        "excluded": 0,
+        "failed": 0,
+        "independent": 0,
+        "intended": 1,
+        "started": 1,
+        "unit": "fixture_family"
+      },
+      "fit": {
+        "censored": 0,
+        "completed": 1,
+        "eligible": 1,
+        "excluded": 0,
+        "failed": 0,
+        "independent": 0,
+        "intended": 1,
+        "started": 1,
+        "unit": "fixture_family"
+      },
+      "tune": {
+        "censored": 0,
+        "completed": 1,
+        "eligible": 1,
+        "excluded": 0,
+        "failed": 0,
+        "independent": 0,
+        "intended": 1,
+        "started": 1,
+        "unit": "fixture_family"
+      }
+    },
+    "censored": 0,
+    "completed": 3,
+    "eligible": 3,
+    "excluded": 0,
+    "failed": 0,
+    "independent": 0,
+    "intended": 3,
+    "started": 3,
+    "unit": "fixture_family"
+  },
+  "source_artifact_hashes": [
+    {
+      "path": "/tmp/carnot7904-qualification-fig4pp87/fixture-input/upstream.json",
+      "role": "upstream",
+      "sha256": "sha256:79a58d15d3a6a6db8f477b8c785df4d803f51ea09ac4e9a741f0e473300b5822"
+    },
+    {
+      "path": "/tmp/carnot7904-qualification-fig4pp87/fixture-input/public_shards.jsonl",
+      "role": "public_shards",
+      "sha256": "sha256:c3e3e62587e260a2adf3083efdcb675707dc836175d8ba8c9b799b1b2f5dd426"
+    },
+    {
+      "path": "/tmp/carnot7904-qualification-fig4pp87/fixture-input/evaluator_shards.jsonl",
+      "role": "evaluator_shards",
+      "sha256": "sha256:b159466d93d7f9f000a427ae1621a802aa2b3ede9c1b72234a9ad2c099c7b540"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7892_v685_source_boundary.json",
+      "role": "upstream",
+      "sha256": "sha256:528a2243693f2543f43bbf4f0b2ce789f2b01ccf14d795260c7e15029230ca14"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/public_0.jsonl",
+      "role": "public_shards",
+      "sha256": "sha256:9a6a9b07f1aa2ab150e272c83dcab782a2a37e8aba5aa42b6ec12c4194368550"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/public_1.jsonl",
+      "role": "public_shards",
+      "sha256": "sha256:b669628bef55c3379056cc5cdbe0d542931616c2ad0c455989408f941f8827fe"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/evaluator_0.jsonl",
+      "role": "evaluator_shards",
+      "sha256": "sha256:374ae136b99662fb8cda0c2b64fcf09c65d244b729fa8dae8ea2cf933d292a5e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/evaluator_1.jsonl",
+      "role": "evaluator_shards",
+      "sha256": "sha256:2564ccb54f2cc97f4661795f5b7c313a2ab6b4691b22671133bdf7ceca59e142"
+    }
+  ],
+  "target_model": null,
+  "task_id": "exp7904-training-qualification",
+  "terminal_validation_sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7904_v686_training_qualification.json.validators.json",
+  "trained_head_specs": [
+    {
+      "arm": "local_set",
+      "fresh_current_fit": true,
+      "parameter_count": 266,
+      "seed": 67801
+    }
+  ],
+  "training_dependency_hashes": {
+    "python/carnot/verify/energy_fit_7894.py": "sha256:6c0f4bea0169205b0e0a68116d5707ad3ca45b5422232f32649efe5090171cc8",
+    "python/carnot/verify/evidence_views.py": "sha256:dbebf5bbb362ee324bd19b529957c689ca5165aefa043de08451f197d31eed3d",
+    "python/carnot/verify/natural_predicates.py": "sha256:ba29249590b470772944b8dc0882f9d8161370d267988f15a54ee126ff2d7ce8",
+    "python/carnot/verify/natural_training.py": "sha256:3719c039a7e05f894e0cb825eca811a98f0ed9da487121a6984789a05c20100d",
+    "python/carnot/verify/source_alignment.py": "sha256:10d5329444d47dc2421d8cceca615c8d5c76df5267c1a70eb669340f05ea475b",
+    "python/carnot/verify/training_qualification_7904.py": "sha256:6df6e4128fdd69681432bf6a5e77a8afffa1cf15bb146a1315d158782b26bc90",
+    "python/carnot/verify/training_runtime.py": "sha256:250b14aac412d1be2d835c37e9b9a3457d5f97bf728e672ffab8cabdc0b00f4b",
+    "scripts/experiments/experiment_7904_v686_training_qualification.py": "sha256:e3efc41d695b62cf6770ebba9290eb8aece20c21a52c743bdc9b2404baa6c76a"
+  },
+  "training_runtime_ready_score": 0,
+  "validation_command_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/validation_command_manifest.json",
+  "validation_receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "--date",
+        "20260930",
+        "--fixture",
+        "--upstream",
+        "/tmp/carnot7904-qualification-fig4pp87/fixture-input/upstream.json",
+        "--output",
+        "/tmp/carnot7904-qualification-fig4pp87/fixture.json",
+        "--raw-root",
+        "/tmp/carnot7904-qualification-fig4pp87/fixture-raw"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode '--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py' scripts/experiments/experiment_7904_v686_training_qualification.py --date 20260930 --fixture --upstream /tmp/carnot7904-qualification-fig4pp87/fixture-input/upstream.json --output /tmp/carnot7904-qualification-fig4pp87/fixture.json --raw-root /tmp/carnot7904-qualification-fig4pp87/fixture-raw",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "--date",
+        "20260930",
+        "--fixture",
+        "--upstream",
+        "/tmp/carnot7904-qualification-fig4pp87/fixture-input/upstream.json",
+        "--output",
+        "/tmp/carnot7904-qualification-fig4pp87/fixture.json",
+        "--raw-root",
+        "/tmp/carnot7904-qualification-fig4pp87/fixture-raw"
+      ],
+      "deadline_s": 180,
+      "duration_s": 7.856965348997619,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/f772f92a64e456fd9a484a1eb10fda83f8a614238c7249857d32c002fb6c6240.log",
+      "log_sha256": "sha256:f772f92a64e456fd9a484a1eb10fda83f8a614238c7249857d32c002fb6c6240",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "fixture_cli_success",
+      "output_tail": "[exp7904] phase=start_flushed elapsed_s=0.000 completed=0\n[exp7904] phase=resolve_inputs elapsed_s=0.002 completed=0\n[exp7904] phase=before_head_fit elapsed_s=0.004 completed=0\n[exp7904] phase=after_head_fit elapsed_s=3.370 completed=1\n[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2\n[exp7303-validation:adversarial] {\n[exp7303-validation:adversarial]   \"reports\": [\n[exp7303-validation:adversarial]     {\n[exp7303-validation:adversarial]       \"artifact\": \"/tmp/carnot7904-qualification-fig4pp87/fixture-raw/terminal_candidate.json\",\n[exp7303-validation:adversarial]       \"loaded\": true,\n[exp7303-validation:adversarial]       \"exp_id\": 7904,\n[exp7303-validation:adversarial]       \"title\": \"\",\n[exp7303-validation:adversarial]       \"honest_verdict\": \"complete_circular_positive_training_fixture\",\n[exp7303-validation:adversarial]       \"flag_count\": 0,\n[exp7303-validation:adversarial]       \"max_severity\": -1,\n[exp7303-validation:adversarial]       \"flags\": [],\n[exp7303-validation:adversarial]       \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n[exp7303-validation:adversarial]     }\n[exp7303-validation:adversarial]   ],\n[exp7303-validation:adversarial]   \"flagged_count\": 0\n[exp7303-validation:adversarial] }\n[exp7303-validation] after_subprocess adversarial elapsed_s=0.596 exit=0 unit=1/2\n[exp7303-validation] before_subprocess row_consistency elapsed_s=0.000 unit=2/2\n[exp7303-validation:row_consistency] \n[exp7303-validation:row_consistency] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n[exp7303-validation:row_consistency]   No row/verdict contradictions among the artifacts that could be checked.\n[exp7303-validation] after_subprocess row_consistency elapsed_s=0.028 exit=0 unit=2/2\n[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2\n[exp7303-validation:adversarial] {\n[exp7303-validation:adversarial]   \"reports\": [\n[exp7303-validation:adversarial]     {\n[exp7303-validation:adversarial]       \"artifact\": \"/tmp/carnot7904-qualification-fig4pp87/fixture-raw/terminal_candidate.json\",\n[exp7303-validation:adversarial]       \"loaded\": true,\n[exp7303-validation:adversarial]       \"exp_id\": 7904,\n[exp7303-validation:adversarial]       \"title\": \"\",\n[exp7303-validation:adversarial]       \"honest_verdict\": \"complete_circular_positive_training_fixture\",\n[exp7303-validation:adversarial]       \"flag_count\": 0,\n[exp7303-validation:adversarial]       \"max_severity\": -1,\n[exp7303-validation:adversarial]       \"flags\": [],\n[exp7303-validation:adversarial]       \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n[exp7303-validation:adversarial]     }\n[exp7303-validation:adversarial]   ],\n[exp7303-validation:adversarial]   \"flagged_count\": 0\n[exp7303-validation:adversarial] }\n[exp7303-validation] after_subprocess adversarial elapsed_s=0.593 exit=0 unit=1/2\n[exp7303-validation] before_subprocess row_consistency elapsed_s=0.000 unit=2/2\n[exp7303-validation:row_consistency] \n[exp7303-validation:row_consistency] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n[exp7303-validation:row_consistency]   No row/verdict contradictions among the artifacts that could be checked.\n[exp7303-validation] after_subprocess row_consistency elapsed_s=0.027 exit=0 unit=2/2\n[exp7904] phase=checked_terminal_published elapsed_s=5.380 completed=3\n",
+      "passed": true,
+      "scope": "private_cpu",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/tmp/carnot7904-qualification-fig4pp87/fixture.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode '--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py' scripts/experiments/experiment_7904_v686_training_qualification.py --date 20260930 --cold-replay /tmp/carnot7904-qualification-fig4pp87/fixture.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/tmp/carnot7904-qualification-fig4pp87/fixture.json"
+      ],
+      "deadline_s": 180,
+      "duration_s": 3.5231817809981294,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/8c778af89e0a97abfe16dd33e91fbe45769324d2b2931f8142723fc75085adc5.log",
+      "log_sha256": "sha256:8c778af89e0a97abfe16dd33e91fbe45769324d2b2931f8142723fc75085adc5",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "fixture_cli_replay",
+      "output_tail": "[exp7904] phase=start_flushed elapsed_s=0.000 completed=0\n[exp7904] phase=cold_replay_passed elapsed_s=1.050 completed=3\n",
+      "passed": true,
+      "scope": "private_cpu",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.training_qualification_7904"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.verify.training_qualification_7904",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.training_qualification_7904"
+      ],
+      "deadline_s": 180,
+      "duration_s": 1.5530625649844296,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/c7e06bc243e64c1bfe498d4bee7a9066290a2e50af4d361e3c2db85dfb8f21c1.log",
+      "log_sha256": "sha256:c7e06bc243e64c1bfe498d4bee7a9066290a2e50af4d361e3c2db85dfb8f21c1",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.verify.training_qualification_7904\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7904.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.verify.training_qualification_7904": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7904.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7904-qualification-fig4pp87/focused",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py",
+        "-q"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot7904-qualification-fig4pp87/focused tests/python/test_training_qualification_7904.py tests/python/test_energy_fit_7894.py tests/python/test_natural_runtime_7853.py tests/python/test_natural_runtime_7867.py tests/python/test_source_boundary_7852.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7904-qualification-fig4pp87/focused",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py",
+        "-q"
+      ],
+      "deadline_s": 600,
+      "duration_s": 114.58035102800932,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/5ef833c8e423f1bd947d07e7da6cc4724ca98b1e85397ac1ec82740168f42803.log",
+      "log_sha256": "sha256:5ef833c8e423f1bd947d07e7da6cc4724ca98b1e85397ac1ec82740168f42803",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "focused_pytest",
+      "output_tail": "....................................................................     [100%]\n68 passed in 110.27s (0:01:50)\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+        "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7904-qualification-fig4pp87/coverage",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py",
+        "-q"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode --data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage '--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot7904-qualification-fig4pp87/coverage tests/python/test_training_qualification_7904.py tests/python/test_energy_fit_7894.py tests/python/test_natural_runtime_7853.py tests/python/test_natural_runtime_7867.py tests/python/test_source_boundary_7852.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+        "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7904-qualification-fig4pp87/coverage",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py",
+        "-q"
+      ],
+      "deadline_s": 600,
+      "duration_s": 123.52334004099248,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/f8ac14d2cf750e705e28ec4918f119e481b27280de3f315ef0b6aba948fca33c.log",
+      "log_sha256": "sha256:f8ac14d2cf750e705e28ec4918f119e481b27280de3f315ef0b6aba948fca33c",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "changed_module_coverage",
+      "output_tail": "....................................................................     [100%]\n68 passed in 116.08s (0:01:56)\n",
+      "passed": true,
+      "scope": "units_and_real_cli",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+        "/tmp/carnot7904-qualification-fig4pp87"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage combine --data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage /tmp/carnot7904-qualification-fig4pp87",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+        "/tmp/carnot7904-qualification-fig4pp87"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.06805907498346642,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/6b3a2ef14bb2931f9bbf222ee5e010717c2a1d361c0426929c3b44dcf4227e85.log",
+      "log_sha256": "sha256:6b3a2ef14bb2931f9bbf222ee5e010717c2a1d361c0426929c3b44dcf4227e85",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "combine_coverage",
+      "output_tail": "Combined 10 files, skipped 11\n",
+      "passed": true,
+      "scope": "changed_source",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+        "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot7904-qualification-fig4pp87/coverage.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage json --data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage '--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py' --fail-under=100 -o /tmp/carnot7904-qualification-fig4pp87/coverage.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--data-file=/tmp/carnot7904-qualification-fig4pp87/.coverage",
+        "--include=*/python/carnot/verify/training_qualification_7904.py,*/scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot7904-qualification-fig4pp87/coverage.json"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.08842780999839306,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/333b83466920a4a3f4ceeecbb51359f00f6febf96d9ab48c57f4a2b165182d1d.log",
+      "log_sha256": "sha256:333b83466920a4a3f4ceeecbb51359f00f6febf96d9ab48c57f4a2b165182d1d",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "changed_module_coverage_report",
+      "output_tail": "Wrote JSON report to /tmp/carnot7904-qualification-fig4pp87/coverage.json\n",
+      "passed": true,
+      "scope": "changed_source",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/verify/training_qualification_7904.py scripts/experiments/experiment_7904_v686_training_qualification.py tests/python/test_training_qualification_7904.py tests/python/test_energy_fit_7894.py tests/python/test_natural_runtime_7853.py tests/python/test_natural_runtime_7867.py tests/python/test_source_boundary_7852.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "deadline_s": 180,
+      "duration_s": 0.013354735972825438,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/verify/training_qualification_7904.py scripts/experiments/experiment_7904_v686_training_qualification.py tests/python/test_training_qualification_7904.py tests/python/test_energy_fit_7894.py tests/python/test_natural_runtime_7853.py tests/python/test_natural_runtime_7867.py tests/python/test_source_boundary_7852.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "deadline_s": 180,
+      "duration_s": 0.010216252994723618,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/0321fffcb91606a42c0a19d8c1121d5c544379d663821fce616c71a7bb62f6b5.log",
+      "log_sha256": "sha256:0321fffcb91606a42c0a19d8c1121d5c544379d663821fce616c71a7bb62f6b5",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "ruff_format",
+      "output_tail": "7 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict --follow-imports=silent python/carnot/verify/training_qualification_7904.py scripts/experiments/experiment_7904_v686_training_qualification.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "deadline_s": 180,
+      "duration_s": 0.15909647598164156,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/5c0e9403142555d05cc1959eb978548f7737c00539a0f33070641f0860916e35.log",
+      "log_sha256": "sha256:5c0e9403142555d05cc1959eb978548f7737c00539a0f33070641f0860916e35",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_training_qualification_7904.py tests/python/test_energy_fit_7894.py tests/python/test_natural_runtime_7853.py tests/python/test_natural_runtime_7867.py tests/python/test_source_boundary_7852.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_training_qualification_7904.py",
+        "tests/python/test_energy_fit_7894.py",
+        "tests/python/test_natural_runtime_7853.py",
+        "tests/python/test_natural_runtime_7867.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "deadline_s": 180,
+      "duration_s": 0.02421373699326068,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260930",
+        "--fixture-e2e",
+        "/tmp/carnot7904-qualification-fig4pp87/e2e016.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260930 --fixture-e2e /tmp/carnot7904-qualification-fig4pp87/e2e016.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260930",
+        "--fixture-e2e",
+        "/tmp/carnot7904-qualification-fig4pp87/e2e016.json"
+      ],
+      "deadline_s": 180,
+      "duration_s": 1.5196408280171454,
+      "exit_code": 1,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/025c34d93b6f7123d55b03fb898a6e3064f5d8222ab3674353242e61fc312837.log",
+      "log_sha256": "sha256:025c34d93b6f7123d55b03fb898a6e3064f5d8222ab3674353242e61fc312837",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "e2e_016_fixture",
+      "output_tail": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py\", line 7, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7868_v683_intervention_protocol.py\", line 852, in main\n    raise ValueError(\"run_date_mismatch\")\nValueError: run_date_mismatch\n",
+      "passed": false,
+      "scope": "private_fixture",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/tmp/carnot7904-qualification-fig4pp87/e2e016.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260930 --cold-replay /tmp/carnot7904-qualification-fig4pp87/e2e016.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/tmp/carnot7904-qualification-fig4pp87/e2e016.json"
+      ],
+      "deadline_s": 180,
+      "duration_s": 1.509549188951496,
+      "exit_code": 1,
+      "expected_exit": 0,
+      "expected_reason": "current affected command must pass",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7904_v686_training_qualification/logs/025c34d93b6f7123d55b03fb898a6e3064f5d8222ab3674353242e61fc312837.log",
+      "log_sha256": "sha256:025c34d93b6f7123d55b03fb898a6e3064f5d8222ab3674353242e61fc312837",
+      "measured_files": [
+        "python/carnot/verify/training_qualification_7904.py",
+        "scripts/experiments/experiment_7904_v686_training_qualification.py"
+      ],
+      "name": "e2e_016_replay",
+      "output_tail": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py\", line 7, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7868_v683_intervention_protocol.py\", line 852, in main\n    raise ValueError(\"run_date_mismatch\")\nValueError: run_date_mismatch\n",
+      "passed": false,
+      "scope": "cold_replay",
+      "timed_out": false
+    }
+  ],
+  "validation_scope_sha256": "sha256:57ba0213c4aa503418fbf0bf6bba3dd6a4c08c992368bf513f28935343207e6e",
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true
+}
