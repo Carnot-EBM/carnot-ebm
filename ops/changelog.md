@@ -21125,3 +21125,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-30: Measure bounded Qwen decisions under source interventions (⚠️ Research Finding) — honest_verdict=complete_null_source_sensitivity; results/experiment_7920_v687_qwen_sufficiency.json
 - 2026-09-30: Assess new live ARC supervisor outcomes for generalization (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_7924_v687_arc_supervisor_delta.json
 - 2026-09-30: Preserve board custody and bound workload acceleration (⚠️ Research Finding) — honest_verdict=complete_null_historical_board_scope; results/experiment_7926_v687_hardware_evidence.json
+- 2026-09-30: Independently reduce thirteen outcomes and decide PRD gaps (⚠️ Blocked) — honest_verdict=complete_blocked_missing_science; results/experiment_7927_v687_capstone.json
