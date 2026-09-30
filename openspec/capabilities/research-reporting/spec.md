@@ -86587,3 +86587,49 @@ exercise fresh fitting, resume, byte replay, deadline failure and terminal
 recheck failure. The Exp7904 terminal artifact controls runtime qualification.
 The old Exp7894 verdict and required failure remain unchanged. Ops and
 traceability reconciliation remain assigned to the conductor.
+
+## REQ-REPORT-7905-V686: Qualify current intervention orchestration
+
+Exp7905 SHALL bind the exact disqualified Exp7893 artifact and current source
+bytes before fixture work. It SHALL freeze affected tests, code hashes, command
+argv, expected exits, deadlines, and coverage inputs before subprocesses run.
+The current CLI SHALL accept date 20260930 on fixture, replay, and measured
+routes. Every fixture output, coverage file, and pytest base directory SHALL
+stay in private `/tmp` storage until sealed evidence is copied after exit.
+
+The producer SHALL retain 24 independent families, all four original-byte
+source views, every possible request and scripted reply, original offsets,
+checkpoint identity and drift checks. Empty answer sentence labels and
+overlength requests SHALL be separate exclusions. Scripted responses SHALL
+make no semantic or independent benefit claim. Combined unit and real CLI
+success, expected-failure, and replay coverage SHALL reach 100 percent for
+every changed module and CLI. Prior disqualifications SHALL remain historical.
+
+The producer SHALL run affected consumer tests, scoped Ruff, strict mypy,
+explicit-file spec coverage, and dated E2E-016 fixture and replay. Required
+owned failures SHALL yield complete disqualified with zero readiness. Missing
+external inputs SHALL yield complete blocked with failed operands. Both terminal
+validators SHALL inspect the exact final candidate bytes. A changed verdict
+SHALL receive a second terminal pass before atomic publication. The result
+SHALL keep validity, readiness, probability quality, decision benefit,
+retention, and efficiency separate.
+
+### SCENARIO-REPORT-7905-MANIFEST
+
+The frozen plan names the complete affected closure and exact child argv.
+Both E2E-016 routes carry 20260930. A missing source or changed historical
+hash produces a terminal blocked artifact with its failed operand.
+
+### SCENARIO-REPORT-7905-FIXTURES
+
+A local scripted peer returns raw replies for 24 distinct families. Four
+requests retain the first complete answer sentence and original byte offsets.
+Cold replay and checkpoint reuse agree; changed bytes fail. Missing sentence
+labels and overlength requests exclude their own units.
+
+### SCENARIO-REPORT-7905-TERMINAL
+
+Private success, timeout, missing input, second-pass failure, and publication
+failure cases keep actual exits and candidate hashes. The final published bytes
+match both passing terminal reports. Protocol readiness measures mechanics
+only; semantic sensitivity and scientific benefit remain unmeasured.
