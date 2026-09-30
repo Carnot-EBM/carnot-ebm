@@ -4,9 +4,9 @@
     "decision_benefit": null,
     "efficiency": null,
     "probability_quality": null,
-    "readiness": 0,
+    "readiness": 1,
     "retention": null,
-    "validity": false
+    "validity": true
   },
   "activation_before_observation": false,
   "activation_confirmed": true,
@@ -42,7 +42,7 @@
     "independent_benefit": false,
     "science": "unmeasured"
   },
-  "contract_ready_score": 0,
+  "contract_ready_score": 1,
   "contract_rows": [
     {
       "absolute_metric": 1,
@@ -518,11 +518,31 @@
       "percent_statements_covered": 100.0,
       "percent_statements_covered_display": "100"
     },
-    "scripts/experiments/experiment_7915_v687_contract_methods.py": {
-      "covered_lines": 42,
+    "python/carnot/reporting/v687_contract_methods.py": {
+      "covered_lines": 88,
       "excluded_lines": 0,
       "missing_lines": 0,
-      "num_statements": 42,
+      "num_statements": 88,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100",
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100"
+    },
+    "python/carnot/reporting/v687_contract_validation.py": {
+      "covered_lines": 55,
+      "excluded_lines": 0,
+      "missing_lines": 0,
+      "num_statements": 55,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100",
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100"
+    },
+    "scripts/experiments/experiment_7915_v687_contract_methods.py": {
+      "covered_lines": 43,
+      "excluded_lines": 0,
+      "missing_lines": 0,
+      "num_statements": 43,
       "percent_covered": 100.0,
       "percent_covered_display": "100",
       "percent_statements_covered": 100.0,
@@ -530,10 +550,10 @@
     }
   },
   "current_invocation_events": [],
-  "current_owner_pid": 3903895,
+  "current_owner_pid": 3921380,
   "current_run_id": "exp7915-20260930",
-  "duration_s": 922.842964095,
-  "ended_monotonic_timestamp_ns": 409562202487749,
+  "duration_s": 195.216083158,
+  "ended_monotonic_timestamp_ns": 409834015889593,
   "event_count": 0,
   "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
   "execution_date": "20260930",
@@ -618,17 +638,7 @@
     "verifier_is_oracle": "Record task-owned custody and mechanics; reused or planned evidence earns no scientific benefit."
   },
   "flagged_adversarial": false,
-  "gate_check_summary": [
-    {
-      "artifact_field": "required_check.passed",
-      "expected": true,
-      "hash": "sha256:64198c3e04163e0d1dc9153344b0c2c7d368ce8caae335764d2730c93e4f48a6",
-      "observed": false,
-      "op": "==",
-      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/validation_command_manifest.json",
-      "upstream_id": "exp7915-owned-validation"
-    }
-  ],
+  "gate_check_summary": [],
   "historical_fixture_date": "20260929",
   "historical_required_failures": [
     {
@@ -1007,9 +1017,27 @@
       ],
       "resolved": false,
       "sha256": "sha256:706827a351bd5a1317e66638d5a0ebba31b20ef903b5546bcc98172de125d84f"
+    },
+    {
+      "experiment_id": 7915,
+      "honest_verdict": "complete_disqualified_required_validation",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/prior-attempt-8c88e4d518eccd0b6bf790fd51f6c6393d8f1a4a65f27ade0a587e0f8f711578.json",
+      "required_failures": [
+        {
+          "artifact_field": "required_check.passed",
+          "expected": true,
+          "hash": "sha256:64198c3e04163e0d1dc9153344b0c2c7d368ce8caae335764d2730c93e4f48a6",
+          "observed": false,
+          "op": "==",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/validation_command_manifest.json",
+          "upstream_id": "exp7915-owned-validation"
+        }
+      ],
+      "resolved": false,
+      "sha256": "sha256:8c88e4d518eccd0b6bf790fd51f6c6393d8f1a4a65f27ade0a587e0f8f711578"
     }
   ],
-  "honest_verdict": "complete_disqualified_required_validation",
+  "honest_verdict": "complete_circular_positive_contract_methods",
   "inference_substrate": "aggregation_from_upstream_artifacts",
   "inference_substrate_class": "no_model_load",
   "inference_substrate_details": {
@@ -1930,7 +1958,7 @@
       "addopts=",
       "--no-cov",
       "-q",
-      "--basetemp=/tmp/exp7915-frjsj5i0/affected",
+      "--basetemp=/tmp/exp7915-e71s2d69/affected",
       "tests/python/test_experiment_7915_v687_contract_methods.py",
       "tests/python/test_experiment_7915_v687_contract_methods.py",
       "tests/python/test_experiment_7903_v686_contract_methods.py",
@@ -1944,7 +1972,7 @@
       "addopts=",
       "--no-cov",
       "-q",
-      "--basetemp=/tmp/exp7915-frjsj5i0/consumer",
+      "--basetemp=/tmp/exp7915-e71s2d69/consumer",
       "tests/python/test_roadmap_schema.py",
       "tests/python/test_audit_roadmap_gates.py",
       "tests/python/test_exclusion_manifest_lint.py",
@@ -1953,8 +1981,8 @@
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
       "run",
-      "--data-file=/tmp/exp7915-frjsj5i0/.coverage.unit",
-      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+      "--data-file=/tmp/exp7915-e71s2d69/.coverage.unit",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
       "-m",
       "pytest",
       "-n",
@@ -1963,7 +1991,7 @@
       "addopts=",
       "--no-cov",
       "-q",
-      "--basetemp=/tmp/exp7915-frjsj5i0/coverage",
+      "--basetemp=/tmp/exp7915-e71s2d69/coverage",
       "tests/python/test_experiment_7915_v687_contract_methods.py",
       "tests/python/test_experiment_7915_v687_contract_methods.py",
       "tests/python/test_experiment_7903_v686_contract_methods.py",
@@ -1972,85 +2000,85 @@
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
       "run",
-      "--data-file=/tmp/exp7915-frjsj5i0/.coverage.cli",
-      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+      "--data-file=/tmp/exp7915-e71s2d69/.coverage.cli",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
       "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
       "--date",
       "20260930",
       "--fixture-e2e",
       "--design",
-      "/tmp/exp7915-frjsj5i0/design.md",
+      "/tmp/exp7915-e71s2d69/design.md",
       "--active",
-      "/tmp/exp7915-frjsj5i0/active.yaml",
+      "/tmp/exp7915-e71s2d69/active.yaml",
       "--staged",
-      "/tmp/exp7915-frjsj5i0/consumed.yaml",
+      "/tmp/exp7915-e71s2d69/consumed.yaml",
       "--output",
-      "/tmp/exp7915-frjsj5i0/fixture.json",
+      "/tmp/exp7915-e71s2d69/fixture.json",
       "--raw",
-      "/tmp/exp7915-frjsj5i0/rows.json"
+      "/tmp/exp7915-e71s2d69/rows.json"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
       "run",
-      "--data-file=/tmp/exp7915-frjsj5i0/.coverage.failure",
-      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+      "--data-file=/tmp/exp7915-e71s2d69/.coverage.failure",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
       "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
       "--date",
       "20260930",
       "--cold-replay",
-      "/tmp/exp7915-frjsj5i0/negative.json",
+      "/tmp/exp7915-e71s2d69/negative.json",
       "--raw",
-      "/tmp/exp7915-frjsj5i0/negative-rows.json"
+      "/tmp/exp7915-e71s2d69/negative-rows.json"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
       "run",
-      "--data-file=/tmp/exp7915-frjsj5i0/.coverage.replay",
-      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+      "--data-file=/tmp/exp7915-e71s2d69/.coverage.replay",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
       "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
       "--date",
       "20260930",
       "--cold-replay",
-      "/tmp/exp7915-frjsj5i0/fixture.json",
+      "/tmp/exp7915-e71s2d69/fixture.json",
       "--raw",
-      "/tmp/exp7915-frjsj5i0/rows.json"
+      "/tmp/exp7915-e71s2d69/rows.json"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
       "run",
-      "--data-file=/tmp/exp7915-frjsj5i0/.coverage.terminal",
+      "--data-file=/tmp/exp7915-e71s2d69/.coverage.terminal",
       "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
       "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
       "--terminal-recheck",
-      "/tmp/exp7915-frjsj5i0/fixture.json",
+      "/tmp/exp7915-e71s2d69/fixture.json",
       "--output",
-      "/tmp/exp7915-frjsj5i0/checked.json"
+      "/tmp/exp7915-e71s2d69/checked.json"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
       "combine",
-      "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-      "/tmp/exp7915-frjsj5i0/.coverage.unit",
-      "/tmp/exp7915-frjsj5i0/.coverage.cli",
-      "/tmp/exp7915-frjsj5i0/.coverage.failure",
-      "/tmp/exp7915-frjsj5i0/.coverage.replay",
-      "/tmp/exp7915-frjsj5i0/.coverage.terminal"
+      "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+      "/tmp/exp7915-e71s2d69/.coverage.unit",
+      "/tmp/exp7915-e71s2d69/.coverage.cli",
+      "/tmp/exp7915-e71s2d69/.coverage.failure",
+      "/tmp/exp7915-e71s2d69/.coverage.replay",
+      "/tmp/exp7915-e71s2d69/.coverage.terminal"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
       "report",
-      "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+      "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
       "--show-missing",
       "--fail-under=100"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
       "json",
-      "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+      "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
       "-o",
-      "/tmp/exp7915-frjsj5i0/coverage.json"
+      "/tmp/exp7915-e71s2d69/coverage.json"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
@@ -2099,7 +2127,7 @@
       "--date",
       "20260929",
       "--fixture-e2e",
-      "/tmp/exp7915-frjsj5i0/e2e016.json"
+      "/tmp/exp7915-e71s2d69/e2e016.json"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
@@ -2107,12 +2135,7 @@
       "--date",
       "20260929",
       "--cold-replay",
-      "/tmp/exp7915-frjsj5i0/e2e016.json"
-    ],
-    [
-      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
-      "tests/python",
-      "-q"
+      "/tmp/exp7915-e71s2d69/e2e016.json"
     ],
     [
       "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
@@ -2122,7 +2145,7 @@
       "addopts=",
       "--no-cov",
       "-q",
-      "--basetemp=/tmp/exp7915-frjsj5i0/source-e2e",
+      "--basetemp=/tmp/exp7915-e71s2d69/source-e2e",
       "tests/python/test_source_boundary_7852.py"
     ],
     [
@@ -2131,17 +2154,13 @@
       "--date",
       "20260930",
       "--fixture-e2e",
-      "/tmp/exp7915-frjsj5i0/wrong-date.json"
-    ],
-    [
-      "coverage_json_reduction",
-      "/tmp/exp7915-frjsj5i0/coverage.json"
+      "/tmp/exp7915-e71s2d69/wrong-date.json"
     ]
   ],
   "phase_spans": [
     {
-      "completed_units": 33,
-      "end_s": 922.842964095,
+      "completed_units": 32,
+      "end_s": 195.216083158,
       "phase": "authority_source_and_validation",
       "start_s": 0
     }
@@ -2155,35 +2174,7 @@
   "receipt_sidecars": [],
   "repository_health": {
     "affects_required_checks": false,
-    "current_full_suite": [
-      {
-        "actual_exit": -15,
-        "argv": [
-          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
-          "tests/python",
-          "-q"
-        ],
-        "classification": "diagnostic",
-        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
-        "command_argv": [
-          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
-          "tests/python",
-          "-q"
-        ],
-        "deadline_s": 600,
-        "duration_s": 738.0470931999735,
-        "exit_code": -15,
-        "expected_exit": 0,
-        "failure_reason": "required_check_failed",
-        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/repository_full_suite-698207e1c21b8779bcd44cdbe15967a0ae571f6253195553a6b7baddc166f0f2.log",
-        "log_sha256": "sha256:698207e1c21b8779bcd44cdbe15967a0ae571f6253195553a6b7baddc166f0f2",
-        "name": "repository_full_suite",
-        "output_tail": "............................................... [ 20%]\n........F.....................F......................................... [ 20%]\n..........................................FF.....F.........F.....F...... [ 20%]\n.....................FFFFFFFF.FFFFFFF................................... [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n.......................FFFFFFF.......................................... [ 20%]\n........................................................................ [ 21%]\n........................................................................ [ 21%]\n........................................................................ [ 21%]\n.........F..................F........F..........F...................F... [ 21%]\n............................................F........F...........F...F.. [ 21%]\nFF..FFFF.F...........FF...............................s......F.......... [ 21%]\n......................F.................F.F............................. [ 21%]\n........................................................................ [ 21%]\n.................................F.F.................................... [ 21%]\n........................................................................ [ 21%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 23%]\n..................................F....................F.F.F....F....... [ 23%]\n......................F..............FFFFFFFFFFFFFFF...........F.....F.. [ 23%]\n.............FFFFF..FF..FFF...........................................F. [ 23%]\n..........F..................FFFFFFFFFFFFFFFFFF/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140404256985296, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139755089180288, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139904529552240, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
-        "passed": false,
-        "scope": "diagnostic",
-        "timed_out": true
-      }
-    ],
+    "current_full_suite": [],
     "historical": {
       "affects_required_checks": false,
       "historical": {
@@ -2230,10 +2221,46 @@
         ]
       }
     },
+    "prior_full_suite_observation": {
+      "actual_exit": -15,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline_s": 600,
+      "duration_s": 738.0470931999735,
+      "exit_code": -15,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/repository_full_suite-698207e1c21b8779bcd44cdbe15967a0ae571f6253195553a6b7baddc166f0f2.log",
+      "log_sha256": "sha256:698207e1c21b8779bcd44cdbe15967a0ae571f6253195553a6b7baddc166f0f2",
+      "name": "repository_full_suite",
+      "output_tail": "............................................... [ 20%]\n........F.....................F......................................... [ 20%]\n..........................................FF.....F.........F.....F...... [ 20%]\n.....................FFFFFFFF.FFFFFFF................................... [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n.......................FFFFFFF.......................................... [ 20%]\n........................................................................ [ 21%]\n........................................................................ [ 21%]\n........................................................................ [ 21%]\n.........F..................F........F..........F...................F... [ 21%]\n............................................F........F...........F...F.. [ 21%]\nFF..FFFF.F...........FF...............................s......F.......... [ 21%]\n......................F.................F.F............................. [ 21%]\n........................................................................ [ 21%]\n.................................F.F.................................... [ 21%]\n........................................................................ [ 21%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 23%]\n..................................F....................F.F.F....F....... [ 23%]\n......................F..............FFFFFFFFFFFFFFF...........F.....F.. [ 23%]\n.............FFFFF..FF..FFF...........................................F. [ 23%]\n..........F..................FFFFFFFFFFFFFFFFFF/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140404256985296, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139755089180288, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139904529552240, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "owned_worker_cleanup": {
+        "pids": [
+          3906419
+        ],
+        "reason": "pytest worker retained stdout after deadline",
+        "signal": "SIGKILL"
+      },
+      "passed": false,
+      "prior_candidate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/prior-attempt-8c88e4d518eccd0b6bf790fd51f6c6393d8f1a4a65f27ade0a587e0f8f711578.json",
+      "prior_candidate_sha256": "sha256:8c88e4d518eccd0b6bf790fd51f6c6393d8f1a4a65f27ade0a587e0f8f711578",
+      "scope": "diagnostic",
+      "timed_out": true
+    },
     "status": "degraded_open"
   },
-  "reproducibility_checksum": "c0b263ece99216d1",
-  "required_checks_passed": false,
+  "reproducibility_checksum": "e01d1e2f9a567e30",
+  "required_checks_passed": true,
   "resolved_imports": {
     "carnot.reporting.current_work_receipt": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
     "carnot.reporting.source_boundary_7892": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/source_boundary_7892.py",
@@ -2243,8 +2270,8 @@
     "carnot.verify.source_projection": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/source_projection.py"
   },
   "retire_if_same_verdict": {
-    "action": "retire_unchanged_scope",
-    "identical_prior_failure": true,
+    "action": "preserve_prior_failures; versioned contract changed",
+    "identical_prior_failure": false,
     "required": true
   },
   "rows": [
@@ -11950,12 +11977,12 @@
     "intended": 640,
     "started": 640
   },
-  "started_monotonic_timestamp_ns": 408639359523654,
+  "started_monotonic_timestamp_ns": 409638799806435,
   "target_model": "none",
   "task_id": "exp7915-contract-methods",
   "trained_head_specs": [],
   "validation_command_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/validation_command_manifest.json",
-  "validation_command_manifest_sha256": "sha256:64198c3e04163e0d1dc9153344b0c2c7d368ce8caae335764d2730c93e4f48a6",
+  "validation_command_manifest_sha256": "sha256:fe038cea36dac9a82db591b23bd3110bcc4f2db290204b1519ab1488d2fa769a",
   "validation_receipts": [
     {
       "actual_exit": 0,
@@ -11967,14 +11994,14 @@
         "addopts=",
         "--no-cov",
         "-q",
-        "--basetemp=/tmp/exp7915-frjsj5i0/affected",
+        "--basetemp=/tmp/exp7915-e71s2d69/affected",
         "tests/python/test_experiment_7915_v687_contract_methods.py",
         "tests/python/test_experiment_7915_v687_contract_methods.py",
         "tests/python/test_experiment_7903_v686_contract_methods.py",
         "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7915-frjsj5i0/affected tests/python/test_experiment_7915_v687_contract_methods.py tests/python/test_experiment_7915_v687_contract_methods.py tests/python/test_experiment_7903_v686_contract_methods.py tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7915-e71s2d69/affected tests/python/test_experiment_7915_v687_contract_methods.py tests/python/test_experiment_7915_v687_contract_methods.py tests/python/test_experiment_7903_v686_contract_methods.py tests/python/test_experiment_7891_v685_authority_lifecycle.py",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
         "-n",
@@ -11983,21 +12010,21 @@
         "addopts=",
         "--no-cov",
         "-q",
-        "--basetemp=/tmp/exp7915-frjsj5i0/affected",
+        "--basetemp=/tmp/exp7915-e71s2d69/affected",
         "tests/python/test_experiment_7915_v687_contract_methods.py",
         "tests/python/test_experiment_7915_v687_contract_methods.py",
         "tests/python/test_experiment_7903_v686_contract_methods.py",
         "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
       ],
       "deadline_s": 900,
-      "duration_s": 52.5302871199674,
+      "duration_s": 56.047344505030196,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/affected_pytest-ece0a2231605f361c8017dc9425dc354f9144dc4c8c7d8d11a206b470ae32752.log",
-      "log_sha256": "sha256:ece0a2231605f361c8017dc9425dc354f9144dc4c8c7d8d11a206b470ae32752",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/affected_pytest-fc856ff1881f49ac54ff1de3cdb96699c71c727ce6f1a92afe6ff0738c358f09.log",
+      "log_sha256": "sha256:fc856ff1881f49ac54ff1de3cdb96699c71c727ce6f1a92afe6ff0738c358f09",
       "name": "affected_pytest",
-      "output_tail": "..............................................                           [100%]\n46 passed in 49.95s\n",
+      "output_tail": "...............................................                          [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/pluggy/_callers.py:121\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['ops/dogfood-memory.json']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.\n    res = hook_impl.function(*args)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n47 passed, 1 warning in 53.42s\n",
       "passed": true,
       "scope": "required",
       "timed_out": false
@@ -12012,14 +12039,14 @@
         "addopts=",
         "--no-cov",
         "-q",
-        "--basetemp=/tmp/exp7915-frjsj5i0/consumer",
+        "--basetemp=/tmp/exp7915-e71s2d69/consumer",
         "tests/python/test_roadmap_schema.py",
         "tests/python/test_audit_roadmap_gates.py",
         "tests/python/test_exclusion_manifest_lint.py",
         "tests/python/test_conductor_gates.py"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7915-frjsj5i0/consumer tests/python/test_roadmap_schema.py tests/python/test_audit_roadmap_gates.py tests/python/test_exclusion_manifest_lint.py tests/python/test_conductor_gates.py",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7915-e71s2d69/consumer tests/python/test_roadmap_schema.py tests/python/test_audit_roadmap_gates.py tests/python/test_exclusion_manifest_lint.py tests/python/test_conductor_gates.py",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
         "-n",
@@ -12028,21 +12055,21 @@
         "addopts=",
         "--no-cov",
         "-q",
-        "--basetemp=/tmp/exp7915-frjsj5i0/consumer",
+        "--basetemp=/tmp/exp7915-e71s2d69/consumer",
         "tests/python/test_roadmap_schema.py",
         "tests/python/test_audit_roadmap_gates.py",
         "tests/python/test_exclusion_manifest_lint.py",
         "tests/python/test_conductor_gates.py"
       ],
       "deadline_s": 240,
-      "duration_s": 9.512153672985733,
+      "duration_s": 10.211312320025172,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/consumer_pytest-4a1e975f1fd943f490d9371b2d6a890ceb99bab3a159b201b9d501bdb45aa03a.log",
-      "log_sha256": "sha256:4a1e975f1fd943f490d9371b2d6a890ceb99bab3a159b201b9d501bdb45aa03a",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/consumer_pytest-c74aaea3edeb1e0d743ca2673ac5c7af76ba17b296a5ad56b5a21d28cd65e1eb.log",
+      "log_sha256": "sha256:c74aaea3edeb1e0d743ca2673ac5c7af76ba17b296a5ad56b5a21d28cd65e1eb",
       "name": "consumer_pytest",
-      "output_tail": "........................................................................ [ 67%]\n..................................                                       [100%]\n106 passed in 7.21s\n",
+      "output_tail": "........................................................................ [ 67%]\n..................................                                       [100%]\n106 passed in 7.75s\n",
       "passed": true,
       "scope": "required",
       "timed_out": false
@@ -12052,8 +12079,8 @@
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.unit",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.unit",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "-m",
         "pytest",
         "-n",
@@ -12062,19 +12089,19 @@
         "addopts=",
         "--no-cov",
         "-q",
-        "--basetemp=/tmp/exp7915-frjsj5i0/coverage",
+        "--basetemp=/tmp/exp7915-e71s2d69/coverage",
         "tests/python/test_experiment_7915_v687_contract_methods.py",
         "tests/python/test_experiment_7915_v687_contract_methods.py",
         "tests/python/test_experiment_7903_v686_contract_methods.py",
         "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-frjsj5i0/.coverage.unit --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py -m pytest -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7915-frjsj5i0/coverage tests/python/test_experiment_7915_v687_contract_methods.py tests/python/test_experiment_7915_v687_contract_methods.py tests/python/test_experiment_7903_v686_contract_methods.py tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-e71s2d69/.coverage.unit --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py -m pytest -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7915-e71s2d69/coverage tests/python/test_experiment_7915_v687_contract_methods.py tests/python/test_experiment_7915_v687_contract_methods.py tests/python/test_experiment_7903_v686_contract_methods.py tests/python/test_experiment_7891_v685_authority_lifecycle.py",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.unit",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.unit",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "-m",
         "pytest",
         "-n",
@@ -12083,21 +12110,21 @@
         "addopts=",
         "--no-cov",
         "-q",
-        "--basetemp=/tmp/exp7915-frjsj5i0/coverage",
+        "--basetemp=/tmp/exp7915-e71s2d69/coverage",
         "tests/python/test_experiment_7915_v687_contract_methods.py",
         "tests/python/test_experiment_7915_v687_contract_methods.py",
         "tests/python/test_experiment_7903_v686_contract_methods.py",
         "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
       ],
       "deadline_s": 900,
-      "duration_s": 91.03442635200918,
+      "duration_s": 97.21906643098919,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_unit-2989918336e33a221b72021cd6db81f8a0bb73ac8e6343b83bce6236f6f653a0.log",
-      "log_sha256": "sha256:2989918336e33a221b72021cd6db81f8a0bb73ac8e6343b83bce6236f6f653a0",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_unit-4c6e40d1d166fe0793abac7a4d37709f7bb50e797c6237bbd000a2cfe34ba2f7.log",
+      "log_sha256": "sha256:4c6e40d1d166fe0793abac7a4d37709f7bb50e797c6237bbd000a2cfe34ba2f7",
       "name": "coverage_unit",
-      "output_tail": "..............................................                           [100%]\n46 passed in 86.96s (0:01:26)\n",
+      "output_tail": "...............................................                          [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/pluggy/_callers.py:121\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 3 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (3): ['ops/conductor-heartbeat.json', 'ops/conductor-log.md', 'ops/conductor-state.json']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.\n    res = hook_impl.function(*args)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n47 passed, 1 warning in 92.90s (0:01:32)\n",
       "passed": true,
       "scope": "required",
       "timed_out": false
@@ -12107,54 +12134,54 @@
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.cli",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.cli",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
         "--date",
         "20260930",
         "--fixture-e2e",
         "--design",
-        "/tmp/exp7915-frjsj5i0/design.md",
+        "/tmp/exp7915-e71s2d69/design.md",
         "--active",
-        "/tmp/exp7915-frjsj5i0/active.yaml",
+        "/tmp/exp7915-e71s2d69/active.yaml",
         "--staged",
-        "/tmp/exp7915-frjsj5i0/consumed.yaml",
+        "/tmp/exp7915-e71s2d69/consumed.yaml",
         "--output",
-        "/tmp/exp7915-frjsj5i0/fixture.json",
+        "/tmp/exp7915-e71s2d69/fixture.json",
         "--raw",
-        "/tmp/exp7915-frjsj5i0/rows.json"
+        "/tmp/exp7915-e71s2d69/rows.json"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-frjsj5i0/.coverage.cli --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py --date 20260930 --fixture-e2e --design /tmp/exp7915-frjsj5i0/design.md --active /tmp/exp7915-frjsj5i0/active.yaml --staged /tmp/exp7915-frjsj5i0/consumed.yaml --output /tmp/exp7915-frjsj5i0/fixture.json --raw /tmp/exp7915-frjsj5i0/rows.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-e71s2d69/.coverage.cli --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py --date 20260930 --fixture-e2e --design /tmp/exp7915-e71s2d69/design.md --active /tmp/exp7915-e71s2d69/active.yaml --staged /tmp/exp7915-e71s2d69/consumed.yaml --output /tmp/exp7915-e71s2d69/fixture.json --raw /tmp/exp7915-e71s2d69/rows.json",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.cli",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.cli",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
         "--date",
         "20260930",
         "--fixture-e2e",
         "--design",
-        "/tmp/exp7915-frjsj5i0/design.md",
+        "/tmp/exp7915-e71s2d69/design.md",
         "--active",
-        "/tmp/exp7915-frjsj5i0/active.yaml",
+        "/tmp/exp7915-e71s2d69/active.yaml",
         "--staged",
-        "/tmp/exp7915-frjsj5i0/consumed.yaml",
+        "/tmp/exp7915-e71s2d69/consumed.yaml",
         "--output",
-        "/tmp/exp7915-frjsj5i0/fixture.json",
+        "/tmp/exp7915-e71s2d69/fixture.json",
         "--raw",
-        "/tmp/exp7915-frjsj5i0/rows.json"
+        "/tmp/exp7915-e71s2d69/rows.json"
       ],
       "deadline_s": 120,
-      "duration_s": 10.042087787005585,
+      "duration_s": 10.123803937982302,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_cli_success-638174517e79698dce4c4c952791ecb3fcda95a4298bfd9ed450a1e387a4515e.log",
-      "log_sha256": "sha256:638174517e79698dce4c4c952791ecb3fcda95a4298bfd9ed450a1e387a4515e",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_cli_success-ecd505fcbde49558c0155d0520fe002839872aba8f3b4cefe7b1db256073f0da.log",
+      "log_sha256": "sha256:ecd505fcbde49558c0155d0520fe002839872aba8f3b4cefe7b1db256073f0da",
       "name": "coverage_cli_success",
-      "output_tail": "[exp7915] start completed_units=0 elapsed_s=0\n[exp7915] phase=start elapsed_s=0 completed_units=0\n[exp7915] phase=resolved_inputs elapsed_s=0.987 completed_units=3\n[exp7915] phase=mutations elapsed_s=0.498 completed_units=1/12\n[exp7915] phase=mutations elapsed_s=0.998 completed_units=2/12\n[exp7915] phase=mutations elapsed_s=1.496 completed_units=3/12\n[exp7915] phase=mutations elapsed_s=1.980 completed_units=4/12\n[exp7915] phase=mutations elapsed_s=2.469 completed_units=5/12\n[exp7915] phase=mutations elapsed_s=2.970 completed_units=6/12\n[exp7915] phase=mutations elapsed_s=3.419 completed_units=7/12\n[exp7915] phase=mutations elapsed_s=3.916 completed_units=8/12\n[exp7915] phase=mutations elapsed_s=4.417 completed_units=9/12\n[exp7915] phase=mutations elapsed_s=4.997 completed_units=10/12\n[exp7915] phase=mutations elapsed_s=5.496 completed_units=11/12\n[exp7915] phase=mutations elapsed_s=5.747 completed_units=12/12\n[exp7915] phase=published elapsed_s=7.844 completed_units=13\n",
+      "output_tail": "[exp7915] start completed_units=0 elapsed_s=0\n[exp7915] phase=start elapsed_s=0 completed_units=0\n[exp7915] phase=resolved_inputs elapsed_s=0.992 completed_units=3\n[exp7915] phase=mutations elapsed_s=0.503 completed_units=1/12\n[exp7915] phase=mutations elapsed_s=1.008 completed_units=2/12\n[exp7915] phase=mutations elapsed_s=1.511 completed_units=3/12\n[exp7915] phase=mutations elapsed_s=1.998 completed_units=4/12\n[exp7915] phase=mutations elapsed_s=2.491 completed_units=5/12\n[exp7915] phase=mutations elapsed_s=3.000 completed_units=6/12\n[exp7915] phase=mutations elapsed_s=3.452 completed_units=7/12\n[exp7915] phase=mutations elapsed_s=4.038 completed_units=8/12\n[exp7915] phase=mutations elapsed_s=4.544 completed_units=9/12\n[exp7915] phase=mutations elapsed_s=5.045 completed_units=10/12\n[exp7915] phase=mutations elapsed_s=5.548 completed_units=11/12\n[exp7915] phase=mutations elapsed_s=5.791 completed_units=12/12\n[exp7915] phase=published elapsed_s=7.900 completed_units=13\n",
       "passed": true,
       "scope": "required",
       "timed_out": false
@@ -12164,33 +12191,33 @@
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.failure",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.failure",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
         "--date",
         "20260930",
         "--cold-replay",
-        "/tmp/exp7915-frjsj5i0/negative.json",
+        "/tmp/exp7915-e71s2d69/negative.json",
         "--raw",
-        "/tmp/exp7915-frjsj5i0/negative-rows.json"
+        "/tmp/exp7915-e71s2d69/negative-rows.json"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-frjsj5i0/.coverage.failure --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py --date 20260930 --cold-replay /tmp/exp7915-frjsj5i0/negative.json --raw /tmp/exp7915-frjsj5i0/negative-rows.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-e71s2d69/.coverage.failure --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py --date 20260930 --cold-replay /tmp/exp7915-e71s2d69/negative.json --raw /tmp/exp7915-e71s2d69/negative-rows.json",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.failure",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.failure",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
         "--date",
         "20260930",
         "--cold-replay",
-        "/tmp/exp7915-frjsj5i0/negative.json",
+        "/tmp/exp7915-e71s2d69/negative.json",
         "--raw",
-        "/tmp/exp7915-frjsj5i0/negative-rows.json"
+        "/tmp/exp7915-e71s2d69/negative-rows.json"
       ],
       "deadline_s": 60,
-      "duration_s": 2.1880424739792943,
+      "duration_s": 2.1562293730094098,
       "exit_code": 1,
       "expected_exit": 1,
       "failure_reason": "cold_replay_mismatch",
@@ -12207,33 +12234,33 @@
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.replay",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.replay",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
         "--date",
         "20260930",
         "--cold-replay",
-        "/tmp/exp7915-frjsj5i0/fixture.json",
+        "/tmp/exp7915-e71s2d69/fixture.json",
         "--raw",
-        "/tmp/exp7915-frjsj5i0/rows.json"
+        "/tmp/exp7915-e71s2d69/rows.json"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-frjsj5i0/.coverage.replay --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py --date 20260930 --cold-replay /tmp/exp7915-frjsj5i0/fixture.json --raw /tmp/exp7915-frjsj5i0/rows.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-e71s2d69/.coverage.replay --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py --date 20260930 --cold-replay /tmp/exp7915-e71s2d69/fixture.json --raw /tmp/exp7915-e71s2d69/rows.json",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.replay",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.replay",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
         "--date",
         "20260930",
         "--cold-replay",
-        "/tmp/exp7915-frjsj5i0/fixture.json",
+        "/tmp/exp7915-e71s2d69/fixture.json",
         "--raw",
-        "/tmp/exp7915-frjsj5i0/rows.json"
+        "/tmp/exp7915-e71s2d69/rows.json"
       ],
       "deadline_s": 60,
-      "duration_s": 2.2018949650228024,
+      "duration_s": 2.175092224031687,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
@@ -12250,36 +12277,36 @@
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.terminal",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.terminal",
         "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
         "--terminal-recheck",
-        "/tmp/exp7915-frjsj5i0/fixture.json",
+        "/tmp/exp7915-e71s2d69/fixture.json",
         "--output",
-        "/tmp/exp7915-frjsj5i0/checked.json"
+        "/tmp/exp7915-e71s2d69/checked.json"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-frjsj5i0/.coverage.terminal --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py --terminal-recheck /tmp/exp7915-frjsj5i0/fixture.json --output /tmp/exp7915-frjsj5i0/checked.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7915-e71s2d69/.coverage.terminal --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py --terminal-recheck /tmp/exp7915-e71s2d69/fixture.json --output /tmp/exp7915-e71s2d69/checked.json",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "run",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.terminal",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.terminal",
         "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py",
         "--terminal-recheck",
-        "/tmp/exp7915-frjsj5i0/fixture.json",
+        "/tmp/exp7915-e71s2d69/fixture.json",
         "--output",
-        "/tmp/exp7915-frjsj5i0/checked.json"
+        "/tmp/exp7915-e71s2d69/checked.json"
       ],
       "deadline_s": 120,
-      "duration_s": 2.9194556690054014,
+      "duration_s": 2.93086487200344,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "terminal_recheck_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_terminal_recheck-6ccfcc639811b0a35db9d3b1f117b7830815f0ef394fb0ade386ff6a3f0c0117.log",
-      "log_sha256": "sha256:6ccfcc639811b0a35db9d3b1f117b7830815f0ef394fb0ade386ff6a3f0c0117",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_terminal_recheck-fb37f52375fc1896f7d02b0d84338eae63e3ec76c056cccaacb949fd88912ac5.log",
+      "log_sha256": "sha256:fb37f52375fc1896f7d02b0d84338eae63e3ec76c056cccaacb949fd88912ac5",
       "name": "coverage_terminal_recheck",
-      "output_tail": "[exp7915] start completed_units=0 elapsed_s=0\n[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1\n[exp7303-validation:adversarial_verify] {\n[exp7303-validation:adversarial_verify]   \"reports\": [\n[exp7303-validation:adversarial_verify]     {\n[exp7303-validation:adversarial_verify]       \"artifact\": \"/tmp/exp7915-terminal-ilxnt7jj/terminal-candidate.json\",\n[exp7303-validation:adversarial_verify]       \"loaded\": true,\n[exp7303-validation:adversarial_verify]       \"exp_id\": 7915,\n[exp7303-validation:adversarial_verify]       \"title\": \"\",\n[exp7303-validation:adversarial_verify]       \"honest_verdict\": \"partial_private_unvalidated\",\n[exp7303-validation:adversarial_verify]       \"flag_count\": 0,\n[exp7303-validation:adversarial_verify]       \"max_severity\": -1,\n[exp7303-validation:adversarial_verify]       \"flags\": [],\n[exp7303-validation:adversarial_verify]       \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n[exp7303-validation:adversarial_verify]     }\n[exp7303-validation:adversarial_verify]   ],\n[exp7303-validation:adversarial_verify]   \"flagged_count\": 0\n[exp7303-validation:adversarial_verify] }\n[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.633 exit=0 unit=1/1\n[exp7303-validation] before_subprocess verdict_row_consistency elapsed_s=0.000 unit=1/1\n[exp7303-validation:verdict_row_consistency] \n[exp7303-validation:verdict_row_consistency] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n[exp7303-validation:verdict_row_consistency]   No row/verdict contradictions among the artifacts that could be checked.\n[exp7303-validation] after_subprocess verdict_row_consistency elapsed_s=0.049 exit=0 unit=1/1\n",
+      "output_tail": "[exp7915] start completed_units=0 elapsed_s=0\n[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1\n[exp7303-validation:adversarial_verify] {\n[exp7303-validation:adversarial_verify]   \"reports\": [\n[exp7303-validation:adversarial_verify]     {\n[exp7303-validation:adversarial_verify]       \"artifact\": \"/tmp/exp7915-terminal-euo_g3no/terminal-candidate.json\",\n[exp7303-validation:adversarial_verify]       \"loaded\": true,\n[exp7303-validation:adversarial_verify]       \"exp_id\": 7915,\n[exp7303-validation:adversarial_verify]       \"title\": \"\",\n[exp7303-validation:adversarial_verify]       \"honest_verdict\": \"partial_private_unvalidated\",\n[exp7303-validation:adversarial_verify]       \"flag_count\": 0,\n[exp7303-validation:adversarial_verify]       \"max_severity\": -1,\n[exp7303-validation:adversarial_verify]       \"flags\": [],\n[exp7303-validation:adversarial_verify]       \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n[exp7303-validation:adversarial_verify]     }\n[exp7303-validation:adversarial_verify]   ],\n[exp7303-validation:adversarial_verify]   \"flagged_count\": 0\n[exp7303-validation:adversarial_verify] }\n[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.623 exit=0 unit=1/1\n[exp7303-validation] before_subprocess verdict_row_consistency elapsed_s=0.000 unit=1/1\n[exp7303-validation:verdict_row_consistency] \n[exp7303-validation:verdict_row_consistency] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n[exp7303-validation:verdict_row_consistency]   No row/verdict contradictions among the artifacts that could be checked.\n[exp7303-validation] after_subprocess verdict_row_consistency elapsed_s=0.049 exit=0 unit=1/1\n",
       "passed": true,
       "scope": "required",
       "timed_out": false
@@ -12289,27 +12316,27 @@
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "combine",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-        "/tmp/exp7915-frjsj5i0/.coverage.unit",
-        "/tmp/exp7915-frjsj5i0/.coverage.cli",
-        "/tmp/exp7915-frjsj5i0/.coverage.failure",
-        "/tmp/exp7915-frjsj5i0/.coverage.replay",
-        "/tmp/exp7915-frjsj5i0/.coverage.terminal"
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+        "/tmp/exp7915-e71s2d69/.coverage.unit",
+        "/tmp/exp7915-e71s2d69/.coverage.cli",
+        "/tmp/exp7915-e71s2d69/.coverage.failure",
+        "/tmp/exp7915-e71s2d69/.coverage.replay",
+        "/tmp/exp7915-e71s2d69/.coverage.terminal"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --data-file=/tmp/exp7915-frjsj5i0/.coverage.combined /tmp/exp7915-frjsj5i0/.coverage.unit /tmp/exp7915-frjsj5i0/.coverage.cli /tmp/exp7915-frjsj5i0/.coverage.failure /tmp/exp7915-frjsj5i0/.coverage.replay /tmp/exp7915-frjsj5i0/.coverage.terminal",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --data-file=/tmp/exp7915-e71s2d69/.coverage.combined /tmp/exp7915-e71s2d69/.coverage.unit /tmp/exp7915-e71s2d69/.coverage.cli /tmp/exp7915-e71s2d69/.coverage.failure /tmp/exp7915-e71s2d69/.coverage.replay /tmp/exp7915-e71s2d69/.coverage.terminal",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "combine",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-        "/tmp/exp7915-frjsj5i0/.coverage.unit",
-        "/tmp/exp7915-frjsj5i0/.coverage.cli",
-        "/tmp/exp7915-frjsj5i0/.coverage.failure",
-        "/tmp/exp7915-frjsj5i0/.coverage.replay",
-        "/tmp/exp7915-frjsj5i0/.coverage.terminal"
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+        "/tmp/exp7915-e71s2d69/.coverage.unit",
+        "/tmp/exp7915-e71s2d69/.coverage.cli",
+        "/tmp/exp7915-e71s2d69/.coverage.failure",
+        "/tmp/exp7915-e71s2d69/.coverage.replay",
+        "/tmp/exp7915-e71s2d69/.coverage.terminal"
       ],
       "deadline_s": 60,
-      "duration_s": 0.052671556011773646,
+      "duration_s": 0.05292235902743414,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
@@ -12326,30 +12353,30 @@
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "report",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "--show-missing",
         "--fail-under=100"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7915-frjsj5i0/.coverage.combined --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py --show-missing --fail-under=100",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7915-e71s2d69/.coverage.combined --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py --show-missing --fail-under=100",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "report",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "--show-missing",
         "--fail-under=100"
       ],
       "deadline_s": 60,
-      "duration_s": 0.08855721104191616,
+      "duration_s": 0.09858348802663386,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_report-c7358eabc8bab1a1b3283b3d8a61cef1f8585e83eecc0de02785705b716a3e75.log",
-      "log_sha256": "sha256:c7358eabc8bab1a1b3283b3d8a61cef1f8585e83eecc0de02785705b716a3e75",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_report-ff326ebd192b61248ca06100403830e9493ad5144db06a081313b668f7c3ea99.log",
+      "log_sha256": "sha256:ff326ebd192b61248ca06100403830e9493ad5144db06a081313b668f7c3ea99",
       "name": "coverage_report",
-      "output_tail": "Name                                                           Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------------\npython/carnot/reporting/v685_authority_lifecycle.py               85      0   100%\npython/carnot/reporting/v686_contract_methods.py                 182      0   100%\npython/carnot/reporting/v686_contract_validation.py              139      0   100%\nscripts/experiments/experiment_7915_v687_contract_methods.py      42      0   100%\n--------------------------------------------------------------------------------------------\nTOTAL                                                            448      0   100%\n",
+      "output_tail": "Name                                                           Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------------\npython/carnot/reporting/v685_authority_lifecycle.py               85      0   100%\npython/carnot/reporting/v686_contract_methods.py                 182      0   100%\npython/carnot/reporting/v686_contract_validation.py              139      0   100%\npython/carnot/reporting/v687_contract_methods.py                  88      0   100%\npython/carnot/reporting/v687_contract_validation.py               55      0   100%\nscripts/experiments/experiment_7915_v687_contract_methods.py      43      0   100%\n--------------------------------------------------------------------------------------------\nTOTAL                                                            592      0   100%\n",
       "passed": true,
       "scope": "required",
       "timed_out": false
@@ -12359,30 +12386,30 @@
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "json",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "-o",
-        "/tmp/exp7915-frjsj5i0/coverage.json"
+        "/tmp/exp7915-e71s2d69/coverage.json"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage json --data-file=/tmp/exp7915-frjsj5i0/.coverage.combined --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py -o /tmp/exp7915-frjsj5i0/coverage.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage json --data-file=/tmp/exp7915-e71s2d69/.coverage.combined --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py -o /tmp/exp7915-e71s2d69/coverage.json",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
         "json",
-        "--data-file=/tmp/exp7915-frjsj5i0/.coverage.combined",
-        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+        "--data-file=/tmp/exp7915-e71s2d69/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v687_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7915_v687_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v686_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
         "-o",
-        "/tmp/exp7915-frjsj5i0/coverage.json"
+        "/tmp/exp7915-e71s2d69/coverage.json"
       ],
       "deadline_s": 60,
-      "duration_s": 0.08438014396233484,
+      "duration_s": 0.09260949702002108,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_json-b2e8f4d51674eed2387122f46bc63f3a6528da399bf9df6a7c3b333715586156.log",
-      "log_sha256": "sha256:b2e8f4d51674eed2387122f46bc63f3a6528da399bf9df6a7c3b333715586156",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/coverage_json-7bc9accea6b1d6667924c815bad169c2626aae948e5a23c84b8f88a5620ca86e.log",
+      "log_sha256": "sha256:7bc9accea6b1d6667924c815bad169c2626aae948e5a23c84b8f88a5620ca86e",
       "name": "coverage_json",
-      "output_tail": "Wrote JSON report to /tmp/exp7915-frjsj5i0/coverage.json\n",
+      "output_tail": "Wrote JSON report to /tmp/exp7915-e71s2d69/coverage.json\n",
       "passed": true,
       "scope": "required",
       "timed_out": false
@@ -12414,7 +12441,7 @@
         "tests/python/test_experiment_7915_v687_contract_methods.py"
       ],
       "deadline_s": 90,
-      "duration_s": 0.013411814987193793,
+      "duration_s": 0.01315677398815751,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
@@ -12455,7 +12482,7 @@
         "tests/python/test_experiment_7915_v687_contract_methods.py"
       ],
       "deadline_s": 90,
-      "duration_s": 0.01071266399230808,
+      "duration_s": 0.010450911009684205,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
@@ -12492,7 +12519,7 @@
         "python/carnot/reporting/v685_authority_lifecycle.py"
       ],
       "deadline_s": 180,
-      "duration_s": 0.12614245701115578,
+      "duration_s": 0.1456102030351758,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
@@ -12525,7 +12552,7 @@
         "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
       ],
       "deadline_s": 180,
-      "duration_s": 0.028637437033466995,
+      "duration_s": 0.03065476199844852,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
@@ -12545,20 +12572,20 @@
         "--date",
         "20260929",
         "--fixture-e2e",
-        "/tmp/exp7915-frjsj5i0/e2e016.json"
+        "/tmp/exp7915-e71s2d69/e2e016.json"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260929 --fixture-e2e /tmp/exp7915-frjsj5i0/e2e016.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260929 --fixture-e2e /tmp/exp7915-e71s2d69/e2e016.json",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
         "--date",
         "20260929",
         "--fixture-e2e",
-        "/tmp/exp7915-frjsj5i0/e2e016.json"
+        "/tmp/exp7915-e71s2d69/e2e016.json"
       ],
       "deadline_s": 120,
-      "duration_s": 1.2161634520161897,
+      "duration_s": 1.2290573909995146,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
@@ -12578,20 +12605,20 @@
         "--date",
         "20260929",
         "--cold-replay",
-        "/tmp/exp7915-frjsj5i0/e2e016.json"
+        "/tmp/exp7915-e71s2d69/e2e016.json"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260929 --cold-replay /tmp/exp7915-frjsj5i0/e2e016.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260929 --cold-replay /tmp/exp7915-e71s2d69/e2e016.json",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
         "--date",
         "20260929",
         "--cold-replay",
-        "/tmp/exp7915-frjsj5i0/e2e016.json"
+        "/tmp/exp7915-e71s2d69/e2e016.json"
       ],
       "deadline_s": 60,
-      "duration_s": 1.2188984099775553,
+      "duration_s": 1.2170132579631172,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "required_check_failed",
@@ -12604,33 +12631,6 @@
       "timed_out": false
     },
     {
-      "actual_exit": -15,
-      "argv": [
-        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
-        "tests/python",
-        "-q"
-      ],
-      "classification": "diagnostic",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
-      "command_argv": [
-        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
-        "tests/python",
-        "-q"
-      ],
-      "deadline_s": 600,
-      "duration_s": 738.0470931999735,
-      "exit_code": -15,
-      "expected_exit": 0,
-      "failure_reason": "required_check_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/repository_full_suite-698207e1c21b8779bcd44cdbe15967a0ae571f6253195553a6b7baddc166f0f2.log",
-      "log_sha256": "sha256:698207e1c21b8779bcd44cdbe15967a0ae571f6253195553a6b7baddc166f0f2",
-      "name": "repository_full_suite",
-      "output_tail": "............................................... [ 20%]\n........F.....................F......................................... [ 20%]\n..........................................FF.....F.........F.....F...... [ 20%]\n.....................FFFFFFFF.FFFFFFF................................... [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n........................................................................ [ 20%]\n.......................FFFFFFF.......................................... [ 20%]\n........................................................................ [ 21%]\n........................................................................ [ 21%]\n........................................................................ [ 21%]\n.........F..................F........F..........F...................F... [ 21%]\n............................................F........F...........F...F.. [ 21%]\nFF..FFFF.F...........FF...............................s......F.......... [ 21%]\n......................F.................F.F............................. [ 21%]\n........................................................................ [ 21%]\n.................................F.F.................................... [ 21%]\n........................................................................ [ 21%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 22%]\n........................................................................ [ 23%]\n..................................F....................F.F.F....F....... [ 23%]\n......................F..............FFFFFFFFFFFFFFF...........F.....F.. [ 23%]\n.............FFFFF..FF..FFF...........................................F. [ 23%]\n..........F..................FFFFFFFFFFFFFFFFFF/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140404256985296, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139755089180288, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139904529552240, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
-      "passed": false,
-      "scope": "diagnostic",
-      "timed_out": true
-    },
-    {
       "actual_exit": 0,
       "argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
@@ -12640,11 +12640,11 @@
         "addopts=",
         "--no-cov",
         "-q",
-        "--basetemp=/tmp/exp7915-frjsj5i0/source-e2e",
+        "--basetemp=/tmp/exp7915-e71s2d69/source-e2e",
         "tests/python/test_source_boundary_7852.py"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7915-frjsj5i0/source-e2e tests/python/test_source_boundary_7852.py",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q --basetemp=/tmp/exp7915-e71s2d69/source-e2e tests/python/test_source_boundary_7852.py",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
         "-n",
@@ -12653,18 +12653,18 @@
         "addopts=",
         "--no-cov",
         "-q",
-        "--basetemp=/tmp/exp7915-frjsj5i0/source-e2e",
+        "--basetemp=/tmp/exp7915-e71s2d69/source-e2e",
         "tests/python/test_source_boundary_7852.py"
       ],
       "deadline_s": 120,
-      "duration_s": 7.027153515955433,
+      "duration_s": 6.939541250001639,
       "exit_code": 0,
       "expected_exit": 0,
       "failure_reason": "source_fixture_failed",
-      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/e2e_015-4fa050a70f65f1025f90f9221076319d7044ad385bc99ed1feaabfa656fcc960.log",
-      "log_sha256": "sha256:4fa050a70f65f1025f90f9221076319d7044ad385bc99ed1feaabfa656fcc960",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7915_v687_contract_methods/sealed_logs/e2e_015-6697f81cd1300531ad83132564282218866e63dee96ce27038d3c7ef85fb1e21.log",
+      "log_sha256": "sha256:6697f81cd1300531ad83132564282218866e63dee96ce27038d3c7ef85fb1e21",
       "name": "e2e_015",
-      "output_tail": "...                                                                      [100%]\n3 passed in 4.21s\n",
+      "output_tail": "...                                                                      [100%]\n3 passed in 4.16s\n",
       "passed": true,
       "scope": "required",
       "timed_out": false
@@ -12677,20 +12677,20 @@
         "--date",
         "20260930",
         "--fixture-e2e",
-        "/tmp/exp7915-frjsj5i0/wrong-date.json"
+        "/tmp/exp7915-e71s2d69/wrong-date.json"
       ],
       "classification": "required",
-      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260930 --fixture-e2e /tmp/exp7915-frjsj5i0/wrong-date.json",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py --date 20260930 --fixture-e2e /tmp/exp7915-e71s2d69/wrong-date.json",
       "command_argv": [
         "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
         "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
         "--date",
         "20260930",
         "--fixture-e2e",
-        "/tmp/exp7915-frjsj5i0/wrong-date.json"
+        "/tmp/exp7915-e71s2d69/wrong-date.json"
       ],
       "deadline_s": 60,
-      "duration_s": 1.2781135879922658,
+      "duration_s": 1.2470173879992217,
       "exit_code": 1,
       "expected_exit": 1,
       "failure_reason": "run_date_mismatch",
@@ -12703,17 +12703,17 @@
       "timed_out": false
     },
     {
-      "actual_exit": 1,
+      "actual_exit": 0,
       "argv": [
         "coverage_json_reduction",
-        "/tmp/exp7915-frjsj5i0/coverage.json"
+        "/tmp/exp7915-e71s2d69/coverage.json"
       ],
       "deadline_s": 0,
       "expected_exit": 0,
       "name": "per_file_statement_coverage",
-      "passed": false
+      "passed": true
     }
   ],
-  "verdict_class": "disqualified",
+  "verdict_class": "circular_positive",
   "verifier_is_oracle": true
 }
