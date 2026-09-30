@@ -458,3 +458,95 @@ execution-graded HumanEval at N=60, no.
 - `python/carnot/phase3/energy_descent_premise.py` -- the project's
   established `mcnemar_test` / `paired_bootstrap_ci` module, reused
   directly (not reimplemented) for the significance testing above
+
+---
+
+## Addendum 2026-09-29: ARC-AGI-3 live-agent candidate eval (offline, 2-arm)
+
+**Scope.** Tests whether ternary Bonsai-2 is a viable candidate to replace
+the mandated `unsloth/Qwen3.8-27B-GGUF` as the ARC-AGI-3 live agent's
+generator. Offline only. Public games only (`cd82`, `lp85`, `ar25`), 2 of
+the 3 canonical explorer-pilot seeds (7491001, 7491002). No live Kaggle
+submission touched. No default changed. `solve_provenance:
+development_proxy` throughout -- this is a candidate-selection eval, not
+an ARC solve, and does not update `ops/arc_solve_registry.yaml`.
+
+**Design: 2 arms run, not 3 -- confound named.** The plan called for three
+arms (A: mandated model, stock server; B: mandated model, PrismML fork
+server; C: ternary model, PrismML fork server) so a serving-stack effect
+could be told apart from a weight effect. Under a session time
+constraint, the run was stopped after Arm A and Arm B was skipped
+entirely (2 real episodes ran and were killed before Arm B's raw file
+was ever written -- nothing here rests on that discarded data). **Result:
+this eval cannot separate "the weights changed" from "the server that
+runs them changed."** Arm A ran the mandated model on the stock
+`llama.cpp-master` binary (confirmed by reading `arc_executable_world_model.py`'s
+`_resolve_llama_server()` -- this is genuinely what the live agent uses
+by default, not `llama-cpp-python` as first assumed). Arm C ran ternary
+Bonsai-2 on the PrismML fork binary. Any difference between A and C is
+attributable to EITHER change, not isolated to the weights.
+
+**Central finding: neither model ever completed a valid induction call.**
+Every one of 25 (Arm A) and 26 (Arm C) `generate()` calls returned
+`ok=False`, truncated at the 512-token `induce_max_tokens` cap, on all 6
+game/seed combinations, both arms. Consequence: because induction never
+produced a usable result, the live agent's `next_move()` fell back to
+identical seed-deterministic explorer behaviour regardless of which
+model served the call -- this is why per-game/per-seed real scorecard
+scores are bit-identical between the two arms (both `mean_game_score =
+0.0897`; `any_level_up_games = [cd82, lp85]` for both). **This eval
+measured real GPU throughput and latency under a genuine ARC-induction
+workload, not generation quality or its effect on gameplay outcome** --
+neither model got the chance to demonstrate one at this token budget.
+
+**Speed.** Ternary ran calls faster: mean call duration 47.3s (Arm C) vs
+80.2s (Arm A), a 1.70x speedup on real ARC-induction prompts (both
+truncated at the same 512-token cap, so this is a clean per-token
+comparison). Direction matches the first section's standalone benchmark
+(1.44x); the larger magnitude here is not independently resolved --
+plausibly the ARC prompt shape, plausibly N=25-26-call noise.
+
+**Sample size.** 6 games x 2 seeds x 2 arms = 24 episodes total, well
+below this project's own N>=30 floor for a percentage-point claim. Every
+number in this addendum is directional, not a statistically powered
+result.
+
+**What would still need to be true before anyone acted on this.** (1)
+Arm B run for real, to know whether the speed/behaviour difference is
+the weights or the fork server; (2) `induce_max_tokens` raised well past
+512 so at least one model can complete a real induction on at least one
+game, so quality-on-gameplay becomes measurable at all; (3) the N=32
+concurrency-collapse from this note's second section resolved or ruled
+out as irrelevant to single-stream ARC serving; (4) a real sample-size
+run (N>=30-equivalent) once (1) and (2) hold.
+
+**Verdict.** Not yet a candidate to carry forward on this evidence. The
+one clean, real finding is a ~1.7x speed advantage on real ARC-shaped
+prompts, consistent in direction with the earlier standalone benchmark.
+Everything about quality-on-gameplay is unmeasured because both models
+failed identically at the token budget used here, and the fork-vs-stock
+confound is real and unresolved. The next useful experiment is Arm B
+plus a higher token budget, not more games at the current settings.
+
+**`adversarial_verify.py` result.** Clean, 0 flags, after one real fix:
+the harness's own `duration_s` initially equalled `generation_duration_s`
+exactly (both were the sum of LLM call time only), correctly caught by
+the TAUTOLOGY check. Fixed by setting `duration_s` to the real total
+wall-clock of the run (from the run logs: Arm A 2099s, Arm C 1297.704s)
+which legitimately differs from generation-only time because the harness
+also spends time on explorer moves, env stepping, and server start/stop.
+
+**Cross-references (this addendum)**
+
+- `results/experiment_bonsai2_arc_candidate_eval.json` -- the full artifact
+- `scripts/experiments/experiment_bonsai2_arc_candidate_eval.py` -- the
+  eval harness (new, uncommitted, reuses `E3AgentPolicy` and
+  `real_scorecard_score()` derived from `docs/research-notes/rescore-arc-formula-2026-09-26.md`)
+- `python/carnot/agentic/arc_competition_agent.py` -- the live entrypoint
+  this eval exercises directly (`E3AgentPolicy`)
+- `python/carnot/agentic/arc_executable_world_model.py` -- `LocalGGUFProposer`,
+  the generator wrapper, and `_resolve_llama_server()` (confirms the
+  live agent's real default serving binary)
+- `python/carnot/experiment_10017_explorer_variants.py` (branch
+  `explorer-pilot`, commit `f494c6cfc3`) -- the runner this harness's
+  seed convention and adapter-disabling pattern is drawn from
