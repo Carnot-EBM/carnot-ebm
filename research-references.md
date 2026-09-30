@@ -48919,3 +48919,89 @@ Exp7920 authenticated the mandated Qwen model and completed 169 calls, but only
 28 complete families remained. Its required comparison floor was 32. It has no
 independent sentence labels and syntax_valid=false. Improve protocol completion
 before interpreting source sensitivity or scheduling a larger accuracy claim.
+
+## V689 planning review — 2026-09-30 (recorded before design)
+
+This review checked the eight requested research topics and all six secondary
+sources. Most useful methods already appear above. They are rechecked sources,
+not new discoveries. Author results below are not Carnot measurements.
+
+### Evidence granularity is the immediate research opportunity
+
+[First Hallucination Tokens Are Different from Conditional Ones](https://arxiv.org/abs/2507.20836)
+(July 2025) studies position-dependent hallucination signals on human-annotated
+RAGTruth spans. Its [Hugging Face entry](https://huggingface.co/papers/2507.20836)
+links the authors' analysis. The practical implication is to preserve annotation
+granularity before evaluating a detector. It does not show that a sentence-level
+Qwen judge or Carnot energy head will improve.
+
+The [RAGTruth author repository](https://github.com/ParticleMedia/RAGTruth/blob/main/README.md)
+defines response-relative span positions, text, annotation types, quality,
+and `implicit_true`. Carnot already has the pinned MIT corpus at commit
+`c103204b9ce28d6bbad859304bf30de72b8ed8fe`. The Exp7423 manifest binds its files.
+Exp7892's public/evaluator boundary preserves response labels; Exp7932 still
+reports no independent sentence labels. A promising next test is an evaluator-only
+join from exact original response bytes to complete sentence boundaries.
+Check Unicode offsets and annotation text. Keep source/answer bytes separate
+from annotation metadata. A sentence containing an annotated unsupported span
+is not the same target as an entirely false sentence. Absence of a span is a
+human annotation judgment, not a formal truth certificate. Preserve this limit.
+
+### Topic review and decisions
+
+| Topic | Sources checked | Application or reason to defer |
+|---|---|---|
+| EBM verification and reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), revised May 2026 | Retain normalized source-conditioned energy decisions. These results do not establish complete constraint extraction or a truth oracle. |
+| Neural constraint satisfaction | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025; [hard linear decision rules](https://arxiv.org/abs/2505.13858), May 2025 | Supplied algebraic constraints permit feasibility checks. Natural-source labeling must be qualified before another solver comparison. |
+| Ising applications in ML | [Energy-Based Constraint Networks](https://arxiv.org/abs/2605.00960), May 2026 | Structural coherence motivates separate violation channels. Defer another architectural sweep until current energy heads pass terminal checks. |
+| Hallucination detection | [Constrained Paraphrase Consistency](https://arxiv.org/abs/2606.08158), June 2026; position-dependent hallucination study above | CCHD's [method](https://arxiv.org/html/2606.08158v1) separates prediction agreement and label preservation. Continue matched constrained-versus-augmented energy controls. Complete-byte window views are an adaptation, not verified paraphrases. Test source support using human labels at the actual queried granularity. |
+| Kolmogorov–Arnold Networks | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026; [KAC](https://arxiv.org/abs/2503.21076), March 2025 | Local support motivates sparse update accounting and retention. Do not reopen the retired importance-anchor mechanism. No new KAN training sweep is warranted here. |
+| Guided decoding | [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 2026; [unified diffusion energy](https://arxiv.org/abs/2606.09159), June 2026 | A useful reward is a prerequisite. V688's bounded grammar result was null. Hold the decoder fixed for a new labeled evaluation; defer energy steering and diffusion-model replacement. |
+| Hardware sampling | [FPGA decomposition](https://arxiv.org/abs/2602.15985), February 2026; [Extropic Z1T](https://extropic.ai/writing/z1t) | Include host preprocessing, transfer and readout in cost bounds. Vendor performance estimates do not qualify local devices. Preserve KV260, PolarFire and GateMate evidence limits. |
+| Continuous learning | [Memoir](https://arxiv.org/abs/2607.20792), July 2026; [Delayed ACI](https://arxiv.org/abs/2609.07251), September 2026 | Pin read state within a query. Compare committed additions with no-write controls on later decisions. Confidence replay must use only released labels and the state issued with each prediction. No forecasting theorem transfers automatically. |
+
+### Secondary-source receipts and limits
+
+- **OpenReview:** searched ICLR, ICML and NeurIPS EBM work. The indexed
+  [EBT ICLR 2026 PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) describes
+  input/candidate compatibility and from-scratch energy training. Also checked
+  [Energy Matching](https://openreview.net/pdf?id=WYSCCw7mCe), NeurIPS 2025.
+  No new reviewer consensus or local replication is claimed.
+- **Semantic Scholar:** both browser citation endpoints failed. A bounded
+  direct API request returned HTTP 429 for EBT. ARM–EBM returned nine records,
+  with no next-page marker. These include distributional EBMs and d-OPD,
+  already catalogued above. Citation indexing is incomplete; this is not a
+  complete census or a verified new citation delta.
+- **Hugging Face:** checked the verification feed and the linked 2025
+  hallucination-token paper. Feed dates mix years; publication dates come from
+  the primary abstract. No popularity claim is used to select a method.
+- **GitHub:** checked weekly Python and Rust trending pages. Retrieved pages
+  were two weeks old. No current EBM/KAN/constraint trend rank was verified.
+  RAGTruth's author-maintained schema is a concrete, locally available asset.
+- **Extropic:** checked the writing index and Z1T article. Sparse sampling and
+  hybrid orchestration remain relevant. No authenticated local TSU access was
+  established by this research review.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The page describes constraint enforcement but supplies no reproducible local
+  weights or training recipe. Treat it as architectural motivation only.
+
+### Local findings that must change the next milestone
+
+V688 fixed primary/sidecar selection and qualified its twelve-task contract.
+Exp7930 fitted 27 heads and recorded 604 eligible source families, but required
+CLI checks failed. Two private blocked-output routes used the same experiment
+number in one directory. `publish_primary` correctly raised `conflicting_primary`;
+then blocked cold replay failed. Use separate private publication roots per
+route. Do not disable uniqueness or declare the old result eligible.
+
+Exp7932 completed 341 bounded calls. Grammar and plain complete-family rates
+were 43/48 and 40/48. The paired gain was .0625, CI95 [0, .145833], exact p=.25.
+Forty families completed in both arms. This is a valid protocol null, with zero
+eligible sentence labels and no natural accuracy claim. Another completion-only
+rerun has no changed premise; annotation granularity supplies a different test.
+
+Exp7938 failed its missing-input route with `KeyError: scope` in the hardware
+operation map. A missing historical board input must remain a typed blocker;
+it must not become a fabricated placement constraint. Exp7936 found no new
+supervisor events. Reuse its receipt identities and stop cheaply when there is
+no delta. Exp7939 is a qualified audit with missing science, not a science win.

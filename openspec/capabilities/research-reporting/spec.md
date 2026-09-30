@@ -87335,3 +87335,32 @@ changes and bind terminal sidecars to final candidate bytes. Both actual gate
 and document readers must select the primary hash after nested sidecars receive
 newer mtimes. Required owned failures yield disqualified and readiness zero.
 No external publication, activation or production default change is allowed.
+
+## REQ-REPORT-PLAN-689: Plan from terminal failures and actual label granularity
+
+Stage milestone 2026.09.689 with thirteen tasks, Exp7940 through Exp7952,
+in four phases. The design table, machine contract, full-task digest and YAML
+must describe exactly the same ordered tasks. Preserve the V688 design before
+rewriting vNEXT. Keep the active roadmap and conductor unchanged.
+
+Record the requested literature review before experiment design. Diagnose the
+V688 conflicting-primary fixture failure and missing board scope explicitly.
+Keep V688 science disqualified where its required checks failed. The sentence
+study must join original human spans to exact response bytes in evaluator
+custody. Predictor views and sentence selection cannot depend on labels.
+
+Every prompt must declare progress and bounded file-writing steps, artifact
+fields, verdict class, substrate, deliverable and exact run command. All LLM
+work uses the mandated Qwen3.8-27B GGUF as bounded generation. Gate fields must
+have current-roadmap producers. Preserve full prior-failure entries and true
+same-verdict retirement. Include causal continuous learning, calibrated energy
+decisions, ARC generalization and all three hardware obligations.
+
+### SCENARIO-REPORT-PLAN-689-CONTRACT
+
+The unchanged schema, exclusion, gate, harness and priority readers accept the
+staged roadmap. Independent comparison rejects count, ID, order, phase, path,
+prompt, gate, model, substrate, prior-failure, digest and authority mutations.
+Every declared read-first input exists. No absent or disqualified producer
+opens a science gate. Planning runs applicable private E2E readers and focused
+unit/lint/spec checks. Repository-wide debt remains separate and visible.
