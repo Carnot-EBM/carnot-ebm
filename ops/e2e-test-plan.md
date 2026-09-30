@@ -272,3 +272,15 @@ candidate during cold replay, and execute the manifest's negative replay with
 exit 1. The current CLI must pass all required validation receipts, all twelve
 authority mutations, adversarial verification, strict row consistency, and a
 cold replay of the published artifact. It makes no model or science claim.
+
+### E2E-019: Exp7942 direct sentence annotation replay (CPU)
+
+Spec ref: REQ-REPORT-7942, SCENARIO-REPORT-7942-DIRECT-CLI and
+SCENARIO-REPORT-7942-COVERAGE-WORKSPACE. Run
+`pytest -n 0 -o addopts= --no-cov -q tests/python/test_experiment_7942_v689_sentence_labels.py`.
+Require private fixture publication, external blocking, date rejection, valid
+replay and aggregate-tamper rejection. The replay regression invokes the actual
+script from outside the checkout with `PYTHONPATH` removed; valid replay reports
+`replay_passed`, and tampered aggregates exit one with `reduction_drift`.
+The frozen fixture command must also save and combine real coverage in private
+scratch without the pytest child artifact guard redirecting its data writes.

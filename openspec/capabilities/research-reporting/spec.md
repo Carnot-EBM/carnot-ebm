@@ -1,5 +1,65 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7942: Seal sentence annotation transport
+
+Exp7942 SHALL publish one current primary for milestone 2026.09.689 on
+20260930. Actual compute is `aggregation_from_upstream_artifacts`, class
+`no_model_load`, venue `host`, with empty model specifications and zero calls.
+Missing external custody closes complete_blocked with exact operands. Owned
+required failures close complete_disqualified with readiness zero. Successful
+transport is measurement readiness only; it is not a learned detector result.
+
+Freeze affected files, transitive consumers, exact argv, expected exits,
+negative failure text, deadlines and identical coverage includes before
+validation. Run explicit unit and consumer tests, E2E-015, historical E2E-016
+fixture and cold replay with `--date 20260929`, and real private Exp7942
+success, negative, blocked and cold replay routes. Each route has its own
+publication directory. Current execution date remains 20260930.
+Combine nonempty coverage and require 100 percent of added module and CLI
+statements. Run scoped Ruff, strict mypy and explicit-file spec coverage.
+Freeze coverage data in a unique private scratch workspace outside protected
+`results/` paths. Unit and CLI children SHALL use that same workspace; combine
+only its current nonempty measurements, retaining the report under raw evidence.
+Run repository pytest once as a bounded child and record health separately.
+Preserve historical required failures.
+
+Cold-reduce claims from primitive public and evaluator rows. Run adversarial
+verification and strict row consistency on the exact terminal candidate.
+Recheck changed verdict bytes and bind sidecars to the final hash. Publish
+only checked bytes through the existing uniqueness-checking atomic publisher.
+Both live gate and document readers SHALL select that primary after newer
+nested sidecars. Keep raw shards below 50 MiB and tracked files below 90 MB.
+
+### SCENARIO-REPORT-7942-TERMINAL
+
+Private success, external block, owned failure, negative replay and cold
+reconstruction retain current producer identity. A changed row or hash fails
+replay. Newer raw sidecars do not change either reader's selected primary.
+
+### SCENARIO-REPORT-7942-DIRECT-CLI
+
+The script-path CLI SHALL resolve its repository-owned publication readers
+without a repository-root `PYTHONPATH`, including when launched from another
+working directory. Valid cold replay SHALL report `replay_passed`; a changed
+aggregate SHALL exit one and report `reduction_drift` after reconstruction.
+
+### SCENARIO-REPORT-7942-COVERAGE-WORKSPACE
+
+A frozen private fixture CLI SHALL exit zero under the pytest child artifact
+guard, save nonempty coverage in its private workspace, and combine its measured
+producer and CLI files without cross-filesystem renames into protected results.
+
+Implementation status: implemented in
+`carnot.experiment_7942_v689_sentence_labels` and the small script-path CLI.
+Direct script-path replay resolves the repository-owned readers before producer
+import; positive and aggregate-tamper subprocess tests run outside the checkout
+without `PYTHONPATH`. A unique private coverage workspace avoids artifact-guard
+redirects and combines only the current run's measurements. The affected
+208-test closure passes, with 402/402 owned module and CLI statements covered.
+The refreshed Exp7942 result binds all fourteen passing required receipts,
+terminal validators and reader checks; final 640-family cold replay passes.
+Ops and traceability record the same validation scope and null cohort outcome.
+
 ## REQ-REPORT-7932-V688: Authenticate and seal paired Qwen completion
 
 Authenticate exact Exp7917 protocol and raw hashes, ready score one, eligible

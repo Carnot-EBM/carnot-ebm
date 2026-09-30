@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-09-30 — V689 direct sentence annotation replay
+
+- Bootstrap the repository root before the Exp7942 CLI imports its producer,
+  allowing its publication readers to resolve during direct execution.
+- Add valid and tampered replay regressions with no `PYTHONPATH` and a working
+  directory outside the checkout. The original negative-replay assertion now
+  reaches reconstruction and reports `reduction_drift`.
+- Allocate a private coverage workspace outside protected `results/` paths and
+  combine only current measurements. Exercise the frozen fixture CLI and its
+  coverage output while the pytest child artifact guard remains enabled.
+- Verify 208 affected/consumer/core/fix-gate tests and 402/402 owned statements,
+  plus scoped Ruff, format, strict mypy and spec coverage.
+- Refresh the Exp7942 primary with 14/14 passing required receipts, terminal
+  validators, reader/hash checks and 640-family cold replay. The original
+  cohort still yields a valid null transport and readiness zero.
+
 ## 2026-09-29 — V685 source boundary CLI and coverage repair
 
 - Added repository-root bootstrap for direct Exp7892 CLI execution so its

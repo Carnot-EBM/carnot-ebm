@@ -1,0 +1,49 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7942_v689_sentence_labels/private-blocked/experiment_7942_v689_sentence_labels.json",
+  "primary_sha256": "sha256:323e204487630059e6024b9816134b9ebcd50c07f579ee671db16fa7e2408e87",
+  "report": {
+    "candidate_sha256": "sha256:323e204487630059e6024b9816134b9ebcd50c07f579ee671db16fa7e2408e87",
+    "flagged_adversarial": false,
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7942_v689_sentence_labels/private-blocked/raw/experiment_7942_v689_sentence_labels/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7942_v689_sentence_labels/private-blocked/raw/experiment_7942_v689_sentence_labels/terminal_candidate.json"
+        ],
+        "duration_s": 0.565443096042145,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7942_v689_sentence_labels/private-blocked/raw/experiment_7942_v689_sentence_labels/terminal_logs/00_adversarial.log",
+        "log_sha256": "sha256:ac13f7c61645dba3f9878f5d229638b74f1fdc78a4478abdbb735f2b2187f721",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7942_v689_sentence_labels/private-blocked/raw/experiment_7942_v689_sentence_labels/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7942,\n      \"title\": \"Human source-support labels at the queried sentence boundary\",\n      \"honest_verdict\": \"complete_blocked_annotation_custody\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal_candidate",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7942_v689_sentence_labels/private-blocked/raw/experiment_7942_v689_sentence_labels/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7942_v689_sentence_labels/private-blocked/raw/experiment_7942_v689_sentence_labels/terminal_candidate.json"
+        ],
+        "duration_s": 0.02844380197348073,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7942_v689_sentence_labels/private-blocked/raw/experiment_7942_v689_sentence_labels/terminal_logs/01_strict_rows.log",
+        "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+        "passed": true,
+        "scope": "terminal_candidate",
+        "timed_out": false
+      }
+    ]
+  }
+}

@@ -1,5 +1,26 @@
 # Carnot — Operational Status
 
+## 2026-09-30 — V689 sentence annotation CLI test repair
+
+- Exp7942 direct script-path execution resolves the repository-owned publication
+  readers before importing the producer. Valid and tampered cold replay work
+  from outside the checkout without a repository-root `PYTHONPATH`.
+- Frozen validation allocates a unique coverage workspace outside `results/`,
+  keeping the pytest child artifact guard active and avoiding cross-filesystem
+  coverage renames. A regression executes and combines the frozen fixture CLI.
+- The affected modules, publication/source-boundary consumers, core checks and
+  fix-gate tests pass 208/208 (one existing deprecation warning). Combined unit
+  and subprocess coverage is 402/402 owned statements. Scoped Ruff, format,
+  strict mypy and spec coverage pass. Existing assertions remain intact.
+- The refreshed primary passes 14/14 required receipts, E2E-015/016/019,
+  terminal adversarial and strict row checks, both primary readers, and a
+  640-family cold replay from outside the checkout without `PYTHONPATH`.
+  It records a valid null transport with readiness zero: only three eligible
+  positive evaluation labels are available, below the required eight.
+- Repository-wide reconciliation still reports 1,142 legacy tests without spec
+  references. The bounded repository pytest diagnostic times out with failures;
+  these observations do not qualify as repository-wide passes.
+
 ## 2026-09-29 — V685 source boundary test and coverage repair
 
 - The Exp7892 script-path CLI resolves its qualified V684 producer import.

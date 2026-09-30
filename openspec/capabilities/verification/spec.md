@@ -1,5 +1,52 @@
 # Verification Capability Specification
 
+## REQ-VERIFY-7942: Authenticate human sentence targets
+
+Exp7942 SHALL use the pinned RAGTruth revision
+`c103204b9ce28d6bbad859304bf30de72b8ed8fe` and both Exp7423 raw file hashes.
+It SHALL preserve Exp7892's 640 families, eight roles, bytes and exclusions.
+Before evaluator access, publish complete byte-preserving sentence intervals
+from `source_alignment.sentence_spans`. Select one sentence per family by the
+smallest SHA256 of UTF-8 family ID, canonical JSON `[start_byte,end_byte]`, and
+`v689-sentence-1`, concatenated without delimiters. Keep all 64 evaluation
+families. Selection SHALL never depend on labels or eligibility.
+
+RAGTruth offsets are half-open Unicode character indices. Convert these to
+UTF-8 byte indices only after exact response equality and exact annotation
+text equality. Missing quality, missing labels, malformed spans, duplicate
+identity and source-cluster role overlap SHALL fail closed. Good-quality
+responses are completely annotated under the original corpus contract.
+Incorrect refusals and truncated responses remain excluded.
+
+The primary target means contains a human-annotated source-unsupported span.
+Positive overlap SHALL include a non-whitespace character. Boundary contact
+alone is insufficient. Cross-boundary spans can label both sentences.
+Include `implicit_true` and `due_to_null` in the primary target. Exclude
+`implicit_true` only in a separately named sensitivity target. No overlap on
+a good completely annotated response gives zero; unknown responses give null.
+
+Predictor shards SHALL contain only source bytes, full answer bytes, selected
+interval and opaque family key. IDs, roles, quality, labels and annotation
+metadata SHALL remain evaluator-only. Every evaluator-field mutation SHALL
+preserve predictor bytes, sentence selection order and label-free features.
+
+### SCENARIO-VERIFY-7942-OFFSETS
+
+Unicode, overlapping spans, whitespace-only overlap, cross-boundary spans,
+no-span responses, implicit truth and null-caused spans yield exact labels.
+Invalid quality, missing annotations, duplicate joins and changed text fail.
+
+### SCENARIO-VERIFY-7942-COHORT
+
+The unchanged evaluation roster has one frozen query per family. Readiness
+requires 32 eligible distinct source clusters and eight examples per class.
+Insufficient operands close null with readiness zero, without replacements.
+Historically exposed groups cannot establish fresh independent generalization.
+
+Implementation status: implemented in `carnot.verify.sentence_labels_7942`.
+Nullable free-text annotation notes remain original metadata. Offset, text,
+type and quality checks remain strict. The result records current readiness.
+
 ## REQ-VERIFY-7932-V688: Paired bounded decoder completion
 
 Freeze 48 original evaluation families by source-group hash before outputs or labels.

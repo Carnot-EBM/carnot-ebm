@@ -1,6 +1,21 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-29
+**Last Updated:** 2026-09-30
+**Operational Note:** REQ-REPORT-7942, SCENARIO-REPORT-7942-DIRECT-CLI and
+SCENARIO-REPORT-7942-COVERAGE-WORKSPACE map the direct script-path bootstrap and
+private coverage workspace to `python/carnot/experiment_7942_v689_sentence_labels.py`,
+`scripts/experiments/experiment_7942_v689_sentence_labels.py` and
+`tests/python/test_experiment_7942_v689_sentence_labels.py`. Valid and tampered
+replay subprocesses run outside the checkout without `PYTHONPATH`. The affected
+closure, including core and fix-gate checks, passes 208/208 tests (one existing
+warning); both added modules and the CLI cover 402/402 statements. E2E-019
+preserves the direct replay and frozen coverage checks. Scoped traceability
+passes; the repository-wide audit retains 1,142 legacy untraced tests.
+`results/experiment_7942_v689_sentence_labels.json` now binds 14/14 passing
+required receipts, E2E-015/016/019, terminal validators and both primary readers.
+The final 640-family cold replay passes outside the checkout without
+`PYTHONPATH`; readiness remains zero because three positive labels fall below
+the original eight-positive minimum.
 **Operational Note:** REQ-REPORT-7892-V685 and its custody, validation and
 terminal scenarios map to `python/carnot/reporting/source_boundary_7892.py`,
 `scripts/experiments/experiment_7892_v685_source_boundary.py`, and
