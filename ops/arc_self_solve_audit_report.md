@@ -16,9 +16,16 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR:** No recent ARC solve artifacts were supplied, so there is no solve to credit as `SELF_DISCOVERY_ADVANCE`. The reachability check passes, but reachability alone does not establish who discovered a solution.
-
-**Per artifact:** None (last 7 days: 0). No verdict or artifact-specific action applies.
-
-**Pattern watch:** No outer-loop drift can be assessed from an empty sample. For future solve claims, require a live entrypoint trace showing the agent’s own attempts, runtime reverse-engineering, and a new registry result.
-
+(LLM review unavailable: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 01a0f09d-cb97-7350-a4cc-0c1e2fb947d2
+--------
+user
+You are a HOSTILE revie)

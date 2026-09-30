@@ -3715,3 +3715,14 @@ today's ARC session per Fable 5.1's recommendation list.
 |---|---|---|---|---|
 | 1 | 2026-09-29T23:42:56Z | 2026-09-29T23:44:34Z | Operational retrospective for milestone 2026.09.685: analyze timing data and GPU state, update retro JSON, changelog, and research-log. | pending authoritative extraction |
 
+
+## Session: 2026-09-30 V687 research planning
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-09-30T04:55:11Z | 2026-09-30T05:17:14Z | User requested the next research milestone after .686. Recorded sources, staged matching thirteen-task design/YAML, reconciled docs and passed planning checks. Start is the first captured UTC timestamp. | unavailable from current tools |
+
+One adversarial reviewer checked the proposal and verified corrections. Its
+result metadata supplied no token or duration figures. The documented
+`scripts/session-metrics.py` is absent, so no authoritative session token count
+or cost is claimed. No experiment execution, activation or push occurred.

@@ -86753,3 +86753,18 @@ use date 20260930. Historical publication is replaced by current private authori
 execution, with all historical assertions retained. Seal child logs only after exit.
 Bind both terminal validators to exact candidate hashes and publish checked bytes.
 G1-G4 retain their stable definitions. DiffusionGemma remains pending without evidence.
+## REQ-REPORT-PLAN-687: Stage the next milestone with an executable contract
+
+The V687 plan shall contain thirteen ordered tasks, Exp7915 through Exp7927.
+The visible table, machine contract and staged YAML shall agree.
+The full-task digest shall bind prompts, gates and prior-failure records.
+The plan shall preserve V686 evidence and its design before replacing vNEXT.
+It shall record research sources before experiment design.
+It shall assign current producer fields, model classes and historical fixture dates explicitly.
+
+### SCENARIO-REPORT-PLAN-687: Read the staged contract without activation
+
+Parse both authorities with the existing roadmap readers. Verify schema,
+gate fields, retirement records, ordered task identity and the complete digest.
+Reject private mutations to IDs, order, deliverables, gate fields and prompts.
+Keep the active roadmap and conductor byte-identical. Runtime experiments remain planned.

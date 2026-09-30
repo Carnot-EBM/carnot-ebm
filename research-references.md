@@ -48737,3 +48737,89 @@ Exp7893 covered 418/512 statements and failed formatting. Exp7901 put pytest
 scratch under results, triggering guarded cross-filesystem publication errors.
 Exp7902 covered 243/377 statements. Address those exact defects. Reuse the
 qualified source boundary rather than writing another version of its producer.
+
+## V687 planning review — 2026-09-30 (recorded before design)
+
+This review checked the eight requested topics and six secondary sources.
+The methods below are author reports. They are not local Carnot results.
+Existing references remain in place; rechecked papers are not new discoveries.
+
+### New method candidate: evidence fragility
+
+[Counterfactual Fragility Certificates](https://arxiv.org/abs/2609.00366)
+studies confident predictions whose support fails under grouped evidence loss.
+The [method and evaluation appendix](https://arxiv.org/html/2609.00366v1)
+separate deterministic removal scores from independently sampled stress labels.
+The certificate is relative to a declared protocol, not a formal robustness proof.
+The retrieved page reports June 29, 2026 despite its September identifier.
+Preserve this metadata discrepancy; do not infer a release date from the ID.
+
+Promising adaptation: score frozen source-energy heads under grouped evidence
+removal. Test rankings on a separate, seeded missing-evidence channel.
+Compare confidence, one-step removal and hash-random review at equal budgets.
+Use public features only. Keep natural correctness separate from prediction
+instability under stress. A model predicting its own deterministic flips is
+circular evidence, not a hallucination detector. This is a small CPU study;
+it does not require another pretrained model or a generator weight update.
+
+### Retained methods and topic coverage
+
+| Topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025, revised May 2026 | Input–candidate compatibility and normalized probabilities inform small energy heads. Neither proves that extracted constraints are complete. |
+| Neural constraint satisfaction | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025; [PAL](https://arxiv.org/abs/2503.19466), March 2025 | Guarantees require supplied algebraic constraints. Defer a new solver while source decisions remain unqualified. |
+| Ising in ML | [Fully parallel Ising with inertia](https://arxiv.org/abs/2604.17109), April 2026 | Relevant hardware dynamics, but existing inertia attempts prevent an unchanged rerun. No new bitstream is justified. |
+| Hallucination detection | [Semantic Illusion](https://arxiv.org/abs/2512.15068), December 2025; fragility study above | Natural labels and independent stress channels must remain separate. Similarity and confidence do not establish correctness. |
+| Kolmogorov–Arnold networks | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026; [KAC](https://arxiv.org/abs/2503.21076), March 2025; [KanAdapter](https://arxiv.org/abs/2609.05281), September 2026 | Local parameter updates motivate retention checks. Speech-adapter results do not justify a new Carnot architecture sweep. |
+| Energy-guided decoding | [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 2026 | A useful reward remains a prerequisite. Keep the mandated generator fixed while testing source sensitivity. |
+| Accelerated sampling | [FPGA decomposition](https://arxiv.org/abs/2602.15985), February 2026; [Extropic Z1T](https://extropic.ai/writing/z1t) | Measure total host, transfer and decision costs. The Z1T estimates exclude important readout/transfer terms; they are not complete local service measurements. |
+| Continual/online learning | [Delayed ACI](https://arxiv.org/abs/2609.07251), September 2026 | Compare feedback schedules on the same issued predictions. Record set size and false accepts alongside coverage. |
+
+The [delayed ACI derivation](https://arxiv.org/html/2609.07251v1) motivates
+interleaved confidence updates. Carnot's binary, exposed development stream
+does not inherit its forecasting guarantee. Preserve pending feedback and
+issued state. Do not tune update rates on evaluation labels.
+
+### Secondary-source access receipts
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM records. Indexed PDFs exposed
+  EBT and energy-based diffusion work. The direct
+  [EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) returned a browser challenge.
+  Use the accessible arXiv text for method claims; no fresh review consensus
+  was established.
+- **Semantic Scholar:** requested bounded citation lists for both named papers.
+  Browser access failed; direct API fallback returned HTTP 429 for EBT.
+  ARM–EBM returned nine records with no next-page marker, including
+  [d-OPD](https://arxiv.org/abs/2609.35362) and distributional energy models.
+  These leads were already in the previous review. This is not a complete
+  EBT citation census or evidence of a new citation delta.
+- **Hugging Face:** checked the
+  [verification feed](https://huggingface.co/papers?q=verification).
+  VerIF, claim verification and code-test generation appeared. The retrieved
+  feed mixes dates; it does not establish September novelty or method quality.
+- **GitHub:** checked weekly
+  [Python](https://github.com/trending/python?since=weekly) and
+  [Rust](https://github.com/trending/rust?since=weekly) trending pages.
+  Crawls were two weeks old, so no current trend rank is claimed. Direct
+  [THRML](https://github.com/extropic-ai/thrml) and
+  [KAC](https://github.com/Ethanhuhuhu/KAC) repositories were accessible.
+  No new relevant trending repository was verified.
+- **Extropic:** checked the writing index and Z1T article. The article gives
+  sparse sampling and FPGA orchestration estimates. TSU access remains
+  unqualified. Preserve readout and inter-device traffic in cost accounting.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  It describes a constraint enforcement layer. The page supplies no reproducible
+  weights or training recipe for a local comparison.
+
+### Local evidence that changes the next plan
+
+V686 has six disqualified declared artifacts and six absent science producers.
+Its contract and capstone report missing task-table, JSON-contract and digest
+sections. Several required E2E-016 calls passed the current date to a historical
+CLI that accepts only `20260929`, causing `run_date_mismatch`. Future checks
+must honor that fixture date on both routes and record current execution time
+separately. Do not change historical verdicts or weaken date validation.
+The training qualification's failed E2Es are not evidence against its numerical
+method. Intervention coverage still misses terminal code. Inspect those exact
+branches before another qualification. Do not schedule another source producer:
+Exp7892 already qualified the public/evaluator boundary.
