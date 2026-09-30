@@ -87661,3 +87661,43 @@ cannot displace the primary even with newer mtimes. Run real adversarial and
 strict-row validators on final bytes; recheck after verdict changes and publish
 atomically. No roadmap activation, external publication or default changes.
 Ops and traceability reconciliation is delegated to the conductor by the task.
+
+## REQ-REPORT-PLAN-690: Stage evidence-qualified decisions and causal learning
+
+The V690 plan shall contain exactly thirteen tasks, exp7953 through exp7965,
+in order across four phases. The design table, machine contract, complete-task
+digest and staged YAML shall agree. The active roadmap and conductor shall
+remain unchanged. Preserve the V689 design and historical determinations.
+
+Use the observed V689 failures to scope new work: real fitting exception-route
+coverage before numerical execution, conditional prior-history requirements,
+observed activation distinct from unknown consumed staging, and original human
+spans joined to a complete-response support target. Retain the calibrated
+energy-training floor, causal constraint admission, delayed confidence,
+live ARC outcome review and all three board custody obligations.
+
+Each task shall declare exact inputs, output path, substrate, model use,
+validation and artifact fields. LLM inference shall include the mandated
+Qwen3.8-27B GGUF and bounded-generation class for the fixed-budget study.
+Comparisons shall retain per-unit rows and explicit independent units.
+External incompleteness shall be terminal blocked with gate_check_summary.
+Required prior failures shall include all four fields and retirement true.
+Every prompt shall require flushed progress, bounded waits and file chunks.
+
+### SCENARIO-REPORT-PLAN-690-CONTRACT
+
+Load the staged YAML through the existing schema and gate readers. Compare
+all thirteen task rows and the complete-task digest with the design. Reject
+twelve private mutations: count, ID, order, phase, path, prompt, gate field,
+model, substrate, prior record, digest and authority date. Validate exact
+current producer fields and read-first paths. A private activated fixture
+does not activate or qualify the actual future milestone.
+
+### SCENARIO-REPORT-PLAN-690-RESEARCH
+
+Record all eight requested research topics and six secondary-source checks
+before experiment design, including inaccessible sources. Preserve original
+annotation granularity and the historical three-positive sentence null.
+No new target or seed converts exposed source families into a fresh holdout.
+Use private E2E-015/016/017/018/019 and affected reader tests for the planning
+change. Runtime repairs, scientific results and hardware gains remain planned.

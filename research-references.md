@@ -49005,3 +49005,97 @@ operation map. A missing historical board input must remain a typed blocker;
 it must not become a fabricated placement constraint. Exp7936 found no new
 supervisor events. Reuse its receipt identities and stop cheaply when there is
 no delta. Exp7939 is a qualified audit with missing science, not a science win.
+
+## V690 planning review — 2026-09-30 (recorded before design)
+
+Primary abstracts and author pages were checked again before drafting V690.
+This is a source refresh, not a claim that every item is newly discovered.
+Paper results below are external evidence, not Carnot measurements.
+
+### Findings to carry into experiment design
+
+- [Evidence-Aligned Entity Verification (EAEV)](https://arxiv.org/abs/2609.08267),
+  submitted September 8, 2026, proposes entity/evidence alignment and
+  counterfactual stability checks. Its abstract and publication link were
+  checked. It motivates testing evidence sensitivity separately from natural
+  correctness. An entity overlap feature alone is not semantic verification.
+- [Hallucination Span Detection with Input-Side Evidence Alignment](https://arxiv.org/abs/2608.15804),
+  August 16, 2026, jointly studies output spans and input evidence. Use the
+  original annotation unit and preserve source alignment. Carnot's V689
+  sentence join worked, but its selected sample had only three positive
+  sentences. A full-response unsupported-span target can retain all the
+  original human evidence without selecting sentences by their labels.
+  This would be an adaptation of the measurement principle, not a replication
+  of the authors' masked-token model.
+- [The Hidden Cost of Structured Generation in LLMs: DCCD](https://arxiv.org/abs/2603.03305),
+  2026, separates drafting from constrained formatting. Syntax validity alone
+  does not establish correct decisions. Keep the qualified grammar fixed in
+  the next accuracy study; defer another decoder comparison until there is
+  a qualified target and sufficient error headroom.
+- [Delayed ACI](https://arxiv.org/abs/2609.07251), September 7, 2026, analyzes
+  delayed updates and interleaved sequences. Compare issued-state updates
+  with current-state updates on identical released feedback. Its forecasting
+  bounds do not automatically apply to Carnot's exposed binary development
+  stream. Keep prediction-set coverage separate from probability calibration.
+
+### Coverage of all requested topics
+
+| Topic | Primary sources checked | Planning implication |
+|---|---|---|
+| EBM verification/reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM v4, May 2026](https://arxiv.org/abs/2512.15605) | Train normalized small energy heads; learned compatibility does not certify truth. |
+| Neural constraint satisfaction | [Certified Correctness Requires Symbolic Integration, 2026](https://arxiv.org/abs/2608.14569) | Keep deterministic feasibility separate from natural-language correctness. This is a position paper, not evidence of local gains. |
+| Ising applications in ML | [Probabilistic SVM training, March 2025](https://arxiv.org/abs/2503.16363); [pipelined p-computer, July 2026](https://arxiv.org/abs/2607.21077) | Distinguish optimization quality from distributional sampling; measure memory traffic and host work. No new SVM sweep. |
+| Hallucination detection/mitigation | EAEV and span/evidence alignment above | Match targets to queried units; report full-source versus erased-source errors against human labels. |
+| Kolmogorov–Arnold Networks | [KAC, March 2025](https://arxiv.org/abs/2503.21076); [Catastrophic Forgetting in KANs, November 2025](https://arxiv.org/abs/2511.12828) | Local support is not a retention guarantee. Test retained accuracy and sparse update costs before another architecture sweep. |
+| Energy-guided/constrained generation | DCCD above; [Energy-Based Decoding, May 2026](https://arxiv.org/abs/2605.28020), retained from V689 | Establish source-sensitive decision value before adding steering or training the generator. |
+| Hardware-accelerated sampling | [FPGA decomposition, February 2026](https://arxiv.org/abs/2602.15985); [Z1T, September 4, 2026](https://extropic.ai/writing/z1t) | Include preprocessing, transfer, readout and update traffic. Z1T describes sparse heterogeneous execution and estimates; no local TSU performance follows. |
+| Continual/online constraint learning | Delayed ACI above; KAN retention study | Compare durable additions against no-write and complete-static controls; test crash/restart and delayed labels. |
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** searched ICLR/NeurIPS/ICML EBM submissions and read the
+  indexed [EBT review PDF](https://openreview.net/pdf/f9139bb41c8b7a03e09be518a71426bcbd061a3f.pdf).
+  The EBT and reasoning forum pages returned browser challenges. No new
+  acceptance decision or reviewer consensus was verified.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing),
+  Z1T article and linked [JAX sparse-transformer repository](https://github.com/extropic-ai/sparse-transformers).
+  Keep model sparsity and physical connectivity distinct. Vendor estimates
+  remain estimates; no procurement or device access is established.
+- **Semantic Scholar:** attempted citations endpoints for both EBT
+  (`ARXIV:2507.02092`) and ARM–EBM (`ARXIV:2512.15605`). Browser requests failed;
+  direct bounded API requests both returned HTTP 429. No new citation census
+  or absence-of-citations claim is made. Reuse primary papers until access returns.
+- **Hugging Face papers:** the [EBT page](https://huggingface.co/papers/2507.02092)
+  was accessible; the span-alignment paper endpoint failed. Use primary arXiv
+  publication dates rather than feed ordering.
+- **GitHub trending:** checked [weekly Python](https://github.com/trending/python?since=weekly).
+  The retrieved page was two weeks old; no current trend ranking is claimed.
+  Also checked author repositories [EBT](https://github.com/alexiglad/EBT),
+  [KAC](https://github.com/Ethanhuhuhu/KAC) and Extropic's repository above.
+  These are implementation leads, not newly verified trending entries.
+- **Logical Intelligence:** checked the [home page](https://logicalintelligence.com/)
+  and [Kona](https://logicalintelligence.com/kona). They describe latent reasoning
+  and constraints. No reproducible local weights or training recipe was found
+  on the inspected pages. Treat the architecture as motivation only.
+
+### V689 evidence that changes the next attempt
+
+Exp7941 qualified isolated publication and replay. Exp7943 then passed its
+CLI routes, affected unit tests, lint, typing and scoped spec checks, but its
+final coverage command failed at 99 percent. The retained coverage JSON names
+exactly lines 51–53 of `scripts/experiments/experiment_7943_v689_energy_fit.py`:
+the exception handler. Test a real malformed-input CLI and cold replay before
+any new full fit; keep the 100 percent threshold and uniqueness checks intact.
+
+Exp7940 rejected task three because the inherited authority reader requires a
+nonempty prior-failure list even for genuinely new scope. Its second blocker
+was absent matching staging after activation. Do not invent failure history
+or recreate staged evidence. Test lifecycle states against an independently
+bound document digest and preserve unknown staging provenance explicitly.
+
+Exp7942's annotation transport was valid but had insufficient positive
+sentences. The response-level evaluation pool recorded by Exp7943 contains
+43 negatives and 19 positives among 62 eligible families. Those are historical
+development counts, not a fresh confirmatory sample. A response-level target
+must be independently rebuilt from original annotations; no result may borrow
+the disqualified fit's scientific authority.
