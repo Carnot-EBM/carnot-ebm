@@ -21120,3 +21120,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   roadmap and conductor hashes are unchanged. No activation, push or new research
   result is claimed.
 - 2026-09-30: Bind thirteen tasks and freeze executable validation dates (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7915_v687_contract_methods.json
+- 2026-09-30: Requalify training through its existing callable runtime (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_7916_v687_training_qualification.json.validators.json
