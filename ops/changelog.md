@@ -21155,3 +21155,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-30: Qualify isolated training CLI publication and blocked cold replay (⚠️ Research Finding) — honest_verdict=complete_circular_positive_training_publication; results/experiment_7941_v689_training_publication.json
 - 2026-09-30: Qualify human span labels at the queried sentence boundary (⚠️ Research Finding) — honest_verdict=complete_null_sentence_annotation_transport; results/experiment_7942_v689_sentence_labels.json
 - 2026-09-30: Fit source energies after isolated publication qualification (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7943_v689_energy_fit.json
+- 2026-09-30: Assess only new live supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_7949_v689_arc_supervisor_delta.json
