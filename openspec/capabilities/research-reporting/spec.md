@@ -87293,3 +87293,45 @@ sidecars bind its hash. Use primary_publication to publish exactly one top-level
 primary. Both actual readers select its path/hash after nested sidecars receive
 newer mtimes. Fixture agreement never establishes independent benefit.
 Retire unchanged prior dispositions. Conductor owns ops and traceability updates.
+
+## REQ-REPORT-7939-V688: Independently reduce the activated twelve-task contract
+
+Authenticate the visible table, machine contract and full-task digest against
+separately observed activation snapshots. Read each declared producer once.
+Reserve the capstone self row. Keep conductor pre-gate receipts separate from
+absent producers. Preserve skipped, absent, blocked, disqualified and valid null
+outcomes. External incompleteness ends as complete_blocked_* with exact operands.
+Reuse V687 primitive reducers. Keep role, seed and source-group denominators
+separate. Exclude future labels. Audit scoring/stress channels, causal writes,
+issued alpha identity, delayed sets and whole-service timings from primitive rows.
+Audit completion may have readiness one while scientific readiness remains zero.
+Keep three PRD decisions separate from unchanged G1-G4 publication definitions.
+Keep GAP-ORACLE-DISTINCT open after the September 28 correction. Keep
+DiffusionGemma pending. Retire unchanged prior verdicts when declared.
+
+### SCENARIO-REPORT-7939-CUSTODY
+
+Current activated authority yields exactly twelve dispositions and three gap
+decisions. Missing producers and failed thresholds retain their path, byte hash,
+field, operator, expected value and observation. Invalid primitive evidence
+cannot become qualified. A complete valid null may pass a readiness operand.
+Cold replay rejects changed primitive claims, source bytes or publication gates.
+
+### SCENARIO-REPORT-7939-QUALIFICATION
+
+Freeze exact commands, deadlines, expected failures and dependency hashes before
+validation. Require nonempty 100 percent statement coverage for new modules and
+CLI, including real success, external block, owned failure, replay and terminal
+routes. Execute read-only publication_gate.py --json. Reject malformed output
+and command failure. Run E2E-015/016/017 and private current-authority E2E-018.
+Both historical Exp7868 routes use 20260929. Current execution uses 20260930.
+Preserve historical required failures and record full-suite debt separately.
+
+### SCENARIO-REPORT-7939-PUBLICATION
+
+Publish one top-level primary. Keep attempts, manifests, rows and validator
+reports below results/raw/experiment_7939_v688_capstone/. Revalidate verdict
+changes and bind terminal sidecars to final candidate bytes. Both actual gate
+and document readers must select the primary hash after nested sidecars receive
+newer mtimes. Required owned failures yield disqualified and readiness zero.
+No external publication, activation or production default change is allowed.

@@ -1,0 +1,368 @@
+{
+  "producer_sha256": "sha256:c46318ce5671dc67be4a304451421d1966d6e08531ed2ca70e19998d4f3c3829",
+  "rows": [
+    {
+      "arm": "publication_layout",
+      "details": {
+        "primary_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/nested/experiment_7928_fixture.json",
+        "primary_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "sidecar_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/nested/raw/experiment_7928_fixture/validators/273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912.json"
+      },
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/nested/experiment_7928_fixture.json",
+        "document_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "document_status": "\u26a0\ufe0f Research Finding",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/nested/experiment_7928_fixture.json",
+        "gate_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "gates": [
+          {
+            "actual": 1,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/nested/experiment_7928_fixture.json",
+            "artifact_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+            "expected": 1,
+            "op": "==",
+            "passed": true,
+            "reason": "actual=1 == expected=1",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": true
+          }
+        ],
+        "passed": true,
+        "summary": "1 gate(s) satisfied",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "nested"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {},
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/legacy/experiment_7928_fixture.json.validators.json",
+        "document_sha256": "sha256:2ec81802b9287042614bb229417ef8a40a97733c4b99f0fdac19c2a21dd6b606",
+        "document_status": "\u26a0\ufe0f Research Finding",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/legacy/experiment_7928_fixture.json.validators.json",
+        "gate_sha256": "sha256:2ec81802b9287042614bb229417ef8a40a97733c4b99f0fdac19c2a21dd6b606",
+        "gates": [
+          {
+            "actual": null,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/legacy/experiment_7928_fixture.json.validators.json",
+            "artifact_sha256": "sha256:2ec81802b9287042614bb229417ef8a40a97733c4b99f0fdac19c2a21dd6b606",
+            "expected": 1,
+            "op": "==",
+            "passed": false,
+            "reason": "actual=None == expected=1 -- upstream artifact has NO field 'artifact_resolution_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": false
+          }
+        ],
+        "passed": false,
+        "summary": "1 of 1 gate(s) failed; first failure: exp7928-primary-publication.artifact_resolution_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'artifact_resolution_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.)",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "legacy"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {},
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "reading": {
+        "document_path": null,
+        "document_sha256": null,
+        "document_status": null,
+        "gate_path": null,
+        "gate_sha256": null,
+        "gates": [
+          {
+            "actual": null,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": null,
+            "artifact_sha256": null,
+            "expected": 1,
+            "op": "==",
+            "passed": false,
+            "reason": "upstream artifact not found for task id 'exp7928-primary-publication'",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": false
+          }
+        ],
+        "passed": false,
+        "summary": "1 of 1 gate(s) failed; first failure: exp7928-primary-publication.artifact_resolution_ready_score (upstream artifact not found for task id 'exp7928-primary-publication')",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "missing"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {
+        "failure_reason": "conflicting_primary"
+      },
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/conflict/experiment_7928_other.json",
+        "document_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "document_status": "\u26a0\ufe0f Research Finding",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/conflict/experiment_7928_other.json",
+        "gate_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "gates": [
+          {
+            "actual": 1,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/conflict/experiment_7928_other.json",
+            "artifact_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+            "expected": 1,
+            "op": "==",
+            "passed": true,
+            "reason": "actual=1 == expected=1",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": true
+          }
+        ],
+        "passed": true,
+        "summary": "1 gate(s) satisfied",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "conflict"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {
+        "failure_reason": "stale_primary_hash",
+        "primary_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/stale/experiment_7928_fixture.json",
+        "primary_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "sidecar_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/stale/raw/experiment_7928_fixture/validators/273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912.json"
+      },
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/stale/experiment_7928_fixture.json",
+        "document_sha256": "sha256:2a991e239b545b6ccf52ae520f0755f0d28decfdd2d6e174852a4b620d3f5400",
+        "document_status": "\u26a0\ufe0f Research Finding",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/stale/experiment_7928_fixture.json",
+        "gate_sha256": "sha256:2a991e239b545b6ccf52ae520f0755f0d28decfdd2d6e174852a4b620d3f5400",
+        "gates": [
+          {
+            "actual": 1,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/stale/experiment_7928_fixture.json",
+            "artifact_sha256": "sha256:2a991e239b545b6ccf52ae520f0755f0d28decfdd2d6e174852a4b620d3f5400",
+            "expected": 1,
+            "op": "==",
+            "passed": true,
+            "reason": "actual=1 == expected=1",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": true
+          }
+        ],
+        "passed": true,
+        "summary": "1 gate(s) satisfied",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "stale"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {},
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/malformed/experiment_7928_fixture.json",
+        "document_sha256": "sha256:021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+        "document_status": "unreadable",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/malformed/experiment_7928_fixture.json",
+        "gate_sha256": "sha256:021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+        "gates": [
+          {
+            "actual": null,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/malformed/experiment_7928_fixture.json",
+            "artifact_sha256": "sha256:021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+            "expected": 1,
+            "op": "==",
+            "passed": false,
+            "reason": "upstream artifact unreadable: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": false
+          }
+        ],
+        "passed": false,
+        "summary": "1 of 1 gate(s) failed; first failure: exp7928-primary-publication.artifact_resolution_ready_score (upstream artifact unreadable: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "malformed"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {},
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/disqualified/experiment_7928_fixture.json",
+        "document_sha256": "sha256:9dfbbb27b4e5081fa1c902958a862d67b4800aa6b9d635e3dd2c8350e5aa3d6e",
+        "document_status": "\u26a0\ufe0f Research Finding",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/disqualified/experiment_7928_fixture.json",
+        "gate_sha256": "sha256:9dfbbb27b4e5081fa1c902958a862d67b4800aa6b9d635e3dd2c8350e5aa3d6e",
+        "gates": [
+          {
+            "actual": 0,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/disqualified/experiment_7928_fixture.json",
+            "artifact_sha256": "sha256:9dfbbb27b4e5081fa1c902958a862d67b4800aa6b9d635e3dd2c8350e5aa3d6e",
+            "expected": 1,
+            "op": "==",
+            "passed": false,
+            "reason": "actual=0 == expected=1",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": true
+          }
+        ],
+        "passed": false,
+        "summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7928-primary-publication.artifact_resolution_ready_score (actual=0 == expected=1)",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "disqualified"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {},
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/absent/experiment_7928_fixture.json",
+        "document_sha256": "sha256:c5cf727a3f0cd9f19d84447033c75546c61d6ddf1ede3c615034028ac9535ba7",
+        "document_status": "\u26a0\ufe0f Research Finding",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/absent/experiment_7928_fixture.json",
+        "gate_sha256": "sha256:c5cf727a3f0cd9f19d84447033c75546c61d6ddf1ede3c615034028ac9535ba7",
+        "gates": [
+          {
+            "actual": null,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/absent/experiment_7928_fixture.json",
+            "artifact_sha256": "sha256:c5cf727a3f0cd9f19d84447033c75546c61d6ddf1ede3c615034028ac9535ba7",
+            "expected": 1,
+            "op": "==",
+            "passed": false,
+            "reason": "actual=None == expected=1 -- upstream artifact has NO field 'artifact_resolution_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": false
+          }
+        ],
+        "passed": false,
+        "summary": "1 of 1 gate(s) failed; first failure: exp7928-primary-publication.artifact_resolution_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'artifact_resolution_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.)",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "absent"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {
+        "replacements": [
+          {
+            "primary_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/concurrent/experiment_7928_fixture.json",
+            "primary_sha256": "sha256:ddaef87b2c6591f4624af727468c58e06e345bac15bf98f5aa9982e60eddf8e3",
+            "sidecar_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/concurrent/raw/experiment_7928_fixture/validators/ddaef87b2c6591f4624af727468c58e06e345bac15bf98f5aa9982e60eddf8e3.json"
+          },
+          {
+            "primary_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/concurrent/experiment_7928_fixture.json",
+            "primary_sha256": "sha256:2a991e239b545b6ccf52ae520f0755f0d28decfdd2d6e174852a4b620d3f5400",
+            "sidecar_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/concurrent/raw/experiment_7928_fixture/validators/2a991e239b545b6ccf52ae520f0755f0d28decfdd2d6e174852a4b620d3f5400.json"
+          }
+        ]
+      },
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/concurrent/experiment_7928_fixture.json",
+        "document_sha256": "sha256:ddaef87b2c6591f4624af727468c58e06e345bac15bf98f5aa9982e60eddf8e3",
+        "document_status": "\u26a0\ufe0f Research Finding",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/concurrent/experiment_7928_fixture.json",
+        "gate_sha256": "sha256:ddaef87b2c6591f4624af727468c58e06e345bac15bf98f5aa9982e60eddf8e3",
+        "gates": [
+          {
+            "actual": 1,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/concurrent/experiment_7928_fixture.json",
+            "artifact_sha256": "sha256:ddaef87b2c6591f4624af727468c58e06e345bac15bf98f5aa9982e60eddf8e3",
+            "expected": 1,
+            "op": "==",
+            "passed": true,
+            "reason": "actual=1 == expected=1",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": true
+          }
+        ],
+        "passed": true,
+        "summary": "1 gate(s) satisfied",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "concurrent"
+    },
+    {
+      "arm": "publication_layout",
+      "details": {
+        "primary_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/terminal/experiment_7928_fixture.json",
+        "primary_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "revalidation": {
+          "primary_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/terminal/experiment_7928_fixture.json",
+          "primary_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+          "sidecar_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/terminal/raw/experiment_7928_fixture/validators/273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912.json"
+        },
+        "sidecar_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/terminal/raw/experiment_7928_fixture/validators/273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912.json"
+      },
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "reading": {
+        "document_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/terminal/experiment_7928_fixture.json",
+        "document_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "document_status": "\u26a0\ufe0f Research Finding",
+        "gate_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/terminal/experiment_7928_fixture.json",
+        "gate_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+        "gates": [
+          {
+            "actual": 1,
+            "artifact_field": "artifact_resolution_ready_score",
+            "artifact_path": "/tmp/carnot7928-zcc7cu4v/layout_fixture-cases/terminal/experiment_7928_fixture.json",
+            "artifact_sha256": "sha256:273ff495783426b3936cbd9fed0fb3e1ec2b5d91891e39b1e357cc734946f912",
+            "expected": 1,
+            "op": "==",
+            "passed": true,
+            "reason": "actual=1 == expected=1",
+            "upstream": "exp7928-primary-publication",
+            "upstream_final": true
+          }
+        ],
+        "passed": true,
+        "summary": "1 gate(s) satisfied",
+        "task_id": "exp7928-primary-publication"
+      },
+      "seed": 0,
+      "unit": "terminal"
+    }
+  ]
+}
