@@ -86713,3 +86713,43 @@ and corruption before publication. Closed logs and coverage shards are sealed
 by hash. The producer artifact records current exits and readiness; historical
 Exp7901 verdicts and repository debt remain unchanged. Ops and traceability
 reconciliation remain assigned to the conductor.
+
+## REQ-REPORT-7914-V686: Reduce twelve actual orchestration outcomes
+
+Exp7914 SHALL authenticate the design table, machine contract and full task digest
+against actual activation snapshots. It SHALL read declared producers once and reserve
+its own row. Missing producers SHALL retain separate conductor receipts and exact gate
+operands. Skipped, missing, blocked, disqualified and valid null states SHALL differ.
+Scientific prerequisites that are absent SHALL produce a terminal blocked verdict.
+Failed owned checks SHALL produce a terminal disqualified verdict and zero readiness.
+
+The reducer SHALL recompute probability, Brier loss, costs, abstention, causal writes
+and delayed prediction sets from primitive rows. It SHALL reject future feedback,
+label features, stale dependency hashes, changed issued alpha and inflated counts.
+Families, calls, checkpoints, windows and board obligations SHALL have separate counts.
+Development and oracle agreement SHALL not close independent reproduction or
+GAP-ORACLE-DISTINCT. Three PRD decisions SHALL state falsifiable continuation conditions.
+
+### SCENARIO-REPORT-7914-DISPOSITIONS
+
+Immutable private authorities exercise twelve outcomes, gate spelling, wrong producer
+identity, missing design, activation drift and conductor skips without substitution.
+Historical failures and identical-verdict retirement obligations remain visible.
+
+### SCENARIO-REPORT-7914-PRIMITIVES
+
+Repeated family observations do not increase the family count. Primitive controls
+exercise abstention, feedback order, delayed release, issued alpha, set coverage,
+label-derived features and stale dependency bytes. Cold replay rejects changed sources
+and changed aggregates. Missing science remains blocked after complete reduction.
+
+### SCENARIO-REPORT-7914-QUALIFICATION
+
+Freeze affected dependencies, exact argv, expected exits and reasons, deadlines and
+measured paths before results. Unit and actual CLI success, external block, failure,
+terminal recheck and cold replay data SHALL cover every new statement. Run scoped
+Ruff, strict mypy, explicit spec coverage and E2E-015/016/017/018. Both E2E-016 routes
+use date 20260930. Historical publication is replaced by current private authority
+execution, with all historical assertions retained. Seal child logs only after exit.
+Bind both terminal validators to exact candidate hashes and publish checked bytes.
+G1-G4 retain their stable definitions. DiffusionGemma remains pending without evidence.
