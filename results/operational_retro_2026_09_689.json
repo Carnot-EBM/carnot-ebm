@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.689",
+  "generated_at": "2026-09-30T22:16:06Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 86.0,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Fit source energies after isolated publication qualification",
+      "duration_minutes": 39.91,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and freeze evidence and validation contracts",
+      "duration_minutes": 17.81,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently reduce thirteen outcomes and decide the PRD gaps",
+      "duration_minutes": 13.97,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify human span labels at the queried sentence boundary",
+      "duration_minutes": 5.54,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify isolated training CLI publication and blocked cold replay",
+      "duration_minutes": 3.13,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.689 recorded 7 completed experiments, all classified as compute-bound, spanning 86.0 wall-time minutes (averaging 12 minutes per experiment) reconstructed from disk modification timestamps. The single longest execution was 'Fit source energies after isolated publication qualification' at 39.91 minutes, followed by 'Bind thirteen tasks and freeze evidence and validation contracts' at 17.81 minutes and 'Independently reduce thirteen outcomes and decide the PRD gaps' at 13.97 minutes. Intra-task phase metrics were not captured in milestone timing data, and while point-in-time telemetry showed both RTX 3090 GPUs at 0% utilization with 4MB allocated, the locked indicator gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "The primary execution bottleneck was 'Fit source energies after isolated publication qualification', which accounted for 39.91 minutes (approximately 46.4% of the 86.0-minute milestone wall time), followed by 'Bind thirteen tasks and freeze evidence and validation contracts' (17.81 minutes) and 'Independently reduce thirteen outcomes and decide the PRD gaps' (13.97 minutes); granular sub-phase timings (such as model load, computation, and validation) were unavailable.",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving phase-level stage attribution unmeasured.",
+    "Absence of continuous time-series telemetry across active execution windows precludes assessing whether compute-bound tasks encountered processor-memory stalls or whether multi-model parallel opportunities existed."
+  ],
+  "improvements_suggested": [
+    "Incorporate monotonic sub-phase timers into experiment runners to separately quantify setup, model loading, compute passes, and artifact verification.",
+    "Profile the energy fitting pipeline to investigate potential algorithmic optimizations or artifact memoization for runs exceeding 30 minutes.",
+    "Collect periodic GPU utilization and memory snapshots throughout task execution rather than solely at discrete monitor checkpoints.",
+    "Limit DualGPURunner orchestration strictly to parallel executions involving two or more distinct models, avoiding overhead on single-model inference jobs.",
+    "Continue leveraging failure_ledger pre-launch checks to prevent doomed reruns from consuming execution wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument experiment runners with granular sub-phase timers to isolate latency across setup, compute, and artifact validation.",
+    "Profile and streamline the source energy fitting workflow, which represented 39.91 of the milestone's 86.0 minutes.",
+    "Implement execution-window GPU utilization logging paired with model concurrency tracking to evaluate accelerator efficiency."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Execution for milestone 2026.09.689 was concentrated in compute-bound tasks totaling 86.0 minutes, with the single longest task ('Fit source energies after isolated publication qualification') consuming 39.91 minutes. Although the static monitor observed both RTX 3090 GPUs at 0% utilization, the locked field records gpu_idle_on_compute_bound_tasks as false, and execution-window telemetry is not captured. Estimated time savings are held at 0% pending empirical measurement of task sub-phases and continuous hardware utilization."
+}
