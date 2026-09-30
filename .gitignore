@@ -1,5 +1,13 @@
 # Rust
 /target/
+# 2026-09-29: an experiment (results/raw/experiment_7339_v644_native_binding/target/)
+# ran cargo build under a per-experiment-ID path outside the repo root. The anchored
+# /target/ rule above only matches a target/ dir at the repo root, so this one --
+# 5,405 files, 1.6GB, a full cargo build directory including a 71.5MB debug binary --
+# was committed wholesale. Same "moving per-experiment-ID path a static rule can't
+# list in advance" class as the 2026-09-18 GGUF-cache incident. Catch every target/
+# dir, not just the root one.
+**/target/
 **/*.rs.bk
 Cargo.lock
 
