@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.686",
+  "generated_at": "2026-09-30T04:02:54Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 31.3,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "Assess new live supervisor outcomes for transferable refinement",
+      "duration_minutes": 12.76,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind twelve tasks and reuse qualified source custody",
+      "duration_minutes": 5.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently reduce twelve outcomes and decide the three PRD gaps",
+      "duration_minutes": 4.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify the actual fitting CLI and checkpoint dependencies",
+      "duration_minutes": 4.24,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Repair private validation paths and preserve board evidence",
+      "duration_minutes": 2.57,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.686 completed 6 compute-bound experiments in 31.3 wall-time minutes, using disk-mtime reconstruction. 'Assess new live supervisor outcomes for transferable refinement' was slowest at 12.76 minutes, followed by 'Bind twelve tasks and reuse qualified source custody' at 5.3 minutes; phase-level causes are not supplied. The locked GPU-idle classification conflicts with the supplied monitor and interpretation rule, so accelerator efficiency remains unresolved.",
+  "bottlenecks_identified": [
+    "Supervisor outcome assessment is the main latency target at 12.76 minutes, followed by task binding and source custody at 5.3 minutes. Independent outcome reduction took 4.42 minutes, fitting CLI and checkpoint qualification took 4.24 minutes, and private validation repair took 2.57 minutes. These are observed durations; the data does not establish whether loading, inference, validation, dependency waits, or another phase caused them.",
+    "Timing uses disk-mtime reconstruction because the live git-log path found no commits. This limits attribution of elapsed time to execution phases; it is a measurement gap rather than a proven execution delay.",
+    "Task-aligned GPU telemetry and model-overlap records are absent. The snapshot cannot establish utilization across execution or whether any task required parallel model dispatch."
+  ],
+  "improvements_suggested": [
+    "Add a receipt writer to the reusable task runner that persists monotonic task and phase timings for model loading, compute, validation, and reduction, linked to the milestone and task name. Use those receipts as the primary timing source.",
+    "Join periodic GPU utilization samples to each task's actual compute interval, loaded-model count, overlapping model intervals, and selected device. Classify GPU idle from those observations and retain an explicit conflict when a locked value disagrees with the evidence rule.",
+    "Profile supervisor outcome assessment first, then task binding and source custody. Reuse validated inputs or checkpoints only when phase receipts show repeated work and their dependencies and source identities still match.",
+    "Use DualGPURunner (carnot.pipeline.dual_gpu_harness) only for verified workloads with multiple models loaded in parallel; a single-model GGUF inference task can correctly use a single GPU. The supplied data cannot establish a missed DualGPURunner dispatch.",
+    "Preserve the existing failure_ledger pre-launch check. A doomed-rerun block saves execution time and is not a slow experiment; no such block is listed in this timing data."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Persist task and phase timing receipts in the reusable runner, starting with supervisor outcome assessment and task binding, to identify the dominant execution phase.",
+    "Record GPU telemetry during compute alongside model overlap and runner selection, then reconcile idle classifications with the observed task intervals.",
+    "Use measured phase costs to select input or checkpoint reuse, and dispatch verified parallel multi-model workloads through DualGPURunner. Keep single-model tasks on their appropriate device."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The supplied monitor reports both GPUs at 0% utilization and all completed experiments are tagged compute-bound; the supplied interpretation rule therefore points to gpu_idle_on_compute_bound_tasks=true, but the explicitly locked field remains false. There is no evidence that the snapshot was post-execution, that accelerator use was efficient, or that a parallel multi-model task bypassed DualGPURunner. Estimated savings are 0% as an unmeasured placeholder, not a measured absence of benefit."
+}

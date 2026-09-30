@@ -1,0 +1,81 @@
+{
+  "experiment": 7937,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-30",
+  "started_at": "2026-09-30T14:37:26.761424+00:00",
+  "finished_at": "2026-09-30T14:37:26.761424+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure complete decision-service and durable-update costs",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7930-energy-fit",
+  "failed_field": "energy_fit_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7930_v688_energy_fit.json",
+  "failed_evidence_sha256": "sha256:e21b2af4721e9763c0c1a282be35c7902b2b1b9fa473dcee1768d797e431ea33",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7930-energy-fit",
+    "failed_field": "energy_fit_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7930_v688_energy_fit.json",
+    "failed_evidence_sha256": "sha256:e21b2af4721e9763c0c1a282be35c7902b2b1b9fa473dcee1768d797e431ea33"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7930-energy-fit.energy_fit_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7930-energy-fit",
+      "artifact_field": "energy_fit_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7930_v688_energy_fit.json",
+      "artifact_sha256": "sha256:e21b2af4721e9763c0c1a282be35c7902b2b1b9fa473dcee1768d797e431ea33"
+    },
+    {
+      "upstream": "exp7930-energy-fit",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7930_v688_energy_fit.json",
+      "artifact_sha256": "sha256:e21b2af4721e9763c0c1a282be35c7902b2b1b9fa473dcee1768d797e431ea33"
+    },
+    {
+      "upstream": "exp7930-energy-fit",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['positive', 'circular_positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7930_v688_energy_fit.json",
+      "artifact_sha256": "sha256:e21b2af4721e9763c0c1a282be35c7902b2b1b9fa473dcee1768d797e431ea33"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

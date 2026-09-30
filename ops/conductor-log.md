@@ -19069,3 +19069,80 @@ code |
 | 2026-09-29 23:10 UTC | Measure complete decision and durable-learning ser | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7894-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
 | 2026-09-29 23:23 UTC | Preserve board evidence and test measured workload | OK | 89 passed, 1 warning in 9.42s |
 | 2026-09-29 23:38 UTC | Independently reduce twelve outcomes and decide th | OK | 87 passed, 1 warning in 13.93s |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_count_integrity_lint.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on arc_c |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_llm_on_liveness_lint.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on arc_l |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | verifier_authenticity_lint.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on ver |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_orphan_solver_lint.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on arc_orp |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | tracked_results_guard.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on tracked_ |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | research_complete_ledger_lint.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on  |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | mutation_marker_lint.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on mutation_ |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | audit_findings_ledger.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on audit_fi |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6633_gpu_lease_phase_journal.json age-week 5: OPEN 35 days: CLAIM_REF |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | run_stop_authority.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on run_stop_au |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on in_pr |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 5: OPEN 35 day |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declares_terminal_artifact_readiness age-week 4: OPEN 28 |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_delta_stem age-week 4: OPEN 28 days: SILENT_NON_FIRING o |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_small_shared_denominator_rate_pair age-week 4: OPEN 2 |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6888_independent_relation_qualification.json age-week 4: OPEN 28 days |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7534_v659_count_memory.json age-week 1: OPEN 7 days: CLAIM_OVERSTATED |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_goal_energy_generation_win age-week 1: OPEN 7 day |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_text age-week 1: OPEN 7 days: SILENT_NON_FIRING on |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_field_name_text age-week 1: OPEN 7 days: SILENT_NON_FIRI |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_marker age-week 1: OPEN 7 days: SILENT_NON_FIRING on |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_real_field_values age-week 1: OPEN 7 days: SILENT_NON_FI |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_typed_field_values age-week 1: OPEN 7 days: SILENT_NON_F |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_path_has_marker age-week 1: OPEN 7 days: SILENT_NON_FIRI |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nontrivial_lever_run age-week 1: OPEN 7 days: SILENT |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_pool_degenerate_reasons age-week 1: OPEN 7 days: SILENT_ |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_norm age-week 0: OPEN 1 days: SILENT_NON_FIRI |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_moat_claim_rigor age-week 0: OPEN 1 days: SILENT_NO |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_check_terminal_prefix_vs_partial_class age-week 0: OPEN  |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_arc_live_search_win age-week 0: OPEN 1 days: SILE |
+| 2026-09-30 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_arc_live_metric age-week 0: OPEN 1 days: SI |
+| 2026-09-30 01:06 UTC | Plan milestone 2026.09.686 | OK | 12 tasks proposed |
+| 2026-09-30 01:16 UTC | Milestone 2026.09.686 activated | OK | 12 tasks queued |
+| 2026-09-30 01:47 UTC | Bind twelve tasks and reuse qualified source custo | OK | 100 passed, 1 warning in 29.23s |
+| 2026-09-30 02:14 UTC | Qualify the actual fitting CLI and checkpoint depe | OK | 93 passed, 1 warning in 48.94s |
+| 2026-09-30 02:16 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 3789018 serves 'Ternary-Bonsai-2-27B-PTQ1_0.gguf', live pin is 'Qwen3. |
+| 2026-09-30 02:32 UTC | Complete intervention orchestration coverage befor | OK | 99 passed, 1 warning in 14.22s |
+| 2026-09-30 02:34 UTC | Train source energies with fresh dependency-bound  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp7904-training-qualification.training_runtime_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.) |
+| 2026-09-30 02:36 UTC | Train source energies with fresh dependency-bound  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp7904-training-qualification.training_runtime_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.) |
+| 2026-09-30 02:38 UTC | Train source energies with fresh dependency-bound  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp7904-training-qualification.training_runtime_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.) |
+| 2026-09-30 02:40 UTC | Measure calibrated decisions and abstention with m | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7906-energy-fit, exp7906-energy-fit, exp7906-energy-fit) |
+| 2026-09-30 02:40 UTC | Measure bounded Qwen witness and neighboring-conte | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7905-intervention-qualification.intervention_protocol_ready_score (actual=0 == expected=1) |
+| 2026-09-30 02:42 UTC | Measure persistent constraint additions before fut | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7906-energy-fit, exp7906-energy-fit, exp7906-energy-fit) |
+| 2026-09-30 02:42 UTC | Test delay-aware confidence updates on a frozen le | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7909-causal-acquisition, exp7909-causal-acquisition, exp7909-causal-acquisition) |
+| 2026-09-30 03:05 UTC | Assess new live supervisor outcomes for transferab | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 89 passed, 1 warning in 8.03s |
+| 2026-09-30 03:07 UTC | Measure complete verification service and useful-w | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7906-energy-fit, exp7906-energy-fit, exp7906-energy-fit) |
+| 2026-09-30 03:32 UTC | Repair private validation paths and preserve board | OK | 103 passed, 1 warning in 11.52s |
+| 2026-09-30 03:58 UTC | Independently reduce twelve outcomes and decide th | OK | 86 passed, 1 warning in 9.77s |
+| 2026-09-30 05:17 UTC | Plan milestone 2026.09.687 | OK | 13 tasks proposed |
+| 2026-09-30 05:33 UTC | Milestone 2026.09.687 activated | OK | 13 tasks queued |
+| 2026-09-30 06:13 UTC | Bind thirteen tasks and freeze executable validati | OK | 91 passed, 1 warning in 32.15s |
+| 2026-09-30 06:40 UTC | Requalify training through its existing callable r | OK | 90 passed, 1 warning in 41.52s |
+| 2026-09-30 07:02 UTC | Cover the two remaining intervention failure branc | OK | 127 passed, 1 warning in 18.85s |
+| 2026-09-30 07:04 UTC | Fit fresh calibrated source energies under matched | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp7916-training-qualification.training_runtime_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.) |
+| 2026-09-30 07:06 UTC | Fit fresh calibrated source energies under matched | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp7916-training-qualification.training_runtime_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.) |
+| 2026-09-30 07:08 UTC | Fit fresh calibrated source energies under matched | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp7916-training-qualification.training_runtime_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.) |
+| 2026-09-30 07:10 UTC | Measure source decisions and abstention at equal c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7918-energy-fit, exp7918-energy-fit, exp7918-energy-fit) |
+| 2026-09-30 07:52 UTC | Measure bounded Qwen decisions under source interv | OK | 110 passed, 1 warning in 8.69s |
+| 2026-09-30 07:54 UTC | Test evidence fragility against an independent str | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7918-energy-fit, exp7918-energy-fit, exp7918-energy-fit) |
+| 2026-09-30 07:54 UTC | Measure causal constraint additions after delayed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7918-energy-fit, exp7918-energy-fit, exp7918-energy-fit) |
+| 2026-09-30 07:54 UTC | Test delay-aware confidence on a fixed learned tra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7922-causal-acquisition, exp7922-causal-acquisition, exp7922-causal-acquisition) |
+| 2026-09-30 08:25 UTC | Assess new live ARC supervisor outcomes for genera | OK | 96 passed, 1 warning in 7.43s |
+| 2026-09-30 08:27 UTC | Measure complete decision-service and durable-upda | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7918-energy-fit, exp7918-energy-fit, exp7918-energy-fit) |
+| 2026-09-30 08:46 UTC | Preserve board custody and bound workload accelera | OK | 102 passed, 1 warning in 8.08s |
+| 2026-09-30 09:29 UTC | Independently reduce thirteen outcomes and decide  | OK | 98 passed, 1 warning in 13.37s |
+| 2026-09-30 10:23 UTC | Plan milestone 2026.09.688 | OK | 12 tasks proposed |
+| 2026-09-30 10:36 UTC | Milestone 2026.09.688 activated | OK | 12 tasks queued |
+| 2026-09-30 11:12 UTC | Qualify primary-only publication through the real  | OK | 103 passed, 1 warning in 10.18s |
+| 2026-09-30 11:45 UTC | Bind twelve tasks and reuse qualified evidence wit | OK | 88 passed, 1 warning in 14.22s |
+| 2026-09-30 13:00 UTC | Fit source energies after primary artifact routing | OK | 117 passed, 1 warning in 11.13s |
+| 2026-09-30 13:02 UTC | Measure calibrated source decisions against matche | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7930-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
+| 2026-09-30 13:56 UTC | Measure bounded Qwen decisions with paired grammar | OK | 130 passed, 1 warning in 9.05s |
+| 2026-09-30 13:58 UTC | Test evidence fragility through an independent str | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7930-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
+| 2026-09-30 14:00 UTC | Measure persistent constraint additions after dela | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7930-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
+| 2026-09-30 14:02 UTC | Compare delay-aware confidence on an issued learni | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7934-causal-acquisition, exp7934-causal-acquisition, exp7934-causal-acquisition) |
+| 2026-09-30 14:35 UTC | Recover same-day live supervisor evidence for gene | OK | 115 passed, 1 warning in 7.56s |
+| 2026-09-30 14:37 UTC | Measure complete decision-service and durable-upda | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7930-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |

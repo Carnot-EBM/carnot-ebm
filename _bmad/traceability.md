@@ -3453,3 +3453,21 @@ registered under the original V674 tasks.
   Scoped spec coverage, Ruff check/format, strict mypy, fixture CLI and cold
   replay pass. The repository-wide suite showed failures before it was stopped
   near 5%; repository-wide spec coverage reports 1,142 untraced tests.
+
+**Operational Note — milestone 2026.09.686:** `results/operational_retro_2026_09_686.json`, `ops/changelog.md`, `docs/research-log.md`, and `ops/status.md` record the supplied operational evidence and its limits. Locked artifact fields are preserved; the GPU-idle classification conflict is explicit. Missing experiment IDs and acceptance evidence are not reconstructed from research artifacts. This is an artifact and documentation update with no implementation changes, new requirements, or capability status changes. `openspec/capabilities/research-reporting/spec.md` remains unchanged; no research success-criteria verdict is asserted.
+
+## V687 research planning — 2026-09-30
+
+REQ-REPORT-PLAN-687 and SCENARIO-REPORT-PLAN-687 map to
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`: thirteen tasks, Exp7915–Exp7927, four phases.
+The matching complete task contract and digest were checked with the existing
+schema and contract readers. Twelve private mutations were rejected. All 21
+current gate fields resolve; model/substrate and prior-failure metadata pass.
+
+The plan advances FR-12 through calibrated source decisions and sensitivity,
+FR-11 through delayed durable constraint additions and confidence retention,
+and FR-05/08/09/10 plus NFR-01 through qualification and complete service costs.
+All research tasks remain planned. No implementation capability was promoted.
+The existing reader/fixture suite passed 111 tests with scoped spec coverage;
+private E2E-015–018 checks passed. Historical repository-wide debt is unchanged.

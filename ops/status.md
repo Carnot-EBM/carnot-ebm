@@ -17570,3 +17570,40 @@ scoped spec coverage, fixture CLI and cold replay pass. The repository-wide
 Python suite showed multiple failures before being stopped near 5%, so it is
 not qualified as passing. Repository-wide spec coverage reports 1,142
 untraced tests outside this affected file.
+
+## 2026-09-30 — Milestone 2026.09.686 operational retrospective
+
+The retrospective artifact and appended operational log entries use only the supplied timing and GPU evidence. Locked artifact fields remain unchanged. The monitor and compute-bound rule conflict with the locked GPU-idle value; execution efficiency and parallel-model dispatch remain unresolved. Phase causes, experiment IDs, acceptance counts, and measured savings are unavailable. Earlier claims about snapshot timing and the absence of parallel workloads are superseded by the appended evidence correction. Task phase receipts joined to execution-time GPU and model-overlap telemetry are the next tooling priority. This update changes reporting artifacts and documentation only; capability requirements and implementation status remain unchanged.
+
+Verification for this reporting update: the artifact contract, locked-field preservation, append-only histories, and protected file hashes passed. Focused document-guard and spec-checker unit tests, Ruff, scoped spec coverage, and whitespace checks passed. The mutation wrapper reported no tracked file changes from the test run. Repository-wide spec coverage still reports untraced tests outside this unchanged implementation scope. The runtime scenarios in `ops/e2e-test-plan.md` do not apply to an artifact and documentation update; the output checks validated the artifact and appended entries directly.
+
+Repository reconciliation confirmed fresh documentation but failed on the same repository-wide test-to-spec traceability gaps. Those gaps predate this artifact and documentation update; no test or implementation files were changed.
+
+## 2026-09-30 — Milestone 2026.09.687 planned; not activated
+
+Staged thirteen tasks, Exp7915–Exp7927, across four phases. The visible table,
+complete machine contract and full-task digest agree with the YAML. The V686
+design is preserved unchanged. The active roadmap and conductor are unchanged.
+
+The plan addresses the missing V686 contract sections, historical E2E date
+mismatch and specific uncovered terminal branches. It reuses the qualified
+source boundary. Scientific tasks measure fresh source energies, typed decisions,
+bounded Qwen3.8-27B source sensitivity, evidence fragility, causal constraint
+addition, delayed confidence and complete service costs. ARC supervisor analysis
+and three-board custody remain independently runnable. No experiment was run
+or activated by this planning task.
+
+Research sources were recorded before design. Adversarial review corrected
+historical task counts, feedback timing, quantile rules, feature grouping and
+multiple-comparison gates. The confidence stream releases labels after the
+learning stream permits access. Fragility uses an independent stress channel
+and retains circular-positive claim limits. Exposed data cannot close the
+oracle-distinct gap or change the September 28 corrigendum.
+
+Validation passed: schema, full table/JSON/YAML contract, twelve negative
+mutations, all 21 gate conditions, prior failures, exclusion, harness-fit,
+ARC floor, priority and prompt/path checks. The focused suite passed 111 tests.
+Scoped Ruff and spec coverage passed. E2E-015/017/018 private tests passed;
+E2E-016 fixture and cold replay passed with the historical 20260929 date.
+Repository-wide test/spec debt remains open; no global-suite pass is claimed.
+Next: normal conductor review and activation of the staged milestone.

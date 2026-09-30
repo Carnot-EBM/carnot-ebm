@@ -1,0 +1,265 @@
+{
+  "affected_dependencies": {
+    "pyproject.toml": "sha256:894adfa5d81b880ec1e16d1c9d63517238de175633e9e510926b1f96efd02249",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229",
+    "python/carnot/reporting/primary_publication.py": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310",
+    "python/carnot/reporting/publication_qualification_7928.py": "sha256:04aa08185b47e5ffe48614383b8c750a2e0eb00ace73d590231d4b17e8c9cfa8",
+    "python/carnot/verify/training_qualification_7916.py": "sha256:796dfaf32ce46be7a1a9d3cd308d0bcfeb0547717d44a1149dc3d984c89d30d6",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/check_spec_coverage.py": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559",
+    "scripts/conductor_gates.py": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7928_v688_primary_publication.py": "sha256:2de1cc27a4d705d631fce64fea2861f891e77c3fc2da3ee8c8deb5d6739afaf3",
+    "scripts/in_process_doc_reconcile.py": "sha256:7fbff3005af55d74acf50c6f932998ea282c674dce197400ea5c1ec219ccd762",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_conductor_gates.py": "sha256:a5a22b1908237000a737920d22c36a9df38e14e92996956e96f1864411b3b409",
+    "tests/python/test_current_work_receipt.py": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120",
+    "tests/python/test_experiment_7868_v683_intervention_protocol.py": "sha256:0cccf567833636fdda8b0502366f98c3898a0f97bbe0aae528096e38ab79233f",
+    "tests/python/test_in_process_doc_reconcile.py": "sha256:e03f78297c5bcca800e8d034c5528759de084f7a053d7003221a06686edb1c67",
+    "tests/python/test_primary_publication_7928.py": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d",
+    "tests/python/test_publication_qualification_7928.py": "sha256:eabd2eb616d177b2208852d7f3791a800b6dfc10a005905c6cb68034b28b820c",
+    "tests/python/test_source_boundary_7852.py": "sha256:feab9c14e5f9047e247e311a12114998012a5c55a0188ffeeffd42ebe492c70d"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.reporting.primary_publication",
+        "carnot.reporting.publication_qualification_7928"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7928-zcc7cu4v/focused",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_publication_qualification_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_in_process_doc_reconcile.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "-q"
+      ],
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7928-zcc7cu4v/.coverage",
+        "--include=*/python/carnot/reporting/primary_publication.py,*/python/carnot/reporting/publication_qualification_7928.py,*/scripts/experiments/experiment_7928_v688_primary_publication.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot7928-zcc7cu4v/coverage",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_publication_qualification_7928.py",
+        "-q"
+      ],
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "changed_module_coverage",
+      "scope": "owned_units_and_cli",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--data-file=/tmp/carnot7928-zcc7cu4v/.coverage",
+        "/tmp/carnot7928-zcc7cu4v"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "combine_coverage",
+      "scope": "owned_statements",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--data-file=/tmp/carnot7928-zcc7cu4v/.coverage",
+        "--include=*/python/carnot/reporting/primary_publication.py,*/python/carnot/reporting/publication_qualification_7928.py,*/scripts/experiments/experiment_7928_v688_primary_publication.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot7928-zcc7cu4v/coverage.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "changed_module_coverage_report",
+      "scope": "owned_statements",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/primary_publication.py",
+        "python/carnot/reporting/publication_qualification_7928.py",
+        "scripts/experiments/experiment_7928_v688_primary_publication.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_publication_qualification_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_in_process_doc_reconcile.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/primary_publication.py",
+        "python/carnot/reporting/publication_qualification_7928.py",
+        "scripts/experiments/experiment_7928_v688_primary_publication.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_publication_qualification_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_in_process_doc_reconcile.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/primary_publication.py",
+        "python/carnot/reporting/publication_qualification_7928.py",
+        "scripts/experiments/experiment_7928_v688_primary_publication.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_publication_qualification_7928.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot7928-zcc7cu4v/e2e016.json"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "e2e_016_fixture",
+      "scope": "historical_fixture",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot7928-zcc7cu4v/e2e016.json"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "expected_reason": "required owned check",
+      "name": "e2e_016_replay",
+      "scope": "historical_fixture",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "--basetemp=/tmp/carnot7928-zcc7cu4v/full"
+      ],
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "expected_reason": "repository-wide debt recorded separately",
+      "name": "full_repository_pytest",
+      "scope": "repository_health",
+      "timeout_s": 600
+    }
+  ],
+  "coverage_includes": "*/python/carnot/reporting/primary_publication.py,*/python/carnot/reporting/publication_qualification_7928.py,*/scripts/experiments/experiment_7928_v688_primary_publication.py",
+  "execution_date": "20260930",
+  "fixture_expected_failures": [
+    "legacy_shadow",
+    "missing_primary",
+    "conflicting_primary",
+    "stale_primary_hash",
+    "malformed_primary",
+    "disqualified_primary",
+    "absent_field"
+  ],
+  "historical_fixture_date": "20260929"
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.687",
+  "generated_at": "2026-09-30T09:35:28Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 42.5,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Independently reduce thirteen outcomes and decide PRD gaps",
+      "duration_minutes": 13.47,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure bounded Qwen decisions under source interventions",
+      "duration_minutes": 9.96,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Requalify training through its existing callable runtime",
+      "duration_minutes": 6.99,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Cover the two remaining intervention failure branches",
+      "duration_minutes": 5.43,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and freeze executable validation dates",
+      "duration_minutes": 3.25,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.687 executed 7 compute-bound experiments in 42.5 wall-time minutes (averaging 6 minutes per experiment), reconstructed from disk modification times. 'Independently reduce thirteen outcomes and decide PRD gaps' was the longest-running experiment at 13.47 minutes, followed by 'Measure bounded Qwen decisions under source interventions' at 9.96 minutes, with sub-phase causes absent from the milestone timing data. The locked GPU-idle indicator is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs.",
+  "bottlenecks_identified": [
+    "Independent outcome reduction and PRD gap decisions represents the largest single latency focus at 13.47 minutes, followed by bounded Qwen decision measurement at 9.96 minutes, training requalification at 6.99 minutes, intervention failure branch coverage at 5.43 minutes, and task binding at 3.25 minutes. Phase-level breakdowns (model loading, inference, evaluation, validation) are not recorded in the data.",
+    "Milestone timing relies on disk-mtime reconstruction due to the live git-log path encountering zero commits, creating an attribution gap for intra-task latency phases.",
+    "Continuous GPU execution telemetry and multi-model concurrency data are absent during the task run windows, preventing empirical assessment of runtime accelerator efficiency."
+  ],
+  "improvements_suggested": [
+    "Introduce structured monotonic phase timing receipts (tracking model loading, execution, evaluation, and validation) into the runner to attribute latency within long-running experiments.",
+    "Sample continuous GPU utilization, VRAM usage, and active model concurrency throughout task execution windows to correlate compute load with accelerator utilization.",
+    "Profile and optimize the independent outcome reduction workflow (13.47 minutes) and bounded intervention evaluation (9.96 minutes), caching immutable intermediate artifacts where valid.",
+    "Restrict DualGPURunner dispatch strictly to verified concurrent multi-model workloads, ensuring single-model tasks target a single GPU without unneeded orchestration.",
+    "Retain the failure_ledger pre-launch doomed-rerun check to preemptively block doomed tasks before wall time is consumed."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement granular task phase receipts in the runner to isolate model loading, compute, and validation stages for the slowest workloads.",
+    "Record time-series GPU telemetry alongside active model identifiers during compute runs to evaluate accelerator utilization empirically.",
+    "Target optimization and checkpoint reuse on the outcome reduction (13.47 min) and bounded decision measurement (9.96 min) pipelines."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "While the static monitor shows both RTX 3090 GPUs at 0% utilization, the locked field records gpu_idle_on_compute_bound_tasks=false and continuous execution-window telemetry is unavailable. The timing data identifies 7 compute-bound tasks totaling 42.5 minutes, led by outcome reduction (13.47 min) and bounded intervention measurement (9.96 min). Estimated time savings remain set to 0% as an unmeasured placeholder until intra-task phase profiling and active-window accelerator telemetry are implemented."
+}

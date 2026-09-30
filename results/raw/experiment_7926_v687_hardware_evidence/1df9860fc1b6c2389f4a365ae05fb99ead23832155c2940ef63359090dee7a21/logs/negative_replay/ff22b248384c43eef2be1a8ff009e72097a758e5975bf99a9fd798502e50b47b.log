@@ -1,0 +1,12 @@
+[exp7926] start host aggregation; no model or device load
+[exp7913] phase=cold_replay event=before_reduction elapsed_s=0.001 completed_units=0
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7926_v687_hardware_evidence.py", line 58, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7926_v687_hardware_evidence.py", line 36, in main
+    json.dumps(q.cold_reduce(root, json.loads(candidate.read_text())), sort_keys=True),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7926_v687_hardware_evidence.py", line 236, in cold_reduce
+    raise ValueError(f"claims_changed:{field}")
+ValueError: claims_changed:rows

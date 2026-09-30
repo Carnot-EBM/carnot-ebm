@@ -73,15 +73,22 @@ def _failure(
 
 
 def assess_authorities(
-    design: Path, staged: Path, active: Path, snapshot_dir: Path
+    design: Path,
+    staged: Path,
+    active: Path,
+    snapshot_dir: Path,
+    *,
+    milestone: str = MILESTONE,
+    first_id: int = 7891,
+    count: int = COUNT,
 ) -> dict[str, Any]:
     """Accept activation only when active tasks match the complete design digest."""
     design_raw = design.read_bytes()
     design_text = design_raw.decode("utf-8")
-    table, machine = parse_design(design_text, milestone=MILESTONE)
+    table, machine = parse_design(design_text, milestone=milestone)
     match = re.search(r"Canonical full-task SHA-256: `([0-9a-f]{64})`", design_text)
     if match is None:
-        raise ValueError("V685 design digest missing")
+        raise ValueError(f"V{milestone.rsplit('.', 1)[-1]} design digest missing")
     expected_digest = match.group(1)
     staged_raw, staged_value = _read(staged)
     active_raw, active_value = _read(active)
@@ -93,23 +100,23 @@ def assess_authorities(
     failures: list[dict[str, Any]] = []
     active_tasks = active_value.get("tasks", []) if active_value else []
     staged_tasks = staged_value.get("tasks", []) if staged_value else []
-    design_ok = len(table) == len(machine) == COUNT
+    design_ok = len(table) == len(machine) == count
     if not design_ok:
         failures.append(
             _failure(
                 design,
                 snapshots["design"]["sha256"],
                 "task_count",
-                COUNT,
+                count,
                 [len(table), len(machine)],
             )
         )
     active_milestone = active_value.get("milestone") if active_value else None
     active_digest = tasks_digest(active_tasks) if isinstance(active_tasks, list) else None
-    if active_milestone != MILESTONE:
+    if active_milestone != milestone:
         failures.append(
             _failure(
-                active, snapshots["active"]["sha256"], "milestone", MILESTONE, active_milestone
+                active, snapshots["active"]["sha256"], "milestone", milestone, active_milestone
             )
         )
     if active_digest != expected_digest:
@@ -122,11 +129,11 @@ def assess_authorities(
                 active_digest,
             )
         )
-    if len(active_tasks) != COUNT:
+    if len(active_tasks) != count:
         failures.append(
-            _failure(active, snapshots["active"]["sha256"], "task_count", COUNT, len(active_tasks))
+            _failure(active, snapshots["active"]["sha256"], "task_count", count, len(active_tasks))
         )
-    staged_current = staged_value is not None and staged_value.get("milestone") == MILESTONE
+    staged_current = staged_value is not None and staged_value.get("milestone") == milestone
     staged_digest = tasks_digest(staged_tasks) if staged_current else None
     if staged_current and staged_digest != expected_digest:
         failures.append(
@@ -139,7 +146,7 @@ def assess_authorities(
             )
         )
     rows: list[dict[str, Any]] = []
-    for index in range(COUNT):
+    for index in range(count):
         expected = machine[index] if index < len(machine) else {}
         shown = table[index] if index < len(table) else {}
         actual = (
@@ -155,8 +162,8 @@ def assess_authorities(
             }
         )
         checks["order"] = shown.get("order") == index + 1
-        checks["sequence"] = str(actual.get("id", "")).startswith(f"exp{7891 + index}-")
-        checks["milestone"] = actual.get("milestone") == MILESTONE
+        checks["sequence"] = str(actual.get("id", "")).startswith(f"exp{first_id + index}-")
+        checks["milestone"] = actual.get("milestone") == milestone
         checks["prior"] = bool(actual.get("prior_failures")) and all(
             isinstance(item, dict)
             and all(

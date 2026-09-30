@@ -1,5 +1,38 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7932-V688: Authenticate and seal paired Qwen completion
+
+Authenticate exact Exp7917 protocol and raw hashes, ready score one, eligible
+terminal class and false adversarial flag. Authenticate Exp7892 independently.
+Freeze dependencies, argv, expected exits, failure reasons, deadlines and coverage includes.
+Check model-free transport, schema, citation, timeout, token limits and owned cleanup first.
+Confirm native grammar enforcement through a private CPU smoke fixture before Qwen load.
+Use one owned GPU lease and server; authenticate revision, GGUF hash, quantization,
+embedded tokenizer, served path and actual CUDA offload. Preserve fixed generator weights.
+External failures are complete_blocked_* with exact gate operands; owned failures disqualify.
+Checkpoint each family with code/config/input hashes and preserve every raw response.
+Publish one top-level experiment_7932_v688_qwen_completion.json through the qualified publisher.
+Keep attempts, validators and reader receipts under results/raw/experiment_7932_v688_qwen_completion/.
+
+### SCENARIO-REPORT-7932-VALIDATION
+
+Run affected and consumer tests, E2E-014/016, a current bounded panel and terminal cold replay.
+Both historical Exp7868 fixture and replay use 20260929; current execution uses 20260930.
+Combine unit, real CLI success, expected failure, replay and terminal-recheck coverage.
+Require nonempty 100 percent statement coverage for added modules and CLI.
+Run scoped Ruff, strict mypy and explicit-file spec coverage. Run full pytest once;
+record unrelated repository debt separately and preserve historical required failures.
+Validate exact terminal bytes with adversarial and strict row validators before atomic publication.
+Actual gate and document readers must select the primary hash after newer nested sidecars.
+Readiness means complete accounting and passed owned validation, including valid nulls.
+Ops/status/traceability reconciliation remains conductor-owned. No production default changes.
+
+Implementation status: implemented in the parameterized Exp7932 module and CLI.
+The primary keeps terminal and reader receipts outside its own bytes to avoid
+self-referential hashes. Both readers report the final primary path and SHA-256.
+The required coverage scope contains only the added producer, view/reduction
+module and CLI. Historical assertions and failure receipts remain intact.
+
 ## REQ-REPORT-7899-V685: Count unseen live supervisor outcomes
 
 Exp7899 SHALL pin the V684 artifact, registry, live policy source and exact raw
@@ -86483,3 +86516,735 @@ E2E-016 uses the date on fixture and replay routes. Measured combined coverage
 of changed code SHALL be 100 percent. Exact terminal bytes SHALL pass the
 adversarial and strict row validators before atomic publication. The report
 keeps G1-G4, PRD gap decisions and historical failure scopes separate.
+
+## REQ-REPORT-PLAN-686: Stage an exact research milestone contract
+
+The V686 planning artifacts SHALL declare milestone 2026.09.686 and the same
+12 ordered tasks, exp7903 through exp7914, across four phases. The design
+SHALL bind each task ID, title, phase, deliverable, model, substrate and gate,
+and a canonical SHA-256 over the complete YAML task list. The predecessor
+V685 design SHALL remain available unchanged. Planning SHALL leave the active
+roadmap and research conductor unchanged.
+
+Every prompt SHALL contain CONTEXT, EXISTING CODE TO READ FIRST, TASK,
+numbered CONCRETE STEPS, principle-annotated REQUIRED ARTIFACT FIELDS, a Run
+command, and the push/conductor prohibitions. Numbered steps SHALL require
+flushed phase and long-call progress, heartbeats within 60 seconds, and
+multiple tool calls for files over about 200 lines. Gate fields SHALL appear
+with identical spelling in earlier current producers. Repeated failure scopes
+SHALL carry all four prior-failure fields with same-verdict retirement true.
+
+### SCENARIO-REPORT-PLAN-686-CONTRACT
+
+Independent planning validation compares the table, JSON contract and YAML.
+Mutations to task count, order, deliverable, phase, model, substrate, gate
+producer/field, prompt or lineage SHALL fail. Staged and active authority
+SHALL remain distinct; missing staging after legitimate activation is allowed
+only with the frozen current-task digest and matching actual active authority.
+
+### SCENARIO-REPORT-PLAN-686-SCOPE
+
+The plan SHALL include calibrated decision training, continuous constraint
+acquisition, delayed-feedback calibration, an ARC generalization obligation
+and hardware continuity. Only the bounded local-model task SHALL declare
+unsloth/Qwen3.8-27B-GGUF and model_bounded_generation. Qualification SHALL not
+imply science benefit. Exposed development data SHALL not close the independent
+oracle-distinct gap. New validation scopes SHALL be fixed before execution;
+historical required failures SHALL remain failures.
+
+## REQ-REPORT-7903-V686: Bind methods and reuse qualified source custody
+
+The producer SHALL reuse the V685 lifecycle with explicit version inputs.
+It SHALL read staged and active bytes separately. A missing design table,
+machine contract or canonical digest SHALL yield complete_blocked_authority.
+It SHALL never reconstruct missing design authority from the active roadmap.
+Twelve task rows SHALL retain all lineage, prompts, models and gates.
+Consumed or later staging SHALL be accepted only with matching active authority.
+Source readiness SHALL remain separate from contract readiness. The producer
+SHALL authenticate Exp7892, its receipt logs, manifest and six raw shards.
+It SHALL preserve 640 intended, 604 eligible and 36 excluded source families.
+Only the qualified public projection SHALL supply predictor bytes.
+Methods SHALL freeze delayed confidence, service denominators and science budgets.
+Required owned failures SHALL disqualify; external prerequisites SHALL block.
+Terminal validator sidecars SHALL bind the exact atomically published bytes.
+Coverage SHALL include real CLI success, expected failure and cold replay.
+Historical verdicts and repository debt SHALL remain recorded.
+
+### SCENARIO-REPORT-7903-AUTHORITY
+
+Private immutable authorities SHALL test consumed staging, later staging,
+stale active bytes, prompt drift, lineage deletion, model and substrate drift.
+Missing design operands SHALL name their actual path, hash and field.
+Neither staging nor active authority SHALL be activated by this producer.
+
+### SCENARIO-REPORT-7903-SOURCE
+
+Source hash drift, contaminated public fields, role drift and exclusion drift
+SHALL fail with an operand. Receipt and shard hashes SHALL be frozen separately.
+No source producer SHALL run again. Existing exclusion reasons SHALL survive.
+
+### SCENARIO-REPORT-7903-VALIDATION
+
+The command manifest SHALL freeze argv, expected exits, reasons, deadlines,
+dependency hashes and measured modules before results. Tests SHALL use private
+/tmp authorities and scratch. Both dated E2E-016 routes and private E2E-018
+tests SHALL run. Cold replay SHALL reduce primitive rows and denominators.
+All added statements and the CLI SHALL have nonempty 100 percent coverage.
+
+## REQ-REPORT-7904-V686: Freeze and qualify the complete fitting scope
+
+Before CPU fitting, the producer SHALL freeze dependency hashes, exact argv,
+expected exits, reasons, deadlines and measured files. Unit and real CLI data
+SHALL cover every new statement. Scoped spec checks SHALL name test filenames.
+The old Exp7894 unscoped failure and 1142 untraced tests SHALL remain historical
+failures. Current source changes SHALL not rewrite their authority. Children
+SHALL emit bounded heartbeats. Logs SHALL seal by hash after child exit.
+External input failures SHALL be complete blocked with exact operands. Required
+owned failures SHALL disqualify and close readiness. Both terminal readers SHALL
+inspect final candidate bytes; sidecars SHALL bind their hash. Fixture runtime
+qualification SHALL not claim natural quality, decision benefit or independence.
+
+### SCENARIO-REPORT-7904-SCOPE
+
+Private tests SHALL execute actual success, failure and replay CLI routes.
+The scope SHALL include both natural runtime suites, Exp7894 tests, E2E-015,
+E2E-016 fixture and replay with date 20260930, Ruff, strict mypy and scoped spec
+coverage. Repository health SHALL remain separate from affected qualification.
+
+Implementation status: specified for 2026.09.686. The conductor owns ops and
+traceability reconciliation after producer completion.
+
+V686 implementation: the current fitting callable and its small CLI bind all
+local numerical dependencies and resolved source authority. Private CPU routes
+exercise fresh fitting, resume, byte replay, deadline failure and terminal
+recheck failure. The Exp7904 terminal artifact controls runtime qualification.
+The old Exp7894 verdict and required failure remain unchanged. Ops and
+traceability reconciliation remain assigned to the conductor.
+
+## REQ-REPORT-7916-V687: Preserve fixture dates and current qualification receipts
+
+Exp7916 SHALL freeze exact affected argv, expected exits, failure reasons,
+deadlines, byte hashes and coverage includes before compute. Execution date
+SHALL be 20260930. BOTH historical E2E-016 fixture and replay calls SHALL use
+20260929; a wrong-date rejection SHALL remain tested. Exp7904's 290/290 covered
+statements and both run_date_mismatch failures SHALL remain historical evidence.
+Current owned failures SHALL close readiness. External missing evidence SHALL
+be complete_blocked with exact gate operands. Required affected unit, consumer,
+E2E-015/016, Ruff, strict mypy and explicit-file spec checks SHALL run.
+
+### SCENARIO-REPORT-7916-SCOPE
+
+New module and CLI coverage SHALL be nonempty and 100 percent. Preserve the
+existing training closure and its stricter coverage obligations. Private /tmp
+directories SHALL contain fixtures, pytest scratch and coverage data. Logs and
+primitive rows SHALL seal after children exit. Current producer fields SHALL
+identify Exp7916, milestone 2026.09.687, no pretrained model calls and host
+aggregation. Both terminal readers SHALL inspect final bytes before atomic
+publication. Sidecars SHALL bind their hash. Fixture agreement is circular_positive.
+
+Implementation status: specified for 2026.09.687. The conductor owns ops,
+changelog and traceability reconciliation after producer completion.
+
+V687 implementation: Exp7916 reuses the unchanged fitting library through an
+isolated producer configuration. All 97 affected tests passed. Both historical
+E2E-016 routes passed with 20260929. Current module and CLI statement coverage
+is 100 percent, including the existing 290-statement obligation. Both terminal
+readers passed; the published verdict is circular_positive with readiness 1.
+The interrupted repository-wide suite remains separate debt: 137 failures.
+
+## REQ-REPORT-7905-V686: Qualify current intervention orchestration
+
+Exp7905 SHALL bind the exact disqualified Exp7893 artifact and current source
+bytes before fixture work. It SHALL freeze affected tests, code hashes, command
+argv, expected exits, deadlines, and coverage inputs before subprocesses run.
+The current CLI SHALL accept date 20260930 on fixture, replay, and measured
+routes. Every fixture output, coverage file, and pytest base directory SHALL
+stay in private `/tmp` storage until sealed evidence is copied after exit.
+
+The producer SHALL retain 24 independent families, all four original-byte
+source views, every possible request and scripted reply, original offsets,
+checkpoint identity and drift checks. Empty answer sentence labels and
+overlength requests SHALL be separate exclusions. Scripted responses SHALL
+make no semantic or independent benefit claim. Combined unit and real CLI
+success, expected-failure, and replay coverage SHALL reach 100 percent for
+every changed module and CLI. Prior disqualifications SHALL remain historical.
+
+The producer SHALL run affected consumer tests, scoped Ruff, strict mypy,
+explicit-file spec coverage, and dated E2E-016 fixture and replay. Required
+owned failures SHALL yield complete disqualified with zero readiness. Missing
+external inputs SHALL yield complete blocked with failed operands. Both terminal
+validators SHALL inspect the exact final candidate bytes. A changed verdict
+SHALL receive a second terminal pass before atomic publication. The result
+SHALL keep validity, readiness, probability quality, decision benefit,
+retention, and efficiency separate.
+
+### SCENARIO-REPORT-7905-MANIFEST
+
+The frozen plan names the complete affected closure and exact child argv.
+Both E2E-016 routes carry 20260930. A missing source or changed historical
+hash produces a terminal blocked artifact with its failed operand.
+
+### SCENARIO-REPORT-7905-FIXTURES
+
+A local scripted peer returns raw replies for 24 distinct families. Four
+requests retain the first complete answer sentence and original byte offsets.
+Cold replay and checkpoint reuse agree; changed bytes fail. Missing sentence
+labels and overlength requests exclude their own units.
+
+### SCENARIO-REPORT-7905-TERMINAL
+
+Private success, timeout, missing input, second-pass failure, and publication
+failure cases keep actual exits and candidate hashes. The final published bytes
+match both passing terminal reports. Protocol readiness measures mechanics
+only; semantic sensitivity and scientific benefit remain unmeasured.
+## REQ-REPORT-7911: Reuse the qualified live supervisor cutoff
+
+Exp7911 SHALL authenticate Exp7899, its inventory, reducer, registry and scored
+agent source before reduction. It SHALL retain cutoff content hashes and count
+only authenticated, distinct live supervisor outcomes. An unchanged inventory
+SHALL use the explicit empty fast path with no new reducer module or model call.
+No new outcomes SHALL yield complete_null_no_new_supervisor_outcomes with ready
+mechanics and zero new solves. External failures SHALL be terminal blocked.
+Owned validation failures SHALL disqualify readiness. Historical failures remain.
+
+### SCENARIO-REPORT-7911-CUTOFF
+
+Unchanged bytes and changed modification times retain zero fresh outcomes.
+Missing or changed prerequisite bytes name the failed path, hash and gate operand.
+New receipt bytes use the existing Exp7899 authentication and event reducer.
+
+### SCENARIO-REPORT-7911-VALIDATION
+
+Before compute, freeze exact commands, deadlines, expected exits and dependency
+hashes. Private unit, success, failure and replay coverage SHALL cover every new
+statement. Run Exp7899 regressions, E2E-017 and both E2E-016 routes dated 20260930.
+Run the full Python suite once and preserve repository backlog separately.
+Scoped Ruff, strict mypy and explicit-file spec coverage SHALL pass. Both terminal
+validators SHALL inspect the published candidate hash. No public game is solved.
+
+Implementation status: specified for milestone 2026.09.686. The conductor owns
+ops/status.md, ops/changelog.md and _bmad/traceability.md reconciliation.
+
+V686 implementation: the small producer CLI reuses the unchanged qualified
+Exp7899 reducer. All 39 affected tests pass. Combined private unit and real CLI
+coverage measures 145 new statements with no missed statements. Current
+E2E-016 fixture and replay commands carry 20260930; the historical CLI rejects
+that date with run_date_mismatch. These owned failures disqualify readiness.
+The terminal artifact preserves the zero delta and the required failures.
+
+## REQ-REPORT-7913-V686: Own private validation scratch and preserve board custody
+
+Exp7913 SHALL reuse the callable board reducer with explicit source paths.
+It SHALL preserve the Exp7901 five affected failures and 141/218 statement
+coverage as immutable history. All pytest bases, coverage data and CLI fixtures
+SHALL use private TemporaryDirectory storage under /tmp. Guards SHALL remain
+active. Only closed, hash sealed child evidence SHALL enter results storage.
+The frozen command plan SHALL name the complete dependency closure, measured
+modules, exact argv, expected exits, rejection reasons and bounded deadlines.
+New reducer, orchestration and CLI statements SHALL have 100 percent coverage.
+
+### SCENARIO-REPORT-7913-CUSTODY
+
+Missing, malformed or changed historical bytes SHALL produce terminal blocked
+operands. Separate dated KV260 k_max<=5 fabric, PolarFire Linux CPU and GateMate
+0xffffffff physical/JTAG rows SHALL retain all three obligations. Device
+execution count SHALL stay zero. NPU and TSU SHALL remain unqualified. Exp7912
+complete current rows SHALL attach only with ready, unflagged validated evidence;
+unavailable service evidence SHALL not block historical board custody.
+
+### SCENARIO-REPORT-7913-PRIVATE
+
+Tests SHALL exercise active child guards, exact argv and private scratch paths.
+Missing, empty and unrelated coverage data SHALL fail before combination.
+The actual small CLI SHALL accept success, missing input and cold replay, and
+reject negative replay. Historical board reader assertions SHALL stay intact.
+
+### SCENARIO-REPORT-7913-TERMINAL
+
+Affected tests, scoped Ruff, strict mypy and explicit filename spec checks SHALL
+run. Both E2E-016 routes SHALL carry 20260930. The full Python suite SHALL run
+once as repository health; its backlog SHALL remain separate. Owned failures
+SHALL disqualify readiness. Terminal validators SHALL bind candidate hashes;
+a changed verdict SHALL be checked again before atomic publication. Mechanics
+SHALL not imply decision benefit or hardware speedup. The conductor owns ops
+and traceability reconciliation after this producer exits.
+
+V686 implementation: the small Exp7913 CLI reuses authenticated board custody,
+freezes explicit dated commands and keeps all validation scratch under /tmp.
+New tests cover guard propagation, missing or malformed evidence, optional
+service rejection, coverage shard rejection, replay drift, terminal rechecks
+and corruption before publication. Closed logs and coverage shards are sealed
+by hash. The producer artifact records current exits and readiness; historical
+Exp7901 verdicts and repository debt remain unchanged. Ops and traceability
+reconciliation remain assigned to the conductor.
+
+## REQ-REPORT-7914-V686: Reduce twelve actual orchestration outcomes
+
+Exp7914 SHALL authenticate the design table, machine contract and full task digest
+against actual activation snapshots. It SHALL read declared producers once and reserve
+its own row. Missing producers SHALL retain separate conductor receipts and exact gate
+operands. Skipped, missing, blocked, disqualified and valid null states SHALL differ.
+Scientific prerequisites that are absent SHALL produce a terminal blocked verdict.
+Failed owned checks SHALL produce a terminal disqualified verdict and zero readiness.
+
+The reducer SHALL recompute probability, Brier loss, costs, abstention, causal writes
+and delayed prediction sets from primitive rows. It SHALL reject future feedback,
+label features, stale dependency hashes, changed issued alpha and inflated counts.
+Families, calls, checkpoints, windows and board obligations SHALL have separate counts.
+Development and oracle agreement SHALL not close independent reproduction or
+GAP-ORACLE-DISTINCT. Three PRD decisions SHALL state falsifiable continuation conditions.
+
+### SCENARIO-REPORT-7914-DISPOSITIONS
+
+Immutable private authorities exercise twelve outcomes, gate spelling, wrong producer
+identity, missing design, activation drift and conductor skips without substitution.
+Historical failures and identical-verdict retirement obligations remain visible.
+
+### SCENARIO-REPORT-7914-PRIMITIVES
+
+Repeated family observations do not increase the family count. Primitive controls
+exercise abstention, feedback order, delayed release, issued alpha, set coverage,
+label-derived features and stale dependency bytes. Cold replay rejects changed sources
+and changed aggregates. Missing science remains blocked after complete reduction.
+
+### SCENARIO-REPORT-7914-QUALIFICATION
+
+Freeze affected dependencies, exact argv, expected exits and reasons, deadlines and
+measured paths before results. Unit and actual CLI success, external block, failure,
+terminal recheck and cold replay data SHALL cover every new statement. Run scoped
+Ruff, strict mypy, explicit spec coverage and E2E-015/016/017/018. Both E2E-016 routes
+use date 20260930. Historical publication is replaced by current private authority
+execution, with all historical assertions retained. Seal child logs only after exit.
+Bind both terminal validators to exact candidate hashes and publish checked bytes.
+G1-G4 retain their stable definitions. DiffusionGemma remains pending without evidence.
+## REQ-REPORT-PLAN-688: Plan experiments from the actual producer evidence
+
+The V688 plan shall stage twelve tasks, Exp7928 through Exp7939, in four phases.
+Its visible table, machine contract, full-task digest and YAML shall agree.
+It shall preserve V687 before replacing vNEXT and record source research first.
+It shall address validator-sidecar selection before repeating blocked fitting.
+It shall retain calibrated decisions, continuous learning, ARC generalization
+and all three board obligations. Every LLM task shall mandate Qwen3.8-27B-GGUF.
+Prompts shall specify progress output, bounded file writes, exact gate fields,
+prior failures, verdict classes, per-unit rows and concrete deliverable paths.
+Planning shall not change the active roadmap or research_conductor.py.
+
+### SCENARIO-REPORT-PLAN-688: Validate a staged plan without activation
+
+Use the existing schema, contract, retirement and gate readers. Confirm twelve
+ordered task rows and the canonical digest. Mutate contract count, order,
+prompt, gate, model and history to confirm rejection. Run relevant reader
+tests, scoped lint/spec checks and private E2E-015 through E2E-018 routes.
+Verify protected-file hashes. Planned tasks do not establish research results.
+
+## REQ-REPORT-PLAN-687: Stage the next milestone with an executable contract
+
+The V687 plan shall contain thirteen ordered tasks, Exp7915 through Exp7927.
+The visible table, machine contract and staged YAML shall agree.
+The full-task digest shall bind prompts, gates and prior-failure records.
+The plan shall preserve V686 evidence and its design before replacing vNEXT.
+It shall record research sources before experiment design.
+It shall assign current producer fields, model classes and historical fixture dates explicitly.
+
+### SCENARIO-REPORT-PLAN-687: Read the staged contract without activation
+
+Parse both authorities with the existing roadmap readers. Verify schema,
+gate fields, retirement records, ordered task identity and the complete digest.
+Reject private mutations to IDs, order, deliverables, gate fields and prompts.
+Keep the active roadmap and conductor byte-identical. Runtime experiments remain planned.
+
+## REQ-REPORT-7915-V687: Bind thirteen tasks and historical validation dates
+
+Exp7915 SHALL bind the visible V687 table, machine JSON and full-task digest
+to separately read staging and active authority. Matching active authority
+permits consumed or later staging, without replacing missing staged bytes.
+The reused lifecycle SHALL default to twelve tasks and accept an explicit thirteen.
+Source custody SHALL authenticate Exp7892 and its 640 families, 604 eligible
+families and 36 exclusions directly. Custody is separate from contract readiness.
+The receipt SHALL preserve historical required failures and make no science claim.
+
+### SCENARIO-REPORT-7915-AUTHORITY
+
+Private twelve-task and thirteen-task fixtures check matching, preactivation,
+consumed and later staging. Twelve mutations exercise order, prompt, failure
+history, gates, count, date, digest, model, compute class and source drift.
+Cold replay SHALL reject changed primitives, counts, identities or snapshots.
+
+### SCENARIO-REPORT-7915-DATES
+
+Both E2E-016 routes SHALL use historical fixture date 20260929. Execution date
+remains 20260930. Wrong-date calls SHALL fail with run_date_mismatch. E2E-015
+and private E2E-018 SHALL preserve historical assertions after rollover.
+
+### SCENARIO-REPORT-7915-VALIDATION
+
+Freeze argv, dependencies, expected exits, reasons, deadlines and coverage
+includes before outcomes. Private unit, CLI, rejection, replay and terminal
+checks SHALL cover every new statement. Require scoped Ruff, strict mypy and
+explicit affected spec coverage. Preserve repository debt separately. Seal
+logs after exit, bind validators to final bytes and publish atomically.
+Freeze fragility groups, masks and delayed-ACI budgets before future outcomes.
+External absence SHALL block; owned failures SHALL disqualify with readiness zero.
+
+## REQ-REPORT-7917-V687: Close the two intervention failure regressions
+
+Exp7917 SHALL retain Exp7905's exact 697/699 disqualification and sealed
+coverage report as historical evidence. It SHALL test the Exp7893 wrong-date
+rejection and Exp7905 repeated terminal failure. The failed candidate SHALL
+remain disqualified with readiness zero and a failed terminal receipt.
+A second failed validation SHALL prevent final publication.
+
+The producer SHALL reuse the callable qualification runner with explicit
+input, output, raw root and producer identity. It SHALL retain 24 independent
+fixture families, four source views, first complete answer sentences, original
+byte offsets, full-source witness nomination, and at most 25 percent filler
+length mismatch. Missing labels SHALL leave semantic sensitivity null.
+No pretrained model SHALL load. Execution date SHALL remain 20260930.
+
+### SCENARIO-REPORT-7917-DATES
+
+Both historical E2E-016 routes SHALL invoke Exp7868 with date 20260929.
+Exp7893 SHALL reject 20260930 before creating fixture output or checkpoints.
+
+### SCENARIO-REPORT-7917-TERMINAL
+
+Private tests SHALL exercise success, missing input, timeout, checkpoint reuse
+and drift, cold replay, repeated terminal rejection and failed publication.
+A failed second terminal receipt SHALL retain the disqualified candidate,
+zero readiness, false validity and readiness gates, and no published output.
+
+### SCENARIO-REPORT-7917-QUALIFICATION
+
+Freeze dependencies, argv, expected exits and reasons, deadlines and identical
+coverage includes before compute. Combine private unit and actual CLI success,
+rejection and replay coverage. Every changed module and CLI SHALL have nonempty
+100 percent statement coverage. Preserve stricter historical coverage scopes.
+Run scoped Ruff, strict mypy and explicit-file spec coverage. Record one bounded
+full Python suite observation separately as repository health. Seal closed logs.
+Bind terminal validators to exact candidate hashes and publish checked bytes.
+Fixture agreement SHALL remain circular_positive with scientific benefit null.
+The conductor owns ops and traceability reconciliation after this producer exits.
+
+V687 implementation: nine new tests and all 108 affected tests pass. Combined
+unit and real CLI coverage measures 818/818 owned statements, including 110/110
+new producer and CLI statements. Both historical E2E-016 routes pass with
+20260929. Scoped Ruff, strict mypy and explicit-file spec checks pass. Two
+terminal checks inspect identical candidate hashes with zero adversarial flags.
+The artifact is complete_circular_positive_protocol_qualification, readiness
+one, with semantic sensitivity and scientific benefit unmeasured. Exp7905's
+697/699 disqualification remains historical. The one full-suite observation
+records failures and a timeout separately. The conductor owns ops reconciliation.
+
+## REQ-REPORT-7920-V687: Measure bounded source sensitivity with current Qwen
+
+Exp7920 SHALL authenticate Exp7917 and Exp7892, including referenced byte
+hashes, before compute. Freeze the first 48 evaluation families in source-group
+hash order, including exclusions. Use only cached unsloth/Qwen3.8-27B-GGUF
+Q4_K_M in a private owned CUDA runtime and GPU lease. Freeze 192 calls,
+24576 output tokens, 128 tokens per call, context 8192, temperature zero,
+seed 67801 and /no_think. Load deadline is 300 seconds, call deadline 120,
+latest launch 2400 and measured work cap 3000. Emit real timing and heartbeats.
+
+### SCENARIO-REPORT-7920-CUSTODY
+
+Missing or changed external authority SHALL end complete_blocked with exact
+path, hash and gate operands. Wrong execution dates SHALL reject before output.
+No-run fields SHALL name planned compute separately and count zero invocations.
+
+### SCENARIO-REPORT-7920-CAPTURE
+
+Full source nominates an original complete-sentence witness and risk for the
+unchanged first answer sentence. Reuse qualified witness-only, neighbors and
+matched disjoint filler construction. Tokenize rendered prompts before dispatch;
+overlength inputs abstain without truncation. Preserve raw bytes, hashes, spans,
+errors, truncations, unstarted arms, and original sentence label eligibility.
+Edited risks measure sensitivity only. At least 32 complete source clusters
+permit a paired interval; a finished smaller budget is an underpowered null.
+
+### SCENARIO-REPORT-7920-VALIDATION
+
+Run historical E2E-016 fixture and replay with date 20260929 before capture.
+Execution time remains 20260930. Freeze explicit tests, includes, commands,
+expected exits, reasons and deadlines. Require complete new statement coverage,
+scoped Ruff, strict mypy, explicit-file spec coverage, cold reduction and both
+terminal validators bound to exact final bytes. Retain historical failures and
+separate repository debt. Owned required failures disqualify with readiness zero.
+The conductor owns ops and traceability reconciliation after this producer exits.
+## REQ-REPORT-7924-V687: Qualified supervisor delta with historical date custody
+
+Exp7924 SHALL retain Exp7899 as the accepted cutoff. It SHALL use the existing
+Exp7911 and Exp7899 callable reducers without running games or models. It SHALL
+deduplicate all receipt identities seen by Exp7911, including authenticated raw
+inputs of disqualified producers, without accepting their headlines. Missing
+required ledgers SHALL block with exact path, hash and gate operands. It SHALL
+read the current solve registry before importing outcomes. A zero delta SHALL
+produce complete_null_no_new_supervisor_outcomes, zero new solves and no arm
+recommendation. Observations remain exposed development and cannot prove causal
+policy benefit. Recommendations require twenty firings across three games.
+
+### SCENARIO-REPORT-7924-CUSTODY
+
+Qualified cutoff bytes remain unchanged. A receipt already seen by disqualified
+Exp7911 cannot count again. Missing ledgers and altered hashes name failed gates.
+Counterfeit firings and non-live provenance remain excluded.
+
+### SCENARIO-REPORT-7924-VALIDATION
+
+Freeze dependencies, exact commands, deadlines, expected failures and identical
+coverage includes before reduction. Both historical E2E-016 routes use 20260929;
+execution is dated 20260930. A wrong-date route must reject with run_date_mismatch.
+Run E2E-017 and frozen consumer tests. Cover every added statement using private
+unit, CLI success, failure, replay and terminal recheck data. Run scoped Ruff,
+strict mypy and explicit-file spec coverage. Run the full Python suite once as
+repository health and retain all historical required failures.
+
+### SCENARIO-REPORT-7924-TERMINAL
+
+Cold replay rejects changed firing, outcome, row-budget and game counts. Owned
+required failures disqualify readiness; external failures block. Both terminal
+validators bind to final candidate bytes. Publish only those checked bytes.
+A qualified empty audit may be ready but establishes no scientific benefit.
+An unchanged qualified null is retired as new evidence under retire_if_same_verdict.
+The conductor owns ops and traceability reconciliation.
+
+A corrected qualification may reuse a sealed repository-health receipt from its
+disqualified attempt. It SHALL rerun every required check and preserve the prior
+candidate hash, failed commands and diagnostic receipt. Reuse SHALL authenticate
+the log bytes and SHALL not claim another full-suite execution.
+
+Implementation: the task module and small CLI reuse the existing supervisor
+reducers and command builder. The terminal artifact records the current checks.
+Ops and traceability reconciliation remains assigned to the conductor.
+
+## REQ-REPORT-7926-V687: Preserve board custody and bound workload acceleration
+
+Exp7926 SHALL reuse the Exp7913 board reader and private child supervisor.
+It SHALL authenticate Exp7913 and retain every historical required failure.
+The task runs on 20260930 for milestone 2026.09.687 with host aggregation,
+no model load and zero current device operations. No availability probe,
+install, flash or purchase is scheduled. Later KV260 access requires ssh kria.
+
+### SCENARIO-REPORT-7926-CUSTODY
+
+Produce separate KV260, PolarFire and GateMate rows from original byte hashes.
+Preserve qualified KV260 fabric at k_max<=5, PolarFire Linux CPU dispatch,
+and GateMate physical/JTAG 0xffffffff. GateMate requires new physical evidence
+before reopening. NPU and TSU remain unqualified. External source failures
+end complete_blocked with path, hash, field, operator and expected/observed values.
+
+### SCENARIO-REPORT-7926-WORKLOAD
+
+Attach only ready, unflagged current Exp7925 whole-service primitive rows.
+Absent, malformed or failed optional rows leave workload mapping unmeasured;
+they do not block board custody. Compare observed byte movement and kernel
+share with sparse topology and host orchestration. Any Amdahl bound is an
+estimate. Vendor comparisons and hardware speedup remain unmeasured.
+
+### SCENARIO-REPORT-7926-VALIDATION
+
+Freeze dependencies, exact argv, expected exits and reasons, deadlines and
+identical coverage includes before validation. Historical E2E-016 fixture
+and cold replay SHALL both use --date 20260929. Execution remains 20260930.
+An actual wrong-date call SHALL reject with run_date_mismatch. Preserve the
+Exp7913 disqualification. Run all board-reader and consumer tests, scoped Ruff,
+strict mypy and explicit-file spec coverage. Combine nonempty private unit,
+CLI success, expected failure, cold replay and terminal recheck coverage.
+Require 100 percent statements on added code. Run the full Python suite once
+as repository health and preserve failures separately from the affected scope.
+
+### SCENARIO-REPORT-7926-TERMINAL
+
+Cold-reduce primitive board and workload rows and all owned claim fields.
+Owned required failures disqualify and set readiness zero. Terminal adversarial
+and strict-row readers SHALL inspect exact candidate bytes; inspect reports,
+revalidate after verdict changes and bind sidecars to their candidate hashes.
+Publish only checked bytes. Null scientific benefit may coexist with readiness.
+Keep phase spans nonoverlapping, logs sealed after child exit, and checkpoints
+bound to code/config/input hashes. Retire an unchanged verdict as new evidence.
+The conductor owns ops, changelog and traceability reconciliation after exit.
+
+## REQ-REPORT-7927-V687: Cold-reduce thirteen actual outcomes
+
+Exp7927 SHALL bind thirteen ordered tasks to the actual V687 activation snapshots.
+It SHALL authenticate the visible table, machine contract and full-task digest.
+It SHALL read each declared producer once and reserve its own administrative row.
+Absent, skipped, blocked, disqualified and valid null outcomes SHALL remain distinct.
+Conductor receipts SHALL retain their own paths, hashes and observed gate operands.
+A complete reduction with absent external science SHALL be terminal blocked.
+Owned required failures SHALL produce disqualified and zero execution readiness.
+Historical failures, including Exp7914's 270/271 coverage, SHALL remain unresolved evidence.
+
+### SCENARIO-REPORT-7927-CUSTODY
+
+Private current authorities exercise thirteen dispositions, identity drift and missing authority.
+Cold replay rejects changed bytes, raw rows, aggregates, publication operands and counts.
+Three PRD decisions SHALL state explicit continuation and unchanged-verdict retirement conditions.
+GAP-ORACLE-DISTINCT remains open after the September 28 corrigendum.
+DiffusionGemma remains pending. G1-G4 retain the publication script's definitions.
+
+### SCENARIO-REPORT-7927-PRIMITIVES
+
+Reuse V686 primitive reducers for Brier, decision costs, causal writes and delayed sets.
+Recompute source sensitivity, grouped fragility and complete service timings from rows.
+Reject future labels, changed issued alpha, stale dependencies and shared score/stress draws.
+Report seed, family and source-group denominators separately from task dispositions.
+Development exposure and fixture agreement SHALL never establish independent benefit.
+
+### SCENARIO-REPORT-7927-QUALIFICATION
+
+Freeze dependency hashes, argv, exits, failure reasons, deadlines and coverage includes before checks.
+Run affected and consumer tests, scoped Ruff, strict mypy and explicit-file spec coverage.
+Execute the real read-only publication CLI and assert its parsed result.
+Reject invalid publication output and command failure without inventing passing operands.
+Run E2E-015/016/017 and private current-authority E2E-018.
+Both historical E2E-016 calls SHALL use 20260929; current execution remains 20260930.
+Preserve the historical wrong-date rejection and all historical assertions.
+Combine nonempty unit and actual CLI success, block, failure, replay and terminal data.
+Every added module and CLI SHALL have 100 percent statement coverage.
+Run the full Python suite once and retain unrelated repository debt separately.
+Seal logs after child exit. Bind terminal validator sidecars to exact candidate hashes.
+Atomically publish only bytes checked by adversarial and strict row validators.
+Implementation status: specified; conductor owns ops and traceability reconciliation.
+
+V687 capstone implementation uses callable V686 reducers and the bounded command supervisor.
+Unqualified candidates keep validity and readiness zero until owned checks finish.
+Fragility averages repeats within families, then families within source groups.
+Conflicting source-group identities are rejected. Unstable terminal flags refuse publication.
+Monotonic timestamp field names distinguish clock boundaries from scientific metrics.
+The result artifact records measured qualification. Ops and traceability remain conductor-owned.
+
+### REQ-REPORT-7928
+
+New experiments SHALL publish one top-level primary through
+`carnot.reporting.primary_publication.publish_primary`. Validator reports,
+attempts, manifests and row shards SHALL stay below results/raw/. The helper
+SHALL lock each producer, reject conflicting primary identities, validate exact
+candidate bytes before atomic replacement, and bind sidecars to primary hashes.
+Historical artifacts and the live gate and document-reader functions SHALL remain unchanged.
+Other tasks SHALL apply this layout without waiting for this qualification receipt.
+Historical source checks SHALL use exact primary paths, never newest-match lookup.
+
+### SCENARIO-REPORT-7928-1
+
+Freeze Exp7904 and Exp7916 primary and sidecar byte hashes and nanosecond mtimes.
+Record actual gate and document selections and missing fields; keep prior verdicts.
+Do not infer which artifact a historical dispatch consumed from current selection.
+Exercise valid primary plus newer nested sidecar, legacy top-level shadowing,
+missing primary, conflicting primaries, stale bindings, malformed primary,
+disqualified primary, absent field, concurrent replacement and terminal revalidation.
+Legacy shadowing SHALL remain an expected negative through unmodified readers.
+
+### SCENARIO-REPORT-7928-2
+
+Freeze dependencies, exact commands, expected exits and reasons, deadlines and
+identical coverage includes before results. Combine unit and real CLI fixture,
+expected failure, cold replay and terminal checks; new modules and CLI SHALL have
+nonempty data and 100 percent statement coverage. Run scoped Ruff, strict mypy,
+explicit-file spec coverage, current-work consumers and E2E-015/016. Both historical
+Exp7868 fixture and replay SHALL use 20260929; execution date remains 20260930.
+Run the full Python suite once and preserve unrelated repository debt separately.
+
+### SCENARIO-REPORT-7928-3
+
+Readiness SHALL be one only after real gate and document-reader identity checks
+and every owned check pass. Cold-reduce claims from primitive rows, seal exited
+child logs, retain prior required failures, and check exact terminal bytes with
+adversarial and strict row validators. Flagged or owned failed evidence SHALL
+have readiness zero and complete_disqualified_*; external prerequisites SHALL
+end complete_blocked_* with field, operator, expected, observed, upstream and
+path/hash operands. Fixture agreement is circular_positive; independent science,
+calibration, decision benefit, retention and efficiency remain unmeasured.
+No model load, benchmark, numerical qualification or production-default change occurs.
+Implementation status: implemented; Exp7928 records exact reader and qualification evidence.
+
+## REQ-REPORT-7929-V688: Bind twelve tasks and reuse qualified evidence
+
+Exp7929 SHALL bind twelve complete tasks, Exp7928 through Exp7939, using
+separately observed design, staging and active bytes. Missing staging may be
+consumed only when frozen active authority matches the canonical design digest.
+No roadmap activation or numerical qualification is part of this receipt.
+Authenticate exact Exp7892, Exp7916 and Exp7917 primaries, validation logs and
+durable raw dependencies. Preserve 640 families, 604 eligible and 36 exclusions.
+Freeze literature protocols before outcomes. Administrative agreement is circular.
+
+### SCENARIO-REPORT-7929-AUTHORITY
+
+Reject count, ID, order, phase, deliverable, prompt, gate, model, substrate,
+prior-failure entry, digest and authority-date mutations. Preserve historical
+twelve-task and thirteen-task fixtures, consumed staging and preactivation checks.
+
+### SCENARIO-REPORT-7929-CUSTODY
+
+Missing or changed external dependencies produce complete_blocked_* operands.
+Owned validation failures disqualify and set readiness to zero. Current scores
+and flags stay separate from unmeasured calibration, benefit, retention and cost.
+
+### SCENARIO-REPORT-7929-VALIDATION
+
+Freeze exact commands, hashes, exits, reasons, deadlines and identical coverage
+includes. Require all new statements covered by unit and private CLI routes.
+Run E2E-015/016 and private E2E-018. Both historical fixture and replay use
+20260929; current execution is 20260930. Seal logs after exit. Validate terminal
+bytes, cold-reduce rows, and check both actual readers after newer nested sidecars.
+Publish one top-level primary and keep all reports below its raw directory.
+Ops and traceability reconciliation is conductor-owned.
+
+## REQ-REPORT-7936-IDENTITY: Same-day supervisor receipt custody
+
+Exp7936 SHALL preserve Exp7924 accepted cutoff hashes and its complete seen
+inventory separately. It SHALL authenticate raw live trajectory_supervisor
+receipts through producer source hashes. Invocation and receipt IDs bind full
+row content hashes. Identical retries count once. Conflicting IDs or changed
+bytes fail closed. Future dates, unsupported hashes and disqualified producers
+remain excluded. Same-day unseen receipts are eligible for inspection.
+
+### SCENARIO-REPORT-7936-INGEST
+
+A same-day new receipt passes identity inspection while the historical day
+filter drops it. Identical retries, changed IDs, disqualified producers and
+empty redirects do not add events. Missing fields remain unknown. An unseen
+earlier receipt can be recovered without becoming prospective evidence.
+
+## REQ-REPORT-7936-ORDER: Event order and conservative refinement
+
+Only authenticated event timestamps or scoped sequences establish event order.
+Filesystem modification times SHALL NOT establish chronology. Missing order
+or an incomparable cutoff cannot support prospective gain. Reduce by game,
+seed, invocation and arm. Keep level-up, action, pending-credit and termination
+fields. Separate applied, shadow, malformed, censored and excluded records.
+Selection requires thirty uncensored redirects across five games, Wilson
+bounds and leave-one-game-out summaries. Zero progress with upper95 below .10
+permits a deprioritization proposal. Lower95 above .20 with consistent held-out
+direction permits a priority proposal. Defaults remain unchanged. Exhaustion
+without progress records a shared-method gap. Associations are not causal.
+
+### SCENARIO-REPORT-7936-REDUCE
+
+Cold reduction reproduces counts, unknown clocks, credit and decisions from
+primitive rows. Tampered counts fail. Insufficient or censored evidence cannot
+change priorities. Fixture recovery demonstrates mechanics only.
+
+## REQ-REPORT-7936-TERMINAL: Current checked receipt aggregation
+
+Freeze exact dependencies, argv, deadlines, expected failures and coverage
+includes before reduction. Run private real CLI success, failure, cold replay
+and terminal recheck. Require nonempty 100 percent added statement coverage,
+affected consumer tests, E2E-017, scoped Ruff, strict mypy and explicit-file
+spec coverage. Run the full Python suite once as separate repository health.
+Historical Exp7868 E2E-016 fixture and replay both use 20260929. Current work
+uses 20260930. No model or game runs. External prerequisites terminate blocked;
+owned required failures disqualify readiness. A valid zero recovery is terminal
+null. Preserve historical required failures. Both terminal validators bind final
+candidate bytes. Publish one top-level primary; newer raw sidecars cannot change
+actual conductor or reconciliation reader selection. Conductor owns ops and
+traceability reconciliation. Retire unchanged null scans as new evidence.
+
+### SCENARIO-REPORT-7936-CLI
+
+Private CLI accepts a same-day fixture and rejects missing arguments and forged
+counts. Cold replay and terminal recheck use identical coverage includes.
+
+### SCENARIO-REPORT-7936-PUBLISH
+
+Actual gate and reconciliation readers select the primary hash with newer
+sidecars. Validator sidecars bind checked bytes. No new level solves are claimed.

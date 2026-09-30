@@ -11,11 +11,78 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 5 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| CLAIM_SUPPORTED | 1 |
+| NO_CLAIM | 2 |
+| CANNOT_DETERMINE | 5 |
 
-## experiment_7879_v684_contract_methods.json
+## experiment_7916_v687_training_qualification.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7916_v687_training_qualification.json.validators.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7917_v687_intervention_qualification.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7918_energy_fit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+An observation that the experiment executed and produced comparative model or energy fitting results; however, as an operational gate-check receipt recording pre-flight blockage, no comparative or empirical claim is made.
+
+## WAS THAT CHECKED
+No; the experiment was never executed because pre-flight gate checks blocked execution at the conductor layer.
+
+## EVIDENCE
+`schema`
+`blocked_gate_check_v1`
+`status`
+`blocked`
+`honest_verdict`
+`blocked_gate_check_failed`
+`duration_s`
+`0.0`
+`blocked_at_layer`
+`conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7920_v687_qwen_sufficiency.json
 
 **CLAIM_SUPPORTED**
 
@@ -23,21 +90,55 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-V684 is disqualified because the staged authority is missing and required validation did not pass.
+Qwen3.8-27B exhibits null source sensitivity across qualified source intervention views, demonstrating no evidence sufficiency or correctness certification.
 
 ## WHAT WOULD REFUTE IT
-A present staged authority, eligible passing contract rows, and passing required validation would refute the disqualification.
+A statistically significant positive source sensitivity score (such as `mean_neighbors_minus_filler` significantly exceeding zero with a confidence interval strictly above zero and non-null scientific or decision benefits), demonstrating that the model systematically distinguishes supporting witness contexts from filler.
 
 ## WAS THAT CHECKED
-Yes. The precondition and contract rows check staged authority and eligibility; the validation receipts record a required test failure.
+Yes. The experiment executed 170 live generation calls across 28 independent families across multiple source intervention arms (`full_source`, `witness_only`, `witness_neighbors`), giving positive sensitivity a genuine opportunity to appear. Instead, the observed mean difference was negative (-0.0946) with a null interval, honestly confirming the null verdict.
 
 ## EVIDENCE
-`honest_verdict`: `complete_disqualified_v684_required_validation`; `staged_present`: `false`; `missing_staged_authority`; `contract_ready_score`: `0`; `eligible`: `0`; `excluded`: `12`; `affected_pytest`; `passed`: `false`; `verdict_class`: `disqualified`.
+- `"honest_verdict": "complete_null_source_sensitivity"`
+- `"verdict_class": "null"`
+- `"claim_scope": "exposed_development source sensitivity only"`
+- `"mean_neighbors_minus_filler": -0.09464285714285714`
+- `"interval": null`
+- `"interpretation": "source sensitivity only; no correctness or evidence sufficiency certification"`
+- `"independent_families": 28`
+- `"scientific_benefit": null`
+- `"decision_benefit": null`
+- `"verifier_is_oracle": false`
+- `"generation_calls_completed": 170`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7880_v684_source_boundary.json
+## experiment_7924_v687_arc_supervisor_delta.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7926_v687_hardware_evidence.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7927_v687_capstone.json
 
 **NO_CLAIM**
 
@@ -48,155 +149,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify. This artifact records a disqualified custody check.
+An observation asserting an empirical comparative scientific benefit, performance improvement over a baseline, or active model inference rather than administrative disposition.
 
 ## WAS THAT CHECKED
-No comparative refutation was applicable. The required coverage check was run and failed.
+Yes. The artifact verified upstream readiness and recorded that no model was loaded (`model_invoked` is `false`), all outcome rows are assigned to `administrative_disposition`, and scientific benefit metrics (`decision_benefit`, `efficiency`, `probability_quality`, `retention`) remain `null`.
 
 ## EVIDENCE
-`claim_scope`: `exposed_development_custody_only`; `decision_benefit`: `null`; `honest_verdict`: `complete_disqualified_required_checks`; `coverage_report`; `observed`; `passed`: `false`; `source_boundary_ready_score`: `0`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7881_v684_intervention_protocol.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Because no comparative, capability, or superiority claim is asserted, there is no scientific hypothesis to refute. If the artifact had claimed successful protocol readiness or execution validity, that would be refuted by any failing required gate check (such as coverage test failure or pytest timeouts) or circular verifier evaluation (`verifier_is_oracle` being `true`).
-
-## WAS THAT CHECKED
-No comparative or model claims were evaluated (zero model calls or loads occurred). Execution mechanics were checked under `gate_check_summary` and `historical_required_failures`, and the artifact recorded required check failures (`coverage_report.passed` observed `false` and pytest timed out), resulting in a disqualified run.
-
-## EVIDENCE
-`claim_scope`: `CPU fixture mechanics; exposed_development sources; no independent verifier claim`
-`current_work`: `Measured CPU fixture construction and validation`
-`honest_verdict`: `complete_disqualified_required_checks`
-`verdict_class`: `disqualified`
-`intervention_protocol_ready_score`: `0`
-`target_model`: `none (no pretrained model)`
-`model_calls`: `0`
-`acceptance_gate_results`:
-`decision_benefit`: `null`
-`efficiency`: `null`
-`probability_quality`: `null`
-`readiness`: `false`
-`retention`: `null`
-`validity`: `false`
-`gate_check_summary`:
-`artifact_field`: `coverage_report.passed`
-`expected`: `true`
-`observed`: `false`
-`passed`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7882_energy_fit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative energy-fit claim to refute. A passing upstream gate would contradict the artifact’s finding that the run was blocked.
-
-## WAS THAT CHECKED
-Yes. The prerequisite gates were evaluated; the energy fit did not run.
-
-## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"source_boundary_ready_score"`; `"expected": 1`; `"actual": 0`; `"passed": false`; `"actual": "disqualified"`; `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7884_qwen_sufficiency.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no Qwen risk finding to refute. The title describes a planned measurement, and this artifact records a blocked gate check.
-
-## WAS THAT CHECKED
-No risk measurement was performed. The prerequisite gates were checked, and four of six failed.
-
-## EVIDENCE
-`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `duration_s` `0.0` `gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7880-source-boundary.source_boundary_ready_score (actual=0 == expected=1)`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7887_v684_arc_supervisor_delta.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7889_v684_hardware_evidence.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-None; the artifact is a receipt and custody tracking document that makes no comparative claim and explicitly disclaims any performance speedup or hardware advantage.
-
-## WAS THAT CHECKED
-No; no comparative hypothesis was evaluated because required checks failed and the artifact disqualified itself from live device execution.
-
-## EVIDENCE
-`hardware_speedup_claimed`: `false`  
-`hardware_advantage`: `unmeasured`  
-`board_evidence`: `historical custody`  
-`current_measurement`: `host receipt analysis only`  
-`current_device_execution_count`: `0`  
-`hardware_evidence_ready_score`: `0`  
-`workload_attachment_available`: `false`  
-`honest_verdict`: `complete_disqualified_required_checks`  
-`verdict_class`: `disqualified`  
-`arm`: `historical_accounting`  
-`status`: `historical_read_only`  
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7890_v684_capstone.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The V684 capstone is disqualified by failed required validation and establishes no current milestone benefit.
-
-## WHAT WOULD REFUTE IT
-Required validation passing, with valid eligible evidence establishing readiness or benefit, would refute the disqualification and null benefit assessment.
-
-## WAS THAT CHECKED
-Yes. The artifact records required validation results and counts eligible evidence; a required check failed and the eligible count is zero.
-
-## EVIDENCE
-`honest_verdict`: `complete_disqualified_required_v684_validation`; `verdict_class`: `disqualified`; `name`: `affected_pytest`, `classification`: `required`, `exit_code`: `1`, `passed`: `false`; `sample_size_budget` → `eligible`: `0`; `acceptance_gate_results` → `validity`: `false`, `readiness`: `0`; `milestone_benefit_score`: `0`.
+`honest_verdict`
+`complete_blocked_missing_science`
+`verdict_class`
+`blocked`
+`inference_substrate`
+`aggregation_from_upstream_artifacts`
+`inference_substrate_class`
+`no_model_load`
+`model_invoked`
+`false`
+`target_model`
+`none`
+`performed`
+`false`
+`independent_benefit`
+`false`
+`decision_benefit`
+`null`
+`efficiency`
+`null`
+`probability_quality`
+`null`
+`retention`
+`null`
+`arm`
+`administrative_disposition`
+`scientifically_independent`
+`0`
 
 ## RECOMMENDATION
 KEEP
