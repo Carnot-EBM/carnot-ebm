@@ -19162,3 +19162,4 @@ code |
 | 2026-09-30 21:07 UTC | Compare delayed confidence updates on one issued l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7947-causal-acquisition, exp7947-causal-acquisition, exp7947-causal-acquisition) |
 | 2026-09-30 21:24 UTC | Assess only new live supervisor outcomes for trans | OK | 95 passed, 1 warning in 7.72s |
 | 2026-09-30 21:26 UTC | Measure complete source decision and durable updat | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7943-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
+| 2026-09-30 21:43 UTC | Preserve typed board blockers and map measured wor | OK | 111 passed, 1 warning in 8.28s |
