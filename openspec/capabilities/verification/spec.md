@@ -1,5 +1,56 @@
 # Verification Capability Specification
 
+### REQ-VERIFY-7930-V688: Fit current heads from exact qualified primaries
+
+Exp7930 SHALL authenticate exact Exp7916 and Exp7892 primary bytes. Primary
+readiness, terminal eligibility and unflagged status SHALL gate execution.
+Validation sidecars SHALL attest those bytes only. Current transitive runtime
+hashes SHALL match the qualification receipt. External failures SHALL produce
+complete_blocked_* with exact operands. Historical required failures remain visible.
+The producer SHALL reuse the callable runtime without repeating qualification.
+
+#### SCENARIO-VERIFY-7930-CUSTODY
+
+Missing primaries, failed readiness, stale sidecar bindings, dependency drift,
+changed public or evaluator shards and changed cohort roles fail before fitting.
+Recompute public view exclusions and compare them to the qualified exclusions.
+Keep all 640 original roles, 604 eligible families and 36 exclusions. Later-role
+label fields SHALL not be accessed until all 27 current heads are sealed.
+
+#### SCENARIO-VERIFY-7930-FIT
+
+Freeze the nine existing arms, seeds 67801/67802/67803, width 16, parameter
+limit 4096, learning rate .01 and sixteen epochs. Keep 132 base features and
+sixteen complete-static features, unchanged A singles/triples and B singles/pairs
+views, window limit 128 and answer-unit limit 16. Reject complete overbudget
+bytes. Preserve unknown-target masks and the qualified KL/CE/dual/temperature
+rules. Match augmented/constrained observations and epoch budgets. Resume only
+current checkpoints bound to complete code, configuration and input hashes.
+Use one 3000-second numerical budget. Seal traces and per-family probabilities,
+energies, masks, source clusters, exclusions and measured times for every role.
+Fit shortcut controls on fit/tune only and retain length-matched source permutation.
+
+#### SCENARIO-VERIFY-7930-TERMINAL
+
+Freeze explicit commands, expected exits/reasons, deadlines and identical coverage
+includes before numerical results. Combine unit and real CLI coverage to obtain
+nonempty 100 percent statements for added code. Run affected consumers, scoped
+Ruff, strict mypy, explicit-file spec coverage, E2E-015, and E2E-016 with historical
+date 20260929 on fixture and replay. Run the full Python suite once and record
+repository debt separately. Cold-reconstruct probabilities from checkpoints and
+public bytes. Validate exact terminal bytes with adversarial and strict row readers.
+Publish one top-level primary through the qualified publication helper; keep
+sidecars under raw/. Actual gate and document readers SHALL select its path/hash
+after newer sidecars. Failed owned checks imply disqualified and readiness zero.
+Complete null results may be ready; exposed development gives no independent
+generalization claim. Conductor owns ops and traceability reconciliation.
+
+Implementation status: implemented by `energy_fit_7930.py`,
+`energy_fit_7930_run.py` and the small Exp7930 CLI. Private requirement-linked
+tests cover custody mutations, checkpoint identity, label access, cold
+reconstruction, numerical deadlines and actual primary consumers. Current
+execution evidence is bound to `results/experiment_7930_v688_energy_fit.json`.
+
 ### REQ-VERIFY-7894-V685: Fit matched natural source energies
 
 The Exp7894 producer SHALL authenticate the qualified Exp7892 public and
