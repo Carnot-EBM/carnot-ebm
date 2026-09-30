@@ -19141,3 +19141,4 @@ code |
 | 2026-09-30 13:00 UTC | Fit source energies after primary artifact routing | OK | 117 passed, 1 warning in 11.13s |
 | 2026-09-30 13:02 UTC | Measure calibrated source decisions against matche | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7930-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
 | 2026-09-30 13:56 UTC | Measure bounded Qwen decisions with paired grammar | OK | 130 passed, 1 warning in 9.05s |
+| 2026-09-30 13:58 UTC | Test evidence fragility through an independent str | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7930-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |
