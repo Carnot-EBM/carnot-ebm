@@ -86784,6 +86784,26 @@ use date 20260930. Historical publication is replaced by current private authori
 execution, with all historical assertions retained. Seal child logs only after exit.
 Bind both terminal validators to exact candidate hashes and publish checked bytes.
 G1-G4 retain their stable definitions. DiffusionGemma remains pending without evidence.
+## REQ-REPORT-PLAN-688: Plan experiments from the actual producer evidence
+
+The V688 plan shall stage twelve tasks, Exp7928 through Exp7939, in four phases.
+Its visible table, machine contract, full-task digest and YAML shall agree.
+It shall preserve V687 before replacing vNEXT and record source research first.
+It shall address validator-sidecar selection before repeating blocked fitting.
+It shall retain calibrated decisions, continuous learning, ARC generalization
+and all three board obligations. Every LLM task shall mandate Qwen3.8-27B-GGUF.
+Prompts shall specify progress output, bounded file writes, exact gate fields,
+prior failures, verdict classes, per-unit rows and concrete deliverable paths.
+Planning shall not change the active roadmap or research_conductor.py.
+
+### SCENARIO-REPORT-PLAN-688: Validate a staged plan without activation
+
+Use the existing schema, contract, retirement and gate readers. Confirm twelve
+ordered task rows and the canonical digest. Mutate contract count, order,
+prompt, gate, model and history to confirm rejection. Run relevant reader
+tests, scoped lint/spec checks and private E2E-015 through E2E-018 routes.
+Verify protected-file hashes. Planned tasks do not establish research results.
+
 ## REQ-REPORT-PLAN-687: Stage the next milestone with an executable contract
 
 The V687 plan shall contain thirteen ordered tasks, Exp7915 through Exp7927.

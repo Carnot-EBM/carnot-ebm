@@ -11,51 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 3 |
-| CANNOT_DETERMINE | 4 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| CLAIM_SUPPORTED | 1 |
+| NO_CLAIM | 2 |
+| CANNOT_DETERMINE | 5 |
 
-## experiment_7904_v686_training_qualification.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_7904_v686_training_qualification.json.validators.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-None; the artifact records validator execution receipts rather than an empirical or comparative claim.
-
-## WAS THAT CHECKED
-No; no experimental hypothesis or comparative claim is evaluated in this receipt artifact.
-
-## EVIDENCE
-`receipts`
-`actual_exit`
-`0`
-`exit_code`
-`expected_exit`
-`passed`
-`true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7905_v686_intervention_qualification.json
+## experiment_7916_v687_training_qualification.json
 
 **CANNOT_DETERMINE**
 
@@ -67,7 +27,31 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_7906_energy_fit.json
+## experiment_7916_v687_training_qualification.json.validators.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7917_v687_intervention_qualification.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7918_energy_fit.json
 
 **NO_CLAIM**
 
@@ -78,25 +62,59 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-None. The artifact is a pipeline receipt recording that pre-flight conductor gate checks failed before the run began; it makes no empirical, comparative, or substantive claim that could be refuted.
+An observation that the experiment executed and produced comparative model or energy fitting results; however, as an operational gate-check receipt recording pre-flight blockage, no comparative or empirical claim is made.
 
 ## WAS THAT CHECKED
-No. Execution was blocked at the pre-gate layer prior to running any experiment.
+No; the experiment was never executed because pre-flight gate checks blocked execution at the conductor layer.
 
 ## EVIDENCE
 `schema`
-`"blocked_gate_check_v1"`
+`blocked_gate_check_v1`
 `status`
-`"blocked"`
+`blocked`
 `honest_verdict`
-`"blocked_gate_check_failed"`
+`blocked_gate_check_failed`
+`duration_s`
+`0.0`
 `blocked_at_layer`
-`"conductor_pre_gate"`
+`conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7908_qwen_sufficiency.json
+## experiment_7920_v687_qwen_sufficiency.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Qwen3.8-27B exhibits null source sensitivity across qualified source intervention views, demonstrating no evidence sufficiency or correctness certification.
+
+## WHAT WOULD REFUTE IT
+A statistically significant positive source sensitivity score (such as `mean_neighbors_minus_filler` significantly exceeding zero with a confidence interval strictly above zero and non-null scientific or decision benefits), demonstrating that the model systematically distinguishes supporting witness contexts from filler.
+
+## WAS THAT CHECKED
+Yes. The experiment executed 170 live generation calls across 28 independent families across multiple source intervention arms (`full_source`, `witness_only`, `witness_neighbors`), giving positive sensitivity a genuine opportunity to appear. Instead, the observed mean difference was negative (-0.0946) with a null interval, honestly confirming the null verdict.
+
+## EVIDENCE
+- `"honest_verdict": "complete_null_source_sensitivity"`
+- `"verdict_class": "null"`
+- `"claim_scope": "exposed_development source sensitivity only"`
+- `"mean_neighbors_minus_filler": -0.09464285714285714`
+- `"interval": null`
+- `"interpretation": "source sensitivity only; no correctness or evidence sufficiency certification"`
+- `"independent_families": 28`
+- `"scientific_benefit": null`
+- `"decision_benefit": null`
+- `"verifier_is_oracle": false`
+- `"generation_calls_completed": 170`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7924_v687_arc_supervisor_delta.json
 
 **CANNOT_DETERMINE**
 
@@ -108,11 +126,19 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_7911_v686_arc_supervisor_delta.json
+## experiment_7926_v687_hardware_evidence.json
 
-**SKIPPED_ALREADY_FLAGGED**
+**CANNOT_DETERMINE**
 
-## experiment_7913_v686_hardware_evidence.json
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7927_v687_capstone.json
 
 **NO_CLAIM**
 
@@ -123,34 +149,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No observation would refute the headline claim because the artifact asserts no comparative, empirical, or performance claim; refuting a hardware advantage claim would require measured device execution latency or whole-service throughput outperforming host baselines, which this artifact lacks.
+An observation asserting an empirical comparative scientific benefit, performance improvement over a baseline, or active model inference rather than administrative disposition.
 
 ## WAS THAT CHECKED
-No; live hardware execution, workload benchmarking, and comparator speedup evaluations were not checked or performed.
+Yes. The artifact verified upstream readiness and recorded that no model was loaded (`model_invoked` is `false`), all outcome rows are assigned to `administrative_disposition`, and scientific benefit metrics (`decision_benefit`, `efficiency`, `probability_quality`, `retention`) remain `null`.
 
 ## EVIDENCE
-`"hardware_speedup_claimed"`: `false`
-`"hardware_advantage"`: `"unmeasured"`
-`"current_measurement"`: `"host receipt analysis only"`
-`"board_evidence"`: `"historical custody"`
-`"workload"`: `"unavailable"`
-`"arm"`: `"historical_accounting"`
-`"claim_class"`: `"historical"`
-`"current_device_execution_count"`: `0`
-`"honest_verdict"`: `"complete_disqualified_required_checks"`
-`"verdict_class"`: `"disqualified"`
+`honest_verdict`
+`complete_blocked_missing_science`
+`verdict_class`
+`blocked`
+`inference_substrate`
+`aggregation_from_upstream_artifacts`
+`inference_substrate_class`
+`no_model_load`
+`model_invoked`
+`false`
+`target_model`
+`none`
+`performed`
+`false`
+`independent_benefit`
+`false`
+`decision_benefit`
+`null`
+`efficiency`
+`null`
+`probability_quality`
+`null`
+`retention`
+`null`
+`arm`
+`administrative_disposition`
+`scientifically_independent`
+`0`
 
 ## RECOMMENDATION
 KEEP
-
-## experiment_7914_v686_capstone.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write

@@ -48823,3 +48823,75 @@ The training qualification's failed E2Es are not evidence against its numerical
 method. Intervention coverage still misses terminal code. Inspect those exact
 branches before another qualification. Do not schedule another source producer:
 Exp7892 already qualified the public/evaluator boundary.
+
+## V688 planning review — 2026-09-30 (recorded before design)
+
+This review searched all eight requested topics and checked all six secondary
+sources. Most relevant methods were already catalogued. Rechecking a source
+does not make it a new discovery. The applications below are proposed tests.
+
+| Topic | Primary evidence checked | Planning implication |
+|---|---|---|
+| Energy-based verification and reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), May 2026; [distributional EBM](https://arxiv.org/abs/2605.18871), May 2026 | Input-conditioned energies motivate small calibrated decision heads. Learned compatibility does not certify natural-language truth. |
+| Neural constraint satisfaction | [Hard linear constraints with decision rules](https://arxiv.org/abs/2505.13858), NeurIPS 2025; [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), July 2026 | Separate encoded feasibility from semantic extraction. Match length and representation before comparing difficulty. Defer a new solver sweep. |
+| Ising applications in ML | [Energy-Based Constraint Networks](https://arxiv.org/abs/2605.00960), May 2026; [THRML source](https://github.com/extropic-ai/thrml) | Structural energy and composable violation channels motivate matched source-feature controls. Ising compatibility alone gives no accuracy guarantee. |
+| Hallucination detection and mitigation | [Diversion decoding](https://arxiv.org/abs/2607.10476), July 2026, revised August; [Counterfactual Fragility Certificates](https://arxiv.org/abs/2609.00366) | Challenge sensitivity and evidence-removal sensitivity need independent evaluation channels. Grammar validity alone cannot establish factual accuracy. |
+| Kolmogorov–Arnold Networks | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026; [KAC](https://arxiv.org/abs/2503.21076), March 2025, and its [code](https://github.com/Ethanhuhuhu/KAC) | Local parameter updates motivate sparse state accounting. Do not repeat the retired importance-anchor mechanism. |
+| Energy-guided decoding and constrained generation | [Energy-guided object-hallucination decoding](https://arxiv.org/abs/2507.07731), July 2025; ARM–EBM above | The decoding paper studies vision-language models. Transfer to text remains untested. Use bounded typed-output controls before token-level energy steering. |
+| Hardware sampling | [FPGA decomposition](https://arxiv.org/abs/2602.15985), February 2026; [controlled analog Ising](https://arxiv.org/abs/2602.05595), February 2026 | Include decomposition, communication and readout in service cost. Oscillator hardware results do not transfer to the local KV260 fabric. |
+| Continuous learning | [Memoir](https://arxiv.org/abs/2607.20792), July 2026; [Delayed ACI](https://arxiv.org/abs/2609.07251), September 2026 | Pin memory during a query. Compare persistent writes against matched no-write controls. Replay confidence updates using the state issued with each delayed prediction. |
+
+Memoir compares coupled memory writes with read-only pondering at matched
+compute. Its reported early learning penalty supports testing write timing,
+not assuming that more memory writes improve reasoning. Delayed ACI describes
+interleaved delayed updates. Its [full text](https://arxiv.org/html/2609.07251v1)
+was checked; Carnot's binary development stream does not inherit its theorem.
+
+The fragility paper calls its output a protocol audit, not a formal robustness
+certificate. Its retrieved submission date is June 29, although its identifier
+starts with 2609. Preserve that metadata conflict. Diversion decoding lists a
+2025 journal reference alongside a 2026 arXiv submission. Do not infer novelty
+or venue acceptance from identifier dates alone.
+
+### Secondary-source receipts
+
+- **OpenReview:** searched NeurIPS/ICML/ICLR EBM and verification work. Indexed
+  [AtomGraph](https://openreview.net/forum?id=dNsIZln2uv) motivates multi-hop
+  verification. Direct AtomGraph and [EBT](https://openreview.net/forum?id=ZBj3Qp1bYg)
+  pages returned browser challenges. No new review consensus is claimed.
+- **Semantic Scholar:** browser requests failed. A bounded direct API request
+  for [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=30)
+  returned 30 records and next=30. Memoir and Solver-Hard were followed to their
+  primary abstracts. The equivalent ARM–EBM request returned HTTP 429. This is
+  a partial citation sample, not an exhaustive citation census.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  Variable-granularity verification and verification-ceiling papers appeared.
+  The feed mixes years. It does not establish September novelty.
+- **GitHub:** checked [weekly Python trending](https://github.com/trending/python?since=weekly).
+  The retrieved page was two weeks old. No relevant new trend rank was verified.
+  THRML and KAC repositories were checked directly.
+- **Extropic:** checked [Z1T](https://extropic.ai/writing/z1t) and the
+  [Torx, Thermalizers and Z1 announcement](https://extropic.ai/writing/from-one-to-one-billion).
+  Their hybrid programming and sparse sampling paths support measuring host
+  and transfer costs. Vendor efficiency projections are not local measurements.
+  Local TSU access remains unqualified.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The page describes constraint enforcement. It supplies no reproducible local
+  training recipe or weights for a fair implementation comparison.
+
+### Current evidence that changes the next plan
+
+The V687 primary training artifact now has training_runtime_ready_score=1.
+The runtime reader selects the newest `experiment_7916_*.json`, which is
+`experiment_7916_v687_training_qualification.json.validators.json`.
+That sidecar has no readiness field. The conductor logged this missing-field
+block three times, then skipped six scientific tasks. Fix producer resolution
+before repeating numerical qualification. Preserve the primary and sidecar.
+
+The current contract, training and intervention artifacts report qualified
+mechanics. Earlier log entries record earlier attempts. Their current bytes do
+not establish that the gate reader consumed those bytes during dispatch.
+Exp7920 authenticated the mandated Qwen model and completed 169 calls, but only
+28 complete families remained. Its required comparison floor was 32. It has no
+independent sentence labels and syntax_valid=false. Improve protocol completion
+before interpreting source sensitivity or scheduling a larger accuracy claim.
