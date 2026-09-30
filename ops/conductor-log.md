@@ -19106,3 +19106,4 @@ code |
 | 2026-09-30 02:14 UTC | Qualify the actual fitting CLI and checkpoint depe | OK | 93 passed, 1 warning in 48.94s |
 | 2026-09-30 02:16 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 3789018 serves 'Ternary-Bonsai-2-27B-PTQ1_0.gguf', live pin is 'Qwen3. |
 | 2026-09-30 02:32 UTC | Complete intervention orchestration coverage befor | OK | 99 passed, 1 warning in 14.22s |
+| 2026-09-30 02:34 UTC | Train source energies with fresh dependency-bound  | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp7904-training-qualification.training_runtime_ready_score (actual=None == expected=1 -- upstream artifact has NO field 'training_runtime_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.) |
