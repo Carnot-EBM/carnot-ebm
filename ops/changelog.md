@@ -21133,3 +21133,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-30: Measure bounded Qwen decisions with paired grammar controls (⚠️ Research Finding) — honest_verdict=complete_null_paired_decoder_completion; results/experiment_7932_v688_qwen_completion.json
 - 2026-09-30: Recover same-day live supervisor evidence for generalization (⚠️ Research Finding) — honest_verdict=complete_null_no_recovered_live_supervisor_events; results/experiment_7936_v688_arc_supervisor_refinement.json
 - 2026-09-30: Map the measured workload to retained board capabilities (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7938_v688_hardware_evidence.json
+- 2026-09-30: Independently reduce twelve outcomes and decide the PRD gaps (⚠️ Blocked) — honest_verdict=complete_blocked_missing_science; results/experiment_7939_v688_capstone.json
