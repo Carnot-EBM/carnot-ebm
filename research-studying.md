@@ -6269,3 +6269,18 @@ stress draws and family budgets. It also freezes issued-state ACI queues at
 These are prospective empirical controls. Oracle agreement and exposed
 natural cohorts do not establish independent benefit or a coverage theorem.
 The executable freeze preserves adoption and deferral decisions before outcomes.
+
+## 2026-09-30 — Exp7929 V688 methods INGESTED
+
+Read the V688 planning review before freezing current protocols. Sequentially
+checked three primary method pages: [fragility](https://arxiv.org/html/2609.00366v1),
+[Delayed ACI](https://arxiv.org/html/2609.07251v1), and
+[Memoir](https://arxiv.org/html/2607.20792v1). Adopt grouped evidence-removal
+audits with separate stress labels, issued-state delayed confidence updates,
+and read-only predictions with delayed memory commits and no-write controls.
+Keep fit-only imputation, fixed information budgets, eligibility floors, source
+roles and bootstrap groups from accepted protocols. Defer coverage theorems,
+natural correctness claims, new solver sweeps and unchanged KAN anchoring.
+These papers motivate tests; they do not transfer scientific benefit. Preserve
+the fragility page's June 29 date conflict. Science agents must repeat exact
+primary and raw custody checks. No numerical qualification is repeated here.

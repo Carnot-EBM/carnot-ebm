@@ -87123,4 +87123,35 @@ path/hash operands. Fixture agreement is circular_positive; independent science,
 calibration, decision benefit, retention and efficiency remain unmeasured.
 No model load, benchmark, numerical qualification or production-default change occurs.
 Implementation status: implemented; Exp7928 records exact reader and qualification evidence.
+
+## REQ-REPORT-7929-V688: Bind twelve tasks and reuse qualified evidence
+
+Exp7929 SHALL bind twelve complete tasks, Exp7928 through Exp7939, using
+separately observed design, staging and active bytes. Missing staging may be
+consumed only when frozen active authority matches the canonical design digest.
+No roadmap activation or numerical qualification is part of this receipt.
+Authenticate exact Exp7892, Exp7916 and Exp7917 primaries, validation logs and
+durable raw dependencies. Preserve 640 families, 604 eligible and 36 exclusions.
+Freeze literature protocols before outcomes. Administrative agreement is circular.
+
+### SCENARIO-REPORT-7929-AUTHORITY
+
+Reject count, ID, order, phase, deliverable, prompt, gate, model, substrate,
+prior-failure entry, digest and authority-date mutations. Preserve historical
+twelve-task and thirteen-task fixtures, consumed staging and preactivation checks.
+
+### SCENARIO-REPORT-7929-CUSTODY
+
+Missing or changed external dependencies produce complete_blocked_* operands.
+Owned validation failures disqualify and set readiness to zero. Current scores
+and flags stay separate from unmeasured calibration, benefit, retention and cost.
+
+### SCENARIO-REPORT-7929-VALIDATION
+
+Freeze exact commands, hashes, exits, reasons, deadlines and identical coverage
+includes. Require all new statements covered by unit and private CLI routes.
+Run E2E-015/016 and private E2E-018. Both historical fixture and replay use
+20260929; current execution is 20260930. Seal logs after exit. Validate terminal
+bytes, cold-reduce rows, and check both actual readers after newer nested sidecars.
+Publish one top-level primary and keep all reports below its raw directory.
 Ops and traceability reconciliation is conductor-owned.
