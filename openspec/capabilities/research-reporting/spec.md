@@ -86667,3 +86667,49 @@ coverage measures 145 new statements with no missed statements. Current
 E2E-016 fixture and replay commands carry 20260930; the historical CLI rejects
 that date with run_date_mismatch. These owned failures disqualify readiness.
 The terminal artifact preserves the zero delta and the required failures.
+
+## REQ-REPORT-7913-V686: Own private validation scratch and preserve board custody
+
+Exp7913 SHALL reuse the callable board reducer with explicit source paths.
+It SHALL preserve the Exp7901 five affected failures and 141/218 statement
+coverage as immutable history. All pytest bases, coverage data and CLI fixtures
+SHALL use private TemporaryDirectory storage under /tmp. Guards SHALL remain
+active. Only closed, hash sealed child evidence SHALL enter results storage.
+The frozen command plan SHALL name the complete dependency closure, measured
+modules, exact argv, expected exits, rejection reasons and bounded deadlines.
+New reducer, orchestration and CLI statements SHALL have 100 percent coverage.
+
+### SCENARIO-REPORT-7913-CUSTODY
+
+Missing, malformed or changed historical bytes SHALL produce terminal blocked
+operands. Separate dated KV260 k_max<=5 fabric, PolarFire Linux CPU and GateMate
+0xffffffff physical/JTAG rows SHALL retain all three obligations. Device
+execution count SHALL stay zero. NPU and TSU SHALL remain unqualified. Exp7912
+complete current rows SHALL attach only with ready, unflagged validated evidence;
+unavailable service evidence SHALL not block historical board custody.
+
+### SCENARIO-REPORT-7913-PRIVATE
+
+Tests SHALL exercise active child guards, exact argv and private scratch paths.
+Missing, empty and unrelated coverage data SHALL fail before combination.
+The actual small CLI SHALL accept success, missing input and cold replay, and
+reject negative replay. Historical board reader assertions SHALL stay intact.
+
+### SCENARIO-REPORT-7913-TERMINAL
+
+Affected tests, scoped Ruff, strict mypy and explicit filename spec checks SHALL
+run. Both E2E-016 routes SHALL carry 20260930. The full Python suite SHALL run
+once as repository health; its backlog SHALL remain separate. Owned failures
+SHALL disqualify readiness. Terminal validators SHALL bind candidate hashes;
+a changed verdict SHALL be checked again before atomic publication. Mechanics
+SHALL not imply decision benefit or hardware speedup. The conductor owns ops
+and traceability reconciliation after this producer exits.
+
+V686 implementation: the small Exp7913 CLI reuses authenticated board custody,
+freezes explicit dated commands and keeps all validation scratch under /tmp.
+New tests cover guard propagation, missing or malformed evidence, optional
+service rejection, coverage shard rejection, replay drift, terminal rechecks
+and corruption before publication. Closed logs and coverage shards are sealed
+by hash. The producer artifact records current exits and readiness; historical
+Exp7901 verdicts and repository debt remain unchanged. Ops and traceability
+reconciliation remain assigned to the conductor.

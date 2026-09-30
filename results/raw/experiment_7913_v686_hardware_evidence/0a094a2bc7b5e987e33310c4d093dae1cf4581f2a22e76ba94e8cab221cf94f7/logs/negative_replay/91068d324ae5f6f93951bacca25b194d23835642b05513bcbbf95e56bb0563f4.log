@@ -1,0 +1,12 @@
+[exp7913] phase=entrypoint event=start elapsed_s=0.000 completed_units=0
+[exp7913] phase=cold_replay event=before_reduction elapsed_s=0.001 completed_units=0
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7913_v686_hardware_evidence.py", line 57, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7913_v686_hardware_evidence.py", line 33, in main
+    q.cold_reduce(root, json.loads(args.cold_replay.read_text())), sort_keys=True
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7913_v686_hardware_evidence.py", line 241, in cold_reduce
+    raise ValueError(f"claims_changed:{field}")
+ValueError: claims_changed:rows
