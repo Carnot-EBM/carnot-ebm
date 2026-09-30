@@ -3453,3 +3453,5 @@ registered under the original V674 tasks.
   Scoped spec coverage, Ruff check/format, strict mypy, fixture CLI and cold
   replay pass. The repository-wide suite showed failures before it was stopped
   near 5%; repository-wide spec coverage reports 1,142 untraced tests.
+
+**Operational Note — milestone 2026.09.686:** `results/operational_retro_2026_09_686.json`, `ops/changelog.md`, `docs/research-log.md`, and `ops/status.md` record the supplied operational evidence and its limits. Locked artifact fields are preserved; the GPU-idle classification conflict is explicit. Missing experiment IDs and acceptance evidence are not reconstructed from research artifacts. This is an artifact and documentation update with no implementation changes, new requirements, or capability status changes. `openspec/capabilities/research-reporting/spec.md` remains unchanged; no research success-criteria verdict is asserted.

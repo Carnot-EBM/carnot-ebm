@@ -7109,3 +7109,20 @@ The critical path for milestone .250:
 - theme: source energy calibration, producer coverage qualification, and terminal revalidation led wall-time execution across an all-compute set lacking sub-phase metrics
 - key result: honest operational negative — calibrated source energy fitting and source producer coverage qualification consumed 8.63 of 13.1 total wall-time minutes (65.9%), while available records lack intra-task stage timing, continuous multi-device accelerator telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.686
+
+- exp_range: no data available this milestone
+- theme: live supervisor outcome assessment, qualified source custody binding, and capstone PRD gap reduction led wall-time execution across an all-compute set lacking sub-phase metrics
+- key result: honest operational negative — live supervisor outcome assessment and qualified source custody binding consumed 18.06 of 31.3 total wall-time minutes (57.7%), while available records lack intra-task stage timing, continuous multi-device accelerator telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+
+### Milestone 2026.09.686
+
+- exp_range: no data available this milestone (experiment IDs were not supplied).
+- theme: Operational timing, accelerator evidence, and task phase instrumentation.
+- key result: The 6 compute-bound experiments used 31.3 wall-time minutes; supervisor outcome assessment was slowest at 12.76 minutes, but its internal delay is unknown.
+- acceptance: no data available this milestone (criterion definitions and outcomes were not supplied).
+
+Operational evidence addendum: this entry supersedes earlier operational assertions for this milestone while preserving the earlier entry. The monitor shows both GPUs at 0% utilization. Under the supplied compute-bound rule this indicates idle, but the artifact's locked GPU-idle field remains false. The data does not establish that the snapshot was taken after execution, or whether any parallel multi-model workload missed DualGPURunner. Persist phase timing receipts and join them to GPU samples and model-overlap records before estimating savings or choosing parallel dispatch.
