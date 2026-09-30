@@ -19155,3 +19155,4 @@ code |
 | 2026-09-30 18:24 UTC | Qualify isolated training CLI publication and bloc | OK | 109 passed, 1 warning in 51.57s |
 | 2026-09-30 19:44 UTC | Qualify human span labels at the queried sentence  | OK | 110 passed, 1 warning in 47.56s |
 | 2026-09-30 20:56 UTC | Fit source energies after isolated publication qua | OK | 99 passed, 1 warning in 35.88s |
+| 2026-09-30 20:59 UTC | Measure calibrated decisions and abstention agains | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7943-energy-fit.energy_fit_ready_score (actual=0 == expected=1) |

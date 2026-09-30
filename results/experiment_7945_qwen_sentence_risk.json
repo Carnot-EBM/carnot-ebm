@@ -1,0 +1,81 @@
+{
+  "experiment": 7945,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-30",
+  "started_at": "2026-09-30T21:01:01.827448+00:00",
+  "finished_at": "2026-09-30T21:01:01.827448+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure bounded Qwen source support against human sentence labels",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7942-sentence-labels",
+  "failed_field": "sentence_labels_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7942_v689_sentence_labels.json",
+  "failed_evidence_sha256": "sha256:0b6e5272f2e3f86f419fec22f3419c7a3d586cdc2df624ba2454bc18652a1173",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7942-sentence-labels",
+    "failed_field": "sentence_labels_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7942_v689_sentence_labels.json",
+    "failed_evidence_sha256": "sha256:0b6e5272f2e3f86f419fec22f3419c7a3d586cdc2df624ba2454bc18652a1173"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp7942-sentence-labels.sentence_labels_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7942-sentence-labels",
+      "artifact_field": "sentence_labels_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7942_v689_sentence_labels.json",
+      "artifact_sha256": "sha256:0b6e5272f2e3f86f419fec22f3419c7a3d586cdc2df624ba2454bc18652a1173"
+    },
+    {
+      "upstream": "exp7942-sentence-labels",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7942_v689_sentence_labels.json",
+      "artifact_sha256": "sha256:0b6e5272f2e3f86f419fec22f3419c7a3d586cdc2df624ba2454bc18652a1173"
+    },
+    {
+      "upstream": "exp7942-sentence-labels",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "null",
+      "actual_type": "str",
+      "passed": true,
+      "reason": "actual='null' in expected=['positive', 'circular_positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7942_v689_sentence_labels.json",
+      "artifact_sha256": "sha256:0b6e5272f2e3f86f419fec22f3419c7a3d586cdc2df624ba2454bc18652a1173"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
