@@ -87701,3 +87701,44 @@ annotation granularity and the historical three-positive sentence null.
 No new target or seed converts exposed source families into a fresh holdout.
 Use private E2E-015/016/017/018/019 and affected reader tests for the planning
 change. Runtime repairs, scientific results and hardware gains remain planned.
+
+## REQ-REPORT-7953-V690: Observe activation and freeze current methods
+
+Bind thirteen ordered tasks Exp7953 through Exp7965 to the V690 visible table,
+machine contract and full-task digest. Matching active/document identity confirms
+observed activation. Matching staging alone confirms planning readiness only.
+Absent consumed staging records unknown historical custody. Existing conflicting
+staging or preserved staging snapshots reject readiness. Do not reconstruct staging.
+Use unchanged failure-ledger and exclusion readers. Empty prior history is valid
+only without a required scope match. Required history has all four prior fields
+and retirement true. Keep reader receipts per task and reproduce both V689 failures.
+Authenticate Exp7892, Exp7916, Exp7917 and Exp7941 exact primaries. Freeze current
+code hashes independently of historical eligibility. Preserve 640 source families,
+exclusions and the September 28 oracle-distinct correction. No science pre-gate.
+
+### SCENARIO-REPORT-7953-AUTHORITY
+
+Test genuinely new empty history, required missing history, all four prior fields,
+consumed staging, staged-only authority, changed active prompts and contradictory
+snapshots. Retain twelve negative contract mutations and historical fixture dates.
+
+### SCENARIO-REPORT-7953-VALIDATION
+
+Freeze explicit command manifests before results. Run private E2E-015/016/018,
+with both Exp7868 calls dated 20260929. Current execution is 20260930. Require
+nonempty 100 percent added module and CLI statement coverage, scoped Ruff,
+strict mypy and explicit spec coverage. Keep full-suite health separate.
+
+### SCENARIO-REPORT-7953-PUBLICATION
+
+Each private CLI route owns a directory. Publish one checked top-level primary.
+Cold-reduce primitive rows, run adversarial and strict row validators, and bind
+sidecars to final bytes. Actual gate and document readers select the primary
+after nested sidecars get newer mtimes. Fixture agreement is circular_positive.
+External incompleteness is terminal blocked; owned check failures disqualify.
+Ops/status/traceability reconciliation belongs to the conductor for this task.
+
+V690 implementation: task-owned authority, methods, validation and parameterized
+Exp7953 CLI. Private regressions preserve V685 lifecycle assertions and reproduce
+both V689 authority failures. Exact current verification receipts and measured
+statement counts are published below results/raw/experiment_7953_v690_contract_methods/.
