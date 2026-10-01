@@ -124,7 +124,15 @@ def method_freeze(root: Path) -> dict[str, Any]:
     return freeze
 
 
-def mutations(design: Path, active: Path, source: Path, private: Path) -> list[dict[str, Any]]:
+def mutations(
+    design: Path,
+    active: Path,
+    source: Path,
+    private: Path,
+    *,
+    milestone: str = MILESTONE,
+    first_id: int = 7953,
+) -> list[dict[str, Any]]:
     """Reject all twelve private contract changes without modifying live roadmaps."""
     baseline = yaml.safe_load(active.read_bytes())
     rows = []
@@ -163,7 +171,9 @@ def mutations(design: Path, active: Path, source: Path, private: Path) -> list[d
         plan.write_text(text)
         actual.write_text(yaml.safe_dump(value, sort_keys=False))
         stage.write_bytes(active.read_bytes())
-        observed = assess(plan, stage, actual, directory / "snapshots")["activated"]
+        observed = authority.assess(
+            plan, stage, actual, directory / "snapshots", milestone=milestone, first_id=first_id
+        )["activated"]
         rows.append(
             dict(
                 unit_id=name,

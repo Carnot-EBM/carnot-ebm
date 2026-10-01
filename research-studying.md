@@ -6336,3 +6336,25 @@ The recorded Semantic Scholar requests returned HTTP 429. OpenReview forums
 had browser challenges. This ingestion makes no new request or complete citation
 census claim. Preserve the September 28 oracle-distinct correction: the gap is
 open. This administrative contract never becomes a universal science pre-gate.
+
+## V691 methods ingestion — 2026-10-01 UTC
+
+REQ-REPORT-7966-V691 ingests the existing V691 review in research-references.md.
+This is a local methods freeze. No additional source search was run.
+Rechecked sources remain prior literature. Their results are not Carnot results.
+The semantic-gap paper (arXiv:2609.23742) is new context in this review;
+it motivates separate schema and target checks, without a transferred 27B claim.
+
+| Method and rechecked primary | Task mapping | Adoption and limit |
+|---|---|---|
+| Complete-pipeline calibration, BCEA [2606.16667](https://arxiv.org/abs/2606.16667) | Exp7969/7972 | Bind full-source prompt, score transform and action rule. Compare equal-information controls. No visual-study guarantee transfers. |
+| Sparse spline control [2602.02056](https://arxiv.org/abs/2602.02056) | Exp7972/7977 | Use the fixed cubic-spline control. Count touched coefficients and bytes. CPU fitting is not FPGA execution. |
+| Delayed issued-state feedback [2609.07251](https://arxiv.org/abs/2609.07251) | Exp7974 | Freeze the prediction trajectory and label schedule. Update the state that issued the prediction. Dependent windows limit coverage claims. |
+| Full-service hardware cost [2602.15985](https://arxiv.org/abs/2602.15985) | Exp7976/7977 | Include preprocessing, transfer, scoring and readout. Cached scoring differs from complete Qwen service cost. Vendor bounds are external estimates. |
+
+The recorded EBT citation request returned HTTP 429. ARM–EBM returned nine
+records with no next-page marker. The citation index remains incomplete.
+These access results do not establish a complete citation census. Retired
+importance anchoring and four-expert reweighting remain closed. Human labels
+remain fallible exposed-development evidence. The September 28 oracle-distinct
+corrigendum remains open. The contract audit is not a universal science gate.

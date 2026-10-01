@@ -87936,3 +87936,38 @@ stay nested. Both actual consumers select the same primary hash after nested
 sidecars acquire newer mtimes. Inspect adversarial and strict row reports on
 final bytes, including any changed verdict. Preserve historical failures.
 Conductor owns ops, changelog and traceability reconciliation.
+## REQ-REPORT-7966-V691: Bind authority across UTC rollover
+
+Exp7966 SHALL bind thirteen tasks, Exp7966 through Exp7978, to the V691
+visible table, machine contract and full-task digest. Reuse the V690 authority
+and twelve mutations. Matching staged bytes prove planning only. Matching
+active bytes prove activation. Missing consumed staging remains unknown.
+Conflicting observed or preserved bytes SHALL fail. Neither roadmap is written.
+
+### SCENARIO-REPORT-7966-AUTHORITY
+
+Matching active authority with missing staging activates thirteen tasks.
+Staging alone does not activate. Changed prompts, IDs, digests and snapshots fail.
+The existing lineage readers decide whether empty prior history is legitimate.
+
+### SCENARIO-REPORT-7966-DATES
+
+A September 30 producer and October 1 consumer SHALL authenticate against
+separate frozen invocation identities. Changed dates, IDs or hashes fail.
+The consumer date SHALL NOT replace an upstream invocation date.
+
+### SCENARIO-REPORT-7966-METHODS
+
+Freeze all 640 role slots, both independent branches and complete task prompts,
+losses, seeds, budgets, controls and gates. Preserve exact historical evidence,
+failed receipts, exposed-development limits and the September 28 corrigendum.
+Ingest four method mappings from the V691 review without research fan-out.
+
+### SCENARIO-REPORT-7966-VALIDATION
+
+Private temporary directories SHALL hold mutable pytest, child outputs and
+coverage. Archive evidence after child exit. Nonempty combined coverage SHALL
+cover every added statement. Required owned failures disqualify readiness.
+Run E2E-018 private tests and E2E-015 without historical live publication.
+Cold replay and terminal validators SHALL bind the single checked primary.
+The conductor owns ops/status, changelog and traceability reconciliation.
