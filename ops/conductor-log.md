@@ -19272,3 +19272,4 @@ code |
 | 2026-10-01 13:52 UTC | Learn persistent constraint additions from delayed | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7981-qwen-stream-capture.stream_capture_ready_score (actual=0 == expected=1) |
 | 2026-10-01 13:54 UTC | Independently test learning benefit retention and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7985-delayed-acquisition, exp7985-delayed-acquisition, exp7985-delayed-acquisition) |
 | 2026-10-01 13:54 UTC | Compare delayed confidence updates on a fixed qual | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7981-qwen-stream-capture.stream_capture_ready_score (actual=0 == expected=1) |
+| 2026-10-01 14:09 UTC | Review new live ARC supervisor outcomes for transf | OK | 87 passed, 1 warning in 7.65s |
