@@ -87766,3 +87766,24 @@ runner preserves publisher uniqueness, checks both actual readers and binds
 terminal reports to final bytes. A private deleted-test control clears prior
 CLI coverage while retaining other measured files. Ops and traceability updates
 belong to the separate conductor reconciliation requested for this task.
+# REQ-REPORT-7955: Publish authenticated response targets
+
+Exp7955 SHALL authenticate pinned Exp7423 assets, Exp7892 shards and Exp7942
+history; record exact failed operands for terminal external blocks. Freeze
+affected files, consumers, argv, exits, reasons, deadlines and coverage includes
+before results. Publish one checked experiment_7955 primary and private route
+directories. Public and evaluator manifests have separate byte hashes. Cold
+reconstruction starts from original annotations. Running successfully qualifies
+transport only, with exposed development scope and no detector benefit claim.
+
+## SCENARIO-REPORT-7955-TERMINAL
+
+Run private E2E-015 and E2E-019, real fixture CLI, external-CWD cold replay,
+aggregate-tamper rejection and historical E2E-016 using date 20260929. Require
+nonempty 100% added-module/CLI statement coverage, scoped Ruff, strict mypy and
+explicit-file spec coverage. Preserve historical health and required failures.
+Run final adversarial and strict row validators, then bind sidecars to final
+bytes. Both real readers SHALL select the primary after newer nested sidecars.
+Owned failures disqualify and clear readiness. Current run date is 20261001;
+September 28 oracle-distinct correction and historical determinations remain.
+Ops/status/traceability reconciliation belongs to the conductor for this task.

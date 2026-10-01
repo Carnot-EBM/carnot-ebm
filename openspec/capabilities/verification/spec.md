@@ -47193,3 +47193,29 @@ freezes real CLI routes and reduces current coverage and fixture receipts.
 `test_training_coverage_7954.py` checks each exception category, external blocks,
 owned failures, unchanged historical scores and cold primitive reconstruction.
 The current producer's terminal evidence is `experiment_7954_v690_training_coverage.json`.
+# REQ-VERIFY-7955: Rebuild complete-response human support targets
+
+Exp7955 SHALL freeze original source and whole-response bytes and public window
+budgets before opening labels. Preserve all 64 intended Exp7892 evaluation slots,
+existing source clusters and exclusions. Select no sentence or family by label.
+Reuse Exp7942 exact character/text/UTF-8 span checks. The primary target is the
+union of every authenticated unsupported span, including implicit_true and
+due_to_null. No-span good-quality complete annotations give zero. Missing,
+ambiguous or malformed custody never gives zero. Retain every sentence and span.
+Compare the independently rebuilt union to the original response label and record
+disagreement. Implicit-true exclusion is descriptive sensitivity only. Exact
+6000-token Qwen admission belongs to the later pinned-tokenizer task before labels.
+
+## SCENARIO-VERIFY-7955-CUSTODY
+
+Test Unicode, overlap, sentence-boundary spans, zero spans, implicit_true,
+due_to_null, poor quality, missing annotations, duplicates and cross-role clusters.
+Evaluator label, ID, offset metadata and annotation order mutations SHALL preserve
+public inputs and eligibility. Malformed offsets SHALL fail annotation custody.
+
+## SCENARIO-VERIFY-7955-CAPACITY
+
+Readiness requires all owned checks, unambiguous custody, 64 retained slots,
+32 distinct eligible clusters and eight examples per response class. Undersized
+targets give complete_null_response_target_capacity and readiness zero. Keep the
+Exp7942 three-positive sentence null unchanged. No model is loaded or fitted.

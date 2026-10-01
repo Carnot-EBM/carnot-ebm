@@ -19231,3 +19231,5 @@ code |
 | 2026-10-01 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_rising_intrinsic_reward_magnitude age-week 0: OPEN 1 |
 | 2026-10-01 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence age-week  |
 | 2026-10-01 00:21 UTC | Qualify the fitting exception routes before numeri | OK | 96 passed, 1 warning in 14.36s |
+| 2026-10-01 00:35 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 2: OPEN 20 days: REAL_B |
+| 2026-10-01 00:35 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 2: OPEN 19 da |
