@@ -21227,3 +21227,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Recover authenticated stream rows with explicit invocation scope (⚠️ Research Finding) — honest_verdict=complete_null_historical_capture_custody; results/experiment_7993_v693_capture_custody.json
 - 2026-10-01: Seal a source-disjoint development cohort and feedback schedule (⚠️ Research Finding) — honest_verdict=complete_null_development_cohort; results/experiment_7994_v693_development_cohort.json
 - 2026-10-01: Capture bounded Qwen judgments with owned call receipts (⚠️ Research Finding) — honest_verdict=complete_null_qwen_development_capture; results/experiment_7995_v693_qwen_development_capture.json
+- 2026-10-01: Train a local spline energy head for incremental updates (⚠️ Research Finding) — honest_verdict=complete_null_sparse_training; results/experiment_7996_v693_sparse_energy_training.json
