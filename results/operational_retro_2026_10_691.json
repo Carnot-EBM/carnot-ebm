@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.691",
+  "generated_at": "2026-10-01T08:41:20Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 63.6,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Independently reduce thirteen outcomes and decide the three PRD gaps",
+      "duration_minutes": 20.58,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture bounded Qwen judgments for fitting and calibration",
+      "duration_minutes": 13.85,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks across UTC rollover and freeze research methods",
+      "duration_minutes": 8.24,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure complete decision-service cost for each qualified branch",
+      "duration_minutes": 5.72,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify complete-response labels for disjoint calibration roles",
+      "duration_minutes": 3.86,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.691 recorded 9 completed experiments, all 9 classified as compute-bound, spanning 63.6 wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk modification timestamps. The longest running task was 'Independently reduce thirteen outcomes and decide the three PRD gaps' at 20.58 minutes, followed by 'Capture bounded Qwen judgments for fitting and calibration' at 13.85 minutes and 'Bind thirteen tasks across UTC rollover and freeze research methods' at 8.24 minutes. Static GPU monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated, but active execution-window hardware traces were not captured, and the locked indicator gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "Wall-time execution was concentrated in the top compute-bound tasks: 'Independently reduce thirteen outcomes and decide the three PRD gaps' (20.58 minutes) and 'Capture bounded Qwen judgments for fitting and calibration' (13.85 minutes), which together accounted for 34.43 of 63.6 total wall-time minutes (over 54%), while granular intra-task phase timings were not captured.",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving phase-level stage attribution unmeasured.",
+    "Absence of continuous time-series accelerator telemetry across active execution windows leaves hardware processor-memory interactions and concurrency profiling unmeasured across compute-bound tasks."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with monotonic sub-phase timers to isolate latency across environment setup, model loading, compute passes, and artifact validation.",
+    "Deploy continuous, lightweight GPU sampling throughout task execution rather than relying solely on discrete monitor checkpoints.",
+    "Profile the capstone outcome reduction (20.58 minutes) and Qwen calibration capture (13.85 minutes) workflows to identify potential optimization or memoization opportunities.",
+    "Restrict DualGPURunner orchestration strictly to parallel executions involving two or more distinct models, avoiding overhead on single-model inference jobs.",
+    "Preserve and maintain failure_ledger pre-launch checks to ensure doomed reruns continue to be blocked in sub-second time without consuming compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase execution timing to experiment runners to measure setup, compute, and artifact validation overhead.",
+    "Implement active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound tasks.",
+    "Profile the longest-running capstone reduction and Qwen judgment calibration workflows to identify potential optimization or memoization opportunities."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.691 completed 9 compute-bound experiments totaling 63.6 wall-time minutes, led by capstone outcome reduction (20.58 minutes) and bounded Qwen calibration capture (13.85 minutes). While the static GPU monitor reported both RTX 3090 GPUs at 0% utilization with 4MB allocated, the locked field sets gpu_idle_on_compute_bound_tasks to false and no active-execution telemetry exists. Estimated time savings remain at 0% pending empirical measurement of intra-task phases and continuous accelerator utilization."
+}
