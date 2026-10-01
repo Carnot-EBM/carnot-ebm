@@ -21219,3 +21219,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Test whether source features add signal beyond scalar confidence (⚠️ Research Finding) — honest_verdict=complete_null_evidence_ablation; results/experiment_7984_v692_evidence_ablation.json
 - 2026-10-01: Review new live ARC supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_disqualified_supervisor_delta_prerequisites; results/experiment_7988_v692_arc_supervisor_delta.json
 - 2026-10-01: Preserve board evidence and bound acceleration of the measured service (⚠️ Blocked) — honest_verdict=complete_blocked_required_custody_or_service; results/experiment_7990_v692_hardware_evidence.json
+- 2026-10-01: Independently reduce thirteen outcomes and decide the three PRD gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7991_v692_capstone.json
